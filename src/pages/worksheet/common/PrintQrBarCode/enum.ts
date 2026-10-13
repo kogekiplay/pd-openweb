@@ -261,10 +261,11 @@ export const BAR_HEIGHT = {
 };
 export const BAR_HEIGHT_LIST = getList(BAR_HEIGHT);
 
-function getTextByValue(obj, value: number) {
-  let keys = Object.keys(obj).filter(k => k !== 'texts');
-  const matchedKey = _.find(keys, k => obj[k] === value);
-  return _.get(obj, 'texts.' + matchedKey);
+function getTextByValue(obj: EnumTable, value: number | undefined): string {
+  if (value === undefined) return '';
+  const keys = Object.keys(obj).filter(key => key !== 'texts' && key !== 'shorts');
+  const matchedKey = _.find(keys, key => obj[key] === value);
+  return matchedKey ? String(_.get(obj, `texts.${matchedKey}`, '')) : '';
 }
 
 // 获取模板卡片显示信息;
@@ -275,11 +276,11 @@ export function getPrintCardInfoOfTemplate(template: PrintLabelConfig = {}) {
       [PRINT_TYPE.QR]: 'qr_code',
       [PRINT_TYPE.A4]: 'qr_code',
       [PRINT_TYPE.BAR]: 'a-barcode',
-    }[printType] || 'doc';
+    }[printType ?? -1] || 'doc';
   let text = '';
 
   if (labelSize === 100) {
-    text = _l('%0 x %1 mm', template.labelCustomWidth, template.labelCustomHeight);
+    text = _l('%0 x %1 mm', template.labelCustomWidth ?? '', template.labelCustomHeight ?? '');
   } else if (printType === PRINT_TYPE.QR) {
     text = getTextByValue(QR_LABEL_SIZE, labelSize);
   } else if (printType === PRINT_TYPE.A4) {
