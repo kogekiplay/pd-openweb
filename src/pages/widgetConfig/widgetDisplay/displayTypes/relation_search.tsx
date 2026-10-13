@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { isEmpty } from 'lodash';
 import _ from 'lodash';
 import worksheetAjax from 'src/api/worksheet';
 import { SYSTEM_FIELD_TO_TEXT } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js';
+import type { FormControl } from 'src/utils/controlTypes';
 import { CommonDisplay, EditModelWrap } from '../../styled';
 import { isSheetDisplay } from '../../util';
+import { getWidgetDisplayWidths } from '../../util/advancedSettingBoundary';
 import { getAdvanceSetting, getShowControls } from '../../util/setting';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const SYSTEM_CONTROL = Object.keys(SYSTEM_FIELD_TO_TEXT).map(item => ({
   controlId: item,
@@ -32,14 +32,7 @@ export default function RelationSearch({ data = {}, fromType, isTab }) {
   const relationControls: FormControl[] = fromType === 'public' ? controls : data.relationControls || [];
   const showControls = getShowControls(relationControls.concat(SYSTEM_CONTROL), data.showControls);
 
-  const getWidths = () => {
-    const widths = getAdvanceSetting(data, 'widths') || [];
-    if (isEmpty(widths)) return showControls.map(() => 160);
-    if (widths.length === showControls.length) return widths;
-    return showControls.map((_v, i) => widths[i] || 160);
-  };
-
-  const widths = getWidths();
+  const widths = getWidgetDisplayWidths(data, showControls);
   const width = widths.reduce((p, c) => p + c, 0);
 
   const getDisplay = () => {

@@ -274,7 +274,6 @@ const sublist = {
 };
 assert.doesNotThrow(() => callSave('checkWidgetBeforeSave', [sublist], [sublist], scope));
 for (const [key, value] of Object.entries({
-  widths: ['wrong'],
   sorts: [{ isAsc: 'yes' }],
   requestmap: [{ defsource: {} }],
   responsemap: [{ cid: 1 }],
@@ -295,4 +294,5 @@ assert.deepStrictEqual(styleSetting(''), {});
 assert.strictEqual(numberSetting({ value: 3 }), '');
 assert.throws(() => filterSettings({ groupFilters: [] }), /Invalid widget setting list/);
 assert.throws(() => styleSetting({ color: { invalid: true } }), /Invalid widget setting object/);
+assert.deepStrictEqual(read({ advancedSetting: { widths: '["wrong", 240]' } }, 'widths'), [160, 240]);
 console.log('widget advanced setting valid parity, missing defaults and invalid payload tests passed');

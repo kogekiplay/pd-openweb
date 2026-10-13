@@ -101,6 +101,7 @@ export interface SettingSummary extends Record<string, unknown> {
   controlId?: string | undefined;
   type?: number | string | undefined;
 }
+export type SettingWidths = number[] | Record<string, number>;
 interface ComplexSettings {
   custom_event: WidgetEvent[];
   filters: SettingFilter[];
@@ -109,7 +110,7 @@ interface ComplexSettings {
   resultfilters: SettingFilter[];
   searchfilters: SettingFilter[];
   filterregex: SettingRegex[];
-  widths: number[];
+  widths: SettingWidths;
   itemdesc: string[];
   requestmap: SettingMapping[];
   responsemap: SettingMapping[];
@@ -285,6 +286,33 @@ function listSetting<T>(value: unknown, predicate: (v: unknown) => v is T): T[] 
   if (!arrayOf(value, predicate)) throw new TypeError('Invalid widget setting list');
   return value;
 }
+function pixelWidth(value: unknown): number | undefined {
+  const width = typeof value === 'number' ? value : typeof value === 'string' && value.trim() ? Number(value) : NaN;
+  return Number.isFinite(width) && width > 0 ? width : undefined;
+}
+function validPixelWidth(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value) && value > 0;
+}
+function widthMap(value: unknown): value is Record<string, number> {
+  return widgetObject(value) && Object.values(value).every(validPixelWidth);
+}
+function widthSettings(value: unknown): SettingWidths {
+  // Old layouts store widths by position; current layout writers key them by control ID.
+  // Widths only affect presentation, so an invalid entry uses the existing 160px default.
+  if (arrayOf(value, validPixelWidth) || widthMap(value)) return value;
+  if (Array.isArray(value)) return value.map(width => pixelWidth(width) ?? 160);
+  if (widgetObject(value)) {
+    return Object.fromEntries(Object.entries(value).map(([id, width]) => [id, pixelWidth(width) ?? 160]));
+  }
+  return [];
+}
+export function getWidgetDisplayWidths(data: FormControl | undefined, showControls: readonly string[]): number[] {
+  const widths = getWidgetAdvanceSetting(data, 'widths') || [];
+  return showControls.map((id, index) => {
+    const width = Array.isArray(widths) ? widths[index] : Object.hasOwn(widths, id) ? widths[id] : undefined;
+    return width ?? 160;
+  });
+}
 const listDecoders: Record<string, (value: unknown) => unknown> = {
   custom_event: value => listSetting(value, event),
   filters: filterSettings,
@@ -293,7 +321,7 @@ const listDecoders: Record<string, (value: unknown) => unknown> = {
   resultfilters: filterSettings,
   searchfilters: filterSettings,
   filterregex: value => listSetting(value, regex),
-  widths: value => listSetting(value, (item): item is number => typeof item === 'number' && Number.isFinite(item)),
+  widths: widthSettings,
   itemdesc: value => listSetting(value, (item): item is string => typeof item === 'string'),
   requestmap: value => listSetting(value, mapping),
   responsemap: value => listSetting(value, mapping),

@@ -1,9 +1,9 @@
-import { isEmpty } from 'lodash';
 import _ from 'lodash';
 import { SYSTEM_FIELD_TO_TEXT } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js';
 import { SYSTEM_CONTROL } from '../../config/widget';
 import { CommonDisplay, EditModelWrap } from '../../styled';
 import { isSheetDisplay } from '../../util';
+import { getWidgetDisplayWidths } from '../../util/advancedSettingBoundary';
 import { getAdvanceSetting, getShowControls } from '../../util/setting';
 
 export default function RelateSheet({ data = {}, isTab }) {
@@ -17,14 +17,7 @@ export default function RelateSheet({ data = {}, isTab }) {
     data.showControls,
   );
 
-  const getWidths = () => {
-    const widths = getAdvanceSetting(data, 'widths') || [];
-    if (isEmpty(widths)) return showControls.map(() => 160);
-    if (widths.length === showControls.length) return widths;
-    return showControls.map((_v, i) => widths[i] || 160);
-  };
-
-  const widths = getWidths();
+  const widths = getWidgetDisplayWidths(data, showControls);
   const width = widths.reduce((p, c) => p + c, 0);
 
   const getDisplay = () => {
