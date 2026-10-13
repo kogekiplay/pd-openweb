@@ -7,9 +7,10 @@ import { MdAntDatePicker, MdAntDateRangePicker } from 'ming-ui';
 import { DYNAMIC_FROM_MODE } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js';
 import { getDatePickerConfigs } from '../../../../util/setting';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
+import type { DynamicInputProps } from '../dynamicTypes';
 import { DynamicValueInputWrap, WrapMaxOrMin } from '../styled';
 
-export default class DateInput extends Component<any, any> {
+export default class DateInput extends Component<DynamicInputProps, any> {
   declare $wrap: SelectOtherField | null | undefined;
 
   static override propTypes = {
@@ -21,7 +22,7 @@ export default class DateInput extends Component<any, any> {
     onDynamicValueChange: _.noop,
     clearOldDefault: _.noop,
   };
-  constructor(props) {
+  constructor(props: DynamicInputProps) {
     super(props);
     const { data, onDynamicValueChange, clearOldDefault } = props;
     const { default: defaultValue } = data;

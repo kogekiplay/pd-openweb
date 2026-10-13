@@ -3,12 +3,13 @@ import update from 'immutability-helper';
 import _ from 'lodash';
 import { dialogSelectOrgRole } from 'ming-ui/functions';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
+import type { DynamicInputProps } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 
-export default class RoleInput extends Component<any, any> {
+export default class RoleInput extends Component<DynamicInputProps, any> {
   declare $wrap: SelectOtherField | null | undefined;
 
-  constructor(props) {
+  constructor(props: DynamicInputProps) {
     super(props);
     this.state = {};
   }
@@ -61,7 +62,12 @@ export default class RoleInput extends Component<any, any> {
             }}
           />
         )}
-        <SelectOtherField {...this.props} ref={con => { this.$wrap = con; }} />
+        <SelectOtherField
+          {...this.props}
+          ref={con => {
+            this.$wrap = con;
+          }}
+        />
       </DynamicValueInputWrap>
     );
   }

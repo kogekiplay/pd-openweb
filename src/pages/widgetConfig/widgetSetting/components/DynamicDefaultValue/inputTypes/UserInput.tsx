@@ -7,9 +7,10 @@ import type { SelectedQuickUser } from 'src/ming-ui/functions/quickSelectUser/ty
 import { DYNAMIC_FROM_MODE } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js';
 import { getTabTypeBySelectUser } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
+import type { DynamicInputProps } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 
-export default class DateInput extends Component<any, any> {
+export default class DateInput extends Component<DynamicInputProps, any> {
   declare $wrap: SelectOtherField | null | undefined;
 
   static override propTypes = {
@@ -61,9 +62,9 @@ export default class DateInput extends Component<any, any> {
       .filter(
         item =>
           item.staticValue &&
-          (JSON.parse(item.staticValue || '{}').accountId !== 'user-self' || item.cid !== 'user-self'),
+          (JSON.parse(String(item.staticValue || '{}')).accountId !== 'user-self' || item.cid !== 'user-self'),
       )
-      .map(i => JSON.parse(i.staticValue || '{}').accountId);
+      .map(i => JSON.parse(String(i.staticValue || '{}')).accountId);
 
     const getUsers = (usersId: { cid: string; rcid: string; staticValue: string }[]) => {
       // 人员去重
@@ -71,7 +72,7 @@ export default class DateInput extends Component<any, any> {
         _.get(item, ['staticValue', 'accountId']);
       const existUser = dynamicValue
         .filter(item => item.staticValue)
-        .map(item => JSON.parse(item.staticValue || '{}').accountId);
+        .map(item => JSON.parse(String(item.staticValue || '{}')).accountId);
       return usersId.reduce((prev, curr) => {
         return existUser.includes(getId(curr)) ? prev : prev.concat(curr);
       }, dynamicValue);
@@ -146,9 +147,6 @@ export default class DateInput extends Component<any, any> {
           <DynamicInput {...this.props} onTriggerClick={this.onTriggerClick} />
         ) : (
           <OtherFieldList
-            ref={con => {
-              this.userscon = con;
-            }}
             {...this.props}
             removeItem={this.removeItem}
             onClick={this.selectUser}

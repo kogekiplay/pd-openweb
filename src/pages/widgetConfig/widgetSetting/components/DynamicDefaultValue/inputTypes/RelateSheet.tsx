@@ -4,13 +4,14 @@ import { arrayOf, func, shape, string } from 'prop-types';
 import { getCurrentValue } from 'src/components/Form/core/formUtils';
 import { selectRecords } from 'src/components/SelectRecords';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
+import type { DynamicInputProps } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 
 export interface RelateSheetState {
   recordListVisible: boolean;
 }
 
-export default class RelateSheet extends Component<any, RelateSheetState> {
+export default class RelateSheet extends Component<DynamicInputProps, RelateSheetState> {
   declare $wrap: SelectOtherField | null | undefined;
 
   static override propTypes = {
@@ -57,7 +58,10 @@ export default class RelateSheet extends Component<any, RelateSheetState> {
             cid: '',
             rcid: '',
             staticValue: JSON.stringify([item.rowid]),
-            relateSheetName: getCurrentValue(titleControl, item[titleControl.controlId], { type: 2 }) || '未命名',
+            relateSheetName:
+              getCurrentValue(titleControl, titleControl?.controlId ? item[titleControl.controlId] : undefined, {
+                type: 2,
+              }) || '未命名',
           };
         });
 
@@ -102,7 +106,12 @@ export default class RelateSheet extends Component<any, RelateSheetState> {
             removeRelateSheet={this.removeRelateSheet}
           />
         )}
-        <SelectOtherField {...this.props} ref={con => { this.$wrap = con; }} />
+        <SelectOtherField
+          {...this.props}
+          ref={con => {
+            this.$wrap = con;
+          }}
+        />
       </DynamicValueInputWrap>
     );
   }

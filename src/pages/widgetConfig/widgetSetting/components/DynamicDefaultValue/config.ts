@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import type { DynamicNamedMenuItem } from './dynamicTypes';
 
 /* 可以作为文本拼接的控件 */
 export const CAN_AS_TEXT_DYNAMIC_FIELD = [
@@ -220,7 +221,7 @@ export const VALIDATE_REG = {
   number: /^-?\d*(\.\d*)?/,
 };
 export const DEFAULT_VALUE_VALIDATOR = {
-  number: value => _.head(VALIDATE_REG.number.exec(value)),
+  number: (value: string) => _.head(VALIDATE_REG.number.exec(value)),
 };
 
 // 动态默认值选择类型
@@ -258,7 +259,7 @@ export const CUR_DEPARTMENT = [
 ];
 export const CUR_ROLE = [{ icon: 'icon-group', key: 'role', id: 'user-role', text: _l('当前用户的组织角色') }];
 
-export const CURRENT_TYPES = {
+export const CURRENT_TYPES: Record<number, DynamicNamedMenuItem[]> = {
   3: CUR_USER,
   5: CUR_USER,
   15: DATE_TYPES,

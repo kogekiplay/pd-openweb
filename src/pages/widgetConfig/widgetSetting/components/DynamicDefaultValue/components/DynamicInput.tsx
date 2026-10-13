@@ -1,3 +1,4 @@
+import type { MouseEvent } from 'react';
 import { useEffect, useState } from 'react';
 import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -5,7 +6,9 @@ import { handleAdvancedSettingChange } from 'src/pages/widgetConfig/util/setting
 import { DATE_TYPE } from 'src/pages/worksheet/common/ViewConfig/components/fastFilter/config.js';
 import { getDaterange } from 'src/pages/worksheet/common/ViewConfig/components/fastFilter/util.js';
 import { htmlEncodeReg } from 'src/utils/common';
-import { getAdvanceSetting } from 'src/utils/control';
+import { functionSetting, widgetObject } from '../../../../util/advancedSettingBoundary';
+import type { DynamicInputProps } from '../dynamicTypes';
+import { readDynamicValueSources } from '../dynamicTypes';
 import { DynamicInputStyle } from '../styled';
 
 const ICON_TYPES = [
@@ -21,10 +24,20 @@ export default function DynamicInput({
   onTriggerClick,
   data = {},
   onChange,
-  updateQueryConfigs = () => {},
+  updateQueryConfigs,
   linkParams,
-}) {
-  const current = _.find(ICON_TYPES, item => item.key === defaultType) || {};
+}: Pick<
+  DynamicInputProps,
+  | 'defaultType'
+  | 'dynamicData'
+  | 'queryConfig'
+  | 'onTriggerClick'
+  | 'data'
+  | 'onChange'
+  | 'updateQueryConfigs'
+  | 'linkParams'
+>) {
+  const current = _.find(ICON_TYPES, item => item.key === defaultType);
   const name = `<span>：${htmlEncodeReg(_.get(queryConfig, 'sourceName'))}</span>`;
   const [sourceName, setSourceName] = useState(name);
 
@@ -38,11 +51,11 @@ export default function DynamicInput({
     }
   }, [data.controlId, dynamicData]);
 
-  const handleDelete = e => {
+  const handleDelete = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     if (defaultType === 'dynamicsrc') {
       onChange(handleAdvancedSettingChange(data, { dynamicsrc: '', defaulttype: '' }));
-      updateQueryConfigs(dynamicData);
+      updateQueryConfigs?.(functionSetting(dynamicData));
     } else if (defaultType === 'dynamiccustom') {
       onChange(handleAdvancedSettingChange(data, { defsource: JSON.stringify([]), defaulttype: '' }));
     } else if (defaultType === 'defaultfunc') {
@@ -50,15 +63,16 @@ export default function DynamicInput({
     }
   };
 
-  const isLinkParams = (getAdvanceSetting(data, 'defsource') || []).filter(o => o.rcid === 'url').length > 0;
-  const isDYDateTime = (getAdvanceSetting(data, 'defsource') || []).filter(o => o.rcid === 'dateRange').length > 0;
+  const sources = readDynamicValueSources(data);
+  const isLinkParams = sources.some(o => o.rcid === 'url');
+  const isDYDateTime = sources.some(o => o.rcid === 'dateRange');
 
   if (isLinkParams || isDYDateTime) {
     return (
       <DynamicInputStyle className="">
-        {(getAdvanceSetting(data, 'defsource') || []).map((o, index) => {
+        {sources.map((o, index) => {
           if (isLinkParams) {
-            const isDel = !(linkParams || []).includes(o.cid);
+            const isDel = typeof o.cid !== 'string' || !(linkParams || []).includes(o.cid);
             return (
               <span key={index} className={isDel ? 'Red' : ''}>
                 {!isDel ? o.cid : _l('该参数已删除')}
@@ -68,10 +82,10 @@ export default function DynamicInput({
 
           if (isDYDateTime) {
             const info = _.flattenDeep(DATE_TYPE).find(it => it.value == Number(o.cid));
-            const isDel = !info || !getDaterange(data.advancedSetting || {}).includes(o.cid);
+            const isDel = !info || !(getDaterange(data.advancedSetting || {}) || []).includes(o.cid);
             return (
               <span key={index} className={isDel ? 'Red' : ''}>
-                {!isDel ? info.text : _l('已删除')}
+                {!isDel ? info?.text : _l('已删除')}
               </span>
             );
           }
@@ -93,10 +107,10 @@ export default function DynamicInput({
 
   return (
     <DynamicInputStyle onClick={onTriggerClick}>
-      <div className={`text ${dynamicData && dynamicData.status === -1 ? 'error' : ''}`}>
-        {current.icon && <i className={`${current.icon} Font16 mRight10 textSecondary`} />}
+      <div className={`text ${widgetObject(dynamicData) && dynamicData['status'] === -1 ? 'error' : ''}`}>
+        {current?.icon && <i className={`${current?.icon} Font16 mRight10 textSecondary`} />}
         <span className="Bold flex overflow_ellipsis">
-          {current.text}
+          {current?.text}
           {defaultType === 'dynamicsrc' && <span dangerouslySetInnerHTML={{ __html: sourceName }}></span>}
         </span>
       </div>

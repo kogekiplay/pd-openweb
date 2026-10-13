@@ -44,3 +44,6 @@ export const TYPE_TO_COMP = {
   attachment: AttachmentInput,
   location: LocationInput,
 };
+export function isDynamicInputType(type: string): type is keyof typeof TYPE_TO_COMP {
+  return Object.hasOwn(TYPE_TO_COMP, type);
+}

@@ -4,9 +4,10 @@ import _ from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';
 import CascaderDropdown from 'src/components/Form/DesktopForm/widgets/Cascader';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
+import type { DynamicInputProps } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 
-export default class CascaderSheet extends Component<any, any> {
+export default class CascaderSheet extends Component<DynamicInputProps, any> {
   declare $wrap: SelectOtherField | null | undefined;
 
   static override propTypes = {
@@ -17,7 +18,7 @@ export default class CascaderSheet extends Component<any, any> {
     onDynamicValueChange: _.noop,
     dynamicValue: [],
   };
-  constructor(props) {
+  constructor(props: DynamicInputProps) {
     super(props);
     this.state = {
       visible: false,
@@ -70,7 +71,7 @@ export default class CascaderSheet extends Component<any, any> {
         ? []
         : dynamicValue
             .map(i => {
-              let staticValueInfo = JSON.parse(i.staticValue)[0] || '';
+              let staticValueInfo = JSON.parse(String(i.staticValue))[0] || '';
               staticValueInfo = staticValueInfo.indexOf('rowid') > -1 ? safeParse(staticValueInfo) : staticValueInfo;
               if (_.isObject(staticValueInfo)) {
                 return {
@@ -79,7 +80,7 @@ export default class CascaderSheet extends Component<any, any> {
                 };
               }
 
-              return { sid: JSON.parse(i.staticValue)[0], name: i.relateSheetName };
+              return { sid: JSON.parse(String(i.staticValue))[0], name: i.relateSheetName };
             })
             .filter(i => i.sid);
     const cascaderProps = {

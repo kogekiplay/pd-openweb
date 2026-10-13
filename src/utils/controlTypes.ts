@@ -167,6 +167,8 @@ export interface ControlPermissions {
  * 递归字段（relationControls / showControls）用自身类型，子表控件靠它们描述内层结构。
  */
 export interface FormControl {
+  /** Legacy member defaults are cleared after dynamic-default migration. */
+  defaultMen?: unknown[] | string | undefined;
   /** 查询工作表填充的数据控件，动态默认值计算须保留其已填写值。 */
   isQueryWorksheetFill?: boolean | undefined;
   /** 关联字段整体清空后，仍允许原关联记录出现在可选列表。 */
