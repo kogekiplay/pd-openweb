@@ -1,10 +1,11 @@
 import { Fragment } from 'react';
 import _, { isEmpty } from 'lodash';
 import { SYSTEM_FIELD_TO_TEXT } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js';
+import type { FormControl } from 'src/utils/controlTypes';
 import { EditModelWrap, EmptySheetPlaceHolder } from '../../styled';
 import { isSheetDisplay } from '../../util';
-import { getAdvanceSetting, getShowControls } from '../../util/setting';
-import type { FormControl } from 'src/utils/controlTypes';
+import { getWidgetDisplayWidths } from '../../util/advancedSettingBoundary';
+import { getShowControls } from '../../util/setting';
 
 export default function SubList({ data }) {
   const { relationControls = [], desc = '' }: { relationControls: FormControl[]; [key: string]: any } = data;
@@ -15,14 +16,7 @@ export default function SubList({ data }) {
     data.showControls,
   );
 
-  const getWidths = () => {
-    const widths = getAdvanceSetting(data, 'widths') || [];
-    if (isEmpty(widths)) return showControls.map(() => 160);
-    if (widths.length === showControls.length) return widths;
-    return showControls.map((_v, i) => widths[i] || 160);
-  };
-
-  const widths = getWidths();
+  const widths = getWidgetDisplayWidths(data, showControls);
   const width = widths.reduce((p, c) => p + c, 0);
 
   if (isEmpty(relationControls)) {
