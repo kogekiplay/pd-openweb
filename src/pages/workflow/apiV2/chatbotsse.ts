@@ -1,4 +1,5 @@
 import base, { controllerName } from './base';
+import type { ApiArgs, ApiOptions } from './apiTypes';
 /**
  * chatbotsse
 */
@@ -7,7 +8,7 @@ const chatbotsse = {
    * null
    * @param {Object} options 配置参数
    */
-  startProcess_1: function(args, options) {
+  startProcess_1: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/api/sse/startProcess';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'apissestartProcess', args, $.extend({}, base, options));
@@ -16,7 +17,7 @@ const chatbotsse = {
    * null
    * @param {Object} options 配置参数
    */
-  chat: function(args, options) {
+  chat: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/api/sse/chat';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'apissechat', args, $.extend({}, base, options));

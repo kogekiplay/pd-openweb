@@ -1,4 +1,5 @@
 import base, { controllerName } from './base';
+import type { ApiArgs, ApiOptions } from './apiTypes';
 /**
  * instance
 */
@@ -7,7 +8,7 @@ const instance = {
    * null
    * @param {Object} options 配置参数
    */
-  transfer: function(args, options) {
+  transfer: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/instance/transfer';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instancetransfer', args, $.extend({}, base, options));
@@ -16,7 +17,7 @@ const instance = {
    * null
    * @param {Object} options 配置参数
    */
-  taskRevoke: function(args, options) {
+  taskRevoke: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/instance/taskRevoke';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instancetaskRevoke', args, $.extend({}, base, options));
@@ -25,7 +26,7 @@ const instance = {
    * null
    * @param {Object} options 配置参数
    */
-  submit: function(args, options) {
+  submit: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/instance/submit';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instancesubmit', args, $.extend({}, base, options));
@@ -34,7 +35,7 @@ const instance = {
    * null
    * @param {Object} options 配置参数
    */
-  signTask: function(args, options) {
+  signTask: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/instance/sign';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instancesign', args, $.extend({}, base, options));
@@ -43,7 +44,7 @@ const instance = {
    * null
    * @param {Object} options 配置参数
    */
-  revoke: function(args, options) {
+  revoke: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/instance/revoke';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instancerevoke', args, $.extend({}, base, options));
@@ -52,7 +53,7 @@ const instance = {
    * null
    * @param {Object} options 配置参数
    */
-  restart: function(args, options) {
+  restart: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/instance/restart';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instancerestart', args, $.extend({}, base, options));
@@ -70,7 +71,7 @@ const instance = {
    * null
    * @param {Object} options 配置参数
    */
-  pass: function(args, options) {
+  pass: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/instance/pass';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instancepass', args, $.extend({}, base, options));
@@ -79,7 +80,7 @@ const instance = {
    * null
    * @param {Object} options 配置参数
    */
-  overrule: function(args, options) {
+  overrule: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/instance/overrule';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instanceoverrule', args, $.extend({}, base, options));
@@ -88,7 +89,7 @@ const instance = {
    * null
    * @param {Object} options 配置参数
    */
-  operation: function(args, options) {
+  operation: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/instance/operation';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instanceoperation', args, $.extend({}, base, options));
@@ -97,7 +98,7 @@ const instance = {
    * null
    * @param {Object} options 配置参数
    */
-  forward: function(args, options) {
+  forward: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/instance/forward';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'instanceforward', args, $.extend({}, base, options));
@@ -107,7 +108,7 @@ const instance = {
    * @param {string} [args.instanceId] *null
    * @param {Object} options 配置参数
    */
-  getOperationHistoryList: function(args, options) {
+  getOperationHistoryList: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/instance/getOperationHistoryList';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'instancegetOperationHistoryList', args, $.extend({}, base, options));
@@ -127,7 +128,7 @@ const instance = {
    * @param {string} [args.instanceId] *null
    * @param {Object} options 配置参数
    */
-  getInstance: function(args, options) {
+  getInstance: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/instance/getInstance';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'instancegetInstance', args, $.extend({}, base, options));
@@ -147,7 +148,7 @@ const instance = {
    * @param {string} [args.conversationId] null
    * @param {Object} options 配置参数
    */
-  getHistoryList: function(args, options) {
+  getHistoryList: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/instance/getHistoryList';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'instancegetHistoryList', args, $.extend({}, base, options));
@@ -157,7 +158,7 @@ const instance = {
    * @param {string} [args.instanceId] *null
    * @param {Object} options 配置参数
    */
-  getHistoryDetail: function(args, options) {
+  getHistoryDetail: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/instance/getHistoryDetail';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'instancegetHistoryDetail', args, $.extend({}, base, options));
@@ -166,7 +167,7 @@ const instance = {
    * null
    * @param {Object} options 配置参数
    */
-  getArchivedList: function(args, options) {
+  getArchivedList: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/instance/getArchivedList';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'instancegetArchivedList', args, $.extend({}, base, options));
@@ -175,7 +176,7 @@ const instance = {
    * null
    * @param {Object} options 配置参数
    */
-  count_2: function(args, options) {
+  count_2: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/instance/count';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'instancecount', args, $.extend({}, base, options));
