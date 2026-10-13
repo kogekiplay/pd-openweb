@@ -166,7 +166,7 @@ export const functions = {
     // 2) 公式转译为原生 JS 后 IF/IFS 为“及早求值”，所有分支都会实际执行，若此处对空值抛错会打断整条公式，
     //    连本不该走 DATEIF 的分支（如“全天”直接返回 1）也一起报错。故仅对真正非法的非空日期抛错。
     if (_.isNil(begin) || begin === '' || _.isNil(end) || end === '') {
-      return;
+      return undefined;
     }
 
     if (!isDateStr(begin)) {
@@ -1897,3 +1897,22 @@ export const functionDetails = _.pick(
     ].concat(Object.keys(functionDetailsMap)),
   ),
 );
+
+export interface FormulaFunctionDescription {
+  name: string;
+  type: string;
+  title: string;
+  des: string;
+}
+function isFunctionDescription(value: unknown): value is FormulaFunctionDescription {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    ['name', 'type', 'title', 'des'].every(key => typeof Reflect.get(value, key) === 'string')
+  );
+}
+export function getFunctionDescription(name: unknown): FormulaFunctionDescription | undefined {
+  if (typeof name !== 'string' || !Object.hasOwn(functionDetails, name)) return undefined;
+  const description: unknown = Reflect.get(functionDetails, name);
+  return isFunctionDescription(description) ? description : undefined;
+}

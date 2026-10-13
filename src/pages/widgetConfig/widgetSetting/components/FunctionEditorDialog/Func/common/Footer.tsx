@@ -13,7 +13,7 @@ const FooterCon = styled.div`
   }
 `;
 
-export default function Footer(props) {
+export default function Footer(props: { onClose: () => void; onSave: () => void }) {
   const { onClose, onSave } = props;
   return (
     <FooterCon>

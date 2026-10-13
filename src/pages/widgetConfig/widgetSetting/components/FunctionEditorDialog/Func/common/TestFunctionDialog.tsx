@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import cx from 'classnames';
-import { find, get, isFunction, omit, uniq } from 'lodash';
+import { find, omit, uniq } from 'lodash';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -12,6 +12,7 @@ import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget.j
 import execValueFunction from 'src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/exec';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
+import type { CodeEditHandle, TestFunctionDialogOptions } from '../editorTypes';
 import CodeEdit from './CodeEdit';
 
 const Header = styled.div`
@@ -124,31 +125,27 @@ const TestCon = styled.div`
 
 function changeControlType(control: FormControl) {
   const { type } = control;
-  return (
-    {
-      [String(WIDGETS_TO_API_TYPE_ENUM.SIGNATURE)]: WIDGETS_TO_API_TYPE_ENUM.TEXT,
-    }[String(type)] || type
-  );
+  return type === WIDGETS_TO_API_TYPE_ENUM.SIGNATURE ? WIDGETS_TO_API_TYPE_ENUM.TEXT : type;
 }
 
-export default function TestFunctionDialog(props) {
+export default function TestFunctionDialog(props: TestFunctionDialogOptions) {
   const {
     width,
     isWorksheetFlow,
     appId,
     worksheetId,
     projectId,
-    control,
+    control = {},
     type,
     value,
     title,
-    controls,
+    controls = [],
     renderTag,
-    onChange,
-    onCancel,
+    onChange = () => {},
+    onCancel = () => {},
     onUpdate,
-  }: { controls: FormControl[]; value?: string | undefined; [key: string]: any } = props;
-  const codeEditorRef = useRef<any>(undefined);
+  } = props;
+  const codeEditorRef = useRef<CodeEditHandle | null>(null);
   const [expression, setExpression] = useState(value || '');
   const controlIdsInExpression = uniq((expression.match(/\$(.+?)\$/g) || []).map(id => id.slice(1, -1)));
   const [testFormValues, setTestFormValues] = useState<Record<string, unknown>>({});
@@ -187,11 +184,7 @@ export default function TestFunctionDialog(props) {
       className="testFunctionDialog contentScroll"
       footer={null}
       onCancel={() => {
-        if (codeEditorRef.current) {
-          onUpdate(codeEditorRef.current.getValue());
-        }
-
-        onUpdate(codeEditorRef.current.getValue());
+        onUpdate(codeEditorRef.current?.getValue() ?? expression);
         onCancel();
       }}
       height={720}
@@ -219,14 +212,10 @@ export default function TestFunctionDialog(props) {
               ref={codeEditorRef}
               renderTag={renderTag}
               onChange={() => {
-                setExpression(codeEditorRef.current.getValue());
+                setExpression(codeEditorRef.current?.getValue() ?? expression);
                 onChange();
               }}
-              insertTagToEditor={(...args) => {
-                if (isFunction(get(codeEditorRef, 'current.insertTag'))) {
-                  get(codeEditorRef, 'current.insertTag')(...args);
-                }
-              }}
+              insertTagToEditor={(tag, position) => codeEditorRef.current?.insertTag(tag, position)}
             />
           </EditorCon>
         </EditorConCon>
@@ -242,12 +231,13 @@ export default function TestFunctionDialog(props) {
                     pageSize: 25,
                     multiple: false,
                     worksheetId,
-                    onOk: selectedRecords => {
+                    onOk: (selectedRecords: Record<string, unknown>[]) => {
                       if (selectedRecords && selectedRecords[0]) {
                         const newFormData: Record<string, unknown> = {};
+                        const selected = selectedRecords[0];
                         controlIdsInExpression.forEach(expressionControlId => {
                           const bareId = expressionControlId.replace(/[a-zA-Z0-9]+-/, '');
-                          newFormData[expressionControlId] = selectedRecords[0][bareId];
+                          newFormData[expressionControlId] = selected[bareId];
                         });
                         setTestFormValues(newFormData);
                         setFormFlag(Math.random());
@@ -282,10 +272,12 @@ export default function TestFunctionDialog(props) {
               projectId={projectId}
               appId={appId}
               worksheetId={worksheetId}
-              onChange={data => {
-                if (data) {
-                  setTestFormValues(data.reduce((a, b) => Object.assign(a, { [b.controlId]: b.value }), {}));
+              onChange={(data: FormControl[]) => {
+                const values: Record<string, unknown> = {};
+                for (const control of data || []) {
+                  if (control.controlId) values[control.controlId] = control.value;
                 }
+                setTestFormValues(values);
               }}
             />
           </div>
@@ -332,6 +324,6 @@ TestFunctionDialog.propTypes = {
   onUpdate: PropTypes.func,
 };
 
-export function openTestFunctionDialog(props) {
+export function openTestFunctionDialog(props: TestFunctionDialogOptions) {
   return functionWrap(TestFunctionDialog, props);
 }

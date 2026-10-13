@@ -1,15 +1,15 @@
 import { Collapse } from 'antd';
-
 // import 'antd/lib/collapse/style/index.css';
-
 
 import _ from 'lodash';
 import { func, string } from 'prop-types';
 import styled from 'styled-components';
 import { SearchFn } from 'src/pages/widgetConfig/util';
-import { functionDetails, functionTypes } from '../enum';
+import { emitter } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
+import { functionDetails, functionTypes, getFunctionDescription } from '../enum';
 
-const ExpandIcon = styled.i`
+const ExpandIcon = styled.i<{ isActive?: boolean | undefined }>`
   display: inline-block;
   margin-top: -2px;
   font-size: var(--font-lg);
@@ -65,7 +65,7 @@ const Con = styled.div`
 `;
 
 // 控件不支持的函数计算类型
-const fnFilterByControl = (fnName: string, control) => {
+const fnFilterByControl = (fnName: string, control: FormControl | undefined) => {
   // 公式函数不支持当前时间
   if (fnName === 'DATENOW' && _.get(control, 'type') === 53) return false;
   return true;
@@ -77,8 +77,13 @@ const commonly = {
   functions: ['IF', 'CONCAT', 'AVERAGE', 'SUM', 'NETWORKDAY', 'DATEADD', 'DATEIF'],
 };
 
-export default function FnList(props) {
-  const { keywords, insertFn, control } = props;
+interface FnListProps {
+  keywords?: string | undefined;
+  insertFn?: ((name: string) => void) | undefined;
+  control?: FormControl | undefined;
+}
+export default function FnList({ keywords = '', insertFn = () => {}, control }: FnListProps) {
+  const events = window.emitter ?? emitter;
   const functionNames = Object.keys(functionDetails);
   let types = Object.keys(functionTypes);
 
@@ -88,20 +93,20 @@ export default function FnList(props) {
         functionNames,
         fnName =>
           fnFilterByControl(fnName, control) &&
-          functionDetails[fnName].type === type &&
-          (SearchFn(keywords, fnName) || SearchFn(keywords, functionDetails[fnName].name)),
+          getFunctionDescription(fnName)?.type === type &&
+          (SearchFn(keywords, fnName) || SearchFn(keywords, getFunctionDescription(fnName)?.name)),
       ),
     );
   }
 
   let functionListOfTypes = types.map(type => ({
-    name: functionTypes[type],
+    name: functionTypes[type] ?? '',
     type,
     functions: functionNames.filter(
       fnName =>
         fnFilterByControl(fnName, control) &&
-        functionDetails[fnName].type === type &&
-        (!keywords || SearchFn(keywords, fnName) || SearchFn(keywords, functionDetails[fnName].name)),
+        getFunctionDescription(fnName)?.type === type &&
+        (!keywords || SearchFn(keywords, fnName) || SearchFn(keywords, getFunctionDescription(fnName)?.name)),
     ),
   }));
 
@@ -132,18 +137,18 @@ export default function FnList(props) {
                 className="fnItem"
                 key={j}
                 onClick={() => {
-                  window.emitter.emit('FUNCTIONEDITOR_ACTIVE_FN', fnName);
+                  events.emit('FUNCTIONEDITOR_ACTIVE_FN', fnName);
                   insertFn(fnName);
                 }}
                 onMouseEnter={() => {
-                  window.emitter.emit('FUNCTIONEDITOR_FOCUS_FN', fnName);
+                  events.emit('FUNCTIONEDITOR_FOCUS_FN', fnName);
                 }}
                 onMouseLeave={() => {
-                  window.emitter.emit('FUNCTIONEDITOR_BLUR_FN', fnName);
+                  events.emit('FUNCTIONEDITOR_BLUR_FN', fnName);
                 }}
               >
                 <div className="fn">{fnName}</div>
-                <div className="fnName">{functionDetails[fnName].name}</div>
+                <div className="fnName">{getFunctionDescription(fnName)?.name}</div>
               </div>
             ))}
           </Collapse.Panel>

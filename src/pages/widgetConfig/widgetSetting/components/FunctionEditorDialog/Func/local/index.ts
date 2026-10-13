@@ -55,7 +55,8 @@ import lang_vi from './vi/language';
 import lang_zh_hans from './zh_hans/language';
 import lang_zh_hant from './zh_hant/language';
 
-const languageMap = {
+type LanguageTable = Readonly<Record<string, string>>;
+const languageMap: Readonly<Record<string, LanguageTable>> = {
   vi: lang_vi,
   uz: lang_uz,
   uk: lang_uk,
@@ -114,20 +115,32 @@ const languageMap = {
   af: lang_af,
 };
 
-let translate = (key, ...args) => {
+const knownLanguages = new Set<unknown>(Object.values(languageMap));
+function isLanguageTable(value: unknown): value is LanguageTable {
+  return knownLanguages.has(value);
+}
+function hostTranslation(key: string, args: unknown[]): string {
+  const result: unknown = Reflect.apply(_l, undefined, [key, ...args]);
+  if (typeof result !== 'string') throw new TypeError('Translation did not return text');
+  return result;
+}
+let translate = (key: string, ...args: unknown[]): string => {
   if (typeof _l === 'function') {
-    return _l(key, ...args);
+    return hostTranslation(key, args);
   }
 
   return formatLangValue(key, args);
 };
 
-function formatLangValue(value, args = []) {
+function formatLangValue(value: string, args: unknown[] = []) {
   let content = value;
 
   if (args.length > 0) {
     for (let i = 0; i < args.length; i++) {
-      content = content.replace(new RegExp(`%${i}`, 'g'), args[i]);
+      // Native replace also accepts callbacks; keep that protocol without claiming the raw argument's type.
+      const next: unknown = Reflect.apply(String.prototype.replace, content, [new RegExp(`%${i}`, 'g'), args[i]]);
+      if (typeof next !== 'string') throw new TypeError('Language substitution did not return text');
+      content = next;
     }
   } else if (/.*%\d{5}/.test(content)) {
     content = content.replace(/%\d{5}$/, '');
@@ -136,10 +149,10 @@ function formatLangValue(value, args = []) {
   return content.replace(/\\/g, '');
 }
 
-export function initLang(langCode) {
-  const language = languageMap[langCode];
+export function initLang(langCode: unknown) {
+  const language: unknown = Reflect.apply(Reflect.get, Reflect, [languageMap, langCode]);
 
-  if (language) {
+  if (isLanguageTable(language)) {
     translate = (key, ...args) => {
       return formatLangValue(language[key] || key, args);
     };
@@ -149,13 +162,13 @@ export function initLang(langCode) {
 
   translate = (key, ...args) => {
     if (typeof _l === 'function') {
-      return _l(key, ...args);
+      return hostTranslation(key, args);
     }
 
     return formatLangValue(key, args);
   };
 }
 
-export function getLang(key: string, ...args) {
+export function getLang(key: string, ...args: unknown[]) {
   return translate(key, ...args);
 }

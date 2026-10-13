@@ -601,6 +601,7 @@ interface Window {
   draftTotalNumInfo?: { [worksheetId: string]: number };
   /** 表单设计器 / 函数编辑器挂出来的全局事件总线（就是 src/utils/common 的 emitter） */
   emitter?: import('events').EventEmitter;
+  functionEditor?: import('../src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/editorTypes').FormulaEditorApi | undefined;
   /** 知识库上传助手的弹出窗口（window.open 的返回值） */
   uploadAssistantWindow?: Window | null;
   /** 自定义页面的重排函数：页面组件挂上去，页头切换全屏 / 收起时调它 */

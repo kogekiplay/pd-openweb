@@ -1,6 +1,5 @@
 import type { ConfigType, Dayjs } from 'dayjs';
 import type { ControlAdvancedSetting } from './controlTypes';
-import type { SubListStore } from './subListStoreTypes';
 
 /** Formatting reads only these fields; raw field payloads enter as unknown. */
 export interface FunctionControl {
@@ -13,7 +12,12 @@ export interface FunctionControl {
   sourceControl?: { advancedSetting?: ControlAdvancedSetting | undefined } | undefined;
   unit?: string | undefined;
   options?: FunctionOption[] | undefined;
-  store?: SubListStore | undefined;
+  /** Public formula calls can include opaque client state; inspect only the methods used by formatting. */
+  store?: unknown;
+}
+export interface FunctionEvaluationControl extends FunctionControl {
+  controlId?: string | undefined;
+  expression?: unknown;
 }
 export interface FunctionOption {
   key?: string | undefined;

@@ -1,7 +1,9 @@
 import { Base64 } from 'js-base64';
+import type { FunctionEvaluationControl } from 'src/utils/functionLibraryTypes';
 import exec from './exec';
+import { readFunctionLibraryParameters } from './releaseParameterBoundary';
 
-function runWithParams(control, formData, langCode) {
+function runWithParams(control: FunctionEvaluationControl, formData: FunctionEvaluationControl[], langCode: unknown) {
   if (!control.advancedSetting && control.expression) {
     try {
       control.advancedSetting = {
@@ -29,27 +31,33 @@ function runWithParams(control, formData, langCode) {
   }
 }
 
-function mobileRun(base64Str) {
-  const params = JSON.parse(Base64.decode(base64Str));
+function mobileRun(base64Str: string) {
+  const value: unknown = JSON.parse(Base64.decode(base64Str));
+  const params = readFunctionLibraryParameters(value);
   return runWithParams(params.control, params.formData, params.langCode);
 }
 
-function strRun(str) {
-  const params = JSON.parse(str);
+function strRun(str: string) {
+  const value: unknown = JSON.parse(str);
+  const params = readFunctionLibraryParameters(value);
   return runWithParams(params.control, params.formData, params.langCode);
 }
 
-function objRun(obj) {
-  return runWithParams(obj.control, obj.formData, obj.langCode);
+function objRun(obj: unknown) {
+  const params = readFunctionLibraryParameters(obj);
+  return runWithParams(params.control, params.formData, params.langCode);
 }
 
-export function run(str, type = 'mobile') {
-  if (type === 'mobile') {
-    return mobileRun(str);
-  } else if (type === 'str') {
-    return strRun(str);
-  } else if (type === 'obj') {
-    return objRun(str);
+export function run(value: unknown, type = 'mobile'): unknown {
+  try {
+    if (type === 'mobile' || type === 'str') {
+      if (typeof value !== 'string') throw new TypeError('Function wire input must be text');
+      return type === 'mobile' ? mobileRun(value) : strRun(value);
+    }
+    if (type === 'obj') return objRun(value);
+    return undefined;
+  } catch (error) {
+    console.log(error);
+    return '';
   }
-  return undefined;
 }

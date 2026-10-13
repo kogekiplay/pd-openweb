@@ -1,12 +1,13 @@
 import { lazy, Suspense, useRef } from 'react';
 import { func } from 'prop-types';
 import { Dialog, Modal } from 'ming-ui';
+import type { FunctionEditorProps } from './Func/editorTypes';
 
 const LoadableFunction = lazy(() => import('./Func'));
 
-export default function FunctionEditorDialog(props) {
+export default function FunctionEditorDialog(props: FunctionEditorProps) {
   const { onClose } = props;
-  const editor = useRef({});
+  const editor = useRef<{ handleSave?: (() => void) | undefined }>({});
   const cache = useRef<{ changed?: boolean | undefined }>({});
   let width = 960;
   let height = 600;
@@ -36,7 +37,7 @@ export default function FunctionEditorDialog(props) {
         if (cache.current.changed) {
           Dialog.confirm({
             title: _l('是否保存对函数的更改'),
-            onOk: () => editor.current.handleSave(),
+            onOk: () => editor.current.handleSave?.(),
             onCancel: onClose,
           });
         } else {

@@ -1,15 +1,16 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import type { ForwardedRef } from 'react';
 import _ from 'lodash';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'pages/widgetConfig/config/widget';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 import styled from 'styled-components';
 import { Tooltip } from 'ming-ui/antd-components';
 import { validateFnExpression } from 'src/utils/common';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { CodeEditHandle, CodeEditProps, FormulaEditorError } from '../editorTypes';
 import FunctionEditor from './FunctionEditor';
 
-const Con = styled.div`
-  padding: ${({ readOnly }) => (readOnly ? '4px 6px;' : '20px 0 0;')};
+const Con = styled.div<{ $readOnly: boolean }>`
+  padding: ${({ $readOnly }) => ($readOnly ? '4px 6px;' : '20px 0 0;')};
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -84,9 +85,9 @@ const TestButton = styled.div`
   }
 `;
 
-const Editor = styled.div`
+const Editor = styled.div<{ $readOnly: boolean }>`
   flex: 1;
-  padding: ${({ readOnly }) => (readOnly ? '0px' : '20px 0;')}
+  padding: ${({ $readOnly }) => ($readOnly ? '0px' : '20px 0;')}
   overflow: hidden;
   /* CM6：.CodeMirror → .cm-editor，内容区在 .cm-content 上 */
   .cm-editor {
@@ -125,7 +126,7 @@ const Error = styled.div`
   }
 `;
 
-function getControlDescription(type) {
+function getControlDescription(type: number | undefined) {
   let result;
 
   switch (type) {
@@ -142,7 +143,7 @@ function getControlDescription(type) {
   return result;
 }
 
-function CodeEdit(props, ref) {
+function CodeEdit(props: CodeEditProps, ref: ForwardedRef<CodeEditHandle>) {
   const {
     isWorksheetFlow,
     isCustom,
@@ -152,7 +153,7 @@ function CodeEdit(props, ref) {
     value,
     title,
     placeholder,
-    controls,
+    controls = [],
     renderTag,
     appId,
     worksheetId,
@@ -163,11 +164,11 @@ function CodeEdit(props, ref) {
     onChange = () => {},
     insertTagToEditor = () => {},
     openTestFunctionDialog = () => {},
-  }: { controls: FormControl[]; [key: string]: any } = props;
-  const cache = useRef({});
-  const [error, updateError] = useState();
+  } = props;
+  const cache = useRef<{ error?: FormulaEditorError | undefined }>({});
+  const [error, updateError] = useState<FormulaEditorError | undefined>();
 
-  const setError = error => {
+  const setError = (error: FormulaEditorError | undefined) => {
     updateError(error);
     cache.current.error = error;
   };
@@ -175,12 +176,16 @@ function CodeEdit(props, ref) {
   // const [error, setError] = useState(undefined);
   const readOnly = mode === 'read';
   const editorDomRef = useRef<HTMLDivElement>(null);
-  const editorRef = useRef<any>(undefined);
+  const editorRef = useRef<FunctionEditor | undefined>(undefined);
   const description = getControlDescription(control.type);
   useEffect(() => {
-    const handleChange = (...args) => {
-      onChange(...args);
-      let available = validateFnExpression(editorRef.current.getValue(), type);
+    let ownedEditor: FunctionEditor | undefined;
+    const handleChange = (notify = true) => {
+      const editor = editorRef.current;
+      if (!editor) return;
+      if (notify) onChange();
+      if (editorRef.current !== editor) return;
+      const available = validateFnExpression(editor.getValue(), type);
 
       if (!cache.current.error && !available) {
         setError({ text: _l('语法错误'), type: 'run' });
@@ -204,18 +209,23 @@ function CodeEdit(props, ref) {
         insertTagToEditor,
         onError: setError,
       });
+      ownedEditor = functionEditor;
       editorRef.current = window.functionEditor = functionEditor;
-      functionEditor.ready.then(() => {
-        if (editorRef.current === functionEditor) {
-          handleChange();
-        }
-      });
+      functionEditor.ready
+        ?.then(() => {
+          if (editorRef.current === functionEditor) {
+            handleChange(false);
+          }
+        })
+        .catch(() => {
+          if (editorRef.current === functionEditor) setError({ text: _l('加载失败') });
+        });
     }
 
     return () => {
-      editorRef.current?.destroy?.();
-      editorRef.current = undefined;
-      window.functionEditor = undefined;
+      ownedEditor?.destroy();
+      if (editorRef.current === ownedEditor) editorRef.current = undefined;
+      if (window.functionEditor === ownedEditor) window.functionEditor = undefined;
     };
   }, []);
   useEffect(() => {
@@ -223,21 +233,17 @@ function CodeEdit(props, ref) {
       editorRef.current.setValue(value);
     }
   }, [value]);
-  useImperativeHandle(ref, () => ({
-    insertTag: (tag, position, type) => {
-      editorRef.current.insertTag(tag, position, type);
-    },
-    insertFn: (value, position) => {
-      editorRef.current.insertFn(value, position);
-    },
-    getValue: () => editorRef.current && editorRef.current.getValue(),
-    setValue: v => editorRef.current && editorRef.current.setValue(v),
+  useImperativeHandle(ref, (): CodeEditHandle => ({
+    insertTag: (tag, position) => editorRef.current?.insertTag(tag, position),
+    insertFn: (value, position) => editorRef.current?.insertFn(value, position),
+    getValue: () => editorRef.current?.getValue() ?? value ?? '',
+    setValue: next => editorRef.current?.setValue(next),
   }));
   const subListHelpUrl = 'https://help.mingdao.com/worksheet/function-examples/#sumform';
   return (
-    <Con readOnly={readOnly} onClick={onClick}>
+    <Con $readOnly={readOnly} onClick={onClick}>
       {!readOnly && (
-        <Title ref={ref}>
+        <Title>
           <div className="controlName">
             <span className="name ellipsis">{title}</span>
             <span className="equal">=</span>
@@ -276,7 +282,7 @@ function CodeEdit(props, ref) {
                   projectId,
                   width: dialogWidth,
                   control,
-                  value: editorRef.current.getValue(),
+                  value: editorRef.current?.getValue() ?? value ?? '',
                   title,
                   controls,
                   editorRef: editorRef.current,
@@ -284,7 +290,7 @@ function CodeEdit(props, ref) {
                   onChange,
                   insertTagToEditor,
                   onUpdate: newValue => {
-                    editorRef.current.setValue(newValue);
+                    editorRef.current?.setValue(newValue);
                   },
                 });
               }}
@@ -296,7 +302,7 @@ function CodeEdit(props, ref) {
       )}
       {description && <div className="description">{description}</div>}
       {readOnly && !value && placeholder && <PlaceHolder>{placeholder}</PlaceHolder>}
-      <Editor readOnly={readOnly} ref={editorDomRef} />
+      <Editor $readOnly={readOnly} ref={editorDomRef} />
       {error && !readOnly && (
         <Error>
           <i className="icon icon-error1" />
@@ -307,7 +313,7 @@ function CodeEdit(props, ref) {
   );
 }
 
-export default forwardRef(CodeEdit);
+export default forwardRef<CodeEditHandle, CodeEditProps>(CodeEdit);
 
 CodeEdit.propTypes = {
   control: shape({}),
