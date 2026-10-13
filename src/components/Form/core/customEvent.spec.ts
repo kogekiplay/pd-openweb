@@ -323,6 +323,23 @@ function completed() {
     [{ event: true }, { event: false }],
   );
 }
+async function settleEvent() {
+  const deadline = Date.now() + 2000;
+  while (
+    !trace.some(
+      item =>
+        item.kind === 'loading' &&
+        item.value !== null &&
+        typeof item.value === 'object' &&
+        'event' in item.value &&
+        item.value.event === false,
+    )
+  ) {
+    assert.ok(Date.now() < deadline, 'Custom event did not report completion within 2 seconds');
+    await new Promise(resolve => setTimeout(resolve, 1));
+  }
+  completed();
+}
 async function run() {
   const pending = deferred<unknown>();
   apiReply = () => pending.promise;
@@ -333,8 +350,7 @@ async function run() {
     ['loading', 'api'],
   );
   pending.resolve({ apiQueryData: { field: 'assigned' } });
-  await settle();
-  completed();
+  await settleEvent();
   assert.deepEqual(
     trace.map(item => item.kind),
     ['loading', 'api', 'change', 'alert', 'loading'],
@@ -348,33 +364,28 @@ async function run() {
     trace.length = 0;
     apiReply = () => Promise.reject(failure);
     engine.dealCustomEvent(props([apiAction, message]));
-    await settle();
-    completed();
+    await settleEvent();
     assert.equal(trace.filter(item => item.kind === 'change' || item.kind === 'alert').length, 0);
   }
   trace.length = 0;
   apiReply = () => Promise.resolve({ code: 20008 });
   engine.dealCustomEvent(props([apiAction]));
-  await settle();
-  completed();
+  await settleEvent();
   assert.equal(trace.filter(item => item.kind === 'upgrade').length, 1);
   trace.length = 0;
   apiReply = () => Promise.resolve({ message: 'backend refused' });
   engine.dealCustomEvent(props([apiAction]));
-  await settle();
-  completed();
+  await settleEvent();
   assert.equal(trace.filter(item => item.kind === 'change').length, 0);
   trace.length = 0;
   engine.dealCustomEvent(props([{ actionType: 'unsupported' }]));
-  await settle();
-  completed();
+  await settleEvent();
   trace.length = 0;
   functionResult = 'false';
   engine.dealCustomEvent(
     props([message], [{ valueType: '4', spliceType: '1', advancedSetting: { defaultfunc: '{"expression":"false"}' } }]),
   );
-  await settle();
-  completed();
+  await settleEvent();
   assert.equal(trace.filter(item => item.kind === 'alert').length, 0);
   trace.length = 0;
   engine.dealCustomEvent(
@@ -412,8 +423,7 @@ async function run() {
   engine.dealCustomEvent(
     props([{ actionType: '14', advancedSetting: { dynamicsrc: '{"id":"query"}' } }], [], { searchConfig: [query] }),
   );
-  await settle();
-  completed();
+  await settleEvent();
   assert.deepEqual(trace.find(item => item.kind === 'change')?.value, { value: 'found', cid: 'field' });
   const queryArgs = trace.find(item => item.kind === 'query')?.value as {
     worksheetId: string;
@@ -438,8 +448,7 @@ async function run() {
   engine.dealCustomEvent(
     props([{ actionType: '14', advancedSetting: { dynamicsrc: '{"id":"query"}' } }], [], { searchConfig: [query] }),
   );
-  await settle();
-  completed();
+  await settleEvent();
   assert.deepEqual(
     (trace.find(item => item.kind === 'query')?.value as { filterControls: unknown[] }).filterControls,
     [],
@@ -449,8 +458,7 @@ async function run() {
   engine.dealCustomEvent(
     props([{ actionType: '14', advancedSetting: { dynamicsrc: '{"id":"query"}' } }], [], { searchConfig: [query] }),
   );
-  await settle();
-  completed();
+  await settleEvent();
   assert.equal(
     trace.filter(item => item.kind === 'query').length,
     0,
@@ -462,20 +470,17 @@ async function run() {
   engine.dealCustomEvent(
     props([{ actionType: '14', advancedSetting: { dynamicsrc: '{"id":"query"}' } }], [], { searchConfig: [query] }),
   );
-  await settle();
-  completed();
+  await settleEvent();
   assert.equal(trace.filter(item => item.kind === 'change').length, 0, 'Invalid row data cannot clear a valid field');
   trace.length = 0;
   engine.dealCustomEvent(
     props([{ actionType: '14', advancedSetting: { dynamicsrc: '{}' } }], [], { searchConfig: [query] }),
   );
-  await settle();
-  completed();
+  await settleEvent();
   assert.equal(trace.filter(item => item.kind === 'query').length, 0);
   trace.length = 0;
   engine.dealCustomEvent(props([{ actionType: '5', actionItems: [{ type: '0', value: '[]' }] }]));
-  await settle();
-  completed();
+  await settleEvent();
   assert.equal(trace.filter(item => item.kind === 'change').length, 0);
   const relation: FormControl = { controlId: 'relation', type: 29, value: '[{"sid":"old"}]' };
   trace.length = 0;
@@ -484,21 +489,18 @@ async function run() {
       formData: [relation],
     }),
   );
-  await settle();
-  completed();
+  await settleEvent();
   assert.deepEqual(relation.keepShowRowIds, ['old']);
   assert.equal((trace.find(item => item.kind === 'change')?.value as { value: string }).value, 'deleteRowIds: all');
   trace.length = 0;
   dynamicResult = { rowid: 'not-a-link' };
   engine.dealCustomEvent(props([{ actionType: '11', message: '[{"staticValue":"url"}]' }]));
-  await settle();
-  completed();
+  await settleEvent();
   assert.equal(trace.filter(item => item.kind === 'open').length, 0);
   dynamicResult = undefined;
   trace.length = 0;
   engine.dealCustomEvent(props([{ actionType: '11', message: '[{"staticValue":"https://example.test"}]' }]));
-  await settle();
-  completed();
+  await settleEvent();
   assert.equal(trace.find(item => item.kind === 'open')?.value, 'https://example.test');
   trace.length = 0;
   const creating = deferred<unknown>();
@@ -546,8 +548,7 @@ async function run() {
       { formData: [placeholder], setErrorItems: errors => trace.push({ kind: 'errors', value: errors }) },
     ),
   );
-  await settle();
-  completed();
+  await settleEvent();
   assert.equal(placeholder.eventPermissions, undefined, 'Missing target ID cannot change a placeholder permission');
   assert.deepEqual(trace.find(item => item.kind === 'errors')?.value, []);
   assert.equal(trace.filter(item => item.kind === 'refresh').length, 0);
@@ -559,8 +560,7 @@ async function run() {
       ],
     }),
   );
-  await settle();
-  completed();
+  await settleEvent();
   assert.equal(
     trace.filter(item => item.kind === 'query' || item.kind === 'alert').length,
     0,
