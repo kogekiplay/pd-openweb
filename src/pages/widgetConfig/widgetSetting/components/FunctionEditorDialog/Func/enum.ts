@@ -3,41 +3,52 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import isBetween from 'dayjs/plugin/isBetween';
 import _ from 'lodash';
 import { calcDate, countChar } from 'src/utils/function-library';
+import { functionNumeric } from 'src/utils/functionLibraryBoundary';
 import { getLang } from './local';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(isBetween);
 
-function newDate(dateStr) {
+function newDate(dateStr: dayjs.ConfigType) {
   return new Date(dayjs(dateStr || undefined).valueOf());
 }
 
-function isDateStr(str) {
+function isDateStr(str: dayjs.ConfigType) {
   return newDate(str).toString() !== 'Invalid Date';
 }
 
-function checkIsTime(str) {
-  return /^\w\w:\w\w(:\w\w)?$/.test(str);
+function checkIsTime(str: dayjs.ConfigType): str is string {
+  return typeof str === 'string' && /^\w\w:\w\w(:\w\w)?$/.test(str);
 }
 
-function completeTime(str) {
+function completeTime(str: dayjs.ConfigType) {
   return checkIsTime(str) ? dayjs(str, countChar(str, ':') === 2 ? 'HH:mm:ss' : 'HH:mm').format() : str;
 }
 
-function endTimeIsBeforeStartTime(start, end) {
+function endTimeIsBeforeStartTime(start: dayjs.ConfigType, end: dayjs.ConfigType) {
   start = dayjs(start).set('y', 2000).set('M', 1).set('D', 1);
   end = dayjs(end).set('y', 2000).set('M', 1).set('D', 1);
   return end.isBefore(start);
 }
 
 /** FIND / FINDA 分隔符按字面量匹配，需转义正则元字符（含 . 否则会被当作“任意字符”） */
-function escapeRegExpForFind(str) {
+function escapeRegExpForFind(str: unknown) {
   return String(str || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function formulaProperty(value: unknown, key: PropertyKey): unknown {
+  if (value === null || value === undefined) throw new TypeError('Cannot read a property of an empty formula value');
+  return Reflect.get(Object(value), key);
 }
 
 export const functions = {
   // 两个日期间的工作日
-  NETWORKDAY: function (start, end, excludeDate = [], workDays = [1, 2, 3, 4, 5]) {
+  NETWORKDAY: function (
+    start: dayjs.ConfigType,
+    end: dayjs.ConfigType,
+    excludeDate: dayjs.ConfigType[] = [],
+    workDays: number[] = [1, 2, 3, 4, 5],
+  ) {
     if (!start || !end) {
       return 0;
     }
@@ -99,42 +110,42 @@ export const functions = {
     return endIsBeforeStart ? -1 * result : result;
   },
   // 返回分钟数
-  MINUTE: function (dateStr) {
+  MINUTE: function (dateStr: dayjs.ConfigType) {
     const minute = newDate(completeTime(dateStr)).getMinutes();
     return _.isNumber(minute) && !_.isNaN(minute) ? minute : undefined;
   },
   // 返回小时数
-  HOUR: function (dateStr) {
+  HOUR: function (dateStr: dayjs.ConfigType) {
     const hour = newDate(completeTime(dateStr)).getHours();
     return _.isNumber(hour) && !_.isNaN(hour) ? hour : undefined;
   },
   // 返回星期数
-  WEEKDAY: function (dateStr) {
+  WEEKDAY: function (dateStr: dayjs.ConfigType) {
     if (_.isEmpty(dateStr)) return '';
     let weekday = newDate(dateStr).getDay();
     weekday = weekday === 0 ? 7 : weekday;
     return _.isNumber(weekday) && !_.isNaN(weekday) ? weekday : '';
   },
   // 返回天数
-  DAY: function (dateStr) {
+  DAY: function (dateStr: dayjs.ConfigType) {
     if (_.isEmpty(dateStr)) return '';
     const date = newDate(dateStr).getDate();
     return _.isNumber(date) && !_.isNaN(date) ? date : undefined;
   },
   // 返回月份
-  MONTH: function (dateStr) {
+  MONTH: function (dateStr: dayjs.ConfigType) {
     if (_.isEmpty(dateStr)) return '';
     const month = newDate(dateStr).getMonth() + 1;
     return _.isNumber(month) && !_.isNaN(month) ? month : undefined;
   },
   // 返回年份
-  YEAR: function (dateStr) {
+  YEAR: function (dateStr: dayjs.ConfigType) {
     if (_.isEmpty(dateStr)) return '';
     const year = newDate(dateStr).getFullYear();
     return _.isNumber(year) && !_.isNaN(year) ? year : undefined;
   },
   // 为日期加减时间
-  DATEADD: function (date, expression, format = 1) {
+  DATEADD: function (date: dayjs.ConfigType, expression: string, format = 1) {
     expression = expression.replace(/\+\(undefined\)/g, '').replace(/\((\d+)\)/, (_$0, $1) => $1);
     expression = expression.replace(/\w\w:\w\w:\w\w/g, timeStr => {
       const [h, m, s] = dayjs(timeStr, 'HH:mm:ss').format('HH:mm:ss').split(':').map(Number);
@@ -146,7 +157,7 @@ export const functions = {
     return result && result.format(isTime ? 'HH:mm:ss' : format === 1 ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss');
   },
   // 两个日期间的时长
-  DATEIF: function (begin, end, type = 1, unit = 'd') {
+  DATEIF: function (begin: dayjs.ConfigType, end: dayjs.ConfigType, type = 1, unit = 'd') {
     begin = completeTime(begin);
     end = completeTime(end);
     // 开始/结束为空时返回空、而非抛错（与 WORKDAY / WEEKNUM 等空值提前 return 的约定一致）：
@@ -166,33 +177,31 @@ export const functions = {
       throw new Error(getLang('结束日期不是日期类型'));
     }
 
-    if (!/^[YyMdhm]$/.test(unit)) {
+    if (unit !== 'Y' && unit !== 'y' && unit !== 'M' && unit !== 'd' && unit !== 'h' && unit !== 'm') {
       throw new Error(getLang('单位不合法'));
     }
 
-    if (unit === 'Y') {
-      unit = 'y';
-    }
+    const diffUnit = unit === 'Y' ? 'y' : unit;
 
     if (String(type) === '1') {
-      if (/^\d{4}(-\d{2}){2}$/.test(begin)) {
+      if (/^\d{4}(-\d{2}){2}$/.test(String(begin))) {
         begin = dayjs(begin).startOf('day');
       }
 
-      if (/^\d{4}(-\d{2}){2}$/.test(end)) {
+      if (/^\d{4}(-\d{2}){2}$/.test(String(end))) {
         end = dayjs(end).startOf('day');
       }
     } else {
-      if (/^\d{4}(-\d{2}){2}$/.test(begin)) {
+      if (/^\d{4}(-\d{2}){2}$/.test(String(begin))) {
         begin = dayjs(begin).startOf('day');
       }
 
-      if (/^\d{4}(-\d{2}){2}$/.test(end)) {
+      if (/^\d{4}(-\d{2}){2}$/.test(String(end))) {
         end = dayjs(end).add(1, 'day').startOf('day');
       }
     }
 
-    const result = dayjs(end).diff(begin, unit);
+    const result = dayjs(end).diff(begin, diffUnit);
     return (
       result +
       ({
@@ -201,19 +210,19 @@ export const functions = {
         d: getLang('天%04021'),
         h: getLang('时%04022'),
         m: getLang('分%04023'),
-      }[unit] || '')
+      }[diffUnit] || '')
     );
   },
   DATENOW: function () {
     return dayjs().format('YYYY-MM-DD HH:mm:ss');
   },
   // 计对象数量
-  COUNTARRAY: function (values) {
+  COUNTARRAY: function (values: unknown) {
     if (typeof values === 'string' && _.isNumber(+values) && !_.isNaN(+values)) {
       return values;
     }
 
-    return values ? values.length : 0;
+    return values ? formulaProperty(values, 'length') : 0;
   },
   // 计算赋分值
   // SCORE: function (values) {
@@ -233,9 +242,9 @@ export const functions = {
   // // 条件计数
   // COUNTIF: function () {},
   // 返回随机数
-  RANDBETWEEN: function (begin, end) {
-    begin = Math.round(Number(begin));
-    end = Math.round(Number(end));
+  RANDBETWEEN: function (beginInput: unknown, endInput: unknown) {
+    const begin = Math.round(Number(beginInput));
+    const end = Math.round(Number(endInput));
     if (!_.isNumber(begin) || _.isNaN(end)) {
       throw new Error(getLang('开始位置不是数字'));
     }
@@ -247,8 +256,8 @@ export const functions = {
     return begin + Math.floor(Math.random() * (end - begin + 1));
   },
   // 向下舍入
-  ROUNDDOWN: function (number, precision = 0) {
-    number = Number(number);
+  ROUNDDOWN: function (numberInput: unknown, precision = 0) {
+    const number = Number(numberInput);
     precision = Number(precision);
     if (!_.isNumber(number) || _.isNaN(number)) {
       throw new Error(getLang('参数不是数字'));
@@ -261,8 +270,8 @@ export const functions = {
     return _.floor(parseFloat(number.toPrecision(15)), precision);
   },
   // 向上舍入
-  ROUNDUP: function (number, precision = 0) {
-    number = Number(number);
+  ROUNDUP: function (numberInput: unknown, precision = 0) {
+    const number = Number(numberInput);
     precision = Number(precision);
     if (!_.isNumber(number) || _.isNaN(number)) {
       throw new Error(getLang('参数不是数字'));
@@ -275,8 +284,8 @@ export const functions = {
     return _.ceil(parseFloat(number.toPrecision(15)), precision);
   },
   // 四舍五入
-  ROUND: function (number, precision = 0) {
-    number = Number(number);
+  ROUND: function (numberInput: unknown, precision = 0) {
+    const number = Number(numberInput);
     precision = Number(precision);
     if (!_.isNumber(number) || _.isNaN(number)) {
       throw new Error(getLang('参数不是数字'));
@@ -290,9 +299,9 @@ export const functions = {
     return Math.round(number * factor) / factor;
   },
   // 按指定倍数向上舍入
-  CEILING: function (number, significance) {
-    number = Number(number);
-    significance = Number(significance);
+  CEILING: function (numberInput: unknown, significanceInput: unknown) {
+    const number = Number(numberInput);
+    const significance = Number(significanceInput);
     if (!_.isNumber(number) || _.isNaN(number)) {
       throw new Error(getLang('参数不是数字'));
     }
@@ -308,9 +317,9 @@ export const functions = {
     return Math.ceil(number / significance) * significance;
   },
   // 按指定倍数向下舍入
-  FLOOR: function (number, significance) {
-    number = Number(number);
-    significance = Number(significance);
+  FLOOR: function (numberInput: unknown, significanceInput: unknown) {
+    const number = Number(numberInput);
+    const significance = Number(significanceInput);
     if (!_.isNumber(number) || _.isNaN(number)) {
       throw new Error(getLang('参数不是数字'));
     }
@@ -326,13 +335,13 @@ export const functions = {
     return Math.floor(number / significance) * significance;
   },
   // 求余
-  MOD: function (number, divisor) {
-    if (typeof number === 'undefined') {
+  MOD: function (numberInput: unknown, divisorInput: unknown) {
+    if (typeof numberInput === 'undefined') {
       return undefined;
     }
 
-    number = Number(number);
-    divisor = Number(divisor);
+    const number = Number(numberInput);
+    const divisor = Number(divisorInput);
     if (!_.isNumber(number) || _.isNaN(number)) {
       throw new Error(getLang('被除数不是数字'));
     }
@@ -365,8 +374,8 @@ export const functions = {
     return number % divisor;
   },
   // 求整
-  INT: function (value) {
-    value = Number(value);
+  INT: function (input: unknown) {
+    const value = Number(input);
     if (!_.isNumber(value) || _.isNaN(value)) {
       throw new Error(getLang('参数不是数字'));
     }
@@ -374,8 +383,8 @@ export const functions = {
     return Math.floor(value);
   },
   // 绝对值
-  ABS: function (value) {
-    value = Number(value);
+  ABS: function (input: unknown) {
+    const value = Number(input);
     if (!_.isNumber(value) || _.isNaN(value)) {
       throw new Error(getLang('参数不是数字'));
     }
@@ -383,14 +392,14 @@ export const functions = {
     return Math.abs(value);
   },
   // 计数
-  COUNTA: function (...array) {
+  COUNTA: function (...array: unknown[]) {
     return array.filter(
       item =>
         typeof item !== 'undefined' && String(item).trim() !== '' && item !== null && !_.isNaN(item) && item !== false,
     ).length;
   },
   // 计空值数
-  COUNTBLANK: function (...array) {
+  COUNTBLANK: function (...array: unknown[]) {
     return array.filter(
       item =>
         !(
@@ -403,34 +412,34 @@ export const functions = {
     ).length;
   },
   // 乘积
-  PRODUCT: function (...args) {
-    args = args.map(d => Number(d));
+  PRODUCT: function (...input: unknown[]) {
+    const args = input.map(d => Number(d));
     if (_.some(args, d => !_.isNumber(d) || _.isNaN(d))) {
-      return;
+      return undefined;
     }
 
     return args.reduce((a, b) => a * b);
   },
   // 最大值
-  MAX: function (...args) {
+  MAX: function (...args: unknown[]) {
     args = args.filter(a => !(_.isUndefined(a) || String(a).trim() === ''));
     if (!args.length) {
       return 0;
     }
 
-    return Math.max(...args);
+    return Math.max(...args.map(functionNumeric));
   },
   // 最小值
-  MIN: function (...args) {
+  MIN: function (...args: unknown[]) {
     args = args.filter(a => !(_.isUndefined(a) || String(a).trim() === ''));
     if (!args.length) {
       return 0;
     }
 
-    return Math.min(...args);
+    return Math.min(...args.map(functionNumeric));
   },
   // 平均值
-  AVERAGE: function (...args) {
+  AVERAGE: function (...args: unknown[]) {
     args = args.filter(a => !(_.isUndefined(a) || String(a).trim() === ''));
     if (!args.length) {
       return 0;
@@ -439,7 +448,7 @@ export const functions = {
     return _.sum(args.map(Number)) / args.length;
   },
   // 求和
-  SUM: function (...args) {
+  SUM: function (...args: unknown[]) {
     args = args.map(item => (_.isUndefined(item) ? 0 : item));
     if (!args.length) {
       throw new Error(getLang('没有参数'));
@@ -448,19 +457,19 @@ export const functions = {
     return _.sum(args.map(Number));
   },
   // 转为数值
-  NUMBER: function (value) {
+  NUMBER: function (value: unknown) {
     return Number(Number(value).toFixed(14));
   },
   // 求幂
-  POWER: function (base, exponent) {
-    return Math.pow(base, exponent);
+  POWER: function (base: unknown, exponent: unknown) {
+    return Math.pow(functionNumeric(base), functionNumeric(exponent));
   },
   // 求对数
-  LOG: function (logarithm, base) {
-    return Math.log(logarithm) / Math.log(base);
+  LOG: function (logarithm: unknown, base: unknown) {
+    return Math.log(functionNumeric(logarithm)) / Math.log(functionNumeric(base));
   },
   // 替换文本
-  REPLACE: function (text, begin = 1, length = 0, newText = '') {
+  REPLACE: function (text: string | undefined, begin = 1, length = 0, newText = '') {
     if (typeof text === 'undefined') {
       throw new Error('REPLACE: text is undefined');
     }
@@ -516,7 +525,7 @@ export const functions = {
     return String(str).toLowerCase();
   },
   // 合并文本
-  CONCAT: function (...args) {
+  CONCAT: function (...args: unknown[]) {
     let result = '';
     args = args.filter(a => !_.isUndefined(a) && !_.isNull(a)).map(String);
     while (args.length) {
@@ -526,17 +535,17 @@ export const functions = {
     return result;
   },
   // 强制转文本
-  STRING: function (value) {
+  STRING: function (value: unknown) {
     if (_.isArray(value)) {
       return value
-        .map(item => {
-          let str = '';
+        .map((item: unknown) => {
+          let str: unknown = '';
 
           try {
             if (typeof item === 'string') {
               str = item;
             } else if (typeof item === 'object') {
-              str = item.text || '';
+              str = formulaProperty(item, 'text') || '';
             }
           } catch (err) {
             console.log(err);
@@ -550,28 +559,28 @@ export const functions = {
     return String(typeof value === 'undefined' ? '' : value);
   },
   // 删除空格
-  TRIM: function (value) {
+  TRIM: function (value: unknown) {
     return String(value || '').trim();
   },
   // 删除所有空格
-  CLEAN: function (value) {
+  CLEAN: function (value: unknown) {
     return String(value || '').replace(/ /g, '');
   },
   // 条件语句
-  IF: function (expression, trueResult, falseResult) {
+  IF: function (expression: unknown, trueResult: unknown, falseResult: unknown) {
     return expression ? trueResult : falseResult;
   },
   // 求或
-  OR: function (...args) {
-    return _.some(args.map(e => eval(e)));
+  OR: function (...args: unknown[]) {
+    return _.some(args.map(e => (typeof e === 'string' ? eval(e) : e)));
   },
   // 求同
-  AND: function (...args) {
-    return _.every(args.map(e => eval(e)));
+  AND: function (...args: unknown[]) {
+    return _.every(args.map(e => (typeof e === 'string' ? eval(e) : e)));
   },
   // 求反
-  NOT: function (expression) {
-    return !eval(expression);
+  NOT: function (expression: unknown) {
+    return !(typeof expression === 'string' ? eval(expression) : expression);
   },
   // 返回false
   FALSE: function () {
@@ -582,40 +591,40 @@ export const functions = {
     return true;
   },
   // 是否为空
-  ISBLANK: function (value) {
+  ISBLANK: function (value: unknown) {
     return typeof value === 'undefined' || value === null || value === '' || value === '[]' || _.isEqual(value, []);
   },
   // 高级函数
-  ENCODEURI: function (value) {
+  ENCODEURI: function (value: unknown) {
     return encodeURI(String(value || ''));
   },
-  DECODEURI: function (value) {
+  DECODEURI: function (value: unknown) {
     return decodeURI(String(value || ''));
   },
-  ENCODEURICOMPONENT: function (value) {
+  ENCODEURICOMPONENT: function (value: unknown) {
     return encodeURIComponent(String(value || ''));
   },
-  DECODEURICOMPONENT: function (value) {
+  DECODEURICOMPONENT: function (value: unknown) {
     return decodeURIComponent(String(value || ''));
   },
   // 计算经纬度坐标距离
-  DISTANCE: function (location1, location2) {
-    let lon1, lat1, lon2, lat2;
+  DISTANCE: function (location1: unknown, location2: unknown) {
+    let lon1: unknown, lat1: unknown, lon2: unknown, lat2: unknown;
 
     if (_.isObject(location1)) {
-      lon1 = location1.x;
-      lat1 = location1.y;
+      lon1 = Reflect.get(location1, 'x');
+      lat1 = Reflect.get(location1, 'y');
     } else if (typeof location1 === 'string' && /^\d+(\.\d+)?,\d+(\.\d+)?$/.test(location1)) {
-      lon1 = parseFloat(location1.split(',')[0]);
-      lat1 = parseFloat(location1.split(',')[1]);
+      lon1 = parseFloat(location1.split(',')[0] ?? '');
+      lat1 = parseFloat(location1.split(',')[1] ?? '');
     }
 
     if (_.isObject(location2)) {
-      lon2 = location2.x;
-      lat2 = location2.y;
+      lon2 = Reflect.get(location2, 'x');
+      lat2 = Reflect.get(location2, 'y');
     } else if (typeof location2 === 'string' && /^\d+(\.\d+)?,\d+(\.\d+)?$/.test(location2)) {
-      lon2 = parseFloat(location2.split(',')[0]);
-      lat2 = parseFloat(location2.split(',')[1]);
+      lon2 = parseFloat(location2.split(',')[0] ?? '');
+      lat2 = parseFloat(location2.split(',')[1] ?? '');
     }
 
     if (!(lon1 && lat1 && lon2 && lat2)) {
@@ -625,9 +634,9 @@ export const functions = {
     if (lat1 === lat2 && lon1 === lon2) {
       return 0;
     } else {
-      var radlat1 = (Math.PI * lat1) / 180;
-      var radlat2 = (Math.PI * lat2) / 180;
-      var theta = lon1 - lon2;
+      var radlat1 = (Math.PI * functionNumeric(lat1)) / 180;
+      var radlat2 = (Math.PI * functionNumeric(lat2)) / 180;
+      var theta = functionNumeric(lon1) - functionNumeric(lon2);
       var radtheta = (Math.PI * theta) / 180;
       var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
       if (dist > 1) {
@@ -641,7 +650,7 @@ export const functions = {
     }
   },
   // 查找单个文本
-  FIND: function (text = '', start, end) {
+  FIND: function (text = '', start: unknown, end: unknown) {
     if (start) {
       start = escapeRegExpForFind(start);
     }
@@ -661,7 +670,7 @@ export const functions = {
     }
   },
   // 查找多个文本
-  FINDA: function (text = '', start, end) {
+  FINDA: function (text = '', start: unknown, end: unknown) {
     if (!start || !end) {
       return [];
     }
@@ -687,24 +696,24 @@ export const functions = {
   SPLIT: function (text = '', splitter = '') {
     return text.split(splitter);
   },
-  JOIN: function (list = [], splitter = '') {
+  JOIN: function (list: unknown[] = [], splitter = '') {
     return list.join(splitter);
   },
-  INCLUDE: function (value, matchStr) {
+  INCLUDE: function (value: unknown, matchStr: string) {
     if (!value || !matchStr) {
       return undefined;
     }
 
     return String(value).indexOf(matchStr) > -1;
   },
-  GETPOSITION: function (value: Record<string, any> = {}, key) {
+  GETPOSITION: function (value: Record<string, unknown> = {}, key: string) {
     if (key === 'x,y') {
-      return value.x && value.y ? `${value.x},${value.y}` : '';
+      return value['x'] && value['y'] ? `${value['x']},${value['y']}` : '';
     }
 
     return value[key] || '';
   },
-  COUNTCHAR: function (value) {
+  COUNTCHAR: function (value: unknown) {
     return String(value ?? '').replace(/(\r\n|\n)/g, '').length;
   },
   // 圆周率
@@ -712,63 +721,63 @@ export const functions = {
     return Math.PI;
   },
   // 角度转弧度
-  RADIANS: function (value) {
-    value = Number(value);
+  RADIANS: function (input: unknown) {
+    const value = Number(input);
     return (value * Math.PI) / 180;
   },
   // 弧度转角度
-  DEGREES: function (value) {
-    value = Number(value);
+  DEGREES: function (input: unknown) {
+    const value = Number(input);
     return (value * 180) / Math.PI;
   },
   // 正弦
-  SIN: function (value) {
-    value = Number(value);
+  SIN: function (input: unknown) {
+    const value = Number(input);
     return Math.sin(value);
   },
   // 余弦
-  COS: function (value) {
-    value = Number(value);
+  COS: function (input: unknown) {
+    const value = Number(input);
     return Math.cos(value);
   },
   // 正切
-  TAN: function (value) {
-    value = Number(value);
+  TAN: function (input: unknown) {
+    const value = Number(input);
     return Math.tan(value);
   },
   // 反正切
-  COT: function (value) {
-    value = Number(value);
+  COT: function (input: unknown) {
+    const value = Number(input);
     return 1 / Math.tan(value);
   },
   // 反正弦
-  ASIN: function (value) {
-    value = Number(value);
+  ASIN: function (input: unknown) {
+    const value = Number(input);
     return Math.asin(value);
   },
   // 反余弦
-  ACOS: function (value) {
-    value = Number(value);
+  ACOS: function (input: unknown) {
+    const value = Number(input);
     return Math.acos(value);
   },
   // 反正切
-  ATAN: function (value) {
-    value = Number(value);
+  ATAN: function (input: unknown) {
+    const value = Number(input);
     return Math.atan(value);
   },
   // 反余切
-  ACOT: function (value) {
-    value = Number(value);
+  ACOT: function (input: unknown) {
+    const value = Number(input);
     return Math.atan(1 / value);
   },
   // 内容替换函数
-  SUBSTITUTE: function (value, matchStr, replaceStr, position) {
-    value = String(value);
-    matchStr = String(matchStr);
-    replaceStr = String(replaceStr);
+  SUBSTITUTE: function (valueInput: unknown, matchInput: unknown, replacementInput: unknown, position: unknown) {
+    const value = String(valueInput);
+    const matchStr = String(matchInput);
+    const replaceStr = String(replacementInput);
 
     // 转义正则表达式特殊字符
-    const escapeRegExp = str => {
+    const escapeRegExp = (str: string) => {
       return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     };
 
@@ -779,22 +788,22 @@ export const functions = {
       return value.replace(new RegExp(escapedMatchStr, 'g'), replaceStr);
     }
 
-    position = Number(position);
+    const positionIndex = Number(position);
 
     // 如果位置不是有效数字，直接返回原字符串
-    if (isNaN(position) || position <= 0) {
+    if (isNaN(positionIndex) || positionIndex <= 0) {
       return value;
     }
 
     let occurrencesFound = 0;
     const result = value.replace(new RegExp(escapedMatchStr, 'g'), match => {
       occurrencesFound++;
-      return occurrencesFound === position ? replaceStr : match;
+      return occurrencesFound === positionIndex ? replaceStr : match;
     });
 
     return result;
   },
-  IFS: function (...conditions) {
+  IFS: function (...conditions: unknown[]) {
     for (let i = 0; i < conditions.length; i += 2) {
       const condition = conditions[i];
       const value = conditions[i + 1];
@@ -807,7 +816,7 @@ export const functions = {
     return null;
   },
   // 工作日计算函数
-  WORKDAY: function (start_date, days, holidays = []) {
+  WORKDAY: function (start_date: dayjs.ConfigType, daysInput: unknown, holidays: dayjs.ConfigType[] = []) {
     if (!start_date) {
       return undefined;
     }
@@ -816,7 +825,7 @@ export const functions = {
       throw new Error(getLang('开始日期不是日期类型'));
     }
 
-    days = Number(days);
+    const days = Number(daysInput);
     if (isNaN(days)) {
       throw new Error(getLang('天数必须是数字'));
     }
@@ -839,7 +848,12 @@ export const functions = {
     return result.format('YYYY-MM-DD');
   },
   // 工作日计算函数（支持自定义周末）
-  WORKDAY_INTL: function (start_date, days, weekend = 1, holidays = []) {
+  WORKDAY_INTL: function (
+    start_date: dayjs.ConfigType,
+    daysInput: unknown,
+    weekend = 1,
+    holidays: dayjs.ConfigType[] = [],
+  ) {
     if (!start_date) {
       return undefined;
     }
@@ -848,13 +862,13 @@ export const functions = {
       throw new Error(getLang('开始日期不是日期类型'));
     }
 
-    days = Number(days);
+    const days = Number(daysInput);
     if (isNaN(days)) {
       throw new Error(getLang('天数必须是数字'));
     }
 
     // 定义周末设置
-    let weekendDays = [];
+    let weekendDays: number[] = [];
 
     if (weekend === 1 || weekend === undefined) {
       weekendDays = [0, 6]; // 周六、周日
@@ -905,7 +919,7 @@ export const functions = {
   },
 
   // 周数计算函数
-  WEEKNUM: function (date, return_type = 1) {
+  WEEKNUM: function (date: dayjs.ConfigType, return_type = 1) {
     if (!date) {
       return undefined;
     }
@@ -956,17 +970,14 @@ export const functions = {
   },
 
   // 字符串反转函数
-  STRREVERSE: function (text) {
-    if (typeof text !== 'string') {
-      text = String(text || '');
-    }
-
-    return text.split('').reverse().join('');
+  STRREVERSE: function (text: unknown) {
+    const value = typeof text === 'string' ? text : String(text || '');
+    return value.split('').reverse().join('');
   },
 
   // 标准正态分布累积函数
-  NORM_S_DIST: function (z, cumulative = true) {
-    z = Number(z);
+  NORM_S_DIST: function (input: unknown, cumulative = true) {
+    const z = Number(input);
     if (!_.isNumber(z) || _.isNaN(z)) {
       throw new Error(getLang('参数不是数字'));
     }
@@ -994,9 +1005,9 @@ export const functions = {
   },
 
   // 排列组合函数
-  PERMUT: function (number, number_chosen) {
-    number = Number(number);
-    number_chosen = Number(number_chosen);
+  PERMUT: function (totalInput: unknown, chosenInput: unknown) {
+    const number = Number(totalInput);
+    const number_chosen = Number(chosenInput);
 
     if (!_.isNumber(number) || _.isNaN(number) || number < 0 || !Number.isInteger(number)) {
       throw new Error(getLang('总对象数必须是非负整数'));
@@ -1021,9 +1032,9 @@ export const functions = {
   },
 
   // 组合数计算函数
-  COMBIN: function (number, number_chosen) {
-    number = Number(number);
-    number_chosen = Number(number_chosen);
+  COMBIN: function (totalInput: unknown, chosenInput: unknown) {
+    const number = Number(totalInput);
+    let number_chosen = Number(chosenInput);
 
     if (!_.isNumber(number) || _.isNaN(number) || number < 0 || !Number.isInteger(number)) {
       throw new Error(getLang('总对象数必须是非负整数'));
@@ -1822,7 +1833,7 @@ const functionDetailsMap = {
 
 export const functionDetails = _.pick(
   functionDetailsMap,
-  _.uniqBy(
+  _.uniq(
     [
       // 对方法进行排序
       /** 数学 */
