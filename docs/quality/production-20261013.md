@@ -1,5 +1,17 @@
 # 生产前端更新记录：2026-10-13
 
+## 16:46 公式编辑器日常发布
+
+上海时间 16:46:25 将已验证 GitHub main `ec1b4e67c6750cd63ec9b4fbc952d63eca6b2725` 发布到生产，入口 SHA256 为 `a41276dcb69314617aa4c6002b1aadda87c3b4863560b4dbe171c9266b4febd6`。前版 `99f47e7c2` 保留于 `/usr/local/MDPrivateDeployment/www-prev-20261013-ec1b4e67c6`，其入口 SHA 与发布前相同。全部旧 chunk、50x.html 和既有回滚目录保留，厂商 `/pm/freestyle.js`、`/pm/freestyle.css` 网络请求均 HTTP 200。
+
+源码通过 224/224 行为规格（保留既有 PublicWorksheet weixinAuth 隔离失败）、语义差分、strict 欠债和工具门禁。正式 release/publish 成功，79 个 HTML / 537 个本地引用、3 个 runtime 的 1095 JS / 387 CSS 校验通过，无 dev 产物。独立 mdfunction 另行完成生产编译及 24 项入口检查；容器内 17,100 个传入产物逐文件 SHA256 全部匹配后才切换。
+
+本次空间预算改为一份完整容器候选树、两份全部传入产物、5% 文件系统开销和 4 GiB 余量：发布前可用 19,346,752 KiB、现网 10,190,800 KiB、传入 637,202,658 字节，预算 16,139,182 KiB。宿主仅暂存传入文件；容器内先 `cp -a` 现网为候选目录，再覆盖新文件，最后通过目录改名切换。未删除旧回滚、未重启容器。发布后约 8.0 GiB 可用，5 个容器 ID 与发布前一致。
+
+公网入口 revision 匹配，13 个入口 JS/CSS 内容 SHA256 匹配本地产物，根路径、工作台、门户、管理员、50x.html 和旧主入口均 HTTP 200。真实浏览器 UAT 清单正常显示 22 条；验收人搜索可输入“刘倩”并返回对应结果，未选择人员或保存业务记录。设备编码字段页及工位编码子表、编码安装字段页及 5 个子表均渲染正常，相关页面 error/warn 日志为空。内部会话访问门户链接正常转到工作台；本次未重新执行外部账号邮箱验证码登录，不把内部验收当作外部登录端到端证明。
+
+证据：`/private/tmp/hap-deploy-editor-20261013/`、`hap-editor-http-20261013.json`、`hap-editor-person-search-20261013.png`、`hap-editor-device-fields-20261013.png`、`hap-editor-install-fields-20261013.txt`。本地动态默认值入口批次仍在验证，未包含在此次生产发布。全仓 TypeScript 与正式严格化目标继续为 active。
+
 ## 10:11 子表列宽热修复
 
 上海时间 10:11:18 完成前端 `99f47e7c2cd2df5d64612228bc9e76bed970520a` 可回滚目录切换。生产入口 SHA256 为 `351eb4343b525ec48ab991157325dbaf2650ff5cf3f8c8ed16c5637478824a49`，主入口为 `b636a980.entry.js`。旧版 `342174f98` 保留于 `/usr/local/MDPrivateDeployment/www-prev-20261013-99f47e7c2c`，旧 chunk、50x.html、厂商资源和既有回滚目录均保留。
