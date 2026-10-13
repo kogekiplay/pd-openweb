@@ -83,12 +83,12 @@ export interface SettingRegex extends Record<string, unknown> {
   filters?: SettingFilter[] | undefined;
 }
 export interface SettingIncrease extends Record<string, unknown> {
-  controlId?: string | undefined;
+  controlId?: string | null | undefined;
   type?: number | undefined;
   start?: string | number | null | undefined;
   repeatType?: number | undefined;
   length?: number | undefined;
-  format?: string | undefined;
+  format?: string | null | undefined;
 }
 export interface SettingCountry extends Record<string, unknown> {
   name?: string | undefined;
@@ -140,6 +140,7 @@ export function widgetObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 const text = (value: unknown): boolean => value === undefined || typeof value === 'string';
+const nullableText = (value: unknown): boolean => value === null || text(value);
 const num = (value: unknown): boolean => value === undefined || (typeof value === 'number' && Number.isFinite(value));
 const bool = (value: unknown): boolean => value === undefined || typeof value === 'boolean';
 function arrayOf<T>(value: unknown, predicate: (item: unknown) => item is T): value is T[] {
@@ -238,9 +239,9 @@ function regex(value: unknown): value is SettingRegex {
 function increase(value: unknown): value is SettingIncrease {
   return (
     widgetObject(value) &&
-    text(value['controlId']) &&
+    nullableText(value['controlId']) &&
     ['type', 'repeatType', 'length'].every(k => num(value[k])) &&
-    text(value['format']) &&
+    nullableText(value['format']) &&
     (value['start'] === null || text(value['start']) || num(value['start']))
   );
 }

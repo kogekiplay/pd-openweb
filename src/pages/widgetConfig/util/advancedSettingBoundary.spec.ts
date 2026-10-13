@@ -145,6 +145,37 @@ assert.strictEqual(
   actualRules,
   'Already decoded null defaults retain identity',
 );
+const persistedAutoNumberRules = [
+  {
+    rcid: null,
+    relationControlName: null,
+    controlId: 'UAT-',
+    controlType: 0,
+    controlName: null,
+    format: null,
+    repeatType: 0,
+    length: 0,
+    start: null,
+    type: 2,
+  },
+  {
+    rcid: null,
+    relationControlName: null,
+    controlId: null,
+    controlType: 0,
+    controlName: null,
+    format: null,
+    repeatType: 0,
+    length: 4,
+    start: '1',
+    type: 1,
+  },
+];
+assert.deepStrictEqual(
+  read({ advancedSetting: { increase: JSON.stringify(persistedAutoNumberRules) } }, 'increase'),
+  persistedAutoNumberRules,
+  'Persisted auto-number rules may use null placeholders for optional prefix and format fields',
+);
 for (const start of [null, '', 0, 1, '007', undefined]) {
   const value = [{ type: 1, repeatType: 0, start, length: 0, format: '' }];
   assert.deepStrictEqual(
