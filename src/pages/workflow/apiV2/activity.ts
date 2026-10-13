@@ -1,4 +1,5 @@
 import base, { controllerName } from './base';
+import type { ApiArgs, ApiOptions } from './apiTypes';
 /**
  * activity
 */
@@ -7,7 +8,7 @@ const activity = {
    * null
    * @param {Object} options 配置参数
    */
-  remove_1: function(args, options) {
+  remove_1: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/activity/remove';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'activityremove', args, $.extend({}, base, options));
@@ -19,7 +20,7 @@ const activity = {
    * @param {integer} [args.pageSize] null
    * @param {Object} options 配置参数
    */
-  getList_2: function(args, options) {
+  getList_2: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/activity/getList';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'activitygetList', args, $.extend({}, base, options));

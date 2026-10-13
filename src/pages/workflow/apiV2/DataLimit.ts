@@ -1,4 +1,5 @@
 import base, { controllerName } from './base';
+import type { ApiArgs, ApiOptions } from './apiTypes';
 
 /**
  * DataLimit

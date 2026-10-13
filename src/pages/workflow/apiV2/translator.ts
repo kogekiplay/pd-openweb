@@ -1,4 +1,5 @@
 import base, { controllerName } from './base';
+import type { ApiArgs, ApiOptions } from './apiTypes';
 /**
  * translator
 */
@@ -8,7 +9,7 @@ const translator = {
    * @param {string} [args.processId] *null
    * @param {Object} options 配置参数
    */
-  getProcessTranslator: function(args, options) {
+  getProcessTranslator: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/translator/getProcessTranslator';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'translatorgetProcessTranslator', args, $.extend({}, base, options));
@@ -19,7 +20,7 @@ const translator = {
    * @param {boolean} [args.all] *null
    * @param {Object} options 配置参数
    */
-  getProcessTranslatorList: function(args, options) {
+  getProcessTranslatorList: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/translator/getProcessTranslatorList';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'translatorgetProcessTranslatorList', args, $.extend({}, base, options));

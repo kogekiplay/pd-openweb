@@ -1,6 +1,5 @@
 import base, { controllerName } from './base';
-type ApiArgs = Record<string, unknown>;
-type ApiOptions = Parameters<typeof base.server>[0];
+import type { ApiArgs, ApiOptions } from './apiTypes';
 /**
  * flowNode
 */

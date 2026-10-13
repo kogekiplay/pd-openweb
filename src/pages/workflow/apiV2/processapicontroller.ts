@@ -1,4 +1,5 @@
 import base, { controllerName } from './base';
+import type { ApiArgs, ApiOptions } from './apiTypes';
 /**
  * processapicontroller
 */
@@ -8,7 +9,7 @@ const processapicontroller = {
    * @param {string} [args.process_id] *null
    * @param {Object} options 配置参数
    */
-  getProcessApiInfo: function(args, options) {
+  getProcessApiInfo: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/v3/app/workflow/processes/{process_id}';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v3appworkflowprocesses{process_id}', args, $.extend({}, base, options));
@@ -18,7 +19,7 @@ const processapicontroller = {
    * @param {string} [args.process_id] *null
    * @param {Object} options 配置参数
    */
-  getProcessApiInfo_1: function(args, options) {
+  getProcessApiInfo_1: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/v3/processes/{process_id}';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v3processes{process_id}', args, $.extend({}, base, options));
@@ -27,7 +28,7 @@ const processapicontroller = {
    * null
    * @param {Object} options 配置参数
    */
-  getProcessListApi: function(args, options) {
+  getProcessListApi: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/v3/processes';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v3processes', args, $.extend({}, base, options));
@@ -36,7 +37,7 @@ const processapicontroller = {
    * null
    * @param {Object} options 配置参数
    */
-  getProcessListApi_1: function(args, options) {
+  getProcessListApi_1: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/v3/app/workflow/processes';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v3appworkflowprocesses', args, $.extend({}, base, options));

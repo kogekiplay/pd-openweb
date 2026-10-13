@@ -1,4 +1,5 @@
 import base, { controllerName } from './base';
+import type { ApiArgs, ApiOptions } from './apiTypes';
 /**
  * instanceversion2controller
 */
@@ -7,7 +8,7 @@ const instanceversion2controller = {
    * null
    * @param {Object} options 配置参数
    */
-  pass2: function(args, options) {
+  pass2: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/v2/instance/pass';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v2instancepass', args, $.extend({}, base, options));
@@ -16,7 +17,7 @@ const instanceversion2controller = {
    * null
    * @param {Object} options 配置参数
    */
-  overrule2: function(args, options) {
+  overrule2: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/v2/instance/overrule';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v2instanceoverrule', args, $.extend({}, base, options));
@@ -25,7 +26,7 @@ const instanceversion2controller = {
    * null
    * @param {Object} options 配置参数
    */
-  getTodoList2: function(args, options) {
+  getTodoList2: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/v2/instance/getTodoList';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v2instancegetTodoList', args, $.extend({}, base, options));
@@ -34,7 +35,7 @@ const instanceversion2controller = {
    * null
    * @param {Object} options 配置参数
    */
-  batch2: function(args, options) {
+  batch2: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/v2/instance/batch';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'v2instancebatch', args, $.extend({}, base, options));
@@ -44,7 +45,7 @@ const instanceversion2controller = {
    * @param {null} [args.request] *null
    * @param {Object} options 配置参数
    */
-  get2: function(args, options) {
+  get2: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/v2/instance/get';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v2instanceget', args, $.extend({}, base, options));
@@ -54,7 +55,7 @@ const instanceversion2controller = {
    * @param {null} [args.request] *null
    * @param {Object} options 配置参数
    */
-  getTodoCount2: function(args, options) {
+  getTodoCount2: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/v2/instance/getTodoCount';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v2instancegetTodoCount', args, $.extend({}, base, options));
@@ -64,7 +65,7 @@ const instanceversion2controller = {
    * @param {null} [args.request] *null
    * @param {Object} options 配置参数
    */
-  cover: function(args, options) {
+  cover: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/v2/instance/cover';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'v2instancecover', args, $.extend({}, base, options));

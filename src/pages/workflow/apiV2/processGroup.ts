@@ -1,4 +1,5 @@
 import base, { controllerName } from './base';
+import type { ApiArgs, ApiOptions } from './apiTypes';
 /**
  * processGroup
 */
@@ -7,7 +8,7 @@ const processGroup = {
    * null
    * @param {Object} options 配置参数
    */
-  sortGroups: function(args, options) {
+  sortGroups: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/processGroup/sortGroups';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'processGroupsortGroups', args, $.extend({}, base, options));
@@ -16,7 +17,7 @@ const processGroup = {
    * null
    * @param {Object} options 配置参数
    */
-  deleteGroup: function(args, options) {
+  deleteGroup: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/processGroup/deleteGroup';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'processGroupdeleteGroup', args, $.extend({}, base, options));
@@ -25,7 +26,7 @@ const processGroup = {
    * null
    * @param {Object} options 配置参数
    */
-  addGroup: function(args, options) {
+  addGroup: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/processGroup/addGroup';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'processGroupaddGroup', args, $.extend({}, base, options));
@@ -35,7 +36,7 @@ const processGroup = {
    * @param {string} [args.relationId] *null
    * @param {Object} options 配置参数
    */
-  getGroupList: function(args, options) {
+  getGroupList: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/processGroup/getGroupList';
     base.ajaxOptions.type = 'GET';
     return mdyAPI(controllerName, 'processGroupgetGroupList', args, $.extend({}, base, options));

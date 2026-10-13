@@ -1,4 +1,5 @@
 import base, { controllerName } from './base';
+import type { ApiArgs, ApiOptions } from './apiTypes';
 /**
  * chatbot
 */
@@ -79,7 +80,7 @@ const chatbot = {
    * null
    * @param {Object} options 配置参数
    */
-  getConversationList: function(args, options) {
+  getConversationList: function(args: ApiArgs = {}, options: ApiOptions = {}) {
     base.ajaxOptions.url = base.server(options) + '/chatbot/getConversationList';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chatbotgetConversationList', args, $.extend({}, base, options));
