@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
 import _ from 'lodash';
-import { isChildTableStore } from 'src/utils/subListStoreTypes';
 import {
   functionNumeric,
   functionObject,
+  functionProperty,
   functionRows,
   functionString,
   functionValue,
@@ -16,16 +16,30 @@ import type {
   FunctionControl,
   FunctionDateInput,
   FunctionOption,
-  FunctionRow,
 } from './functionLibraryTypes';
 
-function filterEmptyChildTableRows(rows: FunctionRow[] = []) {
+function filterEmptyChildTableRows(rows: unknown = []): FormattedFunctionValue {
   try {
-    return rows.filter(row => !(row.rowid || '').startsWith('empty'));
+    const filter = functionProperty(rows, 'filter');
+    if (typeof filter !== 'function') throw new TypeError('Function rows have no filter method');
+    const result: unknown = Reflect.apply(filter, rows, [
+      (row: unknown) => {
+        const id = functionProperty(row, 'rowid') || '';
+        const startsWith = functionProperty(id, 'startsWith');
+        if (typeof startsWith !== 'function') throw new TypeError('Function row ID is not text');
+        return !Reflect.apply(startsWith, id, ['empty']);
+      },
+    ]);
+    return functionValue(result);
   } catch (err) {
     console.error(err);
     return [];
   }
+}
+function hasChildFunctionStore(store: unknown): boolean {
+  if (!store) return false;
+  if (typeof store !== 'object' && typeof store !== 'function') throw new TypeError('Invalid function store');
+  return 'initAndLoadRows' in store;
 }
 
 const isCustomOptionKey = (key: string) => key.indexOf('other') > -1 || key.indexOf('add_') > -1;
@@ -365,8 +379,11 @@ export function formatControlValue(cell: FunctionControl | undefined, nullzero =
         if (_.isObject(value)) {
           const rows = functionObject(value) ? value['rows'] : undefined;
           return filterEmptyChildTableRows(functionRows(rows === undefined ? [] : rows));
-        } else if (isChildTableStore(cell.store)) {
-          return filterEmptyChildTableRows(cell.store.getState()?.rows || []);
+        } else if (hasChildFunctionStore(cell.store)) {
+          const getState = functionProperty(cell.store, 'getState');
+          if (typeof getState !== 'function') throw new TypeError('Function store has no state method');
+          const state: unknown = Reflect.apply(getState, cell.store, []);
+          return filterEmptyChildTableRows(state == null ? [] : functionProperty(state, 'rows') || []);
         } else {
           return [...new Array<undefined>(value ? Number(value) : 0)];
         }

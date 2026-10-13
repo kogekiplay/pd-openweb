@@ -1,5 +1,36 @@
 import { functions } from '../enum';
 
+interface MarkRange {
+  from: number;
+  to: number;
+}
+export interface ControlMark extends MarkRange {
+  kind: 'control';
+  id: string;
+}
+export interface ChineseSymbolMark extends MarkRange {
+  kind: 'chinese';
+  text: string;
+}
+export interface BadEndMark extends MarkRange {
+  kind: 'badEnd';
+}
+export interface UnclosedBracketMark extends MarkRange {
+  kind: 'unclosed';
+  text: string;
+}
+export interface FunctionNameMark extends MarkRange {
+  kind: 'fnName';
+  known: boolean;
+}
+export type FormulaMark = ControlMark | ChineseSymbolMark | BadEndMark | UnclosedBracketMark | FunctionNameMark;
+interface LineMatch extends MarkRange {
+  str: RegExpExecArray;
+  lineStart: number;
+  indexInLine: number;
+  line: string;
+}
+
 /**
  * 公式编辑器的全部标记与校验规则，抽成纯函数：给定公式文本 → 需要的装饰区间 + 错误提示。
  *
@@ -16,7 +47,7 @@ import { functions } from '../enum';
 
 // CM5 版的 groupMatch 是【逐行】跑正则、给出行内偏移。这里保持同样的分行语义
 // （正则里的 . 不跨行，逐行跑与整体跑在这些规则上等价），但换算成绝对偏移量。
-function eachLineMatch(text, regexp: RegExp, fn) {
+function eachLineMatch(text: string, regexp: RegExp, fn: (match: LineMatch) => void) {
   const lines = text.split('\n');
   let lineStart = 0;
 
@@ -47,9 +78,9 @@ function eachLineMatch(text, regexp: RegExp, fn) {
  * （含首尾引号本身，与 CM5 的 token 边界一致）。
  * 未闭合的引号按「延伸到行尾」处理，也和 JS mode 的行为一致。
  */
-export function scanStringRanges(text) {
+export function scanStringRanges(text: string) {
   const inString = new Uint8Array(text.length);
-  let quote = null;
+  let quote: '"' | "'" | null = null;
 
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
@@ -87,21 +118,22 @@ export function scanStringRanges(text) {
   return inString;
 }
 
-const charInString = (inString, offset) => offset >= 0 && offset < inString.length && inString[offset] === 1;
+const charInString = (inString: Uint8Array, offset: number) =>
+  offset >= 0 && offset < inString.length && inString[offset] === 1;
 
 // 字段引用 $controlId$ → 渲染成标签。CM5: markControls()
-export function findControlMarks(text) {
-  const marks = [];
+export function findControlMarks(text: string): ControlMark[] {
+  const marks: ControlMark[] = [];
   eachLineMatch(text, /\$(.+?)\$/g, m => {
-    marks.push({ kind: 'control', from: m.from, to: m.to, id: m.str[1] });
+    marks.push({ kind: 'control', from: m.from, to: m.to, id: m.str[1] ?? '' });
   });
 
   return marks;
 }
 
 // 中文标点标红。CM5: markChineseSymbol()
-export function findChineseSymbolMarks(text, inString) {
-  const marks = [];
+export function findChineseSymbolMarks(text: string, inString: Uint8Array): ChineseSymbolMark[] {
+  const marks: ChineseSymbolMark[] = [];
   eachLineMatch(text, /[，（）“”]/g, m => {
     // CM5 用的是 getTokenAt(Pos(line, match.start))，取的是 start 前一个字符所在的 token。
     // 这里保持同一个（略显偏移的）判断口径，避免引入行为差异。
@@ -114,8 +146,8 @@ export function findChineseSymbolMarks(text, inString) {
 }
 
 // 公式结尾多了分隔符或运算符，如 "SUM(1,)"。CM5: markErrorFunctionEnd()
-export function findBadEndMarks(text) {
-  const marks = [];
+export function findBadEndMarks(text: string): BadEndMark[] {
+  const marks: BadEndMark[] = [];
   eachLineMatch(text, /(,|\+|-|\*|\/)\)/g, m => {
     marks.push({ kind: 'badEnd', from: m.from, to: m.to });
   });
@@ -124,19 +156,19 @@ export function findBadEndMarks(text) {
 }
 
 // 括号未闭合。CM5: markUnclosedBrackets()
-export function findUnclosedBracketMarks(text, inString) {
+export function findUnclosedBracketMarks(text: string, inString: Uint8Array): UnclosedBracketMark[] {
   const stack: { bracketFrom: number; fnFrom: number | null }[] = [];
   const lines = text.split('\n');
   let lineStart = 0;
 
   // 从 '(' 往前吃掉连续的 [A-Z_]，得到函数名起点。CM5 原样如此，只认大写与下划线。
-  const findFunctionStart = (line, bracketIndex: number) => {
+  const findFunctionStart = (line: string, bracketIndex: number) => {
     let start = bracketIndex;
 
     while (start > 0) {
       start--;
 
-      if (!/[A-Z_]/.test(line[start])) {
+      if (!/[A-Z_]/.test(line.charAt(start))) {
         start++;
         break;
       }
@@ -175,7 +207,7 @@ export function findUnclosedBracketMarks(text, inString) {
 }
 
 // 两个字段引用之间缺分隔符，如 "$a$$b$"。CM5: checkCommaInControls()，只报错不加装饰
-export function hasMissingSeparator(text) {
+export function hasMissingSeparator(text: string) {
   let found = false;
   eachLineMatch(text, /\$(.+?)\$\$(.+?)\$/g, () => {
     found = true;
@@ -186,12 +218,12 @@ export function hasMissingSeparator(text) {
 
 // 已知/未知函数名，供 javascript 之外的高亮用（CM5 是靠给 JS mode 注入 keywords 染色的，
 // 见 CodeEdit.tsx 里的 .cm-customFn）。公式是 DSL 不是 JS，这里直接用装饰器做。
-export function findFunctionNameMarks(text, inString) {
-  const marks = [];
+export function findFunctionNameMarks(text: string, inString: Uint8Array): FunctionNameMark[] {
+  const marks: FunctionNameMark[] = [];
   eachLineMatch(text, /([a-zA-Z0-9_]+)(?=\()/g, m => {
     if (charInString(inString, m.from)) return;
 
-    marks.push({ kind: 'fnName', from: m.from, to: m.to, known: !!functions[m.str[0]] });
+    marks.push({ kind: 'fnName', from: m.from, to: m.to, known: Object.hasOwn(functions, m.str[0]) });
   });
 
   return marks;
@@ -201,10 +233,13 @@ export function findFunctionNameMarks(text, inString) {
  * 汇总。与 CM5 版 markElements() 的分支一致：
  * 字段标记恒开；三个校验只在 type === 'mdfunction' 且非只读时开。
  */
-export function computeFormulaMarks(text, { type = 'mdfunction', readOnly = false } = {}) {
+export function computeFormulaMarks(
+  text: string,
+  { type = 'mdfunction', readOnly = false }: { type?: string | undefined; readOnly?: boolean | undefined } = {},
+) {
   const inString = scanStringRanges(text);
-  const marks = findControlMarks(text);
-  const errors = [];
+  const marks: FormulaMark[] = findControlMarks(text);
+  const errors: string[] = [];
 
   if (type === 'mdfunction') {
     marks.push(...findFunctionNameMarks(text, inString));

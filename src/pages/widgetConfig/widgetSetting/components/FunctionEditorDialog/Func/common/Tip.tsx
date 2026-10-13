@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { string } from 'prop-types';
 import styled from 'styled-components';
-import { functionDetails } from '../enum';
+import { emitter } from 'src/utils/common';
+import { getFunctionDescription } from '../enum';
 
 const Con = styled.div`
   height: 100%;
@@ -57,29 +58,29 @@ const Des = styled.div`
   }
 `;
 
-function beautify(content) {
+function beautify(content: string) {
   return content
     .replace(/(\w+)\(/g, '<span class="green">$1</span>(')
     .replace(/\$([\w\u4e00-\u9fa5]+)\$/g, '<span class="control">$1</span>');
 }
 
-export default function Tip(props) {
+export default function Tip(props: { type?: string | undefined }) {
   const { type } = props;
-  const [hoverFn, setHoverFn] = useState();
-  const [activeFn, setActiveFn] = useState();
+  const [hoverFn, setHoverFn] = useState<string | undefined>();
+  const [activeFn, setActiveFn] = useState<string | undefined>();
   const visibleFn = hoverFn || activeFn;
-  const fn = functionDetails[visibleFn];
+  const fn = getFunctionDescription(visibleFn);
 
-  function handleEnter(fnKey) {
-    setHoverFn(fnKey);
+  function handleEnter(fnKey: unknown) {
+    if (typeof fnKey === 'string') setHoverFn(fnKey);
   }
 
   function handleLeave() {
     setHoverFn(activeFn);
   }
 
-  function handleClick(fnKey) {
-    setActiveFn(fnKey);
+  function handleClick(fnKey: unknown) {
+    if (typeof fnKey === 'string') setActiveFn(fnKey);
   }
 
   function clear() {
@@ -88,15 +89,16 @@ export default function Tip(props) {
   }
 
   useEffect(() => {
-    window.emitter.addListener('FUNCTIONEDITOR_FOCUS_FN', handleEnter);
-    window.emitter.addListener('FUNCTIONEDITOR_BLUR_FN', handleLeave);
-    window.emitter.addListener('FUNCTIONEDITOR_ACTIVE_FN', handleClick);
-    window.emitter.addListener('FUNCTIONEDITOR_CLEAR', clear);
+    const events = window.emitter ?? emitter;
+    events.addListener('FUNCTIONEDITOR_FOCUS_FN', handleEnter);
+    events.addListener('FUNCTIONEDITOR_BLUR_FN', handleLeave);
+    events.addListener('FUNCTIONEDITOR_ACTIVE_FN', handleClick);
+    events.addListener('FUNCTIONEDITOR_CLEAR', clear);
     return () => {
-      window.emitter.removeListener('FUNCTIONEDITOR_FOCUS_FN', handleEnter);
-      window.emitter.removeListener('FUNCTIONEDITOR_BLUR_FN', handleLeave);
-      window.emitter.removeListener('FUNCTIONEDITOR_ACTIVE_FN', handleClick);
-      window.emitter.removeListener('FUNCTIONEDITOR_CLEAR', clear);
+      events.removeListener('FUNCTIONEDITOR_FOCUS_FN', handleEnter);
+      events.removeListener('FUNCTIONEDITOR_BLUR_FN', handleLeave);
+      events.removeListener('FUNCTIONEDITOR_ACTIVE_FN', handleClick);
+      events.removeListener('FUNCTIONEDITOR_CLEAR', clear);
     };
   }, []);
   return (

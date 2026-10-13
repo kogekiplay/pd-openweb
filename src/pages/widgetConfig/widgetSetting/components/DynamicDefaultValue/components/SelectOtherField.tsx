@@ -471,8 +471,8 @@ export default class SelectOtherField extends Component<any, SelectOtherFieldSta
             control={data}
             value={
               subListSetValueEvent
-                ? { ...getAdvanceSetting(data, 'defaultfunc'), type: 'javascript' }
-                : getAdvanceSetting(data, 'defaultfunc')
+                ? { ...(getAdvanceSetting(data, 'defaultfunc') || {}), type: 'javascript' }
+                : getAdvanceSetting(data, 'defaultfunc') || undefined
             }
             title={data.controlName}
             controls={

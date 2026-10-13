@@ -1,4 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import type { ForwardedRef } from 'react';
 import cx from 'classnames';
 import _, { includes } from 'lodash';
 import { arrayOf, bool, func, shape } from 'prop-types';
@@ -11,8 +12,8 @@ import Footer from './common/Footer';
 import SelectFnControl from './common/SelectFnControl';
 import { openTestFunctionDialog } from './common/TestFunctionDialog';
 import Tip from './common/Tip';
+import type { CodeEditHandle, FormulaEditorControl, FunctionEditorHandle, FunctionEditorProps } from './editorTypes';
 import './style.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 if (!window.emitter) {
   window.emitter = emitter;
@@ -75,7 +76,7 @@ const ActiveJsSwitchCon = styled.div`
   }
 `;
 
-function Func(props, ref) {
+function Func(props: FunctionEditorProps, ref: ForwardedRef<FunctionEditorHandle>) {
   const {
     supportDebug,
     isWorksheetFlow,
@@ -87,8 +88,7 @@ function Func(props, ref) {
     control = {},
     setRef,
     supportJavaScript,
-    value,
-    value: { expression } = {},
+    value = {},
     title,
     renderTag,
     onClose,
@@ -99,44 +99,38 @@ function Func(props, ref) {
     customTitle,
     fromCustom,
   } = props;
+  const expression = value.expression;
   const [type, setType] = useState(value.type || 'mdfunction');
   const [codeEditorLoading, setCodeEditorLoading] = useState(false);
-  const [pendingEditorValue, setPendingEditorValue] = useState(null);
-  let { controls = [] }: { controls: FormControl[]; [key: string]: any } = props;
-
-  if (_.isArray(controlGroups)) {
-    controls = _.flatten(controlGroups.map(group => group.controls.map(c => ({ ...c, workflowGroupId: group.id }))));
-    if (isWorksheetFlow) {
-      controls = controls.map(c => ({
-        ...c,
-        type: c.originalType ? c.originalType : c.type,
-        ...(includes([9, 10, 11], c.type) && {
-          enumDefault2: 0,
-        }),
-      }));
-      controlGroups.forEach(group => {
-        group.controls = group.controls.map(c => ({
-          ...c,
-          type: c.originalType ? c.originalType : c.type,
-          ...(includes([9, 10, 11], c.type) && {
-            enumDefault2: 0,
-          }),
-        }));
-      });
-    }
+  const [pendingEditorValue, setPendingEditorValue] = useState<string | null>(null);
+  let controls: FormulaEditorControl[] = props.controls || [];
+  let editorGroups = controlGroups;
+  if (controlGroups) {
+    editorGroups = controlGroups.map(group => ({
+      ...group,
+      controls: isWorksheetFlow
+        ? group.controls.map(control => ({
+            ...control,
+            type: control.originalType || control.type,
+            ...(includes([9, 10, 11], control.type) ? { enumDefault2: 0 } : {}),
+          }))
+        : group.controls,
+    }));
+    controls = editorGroups.flatMap(group =>
+      group.controls.map(control => ({ ...control, workflowGroupId: group.id })),
+    );
   }
 
-  const codeEditor = useRef<any>(undefined);
+  const codeEditor = useRef<CodeEditHandle | null>(null);
   const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const editorFunctions = (key: string) => {
-    return (...args) => {
-      if (codeEditor.current) {
-        codeEditor.current[key](...args);
-      } else {
-        console.error('codeEditor mount failed');
-      }
-    };
+  const insertTagToEditor: CodeEditHandle['insertTag'] = (tag, position, tagType) => {
+    if (codeEditor.current) codeEditor.current.insertTag(tag, position, tagType);
+    else console.error('codeEditor mount failed');
+  };
+  const insertFn: CodeEditHandle['insertFn'] = (name, position) => {
+    if (codeEditor.current) codeEditor.current.insertFn(name, position);
+    else console.error('codeEditor mount failed');
   };
 
   function handleSave() {
@@ -168,7 +162,7 @@ function Func(props, ref) {
     }
   }
 
-  useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, (): FunctionEditorHandle => ({
     codeEditor: codeEditor.current,
     handleSave,
   }));
@@ -206,6 +200,7 @@ function Func(props, ref) {
                 const nextType = checked ? 'mdfunction' : 'javascript';
                 setPendingEditorValue(tempValue);
                 setType(nextType);
+                onChange?.();
                 setCodeEditorLoading(true);
                 if (loadingTimerRef.current) {
                   clearTimeout(loadingTimerRef.current);
@@ -224,11 +219,11 @@ function Func(props, ref) {
         <SelectFnControlCon>
           <SelectFnControl
             type={type}
-            controlGroups={controlGroups}
+            controlGroups={editorGroups}
             controls={controls}
             control={control}
-            insertTagToEditor={editorFunctions('insertTag')}
-            insertFn={editorFunctions('insertFn')}
+            insertTagToEditor={insertTagToEditor}
+            insertFn={insertFn}
           />
         </SelectFnControlCon>
         <Dev>
@@ -251,7 +246,7 @@ function Func(props, ref) {
                 ref={codeEditor}
                 renderTag={renderTag}
                 onChange={onChange}
-                insertTagToEditor={editorFunctions('insertTag')}
+                insertTagToEditor={insertTagToEditor}
                 openTestFunctionDialog={openTestFunctionDialog}
               />
             )}
@@ -266,7 +261,7 @@ function Func(props, ref) {
   );
 }
 
-export default forwardRef(Func);
+export default forwardRef<FunctionEditorHandle, FunctionEditorProps>(Func);
 
 Func.propTypes = {
   control: shape({}),

@@ -1,13 +1,29 @@
 import React, { useLayoutEffect } from 'react';
 import { createRoot } from 'react-dom/client';
+import type { Root } from 'react-dom/client';
+import type { Completion, CompletionContext, CompletionResult } from '@codemirror/autocomplete';
+import type { Compartment, Range as EditorRange, EditorState, Extension } from '@codemirror/state';
+import type {
+  EditorView as CMEditorView,
+  WidgetType as CMWidgetType,
+  Decoration,
+  DecorationSet,
+  ViewUpdate,
+} from '@codemirror/view';
 import _, { get, identity } from 'lodash';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import { emitter } from 'src/utils/common';
 import { checkTypeSupportForFunction } from 'src/utils/control';
+import type {
+  FormulaEditorControl,
+  FormulaEditorError,
+  FormulaEditorOptions,
+  FormulaTag,
+  FormulaTagRenderer,
+} from '../editorTypes';
 import { functions } from '../enum';
 import { getControlType } from './ControlList';
 import { computeFormulaMarks } from './formulaMarks';
-import type { FormControl } from 'src/utils/controlTypes';
 
 /**
  * 公式编辑器（CodeMirror 6）。CM5 → CM6 分三步走的第 2 步。
@@ -27,7 +43,16 @@ import type { FormControl } from 'src/utils/controlTypes';
  *   mdfunction —— 公式 DSL，函数名的绿/红由装饰器给（CM5 是借 JS mode 注入 keywords 染色的）
  *   javascript —— 用户写的真 JS（自定义事件条件），挂 @codemirror/lang-javascript
  */
-let cmPromise;
+interface CodeMirrorModules {
+  state: typeof import('@codemirror/state');
+  view: typeof import('@codemirror/view');
+  language: typeof import('@codemirror/language');
+  autocomplete: typeof import('@codemirror/autocomplete');
+  commands: typeof import('@codemirror/commands');
+  langJavascript: typeof import('@codemirror/lang-javascript');
+  lezerHighlight: typeof import('@lezer/highlight');
+}
+let cmPromise: Promise<CodeMirrorModules> | undefined;
 
 function loadCodeMirror() {
   if (!cmPromise) {
@@ -39,21 +64,32 @@ function loadCodeMirror() {
       import('@codemirror/commands'),
       import('@codemirror/lang-javascript'),
       import('@lezer/highlight'),
-    ]).then(([state, view, language, autocomplete, commands, langJavascript, lezerHighlight]) => ({
-      state,
-      view,
-      language,
-      autocomplete,
-      commands,
-      langJavascript,
-      lezerHighlight,
-    }));
+    ])
+      .then(([state, view, language, autocomplete, commands, langJavascript, lezerHighlight]) => ({
+        state,
+        view,
+        language,
+        autocomplete,
+        commands,
+        langJavascript,
+        lezerHighlight,
+      }))
+      .catch(error => {
+        cmPromise = undefined;
+        throw error;
+      });
   }
 
   return cmPromise;
 }
 
-const TagWrapper = ({ onDidMount = () => {}, tag }) => {
+const TagWrapper = ({
+  onDidMount = () => {},
+  tag,
+}: {
+  onDidMount?: (() => void) | undefined;
+  tag: React.ReactElement;
+}) => {
   useLayoutEffect(() => {
     onDidMount();
   });
@@ -76,11 +112,16 @@ export const COMPLETION_OPTIONS = { activateOnTyping: true, closeOnBlur: true };
 
 const isDarkTheme = () => document.documentElement.getAttribute('data-theme') === 'dark';
 
-function createElement(text, style = {}, { tooltip } = {}) {
+function createElement(
+  text: string,
+  style: Record<string, string> = {},
+  { tooltip }: { tooltip?: string | undefined } = {},
+) {
   const dom = document.createElement('span');
   dom.innerText = text;
   Object.keys(style).forEach(key => {
-    dom.style[key] = style[key];
+    const value = style[key];
+    if (value !== undefined) Reflect.set(dom.style, key, value);
   });
 
   if (tooltip) {
@@ -109,46 +150,43 @@ function createTagEle(text: string) {
 }
 
 export default class Function {
-  // 实例字段一律显式声明。不声明不会影响运行，但 tsc 会为每次 this.x 赋值报一条
-  // TS2551/TS2339，而差分门禁是按 file|错误码 的【计数】比的，凭空多出十几条就会红。
   type = 'mdfunction';
-  controls = [];
-  // 这几个回调故意【不带初值】：带了 TS 就会从初值推出返回类型
-  //（如 () => {} 推成返回 void，于是 this.getControlName(id) || '' 报 TS1345），
-  // 而它们在构造函数里必定被赋成调用方传的实现。不带初值即保持 any，与改动前一致。
-  getControlName;
-  renderTag;
-  onChange;
-  insertTagToEditor;
-  onError;
+  controls: FormulaEditorControl[] = [];
+  getControlName: (id: string) => string | undefined = () => undefined;
+  renderTag: FormulaTagRenderer | undefined;
+  onChange: () => void = () => {};
+  insertTagToEditor: (tag: FormulaTag) => void = () => {};
+  onError: (error: FormulaEditorError | undefined) => void = () => {};
   readOnly = false;
   noCursor = false;
   placeholder = '';
   autofocus = true;
   value = '';
-  pendingActions = [];
-  lastErrorText = undefined;
+  pendingActions: Array<() => void> = [];
+  lastErrorText: string | undefined;
   destroyed = false;
-  ready = undefined;
-  cm = undefined;
-  view = null;
-  themeCompartment = undefined;
+  ready: Promise<void> | undefined;
+  cm: CodeMirrorModules | undefined;
+  view: CMEditorView | null = null;
+  themeCompartment: Compartment | undefined;
   _isDark = false;
-  _themeObserver = null;
+  _themeObserver: MutationObserver | null = null;
+  defaultActiveTimer: ReturnType<typeof setTimeout> | undefined;
+  readonly events = window.emitter ?? emitter;
 
   constructor(
-    dom,
+    dom: HTMLElement,
     {
       value,
       options = {},
       type = 'mdfunction',
-      getControlName = () => {},
+      getControlName = () => undefined,
       controls = [],
       renderTag,
       onChange = () => {},
       insertTagToEditor = () => {},
       onError = () => {},
-    } = {},
+    }: FormulaEditorOptions = {},
   ) {
     if (!dom) {
       console.log('target is not a dom element');
@@ -185,17 +223,20 @@ export default class Function {
         if (this._isDark === next || !this.view) return;
 
         this._isDark = next;
-        this.view.dispatch({ effects: this.themeCompartment.reconfigure(this.buildTheme()) });
+        if (this.themeCompartment)
+          this.view.dispatch({ effects: this.themeCompartment.reconfigure(this.buildTheme()) });
       });
       this._themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
       if (this.value) {
         // CM5 的 init()：setValue + 标记 + 光标放到末尾 + 派发默认激活函数
         this.setCursor(this.value.length);
-        setTimeout(() => this.handleDefaultActiveFn(this.value), 10);
+        this.defaultActiveTimer = setTimeout(() => {
+          if (!this.destroyed) this.handleDefaultActiveFn(this.value);
+        }, 10);
       }
 
-      if (this.autofocus && !this.noCursor) this.view.focus();
+      if (this.autofocus && !this.noCursor) this.view?.focus();
 
       this.pendingActions.forEach(action => action());
       this.pendingActions = [];
@@ -204,8 +245,13 @@ export default class Function {
 
   // ---------- CM6 扩展装配 ----------
 
-  buildTheme() {
-    const { view, language, lezerHighlight } = this.cm;
+  codeMirror(): CodeMirrorModules {
+    if (!this.cm) throw new Error('Formula editor modules are not ready');
+    return this.cm;
+  }
+
+  buildTheme(): Extension[] {
+    const { view, language, lezerHighlight } = this.codeMirror();
     const { EditorView } = view;
     const { HighlightStyle, syntaxHighlighting } = language;
     const { tags } = lezerHighlight;
@@ -262,8 +308,8 @@ export default class Function {
     ];
   }
 
-  createView(dom) {
-    const { state, view, language, autocomplete, commands, langJavascript } = this.cm;
+  createView(dom: HTMLElement) {
+    const { state, view, language, autocomplete, commands, langJavascript } = this.codeMirror();
     const { EditorState, Compartment } = state;
     const { EditorView, keymap, drawSelection, highlightSpecialChars, placeholder } = view;
     const { indentUnit, bracketMatching } = language;
@@ -273,7 +319,7 @@ export default class Function {
     this.themeCompartment = new Compartment();
     this._isDark = isDarkTheme();
 
-    const extensions = [
+    const extensions: Extension[] = [
       drawSelection(),
       highlightSpecialChars(),
       history(),
@@ -288,7 +334,7 @@ export default class Function {
       EditorView.domEventHandlers({
         blur: () => {
           // 失焦只清临时 hover、保留点击选中的 activeFn，避免函数说明在编辑器失焦后消失
-          window.emitter.emit('FUNCTIONEDITOR_BLUR_FN');
+          this.events.emit('FUNCTIONEDITOR_BLUR_FN');
           return false;
         },
       }),
@@ -326,24 +372,26 @@ export default class Function {
    * CM6 是声明式的——装饰集由文档推导，doc 一变就重算，天然不会漏清理。
    */
   marksField() {
-    const { state, view } = this.cm;
+    const { state, view } = this.codeMirror();
     const { StateField } = state;
     const { Decoration, EditorView, WidgetType } = view;
     const self = this;
+    const roots = new WeakMap<HTMLElement, Root>();
 
     // 字段引用的标签。CM5 是 renderColumnTag 里用 createRoot 渲 React 再交给 markText。
     class ControlTagWidget extends WidgetType {
-      constructor(id) {
+      readonly id: string;
+      constructor(id: string) {
         super();
         this.id = id;
       }
 
       // 同一个 controlId 复用同一个 widget，避免每次输入都重挂 React
-      eq(other) {
-        return other.id === this.id;
+      override eq(other: CMWidgetType) {
+        return Reflect.get(other, 'id') === this.id;
       }
 
-      toDOM() {
+      override toDOM() {
         const node = document.createElement('span');
 
         if (_.isFunction(self.renderTag)) {
@@ -351,8 +399,9 @@ export default class Function {
 
           if (React.isValidElement(tag)) {
             // 存在 dom 上，destroy 时才能 unmount——漏了这步就是 React root 泄漏
-            node.__cmReactRoot = createRoot(node);
-            node.__cmReactRoot.render(<TagWrapper tag={tag} />);
+            const root = createRoot(node);
+            roots.set(node, root);
+            root.render(<TagWrapper tag={tag} />);
           } else if (tag) {
             node.appendChild(tag);
           }
@@ -363,24 +412,24 @@ export default class Function {
         return createTagEle(self.getControlName(this.id) || '');
       }
 
-      destroy(node) {
-        if (node && node.__cmReactRoot) {
-          const root = node.__cmReactRoot;
-          node.__cmReactRoot = null;
+      override destroy(node: HTMLElement) {
+        const root = roots.get(node);
+        if (root) {
+          roots.delete(node);
           // React 不允许在自己的 commit 过程中同步 unmount，挪到微任务里
           Promise.resolve().then(() => root.unmount());
         }
       }
 
-      ignoreEvent() {
+      override ignoreEvent() {
         // CM5 那边 handleMouseEvents: true，即让事件照常落到替换出来的节点上
         return false;
       }
     }
 
-    const build = docText => {
+    const build = (docText: string) => {
       const { marks, errors } = computeFormulaMarks(docText, { type: self.type, readOnly: self.readOnly });
-      const ranges = [];
+      const ranges: EditorRange<Decoration>[] = [];
 
       marks.forEach(mark => {
         if (mark.kind === 'control') {
@@ -392,15 +441,15 @@ export default class Function {
           ranges.push(
             Decoration.replace({
               widget: new (class extends WidgetType {
-                eq(o) {
-                  return o.text === mark.text;
+                override eq(o: CMWidgetType) {
+                  return Reflect.get(o, 'text') === mark.text;
                 }
 
-                toDOM() {
+                override toDOM() {
                   return createElement(mark.text, { margin: '0 3px', color: '#F44336' });
                 }
 
-                ignoreEvent() {
+                override ignoreEvent() {
                   return false;
                 }
               })(),
@@ -413,15 +462,15 @@ export default class Function {
           ranges.push(
             Decoration.replace({
               widget: new (class extends WidgetType {
-                eq(o) {
-                  return o.text === mark.text;
+                override eq(o: CMWidgetType) {
+                  return Reflect.get(o, 'text') === mark.text;
                 }
 
-                toDOM() {
+                override toDOM() {
                   return createElement(mark.text, { color: '#F44336' }, { tooltip: _l('函数括号未闭合') });
                 }
 
-                ignoreEvent() {
+                override ignoreEvent() {
                   return false;
                 }
               })(),
@@ -450,7 +499,7 @@ export default class Function {
       return Decoration.set(ranges, true);
     };
 
-    const field = StateField.define({
+    const field = StateField.define<DecorationSet>({
       create: st => build(st.doc.toString()),
       update: (deco, tr) => (tr.docChanged ? build(tr.state.doc.toString()) : deco),
       provide: f => EditorView.decorations.from(f),
@@ -459,7 +508,7 @@ export default class Function {
     return field;
   }
 
-  reportError(text) {
+  reportError(text: string | undefined) {
     if (this.lastErrorText === text) return;
 
     this.lastErrorText = text;
@@ -473,7 +522,7 @@ export default class Function {
    * CM5 是 CodeMirror.showHint() 加一份自造的 hint 数据（含 render / _handlers）。
    * CM6 换成 CompletionSource：候选里带 info/apply，四个 emitter 事件挂在对应时机上。
    */
-  formulaCompletions(context) {
+  formulaCompletions(context: CompletionContext): CompletionResult | null {
     const word = context.matchBefore(/[a-zA-Z0-9_一-龥]*/);
 
     if (!word) return null;
@@ -481,11 +530,14 @@ export default class Function {
     if (word.from === word.to && !context.explicit) return null;
 
     const typed = word.text.toUpperCase();
-    const controls: FormControl[] = this.controls
-      .filter(c => c.controlName && checkTypeSupportForFunction(c))
+    const controls = this.controls
+      .filter(
+        (c): c is FormulaEditorControl & { controlName: string } =>
+          typeof c.controlName === 'string' && !!c.controlName && !!checkTypeSupportForFunction(c),
+      )
       .filter(c => c.controlName.toUpperCase().indexOf(typed) > -1);
     const fns = Object.keys(functions).filter(fn => fn.indexOf(typed) > -1);
-    const options = [];
+    const options: Completion[] = [];
 
     controls.forEach(control => {
       options.push({
@@ -502,7 +554,9 @@ export default class Function {
         info: () => {
           const node = document.createElement('div');
           node.className = 'hint-item';
-          node.innerHTML = `<i class="icon icon-${getIconByType(getControlType(control) || 2)}"></i> ${control.controlName}`;
+          const icon = document.createElement('i');
+          icon.className = `icon icon-${getIconByType(getControlType(control) || 2)}`;
+          node.append(icon, document.createTextNode(' ' + control.controlName));
           return node;
         },
       });
@@ -520,7 +574,7 @@ export default class Function {
             changes: { from, to, insert },
             selection: { anchor: from + insert.length - 1 },
           });
-          window.emitter.emit('FUNCTIONEDITOR_ACTIVE_FN', fnName);
+          this.events.emit('FUNCTIONEDITOR_ACTIVE_FN', fnName);
         },
       });
     });
@@ -532,7 +586,7 @@ export default class Function {
 
   // ---------- 事件 ----------
 
-  handleUpdate(update) {
+  handleUpdate(update: ViewUpdate) {
     if (update.docChanged) {
       this.value = update.state.doc.toString();
 
@@ -543,7 +597,7 @@ export default class Function {
   }
 
   // CM5 的 cursorActivity：光标停在函数名上就把它派发出去，右侧好显示该函数的说明
-  emitActiveFn(state) {
+  emitActiveFn(state: EditorState) {
     const head = state.selection.main.head;
     const line = state.doc.lineAt(head);
     const ch = head - line.from;
@@ -559,7 +613,7 @@ export default class Function {
       const start = match.index;
       const end = start + match[0].length;
 
-      if (ch >= start && ch <= end) window.emitter.emit('FUNCTIONEDITOR_ACTIVE_FN', match[0]);
+      if (ch >= start && ch <= end) this.events.emit('FUNCTIONEDITOR_ACTIVE_FN', match[0]);
 
       match = re.exec(line.text);
     }
@@ -568,12 +622,13 @@ export default class Function {
   handleDefaultActiveFn(value = '') {
     const match = /([a-zA-Z0-9_]+)(?=\()/.exec(value);
 
-    if (match) window.emitter.emit('FUNCTIONEDITOR_ACTIVE_FN', match[1]);
+    if (match) this.events.emit('FUNCTIONEDITOR_ACTIVE_FN', match[1]);
   }
 
   // ---------- 对外 API（与 CM5 版逐一对应）----------
 
   runWhenReady(action: () => void) {
+    if (this.destroyed) return;
     if (this.view) {
       action();
       return;
@@ -589,11 +644,13 @@ export default class Function {
   setValue(value = '') {
     this.value = value;
     this.runWhenReady(() => {
-      const cur = this.view.state.doc.toString();
+      const view = this.view;
+      if (!view) return;
+      const cur = view.state.doc.toString();
 
       if (cur === value) return;
 
-      this.view.dispatch({ changes: { from: 0, to: cur.length, insert: value } });
+      view.dispatch({ changes: { from: 0, to: cur.length, insert: value } });
     });
   }
 
@@ -613,9 +670,11 @@ export default class Function {
    * （见 FnList.tsx / ControlList.tsx / CodeEdit.tsx 的 useImperativeHandle）。
    * 所以这里只接偏移量；传别的一律按「当前光标」处理，与既有实际行为一致。
    */
-  insertTag({ value }, position) {
+  insertTag({ value }: FormulaTag, position?: unknown) {
     this.runWhenReady(() => {
-      const doc = this.view.state.doc.toString();
+      const view = this.view;
+      if (!view) return;
+      const doc = view.state.doc.toString();
       const at = _.isNumber(position) ? position : this.cursor();
       // CM5：紧挨在上一个 $ 后面插时先补个逗号，免得两个字段粘在一起
       const needComma = doc[at - 1] === '$';
@@ -623,26 +682,31 @@ export default class Function {
       // 踩过：在光标处插入后 CM6 默认把光标映射到插入内容【之前】（assoc = -1），
       // 于是第二步又插回了逗号前面，结果是 "$c1$$c2$," 而不是 "$c1$,$c2$"。
       const insert = `${needComma ? ',' : ''}$${value}$`;
-      this.view.dispatch({ changes: { from: at, to: at, insert }, selection: { anchor: at + insert.length } });
-      this.view.focus();
+      view.dispatch({ changes: { from: at, to: at, insert }, selection: { anchor: at + insert.length } });
+      if (this.view === view && !this.destroyed) view.focus();
     });
   }
 
-  insertFn(value, position) {
+  insertFn(value: string, position?: unknown) {
     this.runWhenReady(() => {
+      const view = this.view;
+      if (!view) return;
       const at = _.isNumber(position) ? position : this.cursor();
       // CM5 是 replaceRange(value) 再 insertBrackets()，合起来就是插 "FN()" 且光标落在括号里
       const insert = `${value}()`;
-      this.view.dispatch({
+      view.dispatch({
         changes: { from: at, to: at, insert },
         selection: { anchor: at + insert.length - 1 },
       });
-      this.view.focus();
+      if (this.view === view && !this.destroyed) view.focus();
     });
   }
 
   destroy() {
     this.destroyed = true;
+    this.pendingActions = [];
+    clearTimeout(this.defaultActiveTimer);
+    this.defaultActiveTimer = undefined;
 
     if (this._themeObserver) {
       this._themeObserver.disconnect();

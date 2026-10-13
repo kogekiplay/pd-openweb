@@ -5,6 +5,7 @@ import { getIconByType } from 'src/pages/widgetConfig/util';
 import { SearchFn } from 'src/pages/widgetConfig/util';
 import { checkTypeSupportForFunction } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
+import type { FormulaControlGroup, FormulaEditorControl, FormulaTag } from '../editorTypes';
 
 const Con = styled.div`
   padding: 10px 0;
@@ -48,7 +49,7 @@ const ControlItem = styled.div`
   }
 `;
 
-const ExpandIcon = styled.i`
+const ExpandIcon = styled.i<{ isActive?: boolean | undefined }>`
   display: inline-block;
   font-size: var(--font-lg);
   color: var(--color-text-tertiary);
@@ -73,9 +74,22 @@ export function getControlType(control: FormControl) {
   }
 }
 
-export default function ControlList(props) {
-  const { keywords, controls, controlGroups, insertTagToEditor }: { controls: FormControl[]; [key: string]: any } = props;
-  const visibleControls: FormControl[] = controls.filter(c => c.controlName && checkTypeSupportForFunction(c));
+export interface ControlListProps {
+  keywords?: string | undefined;
+  controls?: FormulaEditorControl[] | undefined;
+  controlGroups?: FormulaControlGroup[] | undefined;
+  insertTagToEditor?: ((tag: FormulaTag) => void) | undefined;
+}
+export default function ControlList({
+  keywords = '',
+  controls = [],
+  controlGroups,
+  insertTagToEditor = () => {},
+}: ControlListProps) {
+  const visibleControls = controls.filter(
+    (c): c is FormulaEditorControl & { controlName: string } =>
+      typeof c.controlName === 'string' && !!c.controlName && !!checkTypeSupportForFunction(c),
+  );
 
   if (controlGroups && controlGroups.length) {
     return (
@@ -97,7 +111,10 @@ export default function ControlList(props) {
           {controlGroups.map(group => (
             <Collapse.Panel key={group.id} header={<span className="fnTitle">{group.name}</span>}>
               {group.controls
-                .filter(c => c.controlName && checkTypeSupportForFunction(c))
+                .filter(
+                  (c): c is FormulaEditorControl & { controlName: string } =>
+                    typeof c.controlName === 'string' && !!c.controlName && !!checkTypeSupportForFunction(c),
+                )
                 .filter(c => SearchFn(keywords, c.controlName))
                 .map((c, i) => (
                   <ControlItem

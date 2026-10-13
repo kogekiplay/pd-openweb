@@ -3,6 +3,10 @@ import type { FormattedFunctionValue, FunctionRow, FunctionValueObject } from '.
 export function functionObject(value: unknown): value is FunctionValueObject {
   return value !== null && (typeof value === 'function' || (typeof value === 'object' && !Array.isArray(value)));
 }
+export function functionProperty(value: unknown, key: PropertyKey): unknown {
+  if (value === null || value === undefined) throw new TypeError('Cannot read an empty function value');
+  return Reflect.get(Object(value), key);
+}
 /** Preserve raw object/callable identity without claiming a callable or SDK ABI. */
 export function isFormattedFunctionValue(
   value: unknown,

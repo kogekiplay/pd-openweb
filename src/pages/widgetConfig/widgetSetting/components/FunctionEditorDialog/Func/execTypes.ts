@@ -3,7 +3,7 @@ export interface FunctionRunOptions {
   type?: string | undefined;
   forceSyncRun?: boolean | undefined;
   defaultExpression?: string | undefined;
-  langCode?: string | number | undefined;
+  langCode?: unknown;
 }
 export interface FunctionRunResult {
   expression?: string | undefined;

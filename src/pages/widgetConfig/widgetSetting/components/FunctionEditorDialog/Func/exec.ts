@@ -2,8 +2,8 @@ import dayjs from 'dayjs';
 import _, { isNaN } from 'lodash';
 import qs from 'query-string';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
-import type { FormControl } from 'src/utils/controlTypes';
 import { formatControlValue } from 'src/utils/function-library';
+import type { FunctionEvaluationControl } from 'src/utils/functionLibraryTypes';
 import { functions } from './enum';
 import type {
   FunctionCompletion,
@@ -169,7 +169,12 @@ function asyncRun(code: string, cb: FunctionCompletion, { timeout = 1000 } = {})
   // cb(null, result);
 }
 
-function replaceControlIdToValue(expression: string, formData: FormControl[], nullzero = '0', inString?: boolean) {
+function replaceControlIdToValue(
+  expression: string,
+  formData: FunctionEvaluationControl[],
+  nullzero = '0',
+  inString?: boolean,
+) {
   expression = expression.replace(/\$(.+?)\$/g, matched => {
     const controlId = matched.slice(1, -1);
     const control = _.find(formData, obj => obj.controlId === controlId);
@@ -200,7 +205,7 @@ function replaceControlIdToValue(expression: string, formData: FormControl[], nu
   return expression;
 }
 
-function formatFunctionResult(control: FormControl, value: unknown): unknown {
+function formatFunctionResult(control: FunctionEvaluationControl, value: unknown): unknown {
   const controlType = _.get(control, 'type') === 53 ? _.get(control, 'enumDefault2') : control.type;
   let result = value;
 
@@ -282,8 +287,8 @@ function formatFunctionResult(control: FormControl, value: unknown): unknown {
 }
 
 export default function (
-  control: FormControl,
-  formData: FormControl[],
+  control: FunctionEvaluationControl,
+  formData: FunctionEvaluationControl[],
   { update, type, forceSyncRun = false, defaultExpression, langCode }: FunctionRunOptions = {},
 ): FunctionRunResult | undefined {
   initLang(langCode);
