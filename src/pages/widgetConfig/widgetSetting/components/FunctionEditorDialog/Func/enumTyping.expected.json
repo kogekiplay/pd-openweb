@@ -1,0 +1,936 @@
+{
+  "revision": "0145d819b",
+  "functions": [
+    "ABS",
+    "ACOS",
+    "ACOT",
+    "AND",
+    "ASIN",
+    "ATAN",
+    "AVERAGE",
+    "CEILING",
+    "CLEAN",
+    "COMBIN",
+    "CONCAT",
+    "COS",
+    "COT",
+    "COUNTA",
+    "COUNTARRAY",
+    "COUNTBLANK",
+    "COUNTCHAR",
+    "DATEADD",
+    "DATEIF",
+    "DATENOW",
+    "DAY",
+    "DECODEURI",
+    "DECODEURICOMPONENT",
+    "DEGREES",
+    "DISTANCE",
+    "ENCODEURI",
+    "ENCODEURICOMPONENT",
+    "FALSE",
+    "FIND",
+    "FINDA",
+    "FLOOR",
+    "GETPOSITION",
+    "HOUR",
+    "IF",
+    "IFS",
+    "INCLUDE",
+    "INT",
+    "ISBLANK",
+    "JOIN",
+    "LEFT",
+    "LOG",
+    "LOWER",
+    "MAX",
+    "MID",
+    "MIN",
+    "MINUTE",
+    "MOD",
+    "MONTH",
+    "NETWORKDAY",
+    "NORM_S_DIST",
+    "NOT",
+    "NUMBER",
+    "OR",
+    "PERMUT",
+    "PI",
+    "POWER",
+    "PRODUCT",
+    "RADIANS",
+    "RANDBETWEEN",
+    "REPLACE",
+    "REPT",
+    "RIGHT",
+    "ROUND",
+    "ROUNDDOWN",
+    "ROUNDUP",
+    "SIN",
+    "SPLIT",
+    "STRING",
+    "STRREVERSE",
+    "SUBSTITUTE",
+    "SUM",
+    "TAN",
+    "TRIM",
+    "TRUE",
+    "UPPER",
+    "WEEKDAY",
+    "WEEKNUM",
+    "WORKDAY",
+    "WORKDAY_INTL",
+    "YEAR"
+  ],
+  "detailsSha256": "e01b5de9c9457140d19cc5f691b7b045328bd1be45560cf8160be0c1c17c43d1",
+  "cases": {
+    "NETWORKDAY/0": {
+      "value": 10
+    },
+    "NETWORKDAY/1": {
+      "value": -10
+    },
+    "NETWORKDAY/2": {
+      "value": 7
+    },
+    "NETWORKDAY/3": {
+      "value": 0
+    },
+    "NETWORKDAY/4": {
+      "error": "Error",
+      "message": "开始日期不是日期类型"
+    },
+    "MINUTE/0": {
+      "value": 35
+    },
+    "MINUTE/1": {
+      "value": 35
+    },
+    "MINUTE/2": {
+      "value": 20
+    },
+    "MINUTE/3": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "HOUR/0": {
+      "value": 11
+    },
+    "HOUR/1": {
+      "value": 11
+    },
+    "HOUR/2": {
+      "value": 14
+    },
+    "HOUR/3": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "WEEKDAY/0": {
+      "value": 7
+    },
+    "WEEKDAY/1": {
+      "value": 1
+    },
+    "WEEKDAY/2": {
+      "value": ""
+    },
+    "DAY/0": {
+      "value": 13
+    },
+    "DAY/1": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "DAY/2": {
+      "value": ""
+    },
+    "MONTH/0": {
+      "value": 10
+    },
+    "MONTH/1": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "MONTH/2": {
+      "value": ""
+    },
+    "YEAR/0": {
+      "value": 2026
+    },
+    "YEAR/1": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "YEAR/2": {
+      "value": ""
+    },
+    "DATEADD/0": {
+      "value": "2026-10-03"
+    },
+    "DATEADD/1": {
+      "value": "13:45:00"
+    },
+    "DATEADD/2": {
+      "value": "2026-10-01 12:20:30"
+    },
+    "DATEADD/3": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "DATEIF/0": {
+      "value": "2天%04021"
+    },
+    "DATEIF/1": {
+      "value": "3天%04021"
+    },
+    "DATEIF/2": {
+      "value": "1年%04019"
+    },
+    "DATEIF/3": {
+      "value": "9月%04020"
+    },
+    "DATEIF/4": {
+      "value": "90分%04023"
+    },
+    "DATEIF/5": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "DATEIF/6": {
+      "error": "Error",
+      "message": "开始日期不是日期类型"
+    },
+    "DATEIF/7": {
+      "error": "Error",
+      "message": "单位不合法"
+    },
+    "DATENOW/0": {
+      "value": "2026-10-13 03:20:30"
+    },
+    "COUNTARRAY/0": {
+      "value": 2
+    },
+    "COUNTARRAY/1": {
+      "value": "42"
+    },
+    "COUNTARRAY/2": {
+      "value": 4
+    },
+    "COUNTARRAY/3": {
+      "value": 0
+    },
+    "COUNTARRAY/4": {
+      "value": 3
+    },
+    "COUNTARRAY/5": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "RANDBETWEEN/0": {
+      "value": 2
+    },
+    "RANDBETWEEN/1": {
+      "value": 3
+    },
+    "RANDBETWEEN/2": {
+      "value": {
+        "kind": "number",
+        "value": "NaN"
+      }
+    },
+    "ROUNDDOWN/0": {
+      "value": 1.23
+    },
+    "ROUNDDOWN/1": {
+      "value": -1.24
+    },
+    "ROUNDDOWN/2": {
+      "error": "Error",
+      "message": "参数不是数字"
+    },
+    "ROUNDUP/0": {
+      "value": 1.24
+    },
+    "ROUNDUP/1": {
+      "value": -1.23
+    },
+    "ROUNDUP/2": {
+      "error": "Error",
+      "message": "参数不是数字"
+    },
+    "ROUND/0": {
+      "value": 1.23
+    },
+    "ROUND/1": {
+      "value": 1.24
+    },
+    "ROUND/2": {
+      "error": "Error",
+      "message": "参数不是数字"
+    },
+    "CEILING/0": {
+      "value": 9
+    },
+    "CEILING/1": {
+      "value": -6
+    },
+    "CEILING/2": {
+      "error": "Error",
+      "message": "#NUM!"
+    },
+    "CEILING/3": {
+      "error": "Error",
+      "message": "参数不是数字"
+    },
+    "FLOOR/0": {
+      "value": 6
+    },
+    "FLOOR/1": {
+      "value": -9
+    },
+    "FLOOR/2": {
+      "error": "Error",
+      "message": "#NUM!"
+    },
+    "FLOOR/3": {
+      "error": "Error",
+      "message": "参数不是数字"
+    },
+    "MOD/0": {
+      "value": 0.1
+    },
+    "MOD/1": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "MOD/2": {
+      "error": "Error",
+      "message": "除数不能为0"
+    },
+    "MOD/3": {
+      "error": "Error",
+      "message": "被除数不是数字"
+    },
+    "INT/0": {
+      "value": 2
+    },
+    "INT/1": {
+      "value": -3
+    },
+    "INT/2": {
+      "error": "Error",
+      "message": "参数不是数字"
+    },
+    "ABS/0": {
+      "value": 2.8
+    },
+    "ABS/1": {
+      "value": 0
+    },
+    "ABS/2": {
+      "error": "Error",
+      "message": "参数不是数字"
+    },
+    "COUNTA/0": {
+      "value": 3
+    },
+    "COUNTBLANK/0": {
+      "value": 5
+    },
+    "PRODUCT/0": {
+      "value": 24
+    },
+    "PRODUCT/1": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "PRODUCT/2": {
+      "error": "TypeError",
+      "message": {
+        "kind": "undefined"
+      }
+    },
+    "MAX/0": {
+      "value": 2
+    },
+    "MAX/1": {
+      "value": 0
+    },
+    "MAX/2": {
+      "error": "TypeError",
+      "message": {
+        "kind": "undefined"
+      }
+    },
+    "MIN/0": {
+      "value": -3
+    },
+    "MIN/1": {
+      "value": 0
+    },
+    "MIN/2": {
+      "error": "TypeError",
+      "message": {
+        "kind": "undefined"
+      }
+    },
+    "AVERAGE/0": {
+      "value": 0
+    },
+    "AVERAGE/1": {
+      "value": 0
+    },
+    "SUM/0": {
+      "value": 3
+    },
+    "SUM/1": {
+      "error": "Error",
+      "message": "没有参数"
+    },
+    "NUMBER/0": {
+      "value": 2.555
+    },
+    "NUMBER/1": {
+      "value": 0
+    },
+    "NUMBER/2": {
+      "value": {
+        "kind": "number",
+        "value": "NaN"
+      }
+    },
+    "POWER/0": {
+      "value": 8
+    },
+    "POWER/1": {
+      "error": "TypeError",
+      "message": {
+        "kind": "undefined"
+      }
+    },
+    "POWER/2": {
+      "value": {
+        "kind": "number",
+        "value": "NaN"
+      }
+    },
+    "LOG/0": {
+      "value": 3
+    },
+    "LOG/1": {
+      "error": "TypeError",
+      "message": {
+        "kind": "undefined"
+      }
+    },
+    "LOG/2": {
+      "value": {
+        "kind": "number",
+        "value": "NaN"
+      }
+    },
+    "REPLACE/0": {
+      "value": "aXef"
+    },
+    "REPLACE/1": {
+      "error": "Error",
+      "message": "REPLACE: text is undefined"
+    },
+    "REPT/0": {
+      "value": "xxx"
+    },
+    "REPT/1": {
+      "error": "Error",
+      "message": "重复字符不能为空"
+    },
+    "REPT/2": {
+      "error": "Error",
+      "message": "长度太大"
+    },
+    "MID/0": {
+      "value": "bcd"
+    },
+    "RIGHT/0": {
+      "value": "def"
+    },
+    "LEFT/0": {
+      "value": "abc"
+    },
+    "UPPER/0": {
+      "value": "ABC"
+    },
+    "LOWER/0": {
+      "value": "abc"
+    },
+    "CONCAT/0": {
+      "value": "a1false"
+    },
+    "STRING/0": {
+      "value": "a,b,,3"
+    },
+    "STRING/1": {
+      "value": ""
+    },
+    "STRING/2": {
+      "value": "0"
+    },
+    "TRIM/0": {
+      "value": "a b"
+    },
+    "TRIM/1": {
+      "value": ""
+    },
+    "CLEAN/0": {
+      "value": "ab"
+    },
+    "CLEAN/1": {
+      "value": ""
+    },
+    "IF/0": {
+      "value": {
+        "keep": true
+      }
+    },
+    "IF/1": {
+      "value": {
+        "keep": true
+      }
+    },
+    "OR/0": {
+      "value": false
+    },
+    "OR/1": {
+      "value": true
+    },
+    "OR/2": {
+      "value": true
+    },
+    "OR/3": {
+      "value": true
+    },
+    "AND/0": {
+      "value": true
+    },
+    "AND/1": {
+      "value": false
+    },
+    "AND/2": {
+      "value": true
+    },
+    "AND/3": {
+      "value": true
+    },
+    "NOT/0": {
+      "value": false
+    },
+    "NOT/1": {
+      "value": true
+    },
+    "NOT/2": {
+      "value": false
+    },
+    "NOT/3": {
+      "value": true
+    },
+    "FALSE/0": {
+      "value": false
+    },
+    "TRUE/0": {
+      "value": true
+    },
+    "ISBLANK/0": {
+      "value": true
+    },
+    "ISBLANK/1": {
+      "value": true
+    },
+    "ISBLANK/2": {
+      "value": true
+    },
+    "ISBLANK/3": {
+      "value": true
+    },
+    "ISBLANK/4": {
+      "value": false
+    },
+    "ISBLANK/5": {
+      "value": false
+    },
+    "ENCODEURI/0": {
+      "value": "https://example.test/a%20b?x=1"
+    },
+    "ENCODEURI/1": {
+      "value": ""
+    },
+    "DECODEURI/0": {
+      "value": "https://example.test/a b"
+    },
+    "DECODEURI/1": {
+      "error": "URIError",
+      "message": "URI malformed"
+    },
+    "ENCODEURICOMPONENT/0": {
+      "value": "a%20b%26c"
+    },
+    "ENCODEURICOMPONENT/1": {
+      "value": ""
+    },
+    "DECODEURICOMPONENT/0": {
+      "value": "a b&c"
+    },
+    "DECODEURICOMPONENT/1": {
+      "error": "URIError",
+      "message": "URI malformed"
+    },
+    "DISTANCE/0": {
+      "value": 23.813324469111308
+    },
+    "DISTANCE/1": {
+      "value": 23.813324469111308
+    },
+    "DISTANCE/2": {
+      "value": 23.813324469111308
+    },
+    "DISTANCE/3": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "DISTANCE/4": {
+      "value": 0
+    },
+    "DISTANCE/5": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "FIND/0": {
+      "value": "b"
+    },
+    "FIND/1": {
+      "value": "foo"
+    },
+    "FIND/2": {
+      "value": "ab"
+    },
+    "FIND/3": {
+      "value": "tail"
+    },
+    "FINDA/0": {
+      "value": [
+        "b",
+        "d"
+      ]
+    },
+    "FINDA/1": {
+      "value": [
+        "foo"
+      ]
+    },
+    "FINDA/2": {
+      "value": []
+    },
+    "SPLIT/0": {
+      "value": [
+        "a",
+        "b"
+      ]
+    },
+    "JOIN/0": {
+      "value": "a,1,"
+    },
+    "INCLUDE/0": {
+      "value": true
+    },
+    "INCLUDE/1": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "INCLUDE/2": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "GETPOSITION/0": {
+      "value": "1,2"
+    },
+    "GETPOSITION/1": {
+      "value": ""
+    },
+    "GETPOSITION/2": {
+      "value": "Office"
+    },
+    "COUNTCHAR/0": {
+      "value": 3
+    },
+    "COUNTCHAR/1": {
+      "value": 0
+    },
+    "PI/0": {
+      "value": 3.141592653589793
+    },
+    "RADIANS/0": {
+      "value": 3.141592653589793
+    },
+    "RADIANS/1": {
+      "value": 1.5707963267948966
+    },
+    "RADIANS/2": {
+      "value": {
+        "kind": "number",
+        "value": "NaN"
+      }
+    },
+    "DEGREES/0": {
+      "value": 180
+    },
+    "DEGREES/1": {
+      "value": {
+        "kind": "number",
+        "value": "NaN"
+      }
+    },
+    "SIN/0": {
+      "value": 0
+    },
+    "SIN/1": {
+      "value": 0.8414709848078965
+    },
+    "COS/0": {
+      "value": 1
+    },
+    "COS/1": {
+      "value": 0.5403023058681398
+    },
+    "TAN/0": {
+      "value": 0
+    },
+    "TAN/1": {
+      "value": 1.5574077246549023
+    },
+    "COT/0": {
+      "value": 0.6420926159343306
+    },
+    "COT/1": {
+      "value": {
+        "kind": "number",
+        "value": "NaN"
+      }
+    },
+    "ASIN/0": {
+      "value": 0.5235987755982989
+    },
+    "ASIN/1": {
+      "value": {
+        "kind": "number",
+        "value": "NaN"
+      }
+    },
+    "ACOS/0": {
+      "value": 1.0471975511965979
+    },
+    "ACOS/1": {
+      "value": {
+        "kind": "number",
+        "value": "NaN"
+      }
+    },
+    "ATAN/0": {
+      "value": 0.7853981633974483
+    },
+    "ATAN/1": {
+      "value": {
+        "kind": "number",
+        "value": "NaN"
+      }
+    },
+    "ACOT/0": {
+      "value": 0.7853981633974483
+    },
+    "ACOT/1": {
+      "value": {
+        "kind": "number",
+        "value": "NaN"
+      }
+    },
+    "SUBSTITUTE/0": {
+      "value": "a-b-a"
+    },
+    "SUBSTITUTE/1": {
+      "value": "abcXbc"
+    },
+    "SUBSTITUTE/2": {
+      "value": "abcabc"
+    },
+    "SUBSTITUTE/3": {
+      "value": "abcabc"
+    },
+    "IFS/0": {
+      "value": "b"
+    },
+    "IFS/1": {
+      "value": null
+    },
+    "IFS/2": {
+      "value": 0
+    },
+    "WORKDAY/0": {
+      "value": "2026-10-06"
+    },
+    "WORKDAY/1": {
+      "value": "2026-10-01"
+    },
+    "WORKDAY/2": {
+      "value": "2026-10-07"
+    },
+    "WORKDAY/3": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "WORKDAY/4": {
+      "error": "Error",
+      "message": "开始日期不是日期类型"
+    },
+    "WORKDAY/5": {
+      "error": "Error",
+      "message": "天数必须是数字"
+    },
+    "WORKDAY_INTL/0": {
+      "value": "2026-10-06"
+    },
+    "WORKDAY_INTL/1": {
+      "value": "2026-10-05"
+    },
+    "WORKDAY_INTL/2": {
+      "value": "2026-10-07"
+    },
+    "WORKDAY_INTL/3": {
+      "value": "2026-10-02"
+    },
+    "WORKDAY_INTL/4": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "WEEKNUM/0": {
+      "value": 42
+    },
+    "WEEKNUM/1": {
+      "value": 42
+    },
+    "WEEKNUM/2": {
+      "value": 43
+    },
+    "WEEKNUM/3": {
+      "value": {
+        "kind": "undefined"
+      }
+    },
+    "WEEKNUM/4": {
+      "error": "Error",
+      "message": "日期不是日期类型"
+    },
+    "STRREVERSE/0": {
+      "value": "cba"
+    },
+    "STRREVERSE/1": {
+      "value": ""
+    },
+    "STRREVERSE/2": {
+      "value": "2,1"
+    },
+    "NORM_S_DIST/0": {
+      "value": 0.9750021738917761
+    },
+    "NORM_S_DIST/1": {
+      "value": 0.3989422804014327
+    },
+    "NORM_S_DIST/2": {
+      "error": "Error",
+      "message": "参数不是数字"
+    },
+    "PERMUT/0": {
+      "value": 60
+    },
+    "PERMUT/1": {
+      "value": 60
+    },
+    "PERMUT/2": {
+      "value": 1
+    },
+    "PERMUT/3": {
+      "error": "Error",
+      "message": "总对象数必须是非负整数"
+    },
+    "PERMUT/4": {
+      "error": "Error",
+      "message": "选择对象数不能大于总对象数"
+    },
+    "COMBIN/0": {
+      "value": 10
+    },
+    "COMBIN/1": {
+      "value": 10
+    },
+    "COMBIN/2": {
+      "value": 1
+    },
+    "COMBIN/3": {
+      "error": "Error",
+      "message": "总对象数必须是非负整数"
+    },
+    "COMBIN/4": {
+      "error": "Error",
+      "message": "选择对象数不能大于总对象数"
+    }
+  },
+  "numericReceivers": {
+    "MAX": {
+      "result": {
+        "value": 4
+      },
+      "trace": [
+        "string",
+        "number"
+      ]
+    },
+    "MIN": {
+      "result": {
+        "value": 2
+      },
+      "trace": [
+        "string",
+        "number"
+      ]
+    },
+    "POWER": {
+      "result": {
+        "value": 16
+      },
+      "trace": [
+        "number"
+      ]
+    },
+    "LOG": {
+      "result": {
+        "value": 0.5
+      },
+      "trace": [
+        "number"
+      ]
+    }
+  }
+}
