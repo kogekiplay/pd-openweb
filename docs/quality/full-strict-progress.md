@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-13 二维码/条码打印边界
+
+收紧 QR/条码打印的 canvas context、标签文本、A4 默认版式、空记录和 pdfobject 预览边界；严格诊断 54,503 → 54,431，按文件/错误码新增 0。二维码预览 URL、221/221 规格及语法/工具门禁通过；外围打印组件债务继续。详见 print-qr-pdf-boundary-strict-20261013.md。
+
 ## 2026-10-13 Socket 通知边界
 
 Socket 初始化、自定义通知、市场/系统通知和 mobile socket payload 已有限化；通知 action 改为有限分支，新增 socket.io-client 使用声明与 decoder 回归。严格诊断 54,519 → 54,503（按文件/错误码新增 0），socket 目录零诊断；221/221 规格、语法和工具门禁通过。详见 socket-notice-strict-20261013.md。全仓目标继续，待 release/资源校验后按日常窗口发布。
