@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-13 生产边界热修复与目标恢复
+
+自动编号 controlId/format 的 null 占位值、子表/关联记录 widths 字段 ID 对象协议已补齐。列宽的三个字段预览共享有限解析，正常原值不回写，非法宽度回退至 160px。222/222 规格、正式 release/publish、runtime/HTML 引用和容器全文件 SHA 校验通过；10:11 已发布 `99f47e7c2`，设备编码及编码安装真实字段编辑页、列宽及 UAT 清单通过，控制台无错误。详见 `production-20261013.md`。全仓仍有 54,075 条终点诊断，目标已恢复为 active，继续全仓强类型与正式严格化；GitHub 仅更新 main，日常下班前发布任务仍 ACTIVE。
+
 ## 2026-10-13 Workflow API v2 请求边界
 
 统一 workflow/apiV2 全部生成式 API 的 args/options 类型合同，保留所有请求路径和运行时行为；严格诊断 54,425 → 54,075（按文件/错误码新增 0），完整 221/221 规格及语法/工具门禁通过。详见 workflow-api-v2-strict-20261013.md。
