@@ -220,7 +220,7 @@ export const VALIDATE_REG = {
   number: /^-?\d*(\.\d*)?/,
 };
 export const DEFAULT_VALUE_VALIDATOR = {
-  number: value => _.head(VALIDATE_REG.number.exec(value)),
+  number: (value: string) => _.head(VALIDATE_REG.number.exec(value)),
 };
 
 // 动态默认值选择类型
