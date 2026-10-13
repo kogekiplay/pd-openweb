@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-13 Workflow API v2 请求边界
+
+统一 flowNode/process 生成式 API 的 args/options 类型合同，保留所有请求路径和运行时行为；严格诊断 54,425 → 54,315（按文件/错误码新增 0），完整 221/221 规格及语法/工具门禁通过。详见 workflow-api-v2-strict-20261013.md。
+
 ## 2026-10-13 二维码/条码打印边界
 
 收紧 QR/条码打印的 canvas context、标签文本、A4 默认版式、空记录、pdfobject 预览和枚举模板边界；严格诊断 54,503 → 54,425，按文件/错误码新增 0。二维码预览 URL、221/221 规格及语法/工具门禁通过；外围打印组件债务继续。详见 print-qr-pdf-boundary-strict-20261013.md。
