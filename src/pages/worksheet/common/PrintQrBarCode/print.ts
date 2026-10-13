@@ -15,14 +15,20 @@ import { A4_OPTS, A4_SIZE } from './printConfig';
 import type { LabelRecord, PrintLabelConfig, QrPdfOptions } from './types';
 import { createBarLabeObjectFromConfig, createQrLabeObjectFromConfig } from './util';
 
-function cutString(text, maxWidth: number, fontSize: number, maxLine = 3) {
+function getCanvasContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
+  const context = canvas.getContext('2d');
+  if (!context) throw new Error('Canvas 2D context is unavailable');
+  return context;
+}
+
+function cutString(text: string, maxWidth: number, fontSize: number, maxLine = 3): string[] {
   text = text.slice(0, 300);
   let result;
   let width = 0;
   const lines = [];
   let i, j;
   const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
+  const ctx = getCanvasContext(canvas);
   ctx.textBaseline = 'hanging';
   ctx.font = fontSize + 'px PingFang SC';
 
@@ -35,11 +41,12 @@ function cutString(text, maxWidth: number, fontSize: number, maxLine = 3) {
       for (j = 0; result.indexOf(' ', j) !== -1; j = result.indexOf(' ', j) + 1);
     }
 
-    lines.push(result.substr(0, j || result.length));
-    width = Math.max(width, ctx.measureText(lines[lines.length - 1]).width);
-    text = text.substr(lines[lines.length - 1].length, text.length);
+    const line = result.substr(0, j || result.length);
+    lines.push(line);
+    width = Math.max(width, ctx.measureText(line).width);
+    text = text.substr(line.length, text.length);
     if (text.length && lines.length + 1 > maxLine) {
-      lines[lines.length - 1] = lines[lines.length - 1].slice(0, -1) + '...';
+      lines[lines.length - 1] = line.slice(0, -1) + '...';
       break;
     }
   }
@@ -58,7 +65,18 @@ function genTextCanvas({
   firstIsBigger = false,
   bolder = false,
   lineOverEllipsis = false,
-}) {
+}: {
+  text: string | string[];
+  fontSize?: number | undefined;
+  color?: string | undefined;
+  width?: number | undefined;
+  isCenter?: boolean | undefined;
+  lineHeight?: number | undefined;
+  pixelScale?: number | undefined;
+  firstIsBigger?: boolean | undefined;
+  bolder?: boolean | undefined;
+  lineOverEllipsis?: boolean | undefined;
+}): HTMLCanvasElement {
   let texts;
 
   if (!_.isArray(text)) {
@@ -76,11 +94,11 @@ function genTextCanvas({
     fontSize = fontSize * pixelScale;
   }
 
-  texts = texts.filter(t => t);
+  texts = texts.filter((t): t is string => Boolean(t));
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = fontSize * lineHeight * texts.length;
-  const ctx = canvas.getContext('2d');
+  const ctx = getCanvasContext(canvas);
   ctx.textBaseline = 'hanging';
   if (isCenter) {
     ctx.textAlign = 'center';
@@ -112,7 +130,7 @@ function genTextCanvas({
 }
 
 function getQrDataurl(
-  url,
+  url: string,
   options = {
     correctLevel: QRErrorCorrectLevel.H,
   },
@@ -147,13 +165,12 @@ export class QrPdf {
   declare $dialog: HTMLElement;
 
   constructor({ worksheetName, printType, layout, printData, correctLevel, config }: QrPdfOptions = {}) {
-    this.worksheetName = worksheetName;
-    this.worksheetName = worksheetName;
-    this.correctLevel = correctLevel;
-    this.printType = printType;
-    this.printData = printData;
-    this.layout = layout;
-    this.config = config;
+    this.worksheetName = worksheetName || '';
+    this.correctLevel = correctLevel ?? QRErrorCorrectLevel.H;
+    this.printType = printType ?? PRINT_TYPE.QR;
+    this.printData = printData || [];
+    this.layout = layout ?? QR_LAYOUT.PORTRAIT;
+    this.config = config || {};
   }
   async render() {
     return new Promise(async resolve => {
@@ -253,6 +270,7 @@ export class QrPdf {
     const options = A4_OPTS;
     this.size = A4_SIZE;
     this.option = options[this.layout];
+    if (!this.option) return;
     this.doc = new this.jsPDF('p', 'mm', 'a4', true);
     this.doc.setProperties({
       title: _l('打印二维码'),
@@ -272,10 +290,10 @@ export class QrPdf {
       }
     }
   }
-  renderPage(printData) {
+  renderPage(printData: LabelRecord[]) {
     let textCanvas;
-    const { col, row, secFontSize, textLeft, width, topLines } = this.option;
-    let { textWidth } = this.option;
+    const { col = 1, row = 1, secFontSize = 12, textLeft = 0, width = 100, topLines = 3 } = this.option;
+    let { textWidth = width } = this.option;
     const pixelScale = 2;
     const is2x2 = this.layout === 3;
     textWidth = textWidth || width;
@@ -287,7 +305,7 @@ export class QrPdf {
           return;
         }
 
-        const texts = printData[qrindex].texts.map(t => t.text);
+        const texts = printData[qrindex].texts.map(t => t.text).filter((text): text is string => typeof text === 'string');
         const qrdataurl = getQrDataurl(printData[qrindex].value, {
           correctLevel: this.correctLevel || QRErrorCorrectLevel.H,
         });
@@ -463,7 +481,7 @@ export class QrPdf {
       </div>
     `;
     this.$dialog.classList.add('worksheetRowsQrPreview');
-    this.$dialog.querySelector('.closeDialog').addEventListener('click', this.closeDialog);
+    this.$dialog.querySelector('.closeDialog')?.addEventListener('click', this.closeDialog);
     document.body.appendChild(this.$dialog);
     setTimeout(() => {
       this.$dialog.classList.add('visible');
@@ -484,7 +502,14 @@ export default async function (
   cb: () => void = () => {},
 ) {
   console.time('render qr');
-  const pdf = new QrPdf({ worksheetName, printType, layout, printData, correctLevel, config });
+  const pdf = new QrPdf({
+    ...(worksheetName === undefined ? {} : { worksheetName }),
+    ...(printType === undefined ? {} : { printType }),
+    ...(layout === undefined ? {} : { layout }),
+    ...(printData === undefined ? {} : { printData }),
+    ...(correctLevel === undefined ? {} : { correctLevel }),
+    ...(config === undefined ? {} : { config }),
+  });
 
   /* 这里原先还有一支 if (pdf.isPdfKit) { this.doc.end(); this.stream.on('finish', ...) }。
      isPdfKit 全仓从来没被赋过值（恒为 undefined），是标签类改由 GeneratingPdf 走 pdfkit 渲染之后留下的死分支；
