@@ -3,10 +3,11 @@ import _ from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';
 import { TagTextarea } from 'ming-ui';
 import { DynamicInput, OtherField, SelectOtherField } from '../components';
+import type { DynamicInputProps, DynamicValueSource } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 import { transferValue } from '../util';
 
-export default class ArrayInput extends Component<any, any> {
+export default class ArrayInput extends Component<DynamicInputProps, any> {
   declare $tagtextarea: TagTextarea | undefined;
   declare $wrap: SelectOtherField | null | undefined;
 
@@ -45,7 +46,7 @@ export default class ArrayInput extends Component<any, any> {
   }
 
   // 设置为标签格式
-  setDynamicValue = (dynamicValue = []) => {
+  setDynamicValue = (dynamicValue: DynamicValueSource[] = []) => {
     let fields = '';
 
     dynamicValue.forEach(item => {
@@ -73,7 +74,7 @@ export default class ArrayInput extends Component<any, any> {
     defaultType && this.$wrap.triggerClick();
   };
 
-  handleDynamicValue = (newField = []) => {
+  handleDynamicValue = (newField: DynamicValueSource[] = []) => {
     if (this.$tagtextarea) {
       const { cid = '', rcid = '' } = newField[0];
       const id = rcid ? `${cid}~${rcid}` : `${cid}`;
@@ -86,7 +87,12 @@ export default class ArrayInput extends Component<any, any> {
   override render() {
     const { defaultType } = this.props;
     return (
-      <DynamicValueInputWrap ref={con => { this.$textinput = con; }} triggerStyle={true}>
+      <DynamicValueInputWrap
+        ref={con => {
+          this.$textinput = con;
+        }}
+        triggerStyle={true}
+      >
         {defaultType ? (
           <DynamicInput {...this.props} onTriggerClick={this.onTriggerClick} />
         ) : (
@@ -106,7 +112,9 @@ export default class ArrayInput extends Component<any, any> {
         <SelectOtherField
           {...this.props}
           onDynamicValueChange={this.handleDynamicValue}
-          ref={con => { this.$wrap = con; }}
+          ref={con => {
+            this.$wrap = con;
+          }}
           popupContainer={this.$textinput}
         />
       </DynamicValueInputWrap>

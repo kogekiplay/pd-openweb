@@ -1,8 +1,8 @@
 import { Component, createRef, Fragment } from 'react';
-import cx from 'classnames';
-import _, { get } from 'lodash';
-import { func } from 'prop-types';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
+import _ from 'lodash';
+import { func } from 'prop-types';
 import styled from 'styled-components';
 import { Menu, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -29,6 +29,12 @@ import {
   PRINT_TEMP_TYPES,
   WATER_MASK_TYPES,
 } from '../config';
+import type {
+  DynamicControl,
+  DynamicFieldSelection,
+  DynamicSourceMenuItem,
+  SelectOtherFieldProps,
+} from '../dynamicTypes';
 import { SelectOtherFieldWrap } from '../styled';
 import SelectFields from './SelectFields';
 import 'rc-trigger/assets/index.css';
@@ -50,16 +56,13 @@ export interface SelectOtherFieldState {
   showPopupType: string;
 }
 
-export default class SelectOtherField extends Component<any, SelectOtherFieldState> {
+export default class SelectOtherField extends Component<SelectOtherFieldProps, SelectOtherFieldState> {
   static override propTypes = { onTriggerClick: func };
   static defaultProps = {
     onTriggerClick: _.noop,
   };
-  constructor(props) {
-    super(props);
-    this.$wrap = createRef(null);
-  }
-  override state = {
+  readonly $wrap = createRef<HTMLDivElement>();
+  override state: SelectOtherFieldState = {
     isDynamic: false,
     filedVisible: false,
     searchVisible: false,
@@ -68,10 +71,12 @@ export default class SelectOtherField extends Component<any, SelectOtherFieldSta
   };
 
   // 插入标签;
-  insertField = para => {
+  insertField = (para: DynamicFieldSelection) => {
     const { fieldId, relateSheetControlId, type } = para;
-    const { data = {}, onDynamicValueChange } = this.props;
+    const { data, onDynamicValueChange } = this.props;
     const { advancedSetting = {} } = data;
+    // Preserve the numeric legacy flag without treating the string wire flag as equivalent.
+    const multiSelection: unknown = advancedSetting['enumDefault'];
     const isText = _.includes([1, 2, 41, 45], data.type);
 
     const isAsync = () => {
@@ -84,7 +89,7 @@ export default class SelectOtherField extends Component<any, SelectOtherFieldSta
     const newField = [{ cid: fieldId, rcid: relateSheetControlId, staticValue: '', isAsync: isAsync() }];
     onDynamicValueChange(newField);
     //多选类型不关闭
-    if (isText || (_.includes([26, 27], data.type) && advancedSetting.enumDefault === 1)) return;
+    if (isText || (_.includes([26, 27], data.type) && multiSelection === 1)) return;
     this.setState({ isDynamic: false, filedVisible: false });
   };
 
@@ -98,7 +103,7 @@ export default class SelectOtherField extends Component<any, SelectOtherFieldSta
     }
   };
 
-  handleAction = data => {
+  handleAction = (data: DynamicSourceMenuItem) => {
     const { onDynamicValueChange } = this.props;
 
     switch (data.key) {
@@ -173,41 +178,44 @@ export default class SelectOtherField extends Component<any, SelectOtherFieldSta
     }
   };
 
-  handleActionForLinkParam = value => {
+  handleActionForLinkParam = (value: string) => {
     const { onDynamicValueChange } = this.props;
     onDynamicValueChange([{ cid: value, rcid: 'url', staticValue: '', isAsync: true }]);
     this.setState({ isDynamic: false, showPopupType: '' });
   };
 
-  handleActionForDY = value => {
+  handleActionForDY = (value: string | number) => {
     const { onDynamicValueChange } = this.props;
     onDynamicValueChange([{ cid: value, rcid: 'dateRange', staticValue: '', isAsync: true }]);
     this.setState({ isDynamic: false, showPopupType: '' });
   };
 
-  getCurrentField = data => {
-    if (this.props.from === DYNAMIC_FROM_MODE.FAST_FILTER && [26, 27, 48].includes(data.type)) {
-      return CURRENT_TYPES[data.type];
+  getCurrentField = (data: DynamicControl): DynamicSourceMenuItem[] => {
+    const currentTypes = data.type === undefined ? [] : CURRENT_TYPES[data.type] || [];
+    if (this.props.from === DYNAMIC_FROM_MODE.FAST_FILTER && [26, 27, 48].includes(data.type ?? -1)) {
+      return currentTypes;
     }
 
     // 自定义默认值
     if (this.props.from === DYNAMIC_FROM_MODE.CREATE_CUSTOM) {
-      let customTypes =
+      let customTypes: DynamicSourceMenuItem[] =
         this.props.writeObject === 1
-          ? CURRENT_TYPES[data.type] || []
-          : (CURRENT_TYPES[data.type] || []).concat([
-              { icon: 'icon-workflow_other', text: _l('当前记录的字段值'), key: 1 },
-            ]);
-      customTypes = this.props.showEmpty ? CUR_EMPTY_TYPES.concat(customTypes) : customTypes;
+          ? currentTypes
+          : [...currentTypes, { icon: 'icon-workflow_other', text: _l('当前记录的字段值'), key: 1 }];
+      customTypes = this.props.showEmpty ? [...CUR_EMPTY_TYPES, ...customTypes] : customTypes;
       return customTypes.filter(c => !_.includes(['keyword'], c.key));
     }
 
     // 自定义页面---封装业务流程
     if (this.props.from === DYNAMIC_FROM_MODE.CUSTOM_PHP) {
-      return data.type === 2 ? _.flatten(Object.values(CUSTOM_PHP_TYPES)) : CUSTOM_PHP_TYPES[data.type];
+      return data.type === 2
+        ? _.flatten(Object.values(CUSTOM_PHP_TYPES))
+        : data.type === undefined
+          ? []
+          : CUSTOM_PHP_TYPES[data.type] || [];
     }
 
-    let types = OTHER_FIELD_LIST;
+    let types: DynamicSourceMenuItem[] = [...OTHER_FIELD_LIST];
 
     // 没有函数的控件
     if (!_.includes(CAN_AS_FX_DYNAMIC_FIELD, data.type)) {
@@ -225,12 +233,12 @@ export default class SelectOtherField extends Component<any, SelectOtherFieldSta
       (_.includes(data.isSearch ? [2, 6] : [15, 16, 26], data.type) &&
         DYNAMIC_FROM_MODE.SEARCH_PARAMS === this.props.from)
     ) {
-      types = (CURRENT_TYPES[data.type] || []).concat(types);
+      types = [...currentTypes, ...types];
     }
 
     // ocr其他字段控件
     if (_.includes([2, 14], data.type) && DYNAMIC_FROM_MODE.OCR_PARAMS === this.props.from) {
-      types = (data.type === 2 ? CUR_OCR_URL_TYPES : CUR_OCR_TYPES).concat(types);
+      types = [...(data.type === 2 ? CUR_OCR_URL_TYPES : CUR_OCR_TYPES), ...types];
     }
 
     // 附件水印其他字段控件
@@ -259,16 +267,17 @@ export default class SelectOtherField extends Component<any, SelectOtherFieldSta
 
     if (this.props.fromRange) {
       // 成员范围补充当前用户所在部门
-      types.splice(1, 0, _.head(CURRENT_TYPES[27]));
+      const department = CURRENT_TYPES[27]?.[0];
+      if (department) types.splice(1, 0, department);
     }
 
     // 包含清空操作
     if (this.props.showEmpty) {
-      types = CUR_EMPTY_TYPES.concat(types);
+      types = [...CUR_EMPTY_TYPES, ...types];
     }
 
     // 未保存子表不支持查询工作表
-    if (this.props.from === 'subList' && this.props.subListSheetId.includes('-')) {
+    if (this.props.from === 'subList' && this.props.subListSheetId?.includes('-')) {
       types = types.filter(item => !_.includes([OTHER_FIELD_TYPE.SEARCH], item.key));
     }
 
@@ -279,9 +288,8 @@ export default class SelectOtherField extends Component<any, SelectOtherFieldSta
     const { isDynamic, filedVisible, fxVisible, searchVisible, showPopupType } = this.state;
     const {
       data,
-      dynamicValue,
       onDynamicValueChange,
-      allControls,
+      allControls = [],
       onChange,
       popupContainer,
       propFiledVisible,
@@ -306,20 +314,25 @@ export default class SelectOtherField extends Component<any, SelectOtherFieldSta
         case 'DY_DATE':
           return (
             <Menu style={{ maxHeight: 200, overflowY: 'auto' }}>
-              {getDaterange(data.advancedSetting || {}).map((o, index) => {
-                return (
-                  <MenuItem
-                    key={index}
-                    className="overflow_ellipsis"
-                    onClick={e => {
-                      this.handleActionForDY(o);
-                      e.stopPropagation();
-                    }}
-                  >
-                    <MenuStyle>{(_.flattenDeep(DATE_TYPE).find(it => it.value == o) || {}).text}</MenuStyle>
-                  </MenuItem>
-                );
-              })}
+              {(getDaterange(data.advancedSetting || {}) || [])
+                .filter(
+                  (value): value is string | number =>
+                    typeof value === 'string' || (typeof value === 'number' && Number.isFinite(value)),
+                )
+                .map((o, index) => {
+                  return (
+                    <MenuItem
+                      key={index}
+                      className="overflow_ellipsis"
+                      onClick={e => {
+                        this.handleActionForDY(o);
+                        e.stopPropagation();
+                      }}
+                    >
+                      <MenuStyle>{(_.flattenDeep(DATE_TYPE).find(it => it.value == o) || {}).text}</MenuStyle>
+                    </MenuItem>
+                  );
+                })}
             </Menu>
           );
 
@@ -386,8 +399,6 @@ export default class SelectOtherField extends Component<any, SelectOtherFieldSta
       return propFiledVisible || filedVisible ? (
         <SelectFields
           onClickAway={() => this.setState({ isDynamic: false, filedVisible: false })}
-          data={data}
-          dynamicValue={dynamicValue}
           onClick={this.insertField}
           onMultiUserChange={onDynamicValueChange}
           {...this.props}
@@ -416,7 +427,7 @@ export default class SelectOtherField extends Component<any, SelectOtherFieldSta
             popupStyle={{ width: '100%' }}
             popupVisible={isDynamic && !isSubList}
             onPopupVisibleChange={isDynamic => this.setState({ isDynamic })}
-            getPopupContainer={() => popupContainer || this.$wrap.current}
+            getPopupContainer={() => popupContainer || this.$wrap.current || document.body}
             popup={renderPopup}
             popupAlign={{
               points: ['tr', 'br'],
@@ -465,9 +476,9 @@ export default class SelectOtherField extends Component<any, SelectOtherFieldSta
             supportJavaScript
             supportDebug
             fromCustom={subListSetValueEvent}
-            appId={get(this.props, 'globalSheetInfo.appId')}
-            worksheetId={get(this.props, 'globalSheetInfo.worksheetId')}
-            projectId={get(this.props, 'globalSheetInfo.projectId')}
+            appId={this.props.globalSheetInfo?.appId}
+            worksheetId={this.props.globalSheetInfo?.worksheetId}
+            projectId={this.props.globalSheetInfo?.projectId}
             control={data}
             value={
               subListSetValueEvent
@@ -482,7 +493,7 @@ export default class SelectOtherField extends Component<any, SelectOtherFieldSta
             }
             onClose={() => this.setState({ fxVisible: false })}
             onSave={value => {
-              onChange(
+              onChange?.(
                 handleAdvancedSettingChange(data, {
                   defsource: '',
                   defaulttype: '1',

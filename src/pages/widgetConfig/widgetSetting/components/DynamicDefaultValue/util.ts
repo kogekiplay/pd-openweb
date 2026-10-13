@@ -30,9 +30,12 @@ import {
   EMEBD_FIELDS,
   TIME_TYPES,
 } from './config';
+import { dynamicValueSources } from './dynamicTypes';
+import type { DynamicValueSource } from './dynamicTypes';
 
 // 新建子表并配置成员、部门等默认值，后端relationControls不处理，没有补全配置返回
-export const dealIds = (type, dynamicValue) => {
+export const dealIds = (type: number | undefined, value: unknown): DynamicValueSource[] => {
+  const dynamicValue = dynamicValueSources(value);
   if (_.isEmpty(dynamicValue)) return dynamicValue;
   return (dynamicValue || []).map(item => {
     if (
@@ -40,7 +43,7 @@ export const dealIds = (type, dynamicValue) => {
       _.includes(['user-self', 'user-departments', 'user-role'], item.staticValue)
     ) {
       const name = _.get(
-        _.find(CURRENT_TYPES[type] || [], i => i.id === item.staticValue),
+        _.find(type === undefined ? [] : CURRENT_TYPES[type] || [], i => i.id === item.staticValue),
         'text',
       );
       const id =
@@ -60,8 +63,8 @@ const filterSys = (list = []) => {
   return list.filter(item => !_.includes(SYS, item.controlId));
 };
 
-export const getControlType = data => {
-  return CONTROL_TYPE[data.type];
+export const getControlType = (data: FormControl): string | undefined => {
+  return data.type === undefined ? undefined : CONTROL_TYPE[data.type];
 };
 
 export const getDateType = data => {
@@ -239,11 +242,17 @@ export const getControls = ({ data = {} as FormControl, controls, isCurrent, fro
       from,
     )
   ) {
-    controls = controls.map((control: FormControl) => control.type === 30 ? {
-      ...control, type: control.sourceControlType, originType: control.type,
-      enumDefault: control.sourceControl?.enumDefault ?? control.enumDefault,
-      advancedSetting: { ...(control.sourceControl?.advancedSetting || {}) },
-    } : control);
+    controls = controls.map((control: FormControl) =>
+      control.type === 30
+        ? {
+            ...control,
+            type: control.sourceControlType,
+            originType: control.type,
+            enumDefault: control.sourceControl?.enumDefault ?? control.enumDefault,
+            advancedSetting: { ...(control.sourceControl?.advancedSetting || {}) },
+          }
+        : control,
+    );
   }
 
   //文本字段值可选 关联记录自动编号，不能是当前表单,查询工作表都可

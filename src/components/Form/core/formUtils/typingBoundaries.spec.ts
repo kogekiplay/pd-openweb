@@ -484,11 +484,14 @@ if (process.env.FORM_NORMAL_ONLY !== '1') {
     __dirname,
     '../../../../pages/widgetConfig/widgetSetting/components/DynamicDefaultValue',
   );
+  producerStubs['./dynamicTypes'] = loadProducer<{
+    readDynamicValueSources: (control: Control) => DefaultValueSource[];
+  }>(path.join(producerDirectory, 'dynamicTypes.ts'));
   const score = loadProducer<{ default: ScoreProducer }>(
     path.join(producerDirectory, 'inputTypes/ScoreInput.tsx'),
   ).default;
   assert.equal(typeof score, 'function');
-  producerStubs['./inputTypes'] = { TYPE_TO_COMP: { score } };
+  producerStubs['./inputTypes'] = { TYPE_TO_COMP: { score }, isDynamicInputType: (type: string) => type === 'score' };
   const setting = loadProducer<{ default: DefaultProducer }>(path.join(producerDirectory, 'index.tsx')).default;
   assert.equal(typeof setting, 'function');
   function nodeWithType(value: unknown, expectedType: unknown): ProducerNode | undefined {

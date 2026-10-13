@@ -3,9 +3,10 @@ import update from 'immutability-helper';
 import _ from 'lodash';
 import { dialogSelectDept } from 'ming-ui/functions';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
+import type { DynamicInputProps } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 
-export default class DepartmentInput extends Component<any, any> {
+export default class DepartmentInput extends Component<DynamicInputProps, any> {
   declare $wrap: SelectOtherField | null | undefined;
 
   // 成员多选数据处理
@@ -28,7 +29,7 @@ export default class DepartmentInput extends Component<any, any> {
   };
   handleClick = () => {
     const { globalSheetInfo, onDynamicValueChange, data = {} } = this.props;
-    const { projectId } = globalSheetInfo;
+    const { projectId } = globalSheetInfo || {};
     const unique = data.enumDefault === 0;
 
     dialogSelectDept({
@@ -59,7 +60,12 @@ export default class DepartmentInput extends Component<any, any> {
         ) : (
           <OtherFieldList {...this.props} removeItem={this.removeItem} onClick={this.handleClick} />
         )}
-        <SelectOtherField {...this.props} ref={con => { this.$wrap = con; }} />
+        <SelectOtherField
+          {...this.props}
+          ref={con => {
+            this.$wrap = con;
+          }}
+        />
       </DynamicValueInputWrap>
     );
   }

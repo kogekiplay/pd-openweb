@@ -1,4 +1,3 @@
-import type { ComponentType } from 'react';
 import AreaInput from './AreaInput';
 import ArrayInput from './ArrayInput';
 import AttachmentInput from './AttachmentInput';
@@ -21,7 +20,7 @@ import TextInput from './TextInput';
 import TimeInput from './TimeInput';
 import UserInput from './UserInput';
 
-export const TYPE_TO_COMP: Record<string, ComponentType<Record<string, unknown>>> = {
+export const TYPE_TO_COMP = {
   text: TextInput,
   number: NumberInput,
   phone: PhoneInput,
@@ -45,3 +44,6 @@ export const TYPE_TO_COMP: Record<string, ComponentType<Record<string, unknown>>
   attachment: AttachmentInput,
   location: LocationInput,
 };
+export function isDynamicInputType(type: string): type is keyof typeof TYPE_TO_COMP {
+  return Object.hasOwn(TYPE_TO_COMP, type);
+}

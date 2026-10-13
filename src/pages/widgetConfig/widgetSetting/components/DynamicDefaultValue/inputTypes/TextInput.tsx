@@ -5,10 +5,11 @@ import { TagTextarea } from 'ming-ui';
 import { DYNAMIC_FROM_MODE } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js';
 import { handleAdvancedSettingChange } from '../../../../util/setting';
 import { DynamicInput, OtherField, SelectOtherField } from '../components';
+import type { DynamicInputProps, DynamicValueSource } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 import { transferValue } from '../util';
 
-export default class TextInput extends Component<any, any> {
+export default class TextInput extends Component<DynamicInputProps, any> {
   static override propTypes = {
     dynamicValue: arrayOf(shape({ cid: string, rcid: string, staticValue: string })),
     onDynamicValueChange: func,
@@ -64,7 +65,7 @@ export default class TextInput extends Component<any, any> {
   }
 
   // 设置为标签格式
-  setDynamicValue = (dynamicValue = []) => {
+  setDynamicValue = (dynamicValue: DynamicValueSource[] = []) => {
     let fields = '';
 
     dynamicValue.forEach(item => {
@@ -92,7 +93,7 @@ export default class TextInput extends Component<any, any> {
     defaultType && this.$wrap.triggerClick();
   };
 
-  handleDynamicValue = (newField = []) => {
+  handleDynamicValue = (newField: DynamicValueSource[] = []) => {
     if (this.$tagtextarea && this.$tagtextarea.view) {
       const { cid = '', rcid = '', staticValue } = newField[0];
 
@@ -121,7 +122,12 @@ export default class TextInput extends Component<any, any> {
   override render() {
     const { defaultType, from } = this.props;
     return (
-      <DynamicValueInputWrap ref={con => { this.$textinput = con; }} triggerStyle={true}>
+      <DynamicValueInputWrap
+        ref={con => {
+          this.$textinput = con;
+        }}
+        triggerStyle={true}
+      >
         {defaultType ? (
           <DynamicInput {...this.props} onTriggerClick={this.onTriggerClick} />
         ) : (
@@ -145,7 +151,9 @@ export default class TextInput extends Component<any, any> {
         <SelectOtherField
           {...this.props}
           onDynamicValueChange={this.handleDynamicValue}
-          ref={con => { this.$wrap = con; }}
+          ref={con => {
+            this.$wrap = con;
+          }}
           popupContainer={this.$textinput}
         />
       </DynamicValueInputWrap>

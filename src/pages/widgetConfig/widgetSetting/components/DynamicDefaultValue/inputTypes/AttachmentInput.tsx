@@ -1,9 +1,10 @@
 import { Component } from 'react';
 import { OtherFieldList, SelectOtherField } from '../components';
+import type { DynamicInputProps } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 
-export default class AttachmentInput extends Component<any, any> {
-  constructor(props) {
+export default class AttachmentInput extends Component<DynamicInputProps, any> {
+  constructor(props: DynamicInputProps) {
     super(props);
     this.state = {};
   }

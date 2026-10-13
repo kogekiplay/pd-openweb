@@ -1,23 +1,27 @@
-import type { ComponentType } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
 import { DYNAMIC_FROM_MODE } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js';
-import { getAdvanceSetting as getAdvanceSettingByKey } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 import { SettingItem } from '../../../styled';
+import type { SettingFunction } from '../../../util/advancedSettingBoundary';
 import { functionSetting } from '../../../util/advancedSettingBoundary';
 import { getAdvanceSetting, handleAdvancedSettingChange } from '../../../util/setting';
 import { DEFAULT_TYPES } from './config';
-import { TYPE_TO_COMP } from './inputTypes';
+import type { DynamicValueSource, SelectOtherFieldProps } from './dynamicTypes';
+import { readDynamicValueSources } from './dynamicTypes';
+import { isDynamicInputType, TYPE_TO_COMP } from './inputTypes';
 import { dealIds, getControlType } from './util';
 
-interface DynamicValueItem extends Record<string, unknown> {
-  cid?: string | undefined;
-  rcid?: string | undefined;
-  staticValue?: string | undefined;
-}
-interface DynamicDefaultValueProps extends Record<string, unknown> {
+export interface DynamicDefaultValueProps extends Omit<
+  SelectOtherFieldProps,
+  'onDynamicValueChange' | 'dynamicValue' | 'dynamicData' | 'defaultType' | 'controls'
+> {
+  className?: string | undefined;
+  hideOtherFields?: boolean | undefined;
+  placeholder?: string | undefined;
+  totalWidth?: boolean | undefined;
+  defaultType?: boolean | string | undefined;
   data: FormControl;
   allControls?: FormControl[] | undefined;
   onChange?: ((next: FormControl) => void) | undefined;
@@ -28,16 +32,17 @@ export default function DynamicDefaultValue(props: DynamicDefaultValueProps) {
   const { data, allControls = [], onChange = () => {}, from, hideTitle } = props;
   const type = getControlType(data);
 
-  if (!type) return null;
+  if (!type || !isDynamicInputType(type)) return null;
 
-  const Comp: ComponentType<Record<string, unknown>> | undefined = TYPE_TO_COMP[type];
-  if (!Comp) return null;
+  const Comp = TYPE_TO_COMP[type];
 
-  const dynamicValue = dealIds(data.type, getAdvanceSetting(data, 'defsource') || []) as DynamicValueItem[];
+  const dynamicValue = dealIds(data.type, readDynamicValueSources(data));
   //工作表或函数
   const { defaulttype = '' } = getAdvanceSetting(data);
   let defaultType = DEFAULT_TYPES[defaulttype] || '';
-  let dynamicData = defaultType ? functionSetting(getAdvanceSetting(data, defaultType)) : {};
+  let dynamicData: SettingFunction | DynamicValueSource = defaultType
+    ? functionSetting(getAdvanceSetting(data, defaultType))
+    : {};
 
   //子表自定义类型异化
   if (dynamicValue.length > 0 && type === 'subList' && defaultType === 'dynamiccustom') {
@@ -45,7 +50,7 @@ export default function DynamicDefaultValue(props: DynamicDefaultValueProps) {
   }
 
   // 更新data
-  const handleDynamicValueChange = (value: DynamicValueItem[]) => {
+  const handleDynamicValueChange = (value: DynamicValueSource[]) => {
     let tempValue = value;
 
     if (_.isArray(value) && _.get(_.last(value), 'cid') === 'empty') {
@@ -68,9 +73,7 @@ export default function DynamicDefaultValue(props: DynamicDefaultValueProps) {
     onChange(para);
   };
 
-  const isDYForFaster =
-    (getAdvanceSettingByKey(data, 'defsource') || []).filter(o => ['url', 'dateRange'].some(key => key === o.rcid))
-      .length > 0;
+  const isDYForFaster = dynamicValue.some(o => o.rcid === 'url' || o.rcid === 'dateRange');
   return (
     <SettingItem className={cx({ mTop0: hideTitle })}>
       {!hideTitle && (
@@ -89,6 +92,8 @@ export default function DynamicDefaultValue(props: DynamicDefaultValueProps) {
         {...props}
         data={data}
         controls={allControls}
+        allControls={allControls}
+        onChange={onChange}
         dynamicValue={dynamicValue}
         defaultType={defaultType || isDYForFaster}
         dynamicData={dynamicData}

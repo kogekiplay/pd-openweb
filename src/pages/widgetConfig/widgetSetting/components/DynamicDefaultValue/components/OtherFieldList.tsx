@@ -1,8 +1,11 @@
+import type { MouseEventHandler } from 'react';
 import { Fragment } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { renderText as renderCellText } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { CUR_DEPARTMENT, CUR_ROLE, CUR_USER } from '../config';
+import type { DynamicInputProps } from '../dynamicTypes';
 import { FieldInfo, OtherFieldList, RelateControl } from '../styled';
 import { getControlType, getDateType, getTypeList, showClear } from '../util';
 import OtherField from './OtherField';
@@ -64,6 +67,21 @@ const getPlaceHolder = data => {
   return text[data.type];
 };
 
+interface OtherFieldListProps extends Omit<
+  DynamicInputProps,
+  'allControls' | 'onChange' | 'clearOldDefault' | 'dynamicValue'
+> {
+  dynamicValue?: DynamicInputProps['dynamicValue'] | undefined;
+  allControls?: FormControl[] | undefined;
+  onChange?: DynamicInputProps['onChange'] | undefined;
+  clearOldDefault?: DynamicInputProps['clearOldDefault'] | undefined;
+  onClick?: MouseEventHandler<HTMLDivElement> | undefined;
+  removeItem?: ((id: string) => void) | undefined;
+  removeRelateSheet?: ((value: string | number | undefined) => void) | undefined;
+  titleControl?: FormControl | undefined;
+  formatMode?: string | undefined;
+}
+
 export default ({
   dynamicValue = [],
   onClick,
@@ -73,7 +91,7 @@ export default ({
   titleControl,
   totalWidth,
   ...rest
-}) => (
+}: OtherFieldListProps) => (
   <OtherFieldList
     isHaveField={isOnlySelect(dynamicValue, data)}
     onClick={onClick}
@@ -130,7 +148,7 @@ export default ({
                         className="remove"
                         onClick={e => {
                           e.stopPropagation();
-                          removeItem(accountId);
+                          removeItem?.(accountId);
                         }}
                       >
                         <i className="icon-close" />
@@ -152,7 +170,7 @@ export default ({
                         className="remove"
                         onClick={e => {
                           e.stopPropagation();
-                          removeItem(organizeId);
+                          removeItem?.(organizeId);
                         }}
                       >
                         <i className="icon-close" />
@@ -173,7 +191,7 @@ export default ({
                         className="remove"
                         onClick={e => {
                           e.stopPropagation();
-                          removeItem(departmentId);
+                          removeItem?.(departmentId);
                         }}
                       >
                         <i className="icon-close" />
@@ -247,7 +265,7 @@ export default ({
                         if (type === 'cascader' && _.get(data, 'advancedSetting.allpath') === '1') {
                           name = safeParse(record.path || '[]').join(' / ');
                         } else {
-                          const titleControlItem = record[titleControl.controlId];
+                          const titleControlItem = titleControl?.controlId ? record[titleControl.controlId] : undefined;
                           name = renderCellText({ ...titleControl, value: titleControlItem }) || _l('未命名');
                         }
                         // 处理关联表默认记录的标题字段是人员字段情况
@@ -267,7 +285,7 @@ export default ({
                             className="icon-close"
                             onClick={e => {
                               e.stopPropagation();
-                              removeRelateSheet(removeValue);
+                              removeRelateSheet?.(removeValue);
                             }}
                           ></i>
                         </RelateControl>
@@ -285,7 +303,7 @@ export default ({
                         className="icon-close"
                         onClick={e => {
                           e.stopPropagation();
-                          removeRelateSheet(removeValue);
+                          removeRelateSheet?.(removeValue);
                         }}
                       ></i>
                     </RelateControl>
