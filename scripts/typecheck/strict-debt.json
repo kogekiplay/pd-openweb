@@ -3054,7 +3054,6 @@
     "src/pages/worksheet/views/GunterView/enter.tsx",
     "src/pages/worksheet/views/GunterView/index.tsx",
     "src/pages/worksheet/views/GunterView/mobile.tsx",
-    "src/pages/worksheet/views/GunterView/util.ts",
     "src/pages/worksheet/views/HierarchyMixView/index.tsx",
     "src/pages/worksheet/views/HierarchyVerticalView/components/DraggableRecord.tsx",
     "src/pages/worksheet/views/HierarchyVerticalView/components/VerticalSortableNode.tsx",

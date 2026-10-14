@@ -1,19 +1,70 @@
 import _ from 'lodash';
 import moment from 'moment';
 import { SYS } from 'src/pages/widgetConfig/config/widget';
-import { sortDataByCustomItems } from 'src/pages/worksheet/redux/actions/util.js';
-import type { SortableGroup } from 'src/pages/worksheet/redux/actions/util';
+import { sortDataByCustomItems } from 'src/pages/worksheet/redux/actions/util';
 import type { WorksheetView } from 'src/pages/worksheet/types';
 import { browserIsMobile } from 'src/utils/common';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { FormControl } from 'src/utils/controlTypes';
 import { PERIOD_TYPE, PERIODS } from './config';
+
+/** 时间轴由视图配置生成；动态字段值在读取时验证，额外记录字段原样保留。 */
+export interface GunterWorkCalendar {
+  onlyWorkDay?: boolean | undefined;
+  dayOff: readonly number[];
+}
+
+export interface GunterPeriodConfig extends GunterWorkCalendar {
+  minDayWidth: number;
+  periodCount: number;
+}
+
+export interface GunterTimeBlockConfig extends GunterPeriodConfig {
+  periodType: number;
+  milepost?: string | null | undefined;
+}
+
+export interface GunterPeriod {
+  time: string;
+  width: number;
+  isToday?: boolean | undefined;
+  left?: number | undefined;
+}
+
+export interface GunterTimeRow {
+  rowid?: string | undefined;
+  startTime?: string | null | undefined;
+  endTime?: string | null | undefined;
+  dragStartTime?: string | null | undefined;
+  dragEndTime?: string | null | undefined;
+  dragBeforeStartTime?: string | null | undefined;
+  dragBeforeEndTime?: string | null | undefined;
+  diff?: number | undefined;
+  [controlId: string]: unknown;
+}
+
+interface GunterGroup extends GunterTimeRow {
+  rows: GunterTimeRow[];
+}
+
+interface TimeBlock {
+  left?: number | undefined;
+  right?: number | undefined;
+  width: number;
+}
+
+const getDateField = (row: Record<string, unknown>, id: string | null | undefined): string | null | undefined => {
+  const value = id == null ? undefined : row[id];
+  return typeof value === 'string' ? value : value === null ? null : undefined;
+};
 
 /**
  * 修改当前视图配置
  */
-export const changeViewConfig = (value, viewConfig) => {
-  const periodType = value || PERIOD_TYPE.day;
-  const { minDayWidth } = _.find(PERIODS, { value: periodType });
+export const changeViewConfig = <T extends GunterWorkCalendar>(value: number | null | undefined, viewConfig: T) => {
+  const { minDayWidth, value: periodType } = _.find(PERIODS, { value: value || PERIOD_TYPE.day }) || {
+    value: PERIOD_TYPE.day,
+    minDayWidth: 30,
+  };
   const count = getPeriodCount(periodType, minDayWidth, viewConfig);
   return {
     ...viewConfig,
@@ -26,7 +77,7 @@ export const changeViewConfig = (value, viewConfig) => {
 /**
  * 根据用户屏幕获取 periodCount
  */
-export const getPeriodCount = (type, minDayWidth, viewConfig) => {
+export const getPeriodCount = (type: number, minDayWidth: number, viewConfig: GunterWorkCalendar): number => {
   const { onlyWorkDay, dayOff = [] } = viewConfig;
   const monthDay = 30;
   const monthWorkDay = monthDay - dayOff.length * 4;
@@ -53,21 +104,30 @@ export const getPeriodCount = (type, minDayWidth, viewConfig) => {
 
   if (type === PERIOD_TYPE.year) {
     periodWidth = onlyWorkDay ? monthWorkDay * 6 * minDayWidth : monthDay * 6 * minDayWidth;
-    const screenPeriodCount = parseInt(screenWidth / periodWidth);
+    const screenPeriodCount = parseInt(String(screenWidth / periodWidth));
     const value = screenPeriodCount % 4;
     return value === 0 ? screenPeriodCount : screenPeriodCount + (4 - value);
   }
 
-  const screenPeriodCount = parseInt(screenWidth / periodWidth);
+  const screenPeriodCount = parseInt(String(screenWidth / periodWidth));
   return screenPeriodCount % 2 === 0 ? screenPeriodCount : screenPeriodCount + 1;
 };
 
 /**
  * 获取一个时间点(time)到指定数量(value, 正数向前，负数向后)的工作日
  */
-export const getAssignWorkDays = (value, time, dayOff) => {
-  const result = [];
+export const getAssignWorkDays = (value: number, time: moment.MomentInput, dayOff: readonly number[]): string[] => {
+  const result: string[] = [];
   const target = Math.abs(value);
+
+  if (
+    !Number.isInteger(target) ||
+    !moment(time).isValid() ||
+    [0, 1, 2, 3, 4, 5, 6].every(day => dayOff.includes(day))
+  ) {
+    return result;
+  }
+
   let count = value >= 0 ? 0 : -1;
 
   while (result.length !== target) {
@@ -91,10 +151,15 @@ export const getAssignWorkDays = (value, time, dayOff) => {
 /**
  * 获取日视图数据(仅工作日)
  */
-export const getWorkDays = (start, end, center?, viewConfig?) => {
+export const getWorkDays = (
+  start: moment.MomentInput,
+  end: moment.MomentInput,
+  center: moment.MomentInput,
+  viewConfig: GunterPeriodConfig,
+) => {
   const { minDayWidth, periodCount, dayOff } = viewConfig;
   const movePeriodCount = periodCount / 2;
-  const days = [];
+  const days: string[] = [];
 
   if (start && _.isNull(end)) {
     const res = getAssignWorkDays(-movePeriodCount, start, dayOff);
@@ -114,15 +179,15 @@ export const getWorkDays = (start, end, center?, viewConfig?) => {
     days.push(...startTime.concat(endTime));
   }
 
-  const parent = {};
-  const result = [];
+  const parent: Record<string, GunterPeriod> = {};
+  const result: GunterPeriod[] = [];
 
   for (let i = 0; i < days.length; i++) {
     const momentObj = moment(days[i]);
     const d = momentObj.format('YYYY-MM-DD');
     const m = momentObj.format('YYYY-MM');
     const isToday = d === moment().format('YYYY-MM-DD');
-    const base = { time: d, width: minDayWidth };
+    const base: GunterPeriod = { time: d, width: minDayWidth };
 
     if (isToday) {
       base.isToday = isToday;
@@ -132,9 +197,10 @@ export const getWorkDays = (start, end, center?, viewConfig?) => {
       result.push(base);
     }
 
-    if (parent[m]) {
-      const { width } = parent[m];
-      parent[m].width = width + minDayWidth;
+    const periodParent = parent[m];
+
+    if (periodParent) {
+      periodParent.width += minDayWidth;
     } else {
       parent[m] = { width: minDayWidth, time: m };
     }
@@ -146,20 +212,25 @@ export const getWorkDays = (start, end, center?, viewConfig?) => {
 /**
  * 获取日视图数据
  */
-export const getDays = (start, end, center, viewConfig) => {
+export const getDays = (
+  start: moment.Moment | null | undefined,
+  end: moment.Moment | null | undefined,
+  center: moment.MomentInput,
+  viewConfig: GunterPeriodConfig,
+) => {
   const { minDayWidth, periodCount } = viewConfig;
   const startTime = start ? start : moment(center).add(-periodCount, 'd');
   const endTime = end ? end : moment(center).add(periodCount, 'd');
   const diff = Math.abs(startTime.diff(endTime, 'd')) + 1;
-  const parent = {};
-  const result = [];
+  const parent: Record<string, GunterPeriod> = {};
+  const result: GunterPeriod[] = [];
 
   for (let i = 0; i < diff; i++) {
     const momentObj = moment(startTime).add(i, 'd');
     const d = momentObj.format('YYYY-MM-DD');
     const m = momentObj.format('YYYY-MM');
     const isToday = d === moment().format('YYYY-MM-DD');
-    const base = { time: d, width: minDayWidth };
+    const base: GunterPeriod = { time: d, width: minDayWidth };
 
     if (isToday) {
       base.isToday = isToday;
@@ -169,9 +240,10 @@ export const getDays = (start, end, center, viewConfig) => {
       result.push(base);
     }
 
-    if (parent[m]) {
-      const { width } = parent[m];
-      parent[m].width = width + minDayWidth;
+    const periodParent = parent[m];
+
+    if (periodParent) {
+      periodParent.width += minDayWidth;
     } else {
       parent[m] = { width: minDayWidth, time: m };
     }
@@ -183,7 +255,7 @@ export const getDays = (start, end, center, viewConfig) => {
 /**
  * 获取今天的位置
  */
-const getTodayLeftValue = (start: moment.Moment, end: moment.Moment, dayOff) => {
+const getTodayLeftValue = (start: moment.Moment, end: moment.Moment, dayOff: readonly number[]) => {
   const diff = Math.abs(start.diff(end, 'd'));
   let value = 0;
 
@@ -206,14 +278,19 @@ const getTodayLeftValue = (start: moment.Moment, end: moment.Moment, dayOff) => 
 /**
  * 获取周视图数据
  */
-export const getWeeks = (start, end, center, viewConfig) => {
+export const getWeeks = (
+  start: moment.Moment | null | undefined,
+  end: moment.Moment | null | undefined,
+  center: moment.MomentInput,
+  viewConfig: GunterPeriodConfig,
+) => {
   const { minDayWidth, periodCount, onlyWorkDay, dayOff } = viewConfig;
   const weeksDay = onlyWorkDay ? 7 - dayOff.length : 7;
   const startTime = start ? start : moment(center).startOf('w').add(-periodCount, 'w');
   const endTime = end ? end : moment(center).endOf('w').add(periodCount, 'w');
   const diff = Math.abs(startTime.diff(endTime, 'w')) + 1;
-  const parent = {};
-  const result = [];
+  const parent: Record<string, GunterPeriod> = {};
+  const result: GunterPeriod[] = [];
 
   for (let i = 0; i < diff; i++) {
     const momentObj = moment(startTime).add(i * 7, 'd');
@@ -221,7 +298,7 @@ export const getWeeks = (start, end, center, viewConfig) => {
     const m = momentObj.format('YYYY-MM');
     const periodWidth = weeksDay * minDayWidth;
     const isCurrent = momentObj.format('YYYY-WW') === moment().format('YYYY-WW');
-    const base = { time: d, width: periodWidth };
+    const base: GunterPeriod = { time: d, width: periodWidth };
 
     if (isCurrent) {
       base.isToday = onlyWorkDay ? !dayOff.includes(moment().days()) : true;
@@ -234,9 +311,10 @@ export const getWeeks = (start, end, center, viewConfig) => {
       result.push(base);
     }
 
-    if (parent[m]) {
-      const { width } = parent[m];
-      parent[m].width = width + periodWidth;
+    const periodParent = parent[m];
+
+    if (periodParent) {
+      periodParent.width += periodWidth;
     } else {
       parent[m] = { width: periodWidth, time: m };
     }
@@ -248,13 +326,18 @@ export const getWeeks = (start, end, center, viewConfig) => {
 /**
  * 获取月视图数据
  */
-export const getMonths = (start, end, center, viewConfig) => {
+export const getMonths = (
+  start: moment.Moment | null | undefined,
+  end: moment.Moment | null | undefined,
+  center: moment.MomentInput,
+  viewConfig: GunterPeriodConfig,
+) => {
   const { minDayWidth, periodCount, onlyWorkDay, dayOff } = viewConfig;
   const startTime = start ? start : moment(center).add(-periodCount, 'M');
   const endTime = end ? end : moment(center).add(periodCount, 'M');
   const diff = Math.abs(startTime.diff(endTime, 'M')) + 1;
-  const parent = {};
-  const result = [];
+  const parent: Record<string, GunterPeriod> = {};
+  const result: GunterPeriod[] = [];
 
   for (let i = 0; i < diff; i++) {
     const momentObj = moment(startTime).add(i, 'M');
@@ -269,7 +352,7 @@ export const getMonths = (start, end, center, viewConfig) => {
       : momentObj.daysInMonth();
     const periodWidth = value * minDayWidth;
     const isCurrent = m === moment().format('YYYY-MM');
-    const base = { time: m, width: periodWidth };
+    const base: GunterPeriod = { time: m, width: periodWidth };
 
     if (isCurrent) {
       base.isToday = onlyWorkDay ? !dayOff.includes(moment().days()) : true;
@@ -283,9 +366,10 @@ export const getMonths = (start, end, center, viewConfig) => {
       result.push(base);
     }
 
-    if (parent[y]) {
-      const { width } = parent[y];
-      parent[y].width = width + periodWidth;
+    const periodParent = parent[y];
+
+    if (periodParent) {
+      periodParent.width += periodWidth;
     } else {
       parent[y] = { width: periodWidth, time: y };
     }
@@ -297,13 +381,18 @@ export const getMonths = (start, end, center, viewConfig) => {
 /**
  * 获取季度视图数据
  */
-export const getQuarters = (start, end, center, viewConfig) => {
+export const getQuarters = (
+  start: moment.Moment | null | undefined,
+  end: moment.Moment | null | undefined,
+  center: moment.MomentInput,
+  viewConfig: GunterPeriodConfig,
+) => {
   const { minDayWidth, periodCount, onlyWorkDay, dayOff } = viewConfig;
   const startTime = start ? start : moment(center).startOf('Q').add(-periodCount, 'Q');
   const endTime = end ? end : moment(center).endOf('Q').add(periodCount, 'Q');
   const diff = Math.abs(startTime.diff(endTime, 'Q')) + 1;
-  const parent = {};
-  const result = [];
+  const parent: Record<string, GunterPeriod> = {};
+  const result: GunterPeriod[] = [];
 
   for (let i = 0; i < diff; i++) {
     const momentObj = moment(startTime).add(i, 'Q');
@@ -316,7 +405,7 @@ export const getQuarters = (start, end, center, viewConfig) => {
       : Math.abs(moment(startDay).diff(moment(endDay), 'd')) + 1;
     const periodWidth = value * minDayWidth;
     const isCurrent = momentObj.format('YYYY-Q') === moment().format('YYYY-Q');
-    const base = { time: m, width: periodWidth };
+    const base: GunterPeriod = { time: m, width: periodWidth };
 
     if (isCurrent) {
       base.isToday = onlyWorkDay ? !dayOff.includes(moment().days()) : true;
@@ -330,9 +419,10 @@ export const getQuarters = (start, end, center, viewConfig) => {
       result.push(base);
     }
 
-    if (parent[y]) {
-      const { width } = parent[y];
-      parent[y].width = width + periodWidth;
+    const periodParent = parent[y];
+
+    if (periodParent) {
+      periodParent.width += periodWidth;
     } else {
       parent[y] = { width: periodWidth, time: y };
     }
@@ -344,17 +434,22 @@ export const getQuarters = (start, end, center, viewConfig) => {
 /**
  * 获取年视图数据
  */
-export const getYears = (start, end, center, viewConfig) => {
+export const getYears = (
+  start: moment.Moment | null | undefined,
+  end: moment.Moment | null | undefined,
+  center: moment.MomentInput,
+  viewConfig: GunterPeriodConfig,
+) => {
   const { minDayWidth, periodCount, onlyWorkDay, dayOff } = viewConfig;
   const yearPeriodCount = periodCount / 2;
-  const startTime = start ? start : moment(center).startOf('Y').add(-yearPeriodCount, 'Y');
-  const endTime = end ? end : moment(center).endOf('Y').add(yearPeriodCount, 'Y');
-  const diff = Math.abs(startTime.diff(endTime, 'Y')) + 1;
-  const parent = {};
-  const result = [];
+  const startTime = start ? start : moment(center).startOf('year').add(-yearPeriodCount, 'year');
+  const endTime = end ? end : moment(center).endOf('year').add(yearPeriodCount, 'year');
+  const diff = Math.abs(startTime.diff(endTime, 'year')) + 1;
+  const parent: Record<string, GunterPeriod> = {};
+  const result: GunterPeriod[] = [];
 
   for (let i = 0; i < diff; i++) {
-    const momentObj = moment(startTime).add(i, 'Y');
+    const momentObj = moment(startTime).add(i, 'year');
     const y = momentObj.format('YYYY');
     // 上半年
     const firstStart = momentObj.format('YYYY-MM-DD');
@@ -363,7 +458,7 @@ export const getYears = (start, end, center, viewConfig) => {
       ? getWeekDayCount(firstStart, firstEnd, dayOff)
       : Math.abs(moment(firstStart).diff(moment(firstEnd), 'd')) + 1;
     const firstPeriodWidth = firstValue * minDayWidth;
-    const first = { time: `${y}-01-01`, width: firstPeriodWidth };
+    const first: GunterPeriod = { time: `${y}-01-01`, width: firstPeriodWidth };
     // 下半年
     const lastStart = `${y}-07-01`;
     const lastEnd = moment(`${y}-12`).endOf('M').format('YYYY-MM-DD');
@@ -371,7 +466,7 @@ export const getYears = (start, end, center, viewConfig) => {
       ? getWeekDayCount(lastStart, lastEnd, dayOff)
       : Math.abs(moment(lastStart).diff(moment(lastEnd), 'd')) + 1;
     const lastPeriodWidth = lastValue * minDayWidth;
-    const last = { time: `${y}-07-01`, width: lastPeriodWidth };
+    const last: GunterPeriod = { time: `${y}-07-01`, width: lastPeriodWidth };
 
     const periodWidth = firstPeriodWidth + lastPeriodWidth;
     const isCurrent = momentObj.year() === moment().year();
@@ -401,9 +496,10 @@ export const getYears = (start, end, center, viewConfig) => {
       result.push(first, last);
     }
 
-    if (parent[y]) {
-      const { width } = parent[y];
-      parent[y].width = width + periodWidth;
+    const periodParent = parent[y];
+
+    if (periodParent) {
+      periodParent.width += periodWidth;
     } else {
       parent[y] = { width: periodWidth, time: y };
     }
@@ -416,7 +512,7 @@ export const getYears = (start, end, center, viewConfig) => {
  * 一段时间内包含多少个工作日
  */
 
-const getWeekDayCount = (start, end, dayOff) => {
+const getWeekDayCount = (start: moment.MomentInput, end: moment.MomentInput, dayOff: readonly number[]): number => {
   const weekStart = moment(start).endOf('w').format('YYYY-MM-DD');
   const weekEnd = moment(end).startOf('w').add(-1, 'd').format('YYYY-MM-DD');
   const diff = moment(weekEnd).diff(moment(weekStart), 'd');
@@ -431,7 +527,7 @@ const getWeekDayCount = (start, end, dayOff) => {
   }
 };
 
-const getWeekDayCount2 = (start, end, dayOff) => {
+const getWeekDayCount2 = (start: moment.MomentInput, end: moment.MomentInput, dayOff: readonly number[]): number => {
   const diff = moment(end).diff(moment(start), 'd');
   let count = 0;
 
@@ -450,7 +546,7 @@ const getWeekDayCount2 = (start, end, dayOff) => {
 /**
  * 判断指定天是否是一周的最后一天
  */
-export const isWeekEndDay = (date, type, viewConfig) => {
+export const isWeekEndDay = (date: moment.MomentInput, type: number, viewConfig: GunterWorkCalendar): boolean => {
   const { onlyWorkDay, dayOff } = viewConfig;
 
   if (type !== PERIOD_TYPE.day) {
@@ -471,11 +567,11 @@ export const isWeekEndDay = (date, type, viewConfig) => {
 /**
  * 获取一组记录里最早和最晚的时间
  */
-export const getRowsTime = rows => {
-  const f = t => (t ? moment(t).valueOf() : 0);
+export const getRowsTime = (rows: readonly GunterTimeRow[]) => {
+  const f = (t: moment.MomentInput) => (t ? moment(t).valueOf() : 0);
   const d = (t: number) => moment(t).format('YYYY-MM-DD');
   const data = rows.filter(
-    (item: RecordRow) => (item.dragBeforeStartTime || item.startTime) && (item.dragBeforeEndTime || item.endTime),
+    item => (item.dragBeforeStartTime || item.startTime) && (item.dragBeforeEndTime || item.endTime),
   );
   const startTimes = data.map(item => f(item.dragBeforeStartTime || item.startTime)).filter(item => item);
   const endTimes = data.map(item => f(item.dragBeforeEndTime || item.endTime)).filter(item => item);
@@ -490,17 +586,22 @@ export const getRowsTime = rows => {
 /**
  * 绘制时间块
  */
-const calculateTimeBlock = (item, periodList, viewConfig) => {
+const calculateTimeBlock = (
+  item: GunterTimeRow,
+  periodList: readonly GunterPeriod[],
+  viewConfig: GunterTimeBlockConfig,
+): TimeBlock => {
   const { minDayWidth, onlyWorkDay, periodType, dayOff, milepost } = viewConfig;
   // const startTime = item.groupId ? (item.dragStartTime || item.startTime) : item.startTime;
   // const endTime = item.groupId ? (item.dragEndTime || item.endTime) : item.endTime;
   const startTime = item.dragStartTime || item.startTime;
   const endTime = item.dragEndTime || item.endTime;
-  const minStartTime = periodList[0].time;
-  const maxEndTime = periodList[periodList.length - 1].time;
-  const isMilepost = item[milepost] === '1';
+  const minStartTime = periodList[0]?.time;
+  const maxEndTime = periodList[periodList.length - 1]?.time;
+  if (minStartTime === undefined || maxEndTime === undefined) return { left: 0, width: 0 };
+  const isMilepost = milepost != null && item[milepost] === '1';
 
-  if (_.isEmpty(startTime) || _.isEmpty(endTime) || moment(startTime).isAfter(endTime)) {
+  if (!startTime || !endTime || moment(startTime).isAfter(endTime)) {
     return {
       left: 0,
       width: 0,
@@ -565,12 +666,16 @@ const calculateTimeBlock = (item, periodList, viewConfig) => {
 /**
  * 计算分组时间块的位置和宽度
  */
-export const groupingTimeBlock = (grouping, periodList, viewConfig) => {
+export const groupingTimeBlock = <T extends GunterGroup>(
+  grouping: T[],
+  periodList: readonly GunterPeriod[],
+  viewConfig: GunterTimeBlockConfig,
+) => {
   if (_.isEmpty(periodList)) return grouping;
   return grouping.map(item => {
     const data = calculateTimeBlock(item, periodList, viewConfig);
     const itemWithoutBlock = _.omit(item, ['left', 'right', 'rows']);
-    const newRows: RecordRow[] = item.rows.map((row: RecordRow) => {
+    const newRows = item.rows.map(row => {
       const rowWithoutBlock = _.omit(row, ['left', 'right']);
       const data = calculateTimeBlock(row, periodList, viewConfig);
       return {
@@ -590,24 +695,30 @@ export const groupingTimeBlock = (grouping, periodList, viewConfig) => {
 /**
  * 为时间块添加颜色
  */
-export const fillRecordsTimeBlockColor = (grouping, colorControl) => {
+export const fillRecordsTimeBlockColor = <T extends GunterGroup>(grouping: T[], colorControl?: FormControl) => {
   return grouping.map(item => ({
     ...item,
-    rows: item.rows.map((row: RecordRow) => fillRecordTimeBlockColor(row, colorControl)),
+    rows: item.rows.map(row => fillRecordTimeBlockColor(row, colorControl)),
   }));
 };
 
-export const fillRecordTimeBlockColor = (record, colorControl: FormControl = {}) => {
+export const fillRecordTimeBlockColor = <T extends Record<string, unknown>>(
+  record: T,
+  colorControl: FormControl = {},
+) => {
   const { controlId, options } = colorControl;
   // 甘特条没配颜色字段时的默认色。跟随主题 —— 它只流向 backgroundColor /
   // borderColor / style.fill 这三种 CSS 值位（全仓查过，没有任何地方对它做
   // TinyColor 计算），所以 var() 能活下来。
   const defaultColor = 'var(--color-primary)';
 
-  if (record[controlId] && colorControl.enumDefault2 === 1) {
-    const value = safeParse(record[controlId], 'array');
-    const colorId = _.isArray(value) ? value[0] : null;
-    const { color } = _.find(options, { key: colorId && colorId.startsWith('other') ? 'other' : colorId }) || {};
+  const rawValue = controlId === undefined ? undefined : record[controlId];
+
+  if (rawValue && colorControl.enumDefault2 === 1) {
+    const value: unknown = safeParse(rawValue, 'array');
+    const first: unknown = Array.isArray(value) ? value[0] : undefined;
+    const colorId = typeof first === 'string' ? first : null;
+    const { color } = options?.find(option => option.key === (colorId?.startsWith('other') ? 'other' : colorId)) || {};
     return {
       ...record,
       color: color || defaultColor,
@@ -623,11 +734,22 @@ export const fillRecordTimeBlockColor = (record, colorControl: FormControl = {})
 /**
  * 处理记录时间
  */
-export const formatRecordTime = (row, { startId, endId, milepost }) => {
-  let startTime = row[startId];
-  let endTime = row[endId];
+export const formatRecordTime = <T extends Record<string, unknown>>(
+  row: T,
+  {
+    startId,
+    endId,
+    milepost,
+  }: {
+    startId?: string | null | undefined;
+    endId?: string | null | undefined;
+    milepost?: string | null | undefined;
+  },
+) => {
+  let startTime = getDateField(row, startId);
+  let endTime = getDateField(row, endId);
 
-  if (row[milepost] == '1') {
+  if (milepost != null && row[milepost] == '1') {
     if (startTime) {
       endTime = startTime;
     } else if (endTime) {
@@ -646,7 +768,7 @@ export const formatRecordTime = (row, { startId, endId, milepost }) => {
 /**
  * 把 allowweek 和 unweekday 转成适用 moment 的 days()
  */
-export const formatWeekDay = allowweek => {
+export const formatWeekDay = (allowweek: string | null | undefined): number[] => {
   return allowweek
     ? allowweek
         .replace('7', '0')
@@ -658,17 +780,19 @@ export const formatWeekDay = allowweek => {
 /**
  * 找到记录的 index
  */
-export const getRecordIndex = (id, grouping, withoutArrangementVisible) => {
+export const getRecordIndex = (
+  id: string | undefined,
+  grouping: readonly (GunterGroup & { groupingIndex: number })[],
+  withoutArrangementVisible: boolean,
+): number | null => {
   let index = null;
 
-  for (let i = 0; i < grouping.length; i++) {
-    let { groupingIndex } = grouping[i];
-    let rows: RecordRow[] = grouping[i].rows.filter((item: RecordRow) =>
-      withoutArrangementVisible ? true : item.diff > 0,
-    );
+  for (const group of grouping) {
+    const { groupingIndex } = group;
+    const rows = group.rows.filter(item => withoutArrangementVisible || (item.diff ?? 0) > 0);
 
-    for (let j = 0; j < rows.length; j++) {
-      if (id === rows[j].rowid) {
+    for (const [j, row] of rows.entries()) {
+      if (id === row.rowid) {
         index = groupingIndex + j + 1;
         break;
       }
@@ -685,16 +809,22 @@ export const getRecordIndex = (id, grouping, withoutArrangementVisible) => {
 /**
  * 排序分组
  */
-export const sortGrouping = <T extends object>(grouping: T[], view: WorksheetView = {}, controls: FormControl[] = []): T[] => {
-  const empty = grouping.filter(item => (item as SortableGroup).key == '-1');
-  const sortGrouping = grouping.filter(item => (item as SortableGroup).key !== '-1').sort((a, b) => (a as SortableGroup).sort! - (b as SortableGroup).sort!);
+export const sortGrouping = <T extends object>(
+  grouping: T[],
+  view: WorksheetView = {},
+  controls: FormControl[] = [],
+): T[] => {
+  const groupKey = (item: T): unknown => ('key' in item ? item.key : undefined);
+  const groupSort = (item: T): number => Number('sort' in item ? item.sort : undefined);
+  const empty = grouping.filter(item => groupKey(item) == '-1');
+  const sortGrouping = grouping.filter(item => groupKey(item) !== '-1').sort((a, b) => groupSort(a) - groupSort(b));
   return sortDataByCustomItems(sortGrouping.concat(empty), view, controls, false);
 };
 
 /**
  * 把一个日期时间的小时转成一个宽度占比
  */
-export const timeToPercentage = (time, width: number) => {
+export const timeToPercentage = (time: string, width: number): number => {
   const [, hours] = time.split(' ');
 
   if (hours) {
@@ -717,10 +847,10 @@ export const percentageToTime = (percentage: number) => {
 /**
  * 获取甘特图支持的字段
  */
-export const getControlsForGunter = worksheetControls => {
+export const getControlsForGunter = <T extends FormControl>(worksheetControls: T[]): T[] => {
   return worksheetControls.filter(
-    (item: FormControl) =>
-      !SYS.includes(item.controlId) &&
+    item =>
+      !_.includes(SYS, item.controlId) &&
       (_.includes([15, 16], item.type) ||
         (item.type === 38 && item.enumDefault === 2) ||
         (item.type === 30 &&
@@ -737,7 +867,7 @@ export const isGunterGroupMultiSelectControl = (control: FormControl = {}) => {
 
   return (
     type === 10 ||
-    ([26, 27, 48].includes(type) && control.enumDefault === 1) ||
+    (_.includes([26, 27, 48], type) && control.enumDefault === 1) ||
     (type === 29 && control.enumDefault === 2)
   );
 };
@@ -745,8 +875,14 @@ export const isGunterGroupMultiSelectControl = (control: FormControl = {}) => {
 /**
  * 获取一组时间中最大的时间
  */
-export const getMaxTime = grouping => {
+export const getMaxTime = (grouping: readonly { endTime?: string | null | undefined }[]): string | null | undefined => {
   return grouping.length
-    ? grouping.map(data => data.endTime).reduce((max, date) => (new Date(date) > new Date(max) ? date : max))
+    ? grouping
+        .map(data => data.endTime)
+        .reduce((max, date) =>
+          new Date(date === null ? 0 : (date ?? Number.NaN)) > new Date(max === null ? 0 : (max ?? Number.NaN))
+            ? date
+            : max,
+        )
     : undefined;
 };

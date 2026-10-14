@@ -88,7 +88,7 @@ const getDayPeriodList = (periodList, periodType, viewConfig) => {
   }
 
   return onlyWorkDay
-    ? getWorkDays(start.time, end.time).result
+    ? getWorkDays(start.time, end.time, null, viewConfig).result
     : getDays(moment(start.time), moment(end.time), null, viewConfig).result;
 };
 

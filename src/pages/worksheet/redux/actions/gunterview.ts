@@ -962,7 +962,7 @@ export const addNewRecord = (record, addIndex?) => {
   };
 };
 
-export const updateEditIndex = (index: number) => {
+export const updateEditIndex = (index: number | string | null) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     if (_.isString(index)) {
       const { gunterView } = getState().sheet;
@@ -1047,7 +1047,7 @@ export const updateGunterSearchRecord = record => {
 
       setTimeout(() => {
         const index = getRecordIndex(record.rowid, grouping, withoutArrangementVisible);
-        const top = index * 32;
+        const top = (index ?? 0) * 32;
         const percentage = (top / chartScroll.scrollerHeight) * 100;
         const value = (percentage / 100) * Math.abs(chartScroll.maxScrollY);
         chartScroll.scrollTo(chartScroll.x, -value);
