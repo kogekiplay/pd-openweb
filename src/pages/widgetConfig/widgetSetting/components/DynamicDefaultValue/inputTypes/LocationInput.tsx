@@ -22,7 +22,7 @@ export default class LocationInput extends Component<DynamicInputProps, Location
 
   onTriggerClick = () => {
     const { defaultType } = this.props;
-    defaultType && this.$wrap.triggerClick();
+    defaultType && this.$wrap?.triggerClick();
   };
   override render() {
     const { defaultType, enumDefault2, advancedSetting = {}, dynamicValue = [], onDynamicValueChange } = this.props;
@@ -32,11 +32,7 @@ export default class LocationInput extends Component<DynamicInputProps, Location
         {defaultType ? (
           <DynamicInput {...this.props} onTriggerClick={this.onTriggerClick} />
         ) : (
-          <OtherFieldList
-            {...this.props}
-            removeItem={this.removeItem}
-            onClick={() => this.setState({ visible: true })}
-          />
+          <OtherFieldList {...this.props} onClick={() => this.setState({ visible: true })} />
         )}
         <SelectOtherField
           {...this.props}
@@ -50,7 +46,17 @@ export default class LocationInput extends Component<DynamicInputProps, Location
             allowCustom={advancedSetting['allowcustom'] === '1'}
             distance={enumDefault2 ? parseInt(advancedSetting['distance'] || '', 10) : 0}
             defaultAddress={staticValue ? JSON.parse(String(staticValue)) : null}
-            onAddressChange={({ lng, lat, address, name }: { name?: string; [key: string]: any }) => {
+            onAddressChange={({
+              lng,
+              lat,
+              address,
+              name,
+            }: {
+              lng: number;
+              lat: number;
+              address?: string;
+              name?: string;
+            }) => {
               onDynamicValueChange([
                 {
                   rcid: '',

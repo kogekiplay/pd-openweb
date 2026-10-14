@@ -1,9 +1,11 @@
+import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
 import { SYS_CONTROLS } from 'src/pages/widgetConfig/config/widget';
+import type { FormControl } from 'src/utils/controlTypes';
 import {
   CUR_EMPTY_TYPES,
   CUR_LOCATION_TYPES,
@@ -20,39 +22,46 @@ import {
   USER_LIST,
   WATER_MASK_TYPES,
 } from '../config';
+import type { DynamicValueSource, SelectOtherFieldProps } from '../dynamicTypes';
 import { OtherFieldWrap } from '../styled';
 import { getControls, getControlType } from '../util';
-import type { FormControl } from 'src/utils/controlTypes';
 
-export default function OtherField(props) {
+export interface OtherFieldProps extends Omit<SelectOtherFieldProps, 'dynamicValue' | 'onDynamicValueChange'> {
+  dynamicValue?: DynamicValueSource[] | undefined;
+  onDynamicValueChange?: SelectOtherFieldProps['onDynamicValueChange'] | undefined;
+  item?: DynamicValueSource | undefined;
+  text?: ReactNode;
+  className?: string | undefined;
+}
+export default function OtherField(props: OtherFieldProps) {
   const {
-    dynamicValue,
+    dynamicValue = [],
     onDynamicValueChange,
     item = {},
     data,
     text,
     className,
-    globalSheetInfo,
+    globalSheetInfo = {},
     globalSheetControls = [],
     from,
   } = props;
   const { worksheetId } = globalSheetInfo;
-  const originControls: FormControl[] = props.controls.concat(globalSheetControls);
+  const originControls: FormControl[] = (props.controls || []).concat(globalSheetControls);
   const [controls, setControls] = useState(originControls);
 
   useEffect(() => {
     setControls(originControls);
   }, [data.controlId, props.controls]);
 
-  const getFieldName = (controls, fieldId) => {
+  const getFieldName = (controls: FormControl[], fieldId: string | number | undefined): ReactNode => {
     if (_.includes(['ctime', 'utime', 'ownerid', 'caid', ...SYS_CONTROLS], fieldId))
-      return SYSTEM_FIELD_TO_TEXT[fieldId];
-    if (fieldId === 'search-keyword') return CUR_SEARCH_TYPES[0].text;
-    if (fieldId === 'ocr-file') return CUR_OCR_TYPES[0].text;
-    if (fieldId === 'ocr-file-url') return CUR_OCR_URL_TYPES[0].text;
-    if (fieldId === 'empty') return CUR_EMPTY_TYPES[0].text;
-    if (fieldId === 'current-time') return WATER_MASK_TYPES[1].text;
-    if (fieldId === 'current-location') return CUR_LOCATION_TYPES[0].text;
+      return SYSTEM_FIELD_TO_TEXT[String(fieldId)];
+    if (fieldId === 'search-keyword') return CUR_SEARCH_TYPES[0]?.text;
+    if (fieldId === 'ocr-file') return CUR_OCR_TYPES[0]?.text;
+    if (fieldId === 'ocr-file-url') return CUR_OCR_URL_TYPES[0]?.text;
+    if (fieldId === 'empty') return CUR_EMPTY_TYPES[0]?.text;
+    if (fieldId === 'current-time') return WATER_MASK_TYPES[1]?.text;
+    if (fieldId === 'current-location') return CUR_LOCATION_TYPES[0]?.text;
     if (_.includes(['codeResult', 'triggerTime', 'triggerUser', 'triggerDepartment', 'triggerOrg'], fieldId)) {
       return _.get(
         _.find(_.flatten(Object.values(CUSTOM_PHP_TYPES)), i => i.id === fieldId),
@@ -60,7 +69,7 @@ export default function OtherField(props) {
       );
     }
 
-    if (from === DYNAMIC_FROM_MODE.WATER_MASK && fieldId === 'user-self') return WATER_MASK_TYPES[0].text;
+    if (from === DYNAMIC_FROM_MODE.WATER_MASK && fieldId === 'user-self') return WATER_MASK_TYPES[0]?.text;
     if (_.includes(['user', 'time', 'address', 'xy'], fieldId)) {
       return _.get(
         _.find(_.flatten(Object.values(H5_WATER_MASK_TYPES)), i => i.id === fieldId),
@@ -75,7 +84,7 @@ export default function OtherField(props) {
         fieldId,
       )
     ) {
-      return PRINT_TEMP_TYPES.find(i => i.id === fieldId).text;
+      return PRINT_TEMP_TYPES.find(i => i.id === fieldId)?.text;
     }
 
     if (
@@ -110,14 +119,14 @@ export default function OtherField(props) {
         _.find(controls, item => _.includes([item.controlId, item.id], fieldId)),
         'controlName',
       ) || (
-        <Tooltip title={_l('ID: %0', fieldId)} placement="bottom">
+        <Tooltip title={_l('ID: %0', fieldId === undefined ? 'undefined' : fieldId)} placement="bottom">
           <span>{_l('已删除')}</span>
         </Tooltip>
       )
     );
   };
 
-  const getFieldNameById = (item, controls: FormControl[]) => {
+  const getFieldNameById = (item: DynamicValueSource, controls: FormControl[]) => {
     const { cid, rcid } = item;
     const filterControls = getControls({ data, controls, isCurrent: true, from });
 
@@ -138,18 +147,19 @@ export default function OtherField(props) {
     }
   };
 
-  const delField = tag => {
+  const delField = (tag: DynamicValueSource) => {
     const { cid, rcid, staticValue } = tag;
     const index = _.findIndex(dynamicValue, d =>
       cid ? d.cid === cid && d.rcid === rcid : d.staticValue === staticValue,
     );
-    onDynamicValueChange(update(dynamicValue, { $splice: [[index, 1]] }));
+    if (index < 0) return;
+    onDynamicValueChange?.(update(dynamicValue, { $splice: [[index, 1]] }));
   };
 
-  const isFieldDeleteFn = (item, controls: FormControl[] = []) => {
+  const isFieldDeleteFn = (item: DynamicValueSource, controls: FormControl[] = []) => {
     const { cid, rcid } = item;
 
-    const isFieldNotInControls = (controls: FormControl[], cid) => {
+    const isFieldNotInControls = (controls: FormControl[], cid: string | number | undefined) => {
       if (
         _.includes(
           [
@@ -205,7 +215,7 @@ export default function OtherField(props) {
 
       const record = _.find(controls, item => item.controlId === rcid);
       if (!record) return true;
-      return isFieldNotInControls(_.get(record, 'relationControls'), cid);
+      return isFieldNotInControls(record.relationControls || [], cid);
     } else {
       return isFieldNotInControls(controls, cid);
     }

@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import type { MouseEvent } from 'react';
 import update from 'immutability-helper';
 import _ from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';
@@ -7,10 +8,12 @@ import type { SelectedQuickUser } from 'src/ming-ui/functions/quickSelectUser/ty
 import { DYNAMIC_FROM_MODE } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js';
 import { getTabTypeBySelectUser } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
+import { dynamicStaticText } from '../dynamicTypes';
+import type { DynamicValueSource } from '../dynamicTypes';
 import type { DynamicInputProps } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 
-export default class DateInput extends Component<DynamicInputProps, any> {
+export default class DateInput extends Component<DynamicInputProps, Record<string, never>> {
   declare $wrap: SelectOtherField | null | undefined;
 
   static override propTypes = {
@@ -33,10 +36,10 @@ export default class DateInput extends Component<DynamicInputProps, any> {
   removeItem = (accountId: string) => {
     const { dynamicValue } = this.props;
 
-    const getUserId = item => {
+    const getUserId = (item: DynamicValueSource) => {
       const { staticValue } = item;
       if (!staticValue) return '';
-      return _.get(_.isString(staticValue) ? JSON.parse(staticValue) : staticValue, 'accountId');
+      return dynamicStaticText(item, 'accountId');
     };
 
     const index = _.findIndex(dynamicValue, item => {
@@ -54,32 +57,27 @@ export default class DateInput extends Component<DynamicInputProps, any> {
       staticValue: JSON.stringify(_.pick(item, ['accountId', 'fullname', 'avatar'])),
     }));
   };
-  selectUser = event => {
+  selectUser = (event: MouseEvent<HTMLDivElement>) => {
     const { data, dynamicValue, globalSheetInfo = {}, from } = this.props;
     const tabType = getTabTypeBySelectUser(data);
     const unique = data.enumDefault === 0;
     const selectedAccountIds = dynamicValue
       .filter(
-        item =>
-          item.staticValue &&
-          (JSON.parse(String(item.staticValue || '{}')).accountId !== 'user-self' || item.cid !== 'user-self'),
+        item => item.staticValue && (dynamicStaticText(item, 'accountId') !== 'user-self' || item.cid !== 'user-self'),
       )
-      .map(i => JSON.parse(String(i.staticValue || '{}')).accountId);
+      .map(i => dynamicStaticText(i, 'accountId'));
 
     const getUsers = (usersId: { cid: string; rcid: string; staticValue: string }[]) => {
       // 人员去重
-      const getId = (item: { cid: string; rcid: string; staticValue: string }) =>
-        _.get(item, ['staticValue', 'accountId']);
-      const existUser = dynamicValue
-        .filter(item => item.staticValue)
-        .map(item => JSON.parse(String(item.staticValue || '{}')).accountId);
+      const getId = (item: { cid: string; rcid: string; staticValue: string }) => dynamicStaticText(item, 'accountId');
+      const existUser = dynamicValue.filter(item => item.staticValue).map(item => dynamicStaticText(item, 'accountId'));
       return usersId.reduce((prev, curr) => {
         return existUser.includes(getId(curr)) ? prev : prev.concat(curr);
       }, dynamicValue);
     };
 
     if (tabType === 2 || from === DYNAMIC_FROM_MODE.FAST_FILTER) {
-      let param: Record<string, any> = {};
+      const param: { staticAccounts?: SelectedQuickUser[] } = {};
 
       if (from === DYNAMIC_FROM_MODE.FAST_FILTER && _.get(data, 'advancedSetting.shownullitem') === '1') {
         param.staticAccounts = [
@@ -91,7 +89,7 @@ export default class DateInput extends Component<DynamicInputProps, any> {
         ];
       }
 
-      quickSelectUser(event.target, {
+      quickSelectUser(event.target instanceof HTMLElement ? event.target : event.currentTarget, {
         ...param,
         showMoreInvite: false,
         isTask: false,
@@ -137,7 +135,7 @@ export default class DateInput extends Component<DynamicInputProps, any> {
   };
   onTriggerClick = () => {
     const { defaultType } = this.props;
-    defaultType && this.$wrap.triggerClick();
+    defaultType && this.$wrap?.triggerClick();
   };
   override render() {
     const { defaultType } = this.props;
@@ -146,11 +144,7 @@ export default class DateInput extends Component<DynamicInputProps, any> {
         {defaultType ? (
           <DynamicInput {...this.props} onTriggerClick={this.onTriggerClick} />
         ) : (
-          <OtherFieldList
-            {...this.props}
-            removeItem={this.removeItem}
-            onClick={this.selectUser}
-          />
+          <OtherFieldList {...this.props} removeItem={this.removeItem} onClick={this.selectUser} />
         )}
         <SelectOtherField
           {...this.props}

@@ -128,7 +128,7 @@ const OptionItem = props => {
           .map(({ color, value }, index) => (
             <li key={index}>
               {colorful ? (
-                <OptionChip color={color} title={value}>
+                <OptionChip color={color || ''} title={value || ''}>
                   {value}
                 </OptionChip>
               ) : (

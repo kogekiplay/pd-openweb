@@ -49,7 +49,7 @@ export default class SubSheet extends Component<DynamicInputProps, SubSheetState
       return;
     }
 
-    defaultType && this.$wrap.triggerClick();
+    defaultType && this.$wrap?.triggerClick();
   };
   override render() {
     const { defaultType } = this.props;

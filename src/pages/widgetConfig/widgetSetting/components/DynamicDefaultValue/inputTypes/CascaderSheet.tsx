@@ -4,10 +4,11 @@ import _ from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';
 import CascaderDropdown from 'src/components/Form/DesktopForm/widgets/Cascader';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
+import { dynamicRecordId, dynamicRecordValue, dynamicRelatedSelections } from '../dynamicTypes';
 import type { DynamicInputProps } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 
-export default class CascaderSheet extends Component<DynamicInputProps, any> {
+export default class CascaderSheet extends Component<DynamicInputProps, { visible: boolean; cascaderValue?: never[] }> {
   declare $wrap: SelectOtherField | null | undefined;
 
   static override propTypes = {
@@ -25,7 +26,7 @@ export default class CascaderSheet extends Component<DynamicInputProps, any> {
     };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: DynamicInputProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (_.get(this.props, 'data.controlId') !== _.get(prevProps, 'data.controlId')) {
         this.setState({
@@ -45,11 +46,8 @@ export default class CascaderSheet extends Component<DynamicInputProps, any> {
 
     this.setState({ visible: true });
   };
-  getRowId = staticValue => {
-    const value = JSON.parse(staticValue || '[]')[0];
-    return _.isObject(value) ? value.rowid : value;
-  };
-  removeRelateSheet = staticValue => {
+  getRowId = dynamicRecordId;
+  removeRelateSheet = (staticValue: string | number | undefined) => {
     const { dynamicValue = [] } = this.props;
     const removeId = this.getRowId(staticValue);
     const newValue = dynamicValue.filter(item => {
@@ -59,7 +57,7 @@ export default class CascaderSheet extends Component<DynamicInputProps, any> {
   };
   onTriggerClick = () => {
     const { defaultType } = this.props;
-    defaultType && this.$wrap.triggerClick();
+    defaultType && this.$wrap?.triggerClick();
   };
   override render() {
     const { data, defaultType, hideOtherFields = false, getType, dynamicValue } = this.props;
@@ -71,16 +69,19 @@ export default class CascaderSheet extends Component<DynamicInputProps, any> {
         ? []
         : dynamicValue
             .map(i => {
-              let staticValueInfo = JSON.parse(String(i.staticValue))[0] || '';
-              staticValueInfo = staticValueInfo.indexOf('rowid') > -1 ? safeParse(staticValueInfo) : staticValueInfo;
-              if (_.isObject(staticValueInfo)) {
-                return {
-                  sid: staticValueInfo.rowid,
-                  name: JSON.parse(staticValueInfo.path || '[]').join(' / ') || _l('未命名'),
-                };
+              const info = dynamicRecordValue(i.staticValue);
+              const sid = dynamicRecordId(i.staticValue);
+              if (info !== null && typeof info === 'object') {
+                const rawPath: unknown = 'path' in info ? info.path : undefined;
+                let parts: unknown;
+                try {
+                  parts = typeof rawPath === 'string' ? JSON.parse(rawPath) : [];
+                } catch {
+                  parts = [];
+                }
+                return { sid, name: Array.isArray(parts) ? parts.join(' / ') || _l('未命名') : _l('未命名') };
               }
-
-              return { sid: JSON.parse(String(i.staticValue))[0], name: i.relateSheetName };
+              return { sid, name: i.relateSheetName };
             })
             .filter(i => i.sid);
     const cascaderProps = {
@@ -95,12 +96,12 @@ export default class CascaderSheet extends Component<DynamicInputProps, any> {
         anylevel: '0',
       },
       visible: true,
-      onPopupVisibleChange: visible => {
+      onPopupVisibleChange: (visible: boolean) => {
         this.setState({ visible });
       },
       value: JSON.stringify(showValue),
-      onChange: value => {
-        const newValue = safeParse(value, 'array').map(item => {
+      onChange: (value: string) => {
+        const newValue = dynamicRelatedSelections(value).map(item => {
           return {
             cid: '',
             rcid: '',

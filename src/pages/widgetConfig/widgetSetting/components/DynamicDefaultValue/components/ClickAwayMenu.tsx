@@ -9,7 +9,13 @@ const ClearSelect = styled.div`
   color: var(--color-text-secondary);
   cursor: pointer;
 `;
-const UnwrappedClickAwayMenu = class ClickAwayMenu extends Component<any, any> {
+interface ClickAwayMenuProps {
+  types: { id: string; text?: string; value?: string }[];
+  handleTimeSelect: (type: { id: string; text?: string; value?: string }) => void;
+  dynamicValue?: import('../dynamicTypes').DynamicValueSource[] | undefined;
+  showClear?: boolean | undefined;
+}
+const UnwrappedClickAwayMenu = class ClickAwayMenu extends Component<ClickAwayMenuProps, Record<string, never>> {
   override render() {
     const { types, handleTimeSelect, dynamicValue, showClear = true } = this.props;
     return (

@@ -1,22 +1,23 @@
-import { createRef, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Input } from 'antd';
 import { getAdvanceSetting } from 'src/pages/widgetConfig/util';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
+import type { DynamicInputProps, DynamicValueSource } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 
-export default function (props) {
+export default function (props: DynamicInputProps) {
   const { onDynamicValueChange, dynamicValue = [], data = {}, defaultType } = props;
   const { staticValue = '', cid = '' } = dynamicValue[0] || {};
   const configuredMax = getAdvanceSetting(data, 'max');
-  const maxValue = typeof configuredMax === 'number' && configuredMax ? configuredMax : (data.enumDefault === 1 ? 5 : 10);
+  const maxValue = typeof configuredMax === 'number' && configuredMax ? configuredMax : data.enumDefault === 1 ? 5 : 10;
   const [isDynamic, setDynamic] = useState(!!cid);
-  const $wrap = createRef(null);
+  const $wrap = useRef<SelectOtherField>(null);
 
   useEffect(() => {
     setDynamic(!!cid);
   }, [data.controlId, cid]);
 
-  const setDynamicValue = newValue => {
+  const setDynamicValue = (newValue: DynamicValueSource[]) => {
     onDynamicValueChange(newValue || []);
   };
 
@@ -25,7 +26,7 @@ export default function (props) {
   };
 
   const onTriggerClick = () => {
-    defaultType && $wrap.current.triggerClick();
+    defaultType && $wrap.current?.triggerClick();
   };
 
   return (

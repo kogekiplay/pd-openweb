@@ -59,7 +59,7 @@ export const dealIds = (type: number | undefined, value: unknown): DynamicValueS
   });
 };
 
-const filterSys = (list = []) => {
+const filterSys = (list: FormControl[] = []) => {
   return list.filter(item => !_.includes(SYS, item.controlId));
 };
 
@@ -67,28 +67,28 @@ export const getControlType = (data: FormControl): string | undefined => {
   return data.type === undefined ? undefined : CONTROL_TYPE[data.type];
 };
 
-export const getDateType = data => {
+export const getDateType = (data: FormControl) => {
   if (data.type === 46) return CUR_TIME_TYPES;
   return data.type === 16 ? TIME_TYPES : DATE_TYPES;
 };
 
-export const showClear = (data: FormControl = {}, dynamicValue) => {
+export const showClear = (data: FormControl = {}, dynamicValue: DynamicValueSource[] = []) => {
   const { staticValue } = dynamicValue[0] || {};
   if (_.includes(CAN_SHOW_CLEAR_FIELD, data.type) && staticValue) return true;
   if (_.includes([3, 4, 5], data.type)) {
-    const transferValue = typeof staticValue === 'string' ? safeParse(staticValue || '{}') : staticValue;
-    return _.includes(['user-self'], (transferValue || {}).accountId);
+    const parsed: unknown = typeof staticValue === 'string' ? safeParse(staticValue || '{}') : staticValue;
+    return parsed !== null && typeof parsed === 'object' && 'accountId' in parsed && parsed.accountId === 'user-self';
   }
 
   return false;
 };
 
-const isSingleRelate = control => control.type === 29 && control.enumDefault === 1;
+const isSingleRelate = (control: FormControl) => control.type === 29 && control.enumDefault === 1;
 
-const isRelateMore = control => control.type === 29 && control.enumDefault === 2;
+const isRelateMore = (control: FormControl) => control.type === 29 && control.enumDefault === 2;
 
 //关联多条卡片、下拉框
-const isResultAsRelateMore = control => control.type === 29 && !isSheetDisplay(control);
+const isResultAsRelateMore = (control: FormControl) => control.type === 29 && !isSheetDisplay(control);
 
 // 汇总计算为数值的
 export const isFormulaResultAsSubtotal = (item: FormControl = {}) => {
@@ -155,13 +155,14 @@ export const isCustomOptions = (item: FormControl = {}) => {
 };
 
 // 同类型成员
-const isSameUser = (item: FormControl = {}, usertype) => {
+const isSameUser = (item: FormControl = {}, usertype: string | undefined) => {
   return usertype === '2'
     ? (item.advancedSetting || {}).usertype === '2'
     : (item.advancedSetting || {}).usertype !== '2';
 };
 
 // 根据类型筛选 可用的动态默认值类型
+type DynamicFilter = (control: FormControl, enumDefault?: number) => boolean;
 export const FILTER = {
   // 文本
   2: item => _.includes(CAN_AS_TEXT_DYNAMIC_FIELD, item.type) || isSingleRelate(item) || isFormulaResultAsText(item),
@@ -191,7 +192,7 @@ export const FILTER = {
   // 多选可以选择单选字段 单选不能选多选字段
   // 必须是同类型用户
   // 用户
-  26: (item, enumDefault: number) =>
+  26: (item, enumDefault) =>
     enumDefault === 0
       ? _.includes(CAN_AS_USER_DYNAMIC_FIELD, item.type) && item.enumDefault === enumDefault
       : _.includes(CAN_AS_USER_DYNAMIC_FIELD, item.type),
@@ -215,18 +216,36 @@ export const FILTER = {
   10000007: item => _.includes(CAN_AS_ARRAY_DYNAMIC_FIELD, item.type) || isResultAsRelateMore(item),
   // 对象数组
   10000008: item => _.includes(CAN_AS_ARRAY_OBJECT_DYNAMIC_FIELD, item.type),
-};
+} satisfies Record<number, DynamicFilter>;
 
 // 关联多条----关联单条、多条（列表除外）
-export const filterControls = (data = {}, controls: FormControl[] = []) => {
+export const filterControls = (data: FormControl = {}, controls: FormControl[] = []) => {
   return controls.filter(item =>
     isRelateMore(data) ? isResultAsRelateMore(item) : isSingleRelate(item) || item.type === 35,
   );
 };
 
-export const getControls = ({ data = {} as FormControl, controls, isCurrent, from }) => {
+export interface DynamicAvailableControl extends FormControl {
+  originType?: number | undefined;
+  isEqualSource?: boolean | undefined;
+  parentId?: string | undefined;
+  parentName?: string | undefined;
+}
+export interface DynamicControlFilter {
+  data?: FormControl | undefined;
+  controls?: FormControl[] | undefined;
+  isCurrent?: boolean | undefined;
+  from?: string | number | undefined;
+}
+export const getControls = ({
+  data = {},
+  controls = [],
+  isCurrent,
+  from,
+}: DynamicControlFilter): DynamicAvailableControl[] => {
   const { type, enumDefault, dataSource, advancedSetting: { usertype } = {} } = data;
-  const filterFn = FILTER[type];
+  const filters: Partial<Record<number, DynamicFilter>> = FILTER;
+  const filterFn = type === undefined ? undefined : filters[type];
 
   if (
     _.includes(
@@ -235,7 +254,8 @@ export const getControls = ({ data = {} as FormControl, controls, isCurrent, fro
         DYNAMIC_FROM_MODE.USER_CONFIG,
         DYNAMIC_FROM_MODE.ORG_CONFIG,
         DYNAMIC_FROM_MODE.DEPART_CONFIG,
-        DYNAMIC_FROM_MODE.DYNAMIC_VALUE,
+        // The historical DYNAMIC_VALUE property is absent; its undefined value also matched the default mode.
+        undefined,
         DYNAMIC_FROM_MODE.RULES,
         DYNAMIC_FROM_MODE.CUSTOM_EVENT,
       ],
@@ -298,7 +318,7 @@ export const getControls = ({ data = {} as FormControl, controls, isCurrent, fro
     controls = _.includes([DYNAMIC_FROM_MODE.USER_CONFIG], from)
       ? controls
       : _.filter(controls, item => !_.includes([27, 48], item.type));
-    return _.filter(controls, item => filterFn(item, enumDefault) && isSameUser(item, usertype));
+    return _.filter(controls, item => (filterFn?.(item, enumDefault) ?? false) && isSameUser(item, usertype));
   }
 
   // 默认值部门可选成员字段、查询配置中不可选成员字段
@@ -340,11 +360,11 @@ export const getControls = ({ data = {} as FormControl, controls, isCurrent, fro
 
 export { transferValue } from 'src/utils/controlCommon';
 
-export const isIframeControl = item => {
+export const isIframeControl = (item: FormControl | null | undefined) => {
   return item && item.type === 45 && item.enumDefault === 1;
 };
 
-export const getTypeList = (data = {}) => {
+export const getTypeList = (data: FormControl = {}) => {
   const { advancedSetting: { showtype } = {} } = data;
 
   if (showtype === '1') {
@@ -362,8 +382,8 @@ export const getTypeList = (data = {}) => {
   }
 };
 
-export const getOtherSelectField = (control, value: string) => {
-  let data = [];
+export const getOtherSelectField = (control: FormControl, value: string) => {
+  let data: typeof EMEBD_FIELDS = [];
 
   if (control.type === 45 && control.enumDefault === 1) {
     data = EMEBD_FIELDS;
@@ -376,7 +396,7 @@ export const getOtherSelectField = (control, value: string) => {
     : data;
 };
 
-const MAP_FILTER = {
+const MAP_FILTER: Record<number, (control: FormControl) => boolean> = {
   // 文本
   2: item => _.includes([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 16, 28, 36, 46], item.type),
   // 数值
@@ -393,20 +413,20 @@ const MAP_FILTER = {
   10000008: item => _.includes([34], item.type),
 };
 
-export const getMapControls = (item, controls: FormControl[] = []) => {
+export const getMapControls = (item: DynamicAvailableControl, controls: FormControl[] = []) => {
   if (item.type === 10000007) {
     const subControl = controls
       .filter(i => i.type === 34)
-      .reduce((total, cur) => {
+      .reduce<DynamicAvailableControl[]>((total, cur) => {
         const formatRelations = filterSys(cur.relationControls).map(item => {
           return { ...item, parentId: cur.controlId, parentName: cur.controlName };
         });
         return total.concat(formatRelations);
       }, []);
     const totalControls = controls.concat(subControl);
-    return _.filter(totalControls, MAP_FILTER[item.originType]);
+    return _.filter(totalControls, item.originType === undefined ? undefined : MAP_FILTER[item.originType]);
   }
 
-  const filterFn = MAP_FILTER[item.type];
+  const filterFn = item.type === undefined ? undefined : MAP_FILTER[item.type];
   return _.filter(controls, filterFn);
 };

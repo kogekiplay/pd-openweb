@@ -13,6 +13,7 @@ import {
   getShowFormat,
   getTitleStyle,
 } from 'src/utils/controlCommon';
+import type { ControlOption } from 'src/utils/controlTypes';
 import type { FormControl } from 'src/utils/controlTypes';
 import { getMaxControlsCount, NO_CONTENT_CONTROL, NOT_HAVE_WIDTH_CONFIG } from '../config';
 import { DISPLAY_TYPE } from '../config/setting';
@@ -65,11 +66,9 @@ export const getControlsSorts = (data, controls, key = 'controlssorts') => {
 
 // 默认取标题控件 和 前三个控件
 export const getDefaultShowControls = allControls => {
-  if (allControls.length <= 3)
-    return allControls.map(({ controlId }: FormControl) => controlId);
+  if (allControls.length <= 3) return allControls.map(({ controlId }: FormControl) => controlId);
   const titleControlIndex = _.findIndex(allControls, item => item.attribute === 1);
-  if (titleControlIndex <= 3)
-    return allControls.slice(0, 4).map(({ controlId }: FormControl) => controlId);
+  if (titleControlIndex <= 3) return allControls.slice(0, 4).map(({ controlId }: FormControl) => controlId);
   return allControls
     .slice(0, 3)
     .concat(allControls[titleControlIndex])
@@ -286,7 +285,7 @@ export const isExceedMaxControlLimit = (controls: FormControl[] = [], addCount =
 };
 
 // 获取可用的option
-export const getOptions = data => (data.options || []).filter(item => !item.isDeleted);
+export const getOptions = (data: FormControl): ControlOption[] => (data.options || []).filter(item => !item.isDeleted);
 
 export const getShowControls = (controls: FormControl[] = [], showControls = []) => {
   // 删除掉showControls 中已经被删掉的控件

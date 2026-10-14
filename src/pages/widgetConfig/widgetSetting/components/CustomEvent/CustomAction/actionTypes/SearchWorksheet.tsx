@@ -1,9 +1,9 @@
 import { Component, Fragment, useEffect } from 'react';
 import { useSetState } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import { Dialog, Dropdown, LoadDiv, Menu, MenuItem, RadioGroup } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import homeAppAjax from 'src/api/homeApp';
@@ -16,13 +16,13 @@ import { isSheetDisplay } from 'src/pages/widgetConfig/util';
 import SortConditions from 'src/pages/worksheet/common/ViewConfig/components/SortConditions';
 import FilterConfig from 'src/pages/worksheet/common/WorkSheetFilter/common/FilterConfig';
 import { redefineComplexControl } from 'src/pages/worksheet/common/WorkSheetFilter/util';
+import type { FormControl } from 'src/utils/controlTypes';
 import { DYNAMIC_FROM_MODE } from '../../../DynamicDefaultValue/config';
 import { SearchWorksheetWrap, WorksheetListWrap } from '../../../DynamicDefaultValue/styled';
 import { getControls } from '../../../DynamicDefaultValue/util';
 import EmptyRuleConfig from '../../../EmptyRuleConfig';
 import SelectWorksheet from '../../../SearchWorksheet/SelectWorksheet';
 import SelectControl from '../../../SelectControl';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const RadioDisplay = [
   {
@@ -267,7 +267,7 @@ class SearchWorksheetActionDialog extends Component<any, any> {
       filterControls.length > 0 &&
       ((control.type === 29 && control.dataSource === this.state.sheetId) || _.includes([2, 32], control.type))
     ) {
-      filterControls = ROW_ID_CONTROL.concat(filterControls);
+      filterControls = [...ROW_ID_CONTROL, ...filterControls];
     }
 
     return filterControls.map(({ controlId: value, controlName: text }) => {
@@ -310,7 +310,8 @@ class SearchWorksheetActionDialog extends Component<any, any> {
     const curIsSubList = _.get(cidControl, 'type') === 34;
 
     if (curIsSubList) {
-      const { relationControls = [], showControls = [] }: { relationControls: FormControl[]; [key: string]: any } = cidControl;
+      const { relationControls = [], showControls = [] }: { relationControls: FormControl[]; [key: string]: any } =
+        cidControl;
       cidControls = relationControls.filter(r => _.includes(showControls, r.controlId));
     }
 
@@ -577,7 +578,12 @@ class SearchWorksheetActionDialog extends Component<any, any> {
                 },
               }}
             >
-              <div className="settingWorksheetInput" ref={con => { this.box = con; }}>
+              <div
+                className="settingWorksheetInput"
+                ref={con => {
+                  this.box = con;
+                }}
+              >
                 <div className="overflow_ellipsis">
                   {isSheetDelete ? (
                     <span className="Red">{_l('工作表已删除')}</span>
