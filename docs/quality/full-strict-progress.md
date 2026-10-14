@@ -349,3 +349,7 @@ OnlySync、RecordInfo/DragCore、BaseColumnHead 及列头发布器的有限合�
 该批源码 `3a385743f4` 已完成正式 release（55 秒）、本地 publish 和 1095 JS / 387 CSS / 3 runtime 资源校验；73 个 HTML 的 532 个资源引用存在、无 dev JS，入口 SHA256 为 `e18d3500b3224282ea81c5ff4bd6baeb8c8572cfcab19f8aff8177461b7e7db3`。生产仍为 `5cf1a7bbb`。
 
 工具链批次 `b1347dbf6` 已推送：CI/utils、CI/generate、CI/serve、publishConfig、build、spec-harness 和 run-specs 的自有路径五开关零诊断；179/179 规格及 release 构建通过，资源为 1095 JS、387 CSS、3 runtime。全工具 strict 按诊断标题计数为 2929 条（3158 → 2929，减少 229；旧数字3391是含说明的输出行数），仍有 webpack 配置、其它脚本和既有测试 globals 等未处理债务；本批未更新生产。
+
+## 2026-10-14 HAP 7.5.1 整合批次
+
+已保留上游 `5788d7d5d` 和本地严格化历史完成 7.5.1 源码整合，处理 25 个冲突；新增信用点/附件边界以 TS 有限模型实现。228/228 行为规格通过，终点严格诊断 53,036 → 53,010，按文件/错误码无新增，strict-clean 1,624/4,756、欠债 3,132。基础语义基线只收紧到 8,717 条。详见 `docs/upgrade/7.5.1-validation.md`。正式 strict 未全仓启用，目标继续 active。生产升级正在按已授权回滚流程准备；每小时 HAP 上游与生产同步 heartbeat 已附着到当前继续对话，按 Asia/Shanghai 每天 17:30 前完成验证发布的目标提前推进。

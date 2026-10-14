@@ -19,10 +19,14 @@ function lastIndex<T>(messages: readonly T[], predicate: (message: T) => boolean
   return -1;
 }
 
-export function applyStreamCredit<T extends CreditUiMessage>(messages: T[], messageId: string | undefined, price: number): T[] {
+export function applyStreamCredit<T extends CreditUiMessage>(
+  messages: T[],
+  messageId: string | undefined,
+  price: number,
+): T[] {
   let index = messageId ? lastIndex(messages, item => item.id === messageId) : -1;
   if (index === -1) index = lastIndex(messages, item => item.role === 'assistant');
-  return index === -1 ? messages : messages.map((item, i) => i === index ? { ...item, price } : item);
+  return index === -1 ? messages : messages.map((item, i) => (i === index ? { ...item, price } : item));
 }
 
 export function applySavedCredit<T extends CreditUiMessage>(messages: T[], saved: unknown): T[] {
@@ -30,7 +34,7 @@ export function applySavedCredit<T extends CreditUiMessage>(messages: T[], saved
   const target = messages[index];
   const price = getSavedTurnPrice(saved, target?.modelMessageId);
   if (!price || target?.price === price) return messages;
-  return messages.map((item, i) => i === index ? { ...item, price } : item);
+  return messages.map((item, i) => (i === index ? { ...item, price } : item));
 }
 
 function object(value: unknown): value is Record<string, unknown> {
@@ -61,7 +65,12 @@ export function getSavedTurnPrice(list: unknown, modelMessageId: unknown): numbe
   while (start > 0 && messages[start - 1]?.role !== 'user') start -= 1;
   let end = index + 1;
   while (end < messages.length && messages[end]?.role !== 'user') end += 1;
-  return sumPrice(messages.slice(start, end).filter(item => item.role === 'assistant').map(item => item.metadata.price));
+  return sumPrice(
+    messages
+      .slice(start, end)
+      .filter(item => item.role === 'assistant')
+      .map(item => item.metadata.price),
+  );
 }
 
 export function getStreamPrice(previous: number, usage: unknown): number {

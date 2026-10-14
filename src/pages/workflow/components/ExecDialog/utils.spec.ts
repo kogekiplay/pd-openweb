@@ -22,6 +22,8 @@ const auth = { passTypeList: [101], overruleTypeList: [101] };
 assert.strictEqual(canDirectSubmitApproveAction({ action: 'pass', auth }), true);
 assert.strictEqual(canDirectSubmitApproveAction({ action: 'overrule', auth }), true);
 assert.strictEqual(canDirectSubmitApproveAction({ action: 'return', auth }), true);
+assert.strictEqual(canDirectSubmitApproveAction({ action: 'return', auth, backFlowNodeCount: 2 }), false);
+assert.strictEqual(canDirectSubmitApproveAction({ action: 'return', auth, backFlowNodeCount: 1 }), true);
 
 // ── 分支可区分性 ──────────────────────────────────────────────────────────
 // 上面那个 auth 的 passTypeList 与 overruleTypeList 取值相同（都是 [101]），

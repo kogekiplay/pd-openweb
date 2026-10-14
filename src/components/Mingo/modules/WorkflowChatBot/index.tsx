@@ -21,9 +21,9 @@ import Send from '../../ChatBot/components/Send';
 import { resolveStreamError } from '../../ChatBot/utils';
 import MobileShareOperate from '../MobileShareOperate';
 import ShareOperate from '../ShareOperate';
+import { applySavedCredit, applyStreamCredit, getStreamPrice, sumPrice } from './creditPrice';
 import Guide from './Guide';
 import { filterToolCalls, renderToolCalls } from './ToolCalls';
-import { applySavedCredit, applyStreamCredit, getStreamPrice, sumPrice } from './creditPrice';
 
 const MingoContentWrap = styled.div`
   height: 100%;
@@ -482,11 +482,13 @@ function MingoContent(props, ref) {
     const syncConversationId = cache.current.conversationId;
     const sequence = priceCache.current.sequence;
     if (!syncConversationId) return;
-    chatbotAjax.getMessageList({ chatbotId, conversationId: syncConversationId, pageIndex: 1, pageSize: 50 }, { silent: true })
+    chatbotAjax
+      .getMessageList({ chatbotId, conversationId: syncConversationId, pageIndex: 1, pageSize: 50 }, { silent: true })
       .then((list: unknown) => {
         if (syncConversationId !== cache.current.conversationId || sequence !== priceCache.current.sequence) return;
         setMessages(prev => applySavedCredit(prev, list));
-      }).catch(() => {});
+      })
+      .catch(() => {});
   };
 
   const handleSend = (newMessage, { fromMessageId, files = [], originMessageForRegenerate } = {}) => {

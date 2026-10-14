@@ -120,7 +120,9 @@ class ExportAttachment extends Component<any, any> {
 
     const exampleArr = nameMethodList.filter(it => _.includes(nameMethodValues, it.value));
     const visibleAttachmentControls = attachmentControls.filter(item => this.checkControlVisible(item));
-    const selectedCount = visibleAttachmentControls.filter(item => _.includes(selectControlIds, item.controlId)).length;
+    const selectedCount = visibleAttachmentControls.filter((item: { controlId: string }) =>
+      _.includes(selectControlIds, item.controlId),
+    ).length;
 
     return (
       <Dialog
@@ -143,9 +145,13 @@ class ExportAttachment extends Component<any, any> {
             checked={visibleAttachmentControls.length > 0 && selectedCount === visibleAttachmentControls.length}
             clearselected={selectedCount > 0 && selectedCount < visibleAttachmentControls.length}
             disabled={!visibleAttachmentControls.length}
-            onClick={(checked: boolean) => this.setState({
-              selectControlIds: checked ? [] : visibleAttachmentControls.map(item => item.controlId),
-            })}
+            onClick={(checked: boolean) =>
+              this.setState({
+                selectControlIds: checked
+                  ? []
+                  : visibleAttachmentControls.map((item: { controlId: string }) => item.controlId),
+              })
+            }
           />
           {visibleAttachmentControls.map(item => {
             return (
