@@ -1,4 +1,5 @@
-import { createRef, Fragment, useEffect, useState } from 'react';
+import type { MouseEvent } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { Dropdown } from 'antd';
 import cx from 'classnames';
 import update from 'immutability-helper';
@@ -10,6 +11,7 @@ import { DYNAMIC_FROM_MODE } from 'src/pages/widgetConfig/widgetSetting/componen
 import { DropdownContent, SettingItem } from '../../../../styled';
 import { getOptions, handleAdvancedSettingChange } from '../../../../util/setting';
 import { DynamicInput, OtherField, SelectOtherField } from '../components';
+import type { DynamicInputProps, DynamicValueSource } from '../dynamicTypes';
 import { OptionControl } from '../styled';
 
 export const DefaultOptionSetting = styled(SettingItem)`
@@ -73,7 +75,7 @@ export const DefaultOptionsMenu = styled(DropdownContent)`
   }
 `;
 
-export default function DefaultOptions(props) {
+export default function DefaultOptions(props: DynamicInputProps) {
   const { data, dynamicValue, onDynamicValueChange, onChange, defaultType, from } = props;
   const { type, default: defaultValue, enumDefault2, controlId } = data;
   const [visible, setVisible] = useState(false);
@@ -92,17 +94,22 @@ export default function DefaultOptions(props) {
         score: 0,
         value: _.get(data, 'advancedSetting.nullitemname') || _l('为空'),
       },
-    ].concat(options);
+      ...options,
+    ];
   }
 
   const isMulti = data.type === 10;
-  const $wrap = createRef(null);
+  const $wrap = useRef<SelectOtherField>(null);
 
   useEffect(() => {
     // 有default老配置的
     if (defaultValue) {
-      const defaultOptions = safeParse(defaultValue);
-      const arr = defaultOptions.map(v => ({ rcid: '', cid: '', staticValue: v })) || [];
+      const defaultOptions: unknown = safeParse(defaultValue);
+      const arr = Array.isArray(defaultOptions)
+        ? defaultOptions
+            .filter((value): value is string | number => typeof value === 'string' || typeof value === 'number')
+            .map(v => ({ rcid: '', cid: '', staticValue: v }))
+        : [];
       onChange({
         ...handleAdvancedSettingChange(data, {
           defsource: JSON.stringify(arr),
@@ -115,7 +122,7 @@ export default function DefaultOptions(props) {
     }
   }, [controlId]);
 
-  const switchChecked = key => {
+  const switchChecked = (key: string) => {
     if (isMulti) {
       if (from === DYNAMIC_FROM_MODE.FAST_FILTER) {
         if (key === 'isEmpty') {
@@ -125,7 +132,7 @@ export default function DefaultOptions(props) {
 
         if (checkedValue.includes('isEmpty')) {
           if (checkedValue.includes(key)) {
-            const values = dynamicValue.filter(item => ['isEmpty', key].includes(item.staticValue));
+            const values = dynamicValue.filter(item => item.staticValue === 'isEmpty' || item.staticValue === key);
             onDynamicValueChange(values);
             return;
           } else {
@@ -148,7 +155,7 @@ export default function DefaultOptions(props) {
     }
   };
 
-  const removeItem = ({ cid, rcid, staticValue }) => {
+  const removeItem = ({ cid, rcid, staticValue }: DynamicValueSource) => {
     const index = dynamicValue.findIndex(
       item => item.cid === cid && item.rcid === rcid && item.staticValue === staticValue,
     );
@@ -158,7 +165,7 @@ export default function DefaultOptions(props) {
     }
   };
 
-  const handleFieldClick = data => {
+  const handleFieldClick = (data: DynamicValueSource[]) => {
     if (isMulti && _.get(data, '[0].rcid') !== 'url') {
       const value = head(data) || {};
 
@@ -174,7 +181,7 @@ export default function DefaultOptions(props) {
   };
 
   const onTriggerClick = () => {
-    defaultType && $wrap.current.triggerClick();
+    defaultType && $wrap.current?.triggerClick();
   };
 
   return (
@@ -187,9 +194,9 @@ export default function DefaultOptions(props) {
             trigger={['click']}
             open={visible}
             onOpenChange={setVisible}
-            getPopupContainer={() => document.querySelector('.defaultOptionsWrap') || document.body}
+            getPopupContainer={() => document.querySelector<HTMLElement>('.defaultOptionsWrap') || document.body}
             popupRender={() => (
-              <DefaultOptionsMenu onClick={e => e.stopPropagation()}>
+              <DefaultOptionsMenu onClick={(e: MouseEvent<HTMLDivElement>) => e.stopPropagation()}>
                 <div
                   className="clearDefault hoverText"
                   onClick={() => {
@@ -208,7 +215,7 @@ export default function DefaultOptions(props) {
                       {isEmpty && <div className="emptyOption" />}
                       <div className={cx('optionItem', { checked })} key={key} onClick={() => switchChecked(key)}>
                         {colorful && color ? (
-                          <OptionChip color={color} title={value}>
+                          <OptionChip color={color} title={value || ''}>
                             {value}
                           </OptionChip>
                         ) : (
@@ -237,18 +244,18 @@ export default function DefaultOptions(props) {
                 }
 
                 if (staticValue) {
-                  const option = find(options, item => item.key === staticValue) || {};
+                  const option = find(options, item => item.key === staticValue);
                   return (
                     <OptionControl
                       key={index}
                       className={cx('option pointer overflow_ellipsis', { isDeleted: isEmpty(option) })}
                     >
-                      {colorful && option.color ? (
-                        <OptionChip color={option.color} title={option.value}>
+                      {colorful && option?.color ? (
+                        <OptionChip color={option.color} title={option.value || ''}>
                           {option.value}
                         </OptionChip>
                       ) : (
-                        <div className="text overflow_ellipsis">{option.value || _l('已删除')}</div>
+                        <div className="text overflow_ellipsis">{option?.value || _l('已删除')}</div>
                       )}
                       <i
                         className="icon-close"

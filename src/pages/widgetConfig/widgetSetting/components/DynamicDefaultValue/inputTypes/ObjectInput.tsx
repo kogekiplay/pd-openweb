@@ -1,10 +1,11 @@
 import { OtherFieldList, SelectOtherField } from '../components';
+import type { DynamicInputProps, DynamicValueSource } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 
-export default function (props) {
+export default function (props: DynamicInputProps) {
   const { onDynamicValueChange } = props;
 
-  const setDynamicValue = newValue => {
+  const setDynamicValue = (newValue: DynamicValueSource[]) => {
     onDynamicValueChange(newValue || []);
   };
 

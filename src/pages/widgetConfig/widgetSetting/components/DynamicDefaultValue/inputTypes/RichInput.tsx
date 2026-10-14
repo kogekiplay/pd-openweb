@@ -1,39 +1,40 @@
-import { createRef, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Modal } from 'antd';
 import { Icon, RichText } from 'ming-ui';
 import EditIntro from 'src/pages/PageHeader/AppPkgHeader/AppDetail/EditIntro';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
+import type { DynamicInputProps, DynamicValueSource } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 
-export default function (props) {
+export default function (props: DynamicInputProps) {
   const { onDynamicValueChange, dynamicValue = [], data = {}, defaultType } = props;
   const { staticValue = '', cid = '' } = dynamicValue[0] || {};
-  const [value, setValue] = useState(staticValue);
+  const [value, setValue] = useState(String(staticValue));
   const [isDynamic, setDynamic] = useState(!!cid);
   const [visible, setVisible] = useState(false);
-  const $wrap = createRef(null);
+  const $wrap = useRef<SelectOtherField>(null);
 
   useEffect(() => {
-    setValue(staticValue);
+    setValue(String(staticValue));
     setDynamic(!!cid);
   }, [data.controlId, cid, staticValue]);
 
-  const setDynamicValue = newValue => {
+  const setDynamicValue = (newValue: DynamicValueSource[]) => {
     const filterStatic = dynamicValue.filter(i => !i.staticValue);
     onDynamicValueChange(filterStatic.concat(newValue));
   };
 
-  const handleChange = value => {
+  const handleChange = (value: string) => {
     setValue(value);
     onDynamicValueChange(value ? [{ cid: '', rcid: '', staticValue: value }] : []);
   };
 
   const onTriggerClick = () => {
-    defaultType && $wrap.current.triggerClick();
+    defaultType && $wrap.current?.triggerClick();
   };
 
   return (
-    (<DynamicValueInputWrap>
+    <DynamicValueInputWrap>
       {defaultType ? (
         <DynamicInput {...props} onTriggerClick={onTriggerClick} />
       ) : isDynamic ? (
@@ -70,7 +71,7 @@ export default function (props) {
           permissionType={100} //可编辑的权限
           isEditing={true}
           cacheKey={'richInputDes'}
-          onSave={tempValue => {
+          onSave={(tempValue: { description: string | null }) => {
             const description = tempValue.description;
             handleChange(description === null ? value : description);
             setVisible(false);
@@ -81,6 +82,6 @@ export default function (props) {
           title={_l('内容')}
         />
       </Modal>
-    </DynamicValueInputWrap>)
+    </DynamicValueInputWrap>
   );
 }

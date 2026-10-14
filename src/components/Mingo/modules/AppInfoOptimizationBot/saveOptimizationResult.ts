@@ -1,36 +1,88 @@
 import appManagementApi from 'src/api/appManagement';
+import type { GlobalAppInfo } from 'src/common/globalStoreTypes';
+import type { AppOptimizationValue } from 'src/utils/sseTypes';
 
 const CUSTOM_ICON_BASE = 'https://fp1.mingdaoyun.cn/customIcon/';
 
-const getEffectiveIconName = (iconName, lineStyle) => {
+type OptimizationChange = Pick<AppOptimizationValue, 'name' | 'icon'>;
+type OptimizationMap = Record<string, OptimizationChange | undefined>;
+interface TreeItem {
+  id: string;
+  name?: string | undefined;
+  icon?: string | undefined;
+  type?: number | undefined;
+}
+interface SectionItemPayload {
+  id: string;
+  name: string | undefined;
+  icon: string | undefined;
+  type: string;
+}
+interface SectionPayload {
+  id: string;
+  name: string | undefined;
+  icon: string | undefined;
+  type: 'Section';
+  item: SectionItemPayload[];
+  childSections: SectionPayload[];
+}
+interface SaveChangesParams {
+  appInfo?: GlobalAppInfo | undefined;
+  optimizedMap: OptimizationMap;
+  selectedIds: string[];
+  editName: boolean;
+  editIcon: boolean;
+  isLine: boolean;
+  treeData: TreeItem[];
+}
+interface SheetListUpdate {
+  id: string;
+  workSheetName: string | undefined;
+  icon: string | undefined;
+  iconUrl: string | undefined;
+}
+interface BatchEditPayload {
+  appId: string | undefined;
+  sections: SectionPayload[];
+  name?: string;
+  icon?: string;
+}
+
+const getEffectiveIconName = (iconName: string | undefined, lineStyle: boolean): string | undefined => {
   if (!iconName) return undefined;
   if (lineStyle) return iconName.endsWith('_line') ? iconName : `${iconName}_line`;
   return iconName.endsWith('_line') ? iconName.replace(/_line$/, '') : iconName;
 };
 
-const mapItemType = type => {
+const mapItemType = (type: number | undefined): string => {
   if (type === 0) return 'Worksheet';
   if (type === 1) return 'CustomPage';
   return String(type);
 };
 
-const buildSectionPayload = (section, changeMap) => {
+const buildSectionPayload = (
+  section: NonNullable<NonNullable<GlobalAppInfo['sections']>[number]>,
+  changeMap: Record<string, OptimizationChange | undefined>,
+): SectionPayload | null => {
   const sectionId = section.appSectionId;
+  if (!sectionId) return null;
   const sectionChange = changeMap[sectionId];
 
-  const itemPayload = [];
+  const itemPayload: SectionItemPayload[] = [];
   section.workSheetInfo?.forEach(wsItem => {
-    const itemChange = changeMap[wsItem.workSheetId];
+    const itemId = wsItem.workSheetId;
+    if (!itemId) return;
+    const itemChange = changeMap[itemId];
     if (!itemChange) return;
     itemPayload.push({
-      id: wsItem.workSheetId,
+      id: itemId,
       name: itemChange.name || wsItem.workSheetName,
       icon: itemChange.icon || wsItem.icon,
       type: mapItemType(wsItem.type),
     });
   });
 
-  const childSectionPayload = [];
+  const childSectionPayload: SectionPayload[] = [];
   section.childSections?.forEach(childSection => {
     const childPayload = buildSectionPayload(childSection, changeMap);
 
@@ -53,7 +105,7 @@ const buildSectionPayload = (section, changeMap) => {
   };
 };
 
-function buildChanges({ optimizedMap, selectedIds, editName, editIcon, isLine, treeData }) {
+function buildChanges({ optimizedMap, selectedIds, editName, editIcon, isLine, treeData }: SaveChangesParams) {
   return selectedIds
     .filter(id => id !== 'app')
     .map(id => {
@@ -69,8 +121,8 @@ function buildChanges({ optimizedMap, selectedIds, editName, editIcon, isLine, t
 }
 
 /** 供 Redux 更新左侧列表用：返回 { id, workSheetName, icon, iconUrl }[]，不含 app */
-export function buildSheetListUpdates(params) {
-  const changes = buildChanges(params);
+export function buildSheetListUpdates(params: SaveChangesParams): SheetListUpdate[] {
+  const changes = buildChanges(params as SaveChangesParams);
   return changes
     .filter(c => c.id !== 'app')
     .map(c => ({
@@ -81,7 +133,19 @@ export function buildSheetListUpdates(params) {
     }));
 }
 
-export function saveOptimizationResult({ appInfo, optimizedMap, selectedIds, editName, editIcon, isLine, treeData }) {
+interface SaveOptimizationParams extends Omit<SaveChangesParams, 'appInfo'> {
+  appInfo: GlobalAppInfo;
+}
+
+export function saveOptimizationResult({
+  appInfo,
+  optimizedMap,
+  selectedIds,
+  editName,
+  editIcon,
+  isLine,
+  treeData,
+}: SaveOptimizationParams) {
   const changes = buildChanges({ optimizedMap, selectedIds, editName, editIcon, isLine, treeData });
 
   const changeMap = changes.reduce((map, item) => {
@@ -89,22 +153,23 @@ export function saveOptimizationResult({ appInfo, optimizedMap, selectedIds, edi
     return map;
   }, {});
 
-  const sectionsPayload = appInfo.sections
+  const sectionsPayload = (appInfo.sections || [])
     .map(section => buildSectionPayload(section, changeMap))
     .filter(section => section !== null);
 
-  const appNameChanged = editName && optimizedMap.app?.name && optimizedMap.app.name !== appInfo.name;
+  const appNameCandidate = editName ? optimizedMap.app?.name : undefined;
+  const appNameChanged = !!appNameCandidate && appNameCandidate !== appInfo.name;
   const appIconCandidate =
     editIcon && optimizedMap.app?.icon ? getEffectiveIconName(optimizedMap.app.icon, isLine) : undefined;
   const appIconChanged = !!appIconCandidate && appIconCandidate !== appInfo.icon;
 
-  const payload = {
+  const payload: BatchEditPayload = {
     appId: appInfo.id || appInfo.appId,
     sections: sectionsPayload,
   };
 
   if (appNameChanged) {
-    payload.name = optimizedMap.app.name;
+    payload.name = appNameCandidate;
   }
 
   if (appIconChanged) {

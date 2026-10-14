@@ -3,7 +3,7 @@ import { OtherFieldList, SelectOtherField } from '../components';
 import type { DynamicInputProps } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 
-export default class AttachmentInput extends Component<DynamicInputProps, any> {
+export default class AttachmentInput extends Component<DynamicInputProps, Record<string, never>> {
   constructor(props: DynamicInputProps) {
     super(props);
     this.state = {};

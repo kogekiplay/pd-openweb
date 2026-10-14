@@ -3,7 +3,9 @@ import _ from 'lodash';
 import { arrayOf, func, shape, string } from 'prop-types';
 import { getCurrentValue } from 'src/components/Form/core/formUtils';
 import { selectRecords } from 'src/components/SelectRecords';
+import type { RecordRow } from 'src/utils/controlTypes';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
+import { dynamicRecordId } from '../dynamicTypes';
 import type { DynamicInputProps } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 
@@ -32,7 +34,7 @@ export default class RelateSheet extends Component<DynamicInputProps, RelateShee
     }
 
     const multiple = data.enumDefault === 2;
-    const filterRowIds = dynamicValue.reduce((total, item) => {
+    const filterRowIds = dynamicValue.reduce<Array<string | number | undefined>>((total, item) => {
       if (!item.cid) {
         total = total.concat(this.getRowId(item.staticValue));
       }
@@ -52,16 +54,17 @@ export default class RelateSheet extends Component<DynamicInputProps, RelateShee
       worksheetId: data.dataSource,
       projectId: _.get(this.props, 'globalSheetInfo.projectId'),
       onClose: () => this.setState({ recordListVisible: false }),
-      onOk: records => {
+      onOk: (records: RecordRow[]) => {
         const newValue = records.map(item => {
           return {
             cid: '',
             rcid: '',
             staticValue: JSON.stringify([item.rowid]),
-            relateSheetName:
+            relateSheetName: String(
               getCurrentValue(titleControl, titleControl?.controlId ? item[titleControl.controlId] : undefined, {
                 type: 2,
               }) || '未命名',
+            ),
           };
         });
 
@@ -75,11 +78,8 @@ export default class RelateSheet extends Component<DynamicInputProps, RelateShee
       ..._.pick(data, ['appId', 'showControls', 'viewId', 'coverCid']),
     });
   };
-  getRowId = staticValue => {
-    const value = JSON.parse(staticValue || '[]')[0];
-    return typeof value === 'string' && value.indexOf('rowid') > -1 ? _.get(safeParse(value), 'rowid') : value;
-  };
-  removeRelateSheet = staticValue => {
+  getRowId = dynamicRecordId;
+  removeRelateSheet = (staticValue: string | number | undefined) => {
     const { dynamicValue = [] } = this.props;
     const removeId = this.getRowId(staticValue);
     const newValue = dynamicValue.filter(item => {
@@ -89,7 +89,7 @@ export default class RelateSheet extends Component<DynamicInputProps, RelateShee
   };
   onTriggerClick = () => {
     const { defaultType } = this.props;
-    defaultType && this.$wrap.triggerClick();
+    defaultType && this.$wrap?.triggerClick();
   };
   override render() {
     const { data, defaultType } = this.props;

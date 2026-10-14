@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import moment from 'moment';
+import type { Moment } from 'moment';
 import { func, number, shape } from 'prop-types';
 import { MdAntDatePicker, MdAntDateRangePicker } from 'ming-ui';
 import { DYNAMIC_FROM_MODE } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js';
@@ -10,7 +11,7 @@ import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import type { DynamicInputProps } from '../dynamicTypes';
 import { DynamicValueInputWrap, WrapMaxOrMin } from '../styled';
 
-export default class DateInput extends Component<DynamicInputProps, any> {
+export default class DateInput extends Component<DynamicInputProps, { defValue: string | number; isDynamic: boolean }> {
   declare $wrap: SelectOtherField | null | undefined;
 
   static override propTypes = {
@@ -41,7 +42,7 @@ export default class DateInput extends Component<DynamicInputProps, any> {
     this.updateValue();
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: DynamicInputProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.dynamicValue, prevProps.dynamicValue)) {
         this.updateValue(this.props);
@@ -49,7 +50,7 @@ export default class DateInput extends Component<DynamicInputProps, any> {
     }
   }
 
-  updateValue(nextProps?) {
+  updateValue(nextProps?: DynamicInputProps) {
     const { dynamicValue = [] } = nextProps || this.props;
     const { staticValue, cid = '' } = _.get(dynamicValue, '0') || {};
     const tempValue = !cid && staticValue && staticValue !== '2' ? staticValue : '';
@@ -63,16 +64,16 @@ export default class DateInput extends Component<DynamicInputProps, any> {
     this.updateValue();
   };
 
-  handleDateChange = date => {
+  handleDateChange = (date: Moment | [Moment | null, Moment | null] | null) => {
     const { data, withMaxOrMin } = this.props;
 
-    if (_.isNull(date)) {
+    if (!date || (Array.isArray(date) && (!date[0] || !date[1]))) {
       this.setState({ defValue: '', isDynamic: false });
       this.props.onDynamicValueChange([]);
       return;
     }
 
-    const formatDate = value => {
+    const formatDate = (value: Moment) => {
       const dateProps = getDatePickerConfigs(data);
       const formatMode = dateProps.formatMode;
       let formatText = formatMode ? formatMode : data.type === 16 ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD';
@@ -84,7 +85,9 @@ export default class DateInput extends Component<DynamicInputProps, any> {
       return moment(value.format(formatMode)).format(formatText);
     };
 
-    const time = _.isArray(date) ? `${formatDate(date[0])}-${formatDate(date[1])}` : formatDate(date);
+    const time = _.isArray(date)
+      ? `${date[0] ? formatDate(date[0]) : ''}-${date[1] ? formatDate(date[1]) : ''}`
+      : formatDate(date);
     this.setState({ defValue: time });
     const newValue = [{ rcid: '', cid: '', staticValue: time, ...(time.includes('-') ? {} : { time }) }];
     this.props.onDynamicValueChange(newValue);
@@ -92,7 +95,7 @@ export default class DateInput extends Component<DynamicInputProps, any> {
 
   onTriggerClick = () => {
     const { defaultType } = this.props;
-    defaultType && this.$wrap.triggerClick();
+    defaultType && this.$wrap?.triggerClick();
   };
 
   renderContent() {
@@ -106,7 +109,7 @@ export default class DateInput extends Component<DynamicInputProps, any> {
     }
 
     if (withMaxOrMin && from === DYNAMIC_FROM_MODE.FAST_FILTER) {
-      const [minValue, maxValue] = defValue.split('-');
+      const [minValue, maxValue] = String(defValue).split('-');
       return (
         <WrapMaxOrMin className="flexRow alignItemsCenter">
           <MdAntDateRangePicker
@@ -116,7 +119,7 @@ export default class DateInput extends Component<DynamicInputProps, any> {
             showTime={dateProps.mode === 'datetime'}
             picker={dateProps.mode === 'datetime' ? 'date' : dateProps.mode}
             format={dateProps.formatMode}
-            onChange={time => this.handleDateChange(time, formatMode)}
+            onChange={this.handleDateChange}
           />
         </WrapMaxOrMin>
       );
@@ -129,8 +132,8 @@ export default class DateInput extends Component<DynamicInputProps, any> {
         format={dateProps.formatMode}
         showTime={dateProps.mode === 'datetime'}
         picker={dateProps.mode === 'datetime' ? 'date' : dateProps.mode}
-        onChange={time => this.handleDateChange(time, formatMode)}
-        onOk={time => this.handleDateChange(time, formatMode)}
+        onChange={this.handleDateChange}
+        onOk={this.handleDateChange}
       />
     );
   }

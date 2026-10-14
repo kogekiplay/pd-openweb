@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
 import moment from 'moment';
+import type { Moment } from 'moment';
 import { func, number, shape } from 'prop-types';
 import { MdAntTimePicker, MdAntTimeRangePicker } from 'ming-ui';
 import { DYNAMIC_FROM_MODE } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js';
@@ -9,7 +10,7 @@ import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import type { DynamicInputProps } from '../dynamicTypes';
 import { DynamicValueInputWrap, WrapMaxOrMin } from '../styled';
 
-export default class TimeInput extends Component<DynamicInputProps, any> {
+export default class TimeInput extends Component<DynamicInputProps, { defValue: string | number; isDynamic: boolean }> {
   declare $wrap: SelectOtherField | null | undefined;
 
   static override propTypes = {
@@ -33,7 +34,7 @@ export default class TimeInput extends Component<DynamicInputProps, any> {
     this.updateValue();
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: DynamicInputProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.dynamicValue, prevProps.dynamicValue)) {
         this.updateValue(this.props);
@@ -41,7 +42,7 @@ export default class TimeInput extends Component<DynamicInputProps, any> {
     }
   }
 
-  updateValue(nextProps?) {
+  updateValue(nextProps?: DynamicInputProps) {
     const { dynamicValue = [] } = nextProps || this.props;
     const { staticValue, cid = '' } = _.get(dynamicValue, '0') || {};
     const tempValue = !cid && staticValue && staticValue !== '2' ? staticValue : '';
@@ -55,16 +56,18 @@ export default class TimeInput extends Component<DynamicInputProps, any> {
     this.updateValue();
   };
 
-  handleTimeChange = (date, formatMode: string) => {
-    if (_.isNull(date)) {
+  handleTimeChange = (date: Moment | [Moment | null, Moment | null] | null, formatMode: string) => {
+    if (!date || (Array.isArray(date) && (!date[0] || !date[1]))) {
       this.setState({ defValue: '', isDynamic: false });
       this.props.onDynamicValueChange([]);
       return;
     }
 
-    const formatDate = value => moment(value).format(formatMode);
+    const formatDate = (value: Moment) => moment(value).format(formatMode);
 
-    const time = _.isArray(date) ? `${formatDate(date[0])}-${formatDate(date[1])}` : formatDate(date);
+    const time = _.isArray(date)
+      ? `${date[0] ? formatDate(date[0]) : ''}-${date[1] ? formatDate(date[1]) : ''}`
+      : formatDate(date);
     this.setState({ defValue: time });
     const newValue = [{ rcid: '', cid: '', staticValue: time }];
     this.props.onDynamicValueChange(newValue);
@@ -72,7 +75,7 @@ export default class TimeInput extends Component<DynamicInputProps, any> {
 
   onTriggerClick = () => {
     const { defaultType } = this.props;
-    defaultType && this.$wrap.triggerClick();
+    defaultType && this.$wrap?.triggerClick();
   };
 
   renderContent() {
@@ -85,7 +88,7 @@ export default class TimeInput extends Component<DynamicInputProps, any> {
     }
 
     if (withMaxOrMin && from === DYNAMIC_FROM_MODE.FAST_FILTER) {
-      const [minValue, maxValue] = defValue.split('-');
+      const [minValue, maxValue] = String(defValue).split('-');
       return (
         <WrapMaxOrMin className="flexRow alignItemsCenter">
           <MdAntTimeRangePicker
@@ -94,7 +97,7 @@ export default class TimeInput extends Component<DynamicInputProps, any> {
             placeholder={[_l('开始时间'), _l('结束时间')]}
             value={minValue && maxValue ? [moment(minValue, formatMode), moment(maxValue, formatMode)] : []}
             format={formatMode}
-            onChange={time => this.handleTimeChange(time, formatMode)}
+            onChange={(time: Moment | [Moment | null, Moment | null] | null) => this.handleTimeChange(time, formatMode)}
           />
         </WrapMaxOrMin>
       );
@@ -105,7 +108,7 @@ export default class TimeInput extends Component<DynamicInputProps, any> {
         className="datePicker"
         format={formatMode}
         value={defValue ? moment(defValue, formatMode) : ''}
-        onChange={time => this.handleTimeChange(time, formatMode)}
+        onChange={(time: Moment | [Moment | null, Moment | null] | null) => this.handleTimeChange(time, formatMode)}
       />
     );
   }

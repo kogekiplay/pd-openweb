@@ -3,20 +3,22 @@ import update from 'immutability-helper';
 import _ from 'lodash';
 import { dialogSelectDept } from 'ming-ui/functions';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
+import { dynamicStaticText } from '../dynamicTypes';
+import type { DynamicValueSource } from '../dynamicTypes';
 import type { DynamicInputProps } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 
-export default class DepartmentInput extends Component<DynamicInputProps, any> {
+export default class DepartmentInput extends Component<DynamicInputProps, Record<string, never>> {
   declare $wrap: SelectOtherField | null | undefined;
 
   // 成员多选数据处理
-  removeItem = id => {
+  removeItem = (id: string) => {
     const { dynamicValue, onDynamicValueChange } = this.props;
 
-    const getId = item => {
+    const getId = (item: DynamicValueSource) => {
       const { staticValue } = item;
       if (!staticValue) return '';
-      return _.get(_.isString(staticValue) ? JSON.parse(staticValue) : staticValue, 'departmentId');
+      return dynamicStaticText(item, 'departmentId');
     };
 
     const index = _.findIndex(dynamicValue, item => {
@@ -49,7 +51,7 @@ export default class DepartmentInput extends Component<DynamicInputProps, any> {
   };
   onTriggerClick = () => {
     const { defaultType } = this.props;
-    defaultType && this.$wrap.triggerClick();
+    defaultType && this.$wrap?.triggerClick();
   };
   override render() {
     const { defaultType } = this.props;

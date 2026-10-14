@@ -1,27 +1,28 @@
-import { createRef, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Input } from 'antd';
 import _ from 'lodash';
 import { DYNAMIC_FROM_MODE } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/config.js';
 import { formatNumberFromInput } from 'src/utils/control';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
+import type { DynamicInputProps, DynamicValueSource } from '../dynamicTypes';
 import { DynamicValueInputWrap, WrapMaxOrMin } from '../styled';
 
-export default function NumberInput(props) {
+export default function NumberInput(props: DynamicInputProps) {
   const { dynamicValue, data, clearOldDefault, onDynamicValueChange, defaultType, totalWidth, from, withMaxOrMin } =
     props;
   const { cid = '' } = dynamicValue[0] || {};
   const [value, setValue] = useState('');
-  const [isDynamic, setDynamic] = useState<false | { isDynamic: boolean }>(false);
-  const $wrap = createRef(null);
+  const [isDynamic, setDynamic] = useState(false);
+  const $wrap = useRef<SelectOtherField>(null);
   const isStep = _.get(data, 'type') === 6 && _.get(data, 'advancedSetting.showtype') === '2';
   const maxValue = _.get(data, 'advancedSetting.max');
   const minValue = _.get(data, 'advancedSetting.min');
 
-  const setDynamicValue = newValue => {
+  const setDynamicValue = (newValue: DynamicValueSource[]) => {
     onDynamicValueChange(newValue || []);
   };
 
-  const handleChange = (value, noChange?: boolean | undefined) => {
+  const handleChange = (value: string | number | undefined, noChange?: boolean | undefined) => {
     const parsedValue = formatNumberFromInput(value);
     setValue(parsedValue);
     !noChange && onDynamicValueChange(value ? [{ cid: '', rcid: '', staticValue: parsedValue }] : []);
@@ -39,11 +40,11 @@ export default function NumberInput(props) {
     const value = (_.head(dynamicValue) || {}).staticValue;
 
     if (value) {
-      setValue(value);
+      setValue(String(value));
     }
 
     if (dynamicValue.some(item => !!item.cid)) {
-      setDynamic({ isDynamic: true });
+      setDynamic(true);
     }
   }, []);
 
@@ -51,17 +52,17 @@ export default function NumberInput(props) {
     const nextValue = (_.head(dynamicValue) || {}).staticValue;
 
     if (String(nextValue) !== value) {
-      setValue(nextValue);
+      setValue(nextValue === undefined ? '' : String(nextValue));
       setDynamic(false);
     }
 
     if (dynamicValue.some(item => !!item.cid)) {
-      setDynamic({ isDynamic: true });
+      setDynamic(true);
     }
   }, [dynamicValue]);
 
   const onTriggerClick = () => {
-    defaultType && $wrap.current.triggerClick();
+    defaultType && $wrap.current?.triggerClick();
   };
 
   const getMaxOrMin = (isMax?: boolean) => {
@@ -150,19 +151,19 @@ export default function NumberInput(props) {
           placeholder={_l('请输入数值')}
           onBlur={() => {
             if (value) {
-              let dealValue = value === '-' ? '' : parseFloat(value);
+              let dealValue: string | number = value === '-' ? '' : parseFloat(value);
 
               if (from === DYNAMIC_FROM_MODE.FAST_FILTER) {
                 return handleChange(String(dealValue));
               }
 
               if (isStep && (dealValue === 0 || dealValue)) {
-                if (dealValue > parseFloat(maxValue)) dealValue = maxValue;
-                if (dealValue < parseFloat(minValue)) dealValue = minValue;
+                if (Number(dealValue) > parseFloat(maxValue || '')) dealValue = maxValue || '';
+                if (Number(dealValue) < parseFloat(minValue || '')) dealValue = minValue || '';
                 handleChange(String(dealValue));
               }
 
-              setValue(dealValue);
+              setValue(String(dealValue));
               if (dealValue === '') {
                 onDynamicValueChange([]);
               }
@@ -173,7 +174,7 @@ export default function NumberInput(props) {
           onChange={e => handleChange(e.target.value, from === DYNAMIC_FROM_MODE.FAST_FILTER)}
         />
       )}
-      <SelectOtherField onDynamicValueChange={setDynamicValue} {...props} ref={$wrap} />
+      <SelectOtherField {...props} onDynamicValueChange={setDynamicValue} ref={$wrap} />
     </DynamicValueInputWrap>
   );
 }

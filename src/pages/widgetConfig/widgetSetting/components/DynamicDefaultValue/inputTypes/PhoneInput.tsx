@@ -1,24 +1,25 @@
-import { createRef, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Input } from 'antd';
-import _ from 'lodash';
 import { DynamicInput, OtherFieldList, SelectOtherField } from '../components';
 import { DYNAMIC_FROM_MODE } from '../config';
+import { dynamicStaticField } from '../dynamicTypes';
+import type { DynamicInputProps, DynamicValueSource } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 
-export default function (props) {
+export default function (props: DynamicInputProps) {
   const { onDynamicValueChange, dynamicValue = [], data = {}, defaultType, from } = props;
   const { staticValue = '', cid = '' } = dynamicValue[0] || {};
-  const hasAccountId = !!_.get(safeParse(staticValue), 'accountId');
+  const hasAccountId = !!dynamicStaticField({ staticValue }, 'accountId');
   const [value, setValue] = useState(staticValue);
   const [isDynamic, setDynamic] = useState(hasAccountId || !!cid);
-  const $wrap = createRef(null);
+  const $wrap = useRef<SelectOtherField>(null);
 
   useEffect(() => {
     setValue(staticValue);
     setDynamic(hasAccountId || !!cid);
   }, [data.controlId, cid, staticValue]);
 
-  const setDynamicValue = newValue => {
+  const setDynamicValue = (newValue: DynamicValueSource[]) => {
     onDynamicValueChange(newValue || []);
   };
 
@@ -30,7 +31,7 @@ export default function (props) {
   };
 
   const onTriggerClick = () => {
-    defaultType && $wrap.current.triggerClick();
+    defaultType && $wrap.current?.triggerClick();
   };
 
   return (

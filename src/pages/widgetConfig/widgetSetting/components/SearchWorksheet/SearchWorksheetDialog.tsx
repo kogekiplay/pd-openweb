@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import { Dialog, Dropdown, LoadDiv, Menu, MenuItem, RadioGroup } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import homeAppAjax from 'src/api/homeApp';
@@ -17,6 +17,7 @@ import SortConditions from 'src/pages/worksheet/common/ViewConfig/components/Sor
 import FilterConfig from 'src/pages/worksheet/common/WorkSheetFilter/common/FilterConfig';
 import { redefineComplexControl } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { getDefaultCount } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { RESULT_DISPLAY } from '../CustomEvent/config';
 import { DYNAMIC_FROM_MODE } from '../DynamicDefaultValue/config';
 import { SearchWorksheetWrap, WorksheetListWrap } from '../DynamicDefaultValue/styled';
@@ -24,7 +25,6 @@ import { getControls } from '../DynamicDefaultValue/util';
 import EmptyRuleConfig from '../EmptyRuleConfig';
 import SelectControl from '../SelectControl';
 import SelectWorksheet from './SelectWorksheet';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const RadioDisplay = [
   {
@@ -274,7 +274,7 @@ export default class SearchWorksheetDialog extends Component<any, any> {
     // 有记录id选项(同查询表的关联记录或者文本类控件)
     if (hasRowId) {
       if ((control.type === 29 && control.dataSource === this.state.sheetId) || _.includes([2, 32], control.type))
-        filterControls = ROW_ID_CONTROL.concat(filterControls);
+        filterControls = [...ROW_ID_CONTROL, ...filterControls];
     }
 
     return filterControls.map(({ controlId: value, controlName: text, dataSource }) => {
@@ -543,7 +543,12 @@ export default class SearchWorksheetDialog extends Component<any, any> {
                 },
               }}
             >
-              <div className={cx('settingWorksheetInput', { disabled: relateField })} ref={con => { this.box = con; }}>
+              <div
+                className={cx('settingWorksheetInput', { disabled: relateField })}
+                ref={con => {
+                  this.box = con;
+                }}
+              >
                 <div className="overflow_ellipsis">
                   {isSheetDelete ? (
                     <span className="Red">{_l('工作表已删除')}</span>
@@ -641,7 +646,9 @@ export default class SearchWorksheetDialog extends Component<any, any> {
                             </span>
                           );
                         }}
-                        onChange={(controlId: string) => this.setState({ configs: [{ cid: data.controlId, subCid: controlId }] })}
+                        onChange={(controlId: string) =>
+                          this.setState({ configs: [{ cid: data.controlId, subCid: controlId }] })
+                        }
                       />
                       {_l('的值写入当前字段')}
                     </div>

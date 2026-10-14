@@ -438,6 +438,7 @@ if (process.env.FORM_NORMAL_ONLY !== '1') {
   const producerStubs: Record<string, unknown> = {
     react: {
       createRef: () => ({ current: null }),
+      useRef: () => ({ current: null }),
       useEffect: () => {},
       useState: (value: unknown) => [value, () => {}],
     },

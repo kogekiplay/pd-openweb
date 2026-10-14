@@ -9,7 +9,7 @@ import type { DynamicInputProps, DynamicValueSource } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 import { transferValue } from '../util';
 
-export default class TextInput extends Component<DynamicInputProps, any> {
+export default class TextInput extends Component<DynamicInputProps, Record<string, never>> {
   static override propTypes = {
     dynamicValue: arrayOf(shape({ cid: string, rcid: string, staticValue: string })),
     onDynamicValueChange: func,
@@ -23,9 +23,9 @@ export default class TextInput extends Component<DynamicInputProps, any> {
 
   // 这三个原来都是隐式挂上去的 ref（每个访问点一条 TS2339）。
   // babel 只做类型擦除不会报错，属于「构建绿但类型不干净」那一类，顺手声明掉。
-  $tagtextarea;
-  $textinput;
-  $wrap;
+  declare $tagtextarea: TagTextarea | null | undefined;
+  declare $textinput: HTMLDivElement | null | undefined;
+  declare $wrap: SelectOtherField | null | undefined;
 
   override componentDidMount() {
     const { dynamicValue, data, onChange } = this.props;
@@ -49,7 +49,7 @@ export default class TextInput extends Component<DynamicInputProps, any> {
     }
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: DynamicInputProps) {
     if (JSON.stringify(this.props.dynamicValue) !== JSON.stringify(prevProps.dynamicValue)) {
       if (this.$tagtextarea) {
         // 光标现在是全文绝对 offset（数字），不再是 CM5 的 {line, ch}。
@@ -83,19 +83,24 @@ export default class TextInput extends Component<DynamicInputProps, any> {
     }
   };
   // 输入普通字符串时数据转换
-  transferValue = value => {
+  transferValue = (value: string | undefined) => {
     const defsource = transferValue(value);
     this.props.onDynamicValueChange(defsource);
   };
 
   onTriggerClick = () => {
     const { defaultType } = this.props;
-    defaultType && this.$wrap.triggerClick();
+    defaultType && this.$wrap?.triggerClick();
   };
 
   handleDynamicValue = (newField: DynamicValueSource[] = []) => {
+    if (!newField.length) {
+      this.$tagtextarea?.setValue('');
+      this.props.onDynamicValueChange([]);
+      return;
+    }
     if (this.$tagtextarea && this.$tagtextarea.view) {
-      const { cid = '', rcid = '', staticValue } = newField[0];
+      const { cid = '', rcid = '', staticValue } = newField[0] || {};
 
       if (rcid === 'url') {
         this.props.onDynamicValueChange(newField);
@@ -104,7 +109,7 @@ export default class TextInput extends Component<DynamicInputProps, any> {
 
       const id = rcid ? `${cid}~${rcid}` : `${cid}`;
       this.$tagtextarea.insertColumnTag(id);
-      let newValue = this.$tagtextarea.getValue();
+      let newValue = this.$tagtextarea.getValue() || '';
 
       // 文本能多选，以下情况不能同时配置
       if (_.includes(['search-keyword', 'empty'], cid) && !staticValue) {
@@ -123,10 +128,10 @@ export default class TextInput extends Component<DynamicInputProps, any> {
     const { defaultType, from } = this.props;
     return (
       <DynamicValueInputWrap
-        ref={con => {
+        ref={(con: HTMLDivElement | null) => {
           this.$textinput = con;
         }}
-        triggerStyle={true}
+        $triggerStyle={true}
       >
         {defaultType ? (
           <DynamicInput {...this.props} onTriggerClick={this.onTriggerClick} />
@@ -154,7 +159,7 @@ export default class TextInput extends Component<DynamicInputProps, any> {
           ref={con => {
             this.$wrap = con;
           }}
-          popupContainer={this.$textinput}
+          popupContainer={this.$textinput || undefined}
         />
       </DynamicValueInputWrap>
     );

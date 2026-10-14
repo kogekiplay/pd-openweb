@@ -6,7 +6,10 @@ const FlexCenter = styled.div`
   align-items: center;
 `;
 
-export const DynamicValueInputWrap = styled(FlexCenter)`
+export const DynamicValueInputWrap = styled(FlexCenter)<{
+  $hasHoverBg?: boolean | undefined;
+  $triggerStyle?: boolean | undefined;
+}>`
   position: relative;
   .tagTextAreaWrap {
     width: calc(100% - 36px);
@@ -87,7 +90,7 @@ export const DynamicValueInputWrap = styled(FlexCenter)`
         display: block;
       }
       input {
-        background: ${props => (props.hasHoverBg ? 'var(--color-background-secondary)' : 'transparent')};
+        background: ${props => (props.$hasHoverBg ? 'var(--color-background-secondary)' : 'transparent')};
       }
     }
     .clearOp {
@@ -116,9 +119,9 @@ export const DynamicValueInputWrap = styled(FlexCenter)`
     }
   }
   & > div:nth-child(3) {
-    ${props => (props.triggerStyle ? 'top: 100% !important' : '')}
+    ${props => (props.$triggerStyle ? 'top: 100% !important' : '')}
     .rc-trigger-popup {
-      ${props => (props.triggerStyle ? 'top: 0px !important' : '')}
+      ${props => (props.$triggerStyle ? 'top: 0px !important' : '')}
     }
   }
 `;

@@ -1,3 +1,4 @@
+import type { ChangeEvent } from 'react';
 import { Component } from 'react';
 import update from 'immutability-helper';
 import _ from 'lodash';
@@ -10,6 +11,9 @@ import type { FormControl } from 'src/utils/controlTypes';
 import { SYSTEM_CONTROL, SYSTEM_PERSON_CONTROL, WORKFLOW_SYSTEM_CONTROL } from '../../../../config/widget';
 import { getIconByType } from '../../../../util';
 import { DYNAMIC_FROM_MODE } from '../config';
+import type { DynamicFieldSelection, DynamicValueSource, SelectOtherFieldProps } from '../dynamicTypes';
+import { dynamicValueSources } from '../dynamicTypes';
+import type { DynamicAvailableControl } from '../util';
 import { filterControls, getControls, getOtherSelectField } from '../util';
 
 const Empty = styled.div`
@@ -19,27 +23,35 @@ const Empty = styled.div`
   background-color: var(--color-background-primary);
 `;
 
-const filterSys = (controls: FormControl[] = [], fromCustomEventApi?) => {
+const filterSys = (controls: FormControl[] = [], fromCustomEventApi?: boolean) => {
   // 自定义事件api查询支持rowid异化
   // 注意：SYS_CONTROLS 是 id 字符串数组，SYSTEM_CONTROL 是控件对象数组。下面拿它跟
   // i.controlId（字符串）比，fromCustomEventApi 为假时永远不相等 —— 即这条分支实际上
   // 一个系统字段都没过滤掉。这里只放开类型，不动行为。
   const FILTER_SYS_CONTROLS: unknown[] = fromCustomEventApi ? SYS_CONTROLS.filter(i => i !== 'rowid') : SYSTEM_CONTROL;
-  return controls.filter(i => !_.includes(FILTER_SYS_CONTROLS, i.controlId as unknown));
+  return controls.filter(i => !_.includes(FILTER_SYS_CONTROLS, i.controlId));
 };
 
-const UnwrappedSelectFields = class SelectFields extends Component<any, any> {
+interface SheetEntry {
+  id: string | undefined;
+  name: string;
+}
+interface SelectFieldsProps extends Omit<SelectOtherFieldProps, 'onDynamicValueChange'> {
+  onClick?: ((field: DynamicFieldSelection) => void) | undefined;
+  onMultiUserChange?: ((values: DynamicValueSource[]) => void) | undefined;
+}
+const UnwrappedSelectFields = class SelectFields extends Component<SelectFieldsProps, { searchValue: string }> {
   static override propTypes = {};
   static defaultProps = {};
   override state = {
     searchValue: '',
   }; // 省略掉自身和循环引用
 
-  omitSelfAndNest = controls => {
+  omitSelfAndNest = (controls: FormControl[] = []) => {
     const { data } = this.props;
     return _.filter(controls, item => {
       try {
-        const defaultValue = JSON.parse(_.get(item, ['advancedSetting', 'defsource']) || '[]'); // 去除循环引用
+        const defaultValue = dynamicValueSources(JSON.parse(item.advancedSetting?.defsource || '[]')); // 去除循环引用
 
         if (_.some(defaultValue, item => _.includes([data.controlId], item.cid))) {
           return false;
@@ -52,13 +64,13 @@ const UnwrappedSelectFields = class SelectFields extends Component<any, any> {
       return item.controlId !== data.controlId;
     });
   };
-  handleChange = e => {
+  handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     this.setState({
       searchValue: value,
     });
   };
-  getSheetList = (subListControls, initSheetList) => {
+  getSheetList = (subListControls: FormControl[], initSheetList: SheetEntry[]): SheetEntry[] => {
     const { data = {}, from, parentControl } = this.props; // 自定义默认值
 
     if (
@@ -71,13 +83,14 @@ const UnwrappedSelectFields = class SelectFields extends Component<any, any> {
 
     if (_.includes([DYNAMIC_FROM_MODE.SEARCH_PARAMS], from)) {
       // (查询参数 && 非对象数组内字段)不支持关联记录
-      if (!data.dataSource) {
+      if (!data.dataSource || !parentControl) {
         return initSheetList;
       } else {
         return initSheetList.concat(
           [parentControl].map(item => ({
             id: item.controlId,
-            name: item.type === 34 ? _l('子表 “%0”', item.controlName) : _l('关联记录 “%0”', item.controlName),
+            name:
+              item.type === 34 ? _l('子表 “%0”', item.controlName || '') : _l('关联记录 “%0”', item.controlName || ''),
           })),
         );
       }
@@ -87,7 +100,8 @@ const UnwrappedSelectFields = class SelectFields extends Component<any, any> {
     return initSheetList.concat(
       filterSubListControls.map(item => ({
         id: item.controlId,
-        name: item.type === 35 ? _l('级联选择 “%0”', item.controlName) : _l('关联记录 “%0”', item.controlName),
+        name:
+          item.type === 35 ? _l('级联选择 “%0”', item.controlName || '') : _l('关联记录 “%0”', item.controlName || ''),
       })),
     );
   };
@@ -95,7 +109,7 @@ const UnwrappedSelectFields = class SelectFields extends Component<any, any> {
     const { from, globalSheetInfo, controls, data = {}, fromCustomEventApi } = this.props;
     const subListControls = this.omitSelfAndNest(controls) || [];
     const globalSheetControls = this.omitSelfAndNest(this.props.globalSheetControls);
-    const { worksheetId } = globalSheetInfo;
+    const { worksheetId } = globalSheetInfo || {};
     const { searchValue } = this.state;
     const initSheetList =
       from === 'subList'
@@ -118,14 +132,14 @@ const UnwrappedSelectFields = class SelectFields extends Component<any, any> {
 
     const sheetList = this.getSheetList(subListControls, initSheetList); // 获取当前表的控件
 
-    const fieldList = {
+    const fieldList: Record<string, DynamicAvailableControl[]> = {
       current: getControls({
         data,
         controls: filterSys(subListControls, fromCustomEventApi),
         isCurrent: true,
         from,
       }),
-      [worksheetId]: getControls({
+      [String(worksheetId)]: getControls({
         data,
         controls: filterSys(globalSheetControls),
         isCurrent: true,
@@ -137,10 +151,11 @@ const UnwrappedSelectFields = class SelectFields extends Component<any, any> {
       const relateSheetControl = _.find(subListControls, ({ controlId }) => controlId === id) || {};
       let relationControls = _.get(relateSheetControl, 'relationControls') || []; // 如果relationControl没有返回系统字段， 则手动添加上
 
+      const excludedSystemEntries: unknown[] = ['wfstatus'];
       if (!relationControls.some(item => item.controlId === 'ctime')) {
         relationControls = relationControls
           .concat([...SYSTEM_CONTROL, ...WORKFLOW_SYSTEM_CONTROL, ...SYSTEM_PERSON_CONTROL])
-          .filter(i => !_.includes(['wfstatus'], i));
+          .filter(i => !excludedSystemEntries.includes(i));
       }
 
       const filteredRelationControls = getControls({
@@ -149,17 +164,17 @@ const UnwrappedSelectFields = class SelectFields extends Component<any, any> {
         isCurrent: undefined,
         from,
       });
-      fieldList[id] = filteredRelationControls;
+      fieldList[String(id)] = filteredRelationControls;
     });
     if (!searchValue)
       return {
         sheetList,
         filteredList: fieldList,
       };
-    const filteredList = {};
+    const filteredList: Record<string, DynamicAvailableControl[]> = {};
 
     _.keys(fieldList).forEach(key => {
-      const item = fieldList[key];
+      const item = fieldList[key] || [];
       filteredList[key] = item.filter(field => _.includes(field.controlName, searchValue));
     });
 
@@ -168,13 +183,13 @@ const UnwrappedSelectFields = class SelectFields extends Component<any, any> {
       filteredList,
     };
   };
-  isMultiUser = data => {
+  isMultiUser = (data: FormControl) => {
     // dynamicMultiple其他字段值多选
     return (_.includes([26, 27], data.type) && data.enumDefault === 1) || this.props.dynamicMultiple;
   };
-  handleMultiUserClick = para => {
+  handleMultiUserClick = (para: DynamicFieldSelection & { checked: boolean; isAsync?: boolean }) => {
     const { checked, relateSheetControlId, fieldId } = para;
-    const { onMultiUserChange, dynamicValue } = this.props;
+    const { onMultiUserChange, dynamicValue = [] } = this.props;
     const newValue = checked
       ? update(dynamicValue, {
           $push: [
@@ -195,20 +210,17 @@ const UnwrappedSelectFields = class SelectFields extends Component<any, any> {
       : update(dynamicValue, {
           $splice: [[_.findIndex(dynamicValue, item => item.cid === fieldId && item.rcid === relateSheetControlId), 1]],
         });
-    onMultiUserChange(newValue);
+    onMultiUserChange?.(newValue);
   };
-  getControlCount = list => {
+  getControlCount = (list: Record<string, DynamicAvailableControl[]>) => {
     return _.keys(list).reduce((p, c) => p + (list[c] || []).length, 0);
   };
-  getOtherCount = data => {
-    return data.reduce((p, c) => {
-      return (p.list || []).length + (c.list || []).length;
-    }, 0);
-  };
+  getOtherCount = (data: ReturnType<typeof getOtherSelectField>) =>
+    data.reduce((total, group) => total + group.list.length, 0);
 
   override render() {
     const { searchValue } = this.state;
-    const { onClick, data, dynamicValue, from, hideRelateSheetHeader } = this.props;
+    const { onClick, data, dynamicValue = [], from, hideRelateSheetHeader } = this.props;
     const otherList = getOtherSelectField(data, searchValue);
     const { sheetList, filteredList } = this.filterFieldList();
     const filteredControlCount = this.getControlCount(filteredList) + this.getOtherCount(otherList);
@@ -239,8 +251,8 @@ const UnwrappedSelectFields = class SelectFields extends Component<any, any> {
           ></input>
         </div>
         <div className="fieldsWrap">
-          {sheetList.map(({ id: recordId, name }: { recordId?: string; name?: string; [key: string]: any }) => {
-            const list = filteredList[recordId];
+          {sheetList.map(({ id: recordId, name }) => {
+            const list = filteredList[String(recordId)];
             return list && list.length > 0 ? (
               <ul className="relateSheetList">
                 <li>
@@ -250,51 +262,40 @@ const UnwrappedSelectFields = class SelectFields extends Component<any, any> {
                     </div>
                   )}
                   <ul className="fieldList">
-                    {list.map(
-                      ({
+                    {list.map(({ type, controlName, controlId, id, isEqualSource }) => {
+                      const ids = {
                         type,
-                        controlName,
-                        controlId,
-                        id,
-                        isEqualSource,
-                      }: {
-                        controlId?: string;
-                        [key: string]: any;
-                      }) => {
-                        const ids = {
-                          type,
-                          relateSheetControlId: recordId === 'current' ? '' : recordId,
-                          fieldId: controlId || id,
-                        };
-                        return this.isMultiUser(data) ? (
-                          <li className="overflow_ellipsis">
-                            <Checkbox
-                              size="small"
-                              checked={_.some(
-                                dynamicValue,
-                                item => item.cid === ids.fieldId && item.rcid === ids.relateSheetControlId,
-                              )}
-                              onClick={(checked: boolean) => {
-                                this.handleMultiUserClick({
-                                  checked: !checked,
-                                  ...ids,
-                                  isAsync: data.type === 27 && type === 26,
-                                });
-                              }}
-                            >
-                              <i className={`icon-${getIconByType(type)}`}></i>
-                              <span className="overflow_ellipsis">{controlName}</span>
-                            </Checkbox>
-                          </li>
-                        ) : (
-                          <li className="overflow_ellipsis" onClick={() => onClick(ids)}>
+                        relateSheetControlId: recordId === 'current' ? '' : recordId,
+                        fieldId: controlId || id,
+                      };
+                      return this.isMultiUser(data) ? (
+                        <li className="overflow_ellipsis">
+                          <Checkbox
+                            size="small"
+                            checked={_.some(
+                              dynamicValue,
+                              item => item.cid === ids.fieldId && item.rcid === ids.relateSheetControlId,
+                            )}
+                            onClick={(checked: boolean) => {
+                              this.handleMultiUserClick({
+                                checked: !checked,
+                                ...ids,
+                                isAsync: data.type === 27 && type === 26,
+                              });
+                            }}
+                          >
                             <i className={`icon-${getIconByType(type)}`}></i>
                             <span className="overflow_ellipsis">{controlName}</span>
-                            {isEqualSource && <span className="textTertiary">（{_l('相同选项集')}）</span>}
-                          </li>
-                        );
-                      },
-                    )}
+                          </Checkbox>
+                        </li>
+                      ) : (
+                        <li className="overflow_ellipsis" onClick={() => onClick?.(ids)}>
+                          <i className={`icon-${getIconByType(type)}`}></i>
+                          <span className="overflow_ellipsis">{controlName}</span>
+                          {isEqualSource && <span className="textTertiary">（{_l('相同选项集')}）</span>}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </li>
               </ul>
@@ -314,7 +315,7 @@ const UnwrappedSelectFields = class SelectFields extends Component<any, any> {
                           key={index}
                           className="overflow_ellipsis"
                           onClick={() =>
-                            onClick({
+                            onClick?.({
                               fieldId: id,
                             })
                           }

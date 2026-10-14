@@ -7,8 +7,9 @@ import type { DynamicInputProps, DynamicValueSource } from '../dynamicTypes';
 import { DynamicValueInputWrap } from '../styled';
 import { transferValue } from '../util';
 
-export default class ArrayInput extends Component<DynamicInputProps, any> {
-  declare $tagtextarea: TagTextarea | undefined;
+export default class ArrayInput extends Component<DynamicInputProps, Record<string, never>> {
+  declare $tagtextarea: TagTextarea | null | undefined;
+  declare $textinput: HTMLDivElement | null | undefined;
   declare $wrap: SelectOtherField | null | undefined;
 
   static override propTypes = {
@@ -34,7 +35,7 @@ export default class ArrayInput extends Component<DynamicInputProps, any> {
     }
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: DynamicInputProps) {
     if (JSON.stringify(this.props.dynamicValue) !== JSON.stringify(prevProps.dynamicValue)) {
       if (this.$tagtextarea) {
         // 光标现在是全文绝对 offset（数字），不再是 CM5 的 {line, ch}
@@ -71,12 +72,17 @@ export default class ArrayInput extends Component<DynamicInputProps, any> {
 
   onTriggerClick = () => {
     const { defaultType } = this.props;
-    defaultType && this.$wrap.triggerClick();
+    defaultType && this.$wrap?.triggerClick();
   };
 
   handleDynamicValue = (newField: DynamicValueSource[] = []) => {
-    if (this.$tagtextarea) {
-      const { cid = '', rcid = '' } = newField[0];
+    if (!newField.length) {
+      this.$tagtextarea?.setValue('');
+      this.props.onDynamicValueChange([]);
+      return;
+    }
+    if (this.$tagtextarea && newField.length) {
+      const { cid = '', rcid = '' } = newField[0] || {};
       const id = rcid ? `${cid}~${rcid}` : `${cid}`;
       this.$tagtextarea.insertColumnTag(id);
       const newValue = this.$tagtextarea.getValue();
@@ -88,10 +94,10 @@ export default class ArrayInput extends Component<DynamicInputProps, any> {
     const { defaultType } = this.props;
     return (
       <DynamicValueInputWrap
-        ref={con => {
+        ref={(con: HTMLDivElement | null) => {
           this.$textinput = con;
         }}
-        triggerStyle={true}
+        $triggerStyle={true}
       >
         {defaultType ? (
           <DynamicInput {...this.props} onTriggerClick={this.onTriggerClick} />
@@ -115,7 +121,7 @@ export default class ArrayInput extends Component<DynamicInputProps, any> {
           ref={con => {
             this.$wrap = con;
           }}
-          popupContainer={this.$textinput}
+          popupContainer={this.$textinput || undefined}
         />
       </DynamicValueInputWrap>
     );

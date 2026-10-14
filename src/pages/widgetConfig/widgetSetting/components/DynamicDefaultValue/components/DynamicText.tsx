@@ -4,12 +4,16 @@ import moment from 'moment';
 import filterXSS from 'xss';
 import { OptionChip } from 'src/components/OptionChip';
 import { checkCellIsEmpty, renderText as renderCellText } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import { getDatePickerConfigs } from '../../../../util/setting';
+import type { DynamicValueSource } from '../dynamicTypes';
+import { dynamicDisplayPath, dynamicDisplayRecord, dynamicDisplayValue, dynamicObject } from '../dynamicTypes';
 import { DynamicTextWrap, FieldInfo, OptionControl, RelateControl } from '../styled';
 import { getControlType, getDateType, getTypeList } from '../util';
 import OtherField from './OtherField';
+import type { OtherFieldProps } from './OtherField';
 
-const getValue = (item, type) => {
+const getValue = (item: DynamicValueSource, type: string | undefined): unknown => {
   if (_.includes(['user', 'role', 'department', 'area', 'cascader', 'relateSheet'], type)) {
     return safeParse(item.staticValue);
   }
@@ -21,7 +25,11 @@ const getValue = (item, type) => {
   return item.staticValue;
 };
 
-export default ({ dynamicValue = [], data = {}, ...rest }) => {
+export default ({
+  dynamicValue = [],
+  data = {},
+  ...rest
+}: Omit<OtherFieldProps, 'data'> & { data?: FormControl | undefined }) => {
   if (_.isEmpty(dynamicValue)) return <span>{_l('清空')}</span>;
   if (_.isEmpty(data)) return '';
 
@@ -35,7 +43,7 @@ export default ({ dynamicValue = [], data = {}, ...rest }) => {
             const value = getValue(item, type);
 
             if (type === 'user' || _.get(value, 'accountId') === 'user-self') {
-              const { accountId, fullname, avatar, name } = value;
+              const { accountId, fullname, avatar, name } = dynamicDisplayRecord(value);
               let userSrc = _.includes(avatar, 'UserAvatar')
                 ? avatar
                 : `${md.global.FileStoreConfig.pictureHost}/UserAvatar/${avatar}`;
@@ -53,7 +61,7 @@ export default ({ dynamicValue = [], data = {}, ...rest }) => {
             }
 
             if (type === 'role') {
-              const { organizeId, organizeName } = value;
+              const { organizeId, organizeName } = dynamicDisplayRecord(value);
 
               return (
                 <FieldInfo key={organizeId} title={organizeName}>
@@ -66,7 +74,7 @@ export default ({ dynamicValue = [], data = {}, ...rest }) => {
             }
 
             if (type === 'department') {
-              const { departmentName, departmentId } = value;
+              const { departmentName, departmentId } = dynamicDisplayRecord(value);
               return (
                 <FieldInfo key={departmentId} title={departmentName}>
                   <div className="departWrap">
@@ -79,20 +87,20 @@ export default ({ dynamicValue = [], data = {}, ...rest }) => {
 
             if (type === 'date' || type === 'time') {
               const types = getDateType(data);
-              let text = '';
+              let text: string | number | undefined = '';
 
               if (_.includes(['2', '3'], value)) {
-                text = (_.find(types, type => type.value === value) || {}).text;
+                text = _.find(types, type => type.value === value)?.text || '';
               } else {
                 const dateProps = getDatePickerConfigs(data);
-                text = type === 'date' ? moment(value).format(dateProps.formatMode) : value;
+                text = type === 'date' ? moment(item.staticValue).format(dateProps.formatMode) : item.staticValue;
               }
 
               return <span className="dynamicText breakAll">{text}</span>;
             }
 
             if (type === 'switch') {
-              const text = _.get(_.find(getTypeList(data), ct => ct.id === item.staticValue) || {}, 'text');
+              const text = _.get(_.find(getTypeList(data), ct => ct.id === String(item.staticValue)) || {}, 'text');
               return <span className="dynamicText breakAll">{text}</span>;
             }
 
@@ -103,12 +111,12 @@ export default ({ dynamicValue = [], data = {}, ...rest }) => {
                 name = item.relateSheetName;
               } else {
                 const titleControl = _.find(data.relationControls || [], re => re.attribute === 1);
-                const record = safeParse(_.head(value));
+                const record = dynamicObject(safeParse(Array.isArray(value) ? value[0] : undefined));
 
                 if (type === 'cascader' && _.get(data, 'advancedSetting.allpath') === '1') {
-                  name = safeParse(record.path || '[]').join(' / ');
+                  name = dynamicDisplayPath(record);
                 } else {
-                  const titleControlItem = record[titleControl.controlId];
+                  const titleControlItem = titleControl?.controlId ? record[titleControl.controlId] : undefined;
                   name = renderCellText({ ...titleControl, value: titleControlItem }) || _l('未命名');
                 }
               }
@@ -122,31 +130,36 @@ export default ({ dynamicValue = [], data = {}, ...rest }) => {
             }
 
             if (type === 'option') {
-              const option = _.find(data.options || [], o => o.key === value) || {};
+              const option = _.find(data.options || [], o => o.key === value);
               return (
                 <OptionControl
                   className={cx('option pointer overflow_ellipsis mRight6', { isDeleted: _.isEmpty(option) })}
                 >
-                  {data.enumDefault2 === 1 && option.color ? (
-                    <OptionChip color={option.color} title={option.value}>
+                  {data.enumDefault2 === 1 && option?.color ? (
+                    <OptionChip color={option.color} title={option?.value || ''}>
                       {option.value}
                     </OptionChip>
                   ) : (
-                    <div className="text overflow_ellipsis">{option.value || _l('已删除')}</div>
+                    <div className="text overflow_ellipsis">{option?.value || _l('已删除')}</div>
                   )}
                 </OptionControl>
               );
             }
 
             if (type === 'area') {
-              return <span className="dynamicText breakAll">{_.get(value, 'name')}</span>;
+              return <span className="dynamicText breakAll">{dynamicDisplayRecord(value).name}</span>;
             }
 
             if (type === 'richtext') {
-              return <div className="w100 mTop0 mBottom0" dangerouslySetInnerHTML={{ __html: filterXSS(value) }}></div>;
+              return (
+                <div
+                  className="w100 mTop0 mBottom0"
+                  dangerouslySetInnerHTML={{ __html: filterXSS(String(value ?? '')) }}
+                ></div>
+              );
             }
 
-            return <span className="dynamicText breakAll">{value}</span>;
+            return <span className="dynamicText breakAll">{dynamicDisplayValue(value)}</span>;
           } catch (error) {
             console.log(error);
             return null;

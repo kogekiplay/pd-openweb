@@ -117,3 +117,115 @@ export interface DynamicInputProps extends Omit<SelectOtherFieldProps, 'dynamicV
   advancedSetting?: ControlAdvancedSetting | undefined;
   getType?: ((control: FormControl) => string | undefined) | undefined;
 }
+
+/** Widget-specific JSON is inspected at the point where a display field is needed. */
+export function dynamicStaticField(source: DynamicValueSource, key: string): unknown {
+  let value: unknown = source.staticValue;
+  if (typeof value === 'string') {
+    try {
+      value = JSON.parse(value);
+    } catch {
+      return undefined;
+    }
+  }
+  return value !== null && typeof value === 'object' && key in value ? Reflect.get(value, key) : undefined;
+}
+export function dynamicStaticText(source: DynamicValueSource, key: string): string | undefined {
+  const value = dynamicStaticField(source, key);
+  return typeof value === 'string' ? value : undefined;
+}
+
+export function dynamicRecordValue(value: string | number | undefined): unknown {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(String(value || '[]'));
+  } catch {
+    return undefined;
+  }
+  if (!Array.isArray(parsed)) return undefined;
+  let first: unknown = parsed[0];
+  if (typeof first === 'string' && first.includes('rowid')) {
+    try {
+      first = JSON.parse(first);
+    } catch {
+      /* Plain identifiers retain their value. */
+    }
+  }
+  return first;
+}
+export function dynamicRecordId(value: string | number | undefined): string | number | undefined {
+  const parsed = dynamicRecordValue(value);
+  const id: unknown = parsed !== null && typeof parsed === 'object' && 'rowid' in parsed ? parsed.rowid : parsed;
+  return typeof id === 'string' || typeof id === 'number' ? id : undefined;
+}
+export interface DynamicRelatedSelection {
+  sid: string | number;
+  name?: string | undefined;
+}
+export function dynamicRelatedSelections(value: unknown): DynamicRelatedSelection[] {
+  if (typeof value === 'string') {
+    try {
+      value = JSON.parse(value);
+    } catch {
+      return [];
+    }
+  }
+  if (!Array.isArray(value)) return [];
+  return value.filter(
+    (item): item is DynamicRelatedSelection =>
+      item !== null &&
+      typeof item === 'object' &&
+      !Array.isArray(item) &&
+      (typeof item.sid === 'string' || typeof item.sid === 'number') &&
+      (item.name === undefined || typeof item.name === 'string'),
+  );
+}
+
+export interface DynamicDisplayRecord {
+  accountId?: string;
+  fullname?: string;
+  avatar?: string;
+  name?: string;
+  organizeId?: string;
+  organizeName?: string;
+  departmentId?: string;
+  departmentName?: string;
+}
+export function dynamicDisplayRecord(value: unknown): DynamicDisplayRecord {
+  const output: DynamicDisplayRecord = {};
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return output;
+  for (const key of [
+    'accountId',
+    'fullname',
+    'avatar',
+    'name',
+    'organizeId',
+    'organizeName',
+    'departmentId',
+    'departmentName',
+  ] as const) {
+    const field: unknown = Reflect.get(value, key);
+    if (typeof field === 'string') output[key] = field;
+  }
+  return output;
+}
+export function dynamicDisplayValue(value: unknown): string | number | undefined {
+  return typeof value === 'string' || typeof value === 'number' ? value : undefined;
+}
+function isDynamicObject(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+export function dynamicObject(value: unknown): Record<string, unknown> {
+  return isDynamicObject(value) ? value : {};
+}
+
+export function dynamicDisplayPath(value: unknown): string {
+  const raw: unknown = dynamicObject(value)['path'];
+  let parts: unknown;
+  try {
+    parts = typeof raw === 'string' ? JSON.parse(raw || '[]') : raw;
+  } catch {
+    return '';
+  }
+  return Array.isArray(parts) ? parts.join(' / ') : '';
+}

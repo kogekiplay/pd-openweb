@@ -5,16 +5,35 @@ import { Dialog } from 'ming-ui';
 import ChildTable from 'worksheet/components/ChildTable';
 import 'src/pages/widgetConfig/styled/style.less';
 import { handleAdvancedSettingChange } from 'src/pages/widgetConfig/util/setting';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { FormControl } from 'src/utils/controlTypes';
+import type { DynamicInputProps } from '../../dynamicTypes';
 
-export default class CustomDefaultValue extends Component<any, any> {
-  constructor(props) {
+interface CustomDefaultValueProps extends DynamicInputProps {
+  onClose: () => void;
+  onOk?: (() => void) | undefined;
+  appId?: string | undefined;
+}
+type DefaultRow = Record<string, unknown>;
+interface CustomDefaultValueState {
+  filterRows: DefaultRow[];
+  rowData: DefaultRow[];
+}
+export default class CustomDefaultValue extends Component<CustomDefaultValueProps, CustomDefaultValueState> {
+  constructor(props: CustomDefaultValueProps) {
     super(props);
     const { dynamicValue = [] } = props;
     const defaultValue = (dynamicValue[0] || {}).staticValue;
-    const rows: RecordRow[] = defaultValue ? JSON.parse(defaultValue) : [];
+    let parsed: unknown;
+    try {
+      parsed = defaultValue ? JSON.parse(String(defaultValue)) : [];
+    } catch {
+      parsed = [];
+    }
+    const rows = Array.isArray(parsed)
+      ? parsed.filter((row): row is DefaultRow => row !== null && typeof row === 'object' && !Array.isArray(row))
+      : [];
     const rowData = rows.map(item => {
-      const tempRowId = item.rowid ? item.rowid : `temp-${uuidv4()}`;
+      const tempRowId = typeof item['rowid'] === 'string' && item['rowid'] ? item['rowid'] : `temp-${uuidv4()}`;
       return { ...item, rowid: tempRowId, allowedit: true, addTime: new Date().getTime() };
     });
     this.state = {
@@ -44,23 +63,12 @@ export default class CustomDefaultValue extends Component<any, any> {
         onCancel={onClose}
         onOk={() => {
           // 自定义默认值场景忽略一切校验（手机/证件格式、必填、唯一、业务规则均不拦截），输入原样保留为默认值。
-          if (filterRows && filterRows.length > 0) {
-            const value = [
-              {
-                rcid: '',
-                cid: '',
-                staticValue: JSON.stringify(filterRows),
-                isAsync: false,
-              },
-            ];
-            onChange(
-              handleAdvancedSettingChange(data, {
-                defsource: JSON.stringify(value),
-                dynamicsrc: '',
-                defaulttype: '0',
-              }),
-            );
-          }
+          const sources = filterRows.length
+            ? [{ rcid: '', cid: '', staticValue: JSON.stringify(filterRows), isAsync: false }]
+            : [];
+          onChange(
+            handleAdvancedSettingChange(data, { defsource: JSON.stringify(sources), dynamicsrc: '', defaulttype: '0' }),
+          );
 
           onClose();
         }}
@@ -90,15 +98,12 @@ export default class CustomDefaultValue extends Component<any, any> {
             controls={controls}
             projectId={globalSheetInfo.projectId}
             appId={appId || globalSheetInfo.appId}
-            registerCell={comp => {
-              this.childTableComp = comp;
-            }}
-            onChange={({ rows = [] }) => {
+            onChange={({ rows = [] }: { rows?: DefaultRow[] }) => {
               const filterRows = rows.map(row => {
-                let itemValue = {};
+                const itemValue: DefaultRow = {};
                 (data.showControls || [])
                   .concat(['pid', 'rowid', 'childrenids'])
-                  .map((controlId: string) => (itemValue[controlId] = row[controlId] || ''));
+                  .map((controlId: string) => (itemValue[controlId] = row[controlId] ?? ''));
                 return itemValue;
               });
               this.setState({ filterRows });
