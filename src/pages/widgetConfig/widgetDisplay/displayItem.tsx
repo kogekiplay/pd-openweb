@@ -425,7 +425,7 @@ export default function DisplayItem(props) {
       controlId,
       path,
     }: {
-      widgets?: FormControl[][];
+      widgets: FormControl[][];
       controlId?: string;
       path?: number[];
     }) => {

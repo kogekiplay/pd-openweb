@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { type MouseEvent, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import { flatten, head, isEmpty, last } from 'lodash';
 import styled from 'styled-components';
+import type { FormControl } from 'src/utils/controlTypes';
 import { WHOLE_SIZE } from '../../config/Drag';
 import { AnimationWrap, SettingItem } from '../../styled';
 import { isFullLineControl, isHaveGap } from '../../util/widgets';
@@ -27,7 +28,13 @@ const ARRANGE_TYPE = [
   { text: _l('四列'), value: 4 },
 ];
 
-export default function QuickArrange({ widgets, setWidgets, status }) {
+interface QuickArrangeProps {
+  widgets: FormControl[][];
+  setWidgets: (widgets: FormControl[][]) => void;
+  status: { saveIndex?: number | undefined };
+}
+
+export default function QuickArrange({ widgets, setWidgets, status }: QuickArrangeProps) {
   const $originWidgets = useRef(widgets);
   const [activeColumn, setActive] = useState(-1);
 
@@ -50,7 +57,7 @@ export default function QuickArrange({ widgets, setWidgets, status }) {
     }
 
     // 多列排列
-    const nextWidgets = flattenWidgets.reduce((widgetList, widget) => {
+    const nextWidgets = flattenWidgets.reduce<FormControl[][]>((widgetList, widget) => {
       const lastRow = last(widgetList);
 
       /**
@@ -58,7 +65,7 @@ export default function QuickArrange({ widgets, setWidgets, status }) {
        * 当前控件是整行控件 直接另起一行
        * 当前行的第一个控件是整行控件 也另起一行
        */
-      if (isEmpty(lastRow) || isFullLineControl(widget) || isFullLineControl(head(lastRow))) {
+      if (!lastRow || isEmpty(lastRow) || isFullLineControl(widget) || isFullLineControl(head(lastRow))) {
         return update(widgetList, { $push: [[widget]] });
       }
 
@@ -66,7 +73,7 @@ export default function QuickArrange({ widgets, setWidgets, status }) {
       if (lastRow.length < columnNumber) {
         return update(widgetList, {
           [widgetList.length - 1]: {
-            $apply: list => {
+            $apply: (list: FormControl[]) => {
               const nextList = list.concat(widget);
               return nextList.map(item => ({ ...item, size: WHOLE_SIZE / nextList.length }));
             },
@@ -78,7 +85,7 @@ export default function QuickArrange({ widgets, setWidgets, status }) {
     }, []);
 
     // 快速排列切换的时候，将落单的控件设为与当前排列相适应的宽度
-    function sortWidgets(list) {
+    function sortWidgets(list: FormControl[][]) {
       return list.map(row =>
         row.map(item => {
           if (isHaveGap(row, item)) {
@@ -98,10 +105,9 @@ export default function QuickArrange({ widgets, setWidgets, status }) {
   };
 
   // 还原
-  const restore = e => {
+  const restore = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    // widgets 是没类型的 prop，lodash 的 flatten 由此推出 unknown[]；这里只依赖 controlId
-    const controls = flatten<{ controlId?: string }>(widgets);
+    const controls = flatten(widgets);
     const nextWidgets = $originWidgets.current.map(row =>
       row.map(item => {
         const data = controls.find(({ controlId }) => item.controlId === controlId);
@@ -125,7 +131,7 @@ export default function QuickArrange({ widgets, setWidgets, status }) {
           )}
           <ArrangeBtn
             disabled={activeColumn < 1}
-            onClick={e => {
+            onClick={(e: MouseEvent<HTMLDivElement>) => {
               e.stopPropagation();
               handleClose();
               $originWidgets.current = widgets;
