@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component, Fragment, type MouseEvent } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
 import { TinyColor } from '@ctrl/tinycolor';
@@ -20,26 +20,147 @@ import { isFormatNumber } from 'statistics/common/controlUtils';
 import { formatSummaryName } from 'statistics/common/reportDataUtils';
 import { formatrChartValue, formatYaxisList, getChartColors } from './common';
 
-const formatTopChartData = map => {
+interface TopChartValue {
+  x?: string | number | null;
+  originalX?: string | number | null;
+  v?: string | number | null;
+}
+
+interface TopChartMapItem {
+  c_id: string;
+  value?: TopChartValue[];
+}
+
+interface TopChartRow {
+  name: string | number | null;
+  originalX: string | number | null;
+  [key: string]: unknown;
+}
+
+interface TopChartYaxis {
+  controlId: string;
+  rename?: string;
+  controlName?: string;
+  [key: string]: unknown;
+}
+
+interface TopChartXaxis {
+  cid?: string;
+  controlId?: string;
+  controlName?: string;
+  controlType?: number;
+  displayMode?: string;
+  rename?: string;
+  [key: string]: unknown;
+}
+
+interface TopChartStyle {
+  autoLinkageChartObjectIds?: string[];
+  chartColorIndex?: number;
+  topStyle?: string;
+  valueProgressVisible?: boolean;
+  [key: string]: unknown;
+}
+
+interface TopChartSummary {
+  name?: string;
+  type?: number;
+  sum?: number;
+  [key: string]: unknown;
+}
+
+interface TopChartReportData {
+  map: TopChartMapItem[];
+  yaxisList: TopChartYaxis[];
+  sorts?: Array<Record<string, unknown>>;
+  xaxes: TopChartXaxis;
+  appId?: string;
+  reportId?: string;
+  name?: string;
+  reportType?: number;
+  style: TopChartStyle;
+  summary?: TopChartSummary;
+  displaySetup: {
+    showRowList?: boolean;
+    showTotal?: boolean;
+  };
+}
+
+interface LinkageFilter {
+  controlId?: string | undefined;
+  values: unknown[];
+  controlName?: string | undefined;
+  controlValue?: string | number | null | undefined;
+  type?: number | undefined;
+  control?: TopChartXaxis | undefined;
+}
+
+interface LinkageMatch {
+  sheetId?: string | undefined;
+  reportId?: string | undefined;
+  reportName?: string | undefined;
+  reportType?: number | undefined;
+  value?: unknown;
+  filters: LinkageFilter[];
+  onlyChartIds?: string[] | undefined;
+}
+
+interface TopChartRequest {
+  isPersonal: boolean;
+  match: Record<string, unknown> | null;
+}
+
+interface TopChartProps {
+  reportData: TopChartReportData;
+  isMobile?: boolean;
+  isThumbnail?: boolean;
+  isViewOriginalData?: boolean;
+  isLinkageData?: boolean;
+  sourceType?: number;
+  themeColor?: string;
+  projectId?: string;
+  linkageMatch?: LinkageMatch | null;
+  customPageConfig?: {
+    chartColor?: Record<string, unknown>;
+    chartColorIndex?: number;
+    pageStyleType?: string;
+  };
+  onOpenChartDialog: (data: TopChartRequest) => void;
+  requestOriginalData: (data: TopChartRequest) => void;
+  onUpdateLinkageFiltersGroup: (data: LinkageMatch | null) => void;
+}
+
+interface TopChartState {
+  originalCount: string | number;
+  count: string | number;
+  dropdownVisible: boolean;
+  offset: { x?: number; y?: number };
+  match: Record<string, unknown> | null;
+  linkageMatch: LinkageMatch | null;
+  newYaxisList: TopChartYaxis[];
+}
+
+const formatTopChartData = (map: TopChartMapItem[]): TopChartRow[] => {
   if (!Array.isArray(map) || !map.length) return [];
-  const data = _.get(map[0], 'value') || [];
-  const result = [];
+  const data = map[0]?.value || [];
+  const result: TopChartRow[] = [];
 
   const getValues = (index: number) => {
-    const obj = {};
-    map.forEach(data => {
-      if (data && Array.isArray(data.value) && data.value[index] !== undefined) {
-        obj[data.c_id] = data.value[index].v;
+    const obj: Record<string, unknown> = {};
+    map.forEach(item => {
+      const value = item.value?.[index];
+      if (value !== undefined) {
+        obj[item.c_id] = value.v;
       }
     });
     return obj;
   };
 
   for (let i = 0; i < data.length; i++) {
-    const { x, originalX } = data[i];
+    const { x, originalX } = data[i] || {};
     result.push({
-      name: x,
-      originalX,
+      name: x ?? null,
+      originalX: originalX ?? null,
       ...getValues(i),
     });
   }
@@ -47,21 +168,21 @@ const formatTopChartData = map => {
   return result;
 };
 
-const getProgressControlId = (sorts, yaxisList) => {
-  const sortId = _.findKey(_.get(sorts, 0));
+const getProgressControlId = (sorts: Array<Record<string, unknown>> | undefined, yaxisList: TopChartYaxis[]) => {
+  const sortId = _.findKey(sorts?.[0] || {});
 
-  return _.find(yaxisList, { controlId: sortId }) ? sortId : _.get(yaxisList[0], 'controlId');
+  return yaxisList.some(item => item.controlId === sortId) ? sortId : yaxisList[0]?.controlId;
 };
 
-const getProgressWidth = (value, maxValue: number) => {
-  value = Number(value);
-  maxValue = Number(maxValue);
+const getProgressWidth = (value: unknown, maxValue: number) => {
+  const numericValue = Number(value);
+  const numericMaxValue = Number(maxValue);
 
-  if (!Number.isFinite(value) || !Number.isFinite(maxValue) || maxValue <= 0) {
+  if (!Number.isFinite(numericValue) || !Number.isFinite(numericMaxValue) || numericMaxValue <= 0) {
     return 0;
   }
 
-  return Math.min(Math.max((value / maxValue) * 100, 0), 100);
+  return Math.min(Math.max((numericValue / numericMaxValue) * 100, 0), 100);
 };
 
 const TopChartContent = styled.div`
@@ -142,10 +263,12 @@ const TopChartContent = styled.div`
   }
 `;
 
-export default class extends Component<any, any> {
+export default class extends Component<TopChartProps, TopChartState> {
   declare chartWrapEl: HTMLDivElement | null | undefined;
+  declare isViewOriginalData: boolean | undefined;
+  declare isLinkageData: boolean | undefined;
 
-  constructor(props) {
+  constructor(props: TopChartProps) {
     super(props);
     this.state = {
       originalCount: 0,
@@ -161,14 +284,14 @@ export default class extends Component<any, any> {
     this.setCount(this.props);
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: TopChartProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.reportData.yaxisList, prevProps.reportData.yaxisList)) {
         this.setCount(this.props);
       }
     }
   }
-  setCount(props) {
+  setCount(props: TopChartProps) {
     const { map, yaxisList } = props.reportData;
     const newYaxisList = formatYaxisList(map, yaxisList);
     const { summary = {} } = props.reportData;
@@ -180,11 +303,11 @@ export default class extends Component<any, any> {
       count,
     });
   }
-  handleClick = (event, data) => {
+  handleClick = (event: MouseEvent<HTMLDivElement>, data: TopChartRow) => {
     const { reportData, isMobile } = this.props;
     const { xaxes, appId, reportId, name, reportType, style } = reportData;
-    const param = {};
-    const linkageMatch = {
+    const param: Record<string, unknown> = {};
+    const linkageMatch: LinkageMatch = {
       sheetId: appId,
       reportId,
       reportName: name,
@@ -211,8 +334,8 @@ export default class extends Component<any, any> {
       linkageMatch.onlyChartIds = style.autoLinkageChartObjectIds;
     }
 
-    const isAll = this.isViewOriginalData && this.isLinkageData;
-    const { left, top } = this.chartWrapEl.getBoundingClientRect();
+    const isAll = Boolean(this.isViewOriginalData && this.isLinkageData);
+    const { left, top } = this.chartWrapEl?.getBoundingClientRect() || { left: 0, top: 0 };
     this.setState(
       {
         dropdownVisible: isAll,
@@ -255,7 +378,7 @@ export default class extends Component<any, any> {
       dropdownVisible: false,
     });
   };
-  getBgColor = data => {
+  getBgColor = (data: TopChartRow) => {
     const { themeColor, projectId, reportData, linkageMatch, customPageConfig = {} } = this.props;
     const { chartColor, chartColorIndex = 1 } = customPageConfig;
     const styleConfig = reportData.style || {};
@@ -263,8 +386,8 @@ export default class extends Component<any, any> {
       chartColor && chartColorIndex >= (styleConfig.chartColorIndex || 0)
         ? { ...styleConfig, ...chartColor }
         : styleConfig;
-    const colors = getChartColors(style, themeColor, projectId);
-    let color = colors[0];
+    const colors = getChartColors(style, themeColor, projectId || '');
+    const color = colors[0] || '';
 
     if (!_.isEmpty(linkageMatch)) {
       if (linkageMatch.value === data.originalX) {
@@ -324,7 +447,7 @@ export default class extends Component<any, any> {
       </div>
     );
   }
-  renderItem(data, index: number, progressControlId, maxValue: number) {
+  renderItem(data: TopChartRow, index: number, progressControlId: string | undefined, maxValue: number) {
     const { projectId, reportData, isViewOriginalData, isLinkageData, isThumbnail, sourceType } = this.props;
     const { style = {}, yaxisList, displaySetup, xaxes } = reportData;
     const { valueProgressVisible } = style;
@@ -344,7 +467,7 @@ export default class extends Component<any, any> {
               <div className="userHead" style={{ width: '30px' }}>
                 <UserCard
                   sourceId={accountId}
-                  projectId={projectId || localStorage.currentProjectId}
+                  projectId={projectId || (localStorage as Storage & { currentProjectId?: string }).currentProjectId}
                   newPageChat={!isThumbnail || sourceType === 2}
                 >
                   <img className="circle w100" src={avatar} />
@@ -357,7 +480,7 @@ export default class extends Component<any, any> {
       }
 
       return (
-        <div {...config} title={data.name}>
+        <div {...config} title={data.name == null ? '' : String(data.name)}>
           {data.name}
         </div>
       );
@@ -391,7 +514,7 @@ export default class extends Component<any, any> {
             <div
               className="progress"
               style={{
-                width: `${getProgressWidth(data[progressControlId], maxValue)}%`,
+                width: `${getProgressWidth(progressControlId ? data[progressControlId] : undefined, maxValue)}%`,
                 backgroundColor: this.getBgColor(data),
               }}
             />
@@ -418,13 +541,15 @@ export default class extends Component<any, any> {
     const { map, yaxisList, sorts } = reportData;
     const data = formatTopChartData(map);
     const progressControlId = getProgressControlId(sorts, yaxisList);
-    const values = data.map(data => Number(data[progressControlId])).filter(value => Number.isFinite(value));
+    const values = data
+      .map(data => (progressControlId ? Number(data[progressControlId]) : NaN))
+      .filter(value => Number.isFinite(value));
     const maxValue = _.max(values) || 0;
     return (
       <TopChartContent className={cx('h100 topChart', { isMobile })} isDark={isDark} yaxisListLength={yaxisList.length}>
         <ScrollView>
           <Fragment>
-            {yaxisList.length > 1 && this.renderHeader(isDark)}
+            {yaxisList.length > 1 && this.renderHeader()}
             {data.map((data, index) => this.renderItem(data, index, progressControlId, maxValue))}
           </Fragment>
         </ScrollView>

@@ -1403,7 +1403,6 @@
     "src/pages/Statistics/Charts/ProgressChart.tsx",
     "src/pages/Statistics/Charts/RadarChart.tsx",
     "src/pages/Statistics/Charts/ScatterChart.tsx",
-    "src/pages/Statistics/Charts/TopChart.tsx",
     "src/pages/Statistics/Charts/VerificationDataLength.tsx",
     "src/pages/Statistics/Charts/WordCloudChart.tsx",
     "src/pages/Statistics/Charts/WorldMap.tsx",
