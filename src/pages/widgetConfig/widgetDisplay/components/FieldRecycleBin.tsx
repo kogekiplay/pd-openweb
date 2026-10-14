@@ -112,7 +112,7 @@ export default class FieldRecycleBin extends Component<any, any> {
 
   updateStatus = (item, status: string) => {
     const { filterList, activeWidget = {}, isComplete } = this.state;
-    const { globalSheetInfo = {}, allControls } = this.props;
+    const { globalSheetInfo = {}, allControls, widgets, setWidgets, setActiveWidget } = this.props;
 
     if (status === 'recover') {
       if (isExceedMaxControlLimit(allControls)) {
@@ -154,7 +154,10 @@ export default class FieldRecycleBin extends Component<any, any> {
 
             if (parentControl) {
               handleMoveWidgets(tempData, {
-                ...this.props,
+                widgets,
+                allControls,
+                setWidgets,
+                setActiveWidget,
                 activeWidget: parentControl,
               });
             } else {

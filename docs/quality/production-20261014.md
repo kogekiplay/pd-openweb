@@ -27,3 +27,13 @@ HAP 镜像更新为 `registry.cn-hangzhou.aliyuncs.com/mdpublic/mingdaoyun-hap:7
 最终六个入口 `/`、`/dashboard`、`/portal.html`、`/admin.html`、`/mobile.html`、`/50x.html` 均 HTTP 200；五个产品入口包含新源码 revision。32 个 JS/CSS/静态资源的公网 SHA256 与本地一致，两个厂商 `/pm/freestyle` 资源成功响应。已登录内置浏览器重新加载工作台，导航、审批列表、应用收藏和最近使用正常显示，error/warn 为 0。所有五个容器 running，nginx 配置检查通过。
 
 回滚材料保留在服务器 `/var/backups/hap-751-20261014/`：`rollback-750.sh`、保留文档卷的 `docker-compose.rollback-preserved.yaml`、原 nginx 路由、数据备份及前端历史归档。回滚脚本恢复 7.5.0 镜像和原前端 `2c37173e1`，脚本语法已验证，未在健康现网执行回滚。证据目录为本机 `/private/tmp/hap751-release/` 及上述服务器目录。上海时间 16:03 完成服务及挂载验收，早于每日 17:30 目标；公网与浏览器验收随后完成。业务写入路径未用真实记录做测试。
+
+## 17:04 布局与甘特图严格化批次
+
+源码 `b179396107f0cb2caa243cc68b441ca1fb7b2904`（含布局工具 `8bbf73f89`）已在 pre-push 的 230/230 行为规格、工具/语法/后缀与 fast 门禁通过后推送 GitHub main。正式 release 再次通过行为与类型门禁，耗时 1 分 47 秒；publish 和 Webpack 校验通过（1,095 JS、387 CSS、3 runtime）。候选入口 SHA256 为 `7d26cce3a1af1a674f553aeba4c7fe33eaf04e6727fd25f7c3ccb870d9e86f00`。
+
+上海时间 17:04:17 完成前端切换。发布前完整复制现网后覆盖生产产物，逐文件校验 17,098 项，确认无 `.dev.js`，保留旧资源和厂商 `50x.html`。五个容器 ID、镜像、挂载与端口在发布前后逐项一致，未重启后端；nginx 配置检查通过。旧入口 SHA256 `485bdfda…` 保留在容器 `/usr/local/MDPrivateDeployment/www-prev-20261014-b179396107`，服务器 `/data/mingdao/frontend-b179396107-20261014/rollback.sh` 提供已做语法检查的前端回滚流程。
+
+公网六个入口均 200，五个产品入口含本次 revision，34 个 JS/CSS/静态和厂商资源校验通过。已登录内置浏览器重新加载工作台，审批列表、应用收藏、最近使用和应用导航正常，DOM 包含本次 revision，控制台 error/warn 为 0。发布后 `/data` 可用 115,901,628 KiB（约 110.5 GiB）。发布脚本最初因服务器 Python 不支持字典合并语法在切换前停止，改为兼容写法后完成；失败尝试未进入复制或切换阶段。
+
+证据：本机 `/private/tmp/hap-gunter-release-20261014/`，服务器 `/data/mingdao/frontend-b179396107-20261014/`，含 release/publish/runtime、候选全量 SHA256、服务前后快照、六入口和 34 个资源结果。上游 main 本轮核实仍为 `5788d7d5d`（7.5.1），无需追加微服务升级。下一批字段配置源码未包含在本次发布中。

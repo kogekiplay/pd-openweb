@@ -33,17 +33,24 @@ import { batchRemoveItems, insertControlInSameLine } from './drag';
 import { canAsUniqueWidget, getAdvanceSetting, handleAdvancedSettingChange, isExceedMaxControlLimit } from './setting';
 import { getPathById, isHaveGap } from './widgets';
 
-/**
- * 表单配置页透传的上下文（由 widgetConfig 的容器组件组装）。
- * 字段按本文件实际读到的点列：activeWidget / setWidgets / globalSheetInfo，
- * 其余用索引签名兜住 —— 它是个在多层组件间透传的大袋子，
- * 精确建模要先把 widgetConfig 的容器组件类型化，是另一件事。
- */
+/** 布局写入和激活操作按真实调用要求拆分，避免可选回调与开放上下文隐藏错误。 */
 interface WidgetProps {
-  activeWidget?: FormControl;
-  setWidgets?: (...args: any[]) => void;
-  globalSheetInfo?: Record<string, any>;
-  [key: string]: any;
+  activeWidget?: FormControl | undefined;
+}
+interface WidgetWriteContext extends WidgetProps {
+  widgets: FormControl[][];
+  setWidgets: (widgets: FormControl[][]) => void;
+}
+interface WidgetMoveContext extends WidgetWriteContext {
+  allControls: FormControl[];
+  setActiveWidget: (widget: FormControl) => void;
+}
+interface WidgetFeatureControl extends FormControl {
+  featureId?: number | string | undefined;
+}
+interface WidgetReplaceContext {
+  setWidgets: (widgets: FormControl[][]) => void;
+  globalSheetInfo?: { projectId?: string | undefined } | undefined;
 }
 
 // 获取动态默认值
@@ -1094,10 +1101,10 @@ type WidgetsChangedCallback = (result?: { newWidgets?: FormControl[][] }) => voi
 
 // 清除所有原有控件，全部换成新的
 export const clearAndSetWidgets = (
-  data: FormControl[],
+  data: WidgetFeatureControl[],
   // 【这个形参没有被用到】函数体里一次都没读，保留是为了不动 3 个调用点的实参位置
   _para: unknown,
-  widgetProps: WidgetProps,
+  widgetProps: WidgetReplaceContext,
   callback?: WidgetsChangedCallback,
 ) => {
   const { setWidgets, globalSheetInfo = {} } = widgetProps;
@@ -1133,13 +1140,13 @@ export const clearAndSetWidgets = (
 };
 
 export const handleDeleteWidgetsForMingo = (
-  { needDeleteWidgets }: { needDeleteWidgets?: DeleteTarget[] } = {},
-  widgetProps: WidgetProps,
+  { needDeleteWidgets = [] }: { needDeleteWidgets?: DeleteTarget[] } = {},
+  widgetProps: WidgetWriteContext,
   callback?: WidgetsChangedCallback,
 ) => {
   const { widgets, setWidgets } = widgetProps;
   const newWidgets = update(widgets, {
-    $apply: arr => arr.map(inner => inner.filter(w => !needDeleteWidgets.some(d => isDeleteTarget(d, w)))),
+    $apply: (arr: FormControl[][]) => arr.map(inner => inner.filter(w => !needDeleteWidgets.some(d => isDeleteTarget(d, w)))),
   });
   setWidgets(newWidgets);
   if (_.isFunction(callback)) {
@@ -1150,13 +1157,13 @@ export const handleDeleteWidgetsForMingo = (
 // 更新某个属性
 export const handleUpdateWidgetsAttribute = (
   // 按 alias 匹配后整体并进控件，所以是「控件的部分字段 + alias」
-  { needUpdateWidgets }: { needUpdateWidgets?: FormControl[] } = {},
-  widgetProps: WidgetProps,
+  { needUpdateWidgets = [] }: { needUpdateWidgets?: FormControl[] } = {},
+  widgetProps: WidgetWriteContext,
   callback?: WidgetsChangedCallback,
 ) => {
   const { widgets, setWidgets } = widgetProps;
   const newWidgets = update(widgets, {
-    $apply: arr =>
+    $apply: (arr: FormControl[][]) =>
       arr.map(inner => {
         return inner.map(w => {
           const matched = needUpdateWidgets.find(d => d.alias === w.alias);
@@ -1180,7 +1187,7 @@ export const handleUpdateWidgetsAttribute = (
 export function batchUpdateWidgetsLayout(
   // { [controlId]: { row, col, size } }
   layoutOfAllWidgets: Record<string, { row?: number; col?: number; size?: number }> = {},
-  widgetProps: WidgetProps,
+  widgetProps: WidgetWriteContext,
   callback?: WidgetsChangedCallback,
 ) {
   const { widgets, setWidgets } = widgetProps;
@@ -1193,7 +1200,7 @@ export function batchUpdateWidgetsLayout(
 
   // 2. 更新每个控件的 row, col, size 属性
   const updatedWidgets = flattenWidgets.map(widget => {
-    const layout = layoutOfAllWidgets[widget.controlId];
+    const layout = widget.controlId === undefined ? undefined : layoutOfAllWidgets[widget.controlId];
 
     if (layout) {
       return {
@@ -1214,7 +1221,7 @@ export function batchUpdateWidgetsLayout(
   const newWidgets = Object.keys(groupedByRow)
     .sort((a, b) => Number(a) - Number(b)) // 按 row 排序
     .map(row => {
-      return groupedByRow[row].sort((a, b) => (a.col || 0) - (b.col || 0)); // 每行内按 col 排序
+      return (groupedByRow[row] || []).sort((a, b) => (a.col || 0) - (b.col || 0)); // 每行内按 col 排序
     });
 
   // 5. 更新 widgets
@@ -1365,14 +1372,15 @@ export const handleAddWidgets = (data, para = {}, widgetProps, callback?) => {
 };
 
 // 批量移动
-export const handleMoveWidgets = (data, widgetProps) => {
+export const handleMoveWidgets = (data: FormControl[], widgetProps: WidgetMoveContext) => {
   const {
     widgets,
     activeWidget,
     allControls,
     setWidgets,
     setActiveWidget,
-  }: { allControls: FormControl[]; [key: string]: any } = widgetProps;
+  } = widgetProps;
+  if (!activeWidget) return;
 
   if (isExceedMaxControlLimit(allControls, data.length)) {
     alert(_l('当前表存在的控件已达到最大值，无法添加继续添加新控件!'), 3);
@@ -1381,7 +1389,7 @@ export const handleMoveWidgets = (data, widgetProps) => {
 
   let newWidgets = widgets;
 
-  let currentRowIndex = head(getPathById(newWidgets, activeWidget.controlId));
+  let currentRowIndex = head(getPathById(newWidgets, activeWidget.controlId)) ?? newWidgets.length - 1;
   const childrenList = getChildWidgetsBySection(allControls, activeWidget.controlId);
 
   if (_.isUndefined(currentRowIndex)) {
@@ -1460,7 +1468,7 @@ export const dealCopyWidgetId = (data: FormControl = {}) => {
 };
 
 // 获取当前分段控件子布局控件
-export const getChildWidgetsBySection = (controls: FormControl[] = [], id) => {
+export const getChildWidgetsBySection = (controls: FormControl[] = [], id: string | undefined) => {
   const childControls = controls.filter(i => i.sectionId === id);
   return putControlByOrder(childControls);
 };
@@ -1542,10 +1550,11 @@ export const batchCopyWidgets = (props, selectWidgets = []) => {
 };
 
 // 批量设置属性
-export const batchResetWidgets = (props, selectWidgets = []) => {
+export const batchResetWidgets = (props: WidgetWriteContext, selectWidgets: FormControl[] = []) => {
   let { widgets, setWidgets } = props;
   selectWidgets.forEach(item => {
     const [row, col] = getPathById(widgets, item.controlId);
+    if (row === undefined || col === undefined) return;
     widgets = update(widgets, { [row]: { [col]: { $set: item } } });
   });
 
@@ -1553,7 +1562,10 @@ export const batchResetWidgets = (props, selectWidgets = []) => {
 };
 
 // 删除标签页
-export const deleteSection = ({ widgets = [], data }, props) => {
+export const deleteSection = (
+  { widgets = [], data }: { widgets?: FormControl[][]; data: FormControl },
+  props: WidgetWriteContext & { setActiveWidget: (widget: FormControl) => void },
+) => {
   const { setActiveWidget, setWidgets } = props;
   Dialog.confirm({
     title: _l('删除标签？'),
@@ -1562,9 +1574,9 @@ export const deleteSection = ({ widgets = [], data }, props) => {
     buttonType: 'danger',
     onOk: () => {
       // 先删除原来控件
-      const deleteWidgets = [data, ...data.relationControls];
+      const deleteWidgets = [data, ...(data.relationControls || [])];
       let batchDeleteWidgets = batchRemoveItems(widgets, deleteWidgets);
-      const addWidgets = (data.relationControls || []).map(i => ({ ...i, sectionId: '' }));
+      const addWidgets = (data.relationControls || []).map((i: FormControl) => ({ ...i, sectionId: '' }));
       const activeWidget = last(addWidgets);
 
       // 将内部字段移到外部，拼到普通字段后
@@ -1593,24 +1605,28 @@ export const deleteSection = ({ widgets = [], data }, props) => {
 };
 
 // shift连选处理
-export const batchShiftWidgets = props => {
+export const batchShiftWidgets = (props: {
+  batchActive?: FormControl[];
+  data?: FormControl;
+  widgets?: FormControl[][];
+  setBatchActive: (controls: FormControl[]) => void;
+}) => {
   const { batchActive = [], data, widgets = [], setBatchActive } = props;
   const startWidget = last(batchActive);
 
   if (startWidget && data) {
     const [startRow, startCol] = getPathById(widgets, startWidget.controlId);
     const [endRow, endCol] = getPathById(widgets, data.controlId);
-    const newBatchWidgets = [];
+    if (startRow === undefined || startCol === undefined || endRow === undefined || endCol === undefined) return;
+    const newBatchWidgets: FormControl[] = [];
 
-    for (var i = 0; i < widgets.length; i++) {
-      const row = widgets[i];
-
-      for (var j = 0; j < row.length; j++) {
+    for (const [i, row] of widgets.entries()) {
+      for (const [j, widget] of row.entries()) {
         if (
           (i === Math.min(startRow, endRow) && j >= (startRow > endRow ? endCol : startCol)) ||
           (i === Math.max(startRow, endRow) && j <= (startRow > endRow ? startCol : endCol))
         ) {
-          newBatchWidgets.push(widgets[i][j]);
+          newBatchWidgets.push(widget);
         } else if (i > Math.min(startRow, endRow) && i < Math.max(startRow, endRow)) {
           newBatchWidgets.push(...row);
         }
