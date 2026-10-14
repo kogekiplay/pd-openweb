@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-14 Statistics CountryLayer
+
+Statistics CountryLayer 的地图数据、联动筛选、行政区下钻、气泡图层、动态 L7Plot 实例和 Redux 连接已按实际协议收紧；保留字符串/数值地图值、直辖市粒度、原始数据入口和上卷/下钻路径。227/227 全仓规格通过（含 1 项既有隔离失败）；syntax、tools、fast、strict 门禁全部通过。严格诊断 53,162 → 53,036，未新增诊断；CountryLayer 126 条诊断清零，欠债清单 3,133 → 3,132、strict-clean 1,621 → 1,622，基础差分收紧到 8,740 / 2,340。详见 `statistics-country-layer-strict-20261014.md`；本批尚未发布，强类型目标继续。
+
 ## 2026-10-14 Statistics TopChart
 
 TopChart 的排行数据组装、排序字段选择、进度宽度、联动 payload、类组件 props/state、DOM ref 和用户头像边界已按实际协议收紧；保留无数据、无排序、无效进度值和用户字段样式行为。数据组装/排名/进度宽度与旧实现对照通过，227/227 全仓规格通过（含 1 项既有隔离失败）；syntax、tools、fast、strict 门禁全部通过。严格诊断 53,201 → 53,162，未新增诊断；TopChart 39 条诊断清零，欠债清单 3,134 → 3,133、strict-clean 1,620 → 1,621，基础差分收紧到 8,803 / 2,342。详见 `statistics-top-chart-strict-20261014.md`；本批尚未发布，强类型目标继续。

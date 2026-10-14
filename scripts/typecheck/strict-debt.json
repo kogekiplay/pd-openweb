@@ -1393,7 +1393,6 @@
     "src/pages/Statistics/ChartDialog/index.tsx",
     "src/pages/Statistics/Charts/BarChart.tsx",
     "src/pages/Statistics/Charts/BidirectionalBarChart.tsx",
-    "src/pages/Statistics/Charts/CountryLayer.tsx",
     "src/pages/Statistics/Charts/DualAxes.tsx",
     "src/pages/Statistics/Charts/FunnelChart.tsx",
     "src/pages/Statistics/Charts/GaugeChart.tsx",

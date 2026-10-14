@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component, type ComponentType, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -16,6 +16,204 @@ import type { RootState } from 'src/redux/types';
 import { version } from '../common/reportConfigUtils';
 import { fillValueMap } from '../common/reportDataUtils';
 import { formatrChartValue, formatYaxisList, getChartColors, getControlMinAndMax, getStyleColor } from './common';
+
+type Primitive = string | number | boolean | null;
+
+interface CountryMapItem {
+  code: string | number;
+  name: string;
+  value?: number | string;
+  originalCode?: string | number;
+  colorLavel?: number;
+  [key: string]: unknown;
+}
+
+interface CountryAxis {
+  cid?: string | undefined;
+  controlId?: string | undefined;
+  controlName?: string | undefined;
+  controlType?: number | undefined;
+  advancedSetting?: Record<string, string | number | boolean | null | undefined> | undefined;
+  [key: string]: unknown;
+}
+
+interface CountryYaxis {
+  controlId: string;
+  [key: string]: unknown;
+}
+
+interface CountryStyle {
+  autoLinkageChartObjectIds?: string[] | undefined;
+  chartColorIndex?: number | undefined;
+  isDrillDownLayer?: boolean | undefined;
+  [key: string]: unknown;
+}
+
+interface CountryDisplaySetup {
+  showRowList?: boolean | undefined;
+  showTotal?: boolean | undefined;
+  showChartType?: number | undefined;
+  colorRules?: Array<Record<string, unknown>> | undefined;
+  magnitudeUpdateFlag?: Primitive | undefined;
+  [key: string]: unknown;
+}
+
+interface CountryConfig {
+  particleSizeType: number;
+  filterCode: string;
+  municipality?: boolean | undefined;
+  drillFilterCode?: string | number | undefined;
+  drillParticleSizeType?: number | undefined;
+  [key: string]: unknown;
+}
+
+interface CountrySummary {
+  sum: number;
+  [key: string]: unknown;
+}
+
+interface CountryReportData {
+  country: CountryConfig;
+  displaySetup: CountryDisplaySetup;
+  map: CountryMapItem[];
+  yaxisList: CountryYaxis[];
+  summary: CountrySummary;
+  xaxes: CountryAxis;
+  style: CountryStyle;
+  locationMap?: Record<string, string> | undefined;
+  sorts?: Array<Record<string, unknown>> | undefined;
+  appId?: string | undefined;
+  reportId?: string | undefined;
+  name?: string | undefined;
+  reportType?: number | undefined;
+  [key: string]: unknown;
+}
+
+interface CountryBase {
+  sheetVisible?: boolean | undefined;
+  report?: { id?: string | undefined } | undefined;
+  [key: string]: unknown;
+}
+
+interface LinkageFilter {
+  controlId?: string | undefined;
+  values: unknown[];
+  controlName?: string | undefined;
+  controlValue?: Primitive | undefined;
+  type?: number | undefined;
+}
+
+interface LinkageMatch {
+  sheetId?: string | undefined;
+  reportId?: string | undefined;
+  reportName?: string | undefined;
+  reportType?: number | undefined;
+  value?: unknown;
+  filters: LinkageFilter[];
+  onlyChartIds?: string[] | undefined;
+}
+
+interface CountryLayerProps {
+  base?: CountryBase | undefined;
+  reportData: CountryReportData;
+  isMobile?: boolean | undefined;
+  isThumbnail?: boolean | undefined;
+  isViewOriginalData?: boolean | undefined;
+  isLinkageData?: boolean | undefined;
+  loading?: boolean | undefined;
+  themeColor?: string | undefined;
+  projectId?: string | undefined;
+  customPageConfig?:
+    | {
+        chartColor?: Record<string, unknown> | undefined;
+        chartColorIndex?: number | undefined;
+        pageStyleType?: string | undefined;
+        widgetBgColor?: string | undefined;
+      }
+    | undefined;
+  filtersGroup?: Record<string, unknown> | undefined;
+  onOpenChartDialog: (data: { isPersonal: boolean; match: Record<string, unknown> | null }) => void;
+  requestOriginalData: (data: { isPersonal: boolean; match: Record<string, unknown> | null }) => void;
+  onUpdateLinkageFiltersGroup: (data: LinkageMatch | null) => void;
+  changeCurrentReport: (data: { country: CountryConfig }) => void;
+  closeCurrentReport: () => void;
+  getTableData: () => void;
+  changeBase: (data: { reportSingleCacheId: null; apkId: null; match: null }) => void;
+}
+
+interface CountryLayerState {
+  originalCount: string | number;
+  count: string | number;
+  dropdownVisible: boolean;
+  offset: { x?: number; y?: number };
+  match: Record<string, unknown> | null;
+  linkageMatch: LinkageMatch | null;
+  path: string[];
+  drillDownLoading: boolean;
+  drillDownCode: string | number | null;
+}
+
+interface CountryClickFeature {
+  properties: CountryMapItem & { level?: string | undefined };
+}
+
+interface CountryClickEvent {
+  feature: CountryClickFeature;
+  x: number;
+  y: number;
+}
+
+interface LayerData {
+  data: CountryMapItem[];
+  locationMap: Record<string, string>;
+}
+
+type LayerLevel = 'country' | 'province' | 'city' | 'district';
+type LayerDataKey = `${LayerLevel}Data`;
+
+interface DotLayerConfig {
+  source: {
+    data: Array<Record<string, Primitive>>;
+    parser: { type: 'json'; x: 'lng'; y: 'lat' };
+  };
+  [key: string]: unknown;
+}
+
+interface CountryChartConfig {
+  map: { type: 'map'; style: 'blank'; center: number[]; zoom: number; minZoom: number; pitch: number };
+  source: { data: CountryMapItem[]; joinBy: { sourceField: string; geoField: string } };
+  viewLevel?: { level: LayerLevel; adcode: string | number; granularity?: LayerLevel } | undefined;
+  dotLayerConfig?: DotLayerConfig | undefined;
+  geoArea?: { url: string; type: 'topojson' } | undefined;
+  color?: unknown;
+  style: Record<string, unknown>;
+  [key: string]: unknown;
+}
+
+interface CountryChart {
+  options: CountryChartConfig;
+  cityLayer?: { viewLevel: { adcode: string | number } } | undefined;
+  getScene: () => { map: { resize: () => void } };
+  on: {
+    (event: 'loaded', callback: () => void): void;
+    (event: 'fillAreaLayer:click', callback: (data: CountryClickEvent) => void): void;
+  };
+  addLayer: (layer: DotLayer) => void;
+  changeData: (data: CountryMapItem[]) => void;
+  destroy: () => void;
+  drillDown: (view: { level: LayerLevel; adcode: string | number; granularity?: LayerLevel }, config?: unknown) => void;
+  drillUp: (config?: unknown, level?: LayerLevel) => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
+}
+
+interface DotLayer {
+  options: DotLayerConfig;
+  changeData: (data: Array<Record<string, Primitive>>) => void;
+}
+
+type ChartConstructor = new (container: HTMLDivElement, config: CountryChartConfig) => CountryChart;
+type DotLayerConstructor = new (config: DotLayerConfig) => DotLayer;
 
 const PathWrapper = styled.div`
   font-size: var(--font-md);
@@ -54,19 +252,22 @@ const municipality = ['110000', '310000', '120000', '500000', '810000', '820000'
 const municipalityRegExp = /^(11|12|31|50|81|82)/;
 const colorsLength = 6;
 
-const setColorLavel = data => {
-  let res = data.filter(item => item.value).sort((a, b) => a.value - b.value);
+const setColorLavel = (data: CountryMapItem[]): CountryMapItem[] => {
+  const res = data
+    .filter((item): item is CountryMapItem & { value: number | string } => Boolean(item.value))
+    .sort((a, b) => Number(a.value) - Number(b.value));
   let max = Math.ceil(res.length / colorsLength);
   let currentIndex = max;
   let lavel = 1;
 
   for (let i = 0; i < res.length; i++) {
-    let current = res[i];
-    let last = res[i - 1];
+    const current = res[i];
+    const last = res[i - 1];
+    if (!current) continue;
 
     if (i === currentIndex) {
       currentIndex = currentIndex + max;
-      if (current.value !== (last && last.value)) {
+      if (current.value !== last?.value) {
         lavel = lavel + 1;
       }
     }
@@ -78,18 +279,26 @@ const setColorLavel = data => {
     return {
       ...item,
       originalCode: item.code,
-      code: countryLayerCodeMap[item.code] || item.code,
+      code: typeof item.code === 'number' ? countryLayerCodeMap[item.code] || item.code : item.code,
     };
   });
 };
 
-export class CountryLayer extends Component<any, any> {
+export class CountryLayer extends Component<CountryLayerProps, CountryLayerState> {
   declare chartEl: HTMLDivElement | null | undefined;
   declare resizeObserver: ResizeObserver | undefined;
   declare colorLavels: string[] | undefined;
   declare depthColorLavels: string[] | null | undefined;
+  declare CountryLayerChart: CountryChart | null;
+  declare DotLayerChart: DotLayer | null;
+  declare Choropleth: ChartConstructor | undefined;
+  declare DotLayer: DotLayerConstructor | undefined;
+  declare isViewOriginalData: boolean | undefined;
+  declare isLinkageData: boolean | undefined;
+  declare colors: string[];
+  declare layerData: Partial<Record<LayerDataKey, LayerData>>;
 
-  constructor(props) {
+  constructor(props: CountryLayerProps) {
     super(props);
     this.state = {
       originalCount: 0,
@@ -104,11 +313,16 @@ export class CountryLayer extends Component<any, any> {
     };
     this.CountryLayerChart = null;
     this.DotLayerChart = null;
+    this.layerData = {};
   }
   override componentDidMount() {
     Promise.all([import('@antv/l7plot')]).then(([l7plot]) => {
-      this.Choropleth = _.get(l7plot, 'Choropleth.default') || _.get(l7plot, 'default.Choropleth') || l7plot.Choropleth;
-      this.DotLayer = _.get(l7plot, 'DotLayer.default') || _.get(l7plot, 'default.DotLayer') || l7plot.DotLayer;
+      this.Choropleth = (_.get(l7plot, 'Choropleth.default') ||
+        _.get(l7plot, 'default.Choropleth') ||
+        l7plot.Choropleth) as unknown as ChartConstructor;
+      this.DotLayer = (_.get(l7plot, 'DotLayer.default') ||
+        _.get(l7plot, 'default.DotLayer') ||
+        l7plot.DotLayer) as unknown as DotLayerConstructor;
       const { reportData, isViewOriginalData, isLinkageData } = this.props;
       const { style, displaySetup } = reportData;
       this.renderChart(this.props);
@@ -117,7 +331,9 @@ export class CountryLayer extends Component<any, any> {
         isLinkageData && !(_.isArray(style.autoLinkageChartObjectIds) && style.autoLinkageChartObjectIds.length === 0);
       if (this.chartEl && this.CountryLayerChart) {
         this.resizeObserver = new ResizeObserver(() => {
-          const scene = this.CountryLayerChart.getScene();
+          const chart = this.CountryLayerChart;
+          if (!chart) return;
+          const scene = chart.getScene();
           scene.map.resize();
         });
         this.resizeObserver.observe(this.chartEl);
@@ -126,10 +342,12 @@ export class CountryLayer extends Component<any, any> {
   }
   override componentWillUnmount() {
     this.CountryLayerChart && this.CountryLayerChart.destroy();
-    this.resizeObserver && this.resizeObserver.unobserve(this.chartEl);
+    if (this.resizeObserver && this.chartEl) {
+      this.resizeObserver.unobserve(this.chartEl);
+    }
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: CountryLayerProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { style = {}, displaySetup = {} } = this.props.reportData;
       const { style: oldStyle = {}, displaySetup: oldDisplaySetup = {} } = prevProps.reportData;
@@ -159,11 +377,11 @@ export class CountryLayer extends Component<any, any> {
         const data = setColorLavel(map);
         this.setCount(formatYaxisList(data, yaxisList), summary);
         this.colorLavels = this.getColorLavels(this.props, data);
-        this.CountryLayerChart.changeData(data);
+        this.CountryLayerChart?.changeData(data);
       }
     }
   }
-  renderChart = props => {
+  renderChart = (props: CountryLayerProps) => {
     if (!_.isFunction(this.Choropleth) || !this.chartEl) {
       return;
     }
@@ -171,38 +389,45 @@ export class CountryLayer extends Component<any, any> {
     const config = this.getChartConfig(props);
     this.CountryLayerChart = new this.Choropleth(this.chartEl, config);
     this.CountryLayerChart.on('loaded', () => {
+      const chart = this.CountryLayerChart;
+      if (!chart) return;
       if (this.isViewOriginalData || this.isLinkageData) {
-        this.CountryLayerChart.on('fillAreaLayer:click', this.handleClick);
+        chart.on('fillAreaLayer:click', this.handleClick);
       }
 
       const { dotLayerConfig, viewLevel, source } = config;
 
-      if (dotLayerConfig && _.isFunction(this.DotLayer)) {
-        const { locationMap } = props.reportData;
+      if (dotLayerConfig && this.DotLayer && viewLevel) {
+        const locationMap = props.reportData.locationMap || {};
         const dotLayer = new this.DotLayer(dotLayerConfig);
-        this[`${viewLevel.level}Data`] = { data: source.data, locationMap };
-        this.CountryLayerChart.addLayer(dotLayer);
+        this.setLayerData(viewLevel.level, { data: source.data, locationMap });
+        chart.addLayer(dotLayer);
         this.DotLayerChart = dotLayer;
       }
     });
   };
-  resetChart = (props?) => {
+  resetChart = (props?: CountryLayerProps) => {
     this.CountryLayerChart && this.CountryLayerChart.destroy();
     this.renderChart(props || this.props);
     this.setState({ path: [] });
   };
-  handleClick = data => {
+  setLayerData = (level: LayerLevel, data: LayerData) => {
+    this.layerData[`${level}Data`] = data;
+  };
+  getLayerData = (level: LayerLevel): LayerData | undefined => this.layerData[`${level}Data`];
+  handleClick = (data: CountryClickEvent) => {
     const { feature, x, y } = data;
     const { path } = this.state;
     const { isThumbnail, reportData, isMobile } = this.props;
     const { xaxes, country, appId, reportId, name, reportType, style } = reportData;
     const { code, originalCode, value, level } = feature.properties;
     const codeValue = originalCode || code;
+    const controlId = xaxes.controlId;
 
     if (!value || (!country.municipality && isThumbnail && level === 'district')) return;
 
-    const param = {};
-    const linkageMatch = {
+    const param: Record<string, unknown> = {};
+    const linkageMatch: LinkageMatch = {
       sheetId: appId,
       reportId,
       reportName: name,
@@ -213,32 +438,36 @@ export class CountryLayer extends Component<any, any> {
     if (path.length) {
       // 省
       if (country.particleSizeType === 1) {
-        if (municipalityRegExp.test(codeValue)) {
-          param[`${xaxes.controlId}-${3}`] = codeValue;
+        if (!controlId) return;
+        if (municipalityRegExp.test(String(codeValue))) {
+          param[`${controlId}-${3}`] = codeValue;
         } else {
-          param[`${xaxes.controlId}-${path.length}`] = codeValue;
+          param[`${controlId}-${path.length}`] = codeValue;
         }
       }
 
       // 市
       if (country.particleSizeType === 2) {
-        if (municipalityRegExp.test(codeValue)) {
-          param[`${xaxes.controlId}-${3}`] = codeValue;
+        if (!controlId) return;
+        if (municipalityRegExp.test(String(codeValue))) {
+          param[`${controlId}-${3}`] = codeValue;
         } else {
-          param[`${xaxes.controlId}-${path.length + 1}`] = codeValue;
+          param[`${controlId}-${path.length + 1}`] = codeValue;
         }
       }
     } else {
       const { name } = feature.properties;
-      param[xaxes.cid] = codeValue;
-      linkageMatch.value = param[xaxes.cid];
-      linkageMatch.filters.push({
-        controlId: xaxes.controlId,
-        values: [param[xaxes.cid]],
-        controlName: xaxes.controlName,
-        controlValue: name,
-        type: xaxes.controlType,
-      });
+      if (xaxes.cid) {
+        param[xaxes.cid] = codeValue;
+        linkageMatch.value = param[xaxes.cid];
+        linkageMatch.filters.push({
+          controlId: xaxes.controlId,
+          values: [param[xaxes.cid]],
+          controlName: xaxes.controlName,
+          controlValue: name,
+          type: xaxes.controlType,
+        });
+      }
     }
 
     if (_.isArray(style.autoLinkageChartObjectIds) && style.autoLinkageChartObjectIds.length) {
@@ -285,18 +514,20 @@ export class CountryLayer extends Component<any, any> {
     const { base = {} } = this.props;
     const { match } = this.state;
     const key = _.findKey(match);
-    const code = match[key];
+    const code = key ? match?.[key] : undefined;
+    if (typeof code !== 'string' && typeof code !== 'number') return;
     this.requestDrillDownTriggerData(code);
     if (base.sheetVisible) {
       this.handleCloseReportSingleCacheId();
       this.props.getTableData();
     }
   };
-  requestDrillDownTriggerData = code => {
+  requestDrillDownTriggerData = (code: string | number) => {
     const { path } = this.state;
     const { base = {}, reportData, filtersGroup } = this.props;
     const { country, reportId } = reportData;
-    const id = reportId || base.report.id;
+    const id = reportId || base.report?.id;
+    if (!id) return;
     const particleSizeType = path.length ? path.length + 1 : country.particleSizeType + 1;
 
     this.setState({ drillDownLoading: true });
@@ -305,7 +536,7 @@ export class CountryLayer extends Component<any, any> {
       country: {
         ...country,
         drillFilterCode: code,
-        drillParticleSizeType: municipalityRegExp.test(code) ? 3 : particleSizeType,
+        drillParticleSizeType: municipalityRegExp.test(String(code)) ? 3 : particleSizeType,
       },
     });
 
@@ -314,41 +545,43 @@ export class CountryLayer extends Component<any, any> {
         reportId: id,
         version,
         filterCode: code,
-        particleSizeType: municipalityRegExp.test(code) ? 3 : particleSizeType,
+        particleSizeType: municipalityRegExp.test(String(code)) ? 3 : particleSizeType,
         filters: filtersGroup ? [filtersGroup] : undefined,
       })
       .then(result => {
-        result = fillValueMap(result);
+        const filledResult = fillValueMap(result) as unknown as CountryReportData;
         this.setState({ drillDownLoading: false, dropdownVisible: false, drillDownCode: code });
-        const { locationMap = {} } = result;
-        const data = setColorLavel(result.map);
+        const { locationMap = {} } = filledResult;
+        const data = setColorLavel(filledResult.map);
 
-        const renderDotLayerChart = (level: string) => {
+        const renderDotLayerChart = (level: LayerLevel) => {
           if (this.DotLayerChart) {
             const dotLayerConfig = this.getDotLayerConfig({ data, locationMap });
-            this[`${level}Data`] = { data, locationMap };
-            this.DotLayerChart.changeData(dotLayerConfig.source);
+            this.setLayerData(level, { data, locationMap });
+            this.DotLayerChart.changeData(dotLayerConfig.source.data);
           }
         };
 
-        if (municipality.includes(code)) {
-          const last = _.find(this.CountryLayerChart.options.source.data, { code: code });
+        const chart = this.CountryLayerChart;
+        if (!chart) return;
+
+        if (municipality.includes(String(code))) {
+          const last = _.find(chart.options.source.data, { code: code });
+          if (!last) return;
           this.setState({ path: [_l('全国'), last.name] });
           this.depthColorLavels = this.getColorLavels(this.props, data);
-          this.CountryLayerChart.drillDown(
-            { level: 'province', granularity: 'district', adcode: code },
-            { source: { data } },
-          );
+          chart.drillDown({ level: 'province', granularity: 'district', adcode: code }, { source: { data } });
           renderDotLayerChart('province');
           return;
         }
 
         if (path.length) {
-          const last = _.find(this.CountryLayerChart.options.source.data, { code: code });
+          const last = _.find(chart.options.source.data, { code: code });
+          if (!last) return;
           const citys = last.name.split('/');
-          const city = citys[citys.length - 1];
+          const city = citys[citys.length - 1] || '';
           this.setState({ path: path.concat(city) });
-          this.CountryLayerChart.drillDown({ level: 'city', adcode: code }, { source: { data } });
+          chart.drillDown({ level: 'city', adcode: code }, { source: { data } });
           renderDotLayerChart('city');
         } else {
           const { map } = reportData;
@@ -356,21 +589,23 @@ export class CountryLayer extends Component<any, any> {
 
           if (country.particleSizeType === 1) {
             const last = _.find(map, { code: code });
+            if (!last) return;
             newPath.push(_l('全国'), last.name);
           }
 
           if (country.particleSizeType === 2) {
             const last = _.find(map, { code: code });
+            if (!last) return;
             newPath.push(...last.name.split('/'));
           }
 
           if (country.particleSizeType === 1) {
-            this.CountryLayerChart.drillDown({ level: 'province', adcode: code }, { source: { data } });
+            chart.drillDown({ level: 'province', adcode: code }, { source: { data } });
             renderDotLayerChart('province');
           }
 
           if (country.particleSizeType === 2) {
-            this.CountryLayerChart.drillDown({ level: 'city', adcode: code }, { source: { data } });
+            chart.drillDown({ level: 'city', adcode: code }, { source: { data } });
             renderDotLayerChart('city');
           }
 
@@ -383,24 +618,29 @@ export class CountryLayer extends Component<any, any> {
     const { isThumbnail, reportData, base = {} } = this.props;
     const { country } = reportData;
 
-    const renderDotLayerChart = (level: string) => {
+    const renderDotLayerChart = (level: LayerLevel) => {
       if (this.DotLayerChart) {
-        const { data, locationMap } = this[`${level}Data`];
+        const layerData = this.getLayerData(level);
+        if (!layerData) return;
+        const { data, locationMap } = layerData;
         const dotLayerConfig = this.getDotLayerConfig({ data, locationMap });
-        this.DotLayerChart.changeData(dotLayerConfig.source);
+        this.DotLayerChart.changeData(dotLayerConfig.source.data);
       }
     };
+
+    const chart = this.CountryLayerChart;
+    if (!chart) return;
 
     if (path.length) {
       if (index) {
         this.props.changeCurrentReport({
           country: {
             ...country,
-            drillFilterCode: this.CountryLayerChart.options.viewLevel.adcode,
+            drillFilterCode: chart.options.viewLevel?.adcode,
             drillParticleSizeType: 2,
           },
         });
-        this.CountryLayerChart.drillUp(undefined, 'province');
+        chart.drillUp(undefined, 'province');
         renderDotLayerChart('province');
         path.pop();
         this.setState({ path });
@@ -419,10 +659,10 @@ export class CountryLayer extends Component<any, any> {
 
         // 全国
         if (country.particleSizeType === 1) {
-          this.CountryLayerChart.drillUp(undefined, 'country');
+          chart.drillUp(undefined, 'country');
           renderDotLayerChart('country');
         } else {
-          this.CountryLayerChart.drillUp(undefined, 'province');
+          chart.drillUp(undefined, 'province');
           renderDotLayerChart('province');
         }
 
@@ -438,18 +678,18 @@ export class CountryLayer extends Component<any, any> {
             drillParticleSizeType: 1,
           },
         });
-        this.CountryLayerChart.drillUp(undefined, 'country');
+        chart.drillUp(undefined, 'country');
       }
 
       if (country.particleSizeType === 2) {
         this.props.changeCurrentReport({
           country: {
             ...country,
-            drillFilterCode: this.CountryLayerChart.cityLayer.viewLevel.adcode,
+            drillFilterCode: chart.cityLayer?.viewLevel.adcode,
             drillParticleSizeType: 2,
           },
         });
-        this.CountryLayerChart.drillUp(undefined, 'province');
+        chart.drillUp(undefined, 'province');
       }
 
       this.setState({ path: [], drillDownCode: null });
@@ -467,17 +707,18 @@ export class CountryLayer extends Component<any, any> {
       match: null,
     });
   };
-  getColorLavels = (props, data) => {
+  getColorLavels = (props: CountryLayerProps, data: CountryMapItem[]): string[] => {
     const { reportData } = props;
     const { yaxisList, sorts } = reportData;
-    const sort = _.get(sorts[0], yaxisList[0].controlId);
-    const maxColorLavel = _.max(data.map(n => n.colorLavel));
-    const generateColors = generate(this.colors[0])
+    const firstYaxis = yaxisList[0];
+    const sort = firstYaxis ? _.get(sorts?.[0], firstYaxis.controlId) : undefined;
+    const maxColorLavel = Math.max(0, ...data.map(n => n.colorLavel ?? 0));
+    const generateColors = generate(this.colors[0] || '#ccc')
       .filter((_, index) => [0, 2, 4, 6, 7, 9].includes(index))
       .filter((_, index) => maxColorLavel > index);
     return sort === 2 ? generateColors.reverse() : generateColors;
   };
-  getChartConfig(props) {
+  getChartConfig(props: CountryLayerProps): CountryChartConfig {
     const { themeColor, projectId, customPageConfig = {}, reportData, isThumbnail } = props;
     const { country, displaySetup, map, yaxisList, summary, locationMap = {} } = reportData;
     const { colorRules } = displaySetup;
@@ -489,22 +730,22 @@ export class CountryLayer extends Component<any, any> {
         ? { ...styleConfig, ...chartColor }
         : styleConfig;
     const data = setColorLavel(map);
-    const rule = _.get(colorRules[0], 'dataBarRule') || {};
+    const rule = _.get(colorRules?.[0], 'dataBarRule') || {};
     const isRuleColor = !_.isEmpty(rule);
     const controlMinAndMax = isRuleColor
       ? getControlMinAndMax(
           yaxisList,
-          data.map(n => Object.assign({}, n, { controlId: yaxisList[0].controlId })),
+          data.map(n => Object.assign({}, n, { controlId: yaxisList[0]?.controlId })),
         )
       : {};
     const newYaxisList = formatYaxisList(data, yaxisList);
     const isBubbleStyle = displaySetup.showChartType === 2;
 
     this.setCount(newYaxisList, summary);
-    this.colors = getChartColors(style, themeColor, projectId);
+    this.colors = getChartColors(style, themeColor, projectId || '');
     this.colorLavels = this.getColorLavels(props, data);
 
-    const config = {
+    const config: CountryChartConfig = {
       map: {
         type: 'map',
         style: 'blank',
@@ -525,7 +766,7 @@ export class CountryLayer extends Component<any, any> {
         steps: ['province', 'city'],
         triggerUp: null,
         triggerDown: null,
-        onUp: (_from, _to, callback) => {
+        onUp: (_from: unknown, _to: unknown, callback: () => void) => {
           callback();
         },
       },
@@ -558,7 +799,7 @@ export class CountryLayer extends Component<any, any> {
         active: { stroke: isDark ? '#fff' : 'black', lineWidth: 1 },
       },
       tooltip: {
-        customTitle: data => {
+        customTitle: (data: CountryMapItem) => {
           const { name, value } = data;
           return 'value' in data ? `${name}: ${formatrChartValue(value, false, newYaxisList)}` : name;
         },
@@ -576,19 +817,19 @@ export class CountryLayer extends Component<any, any> {
 
     if (isBubbleStyle) {
       config.color = isDark ? 'transparent' : '#ccc';
-      config.style.stroke = '#fff';
+      config.style['stroke'] = '#fff';
       config.dotLayerConfig = this.getDotLayerConfig({ data, locationMap });
     } else {
       if (isRuleColor) {
         config.color = {
           field: 'value',
-          value: data => {
+          value: (data: CountryMapItem) => {
             const { value } = data;
             const color = getStyleColor({
               value,
               controlMinAndMax,
               rule,
-              controlId: yaxisList[0].controlId,
+              controlId: yaxisList[0]?.controlId || '',
             });
             return color;
           },
@@ -597,10 +838,10 @@ export class CountryLayer extends Component<any, any> {
       } else {
         config.color = {
           field: 'colorLavel',
-          value: data => {
+          value: (data: CountryMapItem) => {
             const { colorLavel } = data;
             const colorLavels = this.depthColorLavels || this.colorLavels;
-            return colorLavel ? colorLavels[colorLavel - 1] : undefined;
+            return colorLavel && colorLavels ? colorLavels[colorLavel - 1] : undefined;
           },
           scale: { type: 'quantile' },
         };
@@ -639,32 +880,38 @@ export class CountryLayer extends Component<any, any> {
 
     return config;
   }
-  getDotLayerConfig({ data, locationMap }) {
+  getDotLayerConfig({
+    data,
+    locationMap,
+  }: {
+    data: CountryMapItem[];
+    locationMap: Record<string, string>;
+  }): DotLayerConfig {
     return {
       zIndex: 0,
       source: {
         data: data.map(item => {
-          const [lng, lat] = (locationMap[item.originalCode || item.code] || '').split(',');
+          const [lng, lat] = (locationMap[String(item.originalCode ?? item.code)] || '').split(',');
           return {
             name: item.name,
-            value: item.value,
-            colorLavel: item.colorLavel,
-            lng,
-            lat,
+            value: item.value ?? null,
+            colorLavel: item.colorLavel ?? null,
+            lng: lng ?? null,
+            lat: lat ?? null,
           };
         }),
         parser: { type: 'json', x: 'lng', y: 'lat' },
       },
       size: {
         field: 'colorLavel',
-        value: ({ colorLavel }) => {
+        value: ({ colorLavel }: { colorLavel?: number | null }) => {
           return colorLavel ? colorLavel * 5 : 0;
         },
       },
-      color: this.colors[0],
+      color: this.colors[0] || '#ccc',
     };
   }
-  setCount(yaxisList, summary) {
+  setCount(yaxisList: CountryYaxis[], summary: CountrySummary) {
     const value = summary.sum;
     const count = formatrChartValue(value, false, yaxisList);
     this.setState({
@@ -675,7 +922,7 @@ export class CountryLayer extends Component<any, any> {
   renderOverlay() {
     const { reportData, isThumbnail } = this.props;
     const { path, drillDownLoading, drillDownCode } = this.state;
-    const { style, country } = reportData || {};
+    const { style, country } = reportData;
 
     return (
       <Menu className="chartMenu" style={{ width: 160 }}>
@@ -700,7 +947,7 @@ export class CountryLayer extends Component<any, any> {
         {_.get(style, 'isDrillDownLayer') &&
           [1, 2].includes(country.particleSizeType) &&
           path.length < (country.particleSizeType === 1 ? 3 : 2) &&
-          !municipality.includes(drillDownCode) && (
+          !municipality.includes(String(drillDownCode ?? '')) && (
             <Menu.Item onClick={this.handleDrillDownTriggerData} key="dataDrill">
               <div className="flexRow valignWrapper">
                 <Icon icon="drill_down" className="mRight8 textTertiary Font20" />
@@ -714,8 +961,8 @@ export class CountryLayer extends Component<any, any> {
   }
   override render() {
     const { count, originalCount, dropdownVisible, offset, path } = this.state;
-    const { xaxes = {}, displaySetup = {}, country = {}, summary } = this.props.reportData;
-    const chooserange = _.get(xaxes, 'advancedSetting.chooserange');
+    const { xaxes, displaySetup, country, summary } = this.props.reportData;
+    const chooserange = xaxes.advancedSetting?.['chooserange'];
     return (
       <div className="flex flexColumn chartWrapper countryLayerChart Relative">
         <Dropdown
@@ -782,7 +1029,7 @@ export class CountryLayer extends Component<any, any> {
                 <Icon
                   className="pointer Font20 textSecondary"
                   icon="add"
-                  onClick={() => this.CountryLayerChart.zoomIn()}
+                  onClick={() => this.CountryLayerChart?.zoomIn()}
                 />
               </Tooltip>
               <Tooltip title={_l('完整显示')}>
@@ -796,7 +1043,7 @@ export class CountryLayer extends Component<any, any> {
                 <Icon
                   className="pointer Font20 textSecondary"
                   icon="minus"
-                  onClick={() => this.CountryLayerChart.zoomOut()}
+                  onClick={() => this.CountryLayerChart?.zoomOut()}
                 />
               </Tooltip>
             </ZoomWrapper>
@@ -807,9 +1054,24 @@ export class CountryLayer extends Component<any, any> {
   }
 }
 
-export default connect(
+type CountryStateProps = Pick<CountryLayerProps, 'base'>;
+type CountryDispatchProps = Pick<
+  CountryLayerProps,
+  | 'onOpenChartDialog'
+  | 'requestOriginalData'
+  | 'onUpdateLinkageFiltersGroup'
+  | 'changeCurrentReport'
+  | 'closeCurrentReport'
+  | 'getTableData'
+  | 'changeBase'
+>;
+type CountryOwnProps = Omit<CountryLayerProps, keyof CountryStateProps | keyof CountryDispatchProps>;
+
+const ConnectedCountryLayer = connect<CountryStateProps, CountryDispatchProps, CountryOwnProps, RootState>(
   (state: RootState) => ({
     base: state.statistics.base,
   }),
-  dispatch => bindActionCreators(actions, dispatch),
-)(CountryLayer);
+  dispatch => bindActionCreators(actions, dispatch) as unknown as CountryDispatchProps,
+)(CountryLayer) as unknown as ComponentType<CountryOwnProps>;
+
+export default ConnectedCountryLayer;
