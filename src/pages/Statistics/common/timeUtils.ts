@@ -5,11 +5,71 @@ import { isTimeControl } from './controlUtils';
 
 export const defaultDropdownScopeData = 18;
 
+interface ContrastOption {
+  text: string;
+  value: number;
+  disabled?: boolean;
+  ignoreToday?: boolean;
+}
+
+interface ContrastInput {
+  rangeType: number;
+  rangeValue?: string;
+  today?: boolean;
+}
+
+interface DynamicFilter {
+  startType?: number;
+  startCount?: number;
+  startUnit?: number;
+  endType?: number;
+  endCount?: number;
+  endUnit?: number;
+}
+
+interface TimeOption {
+  text: string;
+  value: number;
+}
+
+interface NamedTimeOption {
+  name: string;
+  value: number;
+}
+
+interface TimeParticleOption extends TimeOption {
+  getTime: (showFormat?: string) => string | number;
+}
+
+interface TimeFormatOption {
+  value: string;
+  getTime: () => string;
+}
+
+interface TimeFilterInput {
+  showtype?: string | undefined;
+  controlType?: number | undefined;
+}
+
+interface TimeRangeInput extends ContrastInput {
+  dynamicFilter?: DynamicFilter;
+}
+
+interface TimeAxis {
+  controlType?: number;
+  particleSizeType?: number;
+}
+
+type TooltipData = Record<string, string | number | null | undefined>;
+
 /**
  * 处理数值图数据对比的周期文案
  */
-export const formatContrastTypes = ({ rangeType, today }) => {
-  let base = [];
+export const formatContrastTypes = ({
+  rangeType,
+  today,
+}: Pick<ContrastInput, 'rangeType' | 'today'>): ContrastOption[] => {
+  let base: ContrastOption[] = [];
 
   switch (rangeType) {
     case 1:
@@ -89,9 +149,13 @@ export const formatContrastTypes = ({ rangeType, today }) => {
 /**
  * 处理折线图数据对比的周期文案
  */
-export const formatLineChartContrastTypes = ({ rangeType, rangeValue, today }) => {
-  const base = [{ text: _l('无'), value: 0 }];
-  const last = { text: _l('与上一年相比'), value: 2 };
+export const formatLineChartContrastTypes = ({
+  rangeType,
+  rangeValue = '',
+  today,
+}: ContrastInput): ContrastOption[] => {
+  const base: ContrastOption[] = [{ text: _l('无'), value: 0 }];
+  const last: ContrastOption = { text: _l('与上一年相比'), value: 2 };
 
   switch (rangeType) {
     case 0:
@@ -139,7 +203,7 @@ export const formatLineChartContrastTypes = ({ rangeType, rangeValue, today }) =
       base.push({ text: _l('与之前的%0天相比', rangeValue), value: 1 }, last);
       break;
     case 20:
-      const [start, end] = rangeValue.split('-');
+      const [start = '', end = ''] = rangeValue.split('-');
       const startDate = moment(start.replace(/\//gi, '-'));
       const endDate = moment(end.replace(/\//gi, '-'));
       const diff = endDate.diff(startDate, 'days');
@@ -158,7 +222,7 @@ export const formatLineChartContrastTypes = ({ rangeType, rangeValue, today }) =
 /**
  * 获取至今天计算方式的文案
  */
-export const getTodayTooltip = ({ rangeType, rangeValue }) => {
+export const getTodayTooltip = ({ rangeType, rangeValue = '' }: Pick<ContrastInput, 'rangeType' | 'rangeValue'>) => {
   if (rangeType === 4) {
     return _l('未勾选时, 表示统计从本周星期一开始到星期日的数据, 勾选时, 表示统计从本周星期一开始到今天的数据。');
   }
@@ -188,7 +252,7 @@ export const getTodayTooltip = ({ rangeType, rangeValue }) => {
 /**
  * 统计范围
  */
-export const dropdownScopeData = [
+export const dropdownScopeData: (TimeOption & { type?: string })[] = [
   {
     text: _l('全部'),
     value: 0,
@@ -284,7 +348,7 @@ export const dropdownScopeData = [
   },
 ];
 
-export const fiscalYearData = [
+export const fiscalYearData: TimeOption[] = [
   {
     text: _l('上一财政年度'),
     value: -1,
@@ -326,7 +390,7 @@ export const pastAndFutureData = [
   },
 ];
 
-export const timeTypes = [
+export const timeTypes: NamedTimeOption[] = [
   {
     name: _l('今天'),
     value: 1,
@@ -349,7 +413,7 @@ export const timeTypes = [
   },
 ];
 
-export const unitTypes = [
+export const unitTypes: NamedTimeOption[] = [
   {
     name: _l('天'),
     value: 1,
@@ -393,7 +457,7 @@ export const unitTypes = [
 /**
  * 是否是 过去...天 & 未来...天
  */
-export const isPastAndFuture = value => {
+export const isPastAndFuture = (value: number) => {
   return [18, 19].includes(value);
 };
 
@@ -401,7 +465,7 @@ export const isPastAndFuture = value => {
  * 是否是时间控件
  */
 
-export const dropdownDayData = [
+export const dropdownDayData: TimeOption[] = [
   {
     text: _l('7天'),
     value: 7,
@@ -431,7 +495,7 @@ export const dropdownDayData = [
 /**
  * 时间的数据格式
  */
-export const timeFormats = [
+export const timeFormats: TimeFormatOption[] = [
   { value: '0', getTime: () => moment().format('YYYY-MM-DD') },
   { value: '4', getTime: () => moment().format('YYYY/MM/DD') },
   { value: '1', getTime: () => `${moment().format('YYYY年M月D日')} (${_l('中国')})` },
@@ -439,7 +503,7 @@ export const timeFormats = [
   { value: '3', getTime: () => `${moment().format('D/M/YYYY')} (EU)` },
 ];
 
-export const formatTimeFormats = particleSizeType => {
+export const formatTimeFormats = (particleSizeType: number | undefined): TimeFormatOption[] => {
   // 年
   if (particleSizeType === 5) {
     return [{ value: '0', getTime: () => moment().format('YYYY') }];
@@ -490,7 +554,7 @@ export const formatTimeFormats = particleSizeType => {
 /**
  * 时间粒度
  */
-export const timeDataParticle = [
+export const timeDataParticle: TimeParticleOption[] = [
   { text: _l('年'), value: 5, getTime: () => moment().year() },
   { text: _l('季'), value: 4, getTime: () => moment().format('YYYY[Q]Q') },
   {
@@ -574,8 +638,11 @@ export const timeDataParticle = [
 /**
  * 过滤时间粒度
  */
-export const filterTimeData = (data, { showtype, controlType }) => {
-  let timeDataParticle = [];
+export const filterTimeData = (
+  data: TimeParticleOption[],
+  { showtype, controlType }: TimeFilterInput,
+): TimeParticleOption[] => {
+  let timeDataParticle: TimeParticleOption[] = [];
 
   if (controlType === WIDGETS_TO_API_TYPE_ENUM.DATE_TIME) {
     timeDataParticle = data.filter(item => ![13].includes(item.value));
@@ -601,7 +668,7 @@ export const filterTimeData = (data, { showtype, controlType }) => {
 /**
  * 集合粒度
  */
-export const timeGatherParticle = [
+export const timeGatherParticle: TimeParticleOption[] = [
   { text: _l('季'), value: 8, getTime: () => moment().format('[Q]Q') },
   { text: _l('月'), value: 9, getTime: () => moment().format('MM') },
   { text: _l('日'), value: 10, getTime: () => moment().format('DD') },
@@ -614,10 +681,10 @@ export const timeGatherParticle = [
  * 过滤集合粒度
  */
 export const filterTimeGatherParticle = (
-  data: { text: string; value: number; getTime: () => string }[],
-  { showtype, controlType },
-) => {
-  let timeGatherParticle = [];
+  data: TimeParticleOption[],
+  { showtype, controlType }: TimeFilterInput,
+): TimeParticleOption[] => {
+  let timeGatherParticle: TimeParticleOption[] = [];
 
   if (controlType === WIDGETS_TO_API_TYPE_ENUM.TIME) {
     timeGatherParticle = data.filter(item => [11, 12, 14].includes(item.value));
@@ -643,7 +710,7 @@ export const filterTimeGatherParticle = (
  */
 export const timeParticleSizeDropdownData = [...timeDataParticle, ...timeGatherParticle];
 
-export const filterTimeParticleSizeDropdownData = (showtype, controlType) => {
+export const filterTimeParticleSizeDropdownData = (showtype?: string, controlType?: number): TimeParticleOption[] => {
   return filterTimeData(timeDataParticle, { showtype, controlType }).concat(
     filterTimeGatherParticle(timeGatherParticle, { showtype, controlType }),
   );
@@ -653,25 +720,34 @@ export const filterTimeParticleSizeDropdownData = (showtype, controlType) => {
  * 地区控件的粒度
  */
 
-export const formatrChartTimeText = ({ rangeType, rangeValue, dynamicFilter, today }) => {
-  const typeName = _.find(dropdownScopeData, { value: rangeType }) || {};
-  const text = isPastAndFuture(rangeType) ? typeName.text.replace(/(\...)/i, rangeValue) : typeName.text;
+export const formatrChartTimeText = ({
+  rangeType,
+  rangeValue = '',
+  dynamicFilter = {},
+  today,
+}: TimeRangeInput): string => {
+  const typeName = _.find(dropdownScopeData, { value: rangeType });
+  const text = isPastAndFuture(rangeType) ? typeName?.text?.replace(/(\...)/i, rangeValue) || '' : typeName?.text || '';
 
   if (rangeType === 20) {
     return rangeValue;
   } else if (rangeType === 21) {
     const { startType, startCount, startUnit } = dynamicFilter;
     const { endType, endCount, endUnit } = dynamicFilter;
-    const start = _.find(timeTypes, { value: startType }).name;
-    const end = _.find(timeTypes, { value: endType }).name;
-    const startUnitText = [5, 6].includes(startType)
-      ? `${startCount}${_.find(unitTypes, { value: startUnit }).name}`
-      : '';
-    const endUnitText = [5, 6].includes(endType) ? `${endCount}${_.find(unitTypes, { value: endUnit }).name}` : '';
+    const start = timeTypes.find(item => item.value === startType)?.name || '';
+    const end = timeTypes.find(item => item.value === endType)?.name || '';
+    const startUnitText =
+      startType !== undefined && [5, 6].includes(startType)
+        ? `${startCount ?? ''}${unitTypes.find(item => item.value === startUnit)?.name || ''}`
+        : '';
+    const endUnitText =
+      endType !== undefined && [5, 6].includes(endType)
+        ? `${endCount ?? ''}${unitTypes.find(item => item.value === endUnit)?.name || ''}`
+        : '';
     return _l('%0至%1', start + startUnitText, end + endUnitText);
   } else if (rangeType === 24) {
     const [year] = rangeValue.split(':');
-    return _.find(fiscalYearData, { value: Number(year) }).text;
+    return fiscalYearData.find(item => item.value === Number(year))?.text || '';
   } else {
     return [4, 8, 11, 15, 18, 19].includes(rangeType) && today ? `${text}${_l('至今天')}` : text;
   }
@@ -681,10 +757,13 @@ export const formatrChartTimeText = ({ rangeType, rangeValue, dynamicFilter, tod
  * 根据文字内容获取尺寸
  */
 
-export const formatterTooltipTitle = (xaxes, key?: string | undefined) => {
+export const formatterTooltipTitle = (
+  xaxes: TimeAxis,
+  key?: string,
+): ((title: string, data: TooltipData) => string) | undefined => {
   if (isTimeControl(xaxes.controlType) && xaxes.particleSizeType === 2) {
-    return (title: string, data) => {
-      const value = key ? data[key] : title;
+    return (title: string, data: TooltipData) => {
+      const value = String(key ? data[key] : title);
       const start = moment(value, 'GGGG[W]WW').startOf('isoWeek').format('YYYY-MM-DD');
       const end = moment(value, 'GGGG[W]WW').endOf('isoWeek').format('YYYY-MM-DD');
       return `${start} - ${end}`;
