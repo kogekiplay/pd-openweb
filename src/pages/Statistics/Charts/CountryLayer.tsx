@@ -17,6 +17,8 @@ import { version } from '../common/reportConfigUtils';
 import { fillValueMap } from '../common/reportDataUtils';
 import { formatrChartValue, formatYaxisList, getChartColors, getControlMinAndMax, getStyleColor } from './common';
 
+const MAP_FALLBACK_COLOR = '#ccc';
+
 type Primitive = string | number | boolean | null;
 
 interface CountryMapItem {
@@ -713,7 +715,7 @@ export class CountryLayer extends Component<CountryLayerProps, CountryLayerState
     const firstYaxis = yaxisList[0];
     const sort = firstYaxis ? _.get(sorts?.[0], firstYaxis.controlId) : undefined;
     const maxColorLavel = Math.max(0, ...data.map(n => n.colorLavel ?? 0));
-    const generateColors = generate(this.colors[0] || '#ccc')
+    const generateColors = generate(this.colors[0] || MAP_FALLBACK_COLOR)
       .filter((_, index) => [0, 2, 4, 6, 7, 9].includes(index))
       .filter((_, index) => maxColorLavel > index);
     return sort === 2 ? generateColors.reverse() : generateColors;
@@ -778,7 +780,7 @@ export class CountryLayer extends Component<CountryLayerProps, CountryLayerState
       },
       style: {
         opacity: 1,
-        stroke: '#ccc',
+        stroke: MAP_FALLBACK_COLOR,
         lineWidth: 0.6,
         lineOpacity: 1,
       },
@@ -816,7 +818,7 @@ export class CountryLayer extends Component<CountryLayerProps, CountryLayerState
     }
 
     if (isBubbleStyle) {
-      config.color = isDark ? 'transparent' : '#ccc';
+      config.color = isDark ? 'transparent' : MAP_FALLBACK_COLOR;
       config.style['stroke'] = '#fff';
       config.dotLayerConfig = this.getDotLayerConfig({ data, locationMap });
     } else {
@@ -908,7 +910,7 @@ export class CountryLayer extends Component<CountryLayerProps, CountryLayerState
           return colorLavel ? colorLavel * 5 : 0;
         },
       },
-      color: this.colors[0] || '#ccc',
+      color: this.colors[0] || MAP_FALLBACK_COLOR,
     };
   }
   setCount(yaxisList: CountryYaxis[], summary: CountrySummary) {
