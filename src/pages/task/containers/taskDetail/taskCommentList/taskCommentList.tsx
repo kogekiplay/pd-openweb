@@ -72,7 +72,7 @@ class TaskCommentList extends Component<any, TaskCommentListState> {
     const commenterProps = {
       sourceId: taskId,
       sourceType: Commenter.TYPES.TASK,
-      appId: md.global.APPInfo.taskAppID,
+      appId: 'ab99d0bb-3249-46f9-8a60-6952cb76cac2',
       remark: taskId + '|' + htmlDecodeReg(data.taskName) + '|' + _l('任务'),
       storageId: taskId,
       forReacordDiscussion: true,

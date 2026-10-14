@@ -120,6 +120,7 @@ class ExportAttachment extends Component<any, any> {
 
     const exampleArr = nameMethodList.filter(it => _.includes(nameMethodValues, it.value));
     const visibleAttachmentControls = attachmentControls.filter(item => this.checkControlVisible(item));
+    const selectedCount = visibleAttachmentControls.filter(item => _.includes(selectControlIds, item.controlId)).length;
 
     return (
       <Dialog
@@ -136,6 +137,16 @@ class ExportAttachment extends Component<any, any> {
             {_l('选择需要导出的附件字段，导出附件总数不超过1000个，总大小不超过1GB')}
           </div>
           <div className="bold mBottom10">{_l('选择导出的附件字段')}</div>
+          <Checkbox
+            size="small"
+            text={_l('全选')}
+            checked={visibleAttachmentControls.length > 0 && selectedCount === visibleAttachmentControls.length}
+            clearselected={selectedCount > 0 && selectedCount < visibleAttachmentControls.length}
+            disabled={!visibleAttachmentControls.length}
+            onClick={(checked: boolean) => this.setState({
+              selectControlIds: checked ? [] : visibleAttachmentControls.map(item => item.controlId),
+            })}
+          />
           {visibleAttachmentControls.map(item => {
             return (
               <Checkbox

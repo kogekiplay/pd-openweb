@@ -259,6 +259,7 @@ const CheckboxWidgets = props => {
                       flexWidth: noMaxWidth,
                     })}
                     disabled={disabled}
+                    style={isSheet ? undefined : { opacity: 1 }}
                     title={item.value}
                     text={renderList(item, noMaxWidth)}
                     value={item.key}
@@ -503,7 +504,7 @@ const CheckboxComp = autoSize(CheckboxWidgets, { onlyWidth: true });
 
 export default memo(CheckboxComp, (prevProps, nextProps) => {
   return _.isEqual(
-    _.pick(prevProps, ['value', 'width', 'disabled', 'options']),
-    _.pick(nextProps, ['value', 'width', 'disabled', 'options']),
+    _.pick(prevProps, ['value', 'width', 'disabled', 'options', 'isFormDetail', 'isSheet', 'selectProps']),
+    _.pick(nextProps, ['value', 'width', 'disabled', 'options', 'isFormDetail', 'isSheet', 'selectProps']),
   );
 });

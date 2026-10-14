@@ -304,7 +304,7 @@ class ConfigPanel extends React.Component<any, ConfigPanelState> {
         Dialog.confirm({
           title: _l('是否应用每行字段数量设置？'),
           description: _l('您已修改「每行字段数量」但尚未应用。'),
-          okText: _l('应用'),
+          okText: _l('确定'),
           onOk: () => {
             this.onApplyColumn();
             onCloseConfig();

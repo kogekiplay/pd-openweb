@@ -10,6 +10,7 @@ import RegExpValidator from 'src/utils/expression';
 import { getCurrentTime } from '../../../utils';
 import * as ajax from '../../../utils/ajax';
 import Constant from '../../../utils/constant';
+import { hasAttachmentData } from '../attachment';
 import './index.less';
 import type { MentionsInputElement } from 'src/components/MentionsInput';
 
@@ -137,7 +138,11 @@ export default class MessageToolbar extends Component<any, any> {
         withdraw: isWithdraw,
       };
     } else if (type === Constant.MSGTYPE_PIC || type === Constant.MSGTYPE_FILE || type === Constant.MSGTYPE_APP_VIDEO) {
-      const { files = {} } = message.msg;
+      const files = message.msg?.files;
+
+      if (!hasAttachmentData(files)) {
+        return { reference: !!message.msg, withdraw: isWithdraw };
+      }
 
       if (files.isEmotion) {
         isWithdraw &&
@@ -188,6 +193,8 @@ export default class MessageToolbar extends Component<any, any> {
     if (message.kcFile) {
       downloadUrl = message.kcFile.downloadUrl;
     } else {
+      if (!hasAttachmentData(message.msg?.files)) return;
+
       const { key, name } = message.msg.files;
       downloadUrl =
         `${md.global.Config.AjaxApiUrl}file/downChatFile?key=` + key + '&attname=' + encodeURIComponent(name);
@@ -218,6 +225,8 @@ export default class MessageToolbar extends Component<any, any> {
         return;
       }
     } else {
+      if (!hasAttachmentData(message.msg?.files)) return;
+
       const { files } = message.msg;
       attachmentType = 0;
       attachment = {

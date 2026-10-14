@@ -286,6 +286,7 @@ function MessageItem({
   hasSubmit,
   content,
   usage,
+  price = 0,
   deactivated = false,
   files = [],
   role,
@@ -442,6 +443,9 @@ function MessageItem({
             <Tooltip title={_l('消耗 %0 个token', usage.total_tokens)}>
               <div className="tokenUsage Font12 textDisabled">Token</div>
             </Tooltip>
+          )}
+          {!!price && window.platformENV.isPlatform && (
+            <div className="creditsUsage Font12 textDisabled">{_l('%0 信用点', price)}</div>
           )}
         </BgIconButton.Group>
 

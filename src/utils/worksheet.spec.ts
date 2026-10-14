@@ -108,7 +108,7 @@ assert.deepStrictEqual(JSON.parse(localStorage.getItem('sheetConfigNavInfo')), {
 
 console.log('worksheet utils tests passed');
 
-// 7.5.0：显式选择的树形表格样式优先于较新的管理视图；关闭继承时只用字段列宽。
+// 7.5.1：指定视图与工作表级样式取较新值，关闭继承时只用字段列宽。
 const tableStyle = (time: number, width: number) => ({
   liststyle: JSON.stringify({ time, styles: [{ cid: 'field', width }] }),
 });
@@ -122,7 +122,11 @@ const inherited = getSheetStylesOfRelateRecordTable({
   worksheetInfo,
   manageView: { advancedSetting: tableStyle(5, 500) },
 });
-assert.strictEqual(inherited.sheetColumnWidths.field, 100);
+assert.strictEqual(inherited.sheetColumnWidths.field, 300);
+assert.strictEqual(getSheetStylesOfRelateRecordTable({
+  control: { advancedSetting: { usecolumnstyle: '1' } }, worksheetInfo,
+  manageView: { advancedSetting: tableStyle(5, 500) },
+}).sheetColumnWidths.field, 500);
 const fieldOnly = getSheetStylesOfRelateRecordTable({
   control: { advancedSetting: { widths: '[80]' }, showControls: ['field'] },
   viewId: 'tree',

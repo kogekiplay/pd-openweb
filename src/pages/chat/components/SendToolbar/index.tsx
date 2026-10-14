@@ -63,6 +63,7 @@ export default class SendToolbar extends Component<any, any> {
   // 这些原来都是隐式挂上去的，TS 下不声明就是 TS2339
   emotion;
   uploadFile;
+  initUploadTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor(props) {
     super(props);
@@ -76,13 +77,14 @@ export default class SendToolbar extends Component<any, any> {
     // 表情
     this.initEmotion();
     // 本地文件上传
-    setTimeout(() => {
+    this.initUploadTimer = setTimeout(() => {
       this.initUpload();
     }, 500);
     // AT
     isGroup && this.initKeyAT();
   }
   override componentWillUnmount() {
+    if (this.initUploadTimer) clearTimeout(this.initUploadTimer);
     const { session } = this.props;
     const textarea = $(`#ChatPanel-${session.id}`).find('.ChatPanel-textarea textarea').get(0) as MentionsInputElement;
     textarea && textarea.destroy && textarea.destroy();

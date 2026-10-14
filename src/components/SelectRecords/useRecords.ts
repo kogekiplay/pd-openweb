@@ -77,6 +77,7 @@ export default function useRecords(props) {
     ignoreRowIds,
     filterRowIds = [],
     listMode = false, // chooselisttype === '2' 时为 true，一次性加载 1000 条，滚动加载更多
+    useColumnStyle = get(control, 'advancedSetting.usecolumnstyle') === '1',
   } = props;
   const cache = useRef({});
   const nextPageRef = useRef(1); // 列表模式下“下一页”页码，用于 loadMore 追加
@@ -88,7 +89,6 @@ export default function useRecords(props) {
   // any 了；那个 any 一去掉，这处缺类型就露出来。字段按 SelectRecords 下真正读到的列。
   const [worksheetInfo, setWorksheetInfo] = useState<SelectRecordsWorksheetInfo>({});
   const [manageView, setManageView] = useState<WorksheetView | undefined>();
-  const useColumnStyle = get(control, 'advancedSetting.usecolumnstyle') === '1';
   const [recordsLoading, setRecordsLoading] = useState(true);
   const [keyWords, setKeyWords] = useState('');
   const [sortControl, setSortControl] = useState();

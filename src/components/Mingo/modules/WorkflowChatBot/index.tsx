@@ -23,6 +23,7 @@ import MobileShareOperate from '../MobileShareOperate';
 import ShareOperate from '../ShareOperate';
 import Guide from './Guide';
 import { filterToolCalls, renderToolCalls } from './ToolCalls';
+import { applySavedCredit, applyStreamCredit, getStreamPrice, sumPrice } from './creditPrice';
 
 const MingoContentWrap = styled.div`
   height: 100%;
@@ -183,7 +184,7 @@ interface RawChatMessage {
   workId?: string;
   media?: unknown;
   hasSubmit?: boolean;
-  metadata?: { id?: string };
+  metadata?: { id?: string; price?: number };
 }
 
 export function formatMessage(message: RawChatMessage) {
@@ -201,6 +202,7 @@ export function formatMessage(message: RawChatMessage) {
     media?: unknown;
     hasSubmit?: boolean;
     modelMessageId?: string;
+    price?: number;
   } = {};
   result.id = get(message, 'metadata.id');
   result.instanceId = message.instanceId;
@@ -210,6 +212,7 @@ export function formatMessage(message: RawChatMessage) {
   result.media = message.media;
   result.hasSubmit = message.hasSubmit;
   result.modelMessageId = get(message, 'metadata.id');
+  if (message.metadata?.price) result.price = message.metadata.price;
   if (isEmpty(result.content) && isEmpty(result.media)) {
     return undefined;
   }
@@ -251,6 +254,7 @@ export function formatMessages(messages) {
         result.push({
           ...formatMessage(messages[0]),
           content: flatten(content),
+          price: sumPrice(messages.map((message: RawChatMessage) => Number(get(message, 'metadata.price')) || 0)),
         });
       }
     });
@@ -293,7 +297,15 @@ function MingoContent(props, ref) {
   const ShareOperateComponent = isMobile ? MobileShareOperate : ShareOperate;
   const messageListRef = useRef(null);
   const sendRef = useRef(null);
-  const cache = useRef({});
+  const cache = useRef<{
+    autoPlay?: boolean | undefined;
+    conversationId?: string | undefined;
+    isLoadingMore?: boolean | undefined;
+    loadAbortController?: AbortController | undefined;
+    prevConversionId?: string | undefined;
+    didMount?: boolean | undefined;
+  }>({});
+  const priceCache = useRef({ streamPrice: 0, needSync: false, sequence: 0 });
   const [isGuideVisible, setIsGuideVisible] = useState(!!sessionStorage.getItem(`chatbotNewCreate-${chatbotId}`));
   const [loadingStatus, setLoadingStatus] = useState<ChatLoadingStatus | undefined>();
   const [shareMode, setShareMode] = useState<boolean | undefined>();
@@ -355,8 +367,14 @@ function MingoContent(props, ref) {
         },
       );
     },
-    onMessagePipe: (messageContent, messageData) => {
+    onMessagePipe: (messageContent, messageData, messageId: string | undefined) => {
       setIsExecutingToolCalls(false);
+      const totalPrice = getStreamPrice(priceCache.current.streamPrice, messageData.usage);
+      if (totalPrice > 0) {
+        priceCache.current.streamPrice = totalPrice;
+        priceCache.current.needSync = true;
+        setMessages(prev => applyStreamCredit(prev, messageId, totalPrice));
+      }
       try {
         if (cache.current.autoPlay) {
           speechSynthesizer.current.speakStream(messageContent);
@@ -383,6 +401,10 @@ function MingoContent(props, ref) {
     onMessageDone: (messages = []) => {
       setLoadingStatus();
       console.log('onMessageDone', messages);
+      if (priceCache.current.needSync) {
+        priceCache.current.needSync = false;
+        setTimeout(syncTurnPrice);
+      }
     },
     // 后端通过独立的 thinking 事件下发思考/工具调用进度，这类事件没有 choices / text-delta，
     // 在 useChat 中会被提前 return，不会进入 onMessagePipe。此时首条消息尚未产生、isRequesting
@@ -456,6 +478,17 @@ function MingoContent(props, ref) {
       });
   }, [isLoadingMore, hasMore, conversationId, pageIndex, chatbotId, hasScrolledToBottom]);
 
+  const syncTurnPrice = () => {
+    const syncConversationId = cache.current.conversationId;
+    const sequence = priceCache.current.sequence;
+    if (!syncConversationId) return;
+    chatbotAjax.getMessageList({ chatbotId, conversationId: syncConversationId, pageIndex: 1, pageSize: 50 }, { silent: true })
+      .then((list: unknown) => {
+        if (syncConversationId !== cache.current.conversationId || sequence !== priceCache.current.sequence) return;
+        setMessages(prev => applySavedCredit(prev, list));
+      }).catch(() => {});
+  };
+
   const handleSend = (newMessage, { fromMessageId, files = [], originMessageForRegenerate } = {}) => {
     if (sessionStorage.getItem(`chatbotNewCreate-${chatbotId}`)) {
       handleHideGuide();
@@ -464,6 +497,7 @@ function MingoContent(props, ref) {
     setError();
     setIsChatting(true);
     setHasScrolledToBottom(true);
+    priceCache.current = { streamPrice: 0, needSync: false, sequence: priceCache.current.sequence + 1 };
     sendMessage(newMessage, {
       fromMessageId,
       media: files.map(file => file.commonAttachment),

@@ -538,6 +538,7 @@ export default class Options extends React.Component<any, any> {
         <Checkbox
           className="cellControlOptionsCheckbox"
           {...cell}
+          isSheet
           disabled={!editable}
           advancedSetting={{ ...cell.advancedSetting, checktype: '2' }}
           value={value}

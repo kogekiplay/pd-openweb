@@ -553,7 +553,7 @@ export default class extends Component<any, any> {
     const overruleSignature = _.includes(['overrule', 'return'], action) && _.includes(auth.overruleTypeList, 1);
     const hideContent =
       (action === 'pass' && _.includes(auth.passTypeList, 101)) ||
-      (action === 'overrule' && _.includes(auth.overruleTypeList, 101));
+      (_.includes(['overrule', 'return'], action) && _.includes(auth.overruleTypeList, 101));
     const isSignature = passSignature || overruleSignature;
     const isAttachment =
       _.includes(['pass', 'overrule', 'return', 'after', 'before', 'taskRevoke', 'revoke'], action) &&

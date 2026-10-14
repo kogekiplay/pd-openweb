@@ -185,7 +185,7 @@ const calendarProducer = walk(calendarComponent.render()).find(
 assert.ok(calendarProducer);
 assert.equal(calendarProducer.props['forReacordDiscussion'], true);
 assert.deepEqual(calendarProducer.props['atData'], calendarAt);
-assert.equal(calendarProducer.props['appId'], 'calendar-app');
+assert.equal(calendarProducer.props['appId'], '42c96ef1-3ab6-4269-9824-e21436f34a38');
 const submit = calendarProducer.props['onSubmit'];
 assert.equal(typeof submit, 'function');
 if (typeof submit === 'function') submit({ discussionId: 'new' });

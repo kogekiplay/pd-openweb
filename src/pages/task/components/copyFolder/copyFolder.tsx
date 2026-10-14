@@ -124,7 +124,7 @@ export default class CopyFolder extends Component<any, any> {
         hasTaskDes: $('#copyAllTaskDesc').hasClass('checked'),
         hasTemplate: $('#copyFolderCustomContent').hasClass('checked'),
         hasTaskAtts: $('#copyAllTaskAtts').hasClass('checked'),
-        appID: md.global.APPInfo.taskFolderAppID,
+        appID: '66d51996-6a56-41ba-be15-0d388b548f00',
       })
       .then(source => {
         if (source.status) {

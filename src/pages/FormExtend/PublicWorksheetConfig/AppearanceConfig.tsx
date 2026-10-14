@@ -351,10 +351,10 @@ class AppearanceConfig extends React.Component<any, any> {
     const config = getPageConfig(pageConfigs, pageConfigKey);
 
     return (
-      <Drawer open={open} size={640} styles={{ body: { padding: 0 }, header: { display: 'none' } }} onClose={onClose}>
+      <Drawer open={open} styles={{ wrapper: { width: 640 }, body: { padding: 0 }, header: { display: 'none' } }} onClose={onClose}>
         <ScrollView>
           <Con>
-            <Absolute right="24" top="-2">
+            <Absolute right="24">
               <Close onClick={onClose}>
                 <i className="icon icon-close hoverColorPrimary"></i>
               </Close>

@@ -421,9 +421,10 @@ export default function ChildTableFlatComp(props) {
                       customWidgetRefs.current[index] = el;
                     }}
                     recordId={rowid}
-                    data={showFields.map(c => ({
-                      ...c,
-                      value: item[c.controlId],
+                    data={controls.map(c => ({
+                      ...formatMobileCardControl(c),
+                      hidden: c.hidden || !_.some(showFields, { controlId: c.controlId }),
+                      value: item[c.controlId === undefined ? 'undefined' : c.controlId],
                       ignoreDisabled: c.type === 36 && controlPermission.editable,
                       fieldPermission: isRelateRecordTableControl(c) ? '000' : c.fieldPermission,
                       controlPermissions: isRelateRecordTableControl(c) ? '000' : c.controlPermissions,

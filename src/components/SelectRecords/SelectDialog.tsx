@@ -53,6 +53,7 @@ import {
   getNumFromLocalStorage,
   getTableConfig,
   getTitleControl,
+  shouldInheritColumnStyle,
 } from './util';
 
 const Con = styled.div`
@@ -202,6 +203,7 @@ export default function SelectDialog({ ...args }) {
   } = args;
   const worksheetId = control.dataSource || args.worksheetId;
   const listMode = get(control, 'advancedSetting.chooselisttype') === '2'; // '1' 表格，'2' 列表
+  const inheritColumnStyle = shouldInheritColumnStyle(control);
   const {
     loading,
     recordsLoading,
@@ -242,6 +244,7 @@ export default function SelectDialog({ ...args }) {
     filterRowIds,
     formData,
     listMode,
+    useColumnStyle: inheritColumnStyle,
   });
   const recordsCache = useRef({});
   const tableRef = useRef<any>(undefined);
@@ -322,7 +325,10 @@ export default function SelectDialog({ ...args }) {
   const sheetStyles =
     !loading &&
     getSheetStylesOfRelateRecordTable({
-      control,
+      control: {
+        ...control,
+        advancedSetting: { ...control.advancedSetting, usecolumnstyle: inheritColumnStyle ? '1' : '0' },
+      },
       viewId: control.viewId,
       worksheetInfo: {
         ...(worksheetInfo.advancedSetting ? { advancedSetting: worksheetInfo.advancedSetting } : {}),

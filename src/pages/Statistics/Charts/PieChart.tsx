@@ -291,6 +291,7 @@ export default class extends Component<any, any> {
     const contentScale = contentSize > 1 ? 1 : contentSize;
 
     const baseConfig = {
+      supportCSSTransform: true,
       data: data.length ? data : [{ originalId: '', value: 0 }],
       appendPadding: [10, 0, 10, 0],
       radius: 0.7,

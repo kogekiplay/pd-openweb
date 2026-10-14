@@ -166,7 +166,8 @@ export const getFilterDataByRuleAction = (
   const sectionControlsMap: Record<string, FormControl[]> = {};
 
   tempRenderData.forEach(item => {
-    controlMap[item.controlId === undefined ? 'undefined' : item.controlId] = item;
+    const key = item.controlId === undefined ? 'undefined' : item.controlId;
+    if (!controlMap[key]) controlMap[key] = item;
 
     if (item.sectionId) {
       sectionControlsMap[item.sectionId] = sectionControlsMap[item.sectionId] || [];

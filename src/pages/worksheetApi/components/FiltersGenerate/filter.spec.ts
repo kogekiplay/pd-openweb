@@ -128,6 +128,7 @@ function load(relative: string): unknown {
     if (['lodash', 'moment', 'immutability-helper'].includes(name) || name.startsWith('@babel/runtime/'))
       return require(name);
     if (name === 'antd') return { Select: Object.assign(() => null, { Option: 'SelectOption' }) };
+    if (name === 'src/pages/worksheet/constants/enum') return { APP_ROLE_TYPE: { DEVELOPERS_ROLE: 1, RUNNER_DEVELOPERS_ROLE: 3 } };
     if (name === '@mingdaocom/json-view') return { __esModule: true, default: 'JsonView' };
     if (name === 'ming-ui') return { Dialog: 'Dialog', Icon: 'Icon' };
     if (name.startsWith('ming-ui/components/')) return { __esModule: true, default: name.split('/').at(-1) };

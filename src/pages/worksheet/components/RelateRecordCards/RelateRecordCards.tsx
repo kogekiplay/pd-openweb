@@ -982,6 +982,7 @@ class RelateRecordCards extends Component<any, any> {
     const isMobile = browserIsMobile();
     const isScanQR = getIsScanQR();
     const multiple = enumDefault === 2;
+    const mainBtnText = allowNewRecord ? sourceBtnName || sourceEntityName || '' : _l('选择%0', sourceEntityName);
 
     if (sheetTemplateLoading) {
       return null;
@@ -1084,9 +1085,9 @@ class RelateRecordCards extends Component<any, any> {
                       this.renderDropDownRecordsCon()
                     ) : (
                       <Button className="relateRecordBtn relateRecordCardsMainBtn" onClick={this.handleClick}>
-                        <i className="icon icon-plus mRight5 Font16"></i>
-                        <span className="overflow_ellipsis WordBreak" title={sourceBtnName || sourceEntityName || ''}>
-                          {sourceBtnName || sourceEntityName || ''}
+                        <i className={`icon ${allowNewRecord ? 'icon-plus' : 'icon-link_record'} mRight5 Font16`}></i>
+                        <span className="overflow_ellipsis WordBreak" title={mainBtnText}>
+                          {mainBtnText}
                         </span>
                       </Button>
                     ))

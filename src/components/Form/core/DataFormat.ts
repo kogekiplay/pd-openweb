@@ -56,6 +56,7 @@ import type { FormConditionRule } from './formUtils/types';
 import type { FormQueryConfig } from './queryTypes';
 import type { ControlValue, FormControl, FormError, SubListStore } from './types';
 import { calcSubTotalCount, getArrBySpliceType, halfSwitchSize, isUnTextWidget } from './utils';
+import { getRelateRecordRowIds } from 'src/utils/domain/control/value';
 
 /**
  * 自定义字段数据格式化
@@ -825,6 +826,13 @@ export default class DataFormat {
                   records: [],
                 });
                 value = '';
+              }
+            }
+
+            if (item.type === 29 && (value === 'deleteRowIds: all' || checkCellIsEmpty(value))) {
+              const keepRowIds = getRelateRecordRowIds(item.value);
+              if (keepRowIds.length) {
+                item.keepShowRowIds = _.uniq((item.keepShowRowIds || []).concat(keepRowIds));
               }
             }
 

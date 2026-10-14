@@ -8,6 +8,8 @@ import CreateRecordBot from './modules/CreateRecordBot';
 import CreateWorksheetBot from './modules/CreateWorksheetBot';
 import CreateWorksheetDataBot from './modules/CreateWorksheetDataBot';
 
+const agentRuntime = { autoFocus: true };
+
 export default function MingoEntry({
   taskType,
   sheetList,
@@ -50,7 +52,7 @@ export default function MingoEntry({
   } else if (taskType === MINGO_TASK_TYPE.CUSTOM_BOT) {
     return <CustomBot base={base} onClose={onClose} onBack={onBack} />;
   } else if (taskType === MINGO_TASK_TYPE.CREATE_APP_ASSIGNMENT) {
-    return <Agent />;
+    return <Agent runtime={agentRuntime} />;
   }
 
   return null;

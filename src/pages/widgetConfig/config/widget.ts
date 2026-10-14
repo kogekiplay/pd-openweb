@@ -515,7 +515,7 @@ export const DEFAULT_DATA = {
     controlName: _l('部门'),
     size: 6,
     enumDefault: 0,
-    userPermission: 1,
+    userPermission: 0,
     enumDefault2: 0,
     advancedSetting: {
       showdelete: '1',
@@ -696,7 +696,7 @@ export const DEFAULT_DATA = {
     controlName: _l('组织角色'),
     size: 6,
     enumDefault: 0,
-    userPermission: 1,
+    userPermission: 0,
     enumDefault2: 0,
   },
   SEARCH_BTN: {

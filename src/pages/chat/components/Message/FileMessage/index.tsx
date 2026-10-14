@@ -3,6 +3,7 @@ import previewAttachments from 'src/components/previewAttachments/previewAttachm
 import { formatFileSize, getClassNameByExt } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 import Constant from '../../../utils/constant';
+import { hasAttachmentData } from '../attachment';
 import { handleMessageFilePreview } from '../MessageToolbar';
 import './index.less';
 
@@ -14,6 +15,8 @@ export interface FileMessageState {
 
 export default class FileMessage extends Component<any, FileMessageState> {
   declare iconClassName: string;
+  declare uploader: { stop(): void; start(): void; removeFile(file: { id: string }): void } | null;
+  declare uploadFileId: string | undefined;
 
   constructor(props) {
     super(props);
@@ -22,31 +25,50 @@ export default class FileMessage extends Component<any, FileMessageState> {
       cancel: false,
       cancelShow: false,
     };
-    const { files } = this.props.message.msg;
-    this.iconClassName = getClassNameByExt(RegExpValidator.getExtOfFileName((files || {}).name));
     this.uploader = null;
   }
   override componentDidMount() {
     const { message } = this.props;
-    const { files } = message.msg;
-    const { aid } = files;
+    const files = message.msg?.files;
 
-    if (aid) return;
+    if (!message.isPrepare || !hasAttachmentData(files) || !files.id || files.aid) return;
 
-    window[`chatBeforeUpload${files.id}`] = uploader => {
-      // 上传文件对象
-      this.uploader = uploader;
-    };
+    this.uploadFileId = files.id;
+    window[`chatBeforeUpload${files.id}`] = this.handleBeforeUpload;
+    window[`chatUploadProgress${files.id}`] = this.handleUploadProgress;
+  }
+  override componentWillUnmount() {
+    this.clearUploadCallbacks();
+  }
+  handleBeforeUpload = (uploader: FileMessage['uploader']) => {
+    this.uploader = uploader;
+  };
+  handleUploadProgress = progress => {
+    this.setState({
+      progress: Number(progress),
+      cancelShow: true,
+    });
+  };
+  clearUploadCallbacks() {
+    const id = this.uploadFileId;
 
-    window[`chatUploadProgress${files.id}`] = progress => {
-      this.setState({
-        progress: Number(progress),
-        cancelShow: true,
-      });
-    };
+    if (!id) return;
+
+    if (window[`chatBeforeUpload${id}`] === this.handleBeforeUpload) {
+      delete window[`chatBeforeUpload${id}`];
+    }
+
+    if (window[`chatUploadProgress${id}`] === this.handleUploadProgress) {
+      delete window[`chatUploadProgress${id}`];
+    }
+
+    this.uploadFileId = undefined;
   }
   handleStopFile() {
-    const { files } = this.props.message.msg;
+    const { message } = this.props;
+    const files = message.msg?.files;
+
+    if (!message.isPrepare || !hasAttachmentData(files) || !files.id) return;
 
     if (this.uploader) {
       this.uploader.stop();
@@ -59,14 +81,15 @@ export default class FileMessage extends Component<any, FileMessageState> {
         cancel: true,
       },
       () => {
-        delete window[`chatBeforeUpload${files.id}`];
-        delete window[`chatUploadProgress${files.id}`];
+        this.clearUploadCallbacks();
       },
     );
   }
   handleMessageFilePreview() {
     const { message } = this.props;
     const { type } = message;
+
+    if (!hasAttachmentData(message.msg?.files)) return;
 
     if (type === Constant.SESSIONTYPE_CALENDAR) {
       if (message.kcFile) {
@@ -88,14 +111,28 @@ export default class FileMessage extends Component<any, FileMessageState> {
   }
   override render() {
     const { message } = this.props;
-    const { files = {} } = message.msg;
+    const files = message.msg?.files;
+
+    if (!hasAttachmentData(files)) {
+      return (
+        <div className="Message-file" aria-disabled={true}>
+          <div className="Message-fileIcon">
+            <i className={getClassNameByExt('')} />
+          </div>
+          <div className="Message-fileInfo">
+            <div className="Message-fileName">{_l('附件信息缺失')}</div>
+          </div>
+        </div>
+      );
+    }
+
     const { progress, cancel, cancelShow } = this.state;
     const isKc = message.card ? message.card.md === 'kcfile' : false;
     const size = formatFileSize(files.fsize || files.size);
     return (
       <div className="Message-file" onClick={this.handleMessageFilePreview.bind(this)}>
         <div className="Message-fileIcon">
-          <i className={this.iconClassName} />
+          <i className={getClassNameByExt(RegExpValidator.getExtOfFileName(files.name))} />
         </div>
         <div className="Message-fileInfo">
           <div className="Message-fileName">{files.name}</div>

@@ -1,6 +1,10 @@
 import { FILTER_BELONGS_TYPE, FILTER_CONDITION_MULTI_TYPE, FILTER_CONDITION_TYPE, FILTER_LOGIC_TYPE } from './enum';
 import { parsedId } from './filterBoundary';
 import type { ApiFilterFields, ApiFilterItem, ApiV3Condition, ApiV3Filters, ApiV3Group } from './filterTypes';
+import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum';
+
+export const isDeveloperPermission = (permissionType: unknown): boolean =>
+  [APP_ROLE_TYPE.DEVELOPERS_ROLE, APP_ROLE_TYPE.RUNNER_DEVELOPERS_ROLE].includes(Number(permissionType));
 
 const conditionTypes: Readonly<Partial<Record<number, string>>> = FILTER_CONDITION_TYPE;
 const multiTypes: Readonly<Partial<Record<number, string>>> = FILTER_CONDITION_MULTI_TYPE;

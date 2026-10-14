@@ -1360,7 +1360,7 @@ const shareAttachmentMethods = defineMethods<ShareAttachmentFields>()({
 
         params = {
           sourceId: SA.selectedTask.taskID,
-          appId: md.global.APPInfo.taskAppID,
+          appId: 'ab99d0bb-3249-46f9-8a60-6952cb76cac2',
           sourceType: 1,
           message: shareDesc || (attachmentType === ATTACHMENT_TYPE.KC ? '分享了知识下的文件' : '添加了文件：'),
           attachments: JSON.stringify([]),

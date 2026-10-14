@@ -178,18 +178,17 @@ class DialogSelectUser extends Component<DialogProps, DialogState> {
           onChange={(value: string | number | undefined) => {
             if (value === curValue) return;
             const isProjectId = !_.includes([dataRangeTypes.all, dataRangeTypes.friend], value);
+            const projectId = isProjectId && isProjectSelection(value) && _.find(md.global.Account.projects, { projectId: value }) ? value : '';
             this.setState(
               {
                 dataRange: isProjectId ? dataRangeTypes.project : typeof value === 'number' ? value : dataRange,
-                projectId:
-                  isProjectId && isProjectSelection(value)
-                    ? _.find(md.global.Account.projects, { projectId: value })
-                      ? value
-                      : ''
-                    : '',
+                projectId,
               },
               this.focusSearchInput,
             );
+            if (projectId && typeof SelectUserSettings.projectCallback === 'function') {
+              SelectUserSettings.projectCallback(projectId);
+            }
           }}
         />
       </div>

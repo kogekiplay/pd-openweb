@@ -784,7 +784,7 @@ export const browserIsMobile = () => {
   const bIsApp = sUserAgent.match(/mingdao application/i)?.[0] === 'mingdao application';
   const bIsMiniProgram = sUserAgent.match(/miniprogram/i)?.[0] === 'miniprogram';
   const isHuawei = sUserAgent.match(/mobile huaweibrowser/i)?.[0] === 'mobile huaweibrowser';
-  const isHarmony = sUserAgent.match(/penharmony/i)?.[0] === 'penharmony';
+  const isHarmony = sUserAgent.match(/openharmony/i)?.[0] === 'openharmony' && !/\(\s*pc\s*;/i.test(sUserAgent);
   const isAndroid = sUserAgent.match(/android/i)?.[0] === 'android';
 
   const value =

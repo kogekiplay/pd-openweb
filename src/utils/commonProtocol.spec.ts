@@ -115,13 +115,15 @@ for (const agent of [
   'miniprogram',
   'Mingdao Application',
   'mobile HuaweiBrowser',
-  'penharmony',
+  'OpenHarmony (Phone;)',
 ]) {
   navigator.userAgent = agent;
   assert.equal(helpers.browserIsMobile(), true);
 }
 navigator.userAgent = 'Mozilla Desktop';
 assert.equal(helpers.browserIsMobile(), false);
+navigator.userAgent = 'Mozilla/5.0 ( PC ; OpenHarmony)';
+assert.equal(helpers.browserIsMobile(), false, 'OpenHarmony desktops keep the desktop route');
 navigator.userAgent = 'rv:1a2b3c4';
 assert.equal(helpers.browserIsMobile(), false, 'A wildcard regex match still must equal its old literal token');
 navigator.userAgent = 'wxwork Desktop';

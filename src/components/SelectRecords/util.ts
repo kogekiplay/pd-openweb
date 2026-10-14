@@ -1,8 +1,17 @@
 import _, { find, get, isNumber } from 'lodash';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { turnControl } from 'src/pages/worksheet/common/Sheet/QuickFilter/Conditions';
+import { isRelateRecordTableControl } from 'src/utils/control';
 import { ERROR_MESSAGE } from './useRecords';
 import type { FormControl } from 'src/utils/controlTypes';
+
+export function shouldInheritColumnStyle(control: Partial<FormControl> = {}) {
+  if (control.type === 29 && !isRelateRecordTableControl(control as FormControl)) {
+    return true;
+  }
+
+  return get(control, 'advancedSetting.usecolumnstyle') === '1';
+}
 
 export function enrichFilters(filters) {
   return filters.map(f => ({

@@ -438,6 +438,7 @@ export default class extends Component<any, any> {
     const topPadding = position === 'bottom' ? 20 : 15;
 
     const baseConfig = {
+      supportCSSTransform: true,
       data: data.length || lineData.length ? [data, lineData] : [emptyData, []],
       appendPadding: [topPadding, 0, 5, 0],
       xField: 'xAxisKey',

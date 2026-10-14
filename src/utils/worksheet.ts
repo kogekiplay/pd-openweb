@@ -526,10 +526,18 @@ export function filterButtonBySheetSwitchPermit<T extends { type?: string }>(
   }));
 }
 
-function getSheetStylesOfObject(object?: { advancedSetting?: ControlAdvancedSetting | undefined }): SheetTableStyles {
-  const listStyle = object?.advancedSetting?.liststyle;
-  if (!listStyle) return { columnStyles: {}, sheetColumnWidths: {} };
-  const { time: updateTime, styles = [] } = decodeListStyle(listStyle);
+function getDisplayedSheetStylesOfView(
+  view: { advancedSetting?: ControlAdvancedSetting | undefined } | undefined,
+  worksheetInfo: { advancedSetting?: ControlAdvancedSetting | undefined } | undefined,
+): SheetTableStyles {
+  const listStyleStrOfView = view?.advancedSetting?.liststyle;
+  const listStyleStrOfWorksheet = worksheetInfo?.advancedSetting?.liststyle;
+
+  if (!listStyleStrOfView && !listStyleStrOfWorksheet) {
+    return { columnStyles: {}, sheetColumnWidths: {} };
+  }
+
+  const { time: updateTime, styles = [] } = getListStyle(listStyleStrOfView, listStyleStrOfWorksheet);
   const columnStyles: SheetTableStyles['columnStyles'] = {};
   const sheetColumnWidths: SheetTableStyles['sheetColumnWidths'] = {};
   styles.forEach(item => {
@@ -574,17 +582,16 @@ export function getSheetStylesOfRelateRecordTable({
     }
     return { columnStyles: {}, sheetColumnWidths };
   }
-  const manageViewStyles = manageView && getSheetStylesOfObject(manageView);
-  const worksheetSheetStyles = manageViewStyles?.updateTime ? manageViewStyles : getSheetStylesOfObject(worksheetInfo);
-  if (!viewId) return worksheetSheetStyles;
+  const manageViewStyles = getDisplayedSheetStylesOfView(manageView, worksheetInfo);
+  if (!viewId) return manageViewStyles;
   const views = worksheetInfo?.views || [];
   const view = views.find(item => item.viewId === viewId);
   const styledView =
     view && isColumnStyleView(view)
       ? view
       : views.find(item => isColumnStyleView(item) && Boolean(item.advancedSetting?.liststyle));
-  const viewStyles = getSheetStylesOfObject(styledView);
-  return viewStyles.updateTime ? viewStyles : worksheetSheetStyles;
+  if (!styledView?.advancedSetting?.liststyle) return manageViewStyles;
+  return getDisplayedSheetStylesOfView(styledView, worksheetInfo);
 }
 
 export function getGroupControlId(view: WorksheetView | undefined): string | undefined {
