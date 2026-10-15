@@ -320,7 +320,7 @@ export const getIconByType = type => {
   return icon;
 };
 
-export const adjustControlSize = (row = [], data) => {
+export const adjustControlSize = (row: FormControl[] = [], data: FormControl): FormControl => {
   const nextRow = row.concat(data);
   return { ...data, size: WHOLE_SIZE / nextRow.length };
 };

@@ -672,7 +672,7 @@ export default function List(props) {
         isMingo: true,
       },
       cache.current.props,
-      ({ newWidgets = [] } = []) => {
+      ({ newWidgets = [] } = {}) => {
         if (para.isStreaming) {
           return;
         }

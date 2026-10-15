@@ -5,6 +5,7 @@ const cp: typeof import('node:child_process') = require('node:child_process');
 const { transformSync } = require('../../../../scripts/spec-harness.ts');
 const lodash = require('lodash');
 const update = require('immutability-helper');
+let nextUuid = 0;
 const root = path.resolve(__dirname, '../../../..');
 const target = 'src/pages/widgetConfig/util/data.tsx';
 type Widget = {
@@ -23,6 +24,13 @@ const testGlobal = globalThis as unknown as Record<string, unknown>;
 testGlobal['_l'] = (value: string) => value;
 testGlobal['alert'] = (...args: unknown[]) => events.push(['alert', ...args]);
 testGlobal['document'] = { getElementById: () => null };
+testGlobal['safeParse'] = (value: string) => {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
+};
 
 function load(source: string, imports: Record<string, unknown> = {}): Record<string, unknown> {
   const output: { exports: Record<string, unknown> } = { exports: {} };
@@ -56,13 +64,21 @@ function invoke(module: object, name: string, args: unknown[]): unknown {
 
 // Execute the current layout, grouping, deletion and ID matching producers used by the mutations.
 const indexSource = fs.readFileSync(path.join(__dirname, 'index.ts'), 'utf8');
-const prefix = 'import _ from "lodash"; const { includes, get, sortBy, filter, isEmpty } = _;\n';
+const prefix =
+  'import _ from "lodash"; import update from "immutability-helper"; const WHOLE_SIZE = 12; const { includes, get, sortBy, filter, isEmpty } = _;\n';
 const helpers = load(
   prefix +
-    ['isSheetDisplay', 'getCurrentRowSize', 'fixedBottomWidgets', 'getBoundRowByTab']
+    [
+      'isSheetDisplay',
+      'getCurrentRowSize',
+      'fixedBottomWidgets',
+      'getBoundRowByTab',
+      'adjustControlSize',
+      'isTabSheetList',
+    ]
       .map(name => declaration(indexSource, name))
       .join('\n'),
-  { lodash },
+  { lodash, 'immutability-helper': update },
 );
 const configSource = fs.readFileSync(path.join(root, 'src/pages/widgetConfig/config/index.ts'), 'utf8');
 const fullLine = configSource.match(/export const FULL_LINE_CONTROL = (\[[^;]+\]);/)?.[1];
@@ -80,24 +96,42 @@ Object.assign(
   load(
     prefix +
       'import { isFullLineControl } from "./widgets";\n' +
-      'const WHOLE_SIZE = 12; const getDefaultSizeByData = () => { throw new Error("Fixture must provide its width"); };\n' +
+      'const getDefaultSizeByData = () => { throw new Error("Fixture must provide its width"); };\n' +
+      declaration(indexSource, 'getCurrentRowSize') +
+      '\n' +
       declaration(indexSource, 'putControlByOrder'),
-    { lodash, './widgets': widgets },
+    { lodash, 'immutability-helper': update, './widgets': widgets },
   ),
 );
 const dragSource = fs.readFileSync(path.join(__dirname, 'drag.ts'), 'utf8');
 const drag = load(
   prefix +
-    ['removeEmptyRow', 'removeSrcItems', 'batchRemoveItems'].map(name => declaration(dragSource, name)).join('\n'),
-  { lodash },
+    ['removeEmptyRow', 'removeSrcItems', 'batchRemoveItems', 'insertControlInSameLine']
+      .map(name => declaration(dragSource, name))
+      .join('\n'),
+  { lodash, 'immutability-helper': update },
 );
 const deletes = load(fs.readFileSync(path.join(__dirname, 'deleteTarget.ts'), 'utf8'));
+const settingBoundary = load(fs.readFileSync(path.join(__dirname, 'advancedSettingBoundary.ts'), 'utf8'), {
+  'src/utils/controlCommon': {
+    getAdvanceSetting: (data: { advancedSetting?: Record<string, string> } = {}, key?: string | string[]) => {
+      if (!key) return data.advancedSetting || {};
+      const value = data.advancedSetting?.[String(key)] || '';
+
+      try {
+        return JSON.parse(value);
+      } catch {
+        return value;
+      }
+    },
+  },
+});
 const source = fs.readFileSync(path.join(root, target), 'utf8');
 const imports: Record<string, unknown> = Object.fromEntries(
   [...source.matchAll(/from ['"]([^'"]+)['"]/g)].map(match => [match[1], {}]),
 );
 Object.assign(imports, {
-  '.': helpers,
+  '.': { ...helpers, checkWidgetMaxNumErr: () => undefined },
   lodash,
   'immutability-helper': update,
   '../config/Drag': dragConfig,
@@ -105,7 +139,16 @@ Object.assign(imports, {
   './drag': drag,
   './deleteTarget': deletes,
   'ming-ui': { Dialog: { confirm: (options: { onOk: () => void }) => options.onOk() } },
-  './setting': { isExceedMaxControlLimit: () => exceedsLimit },
+  './setting': {
+    isExceedMaxControlLimit: () => exceedsLimit,
+    getAdvanceSetting: settingBoundary['getWidgetAdvanceSetting'],
+    handleAdvancedSettingChange: (data: { advancedSetting?: object }, value: object) => ({
+      ...data,
+      advancedSetting: { ...data.advancedSetting, ...value },
+    }),
+  },
+  './advancedSettingBoundary': settingBoundary,
+  uuid: { v4: () => 'new-id-' + ++nextUuid },
   'src/utils/project': { getFeatureStatus: () => featureStatus },
   'src/components/upgradeVersion': {
     buriedUpgradeVersionDialog: (...args: unknown[]) => events.push(['upgrade', ...args]),
@@ -142,6 +185,8 @@ function execute(
 ): unknown[] {
   events = [];
   scheduled = [];
+  nextUuid = 0;
+  testGlobal['window'] = { subListSheetConfig: {} };
   const ctx = context(layout);
   const original = structuredClone(ctx.widgets);
   invoke(module, name, make(ctx));
@@ -247,4 +292,137 @@ assert.deepEqual(
 );
 console.log(
   `Widget mutation callbacks, layout, moves, deletion, shift selection and source preservation passed (${checks} cases${historical ? ' with historical comparison' : ''})`,
+);
+
+// Compare additions and copies against the committed implementation, including setter order and delays.
+const added: Widget = { ...d, controlId: 'added', row: 9, col: 0 };
+
+for (const options of [
+  {},
+  { isMingo: true },
+  { mode: 'INSERT_NEW_LINE', rowIndex: 1 },
+  { mode: 'INSERT_TO_ROW_END', rowIndex: 1 },
+  { mode: 'INSERT_TO_COL', path: [1, 0], location: 'left' },
+]) {
+  compare('handleAddWidgets', ctx => [[added], options, ctx, (value: unknown) => events.push(['callback', value])]);
+}
+
+compare('handleAddWidgets', ctx => [[added, { ...added, controlId: 'added-2' }], {}, ctx]);
+compare('handleAddWidgets', ctx => [[added], {}, { ...ctx, activeWidget: undefined }], undefined, []);
+compare('handleAddWidgets', ctx => [[added], {}, { ...ctx, activeWidget: { ...d, controlId: 'missing' } }]);
+compare('batchCopyWidgets', ctx => [{ ...ctx, queryConfigs: [{ controlId: 'b' }] }, [b, c]]);
+const positionedTab = { ...tab, row: 1, col: 0 };
+compare('batchCopyWidgets', ctx => [ctx, [positionedTab]], undefined, [[a], [positionedTab], [child]]);
+for (const name of ['handleAddWidgets', 'batchCopyWidgets']) {
+  exceedsLimit = true;
+  compare(name, ctx => (name === 'handleAddWidgets' ? [[added], {}, ctx] : [ctx, [b]]));
+  exceedsLimit = false;
+}
+
+assert.deepEqual(
+  execute(current, 'handleAddWidgets', ctx => [[], {}, ctx]),
+  [[], []],
+);
+assert.deepEqual(
+  execute(current, 'handleAddWidgets', ctx => [[added], { mode: 'INSERT_TO_COL' }, ctx]),
+  [[], []],
+);
+
+function compareValue(name: string, args: unknown[]): unknown {
+  const run = (module: object) => {
+    nextUuid = 0;
+    testGlobal['window'] = { subListSheetConfig: { sub: { mode: 'new', persisted: 'keep' } } };
+    const inputs = structuredClone(args);
+    const originalInputs = structuredClone(inputs);
+    const value = invoke(module, name, inputs);
+    if (name !== 'handleCondition') assert.deepEqual(inputs, originalInputs, name + ' preserves consumed input');
+    return { value, runtime: structuredClone(testGlobal['window']) };
+  };
+
+  const original = structuredClone(args);
+  const value = run(current);
+  if (historical) assert.deepEqual(value, run(historical), 'Historical value: ' + name);
+  assert.deepEqual(args, original, name + ' preserves input');
+  checks++;
+  return value.value;
+}
+
+for (const [type, idKey] of [
+  [26, 'accountId'],
+  [27, 'departmentId'],
+  [48, 'organizeId'],
+] as const) {
+  const result = compareValue('dealUserId', [
+    {
+      type,
+      advancedSetting: {
+        defsource: JSON.stringify([
+          { staticValue: JSON.stringify({ [idKey]: 'one' }), extra: 'keep' },
+          { staticValue: { [idKey]: 'two' } },
+          { cid: 'dynamic' },
+        ]),
+      },
+    },
+  ]);
+  assert.deepEqual(JSON.parse(lodash.get(result, 'advancedSetting.defsource')), [
+    { staticValue: 'one', extra: 'keep' },
+    { staticValue: 'two' },
+    { cid: 'dynamic' },
+  ]);
+}
+
+compareValue('dealUserId', [
+  {
+    advancedSetting: {
+      chooserange: JSON.stringify([
+        { type: 1, staticValue: { accountId: 'u' } },
+        { type: 2, staticValue: { departmentId: 'd' } },
+        { type: 3, staticValue: { organizeId: 'o' } },
+      ]),
+    },
+  },
+  'chooserange',
+]);
+compareValue('dealCascaderId', [{ advancedSetting: { topfilters: JSON.stringify(['{ "id": "x" }', 'plain']) } }]);
+const related = compareValue('dealRelateSheetDefaultValue', [
+  {
+    advancedSetting: {
+      defsource: JSON.stringify([
+        { staticValue: JSON.stringify(['{"rowid":"r1"}', 'r2']), relateSheetName: 'remove', cid: 'keep' },
+      ]),
+    },
+  },
+]);
+assert.equal(JSON.parse(lodash.get(related, 'advancedSetting.defsource'))[0].staticValue, '["r1","r2"]');
+compareValue('handleCondition', [
+  { dataType: 26, values: ['{"id":"u"}', '"plain"'], dynamicSource: [{ rcid: 'x' }] },
+  true,
+]);
+compareValue('dealControlPos', [[a, b, c]]);
+compareValue('dealRequestControls', [
+  [
+    { controlId: 'parent', type: 10000007 },
+    { controlId: 'kid', dataSource: 'parent', type: 2 },
+  ],
+  true,
+]);
+compareValue('formatControlsData', [
+  [
+    { type: 6, advancedSetting: { min: '12', max: '3', checkrange: '1' } },
+    { type: 20, dataSource: 'SUM(a)+AVG(b)' },
+    { type: 33, advancedSetting: { increase: '[{"type":1,"start":""},{"type":2,"controlId":""}]' } },
+  ],
+]);
+compareValue('dealCopyWidgetId', [{ ...b, advancedSetting: { defaulttype: '1', custom_event: 'old' } }]);
+compareValue('dealCopyWidgetId', [
+  {
+    type: 34,
+    controlId: 'sub',
+    dataSource: 'old',
+    advancedSetting: { detailworksheettype: '2' },
+    relationControls: [{ ...b, controlId: 'child-id', dataSource: 'child-id', advancedSetting: { defaulttype: '1' } }],
+  },
+]);
+console.log(
+  `Widget additions, copies and serialized defaults passed (${checks} total cases${historical ? ' with historical comparison' : ''})`,
 );

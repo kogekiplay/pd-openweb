@@ -161,7 +161,18 @@ export default class FieldRecycleBin extends Component<any, any> {
                 activeWidget: parentControl,
               });
             } else {
-              handleAddWidgets(tempData, {}, this.props);
+              handleAddWidgets(
+                tempData,
+                {},
+                {
+                  widgets,
+                  allControls,
+                  setWidgets,
+                  setActiveWidget,
+                  globalSheetInfo,
+                  activeWidget: this.props['activeWidget'],
+                },
+              );
             }
           }
 

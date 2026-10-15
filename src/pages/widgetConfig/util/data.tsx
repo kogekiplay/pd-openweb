@@ -27,7 +27,7 @@ import { CAN_NOT_AS_TEXT_GROUP } from '../config';
 import { DRAG_MODE, WHOLE_SIZE } from '../config/Drag';
 import { ALL_SYS } from '../config/widget';
 import { ControlTag } from '../styled';
-import { filterSettings } from './advancedSettingBoundary';
+import { filterSettings, widgetObject } from './advancedSettingBoundary';
 import { type DeleteTarget, isDeleteTarget } from './deleteTarget';
 import { batchRemoveItems, insertControlInSameLine } from './drag';
 import { canAsUniqueWidget, getAdvanceSetting, handleAdvancedSettingChange, isExceedMaxControlLimit } from './setting';
@@ -53,15 +53,47 @@ interface WidgetReplaceContext {
   globalSheetInfo?: { projectId?: string | undefined } | undefined;
 }
 
+interface WidgetAddContext extends WidgetMoveContext {
+  globalSheetInfo?: { projectId?: string | undefined } | undefined;
+}
+interface WidgetAddOptions {
+  mode?: string | undefined;
+  path?: number[] | undefined;
+  location?: string | undefined;
+  displayItemType?: string | undefined;
+  rowIndex?: number | undefined;
+  activePath?: number[] | undefined;
+  isMingo?: boolean | undefined;
+}
+interface WidgetCopyContext extends WidgetMoveContext {
+  queryConfigs?: { controlId?: string | undefined }[] | undefined;
+}
+interface WidgetSaveContext {
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+}
+interface WidgetSubListConfig {
+  mode?: string | undefined;
+  sheetInfo?: FormControl | undefined;
+}
+
+/** JSON 设置保留扩展字段，读取已知键前逐项缩窄。 */
+function parseSettingItems(value: string): Record<string, unknown>[] {
+  const parsed: unknown = JSON.parse(value);
+  if (!Array.isArray(parsed) || !parsed.every(widgetObject)) throw new TypeError('Invalid default setting list');
+  return parsed;
+}
+
 // 获取动态默认值
 export const getDynamicDefaultValue = (data: FormControl) => {
   const value = _.get(data, ['advancedSetting', 'defsource']);
 
   try {
-    const parsedValue = value && JSON.parse(value);
+    const parsedValue = value ? parseSettingItems(value) : undefined;
     return parsedValue;
   } catch (error) {
     console.log(error);
+    return undefined;
   }
 };
 
@@ -97,7 +129,7 @@ export const getMsgByCode = ({
       break;
     case 16:
       const currentItem = _.find(controls, c => c.alias === data);
-      errorText = _l('%0别名重复', _.get(currentItem, 'controlName'));
+      errorText = _l('%0别名重复', _.get(currentItem, 'controlName') || '');
       break;
     default:
       break;
@@ -156,36 +188,34 @@ export function handleExtremeValue(data: FormControl) {
 export function dealRelateSheetDefaultValue(data: FormControl) {
   const dynamicValue = getDynamicDefaultValue(data);
   if (!dynamicValue) return data;
-  const newValue = dynamicValue.map(value => {
-    return update(value, {
-      $apply: item => {
-        const { staticValue } = item;
-        if (!staticValue) return item;
-        try {
-          const parsedValue = JSON.parse(staticValue);
-          return {
-            ..._.omit(item, 'relateSheetName'),
-            staticValue: JSON.stringify(
-              parsedValue.map(v => {
-                return _.get(safeParse(v), 'rowid') || v;
-              }),
-            ),
-          };
-        } catch (error) {
-          console.log(error);
-          return data;
-        }
-      },
-    });
+  const newValue = dynamicValue.map(item => {
+    const staticValue = item['staticValue'];
+    if (!staticValue) return item;
+    try {
+      if (typeof staticValue !== 'string') throw new TypeError('Invalid related record default');
+      const parsedValue: unknown = JSON.parse(staticValue);
+      if (!Array.isArray(parsedValue)) throw new TypeError('Invalid related record list');
+      return {
+        ..._.omit(item, 'relateSheetName'),
+        staticValue: JSON.stringify(
+          parsedValue.map((value: unknown) => {
+            const row: unknown = typeof value === 'string' ? safeParse(value) : value;
+            return (widgetObject(row) && row['rowid']) || value;
+          }),
+        ),
+      };
+    } catch (error) {
+      console.log(error);
+      return data;
+    }
   });
-  return update(data, {
-    advancedSetting: {
-      $apply: item => ({ ...item, defsource: JSON.stringify(newValue) }),
-    },
-  });
+  return {
+    ...data,
+    advancedSetting: { ...data.advancedSetting, defsource: JSON.stringify(newValue) },
+  };
 }
 
-const use_ids = {
+const use_ids: Partial<Record<number, string>> = {
   26: 'accountId',
   27: 'departmentId',
   48: 'organizeId',
@@ -198,36 +228,30 @@ const getCopyDefaultSetting = (advancedSetting: ControlAdvancedSetting = {}) => 
 
 export function dealUserId(data: FormControl, key = 'defsource') {
   const value = _.get(data, ['advancedSetting', key]) || '[]';
-  let dataType = use_ids[data.type];
+  let dataType = data.type === undefined ? undefined : use_ids[data.type];
 
   try {
-    const settings = value && JSON.parse(value);
+    const settings = parseSettingItems(value);
     if (_.isEmpty(settings)) return data;
-    const newValue = settings.map(setting =>
-      update(setting, {
-        $apply: item => {
-          const { staticValue } = item;
+    const newValue = settings.map(item => {
+      const staticValue = item['staticValue'];
 
-          if (item.type && key === 'chooserange') {
-            const chooseId = item.type === 1 ? 26 : item.type === 2 ? 27 : 48;
-            dataType = use_ids[chooseId];
-          }
+      if (item['type'] && key === 'chooserange') {
+        const chooseId = item['type'] === 1 ? 26 : item['type'] === 2 ? 27 : 48;
+        dataType = use_ids[chooseId];
+      }
 
-          if (staticValue && typeof staticValue === 'string') {
-            const accountId = safeParse(staticValue || '{}')[dataType];
-            return { ...item, staticValue: accountId || staticValue };
-          }
+      if (!dataType) return item;
+      if (staticValue && typeof staticValue === 'string') {
+        const parsed: unknown = safeParse(staticValue || '{}');
+        const accountId = widgetObject(parsed) ? parsed[dataType] : undefined;
+        return { ...item, staticValue: accountId || staticValue };
+      }
 
-          if (_.get(staticValue, [dataType])) return { ...item, staticValue: staticValue[dataType] };
-          return item;
-        },
-      }),
-    );
-    return update(data, {
-      advancedSetting: {
-        $apply: item => ({ ...item, [key]: JSON.stringify(newValue) }),
-      },
+      if (widgetObject(staticValue) && staticValue[dataType]) return { ...item, staticValue: staticValue[dataType] };
+      return item;
     });
+    return { ...data, advancedSetting: { ...data.advancedSetting, [key]: JSON.stringify(newValue) } };
   } catch (error) {
     console.log(error);
   }
@@ -239,20 +263,14 @@ export function dealCascaderId(data: FormControl) {
   const value = _.get(data, ['advancedSetting', 'topfilters']) || '[]';
 
   try {
-    const settings = value && JSON.parse(value);
+    const settings: unknown = JSON.parse(value);
     if (_.isEmpty(settings)) return data;
-    const newValue = settings.map(setting =>
-      update(setting, {
-        $apply: item => {
-          return safeParse(item || '{}')['id'] || item;
-        },
-      }),
-    );
-    return update(data, {
-      advancedSetting: {
-        $apply: item => ({ ...item, topfilters: JSON.stringify(newValue) }),
-      },
+    if (!Array.isArray(settings)) throw new TypeError('Invalid cascader list');
+    const newValue = settings.map((item: unknown) => {
+      const parsed: unknown = typeof item === 'string' ? safeParse(item || '{}') : undefined;
+      return (widgetObject(parsed) && parsed['id']) || item;
     });
+    return { ...data, advancedSetting: { ...data.advancedSetting, topfilters: JSON.stringify(newValue) } };
   } catch (error) {
     console.log(error);
   }
@@ -279,7 +297,7 @@ interface FilterCondition {
 export function handleCondition(condition: FilterCondition, isRelate?: boolean | number) {
   // 关联记录(动态值只能选择当前记录字段)特殊处理 rcid置空
   if (_.isBoolean(isRelate) && isRelate && !isEmpty(condition.dynamicSource)) {
-    condition.dynamicSource.forEach(item => (item.rcid = ''));
+    (condition.dynamicSource || []).forEach(item => (item.rcid = ''));
   }
 
   if (_.includes([19, 23, 24, 26, 27, 29, 35, 48], condition.dataType) && condition.values) {
@@ -346,7 +364,7 @@ export const getConcatenateControls = (controls: FormControl[], data: FormContro
     if (isSingleRelateSheet(item)) return true;
     let type = item.type;
     // 日期公式且配置为距离今天的天数不可选
-    if (type === 38 && [3].includes(item.enumDefault)) return false;
+    if (type === 38 && item.enumDefault === 3) return false;
     if (type === 30 || isSingleRelateSheet(item)) {
       const sourceControlType = get(item, ['sourceControl', 'type']);
       if (sourceControlType) type = sourceControlType;
@@ -485,7 +503,7 @@ export function createWorksheetColumnTag(
     isLast?: boolean;
   },
 ) {
-  const { allControls, errorCallback, mode, isLast } = options;
+  const { allControls = [], errorCallback, mode, isLast } = options || {};
   const control = getControlByControlId(allControls, id);
   const node = document.createElement('div');
   // const value = getControlTextValue(id, allControls, worksheetData, true) || _l('空');
@@ -501,11 +519,12 @@ export function createWorksheetColumnTag(
     node.classList.add('onlytag');
   }
 
-  node.innerHTML = !isEmpty(control)
-    ? `
+  node.innerHTML =
+    control && !isEmpty(control)
+      ? `
     <div class="columnName">${control.controlName}</div>
   `
-    : `
+      : `
     <div class="columnName">${_l('该字段已删除')}</div>
   `;
   return node;
@@ -526,7 +545,9 @@ export function genControlTag(allControls: FormControl[], id: string) {
 
 export function navigateToApp(worksheetId: string) {
   sheetAjax.getWorksheetInfo({ worksheetId }).then(data => {
-    const storage = JSON.parse(localStorage.getItem(`mdAppCache_${md.global.Account.accountId}_${data.appId}`));
+    const storage = JSON.parse(
+      localStorage.getItem(`mdAppCache_${md.global.Account.accountId}_${data.appId}`) || 'null',
+    );
     const viewId =
       (
         _.find(
@@ -547,7 +568,7 @@ export const navigateToView = (worksheetId: string, viewId: string) => {
 };
 
 export const dealControlPos = (controls: FormControl[]) => {
-  const sortableControls = controls.reduce((p, c) => {
+  const sortableControls = controls.reduce<FormControl[][]>((p, c) => {
     return update(p, { $push: [[c]] });
   }, []);
   return _.flatten(sortableControls.map((item, row) => item.map((control, col) => ({ ...control, row, col }))));
@@ -611,6 +632,7 @@ const findInvalidUnsavedRelateControl = (controls: FormControl[] = []) => {
   for (const control of controls) {
     if (
       isUnsavedControl(control) &&
+      control.type !== undefined &&
       RELATE_WORKSHEET_CONTROL_TYPES.includes(control.type) &&
       control.dataSource &&
       !WORKSHEET_OBJECT_ID_REG.test(control.dataSource)
@@ -648,7 +670,7 @@ export const checkWidgetErrorBeforeSave = (controls: FormControl[] = [], originC
   if (invalidRelateControl) {
     errorMsg = _l(
       '%0的关联表配置无效，目标表不存在或已被删除，请关联一张有效的工作表后再保存。',
-      invalidRelateControl.controlName,
+      invalidRelateControl.controlName || '',
     );
     errorNum = 2;
   }
@@ -673,7 +695,7 @@ export const checkWidgetErrorBeforeSave = (controls: FormControl[] = [], originC
       });
 
       if (_.some(_.flatten(customActionItems), a => !_.find(controls, c => c.controlId === a.controlId))) {
-        errorMsg = _l(`%0字段事件配置异常`, data.controlName);
+        errorMsg = _l(`%0字段事件配置异常`, data.controlName || '');
         errorNum = 2;
         break;
       }
@@ -727,12 +749,12 @@ export const checkWidgetErrorBeforeSave = (controls: FormControl[] = [], originC
 export const checkWidgetBeforeSave = (
   controls: FormControl[] = [],
   originControls: FormControl[] = [],
-  globalInfo: Record<string, any> = {},
+  globalInfo: WidgetSaveContext = {},
   deep = 0,
 ) => {
   controls.forEach(data => {
     // 自动编号重置
-    if (data.type === 33 && !data.controlId.includes('-')) {
+    if (data.type === 33 && data.controlId && !data.controlId.includes('-')) {
       checkAutoIdReset(data, originControls, globalInfo);
     }
 
@@ -751,14 +773,18 @@ export const checkWidgetBeforeSave = (
   });
 };
 
-const checkAutoIdReset = (data: FormControl = {}, originControls: FormControl[] = [], globalInfo = {}) => {
+const checkAutoIdReset = (
+  data: FormControl = {},
+  originControls: FormControl[] = [],
+  globalInfo: WidgetSaveContext = {},
+) => {
   const increase = getAdvanceSetting(data, 'increase') || [];
   const originAutoId = _.find(originControls, o => o.controlId === data.controlId);
   const originIncrease = getAdvanceSetting(originAutoId, 'increase') || [];
   const startValueChange =
     _.get(_.find(increase, { type: 1 }), 'start') !== _.get(_.find(originIncrease, { type: 1 }), 'start');
 
-  if (startValueChange && window.auto_id_reset[data.controlId]) {
+  if (startValueChange && data.controlId && window['auto_id_reset']?.[data.controlId]) {
     sheetAjax.resetControlIncrease({
       ..._.pick(globalInfo, ['appId', 'worksheetId']),
       controlId: data.controlId,
@@ -767,7 +793,7 @@ const checkAutoIdReset = (data: FormControl = {}, originControls: FormControl[] 
   }
 };
 
-export const formatControlsData = (controls: FormControl[] = [], fromSub = false) => {
+export const formatControlsData = (controls: FormControl[] = [], fromSub = false): FormControl[] => {
   return controls.map(item => {
     const { type } = item;
     let data = { ...item };
@@ -928,7 +954,7 @@ export const formatControlsData = (controls: FormControl[] = [], fromSub = false
       if (type === 51 && (data.enumDefault === 1 || getAdvanceSetting(data, 'querytype') === 1)) {
         data = {
           ...handleAdvancedSettingChange(data, {
-            ...(data.enumDefault === 1 ? { showtype: data.showControls.length > 1 ? '1' : '3' } : {}),
+            ...(data.enumDefault === 1 ? { showtype: (data.showControls || []).length > 1 ? '1' : '3' } : {}),
             allowlink: '0',
             allowedit: '0',
           }),
@@ -996,7 +1022,7 @@ export const formatControlsData = (controls: FormControl[] = [], fromSub = false
       const configItem = increase[index];
       if (!configItem || configItem.start) return data;
       // 未配置初始值时设为1
-      const nextIncrease = update(increase, { [index]: { $apply: item => ({ ...item, start: 1 }) } });
+      const nextIncrease = update(increase, { [index]: { $set: { ...configItem, start: 1 } } });
       return handleAdvancedSettingChange(data, { increase: JSON.stringify(nextIncrease) });
     }
 
@@ -1031,8 +1057,9 @@ export const dealRequestControls = (controls: FormControl[], needChild?: boolean
       if (item.dataSource) {
         const parentIndex = findIndex(newControls, i => i.controlId === item.dataSource);
 
-        if (parentIndex > -1) {
-          const parentControl = newControls[parentIndex];
+        const parentControl = newControls[parentIndex];
+
+        if (parentControl) {
           newControls[parentIndex] = { ...parentControl, child: (parentControl.child || []).concat(item) };
         } else {
           newControls.push({ ...find(controls, i => i.controlId === item.dataSource), child: [item] });
@@ -1146,7 +1173,8 @@ export const handleDeleteWidgetsForMingo = (
 ) => {
   const { widgets, setWidgets } = widgetProps;
   const newWidgets = update(widgets, {
-    $apply: (arr: FormControl[][]) => arr.map(inner => inner.filter(w => !needDeleteWidgets.some(d => isDeleteTarget(d, w)))),
+    $apply: (arr: FormControl[][]) =>
+      arr.map(inner => inner.filter(w => !needDeleteWidgets.some(d => isDeleteTarget(d, w)))),
   });
   setWidgets(newWidgets);
   if (_.isFunction(callback)) {
@@ -1232,17 +1260,16 @@ export function batchUpdateWidgetsLayout(
 }
 
 // 批量添加
-export const handleAddWidgets = (data, para = {}, widgetProps, callback?) => {
-  const {
-    widgets,
-    activeWidget,
-    allControls,
-    setWidgets,
-    setActiveWidget,
-    globalSheetInfo = {},
-  }: { allControls: FormControl[]; [key: string]: any } = widgetProps;
+export const handleAddWidgets = (
+  data: WidgetFeatureControl[],
+  para: WidgetAddOptions = {},
+  widgetProps: WidgetAddContext,
+  callback?: WidgetsChangedCallback,
+) => {
+  const { widgets, activeWidget, allControls, setWidgets, setActiveWidget, globalSheetInfo = {} } = widgetProps;
   const { mode, path, location, displayItemType, rowIndex, activePath, isMingo } = para;
   const tempData = head(data);
+  if (!tempData) return;
   const featureType = getFeatureStatus(globalSheetInfo.projectId, tempData.featureId);
 
   if (_.includes([49, 50], tempData.type) && featureType === '2') {
@@ -1264,8 +1291,9 @@ export const handleAddWidgets = (data, para = {}, widgetProps, callback?) => {
 
     // 拖到单独的行
     if (mode === DRAG_MODE.INSERT_NEW_LINE) {
+      if (rowIndex === undefined) return;
       setWidgets(update(widgets, { $splice: [[rowIndex, 0, data]] }));
-      setActiveWidget(data[0]);
+      setActiveWidget(tempData);
 
       // 标签页拖拽添加，置顶配置同步更新
       if (_.isFunction(callback)) {
@@ -1277,41 +1305,48 @@ export const handleAddWidgets = (data, para = {}, widgetProps, callback?) => {
 
     // 拖到行的末尾
     if (mode === DRAG_MODE.INSERT_TO_ROW_END) {
+      if (rowIndex === undefined) return;
       setWidgets(
         update(widgets, {
           [rowIndex]: {
-            $apply: item => {
+            $apply: (item: FormControl[] | undefined) => {
               const nextRow = (item || []).concat(data);
               return nextRow.map(value => ({ ...value, size: WHOLE_SIZE / nextRow.length }));
             },
           },
         }),
       );
-      setActiveWidget(adjustControlSize(widgets[rowIndex], data[0]));
+      setActiveWidget(adjustControlSize(widgets[rowIndex], tempData));
       return;
     }
 
     if (mode === DRAG_MODE.INSERT_TO_COL) {
-      setWidgets(insertControlInSameLine({ widgets, location, dropPath: path, srcItem: data[0] }));
-      setActiveWidget(adjustControlSize(widgets[path[0]], data[0]));
+      const row = path?.[0];
+      if (row === undefined || path?.[1] === undefined) return;
+      setWidgets(insertControlInSameLine({ widgets, location, dropPath: path, srcItem: tempData, srcPath: undefined }));
+      setActiveWidget(adjustControlSize(widgets[row], tempData));
       return;
     }
   }
 
-  let newWidgets = [].concat(widgets);
-  let lastItem = null;
+  let newWidgets: FormControl[][] = widgets.slice();
+  let lastItem: FormControl | undefined;
 
   data.forEach((item, index: number) => {
-    let currentRowIndex = 0;
+    let currentRowIndex: number;
 
     // 没有激活控件或者激活的控件不存在 则直接添加在最后一行
     // 普通控件，分界位置，非普通表单最后
-    if (isEmpty(activeWidget) || allControls.findIndex(item => item.controlId === activeWidget.controlId) < 0) {
+    if (
+      !activeWidget ||
+      isEmpty(activeWidget) ||
+      allControls.findIndex(item => item.controlId === activeWidget.controlId) < 0
+    ) {
       currentRowIndex = fixedBottomWidgets(item) ? newWidgets.length - 1 : getBoundRowByTab(widgets) - 1;
     } else {
       // 批量数据添加时，以前一个已添加控件作为激活控件
-      let tempActiveWidget = index ? data[index - 1] : activeWidget;
-      currentRowIndex = head(getPathById(newWidgets, get(tempActiveWidget, 'controlId')));
+      const tempActiveWidget = (index ? data[index - 1] : activeWidget) || activeWidget;
+      currentRowIndex = head(getPathById(newWidgets, tempActiveWidget.controlId)) ?? -1;
 
       // 批量拖拽移动，path区分,不走以下逻辑
       if (_.isEmpty(activePath)) {
@@ -1361,8 +1396,9 @@ export const handleAddWidgets = (data, para = {}, widgetProps, callback?) => {
   setWidgets(newWidgets);
   if (lastItem && !isMingo) {
     setActiveWidget(lastItem);
+    const addedWidget = lastItem;
     setTimeout(() => {
-      scrollToVisibleRange(lastItem, { ...widgetProps, activeWidget: lastItem });
+      scrollToVisibleRange(addedWidget, { activeWidget: addedWidget });
     }, 50);
   }
 
@@ -1373,13 +1409,7 @@ export const handleAddWidgets = (data, para = {}, widgetProps, callback?) => {
 
 // 批量移动
 export const handleMoveWidgets = (data: FormControl[], widgetProps: WidgetMoveContext) => {
-  const {
-    widgets,
-    activeWidget,
-    allControls,
-    setWidgets,
-    setActiveWidget,
-  } = widgetProps;
+  const { widgets, activeWidget, allControls, setWidgets, setActiveWidget } = widgetProps;
   if (!activeWidget) return;
 
   if (isExceedMaxControlLimit(allControls, data.length)) {
@@ -1417,13 +1447,16 @@ export const handleMoveWidgets = (data: FormControl[], widgetProps: WidgetMoveCo
   });
 };
 
-export const dealCopyWidgetId = (data: FormControl = {}) => {
+export const dealCopyWidgetId = (data: FormControl = {}): FormControl => {
+  const sheetConfigs: Record<string, WidgetSubListConfig | undefined> =
+    window['subListSheetConfig'] || (window['subListSheetConfig'] = {});
+  const sourceConfig = data.controlId ? sheetConfigs[data.controlId] : undefined;
   const newData = {
     ...data,
     attribute: 0,
     controlId: uuidv4(),
     alias: '',
-    controlName: _l('%0-复制', data.controlName),
+    controlName: _l('%0-复制', data.controlName || ''),
     advancedSetting: { ...data.advancedSetting, custom_event: '', ...getCopyDefaultSetting(data.advancedSetting) },
   };
 
@@ -1431,8 +1464,7 @@ export const dealCopyWidgetId = (data: FormControl = {}) => {
 
   if (
     data.type === 34 &&
-    (_.get(data, 'advancedSetting.detailworksheettype') === '2' ||
-      _.get(window.subListSheetConfig[data.controlId], 'mode') === 'new')
+    (_.get(data, 'advancedSetting.detailworksheettype') === '2' || sourceConfig?.mode === 'new')
   ) {
     const relationControls: FormControl[] = (newData.relationControls || []).map(item => {
       if (_.includes(ALL_SYS, item.controlId)) return item;
@@ -1441,26 +1473,27 @@ export const dealCopyWidgetId = (data: FormControl = {}) => {
         controlId: uuidv4(),
         advancedSetting: { ...item.advancedSetting, ...getCopyDefaultSetting(item.advancedSetting) },
       };
-      ids[item.controlId] = newItem.controlId;
+      if (item.controlId) ids[item.controlId] = newItem.controlId;
       return newItem;
     });
 
-    let newWidget = JSON.stringify({ ...newData, dataSource: uuidv4(), relationControls });
-    Object.keys(ids).forEach(id => {
+    let serialized = JSON.stringify({ ...newData, dataSource: uuidv4(), relationControls });
+    Object.entries(ids).forEach(([id, replacement]) => {
       const reg = new RegExp(id, 'g');
-      newWidget = newWidget.replace(reg, ids[id]);
+      serialized = serialized.replace(reg, replacement);
     });
-    newWidget = safeParse(newWidget);
-    window.subListSheetConfig[newData.controlId] = {
-      ...window.subListSheetConfig[data.controlId],
+    // 来源是刚序列化的控件，替换值仅为生成的 UUID。
+    const newWidget: FormControl = safeParse(serialized);
+    sheetConfigs[newData.controlId] = {
+      ...sourceConfig,
       sheetInfo: newWidget,
     };
     return newWidget;
   }
 
-  if (data.type === 34 && window.subListSheetConfig[data.controlId]) {
-    window.subListSheetConfig[newData.controlId] = {
-      ...window.subListSheetConfig[data.controlId],
+  if (data.type === 34 && sourceConfig) {
+    sheetConfigs[newData.controlId] = {
+      ...sourceConfig,
     };
   }
 
@@ -1474,17 +1507,13 @@ export const getChildWidgetsBySection = (controls: FormControl[] = [], id: strin
 };
 
 // 批量复制控件数据处理
-export const batchCopyWidgets = (props, selectWidgets = []) => {
-  const {
-    widgets,
-    allControls,
-    queryConfigs,
-    setActiveWidget,
-    setWidgets,
-  }: { allControls: FormControl[]; [key: string]: any } = props;
+export const batchCopyWidgets = (props: WidgetCopyContext, selectWidgets: FormControl[] = []) => {
+  const { widgets, allControls, queryConfigs, setActiveWidget, setWidgets } = props;
 
   for (var i = 0; i < selectWidgets.length; i++) {
-    const err = checkWidgetMaxNumErr(selectWidgets[i], [...allControls, ...selectWidgets.slice(0, i)]);
+    const selected = selectWidgets[i];
+    if (!selected) continue;
+    const err = checkWidgetMaxNumErr(selected, [...allControls, ...selectWidgets.slice(0, i)]);
 
     if (err) {
       alert(err, 3);
@@ -1492,16 +1521,16 @@ export const batchCopyWidgets = (props, selectWidgets = []) => {
     }
   }
 
-  const copyWidgets = [];
+  const copyWidgets: FormControl[] = [];
   let childCount = 0;
   let newWidgets = widgets;
-  let sectionIds = {};
-  let newActiveWidget = {};
+  const sectionIds: Record<string, string | undefined> = {};
+  let newActiveWidget: FormControl = {};
 
   selectWidgets.forEach(item => {
     copyWidgets.push(item);
     if (item.type === 52 && get(item, 'relationControls.length')) {
-      copyWidgets.push(...item.relationControls);
+      copyWidgets.push(...(item.relationControls || []));
     }
   });
 
@@ -1509,12 +1538,15 @@ export const batchCopyWidgets = (props, selectWidgets = []) => {
 
   orderCopyWidgets.forEach(row => {
     const currentRow = head(getPathById(newWidgets, get(last(row), 'controlId')));
+    if (currentRow === undefined) return;
     const dealRow = row.map(data => {
       let dealItem = dealCopyWidgetId(data);
 
       // 替换分段内字段sectionId
-      if (sectionIds[dealItem.sectionId]) {
-        dealItem.sectionId = sectionIds[dealItem.sectionId];
+      const copiedSectionId = dealItem.sectionId ? sectionIds[dealItem.sectionId] : undefined;
+
+      if (copiedSectionId) {
+        dealItem.sectionId = copiedSectionId;
       } else {
         // 没有sectionId,清空childCount,防止插入位置不对
         childCount = 0;
@@ -1530,13 +1562,13 @@ export const batchCopyWidgets = (props, selectWidgets = []) => {
 
       if (data.type === 52) {
         // 缓存sectionId
-        sectionIds[data.controlId] = dealItem.controlId;
-        childCount = get(data, 'relationControls.length');
+        if (data.controlId) sectionIds[data.controlId] = dealItem.controlId;
+        childCount = data.relationControls?.length || 0;
       }
 
       return dealItem;
     });
-    newActiveWidget = last(dealRow);
+    newActiveWidget = last(dealRow) || {};
     newWidgets = update(newWidgets, {
       $splice: [[currentRow + childCount + 1, 0, dealRow]],
     });

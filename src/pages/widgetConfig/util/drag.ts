@@ -1,3 +1,4 @@
+import type { FormControl } from 'src/utils/controlTypes';
 import { enumWidgetType, genWidgetRowAndCol, getDefaultSizeByData } from '.';
 import update from 'immutability-helper';
 import { filter, flatten, head, includes, isEmpty } from 'lodash';
@@ -48,14 +49,14 @@ const getDealWidgets = (widgets, data) => {
 };
 
 // 从原有位置删除拖拽元素,批量操作
-const removeSrcItems = (widgets, dealWidgets = []) => {
-  const ids = dealWidgets.map((i: Record<string, any> = {}) => i.controlId);
+const removeSrcItems = (widgets, dealWidgets: FormControl[] = []) => {
+  const ids = dealWidgets.map((i: FormControl = {}) => i.controlId);
   const removeItems = widgets.map(row => row.filter(i => !includes(ids, i.controlId)));
   return removeItems;
 };
 
 // 批量删除
-export const batchRemoveItems = (widgets, deleteItems = []) => {
+export const batchRemoveItems = (widgets, deleteItems: FormControl[] = []) => {
   return removeEmptyRow(removeSrcItems(widgets, deleteItems));
 };
 
