@@ -222,7 +222,7 @@ export const canSetAsTitle = data => {
   return !includes(NOT_AS_TITLE_CONTROL, type);
 };
 
-export function genWidgetRowAndCol(widgets) {
+export function genWidgetRowAndCol<T extends FormControl>(widgets: T[][]): Array<Array<T & { row: number; col: number }>> {
   return widgets.map((rowItem, row) => rowItem.map((colItem, col) => ({ ...colItem, row, col })));
 }
 
@@ -237,7 +237,7 @@ export const setDefaultTitle = controls => {
   return controls;
 };
 
-export const genControlsByWidgets = widgets => {
+export const genControlsByWidgets = (widgets: FormControl[][]): FormControl[] => {
   return flatten(genWidgetRowAndCol(widgets));
 };
 

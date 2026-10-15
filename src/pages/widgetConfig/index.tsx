@@ -65,7 +65,7 @@ export default function Container({ isDialog, ...props }) {
   // 本表设置相关信息
   const [{ version }, setInfo] = useState({ version: 1 });
   // 所有的控件 二维数组方式保存
-  const [widgets, setWidgets] = useState([]);
+  const [widgets, setWidgets] = useState<FormControl[][]>([]);
   // 选中的控件
   const [activeWidget, setActiveWidget] = useState({});
   // 批量选中

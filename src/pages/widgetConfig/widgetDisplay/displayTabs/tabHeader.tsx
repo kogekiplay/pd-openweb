@@ -204,6 +204,7 @@ export function DragHeaderItem(props) {
       const dropResult = monitor.getDropResult();
       if (!dropResult) return;
       const { rowIndex } = dropResult;
+      if (rowIndex === undefined) return;
       setWidgets(insertNewLine({ widgets, srcItem: data, srcPath: path, targetIndex: rowIndex }));
       setActiveWidget(data);
     },

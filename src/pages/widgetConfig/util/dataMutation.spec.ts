@@ -113,7 +113,7 @@ Object.assign(
 const dragSource = fs.readFileSync(path.join(__dirname, 'drag.ts'), 'utf8');
 const drag = load(
   prefix +
-    ['removeEmptyRow', 'removeSrcItems', 'batchRemoveItems', 'insertControlInSameLine']
+    ['isDropPath', 'removeEmptyRow', 'removeSrcItems', 'batchRemoveItems', 'insertControlInSameLine']
       .map(name => declaration(dragSource, name))
       .join('\n'),
   { lodash, 'immutability-helper': update },

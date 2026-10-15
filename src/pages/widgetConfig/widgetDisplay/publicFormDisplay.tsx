@@ -1,28 +1,33 @@
 import { useEffect, useState } from 'react';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { flatten } from 'lodash';
+import type { ControlAdvancedSetting, FormControl } from 'src/utils/controlTypes';
 import { genControlsByWidgets, genWidgetsByControls } from '../util';
 import DisplayRow from './displayRow';
-import type { FormControl } from 'src/utils/controlTypes';
 
-export default function PublicFormDisplay(props) {
-  const { controls, onChange, ...rest }: { controls: FormControl[]; [key: string]: any } = props;
+interface PublicFormDisplayProps {
+  controls: FormControl[];
+  onChange: (controls: FormControl[], hiddenControlId?: string) => void;
+  fromType?: 'public' | undefined;
+  styleInfo?: { info?: ControlAdvancedSetting | undefined } | undefined;
+}
 
-  const [widgets, setWidgets] = useState([]);
+export default function PublicFormDisplay({ controls, onChange, ...rest }: PublicFormDisplayProps) {
+  const [widgets, setWidgets] = useState<FormControl[][]>([]);
 
   useEffect(() => {
     setWidgets(genWidgetsByControls(controls));
   }, [controls]);
 
-  const [activeWidget, setActiveWidget] = useState({});
+  const [activeWidget, setActiveWidget] = useState<FormControl>({});
 
   const handleHide = (controlId: string) => {
     const nextControls = controls.filter(item => item.controlId !== controlId);
     onChange(nextControls, controlId);
   };
 
-  const onSort = list => {
+  const onSort = (list: FormControl[][]) => {
     setWidgets(list);
     onChange(genControlsByWidgets(list));
   };

@@ -5,7 +5,7 @@ import _, { head, isEmpty, some } from 'lodash';
 import styled from 'styled-components';
 import { DRAG_ACCEPT, DRAG_MODE } from '../config/Drag';
 import { notInsetSectionTab } from '../util';
-import { isFullLineDragItem } from '../util/drag';
+import { isFullLineDragItem, type WidgetDragItem } from '../util/drag';
 import { isFullLineControl } from '../util/widgets';
 import DisplayItem from './displayItem';
 
@@ -19,7 +19,7 @@ const DisplayRowWrap = styled.div`
 export default function RowItem({ row, displayItemType, sectionId, index, ...rest }: { index?: number; [key: string]: any }) {
   const [pointerDir, setPointerDir] = useState('');
   const $ref = useRef<HTMLDivElement | null>(null);
-  const [{ isOver }, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop<WidgetDragItem>({
     accept: DRAG_ACCEPT[displayItemType],
     canDrop(item) {
       const { path } = item;

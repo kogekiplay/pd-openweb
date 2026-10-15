@@ -243,6 +243,7 @@ export default function DisplayItem(props) {
 
       // 插入新行
       if (mode === DRAG_MODE.INSERT_NEW_LINE) {
+        if (rowIndex === undefined) return;
         // 标签页表格拖拽到普通控件中，更改showtype
         const formatData =
           isTabSheetList(newData) && dropResult.displayItemType === 'common'
@@ -255,12 +256,14 @@ export default function DisplayItem(props) {
 
       // 拖到行的末尾
       if (mode === DRAG_MODE.INSERT_TO_ROW_END) {
+        if (rowIndex === undefined) return;
         setWidgets(insertToRowEnd({ widgets, srcItem: newData, srcPath: path, targetIndex: rowIndex }));
         setActiveWidget({ ...newData, size: WHOLE_SIZE / (widgets[rowIndex].length + 1) });
       }
 
       // 行内拖拽
       if (mode === DRAG_MODE.INSERT_TO_COL) {
+        if (!dropPath) return;
         setWidgets(insertToCol({ widgets, dropPath, location, srcPath: path, srcItem: newData }));
         setActiveWidget({ ...newData, size: WHOLE_SIZE / ((widgets[dropPath[0]] || []).length + 1) });
       }
