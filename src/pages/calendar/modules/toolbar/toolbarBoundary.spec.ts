@@ -466,6 +466,11 @@ async function main() {
         [],
       );
     });
+  for (const calendars of [undefined, null])
+    await compare(h => {
+      h.responses.set('InvitedCalendars', { code: 1, data: { count: 0, calendars } });
+      h.invoke('Method.getInvitedCalendars');
+    });
   // Decode boundaries preserve array identity and opaque metadata; malformed lists cannot become successful empty results.
   const categories = structuredClone(old);
   assert.equal(boundary.calendarCategories(categories), categories);

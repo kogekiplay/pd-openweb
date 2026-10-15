@@ -666,13 +666,14 @@ Toolbar.Method = {
 
       if (source.code == 1) {
         var data = invitedCalendarList(source.data);
+        const calendars = data.calendars || [];
         Toolbar.settings.dataCount = data.count;
         data.statusTypes = [''];
         $('#calendarLoading').hide();
 
         // 过滤发起人
-        if (data.calendars) {
-          data.calendars.forEach(function (calendar) {
+        if (calendars.length) {
+          calendars.forEach(function (calendar) {
             calendar.members.forEach(function (member, key) {
               if (member.accountID === calendar.createUser) {
                 calendar.members.splice(key, 1);
@@ -686,8 +687,8 @@ Toolbar.Method = {
           // 加载模板
           $('#calendarNumber').html(String(data.count)).show();
           // 重复日程describe
-          for (var i = 0; i < data.calendars.length; i++) {
-            var calendar = data.calendars[i];
+          for (var i = 0; i < calendars.length; i++) {
+            var calendar = calendars[i];
             if (!calendar?.isRecur) {
               continue;
             }
@@ -697,7 +698,7 @@ Toolbar.Method = {
 
           data.TplComm = Toolbar.inviteCalendarMethod;
           // 摘要换行
-          data.calendars.forEach(item => {
+          calendars.forEach(item => {
             item.description = htmlEncodeReg(item.description).replace(/\n/g, '<br>');
           });
           $('#invitedMain')

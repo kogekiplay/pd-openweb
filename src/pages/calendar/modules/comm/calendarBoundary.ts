@@ -43,7 +43,7 @@ export interface InvitedCalendar extends Record<string, unknown> {
 }
 export interface InvitedCalendarList extends Record<string, unknown> {
   count: number;
-  calendars: InvitedCalendar[];
+  calendars?: InvitedCalendar[] | null | undefined;
   statusTypes?: string[] | undefined;
   TplComm?: InviteCalendarMethods | undefined;
 }
@@ -104,8 +104,10 @@ export function invitedCalendarList(value: unknown): InvitedCalendarList {
   if (
     !object(value) ||
     typeof value['count'] !== 'number' ||
-    !Array.isArray(value['calendars']) ||
-    !Array.from(value['calendars']).every(invite)
+    !(
+      (value['count'] <= 0 && value['calendars'] == null) ||
+      (Array.isArray(value['calendars']) && Array.from(value['calendars']).every(invite))
+    )
   )
     throw new TypeError('Invalid invited calendars');
   return value as InvitedCalendarList;
