@@ -267,7 +267,7 @@ export function dealCascaderId(data: FormControl) {
     if (_.isEmpty(settings)) return data;
     if (!Array.isArray(settings)) throw new TypeError('Invalid cascader list');
     const newValue = settings.map((item: unknown) => {
-      const parsed: unknown = typeof item === 'string' ? safeParse(item || '{}') : undefined;
+      const parsed: unknown = typeof item === 'string' ? safeParse(item || '{}') : item;
       return (widgetObject(parsed) && parsed['id']) || item;
     });
     return { ...data, advancedSetting: { ...data.advancedSetting, topfilters: JSON.stringify(newValue) } };

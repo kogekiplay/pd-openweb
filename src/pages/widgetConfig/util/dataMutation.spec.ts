@@ -24,13 +24,20 @@ const testGlobal = globalThis as unknown as Record<string, unknown>;
 testGlobal['_l'] = (value: string) => value;
 testGlobal['alert'] = (...args: unknown[]) => events.push(['alert', ...args]);
 testGlobal['document'] = { getElementById: () => null };
-testGlobal['safeParse'] = (value: string) => {
-  try {
-    return JSON.parse(value);
-  } catch {
-    return value;
-  }
-};
+// Exercise the actual global parser, including its object passthrough and malformed-string fallback.
+const globalSource = fs.readFileSync(path.join(root, 'src/common/global.ts'), 'utf8');
+const safeParseStart = globalSource.indexOf('window.safeParse =');
+const safeParseEnd = globalSource.indexOf('\n};', safeParseStart);
+assert.ok(safeParseStart >= 0 && safeParseEnd > safeParseStart);
+const parserWindow: Record<string, unknown> = {};
+new Function(
+  'window',
+  'console',
+  transformSync(globalSource.slice(safeParseStart, safeParseEnd + 3), {
+    filename: 'src/common/global.ts',
+  }).code,
+)(parserWindow, { error: () => {} });
+testGlobal['safeParse'] = parserWindow['safeParse'];
 
 function load(source: string, imports: Record<string, unknown> = {}): Record<string, unknown> {
   const output: { exports: Record<string, unknown> } = { exports: {} };
@@ -383,7 +390,9 @@ compareValue('dealUserId', [
   },
   'chooserange',
 ]);
-compareValue('dealCascaderId', [{ advancedSetting: { topfilters: JSON.stringify(['{ "id": "x" }', 'plain']) } }]);
+compareValue('dealCascaderId', [
+  { advancedSetting: { topfilters: JSON.stringify(['{ "id": "x" }', { id: 'object-id' }, 'plain']) } },
+]);
 const related = compareValue('dealRelateSheetDefaultValue', [
   {
     advancedSetting: {
