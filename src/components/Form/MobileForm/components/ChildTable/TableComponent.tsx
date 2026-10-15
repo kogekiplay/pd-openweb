@@ -258,13 +258,13 @@ function TableComponent(props) {
         rows,
         row => /^temp/.test(row.rowid) || (allowcancel && (useUserPermission && !!recordId ? row.allowdelete : true)),
       ) > -1;
-    let visibleColumns = showControls
-      .map((item: FormControl) => _.find(controls, c => c.controlId === item))
+    let visibleColumns: Array<FormControl & {className?: string; width?: number}> = showControls
+      .map((item: string) => _.find(controls, c => c.controlId === item))
       .filter(_.identity)
       .filter(c => c.type !== 34 && controlState(c).visible && !isRelateRecordTableControl(c));
     visibleColumns =
       !disabled && isEdit && !_.isEmpty(rows) && showDeleteCol
-        ? [{ controlId: 'delete', controlName: '', className: 'deleteAction', width: 30 }].concat(visibleColumns)
+        ? [{ controlId: 'delete', controlName: '', className: 'deleteAction', width: 30 }, ...visibleColumns]
         : visibleColumns;
 
     return addWidthToColumns(visibleColumns, widthDataSource);
@@ -494,9 +494,10 @@ function TableComponent(props) {
                   }
                   canedit={cellControl.type === 36 && controlPermission.editable && !control.mobileCheckRuleLocked}
                   updateCell={({ value }) => {
-                    if (cellControl.type !== 36) return;
+                    const controlId = cellControl.controlId;
+                    if (cellControl.type !== 36 || controlId === undefined) return;
 
-                    onSave({ ...record, [cellControl.controlId]: value }, [cellControl.controlId]);
+                    onSave({ ...record, [controlId]: value }, [controlId]);
 
                     if (isEdit) return;
                     clearTimeout(timerRef.current);

@@ -1,167 +1,169 @@
 import _ from 'lodash';
 import DataFormat from 'src/components/Form/core/DataFormat';
 import type { FormConditionRule } from 'src/components/Form/core/formUtils/types';
+import type { MasterData } from 'src/components/Form/core/types';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { checkCellIsEmpty, controlState } from 'src/utils/control';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { FormControl } from 'src/utils/controlTypes';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 import { checkRulesErrorOfRow } from 'src/utils/rule';
 import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT, FROM } from '../../../core/config';
-import { checkRuleLocked } from '../../../core/formUtils';
-import { checkValueByFilterRegex } from '../../../core/formUtils';
+import { checkRuleLocked, checkValueByFilterRegex } from '../../../core/formUtils';
 
-type ChildValueItem = {
-  accountId?: string;
-  sid?: string;
-  departmentId?: string;
-  organizeId?: string;
-  id?: string;
-  rowid?: string;
-};
-type SDKCondition = {
-  controlId?: string;
-  dataType?: number;
-  spliceType?: number;
-  filterType?: number;
-  dateRange?: number;
-  dateRangeType?: number;
-  maxValue?: string | number;
-  minValue?: string | number;
-  isDynamicsource?: boolean;
-  dynamicSource?: unknown[];
+interface ChildRow {
+  rowid?: string | undefined;
+  [controlId: string]: unknown;
+}
+interface ChildColumn {
+  controlId?: string | undefined;
+  controlName?: string | undefined;
+  width?: number | undefined;
+}
+interface SDKCondition extends Record<string, unknown> {
+  controlId?: string | null | undefined;
+  dataType?: number | null | undefined;
+  spliceType?: number | null | undefined;
+  filterType?: number | null | undefined;
+  dateRange?: number | null | undefined;
+  dateRangeType?: number | null | undefined;
+  maxValue?: string | number | null | undefined;
+  minValue?: string | number | null | undefined;
+  isDynamicsource?: boolean | null | undefined;
+  dynamicSource?: unknown[] | null | undefined;
   value?: unknown;
-  values?: unknown[];
-  isGroup?: boolean;
-  groupFilters?: SDKCondition[];
-  [key: string]: unknown;
-};
-type ErrorRow = RecordRow;
+  values?: unknown[] | null | undefined;
+  isGroup?: boolean | null | undefined;
+  groupFilters?: SDKCondition[] | null | undefined;
+}
 type ErrorResult = Record<string, string | undefined>;
+const { DATE_TIME_RANGE: dateTimeRangeMessage, ...controlErrorMessages } = FORM_ERROR_TYPE_TEXT;
+const errorMessages: Readonly<Partial<Record<string, string | ((control: FormControl) => string | undefined)>>> =
+  controlErrorMessages;
 
-function getControlCompareValue(c: FormControl, value: string | undefined): string {
-  if (c.type === 26) {
-    return safeParse(value, 'array')
-      .map((u: ChildValueItem) => u.accountId || '')
-      .sort()
-      .join('');
-  } else if (c.type === 29) {
-    return safeParse(value, 'array')
-      .map((u: ChildValueItem) => u.sid || '')
-      .sort()
-      .join('');
-  } else if (c.type === 27) {
-    return safeParse(value, 'array')
-      .map((u: ChildValueItem) => u.departmentId || '')
-      .sort()
-      .join('');
-  } else if (c.type === 48) {
-    return safeParse(value, 'array')
-      .map((u: ChildValueItem) => u.organizeId || '')
-      .sort()
-      .join('');
-  } else {
-    return String(value ?? '');
-  }
+function property(value: unknown, key: string): unknown {
+  return value !== null && typeof value === 'object' ? Reflect.get(value, key) : undefined;
 }
 
-/**
- * 记录数据格式化为 关联表控件数据格式
- * @param  {} controls
- * @param  {} data
- */
+function getControlCompareValue(c: FormControl, value: unknown): unknown {
+  const key =
+    c.type === 26
+      ? 'accountId'
+      : c.type === 29
+        ? 'sid'
+        : c.type === 27
+          ? 'departmentId'
+          : c.type === 48
+            ? 'organizeId'
+            : undefined;
+  if (!key) return value;
+  const parsed: unknown = safeParse(value, 'array');
+  if (!Array.isArray(parsed)) throw new TypeError('Invalid child table selected values');
+  return parsed
+    .map((item: unknown) => property(item, key))
+    .sort()
+    .join('');
+}
 
+/** Collect field/rule errors and duplicate values for visible subtable fields. */
 export function getSubListError(
-  { rows, rules }: { rows: ErrorRow[]; rules: FormConditionRule[] },
+  { rows, rules }: { rows: ChildRow[]; rules: FormConditionRule[] },
   controls: FormControl[] = [],
   showControls: string[] = [],
   from = 3,
-  masterData?: unknown,
+  masterData?: MasterData,
 ): ErrorResult {
   const result: ErrorResult = {};
 
   try {
-    filterEmptyChildTableRows(rows).forEach(async row => {
+    // Every operation is synchronous. Do not turn thrown validation errors into unobserved rejected promises.
+    filterEmptyChildTableRows(rows).forEach(row => {
       const rulesResult = checkRulesErrorOfRow({
         from,
         rules,
         controls: controls.filter(
-          (c: FormControl) =>
-            _.find(showControls, id => id === c.controlId) ||
-            (!!c.controlId && _.find(rules, rule => JSON.stringify(rule.filters).indexOf(c.controlId || '') > -1)),
+          c =>
+            c.controlId !== undefined &&
+            (showControls.includes(c.controlId) ||
+              rules.some(rule => (JSON.stringify(rule.filters) || '').includes(c.controlId || ''))),
         ),
         row,
-      }) as { errors: Array<{ controlId?: string; errorMessage?: string }>; formData: FormControl[] };
-      const rulesErrors = rulesResult.errors;
+      });
       const controldata = rulesResult.formData.filter(
-        (c: FormControl) =>
-          _.find(showControls, id => id === c.controlId) && controlState(c).visible && controlState(c).editable,
+        c =>
+          c.controlId !== undefined &&
+          showControls.includes(c.controlId) &&
+          controlState(c).visible &&
+          controlState(c).editable,
       );
       const isLock = checkRuleLocked(
         rules,
         rulesResult.formData.filter(
-          (c: FormControl) => _.find(showControls, id => id === c.controlId) && controlState(c).visible,
+          c => c.controlId !== undefined && showControls.includes(c.controlId) && controlState(c).visible,
         ),
-        row.rowid || '',
+        row.rowid,
       );
-
-      if (isLock) {
-        return;
-      }
-
+      if (isLock) return;
       const formdata = new DataFormat({
         data: controldata.map(c => ({ ...c, isSubList: true })),
         from: FROM.NEWRECORD,
         masterData,
       });
-      let errorItems = formdata.getErrorControls();
-      rulesErrors.forEach(errorItem => {
-        if (_.includes(showControls, errorItem.controlId)) {
-          result[(row.rowid || '') + '-' + errorItem.controlId] = errorItem.errorMessage;
+      rulesResult.errors.forEach(errorItem => {
+        if (showControls.includes(errorItem.controlId))
+          result[row.rowid + '-' + errorItem.controlId] = errorItem.errorMessage;
+      });
+      formdata.getErrorControls().forEach(errorItem => {
+        const errorControl = controldata.find(c => c.controlId === errorItem.controlId);
+        if (!errorControl || !errorItem.errorType) return;
+        const value: unknown = errorControl.value;
+        const message = errorMessages[errorItem.errorType];
+
+        if (errorItem.errorType === FORM_ERROR_TYPE.CUSTOM) {
+          result[row.rowid + '-' + errorItem.controlId] = checkValueByFilterRegex(
+            errorControl,
+            typeof value === 'string' ? value : value === undefined ? undefined : String(value),
+            controldata,
+          );
+        } else if (errorItem.errorType === FORM_ERROR_TYPE.DATE_TIME_RANGE) {
+          result[row.rowid + '-' + errorItem.controlId] =
+            errorItem.errorMessage || dateTimeRangeMessage(String(value ?? ''));
+        } else if (typeof message === 'string') {
+          result[row.rowid + '-' + errorItem.controlId] = message;
+        } else if (message) {
+          result[row.rowid + '-' + errorItem.controlId] = message(errorControl);
+        } else {
+          throw new TypeError('Unknown child table validation error');
         }
       });
-      errorItems.forEach(errorItem => {
-        const errorControl = _.find(controldata, c => c.controlId === errorItem.controlId);
-        result[(row.rowid || '') + '-' + errorItem.controlId] =
-          errorItem.errorType === FORM_ERROR_TYPE.CUSTOM
-            ? checkValueByFilterRegex(errorControl, _.get(errorControl, 'value'), controldata)
-            : typeof FORM_ERROR_TYPE_TEXT[errorItem.errorType] === 'string'
-              ? FORM_ERROR_TYPE_TEXT[errorItem.errorType]
-              : FORM_ERROR_TYPE_TEXT[errorItem.errorType](errorControl);
-      });
     });
-    const uniqueControls = controls.filter(
-      (c: FormControl) =>
-        !!c.controlId && _.find(showControls, id => id === c.controlId) && (c.unique || c.uniqueInRecord),
-    );
-    uniqueControls.forEach(c => {
-      const hadValueRows = rows.filter(
-        (row: RecordRow) =>
-          !!c.controlId &&
-          typeof row[c.controlId] !== 'undefined' &&
-          !checkCellIsEmpty(row[c.controlId]) &&
-          !String(row[c.controlId]).startsWith('deleteRowIds'),
-      );
-      const uniqueValueRows = _.uniqBy(hadValueRows, row =>
-        getControlCompareValue(c, row[c.controlId] as string | undefined),
-      );
-
-      if (hadValueRows.length !== uniqueValueRows.length) {
-        const duplicateValueRows = hadValueRows.filter(vr => !_.find(uniqueValueRows, r => r.rowid === vr.rowid));
-        duplicateValueRows.forEach(row => {
-          const sameValueRows = hadValueRows.filter(
-            r =>
-              getControlCompareValue(c, r[c.controlId] as string | undefined) ===
-              getControlCompareValue(c, row[c.controlId] as string | undefined),
+    controls
+      .filter(c => c.controlId !== undefined && showControls.includes(c.controlId) && (c.unique || c.uniqueInRecord))
+      .forEach(c => {
+        const controlId = c.controlId;
+        if (controlId === undefined) return;
+        const hadValueRows = rows.filter(row => {
+          const value = row[controlId];
+          return (
+            value !== undefined &&
+            !checkCellIsEmpty(value) &&
+            !(typeof value === 'string' && value.startsWith('deleteRowIds'))
           );
-
-          if (sameValueRows.length > 1) {
-            sameValueRows.forEach(r => {
-              result[(r.rowid || '') + '-' + c.controlId] = FORM_ERROR_TYPE_TEXT.UNIQUE();
-            });
-          }
         });
-      }
-    });
+        const uniqueValueRows = _.uniqBy(hadValueRows, row => getControlCompareValue(c, row[controlId]));
+
+        if (hadValueRows.length !== uniqueValueRows.length) {
+          const duplicateValueRows = hadValueRows.filter(vr => !uniqueValueRows.some(r => r.rowid === vr.rowid));
+          duplicateValueRows.forEach(row => {
+            const sameValueRows = hadValueRows.filter(
+              r => getControlCompareValue(c, r[controlId]) === getControlCompareValue(c, row[controlId]),
+            );
+            if (sameValueRows.length > 1)
+              sameValueRows.forEach(r => {
+                result[r.rowid + '-' + controlId] = FORM_ERROR_TYPE_TEXT.UNIQUE();
+              });
+          });
+        }
+      });
     return result;
   } catch (err) {
     alert(_l('失败'), 3);
@@ -170,53 +172,32 @@ export function getSubListError(
   }
 }
 
-export const addWidthToColumns = (columns: any[], dataSource: RecordRow[]): any[] => {
-  // 创建一个隐藏的 div 用来计算文字宽度
+export const addWidthToColumns = <T extends ChildColumn>(columns: T[], dataSource: ChildRow[]): T[] => {
   const wrapper = document.createElement('div');
   wrapper.style.position = 'absolute';
   wrapper.style.visibility = 'hidden';
   wrapper.style.whiteSpace = 'nowrap';
   wrapper.style.fontSize = '16px';
   document.body.appendChild(wrapper);
-
   const tempDiv = document.createElement('div');
   tempDiv.style.fontSize = '1em';
   wrapper.appendChild(tempDiv);
-
-  const MIN_WIDTH = 80;
-  const MAX_WIDTH = 200;
-  const PADDING = 20; // 左右各 10
-  const TOLERANCE = 10; // 预留10像素容错，避免计算误差
-
-  const newColumns = columns.map(col => {
-    if (col.controlId === 'delete') {
-      return col;
-    }
-
-    // 获取该列的所有值（加上列标题）
-    const values: unknown[] = [col.controlName ?? '', ...dataSource.map(row => row[col.controlId] ?? '')];
-    // 计算最大宽度
-    let maxTextWidth = 0;
-    values.forEach(value => {
-      tempDiv.innerText = String(value);
-      maxTextWidth = Math.max(maxTextWidth, tempDiv.offsetWidth);
+  try {
+    return columns.map(col => {
+      if (col.controlId === 'delete') return col;
+      const values = [col.controlName, ...dataSource.map(row => row[String(col.controlId)] ?? '')];
+      let maxTextWidth = 0;
+      values.forEach(value => {
+        tempDiv.innerText = String(value);
+        maxTextWidth = Math.max(maxTextWidth, tempDiv.offsetWidth);
+      });
+      return { ...col, width: Math.min(200, Math.max(80, maxTextWidth + 30)) };
     });
-
-    // 加上 padding + 容错
-    let finalWidth = maxTextWidth + PADDING + TOLERANCE;
-    // 限制范围
-    if (finalWidth < MIN_WIDTH) finalWidth = MIN_WIDTH;
-    if (finalWidth > MAX_WIDTH) finalWidth = MAX_WIDTH;
-
-    return { ...col, width: finalWidth };
-  });
-
-  document.body.removeChild(wrapper);
-
-  return newColumns;
+  } finally {
+    document.body.removeChild(wrapper);
+  }
 };
 
-// 关联类型字段的 dataType 列表，其 values 可能包含对象格式，需转换为纯 ID
 const RELATION_FILTER_TYPES = [
   WIDGETS_TO_API_TYPE_ENUM.USER_PICKER,
   WIDGETS_TO_API_TYPE_ENUM.DEPARTMENT,
@@ -230,24 +211,41 @@ const RELATION_FILTER_TYPES = [
 
 function normalizeSDKFilterValueItem(v: unknown): unknown {
   if (typeof v === 'object' && v !== null) {
-    const entity = v as ChildValueItem;
-    return entity.accountId || entity.id || entity.departmentId || entity.organizeId || entity.rowid;
+    return (
+      property(v, 'accountId') ||
+      property(v, 'id') ||
+      property(v, 'departmentId') ||
+      property(v, 'organizeId') ||
+      property(v, 'rowid')
+    );
   }
 
   if (typeof v === 'string' && v.startsWith('{')) {
-    const parsed = safeParse(v);
-
-    if (parsed && typeof parsed === 'object') {
-      return parsed.id || parsed.accountId;
-    }
+    const parsed: unknown = safeParse(v);
+    if (parsed && typeof parsed === 'object') return property(parsed, 'id') || property(parsed, 'accountId');
   }
 
   return v;
 }
 
-// 将单条 SDK 筛选条件规范化为与 PC 端 formatConditionForSave 输出一致的格式
+function sdkCondition(value: unknown): value is SDKCondition {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
+  const get = (key: string): unknown => Reflect.get(value, key);
+  const groups = get('groupFilters');
+  return (
+    (get('controlId') == null || typeof get('controlId') === 'string') &&
+    ['dataType', 'spliceType', 'filterType', 'dateRange', 'dateRangeType'].every(
+      k => get(k) == null || typeof get(k) === 'number',
+    ) &&
+    ['maxValue', 'minValue'].every(k => get(k) == null || typeof get(k) === 'string' || typeof get(k) === 'number') &&
+    ['isGroup', 'isDynamicsource'].every(k => get(k) == null || typeof get(k) === 'boolean') &&
+    ['values', 'dynamicSource'].every(k => get(k) == null || Array.isArray(get(k))) &&
+    (groups == null || (Array.isArray(groups) && Array.from(groups).every(sdkCondition)))
+  );
+}
+
 function normalizeSDKCondition(fc: SDKCondition): SDKCondition {
-  const result = {
+  const result: SDKCondition = {
     controlId: fc.controlId,
     dataType: fc.dataType,
     spliceType: fc.spliceType || 1,
@@ -260,45 +258,37 @@ function normalizeSDKCondition(fc: SDKCondition): SDKCondition {
     dynamicSource: fc.dynamicSource || [],
     value: fc.value,
     values: fc.values || [],
-  } as Record<string, unknown> & SDKCondition;
-
+  };
   Object.keys(result).forEach(k => result[k] === undefined && delete result[k]);
-
-  // SDK 会传空字符串，PC 端不传此字段时直接省略
   if (result.maxValue === '') delete result.maxValue;
   if (result.minValue === '') delete result.minValue;
-
-  // 日期/日期时间字段（type 15/16）指定日期时间（dateRange=18）场景：
-  // SDK 使用 filterType=17（DATEENUM）+ dateRangeType=3（DAY），
-  // PC 使用 filterType=37（DATE_EQ）+ dateRangeType=1（MINUTE），需对齐
   if (_.includes([15, 16], result.dataType) && result.filterType === 17 && result.dateRange === 18) {
     result.filterType = 37;
     result.dateRangeType = 1;
   }
 
-  if (_.includes(RELATION_FILTER_TYPES, result.dataType) && result.values && result.values.length) {
+  if (_.includes(RELATION_FILTER_TYPES, result.dataType) && result.values?.length) {
     result.values = result.values.map(normalizeSDKFilterValueItem).filter(Boolean);
   }
 
-  return result as SDKCondition;
+  return result;
 }
 
-// SDK 返回扁平条件数组，API 要求分组格式 [{isGroup: true, groupFilters: [...]}]，此函数完成转换并规范化字段
-export function normalizeSDKFilterControls(filterControls: SDKCondition[]): SDKCondition[] {
-  if (!filterControls || !filterControls.length) return filterControls;
-
+/** Decode the SDK boundary before flattening conditions to the API's grouped representation. */
+export function normalizeSDKFilterControls(filterControls: unknown): SDKCondition[] | null | undefined {
+  if (filterControls === null) return null;
+  if (filterControls === undefined) return undefined;
+  if (!Array.isArray(filterControls) || !Array.from(filterControls).every(sdkCondition))
+    throw new TypeError('Invalid SDK filter conditions');
+  if (!filterControls.length) return filterControls;
   if (filterControls.some(fc => fc.isGroup && fc.groupFilters)) {
-    return filterControls.map(fc => {
-      if (fc.isGroup && fc.groupFilters) {
-        return { ...fc, groupFilters: fc.groupFilters.map(normalizeSDKCondition) };
-      }
-
-      return normalizeSDKCondition(fc);
-    });
+    return filterControls.map(fc =>
+      fc.isGroup && fc.groupFilters
+        ? { ...fc, groupFilters: fc.groupFilters.map(normalizeSDKCondition) }
+        : normalizeSDKCondition(fc),
+    );
   }
 
   const normalizedConditions = filterControls.map(normalizeSDKCondition);
-  const spliceType = (normalizedConditions[0] && normalizedConditions[0].spliceType) || 1;
-
-  return [{ isGroup: true, spliceType, groupFilters: normalizedConditions }];
+  return [{ isGroup: true, spliceType: normalizedConditions[0]?.spliceType || 1, groupFilters: normalizedConditions }];
 }
