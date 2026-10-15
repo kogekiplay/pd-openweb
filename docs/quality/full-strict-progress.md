@@ -387,3 +387,5 @@ OnlySync、RecordInfo/DragCore、BaseColumnHead 及列头发布器的有限合�
 2026-10-15 数据集成公共字段映射工具批次：utils.ts与constant.ts达标，严格诊断52,206→52,157，按文件/错误码无新增；欠债3,120，strict-clean1,640/4,760；fast8,604/2,318keys。449组历史A/B及237项规格通过，详见integration-utils-strict-20261015.md。全仓严格化继续进行。
 
 2026-10-15上海时间12:47:25已发布数据集成公共字段映射批次84e7265963：六入口、34资源、17,098文件与同步任务空列表通过；strict52,157。见production-20261015-integration-utils.md。
+
+2026-10-15 移动端子表工具批次：strict52,157→52,125，按文件/错误码无新增；fast8,601/2,315keys；238规格与36组历史对照通过，见mobile-childtable-strict-20261015.md。

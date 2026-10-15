@@ -1,37 +1,66 @@
 import _ from 'lodash';
 import DataFormat from 'src/components/Form/core/DataFormat';
+import type { FormConditionRule } from 'src/components/Form/core/formUtils/types';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import { checkCellIsEmpty, controlState } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 import { checkRulesErrorOfRow } from 'src/utils/rule';
 import { FORM_ERROR_TYPE, FORM_ERROR_TYPE_TEXT, FROM } from '../../../core/config';
 import { checkRuleLocked } from '../../../core/formUtils';
 import { checkValueByFilterRegex } from '../../../core/formUtils';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
-function getControlCompareValue(c: FormControl, value) {
+type ChildValueItem = {
+  accountId?: string;
+  sid?: string;
+  departmentId?: string;
+  organizeId?: string;
+  id?: string;
+  rowid?: string;
+};
+type SDKCondition = {
+  controlId?: string;
+  dataType?: number;
+  spliceType?: number;
+  filterType?: number;
+  dateRange?: number;
+  dateRangeType?: number;
+  maxValue?: string | number;
+  minValue?: string | number;
+  isDynamicsource?: boolean;
+  dynamicSource?: unknown[];
+  value?: unknown;
+  values?: unknown[];
+  isGroup?: boolean;
+  groupFilters?: SDKCondition[];
+  [key: string]: unknown;
+};
+type ErrorRow = RecordRow;
+type ErrorResult = Record<string, string | undefined>;
+
+function getControlCompareValue(c: FormControl, value: string | undefined): string {
   if (c.type === 26) {
     return safeParse(value, 'array')
-      .map(u => u.accountId)
+      .map((u: ChildValueItem) => u.accountId || '')
       .sort()
       .join('');
   } else if (c.type === 29) {
     return safeParse(value, 'array')
-      .map(u => u.sid)
+      .map((u: ChildValueItem) => u.sid || '')
       .sort()
       .join('');
   } else if (c.type === 27) {
     return safeParse(value, 'array')
-      .map(u => u.departmentId)
+      .map((u: ChildValueItem) => u.departmentId || '')
       .sort()
       .join('');
   } else if (c.type === 48) {
     return safeParse(value, 'array')
-      .map(u => u.organizeId)
+      .map((u: ChildValueItem) => u.organizeId || '')
       .sort()
       .join('');
   } else {
-    return value;
+    return String(value ?? '');
   }
 }
 
@@ -41,8 +70,14 @@ function getControlCompareValue(c: FormControl, value) {
  * @param  {} data
  */
 
-export function getSubListError({ rows, rules }, controls: FormControl[] = [], showControls = [], from = 3, masterData) {
-  const result = {};
+export function getSubListError(
+  { rows, rules }: { rows: ErrorRow[]; rules: FormConditionRule[] },
+  controls: FormControl[] = [],
+  showControls: string[] = [],
+  from = 3,
+  masterData?: unknown,
+): ErrorResult {
+  const result: ErrorResult = {};
 
   try {
     filterEmptyChildTableRows(rows).forEach(async row => {
@@ -52,18 +87,21 @@ export function getSubListError({ rows, rules }, controls: FormControl[] = [], s
         controls: controls.filter(
           (c: FormControl) =>
             _.find(showControls, id => id === c.controlId) ||
-            _.find(rules, rule => JSON.stringify(rule.filters).indexOf(c.controlId) > -1),
+            (!!c.controlId && _.find(rules, rule => JSON.stringify(rule.filters).indexOf(c.controlId || '') > -1)),
         ),
         row,
-      });
+      }) as { errors: Array<{ controlId?: string; errorMessage?: string }>; formData: FormControl[] };
       const rulesErrors = rulesResult.errors;
       const controldata = rulesResult.formData.filter(
-        (c: FormControl) => _.find(showControls, id => id === c.controlId) && controlState(c).visible && controlState(c).editable,
+        (c: FormControl) =>
+          _.find(showControls, id => id === c.controlId) && controlState(c).visible && controlState(c).editable,
       );
       const isLock = checkRuleLocked(
         rules,
-        rulesResult.formData.filter((c: FormControl) => _.find(showControls, id => id === c.controlId) && controlState(c).visible),
-        row.rowid,
+        rulesResult.formData.filter(
+          (c: FormControl) => _.find(showControls, id => id === c.controlId) && controlState(c).visible,
+        ),
+        row.rowid || '',
       );
 
       if (isLock) {
@@ -78,12 +116,12 @@ export function getSubListError({ rows, rules }, controls: FormControl[] = [], s
       let errorItems = formdata.getErrorControls();
       rulesErrors.forEach(errorItem => {
         if (_.includes(showControls, errorItem.controlId)) {
-          result[row.rowid + '-' + errorItem.controlId] = errorItem.errorMessage;
+          result[(row.rowid || '') + '-' + errorItem.controlId] = errorItem.errorMessage;
         }
       });
       errorItems.forEach(errorItem => {
         const errorControl = _.find(controldata, c => c.controlId === errorItem.controlId);
-        result[row.rowid + '-' + errorItem.controlId] =
+        result[(row.rowid || '') + '-' + errorItem.controlId] =
           errorItem.errorType === FORM_ERROR_TYPE.CUSTOM
             ? checkValueByFilterRegex(errorControl, _.get(errorControl, 'value'), controldata)
             : typeof FORM_ERROR_TYPE_TEXT[errorItem.errorType] === 'string'
@@ -92,27 +130,33 @@ export function getSubListError({ rows, rules }, controls: FormControl[] = [], s
       });
     });
     const uniqueControls = controls.filter(
-      (c: FormControl) => _.find(showControls, id => id === c.controlId) && (c.unique || c.uniqueInRecord),
+      (c: FormControl) =>
+        !!c.controlId && _.find(showControls, id => id === c.controlId) && (c.unique || c.uniqueInRecord),
     );
     uniqueControls.forEach(c => {
       const hadValueRows = rows.filter(
         (row: RecordRow) =>
+          !!c.controlId &&
           typeof row[c.controlId] !== 'undefined' &&
           !checkCellIsEmpty(row[c.controlId]) &&
-          !row[c.controlId].startsWith('deleteRowIds'),
+          !String(row[c.controlId]).startsWith('deleteRowIds'),
       );
-      const uniqueValueRows = _.uniqBy(hadValueRows, row => getControlCompareValue(c, row[c.controlId]));
+      const uniqueValueRows = _.uniqBy(hadValueRows, row =>
+        getControlCompareValue(c, row[c.controlId] as string | undefined),
+      );
 
       if (hadValueRows.length !== uniqueValueRows.length) {
         const duplicateValueRows = hadValueRows.filter(vr => !_.find(uniqueValueRows, r => r.rowid === vr.rowid));
         duplicateValueRows.forEach(row => {
           const sameValueRows = hadValueRows.filter(
-            r => getControlCompareValue(c, r[c.controlId]) === getControlCompareValue(c, row[c.controlId]),
+            r =>
+              getControlCompareValue(c, r[c.controlId] as string | undefined) ===
+              getControlCompareValue(c, row[c.controlId] as string | undefined),
           );
 
           if (sameValueRows.length > 1) {
             sameValueRows.forEach(r => {
-              result[r.rowid + '-' + c.controlId] = FORM_ERROR_TYPE_TEXT.UNIQUE(c, true);
+              result[(r.rowid || '') + '-' + c.controlId] = FORM_ERROR_TYPE_TEXT.UNIQUE();
             });
           }
         });
@@ -126,7 +170,7 @@ export function getSubListError({ rows, rules }, controls: FormControl[] = [], s
   }
 }
 
-export const addWidthToColumns = (columns, dataSource: RecordRow[]) => {
+export const addWidthToColumns = (columns: any[], dataSource: RecordRow[]): any[] => {
   // 创建一个隐藏的 div 用来计算文字宽度
   const wrapper = document.createElement('div');
   wrapper.style.position = 'absolute';
@@ -150,7 +194,7 @@ export const addWidthToColumns = (columns, dataSource: RecordRow[]) => {
     }
 
     // 获取该列的所有值（加上列标题）
-    const values = [col.controlName, ...dataSource.map(row => row[col.controlId] ?? '')];
+    const values: unknown[] = [col.controlName ?? '', ...dataSource.map(row => row[col.controlId] ?? '')];
     // 计算最大宽度
     let maxTextWidth = 0;
     values.forEach(value => {
@@ -164,10 +208,7 @@ export const addWidthToColumns = (columns, dataSource: RecordRow[]) => {
     if (finalWidth < MIN_WIDTH) finalWidth = MIN_WIDTH;
     if (finalWidth > MAX_WIDTH) finalWidth = MAX_WIDTH;
 
-    return {
-      ...col,
-      width: finalWidth,
-    };
+    return { ...col, width: finalWidth };
   });
 
   document.body.removeChild(wrapper);
@@ -187,9 +228,10 @@ const RELATION_FILTER_TYPES = [
   WIDGETS_TO_API_TYPE_ENUM.ORG_ROLE,
 ];
 
-function normalizeSDKFilterValueItem(v) {
+function normalizeSDKFilterValueItem(v: unknown): unknown {
   if (typeof v === 'object' && v !== null) {
-    return v.accountId || v.id || v.departmentId || v.organizeId || v.rowid;
+    const entity = v as ChildValueItem;
+    return entity.accountId || entity.id || entity.departmentId || entity.organizeId || entity.rowid;
   }
 
   if (typeof v === 'string' && v.startsWith('{')) {
@@ -204,7 +246,7 @@ function normalizeSDKFilterValueItem(v) {
 }
 
 // 将单条 SDK 筛选条件规范化为与 PC 端 formatConditionForSave 输出一致的格式
-function normalizeSDKCondition(fc) {
+function normalizeSDKCondition(fc: SDKCondition): SDKCondition {
   const result = {
     controlId: fc.controlId,
     dataType: fc.dataType,
@@ -218,7 +260,7 @@ function normalizeSDKCondition(fc) {
     dynamicSource: fc.dynamicSource || [],
     value: fc.value,
     values: fc.values || [],
-  };
+  } as Record<string, unknown> & SDKCondition;
 
   Object.keys(result).forEach(k => result[k] === undefined && delete result[k]);
 
@@ -238,11 +280,11 @@ function normalizeSDKCondition(fc) {
     result.values = result.values.map(normalizeSDKFilterValueItem).filter(Boolean);
   }
 
-  return result;
+  return result as SDKCondition;
 }
 
 // SDK 返回扁平条件数组，API 要求分组格式 [{isGroup: true, groupFilters: [...]}]，此函数完成转换并规范化字段
-export function normalizeSDKFilterControls(filterControls) {
+export function normalizeSDKFilterControls(filterControls: SDKCondition[]): SDKCondition[] {
   if (!filterControls || !filterControls.length) return filterControls;
 
   if (filterControls.some(fc => fc.isGroup && fc.groupFilters)) {
