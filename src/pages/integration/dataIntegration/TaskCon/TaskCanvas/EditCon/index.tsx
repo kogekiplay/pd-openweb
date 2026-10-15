@@ -1,3 +1,4 @@
+import type { CanvasNode } from '../canvasTypes';
 import React, { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
@@ -305,17 +306,17 @@ export default class EditorCon extends Component<any, any> {
     }
   };
 
-  renderCard = (nodeData: Record<string, any> = {}) => {
+  renderCard = (nodeData: Partial<CanvasNode> = {}) => {
     const { flowData } = this.props;
     const defaultInfo = NODE_TYPE_LIST.find(it => it.nodeType === nodeData.nodeType) || {};
-    const isAct = ACTION_LIST.map(o => o.type).includes(nodeData.nodeType);
+    const isAct = ACTION_LIST.map(o => o.type).includes(nodeData.nodeType || '');
     const {
       iconBgColor,
       dsType,
       unionType = 'UNION',
       joinType = 'INNER_JOIN',
       className,
-    } = _.get(nodeData, ['nodeConfig', 'config']) || {};
+    } = nodeData.nodeConfig?.config || {};
 
     if (!isAct && !dsType) {
       return <AddSourceOrDest {...this.props} node={nodeData} height={72} />;

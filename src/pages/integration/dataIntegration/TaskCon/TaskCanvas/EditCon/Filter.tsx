@@ -11,14 +11,14 @@ export default function Filter(props) {
   const [{ filterVisible, data, relateControls, filterInfo, filters }, setState] = useSetState({
     filterVisible: false,
     data: {},
-    relateControls: [],
+    relateControls: [] as ReturnType<typeof formatControls>,
     filterInfo: {},
     filters: [],
   });
   useEffect(() => {
     const { list = [], node = {}, currentProjectId: projectId } = props;
     const preNode = list.filter(o => o.pathIds.length > 0 && o.pathIds[0].toDt.nodeId === node.nodeId)[0];
-    let relateControls = formatControls(_.get(preNode, ['nodeConfig', 'fields']) || [], preNode.nodeType).filter(
+    let relateControls = formatControls(_.get(preNode, ['nodeConfig', 'fields']) || []).filter(
       o => o.isCheck,
     ); //过滤掉未勾选的字段
     setState({

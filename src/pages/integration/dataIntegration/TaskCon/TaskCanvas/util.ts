@@ -20,28 +20,39 @@ import {
   TIME_GATHER_PARTICLE,
   time_jdbcTypeIds,
 } from 'src/pages/integration/dataIntegration/TaskCon/TaskCanvas/config.js';
+import {
+  syncFields,
+  syncMappings,
+  syncMatchedTypes,
+  syncRecord,
+} from '../../connector/components/OnlySyncStep/connectorBoundary';
+import type { MatchedTypes, SyncField, SyncMapping } from '../../connector/components/OnlySyncStep/connectorTypes';
 import { getDefaultData, getInitWorkSheetFields } from '../../utils';
+import type { CanvasFieldRequest, CanvasLine, CanvasMappingDefaults, CanvasNode, UnionField } from './canvasTypes';
 
-export const formatTaskNodeData = (dataList = [], firstId) => {
+export const formatTaskNodeData = (dataList: CanvasNode[] = [], firstId: string | undefined) => {
   // const firstId = "source1";
   if (dataList.length <= 0) {
     return [];
   }
 
-  let parentIds = [];
+  let parentIds: Array<string | undefined> = [];
   let maxY = 0;
-  let list = dataList.map(o => {
+  const list: CanvasNode[] = dataList.map(o => {
+    const { x: _x, y: _y, ...node } = o;
     return {
-      ..._.omit(o, ['x', 'y']),
+      ...node,
       prevIds:
         ['JOIN', 'UNION'].includes(o.nodeType) && (o.prevIds || []).length > 1
-          ? [_.get(o, 'nodeConfig.config.leftTableId'), _.get(o, 'nodeConfig.config.rightTableId')]
+          ? [o.nodeConfig?.config?.leftTableId, o.nodeConfig?.config?.rightTableId]
           : o.prevIds,
     };
   });
 
-  const generateCoordinateX = (currentId, x?, y?) => {
+  const generateCoordinateX = (currentId: string | undefined, x = 0, y = 0, ancestors = new Set<string>()) => {
     const currentItem = list.find(item => item.nodeId === currentId);
+    if (!currentItem || ancestors.has(currentItem.nodeId)) return;
+    const branch = new Set(ancestors).add(currentItem.nodeId);
 
     currentItem.x = currentId === firstId ? 0 : x;
     currentItem.y = currentId === firstId ? 0 : y;
@@ -50,20 +61,25 @@ export const formatTaskNodeData = (dataList = [], firstId) => {
       parentIds = parentIds.concat(currentItem.prevIds || []);
     }
 
-    currentItem.nextIds.forEach(o => {
-      generateCoordinateX(o, currentItem.x + 1, currentItem.y);
+    (currentItem.nextIds || []).forEach(o => {
+      generateCoordinateX(o, (currentItem.x || 0) + 1, currentItem.y, branch);
     });
   };
 
-  const generateCoordinateParent = (parentIds, newY?: number | undefined) => {
+  const generateCoordinateParent = (
+    parentIds: Array<string | undefined>,
+    newY?: number,
+    ancestors = new Set<string>(),
+  ) => {
     parentIds.forEach(currentId => {
       const currentItem = list.find(item => item.nodeId === currentId);
 
-      if (!currentItem) {
+      if (!currentItem || ancestors.has(currentItem.nodeId)) {
         return;
       }
 
       const parentNode = list.find(obj => (obj.prevIds || []).indexOf(currentId) > -1);
+      if (!parentNode || parentNode.x === undefined) return;
 
       if (!newY || (parentNode.prevIds || []).indexOf(currentId) > 0) {
         maxY = maxY + 1;
@@ -71,7 +87,7 @@ export const formatTaskNodeData = (dataList = [], firstId) => {
 
       currentItem.x = parentNode.x - 1;
       currentItem.y = maxY;
-      generateCoordinateParent(currentItem.prevIds || [], maxY);
+      generateCoordinateParent(currentItem.prevIds || [], maxY, new Set(ancestors).add(currentItem.nodeId));
     });
   };
 
@@ -80,7 +96,7 @@ export const formatTaskNodeData = (dataList = [], firstId) => {
     let minX = 0;
 
     list.forEach(item => {
-      if (item.x < minX) {
+      if (item.x !== undefined && item.x < minX) {
         minX = item.x;
       }
     });
@@ -88,7 +104,7 @@ export const formatTaskNodeData = (dataList = [], firstId) => {
     minX = Math.abs(minX);
 
     list.forEach(item => {
-      if (item.x !== 0 || item.y !== 0) {
+      if (item.x !== undefined && (item.x !== 0 || item.y !== 0)) {
         item.x = item.x + minX;
       }
     });
@@ -96,22 +112,21 @@ export const formatTaskNodeData = (dataList = [], firstId) => {
 
   // 计算所有行的位置情况
   const calculationAllRowPosition = () => {
-    const rowObj = {};
+    const rowObj: Record<string, number[]> = {};
     let allowMergeRow: number[] = [];
 
     list
-      .filter(item => item.y > 0)
+      .filter(item => (item.y || 0) > 0)
       .forEach(item => {
-        if (!rowObj[item.y]) {
-          rowObj[item.y] = [item.x];
-        } else {
-          rowObj[item.y].push(item.x);
-        }
+        if (item.y === undefined || item.x === undefined) return;
+        (rowObj[item.y] ||= []).push(item.x);
       });
 
     Object.keys(rowObj).forEach((key, index) => {
       if (index !== Object.keys(rowObj).length - 1) {
-        const mergeArr = rowObj[key].concat(rowObj[Object.keys(rowObj)[index + 1]]);
+        const nextRow = Object.keys(rowObj)[index + 1];
+        if (nextRow === undefined) return;
+        const mergeArr = (rowObj[key] || []).concat(rowObj[nextRow] || []);
 
         if (_.uniq(mergeArr).length === mergeArr.length) {
           allowMergeRow.push(parseInt(key) + 1);
@@ -123,9 +138,9 @@ export const formatTaskNodeData = (dataList = [], firstId) => {
       .sort((a, b) => b - a)
       .forEach(line => {
         list
-          .filter(item => item.y >= line)
+          .filter(item => item.y !== undefined && item.y >= line)
           .forEach(item => {
-            item.y = item.y - 1;
+            item.y = (item.y || 0) - 1;
           });
       });
   };
@@ -138,18 +153,18 @@ export const formatTaskNodeData = (dataList = [], firstId) => {
 };
 
 //计算pathIds
-export const formatDataWithLine = dataList => {
+export const formatDataWithLine = (dataList: CanvasNode[]) => {
   let list = dataList.map(o => {
     return {
       ...o,
       prevIds:
         ['JOIN', 'UNION'].includes(o.nodeType) && (o.prevIds || []).length > 1
-          ? [_.get(o, 'nodeConfig.config.leftTableId'), _.get(o, 'nodeConfig.config.rightTableId')]
+          ? [o.nodeConfig?.config?.leftTableId, o.nodeConfig?.config?.rightTableId]
           : o.prevIds,
     };
   });
   const l = list.map(o => {
-    let pathIds = [];
+    const pathIds: CanvasLine[] = [];
 
     if ((o.nextIds || []).length > 0) {
       (o.nextIds || []).map(it => {
@@ -167,8 +182,10 @@ export const formatDataWithLine = dataList => {
       (o.prevIds || []).map(it => {
         let index = list.findIndex(a => a.nodeId === it);
 
-        if (index > -1) {
-          l[index] = { ...l[index], pathIds: [...(l[index].pathIds || []), { fromDt: l[index], toDt: o }] };
+        const fromNode = l[index];
+
+        if (fromNode) {
+          l[index] = { ...fromNode, pathIds: [...fromNode.pathIds, { fromDt: fromNode, toDt: o }] };
         }
       });
     }
@@ -177,9 +194,8 @@ export const formatDataWithLine = dataList => {
 };
 
 //通过中间类型转换成筛选组件使用的type
-export const formatControls = controls => {
-  let templateControls = [];
-  templateControls = controls.map(o => {
+export const formatControls = (controls: SyncField[]) => {
+  const templateControls = controls.map(o => {
     switch (o.jdbcTypeId) {
       case 93:
       case 92:
@@ -207,7 +223,7 @@ export const formatControls = controls => {
   return templateControls;
 };
 
-export const getNodeInfo = async (projectId: string, flowId, nodeId) => {
+export const getNodeInfo = async (projectId: string, flowId: string, nodeId: string): Promise<unknown> => {
   const node = await TaskFlow.getNodeInfo({
     projectId,
     flowId,
@@ -226,7 +242,9 @@ export const getNodeInfo = async (projectId: string, flowId, nodeId) => {
  * {Array} props.destFields 目的地表字段列表
  * @returns
  */
-export const setFieldsMappingDefaultData = async props => {
+export const setFieldsMappingDefaultData = async (
+  props: CanvasMappingDefaults,
+): Promise<{ fieldsMapping: SyncMapping[]; matchedTypes?: MatchedTypes | null | undefined }> => {
   const {
     initMapping,
     sourceFields,
@@ -241,33 +259,25 @@ export const setFieldsMappingDefaultData = async props => {
 
   if (matchedTypes) {
     return {
-      fieldsMapping: getDefaultData(
-        initMapping,
-        matchedTypes,
-        isSetDefaultFields,
-        destFields,
-        isSourceAppType,
-        isDestAppType,
+      fieldsMapping: syncMappings(
+        getDefaultData(initMapping, matchedTypes, isSetDefaultFields, destFields, isSourceAppType, isDestAppType),
       ),
     };
   }
 
   //通过接口获取当前源字段对应 目的地字段字段可选的字段类型
-  const res = await dataSourceApi.fieldsDataTypeMatch({
+  const res: unknown = await dataSourceApi.fieldsDataTypeMatch({
     dataDestType,
     sourceFields,
     isCreate,
   });
+  if (!syncRecord(res)) throw new TypeError('Invalid canvas matched types response');
+  const nextMatchedTypes = res['matchedTypes'] === null ? null : syncMatchedTypes(res['matchedTypes']);
   return {
-    fieldsMapping: getDefaultData(
-      initMapping,
-      res.matchedTypes,
-      isSetDefaultFields,
-      destFields,
-      isSourceAppType,
-      isDestAppType,
+    fieldsMapping: syncMappings(
+      getDefaultData(initMapping, nextMatchedTypes, isSetDefaultFields, destFields, isSourceAppType, isDestAppType),
     ),
-    matchedTypes: res.matchedTypes,
+    matchedTypes: nextMatchedTypes,
   };
 };
 
@@ -281,33 +291,26 @@ export const getFields = async ({
   withRowId,
   withSys,
   destType,
-}) => {
-  let { dsType, workSheetId, tableName, dbName, schema, datasourceId, dataDestId } =
-    _.get(node, ['nodeConfig', 'config']) || {};
+}: CanvasFieldRequest): Promise<SyncField[] | undefined> => {
+  let { dsType, workSheetId, tableName, dbName, schema, datasourceId, dataDestId } = node.nodeConfig?.config || {};
 
   if (dsType === DATABASE_TYPE.APPLICATION_WORKSHEET) {
     if (!workSheetId) return undefined;
     const res = await worksheetApi.getWorksheetInfo({ worksheetId: workSheetId, getTemplate: true });
     const resFields = isGetDest
-      ? _.get(res, 'template.controls') || []
-      : (_.get(res, 'template.controls') || []).map(o => {
+      ? res?.template?.controls || []
+      : (res?.template?.controls || []).map(o => {
           return { ...o, alias: o.controlName };
         });
-    const fieldsParams = getInitWorkSheetFields(
-      resFields,
-      isGetDest,
-      isSourceAppType,
-      isDestAppType,
-      workSheetId,
-      withRowId,
-      withSys,
+    const fieldsParams = syncFields(
+      getInitWorkSheetFields(resFields, isGetDest, isSourceAppType, isDestAppType, workSheetId, withRowId, withSys),
     );
 
     if (_.isEmpty(fieldsParams)) {
       return [];
     } else {
       const ress = await dataSourceApi.fillJdbcType({ worksheetId: workSheetId, fields: fieldsParams });
-      return Array.isArray(ress) ? ress : [];
+      return Array.isArray(ress) ? syncFields(ress) : [];
     }
   } else {
     if (!tableName) {
@@ -323,18 +326,18 @@ export const getFields = async ({
       schema: dsType === DATABASE_TYPE.HANA ? dbName : schema,
     };
     const res = await dataSourceApi.getTableFields(params);
-    return Array.isArray(res) ? res : [];
+    return Array.isArray(res) ? syncFields(res) : [];
   }
 };
 
-export const formatFieldsByType = list => {
-  let initWorkSheetFields = [];
+export const formatFieldsByType = (list: SyncField[]): SyncField[] => {
+  const initWorkSheetFields: SyncField[] = [];
   const oidStrList = [...PERSONNEL_FIELDS, ...DEPT_FIELDS, ...RELATED_RECORD_FIELDS].map(o => o.id);
 
-  const isIn = str => {
+  const isIn = (str: string | null | undefined) => {
     let inStr = false;
     oidStrList.forEach(o => {
-      if (str.indexOf(o) >= 0) {
+      if ((str || '').indexOf(o) >= 0) {
         inStr = true;
       }
     });
@@ -389,9 +392,9 @@ export const formatFieldsByType = list => {
   return initWorkSheetFields;
 };
 
-export const hsMorePkControl = (preNode, list) => {
+export const hsMorePkControl = (preNode: CanvasNode | undefined, list: CanvasNode[]) => {
   //多源且多主键的情况
-  const pks = (_.get(preNode, 'nodeConfig.fields') || []).filter(o => o.isPk);
+  const pks = (preNode?.nodeConfig?.fields || []).filter(o => o.isPk);
   const sourceNodes = list.filter(o => ['SOURCE_TABLE'].includes(o.nodeType));
   const destNodes = list.find(o => ['DEST_TABLE'].includes(o.nodeType));
   return (
@@ -400,14 +403,14 @@ export const hsMorePkControl = (preNode, list) => {
   );
 };
 
-export const getUnionFeids = (defaultFields = [], list, node) => {
-  const { leftTableId, rightTableId } = _.get(node, ['nodeConfig', 'config']) || {};
+export const getUnionFeids = (defaultFields: SyncField[] = [], list: CanvasNode[], node: CanvasNode) => {
+  const { leftTableId, rightTableId } = node.nodeConfig?.config || {};
   let leftNode = list.find(o => o.nodeId === leftTableId);
   let rightNode = list.find(o => o.nodeId === rightTableId);
-  const leftFields = (_.get(leftNode, 'nodeConfig.fields') || []).filter(o => o.isCheck);
-  const rightFields = (_.get(rightNode, 'nodeConfig.fields') || []).filter(o => o.isCheck);
+  const leftFields = (leftNode?.nodeConfig?.fields || []).filter(o => o.isCheck);
+  const rightFields = (rightNode?.nodeConfig?.fields || []).filter(o => o.isCheck);
   let othersFields = rightFields;
-  const fields = leftFields.map(o => {
+  const fields: UnionField[] = leftFields.map(o => {
     let rightField = rightFields.find(it => it.alias === o.alias && it.jdbcTypeId === o.jdbcTypeId);
 
     if (rightField) {
@@ -426,13 +429,13 @@ export const getUnionFeids = (defaultFields = [], list, node) => {
       ...o,
       resultField: {
         ...o.resultField,
-        isCheck: !!(defaultFields.find(it => it.id === _.get(o, 'resultField.id')) || {}).isCheck,
+        isCheck: !!defaultFields.find(it => it.id === o.resultField.id)?.isCheck,
       },
     };
   });
 };
 
-export const setAllUnionFieldsCheck = (fieldList, setCheck?) => {
+export const setAllUnionFieldsCheck = (fieldList: UnionField[], setCheck?: boolean) => {
   const fields = setCheck
     ? fieldList.map(it => {
         return {
@@ -456,8 +459,8 @@ export const setAllUnionFieldsCheck = (fieldList, setCheck?) => {
   });
 };
 
-export const setFeildAlias = fields => {
-  let newFeilds = [];
+export const setFeildAlias = <T extends SyncField>(fields: T[]): T[] => {
+  let newFeilds: T[] = [];
   let result = _.groupBy(fields, 'alias');
   _.forEach(result, a => {
     if (a.length > 1) {
@@ -471,7 +474,10 @@ export const setFeildAlias = fields => {
   return newFeilds;
 };
 
-export const getNodeName = (flowData, nodeData) => {
+export const getNodeName = (
+  flowData: { datasources?: { id?: string | undefined; name?: string | undefined }[] | undefined },
+  nodeData: Partial<Pick<CanvasNode, 'nodeType' | 'nodeConfig' | 'name'>>,
+) => {
   const defaultInfo = NODE_TYPE_LIST.find(it => it.nodeType === nodeData.nodeType);
   const sourceName = (
     (flowData.datasources || []).find(o =>
@@ -483,27 +489,29 @@ export const getNodeName = (flowData, nodeData) => {
     ) || {}
   ).name;
   return (
-    (['DEST_TABLE', 'SOURCE_TABLE'].includes(nodeData.nodeType)
+    (['DEST_TABLE', 'SOURCE_TABLE'].includes(nodeData.nodeType || '')
       ? _.get(nodeData, 'nodeConfig.config.dsType') === DATABASE_TYPE.APPLICATION_WORKSHEET
         ? _l('应用工作表')
         : sourceName || nodeData.name
-      : nodeData.name) || defaultInfo.name
+      : nodeData.name) ||
+    defaultInfo?.name ||
+    ''
   );
 };
 
-export const isTimeTypes = data => {
-  return [91, 93, 2013, 92, 2014].includes(data.jdbcTypeId);
+export const isTimeTypes = (data: Pick<SyncField, 'jdbcTypeId'>) => {
+  return [91, 93, 2013, 92, 2014].includes(data.jdbcTypeId ?? NaN);
 };
 
-export const getDefaultAggregate = jdbcTypeId => {
+export const getDefaultAggregate = (jdbcTypeId: number | null | undefined) => {
   if (92 === jdbcTypeId) return 'HOUR_FOR_TIME';
   if (2013 === jdbcTypeId) return 'CUR_HOUR';
   return 'TODAY';
 };
 
 //时间字段的归组方式
-export const getTimeGroupDropData = jdbcTypeId => {
-  if ([92].includes(jdbcTypeId)) {
+export const getTimeGroupDropData = (jdbcTypeId: number | null | undefined) => {
+  if ([92].includes(jdbcTypeId ?? NaN)) {
     // 时间：时、分
     // 集合：时
     return [...ONLY_TIME_DATA_PARTICLE, ...TIME_GATHER_PARTICLE].filter(o =>
@@ -511,7 +519,7 @@ export const getTimeGroupDropData = jdbcTypeId => {
     );
   }
 
-  if ([2013].includes(jdbcTypeId)) {
+  if ([2013].includes(jdbcTypeId ?? NaN)) {
     // 时间：时、分
     // 集合：时
     return [...TIME_DATA_PARTICLE, ...TIME_GATHER_PARTICLE].filter(o =>
@@ -519,27 +527,30 @@ export const getTimeGroupDropData = jdbcTypeId => {
     );
   }
 
-  if ([91, 93, 2014].includes(jdbcTypeId)) {
+  if ([91, 93, 2014].includes(jdbcTypeId ?? NaN)) {
     return [...DATE_TIME_DATA_PARTICLE, ...TIME_GATHER_PARTICLE];
   }
+
   return undefined;
 };
 
 //获取当前字段的集合配置
-export const getAggData = data => {
+export const getAggData = (data: {
+  aggFuncType?: string | undefined;
+}): Partial<(typeof ALL_OPERATION_TYPE_DATA)[number]> => {
   return ALL_OPERATION_TYPE_DATA.find(a => a.value === data.aggFuncType) || {};
 };
 
 //获取当前字段可配置的集合配置
-export const getAggregateData = (jdbcTypeId, isRowsCount) => {
+export const getAggregateData = (jdbcTypeId: number | null | undefined, isRowsCount?: boolean) => {
   return OPERATION_TYPE_DATA.filter(it =>
     isRowsCount
       ? it.value === 'COUNT'
-      : text_jdbcTypeIds.includes(jdbcTypeId)
+      : text_jdbcTypeIds.includes(jdbcTypeId ?? NaN)
         ? ['MAX', 'MIN'].includes(it.value) //文本类型=>最大值|最小值
-        : time_jdbcTypeIds.includes(jdbcTypeId)
+        : time_jdbcTypeIds.includes(jdbcTypeId ?? NaN)
           ? ['COUNT', 'DISTINCT_COUNT'].includes(it.value)
-          : num_jdbcTypeIds.includes(jdbcTypeId)
+          : num_jdbcTypeIds.includes(jdbcTypeId ?? NaN)
             ? ['SUM', 'MAX', 'MIN', 'AVG', 'COUNT', 'DISTINCT_COUNT'].includes(it.value) //数值类型=>求和|平均值|最大值|最小值,计数，去重计数
             : !['COUNT', 'DISTINCT_COUNT'].includes(it.value),
   );

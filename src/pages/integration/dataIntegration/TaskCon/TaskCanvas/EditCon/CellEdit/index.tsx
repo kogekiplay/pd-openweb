@@ -1,3 +1,4 @@
+import type { SyncField } from '../../../../connector/components/OnlySyncStep/connectorTypes';
 import React, { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
@@ -190,7 +191,7 @@ export default class CellEdit extends Component<any, any> {
     const isDestMDType =
       _.get(list.find(o => o.nodeType === 'DEST_TABLE') || {}, 'nodeConfig.config.dsType') ===
       DATABASE_TYPE.APPLICATION_WORKSHEET;
-    let data = [];
+    let data: SyncField[] = [];
 
     try {
       data =
@@ -206,7 +207,7 @@ export default class CellEdit extends Component<any, any> {
       console.log(error);
     }
 
-    data = data.filter(o => !disableList.includes(o.jdbcTypeId));
+    data = data.filter(o => !disableList.includes(o.jdbcTypeId ?? NaN));
     this.setState({
       fieldsBysource: data,
     });
@@ -215,7 +216,7 @@ export default class CellEdit extends Component<any, any> {
         let field = data.find(it => it.id === o.id);
         return { ...o, ..._.omit(field || {}, ['alias', 'isCheck', 'isPk', 'isFakePk']), isErr: !field };
       })
-      .filter(o => !disableList.includes(o.jdbcTypeId));
+      .filter(o => !disableList.includes(o.jdbcTypeId ?? NaN));
     let otherData = data
       .filter(o => !fieldsData.find(a => a.id === o.id))
       .map(o => {

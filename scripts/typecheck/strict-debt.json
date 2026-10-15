@@ -1845,7 +1845,6 @@
     "src/pages/integration/dataIntegration/TaskCon/TaskCanvas/components/EditFeildsName.tsx",
     "src/pages/integration/dataIntegration/TaskCon/TaskCanvas/components/PublishSetDialog.tsx",
     "src/pages/integration/dataIntegration/TaskCon/TaskCanvas/index.tsx",
-    "src/pages/integration/dataIntegration/TaskCon/TaskCanvas/util.ts",
     "src/pages/integration/dataIntegration/TaskCon/TaskHeader.tsx",
     "src/pages/integration/dataIntegration/TaskCon/index.tsx",
     "src/pages/integration/dataIntegration/components/CommonSelect/index.tsx",
