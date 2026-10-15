@@ -1507,8 +1507,6 @@
     "src/pages/calendar/modules/calendarDetail/lib/postMessage.tsx",
     "src/pages/calendar/modules/calendarDetail/lib/recurCalendarUpdateDialog.tsx",
     "src/pages/calendar/modules/calendarDetail/root.tsx",
-    "src/pages/calendar/modules/comm/comm.tsx",
-    "src/pages/calendar/modules/toolbar/toolbar.tsx",
     "src/pages/calendar/share/index.tsx",
     "src/pages/certification/IdentityAuth.tsx",
     "src/pages/certification/components/CertificationDetail/EditContactInfo.tsx",

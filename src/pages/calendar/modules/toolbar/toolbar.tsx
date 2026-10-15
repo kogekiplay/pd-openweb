@@ -9,6 +9,19 @@ import { htmlEncodeReg } from 'src/utils/common';
 import copy from 'src/utils/copyToClipboard';
 import Calendar from '../calendar/calendar';
 import { formatRecur } from '../calendarDetail/common';
+import {
+  calendarCategories,
+  calendarOtherUsers,
+  calendarResponse,
+  calendarUrl,
+  invitedCalendarList,
+} from '../comm/calendarBoundary';
+import type {
+  CalendarCategories,
+  CalendarCategory,
+  CalendarOtherUser,
+  InviteCalendarMethods,
+} from '../comm/calendarBoundary';
 import Comm from '../comm/comm';
 import addOtherUserTpl from './tpl/addOtherUser.html';
 import calendarInviteTpl from './tpl/calendarInvite.html';
@@ -20,7 +33,35 @@ import toolbarTpl from './tpl/toolbar.html';
 import updateCategoryListTpl from './tpl/updateCategoryList.html';
 import './toolbar.less';
 
-var Toolbar: Record<string, any> = {};
+interface ToolbarModule {
+  settings: {
+    oldCategoryList: CalendarCategories;
+    pageIndex: number;
+    pageSize: number;
+    dataCount: number | null;
+    isComplete: boolean;
+  };
+  Comm: typeof Comm;
+  Calendar: { init: () => void; rememberClickRefresh: () => void };
+  Event: () => void;
+  Method: {
+    init: () => void;
+    getIcsUrl: () => void;
+    deleteUserCalCategory: (target: JQuery<HTMLElement>, catId: string) => void;
+    updateUserCalCategoryInfo: (categories: CalendarCategory[]) => void;
+    calendarRemind: () => void;
+    getInvitedCalendars: () => void;
+    colorClass: (color: number | undefined, type?: string) => string | undefined;
+    colorValue: (className: string | undefined) => number | undefined;
+    inviteColorClass: (color: number | undefined) => string;
+    otherUsers: () => void;
+    addOtherUser: (users: CalendarOtherUser[], isPrepend?: boolean) => void;
+  };
+  inviteCalendarMethod: InviteCalendarMethods;
+  Export: { init: () => void; bindEvent: () => void };
+}
+
+const Toolbar = {} as ToolbarModule;
 
 Toolbar.settings = {
   oldCategoryList: [],
@@ -42,7 +83,7 @@ Toolbar.Event = function () {
 
     $(this).addClass('bgColorPrimaryTransparent');
     Toolbar.settings.pageIndex = 1;
-    $('#invitedCalendars').css('height', $(window).height() - $('#topBarContainer').height() - 90);
+    $('#invitedCalendars').css('height', ($(window).height() || 0) - ($('#topBarContainer').height() || 0) - 90);
 
     document.title = _l('待确认日程') + ' - ' + _l('日程');
     Toolbar.Method.getInvitedCalendars();
@@ -87,7 +128,8 @@ Toolbar.Event = function () {
   // 未确认日程颜色分类click
   $('#invitedCalendars').on('click', '.inviteCalendarTypeList li', function (this: HTMLElement, event) {
     var catID = $(this).attr('catID');
-    var catClassName = $(this).find('.editColor').attr('class');
+    if (catID === undefined) return;
+    var catClassName = $(this).find('.editColor').attr('class') || '';
     var $calendarType = $(this).parents('.inviteCalendarType');
 
     $calendarType.find('.editColor').eq(0).removeClass().addClass(catClassName);
@@ -124,19 +166,19 @@ Toolbar.Event = function () {
           var catName;
           var catColor;
           var $li;
-          var newCategoryList = [];
+          var newCategoryList: CalendarCategory[] = [];
 
           $list.each(function (this: HTMLElement) {
             $li = $(this);
             catId = $li.attr('catid') || '';
-            catName = $li.find('.classificationListName').val().trim();
+            catName = String($li.find('.classificationListName').val() ?? '').trim();
             // 分类名称不为空
             if (catName !== '') {
               catColor = Toolbar.Method.colorValue(
                 $li
                   .find('.classificationListColumnOperation .colorBlock')
                   .attr('class')
-                  .replace(/^colorBlock\s|\scolorBlock$/, ''),
+                  ?.replace(/^colorBlock\s|\scolorBlock$/, ''),
               );
               newCategoryList.push({
                 catName: catName,
@@ -188,7 +230,7 @@ Toolbar.Event = function () {
 
           event.stopPropagation();
         })
-        .on('click', '.colorBlockList', function (this: HTMLElement) {
+        .on('click', '.colorBlockList', function (this: HTMLElement, event) {
           // 改变颜色框
           var $colorBlockMain = $(this).parent();
           var className = $(this).find('span').attr('class');
@@ -237,8 +279,8 @@ Toolbar.Event = function () {
       }
     });
 
-    safeLocalStorageSetItem('isWorkCalendar', Toolbar.Comm.settings.isWorkCalendar);
-    safeLocalStorageSetItem('isTaskCalendar', Toolbar.Comm.settings.isTaskCalendar);
+    safeLocalStorageSetItem('isWorkCalendar', String(Toolbar.Comm.settings.isWorkCalendar));
+    safeLocalStorageSetItem('isTaskCalendar', String(Toolbar.Comm.settings.isTaskCalendar));
     safeLocalStorageSetItem('categorys', Toolbar.Comm.settings.categorys.join(','));
 
     Toolbar.Calendar.rememberClickRefresh();
@@ -264,6 +306,7 @@ Toolbar.Event = function () {
   // 更改分类点击
   $calendarTypeList.on('click', '.filterTaskTypeList li', function (this: HTMLElement, event) {
     var taskType = $(this).find('.filterTaskTypeListIcon').attr('data-tasktype');
+    if (taskType === undefined) return;
     var taskTypeName = $(this).find('span').html();
     var $filterTaskType = $('#filterTaskType');
     var oldTaskType = $filterTaskType.attr('data-tasktype');
@@ -295,7 +338,7 @@ Toolbar.Event = function () {
       showMoreInvite: false,
       SelectUserSettings: {
         projectId: _.find(md.global.Account.projects, item => item.projectId === calendarLastPId)
-          ? calendarLastPId
+          ? calendarLastPId || ''
           : '',
         filterFriend: true,
         filterOthers: true,
@@ -307,7 +350,7 @@ Toolbar.Event = function () {
         callback: function (users) {
           var userCount = users.length;
           var user;
-          var data = [];
+          var data: CalendarOtherUser[] = [];
           if (userCount > 0) {
             for (var i = 0; i < userCount; i++) {
               user = users[i];
@@ -319,7 +362,7 @@ Toolbar.Event = function () {
                   Toolbar.Comm.settings.otherUsers.join(','),
                 );
                 data.push({
-                  fullName: user.fullname,
+                  fullName: user.fullname || '',
                   accountID: user.accountId,
                   avatar: user.avatar,
                 });
@@ -401,14 +444,21 @@ Toolbar.Event = function () {
       var recurTime = $element.data('recurtime');
       var catID = $(this).parents('.inviteSinlge').find('.inviteCalendarType').attr('catID') || '1';
 
-      Toolbar.Comm.inviteCalendar.confirm(calendarId, recurTime, catID);
+      Toolbar.Comm.inviteCalendar.confirm(
+        typeof calendarId === 'string' ? calendarId : undefined,
+        typeof recurTime === 'string' ? recurTime : undefined,
+        catID,
+      );
     })
     .on('click', '.refuseInvite', function (this: HTMLElement) {
       var $element = $(this).parent();
       var calendarId = $element.data('calendarid');
       var recurTime = $element.data('recurtime');
 
-      Toolbar.Comm.inviteCalendar.refuse(calendarId, recurTime, '');
+      Toolbar.Comm.inviteCalendar.refuse(
+        typeof calendarId === 'string' ? calendarId : undefined,
+        typeof recurTime === 'string' ? recurTime : undefined,
+      );
     });
 
   $(document).on('click', function (event) {
@@ -457,9 +507,11 @@ Toolbar.Method = {
 
   // 日程同步
   getIcsUrl: function () {
-    calendarAjax.getIcsUrl().then(function (source) {
+    calendarAjax.getIcsUrl().then(function (response) {
+      const source = calendarResponse(response);
+
       if (source.code == 1) {
-        var url = source.data.replace(/^http[\s\S]*:\/\/?/, 'webcal://');
+        var url = calendarUrl(source.data).replace(/^http[\s\S]*:\/\/?/, 'webcal://');
         Dialog.confirm({
           dialogClasses: 'calendarInteraction',
           width: 644,
@@ -475,7 +527,7 @@ Toolbar.Method = {
           $('#clipinner')
             .off()
             .on('click', function () {
-              copy($('#clipinner').attr('data-clipboard-text'));
+              copy($('#clipinner').attr('data-clipboard-text') || '');
               alert(_l('已经复制到粘贴板，你可以使用Ctrl+V 贴到需要的地方去了哦'));
             });
 
@@ -528,12 +580,14 @@ Toolbar.Method = {
           .deleteUserCalCategory({
             catID: catId,
           })
-          .then(function (source) {
+          .then(function (response) {
+            const source = calendarResponse(response);
+
             if (source.code == 1) {
-              _.remove(Toolbar.settings.oldCategoryList, obj => obj.catID == catId);
+              _.remove<CalendarCategory[]>(Toolbar.settings.oldCategoryList, obj => obj.catID == catId);
               if (Toolbar.Comm.settings.categorys.length) {
                 Toolbar.Comm.settings.categorys.splice(_.indexOf(Toolbar.Comm.settings.categorys, catId), 1);
-                safeLocalStorageSetItem('categorys', Toolbar.Comm.settings.categorys);
+                safeLocalStorageSetItem('categorys', Toolbar.Comm.settings.categorys.join(','));
               }
 
               $('.calendarTypeList li[catid=' + catId + ']').remove();
@@ -553,22 +607,25 @@ Toolbar.Method = {
       .updateUserCalCategoryInfo({
         newCalCategory: JSON.stringify(newCalCategory),
       })
-      .then(function (source) {
+      .then(function (response) {
+        const source = calendarResponse(response);
+
         if (source.code == 1) {
           alert(_l('修改成功'));
 
-          var newCategoryList = source.data;
+          var newCategoryList = calendarCategories(source.data);
           var newSize = newCategoryList.length;
           var oldSize = Toolbar.settings.oldCategoryList.length;
           var catID;
 
           for (var i = 0; i < newSize; i++) {
-            catID = newCategoryList[i].catID;
+            catID = newCategoryList[i]?.catID;
+            if (catID === undefined) continue;
             if (oldSize == 0) {
               Toolbar.Comm.settings.categorys.push(catID);
             } else {
               for (var j = 0; j < oldSize; j++) {
-                if (catID == Toolbar.settings.oldCategoryList[j].catID) {
+                if (catID == Toolbar.settings.oldCategoryList[j]?.catID) {
                   break;
                 } else if (j == oldSize - 1) {
                   Toolbar.Comm.settings.categorys.push(catID);
@@ -577,7 +634,7 @@ Toolbar.Method = {
             }
           }
 
-          safeLocalStorageSetItem('categorys', Toolbar.Comm.settings.categorys);
+          safeLocalStorageSetItem('categorys', Toolbar.Comm.settings.categorys.join(','));
           Toolbar.Calendar.rememberClickRefresh();
 
           newCategoryList.colorClass = Toolbar.Method.colorClass;
@@ -593,18 +650,22 @@ Toolbar.Method = {
 
   // 未确认日程计数
   calendarRemind: function () {
-    calendarAjax.getUserInvitedCalendarsCount().then(function (source) {
-      if (source.code == 1 && source.data > 0) {
-        $('#calendarNumber').html(source.data).show();
+    calendarAjax.getUserInvitedCalendarsCount().then(function (response) {
+      const source = calendarResponse(response);
+
+      if (source.code == 1 && typeof source.data === 'number' && source.data > 0) {
+        $('#calendarNumber').html(String(source.data)).show();
       }
     });
   },
 
   // 获取未确认日程
   getInvitedCalendars: function () {
-    calendarAjax.invitedCalendars().then(function (source) {
+    calendarAjax.invitedCalendars().then(function (response) {
+      const source = calendarResponse(response);
+
       if (source.code == 1) {
-        var data = source.data;
+        var data = invitedCalendarList(source.data);
         Toolbar.settings.dataCount = data.count;
         data.statusTypes = [''];
         $('#calendarLoading').hide();
@@ -621,17 +682,17 @@ Toolbar.Method = {
           });
         }
 
-        if (Toolbar.settings.dataCount > 0) {
+        if (data.count > 0) {
           // 加载模板
-          $('#calendarNumber').html(Toolbar.settings.dataCount).show();
+          $('#calendarNumber').html(String(data.count)).show();
           // 重复日程describe
           for (var i = 0; i < data.calendars.length; i++) {
             var calendar = data.calendars[i];
-            if (!calendar.isRecur) {
+            if (!calendar?.isRecur) {
               continue;
             }
 
-            data.calendars[i].repeat = formatRecur(calendar);
+            calendar.repeat = formatRecur(calendar);
           }
 
           data.TplComm = Toolbar.inviteCalendarMethod;
@@ -662,7 +723,7 @@ Toolbar.Method = {
                       <img className="circle userHead" src={avatar} />
                       {status && (
                         <span
-                          class={`userStatus ${
+                          className={`userStatus ${
                             status === '0'
                               ? 'calendarCenterLabelNosubmit'
                               : status === '1'
@@ -671,8 +732,8 @@ Toolbar.Method = {
                           }`}
                         ></span>
                       )}
-                      <span class="TxtTop calendarName"> {name}</span>
-                      {isCalendar && <span class="textSecondary TxtTop calendarName"> {_l('(发起人)')}</span>}
+                      <span className="TxtTop calendarName"> {name}</span>
+                      {isCalendar && <span className="textSecondary TxtTop calendarName"> {_l('(发起人)')}</span>}
                     </span>
                   </UserCard>,
                 );
@@ -711,6 +772,7 @@ Toolbar.Method = {
       default:
         break;
     }
+
     return undefined;
   },
 
@@ -734,6 +796,7 @@ Toolbar.Method = {
       default:
         break;
     }
+
     return undefined;
   },
 
@@ -775,9 +838,11 @@ Toolbar.Method = {
       .getUserInfo({
         accountIDs: Toolbar.Comm.settings.otherUsers.join(','),
       })
-      .then(function (source) {
+      .then(function (response) {
+        const source = calendarResponse(response);
+
         if (source.code == 1) {
-          Toolbar.Method.addOtherUser(source.data);
+          Toolbar.Method.addOtherUser(calendarOtherUsers(source.data));
         } else {
           Toolbar.Comm.errorMessage(source.msg);
         }
@@ -800,12 +865,12 @@ Toolbar.Method = {
     $hideOneself.show();
 
     if (isPrepend) {
-      $('#calendarType').scrollTop($('#calendarType')[0].scrollHeight);
+      $('#calendarType').scrollTop($('#calendarType')[0]?.scrollHeight || 0);
     }
 
     $('#calendarMenu .addOtherUserHeadImg.noInsert').each((_i, ele) => {
-      const accountId = $(ele).parent().attr('data-id');
-      const avatar = $(ele).attr('data-src');
+      const accountId = $(ele).parent().attr('data-id') || '';
+      const avatar = $(ele).attr('data-src') || '';
       $(ele).removeClass('noInsert');
 
       const root = createRoot(ele);
@@ -834,13 +899,13 @@ Toolbar.inviteCalendarMethod = {
     var starTime = moment(start); // 开始时间
     var endTime = moment(end); // 结束时间
 
-    var startYear = parseInt(starTime.years(), 10);
-    var startMon = parseInt(starTime.months(), 10);
-    var startDay = parseInt(starTime.date(), 10);
+    var startYear = starTime.year();
+    var startMon = starTime.month();
+    var startDay = starTime.date();
 
-    var endYear = parseInt(endTime.years(), 10);
-    var endMon = parseInt(endTime.months(), 10);
-    var endDay = parseInt(endTime.date(), 10);
+    var endYear = endTime.year();
+    var endMon = endTime.month();
+    var endDay = endTime.date();
 
     var calendarTime = '';
     // 是否同一天 0否 1 是
@@ -888,13 +953,13 @@ Toolbar.inviteCalendarMethod = {
     var setWeek = _l('星期');
     var weeks = [];
     for (var i = 0; i < count; i++) {
-      weeks.push(parseInt(weeksOld[i], 10));
-      setWeek += Toolbar.inviteCalendarMethod.getWeekUpper(parseInt(weeksOld[i], 10)) + '、';
+      weeks.push(parseInt(weeksOld[i] ?? '', 10));
+      setWeek += Toolbar.inviteCalendarMethod.getWeekUpper(parseInt(weeksOld[i] ?? '', 10)) + '、';
     }
 
     setWeek = setWeek.substring(0, setWeek.length - 1);
     if (weeks.length == 5) {
-      if (parseInt(weeks[0], 10) == 1 && parseInt(weeks[4], 10) == 5) {
+      if (weeks[0] === 1 && weeks[4] === 5) {
         setWeek = _l('在 工作日');
       }
     }
@@ -913,9 +978,8 @@ Toolbar.inviteCalendarMethod = {
 
 Toolbar.Export = {
   init: function () {
-    Toolbar.Comm.settings.otherUsers = window.localStorage.getItem('otherUsers' + md.global.Account.accountId)
-      ? window.localStorage.getItem('otherUsers' + md.global.Account.accountId).split(',')
-      : [md.global.Account.accountId];
+    const savedOtherUsers = window.localStorage.getItem('otherUsers' + md.global.Account.accountId);
+    Toolbar.Comm.settings.otherUsers = savedOtherUsers ? savedOtherUsers.split(',') : [md.global.Account.accountId];
 
     // 处理冲突日程跳转处理
     if (Toolbar.Comm.getQueryString('view') == 'agendaWeek') {

@@ -64,7 +64,7 @@ export const afterUpdateTaskStatus = (data, status, isAll, $el?) => {
       }
 
       $subCount = $completedNum.siblings('.subCount');
-      $completedNum.html(status ? $subCount.text() : 0);
+      $completedNum.html(status ? $subCount.text() : '0');
     });
   } else {
     let completedNum = taskIdArray.length;
@@ -294,7 +294,7 @@ export const taskTreeAfterDeleteTask = (taskId: string, listSort) => {
           pageIndex: 2,
         };
 
-        import('../containers/taskTree/tpl/treeMaster.html').then(treeListTpl => {
+        import('../containers/taskTree/tpl/treeMaster.html').then(({ default: treeListTpl }) => {
           const allTasks = doT.template(treeListTpl)(folders);
           const $li = $("#taskList .listStageTaskContent li[data-taskid='" + taskId + "']");
           $li.closest('.singleFolderTask').prepend(allTasks);
@@ -618,7 +618,7 @@ export const afterUpdateTaskParent = (taskId: string, parentId, oldParentId, dat
       deep: 0,
     };
 
-    import('../containers/taskTree/tpl/treeMaster.html').then(treeListTpl => {
+    import('../containers/taskTree/tpl/treeMaster.html').then(({ default: treeListTpl }) => {
       const allTasks = doT.template(treeListTpl)(newData);
       afterUpdateTaskParentComm(taskId, parentId, oldParentId, $(allTasks));
     });

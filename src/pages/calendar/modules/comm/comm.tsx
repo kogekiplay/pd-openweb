@@ -2,17 +2,46 @@ import doT from 'dot';
 import _ from 'lodash';
 import Dialog from 'ming-ui/components/Dialog';
 import calendarController from 'src/api/calendar';
+import { calendarCategories, calendarResponse } from './calendarBoundary';
+import type { CalendarCategories } from './calendarBoundary';
 import inviteSingleTpl from './tpl/refuserDialogHtml.html';
 
 // 页面 初始化
 // 公用配置
 // 页面 初始化
 // 公用配置
-const Comm: Record<string, any> = {};
+interface CalendarComm {
+  settings: {
+    date: string | null;
+    categorys: Array<string | undefined>;
+    isWorkCalendar: boolean;
+    isTaskCalendar: boolean;
+    filterTaskType: number | string | null;
+    otherUsers: Array<string | null | undefined>;
+  };
+  doT: { template: (template: string) => (data?: unknown) => string };
+  getQueryString: (name: string) => string | null;
+  inviteCalendar: {
+    confirm: (calendarId: string | undefined, recurTime?: string, catID?: string) => void;
+    refuse: (calendarId: string | undefined, recurTime?: string, catID?: string) => void;
+  };
+  confirmOrUnconfirmInviteMe: (
+    calendarId: string | undefined,
+    status: 1 | 2,
+    remark: string,
+    recurTime: string | undefined,
+    catID: string | undefined,
+  ) => void;
+  errorMessage: (error: unknown) => void;
+  getUserAllCalCategories: (callback: (categories: CalendarCategories | null | undefined) => void) => void;
+}
+const Comm = {} as CalendarComm;
 // 公共设置
 Comm.settings = {
   date: '',
-  categorys: window.localStorage.getItem('categorys') ? window.localStorage.getItem('categorys').split(',') : [], // 已选择的分类
+  categorys: window.localStorage.getItem('categorys')
+    ? (window.localStorage.getItem('categorys') || '').split(',')
+    : [], // 已选择的分类
   isWorkCalendar:
     window.localStorage.getItem('isWorkCalendar') == null || window.localStorage.getItem('isWorkCalendar') == 'true',
   isTaskCalendar:
@@ -28,7 +57,7 @@ Comm.doT = doT;
 Comm.getQueryString = function (name: string) {
   var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
   var r = window.location.search.substr(1).match(reg);
-  if (r != null) return unescape(r[2]);
+  if (r != null) return unescape(r[2] || '');
   return null;
 };
 
@@ -55,7 +84,10 @@ Comm.inviteCalendar = {
       onOk: () => {
         // 其他
         var $selectRadio = $('#refuserstd input:radio:checked');
-        var reason = $selectRadio.attr('id') == 'radOther' ? String($('#txtrefuseReason').val() ?? '').trim() : $selectRadio.val();
+        var reason =
+          $selectRadio.attr('id') == 'radOther'
+            ? String($('#txtrefuseReason').val() ?? '').trim()
+            : String($selectRadio.val() ?? '');
 
         if (reason === '' || reason == _l('输入您拒绝邀请的理由')) {
           alert(_l('请输入不能参加的理由'), 3);
@@ -71,7 +103,7 @@ Comm.inviteCalendar = {
     setTimeout(() => {
       // 不能参加的理由
       $('#refuserstd').on('change', 'input:radio', function () {
-        if ($<HTMLInputElement>('#radOther')[0].checked) {
+        if ($<HTMLInputElement>('#radOther')[0]?.checked) {
           $('#txtrefuseReason').show();
         } else {
           $('#txtrefuseReason').hide();
@@ -91,7 +123,9 @@ Comm.confirmOrUnconfirmInviteMe = function (calendarId, status, remark, recurTim
       newStatus: status,
       remark: remark,
     })
-    .then(function (source) {
+    .then(function (response) {
+      const source = calendarResponse(response);
+
       if (source.code == 1) {
         alert(status == 2 ? _l('您已发送不能参加的原因') : _l('您已确认参加该日程'));
 
@@ -131,10 +165,14 @@ Comm.errorMessage = function (error) {
 
 // 查找用户所有分类
 Comm.getUserAllCalCategories = function (callback) {
-  calendarController.getUserAllCalCategories().then(function (source) {
+  calendarController.getUserAllCalCategories().then(function (response) {
+    const source = calendarResponse(response);
+
     if (source.code == 1) {
       if (_.isFunction(callback)) {
-        callback(source.data);
+        if (source.data === null) callback(null);
+        else if (source.data === undefined) callback(undefined);
+        else callback(calendarCategories(source.data));
       }
     } else {
       Comm.errorMessage(source.msg);
