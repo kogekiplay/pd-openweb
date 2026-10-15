@@ -941,7 +941,6 @@
     "src/pages/FormSet/components/columnRules/actionDropdown/ActionDropDown.tsx",
     "src/pages/FormSet/components/columnRules/actionDropdown/SettingDialog.tsx",
     "src/pages/FormSet/components/columnRules/actionDropdown/StyleSettingDialog.tsx",
-    "src/pages/FormSet/components/columnRules/config.ts",
     "src/pages/FormSet/components/columnRules/redux/actions/columnRules.ts",
     "src/pages/FormSet/containers/AIAction/CreateAIActionDialog.tsx",
     "src/pages/FormSet/containers/AIAction/EditAIActionDrawer.tsx",

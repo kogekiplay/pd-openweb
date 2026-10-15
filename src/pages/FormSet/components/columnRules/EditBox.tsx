@@ -317,7 +317,7 @@ class EditBox extends React.Component<any, any> {
           const actionError = (ruleError.actionError || {})[actionIndex] || false;
           return (
             <div key={actionIndex} className="actionItemCon">
-              <Select
+              <Select<number | string>
                 className={cx('ruleListSelect', { flexItem: _.includes([7], actionItem.type) })}
                 classNames={{ popup: { root: 'ruleListSelectDropdown' } }}
                 value={getActionLabelByType(actionItem.type)}
@@ -325,6 +325,7 @@ class EditBox extends React.Component<any, any> {
                 disabled={_.includes([9], actionItem.type)}
                 suffixIcon={<Icon icon="arrow-down-border Font14" />}
                 onChange={type => {
+                  if (typeof type !== 'number') return;
                   let currentActionData = { ...ruleItems[actionIndex] };
                   currentActionData.type = type;
                   if (_.includes([7, 9], type)) {

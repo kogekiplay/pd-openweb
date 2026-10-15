@@ -207,9 +207,9 @@ export default function CustomEvent(props) {
         return (
           <Fragment>
             {actionItems.map((i, index) => {
-              const controlInfo = _.head(getTextById(allControls, [i], 1)) || {};
+              const controlInfo = _.head(getTextById(allControls, [i], 1));
 
-              if (controlInfo.isDel) {
+              if (controlInfo?.isDel) {
                 return <div key={index} className="textCon LineHeight30 Red">{_l('字段已删除')}</div>;
               }
 

@@ -198,7 +198,7 @@ export default class DropDownItem extends Component<any, any> {
       <Fragment>
         {currentArr.map((item, index) => {
           return (
-            <span key={index} className={cx('valueText', { disabled: item.isDelete })}>
+            <span key={index} className={cx('valueText', { disabled: item.isDel })}>
               <Tooltip title={!item.isDel ? '' : <span>{_l('ID: %0', item.controlId)}</span>} placement="bottom">
                 <span className="ellipsis controlNameBox">{item.name}</span>
               </Tooltip>

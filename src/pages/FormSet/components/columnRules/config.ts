@@ -13,6 +13,11 @@ import {
   FILTER_CONDITION_TYPE,
   getControlSelectType,
 } from 'src/pages/worksheet/common/WorkSheetFilter/enum.js';
+import type {
+  FilterCondition,
+  FilterDynamicSource,
+  FilterScalar,
+} from 'src/pages/worksheet/common/WorkSheetFilter/filterModelTypes';
 import {
   checkConditionAvailable,
   formatOriginFilterGroupValue,
@@ -24,8 +29,75 @@ import { getUnUniqName } from 'src/utils/common';
 import { getSwitchItemNames } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 
+interface RuleSelection extends Omit<FormControl, 'type' | 'value'> {
+  type?: number | string | undefined;
+  value?: unknown;
+}
+export interface ColumnRuleAction extends Record<string, unknown> {
+  type?: number | undefined;
+  controls?: RuleSelection[] | undefined;
+  message?: string | undefined;
+}
+export interface ColumnRule extends Record<string, unknown> {
+  ruleId?: string | undefined;
+  name?: string | undefined;
+  type?: number | undefined;
+  disabled?: boolean | undefined;
+  checkType?: number | undefined;
+  hintType?: number | undefined;
+  filters?: RuleFilter[] | undefined;
+  ruleItems?: ColumnRuleAction[] | undefined;
+}
+export interface RuleFilter extends FilterCondition {
+  isGroup?: boolean | undefined;
+  groupFilters?: RuleFilter[] | undefined;
+}
+interface RuleColumn extends Omit<FormControl, 'data' | 'value'> {
+  data?: RuleColumn | undefined;
+  value?: unknown;
+}
+interface RuleFieldText {
+  parentId: string;
+  controlId: string;
+  name: string;
+  isDel: boolean;
+  showSetting?: boolean | RuleSelection | undefined;
+  type?: number | string | undefined;
+  value?: unknown;
+}
+interface DynamicDisplay {
+  type: 'dynamicSource';
+  data: Array<{ name: string | undefined; id: string; rName: string; type: number }>;
+}
+interface RuleFilterValueDisplay {
+  [metadata: string]: unknown;
+  isGroup?: false | undefined;
+  id?: string | undefined;
+  name?: string | undefined;
+  type?: ReturnType<typeof getFilterTypes>[number] | undefined;
+  spliceType?: number | undefined;
+  value?: FilterScalar | DynamicDisplay;
+}
+
+interface RuleFilterGroupDisplay extends FilterCondition {
+  isGroup: true;
+  groupFilters: RuleFilterDisplay[];
+}
+export type RuleFilterDisplay = RuleFilterValueDisplay | RuleFilterGroupDisplay;
+
+function selectedProperty(value: unknown, key: string): unknown {
+  const parsed: unknown = safeParse(value);
+  if (parsed === null || parsed === undefined) throw new TypeError('Missing selected rule value');
+  return typeof parsed === 'object' || typeof parsed === 'function' ? Reflect.get(parsed, key) : undefined;
+}
+
+function ruleMoment(value: FilterScalar, format?: string) {
+  // moment treats booleans as invalid dates; keep that outcome without widening its input contract.
+  return moment(typeof value === 'boolean' ? NaN : value, format);
+}
+
 //初始规则数据
-export const originRuleItem = {
+export const originRuleItem: ColumnRule = {
   ruleId: uuidv4(), //规则id
   name: '', //名称
   disabled: false, //规则是否停用
@@ -35,7 +107,7 @@ export const originRuleItem = {
 };
 
 //初始动作数据
-export const originActionItem = {
+export const originActionItem: ColumnRuleAction = {
   type: 1,
   controls: [], // {childControlIds: [],controlId: ''}
   message: '',
@@ -110,31 +182,34 @@ export const getNameWidth = (name: string) => {
       fontWeight: 'bold',
     });
   $('body').append(nameNode);
-  let width = Math.ceil(nameNode[0].getBoundingClientRect().width) + 5;
+  const element = nameNode[0];
+  if (!element) throw new TypeError('Unable to measure rule name');
+  let width = Math.ceil(element.getBoundingClientRect().width) + 5;
   nameNode.remove();
   return width;
 };
 
-export function getReTree(tree) {
-  let reTree = {};
+export function getReTree(tree: FormControl[]) {
+  const reTree: Record<string, Array<string | undefined>> = {};
   tree.map(it => {
-    reTree[it.controlId] = it.type === 34 && it.relationControls ? it.relationControls.map(re => re.controlId) : [];
+    reTree[String(it.controlId)] =
+      it.type === 34 && it.relationControls ? it.relationControls.map(re => re.controlId) : [];
   });
   return reTree;
 }
 
 //根据controlId找到node
-export function deepSearch(tree = [], controlId: string) {
-  let results = null;
+export function deepSearch(tree: FormControl[] = [], controlId: string | undefined): FormControl | null {
+  let results: FormControl | null = null;
 
-  function recurse(nodes) {
+  function recurse(nodes: FormControl[]) {
     nodes.forEach(node => {
       if (node.controlId === controlId) {
         results = node;
       }
 
       if (!_.isEmpty(node.relationControls) && !results) {
-        recurse(node.relationControls);
+        recurse(node.relationControls || []);
       }
     });
   }
@@ -143,7 +218,7 @@ export function deepSearch(tree = [], controlId: string) {
   return results;
 }
 
-export const ruleTable = data => {
+export const ruleTable = (data: FormControl | null | undefined) => {
   const item = data || {};
   return (item.type === 29 && _.includes(['2', '5', '6'], _.get(item, 'advancedSetting.showtype'))) || item.type === 34;
 };
@@ -151,9 +226,14 @@ export const ruleTable = data => {
 // 可编辑子表、关联列表，
 // 注意：若父级未选中，则呈现子集，否则不显示子集
 // 字段样式关联记录显示设置icon
-export const showTableSetting = (data, values = [], actionType, from) => {
+export const showTableSetting = (
+  data: FormControl | null | undefined,
+  values: RuleSelection[] = [],
+  actionType: number | undefined,
+  from: string | undefined,
+) => {
   const item = data || {};
-  if (actionType === 11 && from === 'rule' && _.includes([29, 51], item.type) && !isSheetDisplay(data)) return true;
+  if (actionType === 11 && from === 'rule' && _.includes([29, 51], item.type) && !isSheetDisplay(item)) return true;
   return (
     _.includes([1, 3, 5], actionType) &&
     from === 'rule' &&
@@ -163,7 +243,12 @@ export const showTableSetting = (data, values = [], actionType, from) => {
 };
 
 // 可编辑子表、关联列表，是否显示下拉子集
-export const showArrowSetting = (data, values = [], actionType, from) => {
+export const showArrowSetting = (
+  data: FormControl | null | undefined,
+  values: RuleSelection[] = [],
+  actionType: number | undefined,
+  from: string | undefined,
+) => {
   const item = data || {};
 
   if (ruleTable(item) && _.includes([1, 2, 3, 4, 5], actionType) && from === 'rule') {
@@ -177,9 +262,14 @@ export const showArrowSetting = (data, values = [], actionType, from) => {
 };
 
 //根据controls获取controlName
-export function getTextById(data, controls: FormControl[] = [], actionType, from?) {
+export function getTextById(
+  data: FormControl[],
+  controls: RuleSelection[] = [],
+  actionType: number | undefined,
+  from?: string,
+) {
   const tree = getNewDropDownData(data, actionType);
-  let currentArr = [];
+  const currentArr: RuleFieldText[] = [];
   if (_.find(tree, i => i.sectionId)) return undefined;
 
   controls.forEach(controlsItem => {
@@ -206,7 +296,7 @@ export function getTextById(data, controls: FormControl[] = [], actionType, from
         showSetting, // 子表、关联列表显示setting配置按钮
         name:
           sectionNode && parentNode
-            ? _l('%0 / %1', sectionNode.controlName, parentNode.controlName)
+            ? _l('%0 / %1', String(sectionNode.controlName), String(parentNode.controlName))
             : _.get(parentNode, 'controlName') || _l('字段已删除'),
         isDel: !parentNode,
         ...(actionType === 9 ? { ..._.pick(controlsItem, ['type', 'value']) } : {}),
@@ -221,7 +311,9 @@ export function getTextById(data, controls: FormControl[] = [], actionType, from
           parentId: controlId,
           controlId: child,
           isDel: isDelete,
-          name: isDelete ? _l('字段已删除') : _l('%0 / %1', parentNode.controlName, childNode.controlName),
+          name: isDelete
+            ? _l('字段已删除')
+            : _l('%0 / %1', String(parentNode?.controlName), String(childNode?.controlName)),
         });
       });
     }
@@ -229,8 +321,8 @@ export function getTextById(data, controls: FormControl[] = [], actionType, from
   return currentArr;
 }
 
-function formatSectionData(data = []) {
-  const newData = [];
+function formatSectionData(data: FormControl[] = []) {
+  const newData: FormControl[] = [];
   data.forEach(item => {
     if (item.type === 52) {
       item.relationControls = data.filter(i => i.sectionId === item.controlId);
@@ -241,7 +333,7 @@ function formatSectionData(data = []) {
   return newData;
 }
 
-export function getNewDropDownData(controls: FormControl[] = [], actionType) {
+export function getNewDropDownData(controls: FormControl[] = [], actionType: number | undefined) {
   let filterControls: number[] = [];
 
   if (_.includes([3, 4, 5], actionType)) {
@@ -296,13 +388,13 @@ export function getNewDropDownData(controls: FormControl[] = [], actionType) {
 
 // 过滤不符合条件的已选字段
 export const filterUnAvailable = (
-  controlConfig: Record<string, any> = {},
+  controlConfig: ColumnRuleAction = {},
   worksheetControls: FormControl[] = [],
-  type,
+  type: number | undefined,
 ) => {
   const { controls = [] } = controlConfig;
   const dropDownData = getNewDropDownData(worksheetControls, controlConfig.type);
-  let newControls: FormControl[] = [];
+  let newControls: RuleSelection[] = [];
   controls.map(item => {
     let newItem = { ...item };
 
@@ -323,7 +415,8 @@ export const filterUnAvailable = (
       // 已选的必填关联多条列表、标签页字段过滤
       if (!(
         (type === 5 && ((isSheetDisplay(curItem) && !_.get(item, 'childControlIds.length')) || curItem.type === 52)) ||
-        ((_.includes(2, 4), type) && curItem.sectionId)
+        // Preserve the legacy comma expression: every nonzero action hides section children here.
+        (type && curItem.sectionId)
       )) {
         newControls.push(newItem);
       }
@@ -333,7 +426,7 @@ export const filterUnAvailable = (
 };
 
 //根据actionValue获取label
-export function getActionLabelByType(type) {
+export function getActionLabelByType(type: number | undefined) {
   return _.get(_.find(ACTION_DISPLAY, item => item.value === type) || {}, 'label') || '';
 }
 
@@ -364,7 +457,7 @@ export function checkConditionCanSave(filters: readonly unknown[] = []) {
 }
 
 //判断条件是否填写
-export function checkConditionError(condition) {
+export function checkConditionError(condition: RuleFilter) {
   const {
     value,
     values,
@@ -375,7 +468,8 @@ export function checkConditionError(condition) {
     maxValue,
     dateRange,
   } = condition;
-  const conditionGroupType = (CONTROL_FILTER_WHITELIST[getTypeKey(dataType)] || {}).value;
+  const typeKey = getTypeKey(dataType);
+  const conditionGroupType = typeKey === undefined ? undefined : CONTROL_FILTER_WHITELIST[typeKey].value;
   const type = condition.filterType;
 
   //动态参数输入框
@@ -391,7 +485,7 @@ export function checkConditionError(condition) {
       return !(values && values.length) ? 'selectizeInputErrorBorder' : '';
     case CONTROL_FILTER_WHITELIST.NUMBER.value:
       if (type === FILTER_CONDITION_TYPE.BETWEEN || type === FILTER_CONDITION_TYPE.NBETWEEN) {
-        let styleNumber = [];
+        const styleNumber: string[] = [];
 
         if (_.isUndefined(minValue) || minValue === '') {
           styleNumber.push('numberMinErrorBorder');
@@ -438,10 +532,11 @@ export function checkConditionError(condition) {
         }
       }
   }
+
   return undefined;
 }
 
-export function formatFilterValue(condition) {
+export function formatFilterValue(condition: RuleFilter) {
   return {
     controlId: condition.controlId,
     dataType: condition.dataType,
@@ -460,13 +555,13 @@ export function formatFilterValue(condition) {
 }
 
 //filters保存，关联values取id
-export function formatValues(items) {
+export function formatValues(items: RuleFilter[]) {
   return items.map(item => {
     return {
       ...item,
       groupFilters: (item.groupFilters || []).map(i => {
         return _.includes([26, 27, 29, 19, 23, 24, 35, 48], i.dataType)
-          ? { ...i, values: (i.values || []).map(val => (typeof val === 'string' ? safeParse(val).id : val)) }
+          ? { ...i, values: (i.values || []).map(val => (typeof val === 'string' ? selectedProperty(val, 'id') : val)) }
           : i;
       }),
     };
@@ -474,10 +569,11 @@ export function formatValues(items) {
 }
 
 //过滤删除选项
-export function filterDeleteOptions(items, controls: FormControl[] = []) {
+export function filterDeleteOptions(items: RuleFilter[], controls: FormControl[] = []) {
   return items.map(item => {
     if (_.includes([9, 10, 11], item.dataType)) {
       const options = (_.find(controls, con => con.controlId === item.controlId) || {}).options || [];
+      if (!item.values) throw new TypeError('Missing rule option values');
       return { ...item, values: item.values.filter(val => _.find(options, op => op.key === val && !op.isDeleted)) };
     } else {
       return item;
@@ -485,7 +581,7 @@ export function filterDeleteOptions(items, controls: FormControl[] = []) {
   });
 }
 
-export const filterText = (key, filterData, control: FormControl) => {
+export const filterText = (key: number | undefined, filterData: RuleFilter, control: RuleColumn) => {
   const { filterType = '' } = filterData;
 
   if (filterType === FILTER_CONDITION_TYPE.ISNULL || filterType === FILTER_CONDITION_TYPE.HASVALUE) {
@@ -505,7 +601,7 @@ export const filterText = (key, filterData, control: FormControl) => {
 
       if (!!filterData.minValue && !!filterData.maxValue) {
         const { formatMode } = getDatePickerConfigs(control);
-        return `${moment(filterData.minValue).format(formatMode)} - ${moment(filterData.maxValue).format(formatMode)}`;
+        return `${ruleMoment(filterData.minValue).format(formatMode)} - ${ruleMoment(filterData.maxValue).format(formatMode)}`;
       } else if (_.includes([10, 101, 11, 102], dateRange)) {
         const isFeature = _.includes([11, 102], dateRange);
         const rangeText =
@@ -519,21 +615,21 @@ export const filterText = (key, filterData, control: FormControl) => {
       } else if (!dateRange) {
         return '';
       } else {
-        return _.filter(_.flatten(DATE_OPTIONS), {
-          value: filterData.dateRange,
-        })[0].text;
+        const option = DATE_OPTIONS.flat().find(option => option.value === filterData.dateRange);
+        if (!option) throw new TypeError('Unknown rule date range');
+        return option.text;
       }
 
     case CONTROL_FILTER_WHITELIST.TIME.value:
       const formatStr = _.includes(['1', '8'], control.unit) ? 'HH:mm' : 'HH:mm:ss';
 
       if (!!filterData.minValue && !!filterData.maxValue) {
-        return `${moment(filterData.minValue, formatStr).format(formatStr)} - ${moment(
+        return `${ruleMoment(filterData.minValue, formatStr).format(formatStr)} - ${ruleMoment(
           filterData.maxValue,
           formatStr,
         ).format(formatStr)}`;
       } else {
-        return filterData.value ? moment(filterData.value, formatStr).format(formatStr) : '';
+        return filterData.value ? ruleMoment(filterData.value, formatStr).format(formatStr) : '';
       }
 
     case CONTROL_FILTER_WHITELIST.BOOL.value:
@@ -556,14 +652,13 @@ export const filterText = (key, filterData, control: FormControl) => {
       ) {
         return (filterData.values || [])
           .map(item => {
-            const user = safeParse(item || '{}');
-            return user.name;
+            return selectedProperty(item || '{}', 'name');
           })
           .join(',');
       }
 
-      let options = [];
-      let { data = [] } = control;
+      let options: NonNullable<FormControl['options']> = [];
+      let { data = {} } = control;
 
       if (!control.options) {
         if (!data.options) {
@@ -576,17 +671,17 @@ export const filterText = (key, filterData, control: FormControl) => {
       }
 
       if (_.isEmpty(options)) {
-        return filterData.values ? filterData.values.join(',') : '';
+        return filterData.values ? (filterData.values || []).join(',') : '';
       }
 
       if (_.isEmpty(filterData.values)) {
         return '';
       }
 
-      return filterData.values
+      return (filterData.values || [])
         .map(value => {
-          let item = _.find(options, option => value === option.key && !option.isDeleted) || {};
-          return _.isUndefined(item.value) ? _l('字段已删除') : item.value;
+          const item = _.find(options, option => value === option.key && !option.isDeleted);
+          return item?.value === undefined ? _l('字段已删除') : item.value;
         })
         .join(',');
     case CONTROL_FILTER_WHITELIST.USERS.value:
@@ -594,95 +689,76 @@ export const filterText = (key, filterData, control: FormControl) => {
         return '';
       }
 
-      return filterData.values
+      return (filterData.values || [])
         .map(item => {
-          const user = safeParse(item || '{}');
-          return user.name;
+          return selectedProperty(item || '{}', 'name');
         })
         .join(',');
     case CONTROL_FILTER_WHITELIST.RELATE_RECORD.value:
     case CONTROL_FILTER_WHITELIST.CASCADER.value:
       const { values = [] } = filterData;
-      return (values || []).map(item => safeParse(item || '{}').name).join(',');
+      return (values || []).map(item => selectedProperty(item || '{}', 'name')).join(',');
     default:
-      return _.isEmpty(filterData.values) ? '' : filterData.values.join(',');
+      return _.isEmpty(filterData.values) ? '' : (filterData.values || []).join(',');
   }
 };
 
-export const filterDataRelationText = (dynamicSource = [], columns) => {
-  let data = { type: 'dynamicSource', data: [] };
+export const filterDataRelationText = (
+  dynamicSource: FilterDynamicSource[] = [],
+  columns: RuleColumn[],
+): DynamicDisplay | '' => {
+  if (!dynamicSource.length) return '';
+  const data: DynamicDisplay = { type: 'dynamicSource', data: [] };
+  dynamicSource.forEach(item => {
+    const control = columns.find(column => item.cid === column.controlId);
 
-  if (dynamicSource.length <= 0) {
-    data = '';
-  } else {
-    dynamicSource.forEach(item => {
-      let list = [];
-      let type = 1;
-      let id = '';
-      let rName = '';
-      //目前只关联当前记录
-      list = columns;
-      type = 1;
-      id = item.cid;
-      rName = '';
-      let contrls = list.find(it => id === it.controlId);
-
-      if (item.cid) {
-        data.data.push({
-          name: contrls ? contrls.controlName : '',
-          id: item.cid,
-          rName: _.includes(['url'], item.rcid) ? item.rcid : item.rcid === 'parent' ? _l('主记录') : rName,
-          type,
-        });
-      }
-    });
-  }
-
+    if (item.cid) {
+      data.data.push({
+        name: control ? control.controlName : '',
+        id: item.cid,
+        rName: item.rcid === 'url' ? item.rcid : item.rcid === 'parent' ? _l('主记录') : '',
+        type: 1,
+      });
+    }
+  });
   return data;
 };
 
 export const filterData = (
-  columns = [],
-  filterItem = [],
-  isSetting?,
+  columns: RuleColumn[] = [],
+  filterItem: RuleFilter[] = [],
+  isSetting?: boolean,
   relationControls: FormControl[] = [],
   sourceControlId = '',
 ) => {
   columns = columns.concat(DEFAULT_COLUMNS);
-  let dataList = [];
+  const dataList: RuleFilterDisplay[] = [];
   filterItem.forEach(item => {
     if (item.isGroup && item.groupFilters) {
       dataList.push({
         ...item,
+        isGroup: item.isGroup,
         groupFilters: filterData(columns, item.groupFilters, isSetting, relationControls, sourceControlId),
       });
       return;
     }
 
-    let controlData = [];
-
-    if (isSetting) {
-      controlData = relationControls.filter((column = {}) =>
-        column.controlId ? column.controlId === item.controlId : (column.data || {}).controlId === item.controlId,
-      );
-    } else {
-      controlData = columns.filter((column: Record<string, any> = {}) =>
-        column.controlId ? column.controlId === item.controlId : (column.data || {}).controlId === item.controlId,
-      );
-    }
+    const controlData: RuleColumn[] = (isSetting ? relationControls : columns).filter((column: RuleColumn = {}) =>
+      column.controlId ? column.controlId === item.controlId : (column.data || {}).controlId === item.controlId,
+    );
 
     if (controlData && controlData.length > 0) {
       const control = controlData[0] || {};
       const type = isSetting || control.type ? control.type : (control.data || {}).type;
       // type为关联他表，type取sourceControlType的值 -1//无值
-      let { sourceControlType = -1, data = { sourceControlType: -1 } } = control;
-      sourceControlType = isSetting || sourceControlType !== -1 ? sourceControlType : data.sourceControlType;
+      const { sourceControlType: ownSourceType = -1, data = { sourceControlType: -1 } } = control;
+      const sourceControlType = isSetting || ownSourceType !== -1 ? ownSourceType : data.sourceControlType;
       const conditionGroupKey = getTypeKey(type === 30 ? sourceControlType : type);
-      const conditionGroup = CONTROL_FILTER_WHITELIST[conditionGroupKey] || {};
+      const conditionGroup = conditionGroupKey === undefined ? undefined : CONTROL_FILTER_WHITELIST[conditionGroupKey];
       const conditionGroupType = getConditionType({
         ...item,
         controlType: item.dataType,
-        conditionGroupType: conditionGroup.value,
+        conditionGroupType: conditionGroup?.value,
         type: item.filterType,
       });
 
@@ -692,16 +768,14 @@ export const filterData = (
           : filterText(conditionGroupType, item, control);
       dataList.push({
         id: item.controlId,
-        name: isSetting || control.controlName ? control.controlName : control.data.controlName,
-        type: _.find(
-          getFilterTypes({ ...control, type: control.type === 30 ? control.sourceControlType : control.type }),
-          {
-            value:
-              getControlSelectType({ ...control, type: control.type === 30 ? control.sourceControlType : control.type })
-                .isMultiple && item.filterType === FILTER_CONDITION_TYPE.EQ_FOR_SINGLE
-                ? FILTER_CONDITION_TYPE.EQ
-                : item.filterType,
-          },
+        name: isSetting || control.controlName ? control.controlName : control.data?.controlName,
+        type: getFilterTypes({ ...control, type: control.type === 30 ? control.sourceControlType : control.type }).find(
+          operator =>
+            operator.value ===
+            (getControlSelectType({ ...control, type: control.type === 30 ? control.sourceControlType : control.type })
+              .isMultiple && item.filterType === FILTER_CONDITION_TYPE.EQ_FOR_SINGLE
+              ? FILTER_CONDITION_TYPE.EQ
+              : item.filterType),
         ),
         spliceType: item.spliceType,
         value,
@@ -722,16 +796,16 @@ const OCR_ICON_WHITELIST: Record<number, string> = {
 };
 
 //兼容ocr字段icon
-export function getNewIconByType(control = {}) {
+export function getNewIconByType(control: FormControl = {}): string | undefined {
   const { type, enumDefault } = control;
-  return type === 43 ? OCR_ICON_WHITELIST[enumDefault] : getIconByType(type);
+  return type === 43 ? (enumDefault === undefined ? undefined : OCR_ICON_WHITELIST[enumDefault]) : getIconByType(type);
 }
 
 // 业务规则默认名称
-export function getDefaultRuleName(data = [], activeTab: number) {
+export function getDefaultRuleName(data: Array<Pick<ColumnRule, 'type' | 'name'>> = [], activeTab: number) {
   const displayNum = data.filter(i => i.type === activeTab).length + 1;
   return getUnUniqName(
-    data,
+    data.map(rule => ({ name: rule.name })),
     `${_.get(
       _.find(TABS_DISPLAY, i => i.value === activeTab),
       'text',
@@ -740,7 +814,7 @@ export function getDefaultRuleName(data = [], activeTab: number) {
 }
 
 // 校验动作错误
-export function getActionError(value = {}) {
+export function getActionError(value: ColumnRuleAction = {}) {
   const { controls = [], type, message } = value;
 
   if (_.includes([7], type) || !type) {
@@ -757,7 +831,7 @@ export function getActionError(value = {}) {
 
 // 对比是否有变更
 // 只按 ruleId 比对：带 '-' 的是还没保存过的新规则，一律当作有改动
-export function hasRuleChanged(data = [], selectRule: { ruleId?: string } = {}, passAlert?: boolean | undefined) {
+export function hasRuleChanged(data: ColumnRule[] = [], selectRule: ColumnRule = {}, passAlert?: boolean | undefined) {
   const originData = _.find(data, i => i.ruleId === selectRule.ruleId);
   const { ruleId = '' } = selectRule;
 
@@ -794,7 +868,7 @@ export const getErrorControls = (controls: FormControl[] = []) => {
 };
 
 // 校验业务规则启用上限
-export const checkRuleEnableLimit = (data = []) => {
+export const checkRuleEnableLimit = (data: Array<Pick<ColumnRule, 'disabled'>> = []) => {
   const MAX_ENABLE_LIMIT = 100;
   const availableData = data.filter(i => !i.disabled);
 
