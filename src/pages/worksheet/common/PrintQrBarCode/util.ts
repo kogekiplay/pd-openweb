@@ -18,7 +18,9 @@ import {
   QR_POSITION,
   SOURCE_TYPE,
 } from './enum';
-import type { CodeUrlSource } from './types';
+import type { CodeUrlSource, LabelText, PrintLabelConfig } from './types';
+
+export type { PrintLabelConfig } from './types';
 
 export function getDefaultText({
   printType,
@@ -57,17 +59,17 @@ const DPI_MM = 8;
 export function createQrLabeObjectFromConfig(
   config: PrintLabelConfig = {},
   url: string,
-  texts = [],
+  texts: CanvasTexts = [],
   options: QrLabelOptions = {},
 ) {
   let width, height;
 
   if (config.labelSize === QR_LABEL_SIZE.CUSTOM) {
-    width = config.labelCustomWidth * DPI_MM;
-    height = config.labelCustomHeight * DPI_MM;
+    width = required(config.labelCustomWidth, 'custom width') * DPI_MM;
+    height = required(config.labelCustomHeight, 'custom height') * DPI_MM;
   } else {
-    const configWidth = QR_LABEL_SIZES[config.labelSize].width * DPI_MM;
-    const configHeight = QR_LABEL_SIZES[config.labelSize].height * DPI_MM;
+    const configWidth = labelSize(QR_LABEL_SIZES, config.labelSize).width * DPI_MM;
+    const configHeight = labelSize(QR_LABEL_SIZES, config.labelSize).height * DPI_MM;
     width = config.layout === QR_LAYOUT.LANDSCAPE ? configWidth : configHeight;
     height = config.layout === QR_LAYOUT.LANDSCAPE ? configHeight : configWidth;
   }
@@ -82,9 +84,10 @@ export function createQrLabeObjectFromConfig(
 
   const labelObject = new QrLabel({
     type: layout,
-    size: (config.layout === QR_LAYOUT.PORTRAIT ? PORTRAIT_QR_CODE_SIZE : LANDSCAPE_QR_CODE_SIZE).shorts[
-      Number(config.codeSize)
-    ],
+    size: mappedSize(
+      (config.layout === QR_LAYOUT.PORTRAIT ? PORTRAIT_QR_CODE_SIZE : LANDSCAPE_QR_CODE_SIZE).shorts,
+      Number(config.codeSize),
+    ),
     fontSize: config.fontSize,
     width,
     height,
@@ -95,7 +98,7 @@ export function createQrLabeObjectFromConfig(
       [QR_POSITION.BOTTOM]: 'bottom',
       [QR_POSITION.LEFT]: 'left',
       [QR_POSITION.RIGHT]: 'right',
-    }[config.position],
+    }[config.position ?? -1],
     url,
     texts: texts,
     ...options,
@@ -108,7 +111,7 @@ function sliceByByteLength(str = '', length = 0) {
   let size = 0;
 
   for (let i = 0; i < str.length; i++) {
-    const charSize = new Blob([str[i]]).size;
+    const charSize = new Blob([str.charAt(i)]).size;
 
     if (size + charSize <= length) {
       result += str[i];
@@ -122,8 +125,8 @@ function sliceByByteLength(str = '', length = 0) {
 }
 
 export function getCodeTexts(
-  { showTexts, firstIsBold, showControlName, controls }: PrintLabelConfig & { controls?: any[] } = {},
-  data: Record<string, any> = {},
+  { showTexts = [], firstIsBold, showControlName, controls }: PrintLabelConfig & { controls?: FormControl[] } = {},
+  data: Record<string, unknown> = {},
 ) {
   return (
     showTexts
@@ -145,7 +148,7 @@ export function getCodeTexts(
             return { ...newItem, text: '' };
           }
 
-          const controlText = renderCellText({ ...matchedControl, value: data[item.value] });
+          const controlText = renderedText({ ...matchedControl, value: data[String(item.value)] });
           return {
             ...newItem,
             text:
@@ -174,20 +177,20 @@ export function getCodeContent({
   index?: number;
   controls?: FormControl[];
 }) {
-  let content = '';
+  let content: string | undefined = '';
 
   if (sourceType === SOURCE_TYPE.URL) {
-    content = urls[row.rowid] || urls[index];
+    content = sourceUrl(urls, row.rowid) || sourceUrl(urls, index);
   } else if (sourceType === SOURCE_TYPE.CONTROL) {
     const matchedControl = _.find(controls, { controlId: sourceControlId });
 
-    if (matchedControl && row[sourceControlId]) {
-      content = renderCellText({ ...matchedControl, value: row[sourceControlId] });
+    if (matchedControl && row[String(sourceControlId)]) {
+      content = renderedText({ ...matchedControl, value: row[String(sourceControlId)] });
     }
   }
 
   if (printType === PRINT_TYPE.BAR) {
-    content = sliceByByteLength(content.replace(/[^\x00-\x7F]/g, ''), 30);
+    content = sliceByByteLength(required(content, 'barcode content').replace(/[^\x00-\x7F]/g, ''), 30);
   } else {
     content = sliceByByteLength(content, 150 * 3);
   }
@@ -198,7 +201,7 @@ export function getCodeContent({
 export function createBarLabeObjectFromConfig(
   config: PrintLabelConfig = {},
   value: string,
-  texts = [],
+  texts: CanvasTexts = [],
   /* 调用点除了 isPreview 还会传 pixelRadio（print.ts 的条码分支传 1.5），所以类型取 BarLabelOptions 的子集。
      【注意：pixelRadio 在这里没有生效】下面 new BarLabel 从来没收它（上游原本就只解构了 isPreview），
      条码标签一直按 BarLabel 的默认 2 倍渲染；二维码那一路（createQrLabeObjectFromConfig）是 ...options 透传的，1.5 生效。
@@ -208,11 +211,11 @@ export function createBarLabeObjectFromConfig(
   let width, height;
 
   if (config.labelSize === BAR_LABEL_SIZE.CUSTOM) {
-    width = config.labelCustomWidth * DPI_MM;
-    height = config.labelCustomHeight * DPI_MM;
+    width = required(config.labelCustomWidth, 'custom width') * DPI_MM;
+    height = required(config.labelCustomHeight, 'custom height') * DPI_MM;
   } else {
-    const configWidth = BAR_LABEL_SIZES[config.labelSize].width * DPI_MM;
-    const configHeight = BAR_LABEL_SIZES[config.labelSize].height * DPI_MM;
+    const configWidth = labelSize(BAR_LABEL_SIZES, config.labelSize).width * DPI_MM;
+    const configHeight = labelSize(BAR_LABEL_SIZES, config.labelSize).height * DPI_MM;
     width = config.layout === BAR_LAYOUT.LANDSCAPE ? configWidth : configHeight;
     height = config.layout === BAR_LAYOUT.LANDSCAPE ? configHeight : configWidth;
   }
@@ -228,106 +231,137 @@ export function createBarLabeObjectFromConfig(
     codePosition: {
       [BAR_POSITION.TOP]: 'top',
       [BAR_POSITION.BOTTOM]: 'bottom',
-    }[config.position],
+    }[config.position ?? -1],
     size: ['l', 'm', 's'][Number(config.codeSize) - 1],
     texts,
   });
   return barLabel;
 }
 
-/**
- * canvas 版标签的排版参数。BarLabel 与 QrLabel 各自在 setLayout*() 里构造，
- * 共用 paddingX / paddingY / fontSize，另外各有一个自己的尺寸字段。
- * codeSize 写成可选是因为 QrLabel 是先建字面量、再按 type 分支补上去的
- * （this.layout.codeSize = {...}[size]），一开始就写成必填会报 TS2741。
- */
+type CanvasLabelText = LabelText;
+type CanvasTexts = Array<CanvasLabelText | undefined>;
 interface CanvasLabelLayout {
   paddingX: number;
   paddingY: number;
   fontSize: number;
-  /** 条码高度，仅 BarLabel 用 */
-  height?: number;
-  /** 二维码边长，仅 QrLabel 用 */
-  codeSize?: number;
 }
-
-/** 标签上的一行文本。字段取自本文件实际读取的那几个。 */
-interface CanvasLabelText {
-  value?: string;
-  /** 与 value 同义的另一种来源（renderTexts 会把两者都往里塞） */
-  text?: string;
-  name?: string;
-  type?: number;
-  isBold?: boolean;
-  /** 为真时该行不参与自动换行 */
-  forceInLine?: boolean;
+interface BarLayout extends CanvasLabelLayout {
+  height: number;
 }
-
-/**
- * 标签打印的整体配置（打印设置面板存下来的那份）。
- * 这里列的是本文件几个 createXxxFromConfig 实际读取的键。
- * 与 vectorLabel.ts 的 LabelOptions 有重叠但不是同一个东西：
- * 那边是传给 Label 实例的运行参数，这边是面板配置，还带 labelCustomWidth/Height。
- * 两个文件之间没有互相 import，刻意不合并 —— 合并要新开一个 types 模块，
- * 属于单独的整理，不夹在这批里做。
- */
-export interface PrintLabelConfig {
-  labelSize?: number;
-  labelCustomWidth?: number;
-  labelCustomHeight?: number;
-  layout?: number;
-  printType?: number;
-  position?: number;
-  codeSize?: number | string;
-  codeFaultTolerance?: number;
-  fontSize?: number;
-  firstIsBold?: boolean;
-  showBarValue?: boolean;
-  showControlName?: boolean;
-  /** 标签上要打印哪些行；元素是文本配置项，不是布尔（调用点是 showTexts.map(...)） */
-  showTexts?: CanvasLabelText[];
-  sourceType?: number;
-  sourceControlId?: string;
-  sourceUrlType?: number;
-  /** 预览时没有选中记录，用占位样例填充 */
-  emptySetAsSample?: boolean;
+interface QrLayout extends CanvasLabelLayout {
+  codeSize: number;
 }
-
-/** BarLabel 的配置，键名与构造函数解构出来的一一对应。 */
 export interface BarLabelOptions {
-  isDebug?: boolean;
-  isPreview?: boolean;
-  pixelRadio?: number;
-  width?: number;
-  height?: number;
-  fontSize?: number;
-  firstIsTitle?: boolean;
-  showBarValue?: boolean;
-  /** 码相对文本的位置：'top' | 'bottom' */
-  codePosition?: string;
-  /** 档位：'s' | 'm' | 'l'（来源是数组下标取值，类型只到 string） */
-  size?: string;
-  value?: string;
-  texts?: CanvasLabelText[];
+  isDebug?: boolean | undefined;
+  isPreview?: boolean | undefined;
+  pixelRadio?: number | undefined;
+  width?: number | undefined;
+  height?: number | undefined;
+  fontSize?: number | undefined;
+  firstIsTitle?: boolean | undefined;
+  showBarValue?: boolean | undefined;
+  codePosition?: string | undefined;
+  size?: string | undefined;
+  value?: string | undefined;
+  texts?: CanvasTexts | undefined;
+}
+interface BarSettings {
+  isDebug: boolean;
+  isPreview: boolean;
+  pixelRadio: number;
+  width: number;
+  height: number;
+  fontSize: number;
+  firstIsTitle: boolean;
+  showBarValue: boolean;
+  codePosition: string;
+  size: string;
+  value?: string | undefined;
+  texts: CanvasTexts;
+}
+const BAR_DEFAULTS: BarSettings = {
+  isDebug: false,
+  isPreview: false,
+  pixelRadio: 2,
+  width: 100,
+  height: 100,
+  fontSize: 1,
+  firstIsTitle: false,
+  showBarValue: true,
+  codePosition: 'top',
+  size: 'm',
+  texts: [],
+};
+export interface QrLabelOptions {
+  isPreview?: boolean | undefined;
+  pixelRadio?: number | undefined;
+  width?: number | undefined;
+  height?: number | undefined;
+  fontSize?: number | undefined;
+  firstIsTitle?: boolean | undefined;
+  type?: string | undefined;
+  size?: string | undefined;
+  correctLevel?: number | undefined;
+  qrPos?: string | undefined;
+  url?: string | undefined;
+  texts?: CanvasTexts | undefined;
+}
+interface ImageBounds {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+interface FontOptions {
+  minFontSize?: number;
+  maxFontSize?: number;
+  fontFamily?: string;
+  precision?: number;
+}
+interface TextOptions {
+  x?: number;
+  y?: number;
+  fontSize: number;
+  content: string;
+  width: number;
+  isCenter?: boolean | undefined;
+  forceInLine?: boolean | undefined;
+  isBold?: boolean | undefined;
+  color?: string;
+}
+function required<T>(value: T | undefined, name: string): T {
+  if (value === undefined) throw new TypeError('Missing label ' + name);
+  return value;
 }
 
-/** QrLabel 的配置，键名与 setOptions()/各处 this.options.x 的读取点对应。 */
-export interface QrLabelOptions {
-  isPreview?: boolean;
-  pixelRadio?: number;
-  width?: number;
-  height?: number;
-  fontSize?: number;
-  firstIsTitle?: boolean;
-  /** 布局：'p' 表示纵向，其余为横向 */
-  type?: string;
-  size?: string;
-  /** 二维码容错级别，见 vectorLabel.ts 的 QRErrorCorrectLevel */
-  correctLevel?: number;
-  /** 码相对文本的位置 */
-  qrPos?: string;
-  url?: string;
-  texts?: CanvasLabelText[];
+function context2d(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
+  const context = canvas.getContext('2d');
+  if (!context) throw new Error('Canvas 2D context is unavailable');
+  return context;
+}
+
+function labelSize(sizes: Readonly<Record<number, { width: number; height: number }>>, id: number | undefined) {
+  return required(sizes[id ?? -1], 'size');
+}
+
+function mappedSize(sizes: Readonly<Record<number, string>>, id: number) {
+  return required(sizes[id], 'code size');
+}
+
+function property(value: unknown, key: string): unknown {
+  return value !== null && typeof value === 'object' ? Reflect.get(value, key) : undefined;
+}
+
+function renderedText(control: FormControl): string {
+  const value: unknown = renderCellText(control);
+  if (typeof value !== 'string') throw new TypeError('Invalid rendered label text');
+  return value;
+}
+
+function sourceUrl(urls: CodeUrlSource, key: string | number | undefined): string | undefined {
+  const value: unknown = Reflect.get(urls, String(key));
+  if (value !== undefined && typeof value !== 'string') throw new TypeError('Invalid label URL');
+  return typeof value === 'string' ? value : undefined;
 }
 
 class TextMeasure {
@@ -337,14 +371,12 @@ class TextMeasure {
   declare ctx: CanvasRenderingContext2D;
 
   constructor() {
-    this.canvas = null;
-    this.ctx = null;
     this.initCanvas();
   }
 
   initCanvas() {
     this.canvas = document.createElement('canvas');
-    this.ctx = this.canvas.getContext('2d');
+    this.ctx = context2d(this.canvas);
 
     // 隐藏但不添加到 DOM
     this.canvas.style.cssText = `
@@ -353,12 +385,12 @@ class TextMeasure {
     `;
   }
 
-  measureText(text, fontSize: number, fontFamily) {
+  measureText(text: string, fontSize: number, fontFamily: string) {
     this.ctx.font = `${fontSize}px ${fontFamily}`;
     return this.ctx.measureText(text).width;
   }
 
-  findOptimalFontSize(text, containerWidth, options = {}) {
+  findOptimalFontSize(text: string, containerWidth: number, options: FontOptions = {}) {
     const { minFontSize = 2, maxFontSize = 72, fontFamily = 'sans-serif', precision = 0.2 } = options;
 
     let low = minFontSize;
@@ -383,7 +415,7 @@ class TextMeasure {
   }
 }
 
-export function getCompressedFontSize(value, width: number, options = {}) {
+export function getCompressedFontSize(value: string, width: number, options: FontOptions = {}) {
   const textMeasure = new TextMeasure();
   return textMeasure.findOptimalFontSize(value, width, options);
 }
@@ -394,7 +426,11 @@ function parseToCode128(value: string) {
   const parsed = JsBarcode({}, value, {
     format: 'CODE128',
   });
-  return _.get(parsed, '_encodings.0.0');
+  const result: unknown = parsed;
+  const first: unknown = property(property(property(result, '_encodings'), '0'), '0');
+  const data = property(first, 'data');
+  if (typeof data !== 'string') throw new TypeError('Invalid CODE128 encoder result');
+  return { data };
 }
 
 function getBarcodeBase64(value: string, { width = 100, height = 100 } = {}) {
@@ -418,8 +454,8 @@ function getBarcodeBase64(value: string, { width = 100, height = 100 } = {}) {
 export class BarLabel {
   // 同 TextMeasure：这些字段只在 setOptions/setLayoutParams/init 里赋值，
   // 不声明的话每次读取报 TS2339（本文件因此有 117 条）。
-  declare options: BarLabelOptions;
-  declare layout: CanvasLabelLayout;
+  declare options: BarSettings;
+  declare layout: BarLayout;
   declare canvas: HTMLCanvasElement;
   declare ctx: CanvasRenderingContext2D;
   /** 乘过 pixelRadio 之后的画布像素宽高 */
@@ -460,12 +496,12 @@ export class BarLabel {
     this.setLayoutParams();
     this.init();
   }
-  setOptions(values) {
-    this.options = Object.assign({}, this.options, values);
+  setOptions(values: Partial<BarSettings>) {
+    this.options = Object.assign({}, BAR_DEFAULTS, this.options, values);
   }
   setLayoutParams() {
     const { size, width, height } = this.options;
-    const codeSizes =
+    const codeSizes: Record<string, number> =
       width > height
         ? {
             l: 18,
@@ -480,7 +516,7 @@ export class BarLabel {
     this.layout = {
       paddingX: 3,
       paddingY: 2,
-      height: codeSizes[size],
+      height: required(codeSizes[size], 'barcode size'),
       fontSize: 5,
     };
   }
@@ -495,7 +531,7 @@ export class BarLabel {
     this.canvas.height = _height;
     this.canvas.style.width = width + 'px';
     this.canvas.style.height = height + 'px';
-    this.ctx = this.canvas.getContext('2d');
+    this.ctx = context2d(this.canvas);
     this.ctx.fillStyle = '#fff';
     this.ctx.fillRect(0, 0, _width, _height);
     this.unitSize = _width > _height ? _height / 30 : _width / 30;
@@ -520,17 +556,18 @@ export class BarLabel {
     this.drawTexts();
   }
   // 处理文字换行
-  cutTextByWidth(fontSize: number, context: string, maxWidth: number) {
+  cutTextByWidth(fontSize: number, context: string | undefined, maxWidth: number) {
     let result = [];
     this.ctx.font = fontSize + 'px sans-serif';
-    if (this.ctx.measureText(context).width < maxWidth) {
+    if (this.ctx.measureText(String(context)).width < maxWidth) {
       return [context];
     }
 
+    const content = required(context, 'text to wrap');
     let text = '';
 
-    for (let i = 0; i < context.length; i++) {
-      text += context[i];
+    for (let i = 0; i < content.length; i++) {
+      text += content.charAt(i);
       const width = this.ctx.measureText(text).width;
 
       if (width > maxWidth) {
@@ -578,8 +615,8 @@ export class BarLabel {
       this._height - 2 * paddingY * this.unitSize,
     );
   }
-  drawImageUrl(url: string, { x, y, width, height } = {}) {
-    return new Promise(resolve => {
+  drawImageUrl(url: string, { x, y, width, height }: ImageBounds) {
+    return new Promise<void>((resolve, reject) => {
       const image = new Image();
 
       image.onload = () => {
@@ -587,6 +624,7 @@ export class BarLabel {
         resolve();
       };
 
+      image.onerror = () => reject(new Error('Label image could not be loaded'));
       image.src = url;
     });
   }
@@ -647,7 +685,7 @@ export class BarLabel {
   }
   measureTextWidth(value: string, fontSize: number) {
     const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = context2d(canvas);
     ctx.font = fontSize + 'px sans-serif';
     return ctx.measureText(value).width;
   }
@@ -659,7 +697,7 @@ export class BarLabel {
       codePosition === 'top' ? (paddingY + height + (showBarValue ? 2 : 0)) * this.unitSize : paddingY * this.unitSize;
     const textWidth = this._width - 2 * paddingX * this.unitSize;
     const textHeight = fontSize * this.unitSize;
-    texts = _.flatten(
+    texts = _.flatten<CanvasLabelText>(
       texts.map(({ text, forceInLine } = {}, i) =>
         forceInLine
           ? {
@@ -681,7 +719,7 @@ export class BarLabel {
     this.ctx.strokeStyle = '#ccc';
     this.ctx.fillStyle = '#000';
     this.ctx.setLineDash([4, 8]);
-    const titleIsSplitted = texts.filter(t => t.isBold).length > 1;
+    const titleIsSplitted = texts.filter(t => t?.isBold).length > 1;
     texts.forEach(({ text, isBold, forceInLine } = {}, i) => {
       if (!text) {
         return;
@@ -723,7 +761,7 @@ export class BarLabel {
 export class QrLabel {
   // 同上，不声明每次读取报 TS2339（本文件因此有 91 条）。
   declare options: QrLabelOptions;
-  declare layout: CanvasLabelLayout;
+  declare layout: QrLayout;
   declare canvas: HTMLCanvasElement;
   declare ctx: CanvasRenderingContext2D;
   /** 乘过 pixelRadio 之后的画布像素宽高 */
@@ -731,7 +769,7 @@ export class QrLabel {
   declare height: number;
   declare pixelRadio: number;
   declare fontSize: number;
-  declare firstIsTitle: boolean;
+  declare firstIsTitle: boolean | undefined;
   declare unitSize: number;
   declare maxLineNumber: number;
 
@@ -759,27 +797,14 @@ export class QrLabel {
     this.fontSize = fontSize || 1;
   }
   setLayout() {
-    const { size } = this.options;
+    const codeSizes: Record<string, number> =
+      this.options.type === 'p' ? { s: 11, m: 16, l: 20, h: 24 } : { s: 13, m: 16, l: 20, h: 24 };
     this.layout = {
       paddingX: 3,
       paddingY: 2,
       fontSize: 5,
+      codeSize: required(codeSizes[this.options.size ?? ''], 'QR size'),
     };
-    if (this.options.type === 'p') {
-      this.layout.codeSize = {
-        s: 11,
-        m: 16,
-        l: 20,
-        h: 24,
-      }[size];
-    } else {
-      this.layout.codeSize = {
-        s: 13,
-        m: 16,
-        l: 20,
-        h: 24,
-      }[size];
-    }
   }
   init() {
     const { type } = this.options;
@@ -787,7 +812,7 @@ export class QrLabel {
     const canvas = this.canvas || document.createElement('canvas');
     canvas.width = this.width;
     canvas.height = this.height;
-    const ctx = canvas.getContext('2d');
+    const ctx = context2d(canvas);
     this.canvas = canvas;
     this.ctx = ctx;
     ctx.fillStyle = '#fff';
@@ -799,17 +824,18 @@ export class QrLabel {
         : 5;
   }
   // 处理文字换行
-  cutTextByWidth(fontSize: number, context, maxWidth: number, isBold) {
+  cutTextByWidth(fontSize: number, context: string | undefined, maxWidth: number, isBold: boolean | undefined) {
     let result = [];
     this.ctx.font = (isBold ? 'bold ' : '') + fontSize * this.fontSize + 'px sans-serif';
-    if (this.ctx.measureText(context).width < maxWidth) {
+    if (this.ctx.measureText(String(context)).width < maxWidth) {
       return [context];
     }
 
+    const content = required(context, 'text to wrap');
     let text = '';
 
-    for (let i = 0; i < context.length; i++) {
-      text += context[i];
+    for (let i = 0; i < content.length; i++) {
+      text += content.charAt(i);
       const width = this.ctx.measureText(text).width;
 
       if (width > maxWidth) {
@@ -824,13 +850,13 @@ export class QrLabel {
 
     return result;
   }
-  measureTextWidth(value, fontSize: number) {
+  measureTextWidth(value: string, fontSize: number) {
     const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = context2d(canvas);
     ctx.font = fontSize + 'px sans-serif';
     return ctx.measureText(value).width;
   }
-  renderText({ x = 0, y = 0, fontSize, content, width, isCenter, forceInLine, isBold, color = '#222' }) {
+  renderText({ x = 0, y = 0, fontSize, content, width, isCenter, forceInLine, isBold, color = '#222' }: TextOptions) {
     this.ctx.textBaseline = 'top';
     let textFontSize = fontSize * 0.55 * this.fontSize;
 
@@ -863,7 +889,7 @@ export class QrLabel {
     width,
     firstIsBold,
   }: {
-    textList: CanvasLabelText[];
+    textList: CanvasTexts;
     x: number;
     y: number;
     width: number;
@@ -875,7 +901,7 @@ export class QrLabel {
     let textTop = y;
     /* 泛型必须显式写：map 的回调要么返回单个对象、要么返回对象数组，
        lodash 的 flatten 从这个并集推不出元素类型，会得到 unknown[] */
-    const texts = _.flatten<{ text?: string; forceInLine?: boolean; isBold?: boolean }>(
+    const texts = _.flatten<CanvasLabelText>(
       textList.map(({ text, forceInLine } = {}, i) =>
         forceInLine
           ? { text, forceInLine, isBold: this.firstIsTitle && i === 0 }
@@ -885,7 +911,7 @@ export class QrLabel {
             })),
       ),
     ).slice(0, this.maxLineNumber);
-    const titleIsSplitted = texts.filter(t => t.isBold).length > 1;
+    const titleIsSplitted = texts.filter(t => t?.isBold).length > 1;
     texts.forEach(({ text, forceInLine, isBold } = {}, i) => {
       const textIsBold = firstIsBold && isBold;
 
@@ -916,8 +942,8 @@ export class QrLabel {
       textTop += fontSize;
     });
   }
-  drawImageUrl(url: string, { x, y, width, height } = {}) {
-    return new Promise(resolve => {
+  drawImageUrl(url: string, { x, y, width, height }: ImageBounds) {
+    return new Promise<void>((resolve, reject) => {
       const image = new Image();
 
       image.onload = () => {
@@ -931,6 +957,7 @@ export class QrLabel {
         resolve();
       };
 
+      image.onerror = () => reject(new Error('Label image could not be loaded'));
       image.src = url;
     });
   }
@@ -957,14 +984,15 @@ export class QrLabel {
     }
   }
   async renderLandscape() {
-    const { size, texts, qrPos, url, correctLevel } = this.options;
+    const { size, texts = [], qrPos, url, correctLevel } = this.options;
     const { paddingX, paddingY, fontSize, codeSize } = this.layout;
-    let topTextNum = {
+    const topTextCounts: Record<string, number> = {
       s: 2,
       m: 1,
       l: 0,
       h: 0,
-    }[size];
+    };
+    const topTextNum = required(topTextCounts[size ?? ''], 'QR size');
     this.renderVerticalTexts({
       textList: texts.slice(0, topTextNum).slice(0, this.maxLineNumber),
       x: paddingX * this.unitSize,
@@ -997,4 +1025,4 @@ export class QrLabel {
   }
 }
 
-window.QrLabel = QrLabel;
+window['QrLabel'] = QrLabel;

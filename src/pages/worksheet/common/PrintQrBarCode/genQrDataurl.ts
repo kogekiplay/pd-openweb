@@ -18,8 +18,29 @@ const defaultOptions = {
   foreground: '#000000',
 };
 
-const genQrDataurl = function (options) {
-  options = Object.assign({}, defaultOptions, options);
+export interface QrDataUrlOptions {
+  value?: string | undefined;
+  gap?: number | undefined;
+  render?: string | undefined;
+  width?: number | undefined;
+  height?: number | undefined;
+  typeNumber?: number | undefined;
+  correctLevel?: number | undefined;
+  background?: string | undefined;
+  foreground?: string | undefined;
+}
+
+const genQrDataurl = function (input: QrDataUrlOptions) {
+  const options = Object.assign({}, defaultOptions, input);
+  if (
+    typeof options.value !== 'string' ||
+    options.width === undefined ||
+    options.height === undefined ||
+    options.gap === undefined ||
+    options.background === undefined ||
+    options.foreground === undefined
+  )
+    throw new TypeError('Invalid QR canvas options');
   const qrcode = new QRCode(options.typeNumber, options.correctLevel);
   qrcode.addData(options.value);
   qrcode.make();
@@ -29,6 +50,7 @@ const genQrDataurl = function (options) {
   canvas.width = options.width;
   canvas.height = options.height;
   const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Canvas 2D context is unavailable');
   ctx.fillStyle = options.background;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 

@@ -1,4 +1,5 @@
-import { Fragment, useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
 import styled from 'styled-components';
 import { PRINT_TYPE } from './enum';
 import img1 from './images/1x1.png';
@@ -6,6 +7,8 @@ import img2 from './images/1x2.png';
 import img3 from './images/2x2.png';
 import img4 from './images/2x5.png';
 import img5 from './images/3x6.png';
+import type { PrintLabelConfig } from './types';
+import type { BarLabel, QrLabel } from './util';
 
 const Con = styled.div`
   flex: 1;
@@ -53,7 +56,7 @@ const A4PreviewImage = styled.div`
   }
 `;
 
-function A4Preview({ layout }) {
+function A4Preview({ layout }: { layout: number | undefined }) {
   return <A4PreviewImage className={`img${layout}`} />;
 }
 
@@ -84,30 +87,49 @@ function getPreviewSize(width: number, height: number) {
   };
 }
 
-export default function Preview(props) {
-  const { config = {}, labelObject = {}, style = {} } = props;
+type LabelPreview = Pick<BarLabel | QrLabel, 'options' | 'canvas' | 'render'>;
+interface PreviewProps {
+  config?: PrintLabelConfig | undefined;
+  labelObject?: LabelPreview | undefined;
+  style?: CSSProperties | undefined;
+}
+
+export default function Preview(props: PreviewProps) {
+  const { config = {}, labelObject, style = {} } = props;
   const { printType } = config;
-  const { width, height } = labelObject.options || {};
-  let error;
+  const { width, height } = labelObject?.options || {};
+  const [error, setError] = useState('');
   const con = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (labelObject && con.current) {
-      con.current.innerHTML = '';
-      labelObject.render();
-      con.current.appendChild(labelObject.canvas);
+    let active = true;
+    setError('');
+    const container = con.current;
+    if (!labelObject || !container) return undefined;
+    const showError = () => {
+      if (active) setError(_l('加载失败'));
+    };
+
+    container.innerHTML = '';
+    try {
+      void labelObject.render().catch(showError);
+      container.appendChild(labelObject.canvas);
+    } catch {
+      showError();
     }
+
+    return () => {
+      active = false;
+    };
   }, [config, labelObject]);
-  const previewSize = getPreviewSize(width, height);
+  const previewSize = { ...getPreviewSize(width ?? 100, height ?? 100), display: error ? 'none' : undefined };
   return (
     <Con style={style}>
-      {error && <span>{error}</span>}
-      {!error && (
-        <Fragment>
-          {printType === PRINT_TYPE.QR && <Label style={previewSize} ref={con} />}
-          {printType === PRINT_TYPE.BAR && <Label style={previewSize} ref={con} />}
-          {printType === PRINT_TYPE.A4 && <A4Preview layout={config.layout} />}
-        </Fragment>
-      )}
+      {error && <span role="alert">{error}</span>}
+      <Fragment>
+        {printType === PRINT_TYPE.QR && <Label style={previewSize} ref={con} />}
+        {printType === PRINT_TYPE.BAR && <Label style={previewSize} ref={con} />}
+        {printType === PRINT_TYPE.A4 && <A4Preview layout={config.layout} />}
+      </Fragment>
     </Con>
   );
 }

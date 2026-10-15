@@ -139,7 +139,7 @@ export default function PrintQrBarCode(props) {
           printType === PRINT_TYPE.BAR && sourceType === SOURCE_TYPE.CONTROL ? controls[0].controlId : undefined,
         controls,
       }),
-    ].filter(_.identity),
+    ].filter((item): item is NonNullable<typeof item> => Boolean(item)),
   });
   let labelObject;
 

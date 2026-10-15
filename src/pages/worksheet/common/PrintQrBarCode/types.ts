@@ -10,14 +10,14 @@
 /** 标签上的一行文本。各渲染器会把整个对象展开，所以允许携带自己的排版覆盖项。 */
 export interface LabelText {
   /** 文本内容。value 是另一种来源，两个键都出现过 */
-  text?: string;
-  value?: string;
-  name?: string;
-  type?: number;
-  align?: 'left' | 'center' | 'right';
-  isBold?: boolean;
+  text?: string | undefined;
+  value?: string | undefined;
+  name?: string | undefined;
+  type?: number | undefined;
+  align?: 'left' | 'center' | 'right' | undefined;
+  isBold?: boolean | undefined;
   /** 为真时该行不参与自动换行 */
-  forceInLine?: boolean;
+  forceInLine?: boolean | undefined;
 }
 
 /** 一张标签要打印的内容：码里承载的值 + 标签上的文本行。 */
@@ -33,28 +33,28 @@ export interface LabelRecord {
  * 另造联合类型也拦不住什么。
  */
 export interface PrintLabelConfig {
-  printType?: number;
-  labelSize?: number;
+  printType?: number | undefined;
+  labelSize?: number | undefined;
   /** labelSize 为自定义档时才用这两个，单位 mm */
-  labelCustomWidth?: number;
-  labelCustomHeight?: number;
-  layout?: number;
-  position?: number;
-  codeSize?: number | string;
-  codeFaultTolerance?: number;
-  fontSize?: number;
-  firstIsBold?: boolean;
-  showBarValue?: boolean;
-  showControlName?: boolean;
+  labelCustomWidth?: number | undefined;
+  labelCustomHeight?: number | undefined;
+  layout?: number | undefined;
+  position?: number | undefined;
+  codeSize?: number | string | undefined;
+  codeFaultTolerance?: number | undefined;
+  fontSize?: number | undefined;
+  firstIsBold?: boolean | undefined;
+  showBarValue?: boolean | undefined;
+  showControlName?: boolean | undefined;
   /** 要打印哪些行；元素是文本配置项，不是布尔（调用点是 showTexts.map(...)） */
-  showTexts?: LabelText[];
+  showTexts?: LabelText[] | undefined;
   /** 码的内容来源：URL 还是某个字段，见 enum.ts 的 SOURCE_TYPE */
-  sourceType?: number;
-  sourceControlId?: string;
-  sourceUrlType?: number;
+  sourceType?: number | undefined;
+  sourceControlId?: string | undefined;
+  sourceUrlType?: number | undefined;
   /** 预览时没有选中记录，用占位样例填充 */
-  emptySetAsSample?: boolean;
-  worksheetName?: string;
+  emptySetAsSample?: boolean | undefined;
+  worksheetName?: string | undefined;
 }
 
 /**
@@ -63,19 +63,19 @@ export interface PrintLabelConfig {
  * getList() 正是靠排除这两个 key 来遍历真正的枚举项的。
  */
 export interface EnumTable {
-  texts?: Record<string, string>;
-  shorts?: Record<string, string>;
+  texts?: Record<string, string> | undefined;
+  shorts?: Record<string, string> | undefined;
   [key: string]: number | Record<string, string> | undefined;
 }
 
 /** QrPdf 的构造参数，也是 print.ts 默认导出的第一个参数。 */
 export interface QrPdfOptions {
-  worksheetName?: string;
-  printType?: number;
-  layout?: number;
-  printData?: LabelRecord[];
-  correctLevel?: number;
-  config?: PrintLabelConfig;
+  worksheetName?: string | undefined;
+  printType?: number | undefined;
+  layout?: number | undefined;
+  printData?: LabelRecord[] | undefined;
+  correctLevel?: number | undefined;
+  config?: PrintLabelConfig | undefined;
 }
 
 /**
@@ -94,7 +94,7 @@ export type CodeUrlSource = Record<string, string> | string[];
  * Record<string,string> | undefined，antd 的 CheckboxOptionType 收不下（TS2322）。
  *
  * text / label 写成【必填但可为 undefined】：getList 无条件设置这两个键
- * （值来自 value.texts，可能没有），而 antd 那边 label 是必填 prop —— 
+ * （值来自 value.texts，可能没有），而 antd 那边 label 是必填 prop ——
  * 写成可选属性 TS 会认为它可能整个不存在，同样对不上。
  */
 export interface EnumOption {
