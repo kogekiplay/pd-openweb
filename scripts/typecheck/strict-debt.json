@@ -2049,7 +2049,6 @@
     "src/pages/widgetConfig/content/index.tsx",
     "src/pages/widgetConfig/hooks/index.ts",
     "src/pages/widgetConfig/index.tsx",
-    "src/pages/widgetConfig/util/createTemplate.tsx",
     "src/pages/widgetConfig/util/index.ts",
     "src/pages/widgetConfig/util/setting.ts",
     "src/pages/widgetConfig/widgetDisplay/components/BottomDragPointer.tsx",

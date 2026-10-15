@@ -8,14 +8,49 @@ import functionWrap from 'ming-ui/components/FunctionWrap';
 import worksheetAjax from 'src/api/worksheet';
 import { getMyPermissions, hasPermission } from 'src/components/checkPermission';
 import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { ControlAdvancedSetting, FormControl } from 'src/utils/controlTypes';
 import { getCurrentProject } from 'src/utils/project';
-import { ALL_SYS, DEFAULT_CONFIG, WIDGETS_TO_API_TYPE_ENUM } from '../config/widget';
+import { ALL_SYS, WIDGETS_TO_API_TYPE_ENUM } from '../config/widget';
 import { SettingItem } from '../styled';
-import { enumWidgetType } from '../util';
+import { getWidgetInfo } from '../util';
 import { formatControlsData } from './data';
 import { decodeTemplatePermissions } from './templatePermissionBoundary';
 import type { TemplateWorksheetPermission } from './templatePermissionBoundary';
+import {
+  templateExpression,
+  templateFilters,
+  templateMappings,
+  templateQuerySource,
+} from './templateReferenceBoundary';
+import type { TemplateQueryConfig, TemplateReferenceMapping } from './templateReferenceBoundary';
+
+interface FieldTemplate extends Partial<HapApi.MD.Entity.Worksheet.ControlTemplateEntity> {
+  id?: string | undefined;
+  templateId?: string | undefined;
+  name?: string | undefined;
+  desc?: string | undefined;
+  type?: string | number | undefined;
+  controlCount?: number | undefined;
+  accountId?: string | undefined;
+}
+interface TemplateLists {
+  templatePersonalList?: FieldTemplate[] | undefined;
+  templateOrganizationList?: FieldTemplate[] | undefined;
+}
+interface TemplateDialogProps extends TemplateLists {
+  allControls?: FormControl[] | undefined;
+  templateControls?: FormControl[] | undefined;
+  templateInfo?: FieldTemplate | undefined;
+  queryConfigs?: TemplateQueryConfig[] | undefined;
+  globalSheetInfo?: { projectId?: string | undefined } | undefined;
+  setConfig?: ((patch: TemplateLists) => void) | undefined;
+  getTemplateListByPersonal?: (() => void) | undefined;
+  getTemplateListByOrganization?: (() => void) | undefined;
+}
+interface TemplatePermissionErrors {
+  noPermissionSheetNames?: Array<string | undefined> | undefined;
+  deletedWorksheetControlNames?: Array<string | undefined> | undefined;
+}
 
 const TemplateRelationNotice = styled.div`
   margin-top: 10px;
@@ -120,12 +155,12 @@ export const hasCreateOrganizationTemplatePermission = (projectId: string) => {
 };
 
 // 支持创建模板的字段
-export function supportCreateTemplate(control) {
+export function supportCreateTemplate(control: FormControl | null | undefined) {
   const { type, advancedSetting = {}, dataSource = '' } = control || {};
   return (
     !_.includes([45, 49, 50], type) &&
-    !(type === 43 && advancedSetting.ocrapitype === '1') &&
-    !(type === 34 && (dataSource.includes('-') || Number(advancedSetting.detailworksheettype) === 2))
+    !(type === 43 && advancedSetting['ocrapitype'] === '1') &&
+    !(type === 34 && (dataSource.includes('-') || Number(advancedSetting['detailworksheettype']) === 2))
   );
 }
 
@@ -142,8 +177,8 @@ function parseDataSource(dataSource: string | undefined) {
   return _.includes(dataSource, '$') ? dataSource.slice(1, -1) : dataSource;
 }
 
-function isValidControl(control) {
-  return control && (!_.isEmpty(control) || _.includes(ALL_SYS, control.controlId));
+function isValidControl(control: FormControl | null | undefined): control is FormControl {
+  return !!control && (!_.isEmpty(control) || _.includes(ALL_SYS, control.controlId));
 }
 
 const TEMPLATE_RELATION_CONTROL_TYPES = [
@@ -176,10 +211,10 @@ function getWorksheetIdByControl(allControls: FormControl[], control: FormContro
   return parsedDataSource;
 }
 
-function getSourceControl(allControls, control: FormControl = {}) {
+function getSourceControl(allControls: FormControl[], control: FormControl = {}) {
   const parsedDataSource = parseDataSource(control.dataSource);
 
-  if (!parsedDataSource) return;
+  if (!parsedDataSource) return undefined;
 
   return _.find(allControls, item => item.controlId === parsedDataSource);
 }
@@ -194,7 +229,7 @@ function isBlankSubListControl(control: FormControl = {}) {
   );
 }
 
-function isBlankSubListRoleControl(allControls, control: FormControl = {}) {
+function isBlankSubListRoleControl(allControls: FormControl[], control: FormControl = {}) {
   if (isBlankSubListControl(control)) return true;
 
   return (
@@ -202,7 +237,7 @@ function isBlankSubListRoleControl(allControls, control: FormControl = {}) {
   );
 }
 
-function supportReferencedTemplateControl(control = {}) {
+function supportReferencedTemplateControl(control: FormControl = {}) {
   return !isBlankSubListControl(control);
 }
 
@@ -217,7 +252,7 @@ function normalizeTemplateControl(allControls: FormControl[], control: FormContr
   }
 
   if (control.type === WIDGETS_TO_API_TYPE_ENUM.OCR && control?.advancedSetting?.ocrcid) {
-    const ocrControl = _.find(allControls, i => i.controlId === control.advancedSetting.ocrcid);
+    const ocrControl = _.find(allControls, i => i.controlId === control.advancedSetting?.ocrcid);
 
     if (isBlankSubListControl(ocrControl)) {
       return {
@@ -232,7 +267,11 @@ function normalizeTemplateControl(allControls: FormControl[], control: FormContr
   return control;
 }
 
-function isDirectReferencedWorksheetRoleControl(allControls, control: FormControl = {}, worksheetId: string) {
+function isDirectReferencedWorksheetRoleControl(
+  allControls: FormControl[],
+  control: FormControl = {},
+  worksheetId: string | undefined,
+) {
   return (
     isBlankSubListRoleControl(allControls, control) ||
     (_.includes([WIDGETS_TO_API_TYPE_ENUM.SHEET_FIELD, WIDGETS_TO_API_TYPE_ENUM.SUBTOTAL], control.type) &&
@@ -241,13 +280,14 @@ function isDirectReferencedWorksheetRoleControl(allControls, control: FormContro
 }
 
 // 解析$controlId$格式，获取控件
-function getControlByDataSource(allControls: FormControl[], dataSource) {
+function getControlByDataSource(allControls: FormControl[], dataSource: string | undefined) {
   if (!dataSource) return { referencedControls: [], worksheetRoleControls: [] };
   let referencedControls: FormControl[] = [];
   let worksheetRoleControls: FormControl[] = [];
 
   dataSource.replace(/\$.+?\$/g, matched => {
-    const controlId = matched.match(/\$(.+?)\$/)[1];
+    const controlId = matched.match(/\$(.+?)\$/)?.[1];
+    if (!controlId) return matched;
     let singleControl = _.find(allControls, item => item.controlId === controlId);
 
     if (singleControl) {
@@ -257,16 +297,18 @@ function getControlByDataSource(allControls: FormControl[], dataSource) {
         referencedControls.push(singleControl);
       }
     }
+
+    return matched;
   });
   return { referencedControls, worksheetRoleControls };
 }
 
 // 解析函数，获取控件
-function getControlByDynamicFunc(allControls: FormControl[], defaultfunc) {
-  let referencedControls = [];
-  let worksheetRoleControls = [];
+function getControlByDynamicFunc(allControls: FormControl[], defaultfunc: string | undefined) {
+  const referencedControls: FormControl[] = [];
+  const worksheetRoleControls: FormControl[] = [];
 
-  const funcPayload = safeParse(defaultfunc || '{}');
+  const funcPayload = templateExpression(safeParse(defaultfunc || '{}'));
 
   if (!funcPayload.expression) return { referencedControls, worksheetRoleControls };
 
@@ -278,7 +320,7 @@ function getControlByDynamicFunc(allControls: FormControl[], defaultfunc) {
 }
 
 // 解析映射，获取控件
-function getControlByMapping(allControls: FormControl[], mapping) {
+function getControlByMapping(allControls: FormControl[], mapping: TemplateReferenceMapping[]) {
   let referencedControls: FormControl[] = [];
   let worksheetRoleControls: FormControl[] = [];
 
@@ -307,14 +349,19 @@ function getControlByMapping(allControls: FormControl[], mapping) {
 }
 
 // 解析查询工作表，获取控件
-function getControlBySearchworksheet(allControls: FormControl[], dynamicsrc, queryConfigs = []) {
-  let referencedControls = [];
-  let worksheetRoleControls = [];
+function getControlBySearchworksheet(
+  allControls: FormControl[],
+  dynamicsrc: string | undefined,
+  queryConfigs: TemplateQueryConfig[] = [],
+) {
+  const referencedControls: FormControl[] = [];
+  const worksheetRoleControls: FormControl[] = [];
 
-  const dynamicSrc = safeParse(dynamicsrc || '{}');
+  const dynamicSrc = templateQuerySource(safeParse(dynamicsrc || '{}'));
   if (!dynamicSrc.id) return { referencedControls, worksheetRoleControls };
 
   const queryConfig = _.find(queryConfigs, q => !q.eventType && q.id === dynamicSrc.id);
+  if (!queryConfig) throw new Error('Missing worksheet query configuration');
   // 筛选
   const filtersControls = getControlByFilters(allControls, { filters: JSON.stringify(queryConfig.items) }, 'filters');
 
@@ -325,9 +372,9 @@ function getControlBySearchworksheet(allControls: FormControl[], dynamicsrc, que
 }
 
 // 解析默认值，获取控件
-function getControlByDefault(allControls: FormControl[], control, queryConfigs) {
-  let referencedControls = [];
-  let worksheetRoleControls = [];
+function getControlByDefault(allControls: FormControl[], control: FormControl, queryConfigs: TemplateQueryConfig[]) {
+  const referencedControls: FormControl[] = [];
+  const worksheetRoleControls: FormControl[] = [];
 
   const { advancedSetting = {} } = control;
 
@@ -336,11 +383,11 @@ function getControlByDefault(allControls: FormControl[], control, queryConfigs) 
     referencedControls.push(...funcControls.referencedControls);
     worksheetRoleControls.push(...funcControls.worksheetRoleControls);
   } else if (advancedSetting.defaulttype === '2') {
-    const defSourceControls = getControlBySearchworksheet(allControls, advancedSetting.dynamicsrc, queryConfigs);
+    const defSourceControls = getControlBySearchworksheet(allControls, advancedSetting['dynamicsrc'], queryConfigs);
     referencedControls.push(control, ...defSourceControls.referencedControls);
     worksheetRoleControls.push(...defSourceControls.worksheetRoleControls);
   } else {
-    const defSource = safeParse(advancedSetting.defsource || '[]');
+    const defSource = templateMappings(safeParse(advancedSetting.defsource || '[]'));
     const defSourceControls = getControlByMapping(allControls, defSource);
     referencedControls.push(control, ...defSourceControls.referencedControls);
     worksheetRoleControls.push(...defSourceControls.worksheetRoleControls);
@@ -350,22 +397,26 @@ function getControlByDefault(allControls: FormControl[], control, queryConfigs) 
 }
 
 // 解析filters获取控件
-function getControlByFilters(allControls: FormControl[], advancedSetting, filterkey: string) {
+function getControlByFilters(
+  allControls: FormControl[],
+  advancedSetting: ControlAdvancedSetting | undefined,
+  filterkey: string,
+) {
   advancedSetting = advancedSetting || {};
-  const filters = safeParse(advancedSetting[filterkey] || '[]');
-  let referencedControls = [];
-  let worksheetRoleControls = [];
+  const filters = templateFilters(safeParse(advancedSetting[filterkey] || '[]'));
+  const referencedControls: FormControl[] = [];
+  const worksheetRoleControls: FormControl[] = [];
 
   if (_.isEmpty(filters)) return { referencedControls, worksheetRoleControls };
 
   filters.forEach(item => {
     if (_.isEmpty(item.groupFilters)) {
-      const filterControls = getControlByMapping(allControls, item.dynamicSource);
+      const filterControls = getControlByMapping(allControls, item.dynamicSource || []);
       referencedControls.push(...filterControls.referencedControls);
       worksheetRoleControls.push(...filterControls.worksheetRoleControls);
     } else {
-      item.groupFilters.forEach(groupItem => {
-        const groupFilterControls = getControlByMapping(allControls, groupItem.dynamicSource);
+      (item.groupFilters || []).forEach(groupItem => {
+        const groupFilterControls = getControlByMapping(allControls, groupItem.dynamicSource || []);
         referencedControls.push(...groupFilterControls.referencedControls);
         worksheetRoleControls.push(...groupFilterControls.worksheetRoleControls);
       });
@@ -375,13 +426,16 @@ function getControlByFilters(allControls: FormControl[], advancedSetting, filter
   return { referencedControls, worksheetRoleControls };
 }
 
-function formatBracketNames(names) {
+function formatBracketNames(names: Array<string | undefined>) {
   return _.uniq(names)
     .map(name => `【${name}】`)
     .join('，');
 }
 
-function getPermissionErrorMessage({ noPermissionSheetNames = [], deletedWorksheetControlNames = [] }) {
+function getPermissionErrorMessage({
+  noPermissionSheetNames = [],
+  deletedWorksheetControlNames = [],
+}: TemplatePermissionErrors) {
   const messages = [];
 
   if (!_.isEmpty(noPermissionSheetNames)) {
@@ -397,7 +451,7 @@ function getPermissionErrorMessage({ noPermissionSheetNames = [], deletedWorkshe
   return messages.join('\n');
 }
 
-function alertPermissionError(permissionErrorInfo) {
+function alertPermissionError(permissionErrorInfo: TemplatePermissionErrors) {
   const message = getPermissionErrorMessage(permissionErrorInfo);
 
   if (!message) return false;
@@ -407,15 +461,19 @@ function alertPermissionError(permissionErrorInfo) {
 }
 
 // 获取模板中所有引用控件包含本身
-function getAllReferencedControlInfo(allControls: FormControl[], templateControls: FormControl[], queryConfigs) {
+function getAllReferencedControlInfo(
+  allControls: FormControl[],
+  templateControls: FormControl[],
+  queryConfigs: TemplateQueryConfig[],
+) {
   const referencedControls: FormControl[] = [];
   const parsedControlIds: (string | undefined)[] = [];
   const permittedControlIds: (string | undefined)[] = [];
   const permissionMap: Record<string, TemplateWorksheetPermission | null | undefined> = {};
-  const noPermissionSheetNames = [];
+  const noPermissionSheetNames: Array<string | undefined> = [];
   const deletedWorksheetControlNames: (string | undefined)[] = [];
 
-  const addReferencedControls = controls => {
+  const addReferencedControls = (controls: FormControl[]) => {
     controls.filter(isValidControl).forEach(control => {
       if (!supportReferencedTemplateControl(control)) return;
 
@@ -477,14 +535,14 @@ function getAllReferencedControlInfo(allControls: FormControl[], templateControl
     return [...directReferencedControls, ...permittedControls];
   };
 
-  const getControlReferences = control => {
-    let referencedControls = [];
-    let worksheetRoleControls = [];
+  const getControlReferences = (control: FormControl) => {
+    const referencedControls: FormControl[] = [];
+    const worksheetRoleControls: FormControl[] = [];
     const { type, dataSource, sourceControlId, advancedSetting = {} } = control;
 
     switch (type) {
       case WIDGETS_TO_API_TYPE_ENUM.CUSTOM:
-        const customReference = safeParse(advancedSetting.reference || '[]');
+        const customReference = templateMappings(safeParse(advancedSetting['reference'] || '[]'));
         const customControls = getControlByMapping(allControls, customReference);
         referencedControls.push(control, ...customControls.referencedControls);
         worksheetRoleControls.push(...customControls.worksheetRoleControls);
@@ -523,7 +581,7 @@ function getAllReferencedControlInfo(allControls: FormControl[], templateControl
             worksheetRoleControls.push(ocrControl);
           }
         } else {
-          const ocrMap = safeParse(advancedSetting.ocrmap || '[]');
+          const ocrMap = templateMappings(safeParse(advancedSetting['ocrmap'] || '[]'));
           const mappedControls = getControlByMapping(allControls, ocrMap);
           referencedControls.push(...mappedControls.referencedControls);
           worksheetRoleControls.push(...mappedControls.worksheetRoleControls);
@@ -554,7 +612,7 @@ function getAllReferencedControlInfo(allControls: FormControl[], templateControl
         break;
       // 自由编号，increase，type为3，controlId，rcid
       case WIDGETS_TO_API_TYPE_ENUM.AUTO_ID:
-        const increase = safeParse(advancedSetting.increase || '[]');
+        const increase = templateMappings(safeParse(advancedSetting.increase || '[]'));
         const increaseFilters = increase.filter(i => i.type === 3);
         const increaseFiltersControls = getControlByMapping(allControls, increaseFilters);
         referencedControls.push(control, ...increaseFiltersControls.referencedControls);
@@ -562,7 +620,7 @@ function getAllReferencedControlInfo(allControls: FormControl[], templateControl
         break;
       // 附件watermarkinfo，同$controlId$结构
       case WIDGETS_TO_API_TYPE_ENUM.ATTACHMENT:
-        const attachmentControls = getControlByDataSource(allControls, advancedSetting.watermarkinfo);
+        const attachmentControls = getControlByDataSource(allControls, advancedSetting['watermarkinfo']);
         referencedControls.push(control, ...attachmentControls.referencedControls);
         worksheetRoleControls.push(...attachmentControls.worksheetRoleControls);
         break;
@@ -571,7 +629,10 @@ function getAllReferencedControlInfo(allControls: FormControl[], templateControl
       case WIDGETS_TO_API_TYPE_ENUM.USER_PICKER:
       case WIDGETS_TO_API_TYPE_ENUM.ORG_ROLE:
         const orgDefaultControls = getControlByDefault(allControls, control, queryConfigs);
-        const chooserangeControls = getControlByMapping(allControls, safeParse(advancedSetting.chooserange || '[]'));
+        const chooserangeControls = getControlByMapping(
+          allControls,
+          templateMappings(safeParse(advancedSetting.chooserange || '[]')),
+        );
         referencedControls.push(
           control,
           ...orgDefaultControls.referencedControls,
@@ -586,8 +647,8 @@ function getAllReferencedControlInfo(allControls: FormControl[], templateControl
       case WIDGETS_TO_API_TYPE_ENUM.DATE:
       case WIDGETS_TO_API_TYPE_ENUM.DATE_TIME:
         const dateDefaultControls = getControlByDefault(allControls, control, queryConfigs);
-        const minControls = getControlByMapping(allControls, safeParse(advancedSetting.min || '[]'));
-        const maxControls = getControlByMapping(allControls, safeParse(advancedSetting.max || '[]'));
+        const minControls = getControlByMapping(allControls, templateMappings(safeParse(advancedSetting.min || '[]')));
+        const maxControls = getControlByMapping(allControls, templateMappings(safeParse(advancedSetting.max || '[]')));
         referencedControls.push(
           control,
           ...dateDefaultControls.referencedControls,
@@ -601,7 +662,7 @@ function getAllReferencedControlInfo(allControls: FormControl[], templateControl
         );
         break;
       case WIDGETS_TO_API_TYPE_ENUM.SUB_LIST:
-        const subListControls = getControlBySearchworksheet(allControls, advancedSetting.dynamicsrc, queryConfigs);
+        const subListControls = getControlBySearchworksheet(allControls, advancedSetting['dynamicsrc'], queryConfigs);
         referencedControls.push(...subListControls.referencedControls);
         worksheetRoleControls.push(control, ...subListControls.worksheetRoleControls);
         break;
@@ -661,8 +722,8 @@ function getAllReferencedControlInfo(allControls: FormControl[], templateControl
   );
 
   for (let depth = 0; depth < MAX_REFERENCE_DEPTH && !_.isEmpty(currentControls); depth++) {
-    const nextControls = [];
-    const worksheetRoleControls = [];
+    const nextControls: FormControl[] = [];
+    const worksheetRoleControls: FormControl[] = [];
 
     currentControls = _.uniqBy(currentControls, 'controlId').filter(control => {
       return !_.includes(parsedControlIds, control.controlId) && supportReferencedTemplateControl(control);
@@ -701,7 +762,11 @@ function getAllReferencedControlInfo(allControls: FormControl[], templateControl
   };
 }
 
-function getAllReferencedControls(allControls: FormControl[], templateControls: FormControl[], queryConfigs) {
+function getAllReferencedControls(
+  allControls: FormControl[],
+  templateControls: FormControl[],
+  queryConfigs: TemplateQueryConfig[],
+) {
   const { referencedControls, noPermissionSheetNames, deletedWorksheetControlNames } = getAllReferencedControlInfo(
     allControls,
     templateControls,
@@ -712,7 +777,7 @@ function getAllReferencedControls(allControls: FormControl[], templateControls: 
   return referencedControls;
 }
 
-function CreateTemplateDialog(props) {
+function CreateTemplateDialog(props: TemplateDialogProps) {
   const {
     allControls = [],
     globalSheetInfo = {},
@@ -724,7 +789,7 @@ function CreateTemplateDialog(props) {
     templateOrganizationList,
     getTemplateListByPersonal = () => {},
     getTemplateListByOrganization = () => {},
-  }: { allControls: FormControl[]; templateControls: FormControl[]; [key: string]: any } = props;
+  } = props;
   void globalSheetInfo;
   const [visible, setVisible] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -765,6 +830,7 @@ function CreateTemplateDialog(props) {
     }
 
     let referencedControls: FormControl[];
+
     try {
       referencedControls = getAllReferencedControls(allControls, templateControls, queryConfigs);
       setReferenceError(undefined);
@@ -795,6 +861,7 @@ function CreateTemplateDialog(props) {
     if (saving) {
       return;
     }
+
     if (referenceError) {
       alert(referenceError, 2);
       return;
@@ -825,6 +892,7 @@ function CreateTemplateDialog(props) {
       }
 
       let referencedControls: FormControl[];
+
       try {
         referencedControls =
           resolvedReferencedControls !== null
@@ -919,9 +987,10 @@ function CreateTemplateDialog(props) {
             ...templateInfoState,
             type: templateType,
           };
-          const updateTemplateList = list =>
+          const updateTemplateList = (list: FieldTemplate[] = []) =>
             list.map(item => (item.templateId === templateId || item.id === templateId ? nextTemplateInfo : item));
-          const removeTemplate = list => list.filter(item => item.templateId !== templateId && item.id !== templateId);
+          const removeTemplate = (list: FieldTemplate[] = []) =>
+            list.filter(item => item.templateId !== templateId && item.id !== templateId);
           const isPersonalTemplateInList = _.some(
             templatePersonalList,
             item => item.templateId === templateId || item.id === templateId,
@@ -933,13 +1002,13 @@ function CreateTemplateDialog(props) {
           const nextPersonalList = isPersonalTemplate
             ? isPersonalTemplateInList
               ? updateTemplateList(templatePersonalList)
-              : [nextTemplateInfo, ...templatePersonalList]
+              : [nextTemplateInfo, ...(templatePersonalList || [])]
             : removeTemplate(templatePersonalList);
           const nextOrganizationList = isPersonalTemplate
             ? removeTemplate(templateOrganizationList)
             : isOrganizationTemplateInList
               ? updateTemplateList(templateOrganizationList)
-              : [nextTemplateInfo, ...templateOrganizationList];
+              : [nextTemplateInfo, ...(templateOrganizationList || [])];
 
           setConfig({
             templatePersonalList: nextPersonalList,
@@ -1034,8 +1103,7 @@ function CreateTemplateDialog(props) {
               <div className="settingItemTitle">{_l('模板中的字段（包含引用字段）')}</div>
               <TemplateFieldsList>
                 {displayControls.map(control => {
-                  const widgetKey = enumWidgetType[control.type];
-                  const { icon } = (widgetKey && DEFAULT_CONFIG[widgetKey]) || {};
+                  const { icon } = getWidgetInfo(control.type);
                   return (
                     <div
                       key={control.controlId || `${control.type}-${control.controlName}`}
@@ -1055,13 +1123,8 @@ function CreateTemplateDialog(props) {
   );
 }
 
-export const createTemplateDialog = props => {
-  const {
-    allControls = [],
-    templateInfo = {},
-    templateControls = [],
-    queryConfigs = [],
-  }: { allControls: FormControl[]; templateControls: FormControl[]; [key: string]: any } = props || {};
+export const createTemplateDialog = (props: TemplateDialogProps = {}) => {
+  const { allControls = [], templateInfo = {}, templateControls = [], queryConfigs = [] } = props || {};
 
   if (!templateInfo.templateId) {
     const supportedTemplateControls = templateControls.filter(
@@ -1074,12 +1137,14 @@ export const createTemplateDialog = props => {
     }
 
     let permissionInfo: ReturnType<typeof getAllReferencedControlInfo>;
+
     try {
       permissionInfo = getAllReferencedControlInfo(allControls, supportedTemplateControls, queryConfigs);
     } catch {
       alert(_l('获取引用字段权限失败，请重试'), 2);
       return undefined;
     }
+
     const { noPermissionSheetNames, deletedWorksheetControlNames } = permissionInfo;
 
     if (alertPermissionError({ noPermissionSheetNames, deletedWorksheetControlNames })) {

@@ -165,6 +165,7 @@ function ManageUserDialog(props) {
       }}
       bodyClass={'pAll0 manageUserDialogBody flexColumn'}
       headerClass={'pAll0'}
+      dialogClasses="manageUserDialog"
     >
       <Wrapper className="flex flexColumn">
         {loading ? (
