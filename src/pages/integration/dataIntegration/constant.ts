@@ -21,12 +21,15 @@ export const DATABASE_TYPE = {
   HANA: 'HANA',
 };
 
-export const isPostgresqlDestinationType = dsType =>
-  !!dsType &&
+export const isPostgresqlDestinationType = (dsType: unknown): boolean =>
+  typeof dsType === 'string' &&
   [DATABASE_TYPE.POSTGRESQL, DATABASE_TYPE.ALIYUN_POSTGRES, DATABASE_TYPE.TENCENT_POSTGRES].includes(dsType);
 
 /** string 则 toLowerCase，否则原样返回（PG 标识符等） */
-export const lowercaseIfString = value => (typeof value === 'string' ? value.toLowerCase() : value);
+export function lowercaseIfString<T>(value: T): T extends string ? string : T;
+export function lowercaseIfString(value: unknown): unknown {
+  return typeof value === 'string' ? value.toLowerCase() : value;
+}
 
 export const SOURCE_FROM_TYPE = {
   ALL: 'ALL',

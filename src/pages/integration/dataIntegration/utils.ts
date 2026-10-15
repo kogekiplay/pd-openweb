@@ -4,7 +4,6 @@ import {
   DEPT_FIELDS,
   isPostgresqlDestinationType,
   isValidName,
-  lowercaseIfString,
   namePattern,
   PERSONNEL_FIELDS,
   RELATED_RECORD_FIELDS,
@@ -12,8 +11,34 @@ import {
 } from 'src/pages/integration/dataIntegration/constant.js';
 import { DEFAULT_DATA } from 'src/pages/widgetConfig/config/widget.js';
 import { canSetAsTitle, enumWidgetType } from 'src/pages/widgetConfig/util';
+import type {
+  MatchedTypes,
+  SyncField,
+  SyncMapping,
+  SyncWorksheetControl,
+} from './connector/components/OnlySyncStep/connectorTypes';
 
-export const getInitFieldsMapping = (sourceFields, isSourceAppType: boolean, destDsType) => {
+type IntegrationWorksheetControl = Pick<
+  SyncWorksheetControl,
+  | 'controlId'
+  | 'controlName'
+  | 'alias'
+  | 'type'
+  | 'advancedSetting'
+  | 'enumDefault'
+  | 'dot'
+  | 'required'
+  | 'strDefault'
+  | 'sourceControlType'
+  | 'remark'
+>;
+type WidgetDefaults = Pick<SyncWorksheetControl, 'advancedSetting' | 'enumDefault' | 'type' | 'dot' | 'controlName'>;
+
+export const getInitFieldsMapping = (
+  sourceFields: SyncField[],
+  isSourceAppType: boolean,
+  destDsType: string | undefined,
+): SyncMapping[] => {
   const isDestAppType = destDsType === DATABASE_TYPE.APPLICATION_WORKSHEET;
   const needReplace = !isSourceAppType || !isDestAppType;
   const isExistJoinPk = !!(sourceFields || []).filter(item => item.isUniquePk).length;
@@ -28,7 +53,7 @@ export const getInitFieldsMapping = (sourceFields, isSourceAppType: boolean, des
           let n = needReplace ? item.name.replace(namePattern, '') : item.name;
 
           if (isPostgresqlDestinationType(destDsType)) {
-            n = lowercaseIfString(n);
+            n = n.toLowerCase();
           }
 
           return n;
@@ -38,9 +63,7 @@ export const getInitFieldsMapping = (sourceFields, isSourceAppType: boolean, des
 
     const initDestName = getInitName();
     const initDestAliasRaw = item.alias || initDestName;
-    const initDestAlias = isPostgresqlDestinationType(destDsType)
-      ? lowercaseIfString(initDestAliasRaw)
-      : initDestAliasRaw;
+    const initDestAlias = isPostgresqlDestinationType(destDsType) ? initDestAliasRaw.toLowerCase() : initDestAliasRaw;
 
     return {
       sourceField: item,
@@ -65,19 +88,20 @@ export const getInitFieldsMapping = (sourceFields, isSourceAppType: boolean, des
         status: 'NORMAL',
         orderNo: null,
         isTitle: false, //仅用于工作表
-        comment: isSourceAppType ? _.get(item, 'controlSetting.remark') : item.comment,
+        comment: isSourceAppType ? item.controlSetting?.remark : item.comment,
       },
     };
   });
   return getDuplicateFieldsRenamedList(mapping);
 };
 
-export const getDuplicateFieldsRenamedList = list => {
-  const tempObj = {};
+export const getDuplicateFieldsRenamedList = <T extends { destField: { name: string } }>(list: T[]): T[] => {
+  const counts = new Map<string, number>();
   list.forEach(item => {
-    const fieldName = _.get(item, 'destField.name');
-    tempObj[fieldName] = !tempObj[fieldName] ? 1 : tempObj[fieldName] + 1;
-    if (tempObj[fieldName] > 1) {
+    const fieldName = item.destField.name;
+    const count = (counts.get(fieldName) || 0) + 1;
+    counts.set(fieldName, count);
+    if (count > 1) {
       item.destField.name = fieldName + Math.floor(Math.random() * 10000);
     }
   });
@@ -85,16 +109,16 @@ export const getDuplicateFieldsRenamedList = list => {
 };
 
 export const getInitWorkSheetFields = (
-  controls,
-  isGetDest,
-  isSourceAppType,
+  controls: IntegrationWorksheetControl[],
+  isGetDest: boolean | undefined,
+  isSourceAppType: boolean | undefined,
   isDestAppType: boolean,
-  workSheetId,
-  withRowId?,
-  withSys?,
-) => {
-  let initWorkSheetFields = [];
-  const rowIDField = (controls || [])
+  workSheetId: string,
+  withRowId?: boolean,
+  withSys?: boolean,
+): SyncField[] => {
+  const initWorkSheetFields: SyncField[] = [];
+  const rowIDField: SyncField[] = (controls || [])
     .filter(c => c.controlId === 'rowid')
     .map(rowId => {
       return {
@@ -130,6 +154,7 @@ export const getInitWorkSheetFields = (
         : c.controlId !== 'rowid',
     )
     .forEach(control => {
+      if (typeof control.controlName !== 'string') throw new TypeError('Missing worksheet control name');
       const commonObj = {
         id: control.controlId,
         oid: `${workSheetId}_${control.controlId}`,
@@ -159,7 +184,7 @@ export const getInitWorkSheetFields = (
       if (!isDestAppType && _.includes([26, 27, 29], control.type)) {
         if (control.type === 26) {
           //人员字段拆分
-          const isExternalUser = control.advancedSetting.usertype === '2'; // 外部成员
+          const isExternalUser = control.advancedSetting?.usertype === '2'; // 外部成员
 
           if (isExternalUser) {
             initWorkSheetFields.push({
@@ -200,9 +225,15 @@ export const getInitWorkSheetFields = (
   return isSourceAppType || withRowId ? rowIDField.concat(initWorkSheetFields) : initWorkSheetFields;
 };
 
-export const getMatchedFieldsOptions = (types, sourceField, destFields, _isSourceAppType, isDestAppType) => {
-  const matchedTypeIds = _.uniq(((types || {})[sourceField.id]) || []).map(type => type.dataType);
-  const matchedMdTypeIds = _.uniq(((types || {})[sourceField.id]) || []).map(type => type.mdType);
+export const getMatchedFieldsOptions = (
+  types: MatchedTypes | null | undefined,
+  sourceField: SyncField,
+  destFields: SyncField[] | null | undefined,
+  _isSourceAppType: boolean | undefined,
+  isDestAppType: boolean | undefined,
+): SyncField[] => {
+  const matchedTypeIds = _.uniq((types || {})[String(sourceField.id)] || []).map(type => type.dataType);
+  const matchedMdTypeIds = _.uniq((types || {})[String(sourceField.id)] || []).map(type => type.mdType);
 
   const matchedFieldsOptions = isDestAppType
     ? (destFields || []).filter(o => _.includes(matchedMdTypeIds, o.mdType))
@@ -211,14 +242,15 @@ export const getMatchedFieldsOptions = (types, sourceField, destFields, _isSourc
 };
 
 export const getDefaultData = (
-  mapping,
-  types,
-  isSetDefaultFields,
-  destFields,
-  isSourceAppType,
-  isDestAppType,
+  mapping: SyncMapping[] | null | undefined,
+  types: MatchedTypes | null | undefined,
+  isSetDefaultFields: boolean | undefined,
+  destFields: SyncField[] | null | undefined,
+  isSourceAppType: boolean | undefined,
+  isDestAppType: boolean | undefined,
   notCanvas?: boolean,
-) => {
+): SyncMapping[] => {
+  const widgetDefaults: Readonly<Partial<Record<string, WidgetDefaults>>> = DEFAULT_DATA;
   let hasSetFields: Record<string, number> = {};
   let isSetTitle = false; //是否已经设置过标题默认值
 
@@ -235,37 +267,39 @@ export const getDefaultData = (
         isDestAppType,
       );
       const sameNameFields = matchedFields.filter(f => f.name === item.sourceField.name);
+      const sameNameField = sameNameFields[0];
 
-      if (!item.destField.id && sameNameFields.length > 0 && !hasSetFields[sameNameFields[0].name]) {
-        hasSetFields[sameNameFields[0].name] = 1;
+      if (!item.destField.id && sameNameField && !hasSetFields[sameNameField.name]) {
+        hasSetFields[sameNameField.name] = 1;
         return {
           sourceField: { ...item.sourceField, isCheck: isValidField },
           destField: isValidField
             ? {
                 ...item.destField,
                 isCheck: true,
-                isPk: sameNameFields[0].isPk,
-                isNotNull: sameNameFields[0].isNotNull,
-                id: sameNameFields[0].id,
-                oid: sameNameFields[0].oid,
-                name: sameNameFields[0].name,
-                alias: sameNameFields[0].alias,
-                dataType: sameNameFields[0].dataType,
-                jdbcTypeId: sameNameFields[0].jdbcTypeId,
-                precision: sameNameFields[0].precision,
-                scale: sameNameFields[0].scale,
-                mdType: sameNameFields[0].mdType,
-                controlSetting: sameNameFields[0].controlSetting,
+                isPk: sameNameField.isPk,
+                isNotNull: sameNameField.isNotNull,
+                id: sameNameField.id,
+                oid: sameNameField.oid,
+                name: sameNameField.name,
+                alias: sameNameField.alias,
+                dataType: sameNameField.dataType,
+                jdbcTypeId: sameNameField.jdbcTypeId,
+                precision: sameNameField.precision,
+                scale: sameNameField.scale,
+                mdType: sameNameField.mdType,
+                controlSetting: sameNameField.controlSetting,
               }
             : item.destField,
         };
       }
     }
 
-    const itemOptions = ((types || {})[item.sourceField.id]) || [];
+    const itemOptions = (types || {})[String(item.sourceField.id)] || [];
+    const firstOption = itemOptions[0];
 
     //不支持类型的主键isCheck设置为false
-    if (itemOptions.length === 0) {
+    if (!firstOption) {
       return {
         sourceField: { ...item.sourceField, isCheck: false },
         destField: { ...item.destField, isCheck: false },
@@ -278,18 +312,18 @@ export const getDefaultData = (
     )[0];
 
     //工作表-默认controlSetting
-    const ENUM_TYPE = enumWidgetType[itemOptions[0].mdType];
+    const ENUM_TYPE: unknown = firstOption.mdType == null ? undefined : enumWidgetType[firstOption.mdType];
     const settingData =
       ENUM_TYPE === 'DATE_TIME'
-        ? { type: itemOptions[0].mdType, advancedSetting: { showtype: '6' } }
+        ? { type: firstOption.mdType, advancedSetting: { showtype: '6' } }
         : {
-            ..._.omit(DEFAULT_DATA[ENUM_TYPE], ['controlName']),
-            type: itemOptions[0].mdType,
-            dot: itemOptions[0].defaultScale,
+            ..._.omit(typeof ENUM_TYPE === 'string' ? widgetDefaults[ENUM_TYPE] : undefined, ['controlName']),
+            type: firstOption.mdType,
+            dot: firstOption.defaultScale,
           };
 
     //工作表-设置默认类型，是否可设置默认标题判断
-    const mdType = item.destField.isUniquePk ? 2 : (initOption || itemOptions[0]).mdType;
+    const mdType = item.destField.isUniquePk ? 2 : (initOption || firstOption).mdType;
     const canSetTitle = canSetAsTitle({ type: mdType }) && (item.sourceField.oid || '').split('_')[1] !== 'rowid';
     const isTitle = isDestAppType ? notCanvas && canSetTitle && !isSetTitle : null;
 
@@ -302,10 +336,10 @@ export const getDefaultData = (
       destField: !isSetDefaultFields
         ? {
             ...item.destField,
-            dataType: (initOption || itemOptions[0]).typeName.toLowerCase(),
-            jdbcTypeId: (initOption || itemOptions[0]).dataType,
-            precision: (initOption || itemOptions[0]).maxLength,
-            scale: (initOption || itemOptions[0]).defaultScale,
+            dataType: (initOption || firstOption).typeName.toLowerCase(),
+            jdbcTypeId: (initOption || firstOption).dataType,
+            precision: (initOption || firstOption).maxLength,
+            scale: (initOption || firstOption).defaultScale,
             //工作表
             mdType,
             controlSetting: isDestAppType
@@ -320,32 +354,50 @@ export const getDefaultData = (
   return newFieldsMapping;
 };
 
-export const isNotSupportField = (sourceField, matchedTypes) => {
+export const isNotSupportField = (sourceField: SyncField, matchedTypes: MatchedTypes) => {
   const isOtherTable_onlyDisplay_orLink =
     sourceField.mdType === 30 &&
-    (sourceField.controlSetting.strDefault === '10' || sourceField.controlSetting.sourceControlType === 21); //他表字段-仅显示,他表字段-自由连接类型
-  const isRelated_multiple = sourceField.mdType === 29 && sourceField.controlSetting.enumDefault === 2; //关联记录-多条
+    (sourceField.controlSetting?.strDefault === '10' || sourceField.controlSetting?.sourceControlType === 21); //他表字段-仅显示,他表字段-自由连接类型
+  const isRelated_multiple = sourceField.mdType === 29 && sourceField.controlSetting?.enumDefault === 2; //关联记录-多条
   const isNotSupport =
-    !(matchedTypes[sourceField.id] || []).length || isOtherTable_onlyDisplay_orLink || isRelated_multiple;
+    !(matchedTypes[String(sourceField.id)] || []).length || isOtherTable_onlyDisplay_orLink || isRelated_multiple;
   return isNotSupport;
 };
 
-export const getExtraParams = (type, formData) => {
-  let extraParams = {};
+/** The legacy form protocol forwards the first JSON value unchanged, including opaque values. */
+function firstJsonSelection(raw: unknown): unknown {
+  const parsed: unknown = JSON.parse(String(raw));
+  if (parsed === null) throw new TypeError('Invalid connection selection');
+  if (typeof parsed === 'string' || Array.isArray(parsed)) return parsed[0];
+  if (typeof parsed === 'object') return Reflect.get(parsed, '0');
+  return undefined;
+}
+
+interface ConnectionExtraParams {
+  /** These form values are forwarded unchanged; this helper only reads the first serialized selection. */
+  serviceName?: unknown;
+  SID?: unknown;
+  isSrvProtocol?: unknown;
+  authType?: unknown;
+  saslMechanism?: unknown;
+}
+export const getExtraParams = (type: string | undefined, formData: Record<string, unknown>): ConnectionExtraParams => {
+  let extraParams: ConnectionExtraParams = {};
 
   switch (type) {
     case DATABASE_TYPE.ORACLE:
       extraParams = {
-        [JSON.parse(formData.serviceType)[0] === 'ServiceName' ? 'serviceName' : 'SID']: formData.serviceName,
+        [firstJsonSelection(formData['serviceType']) === 'ServiceName' ? 'serviceName' : 'SID']:
+          formData['serviceName'],
       };
       break;
     case DATABASE_TYPE.MONGO_DB:
-      extraParams = { isSrvProtocol: formData.isSrvProtocol };
+      extraParams = { isSrvProtocol: formData['isSrvProtocol'] };
       break;
     case DATABASE_TYPE.KAFKA:
       extraParams = {
-        authType: JSON.parse(formData.authType)[0],
-        saslMechanism: formData.saslMechanism ? JSON.parse(formData.saslMechanism)[0] : undefined,
+        authType: firstJsonSelection(formData['authType']),
+        saslMechanism: formData['saslMechanism'] ? firstJsonSelection(formData['saslMechanism']) : undefined,
       };
   }
 
