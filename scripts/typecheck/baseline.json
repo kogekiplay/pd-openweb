@@ -3,16 +3,16 @@
   "key": "code",
   "tsVersion": "7.0.2",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-10-16T01:58:38.163Z",
-  "rawCount": 8571,
+  "generatedAt": "2026-10-16T02:46:51.585Z",
+  "rawCount": 8570,
   "droppedNoise": {
     "library": 0,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 8571,
-  "uniqueKeys": 2307,
+  "keptCount": 8570,
+  "uniqueKeys": 2306,
   "entries": {
     "src/components/Agent/ChatPanel.tsx|TS2322": 1,
     "src/components/Agent/ChatPanel.tsx|TS2739": 1,
@@ -1046,7 +1046,6 @@
     "src/pages/Statistics/Charts/ScatterChart.tsx|TS2365": 1,
     "src/pages/Statistics/Charts/WordCloudChart.tsx|TS2339": 27,
     "src/pages/Statistics/Charts/WorldMap.tsx|TS2339": 39,
-    "src/pages/Statistics/common/reportConfigUtils.ts|TS2339": 1,
     "src/pages/Statistics/components/ChartAnalyse/components/AutoLinkage.tsx|TS2339": 10,
     "src/pages/Statistics/components/ChartAnalyse/components/AuxiliaryLine.tsx|TS2339": 4,
     "src/pages/Statistics/components/ChartAnalyse/components/AuxiliaryLine.tsx|TS2739": 1,
