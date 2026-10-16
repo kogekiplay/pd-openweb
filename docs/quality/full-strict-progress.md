@@ -405,3 +405,5 @@ OnlySync、RecordInfo/DragCore、BaseColumnHead 及列头发布器的有限合�
 2026-10-16 10:09:48（上海）已发布63d1f52a0：六入口/34资源/17,098文件、容器挂载及已登录单记录二维码PDF生成验收通过。见production-20261016-vector-label.md。补记15日a4c95d520发布证据见production-20261015-print-label.md。
 
 2026-10-16 统计图表公共配置：strict51,798→51,692，文件/错误码无新增；fast8,570/2,306keys，欠债3,113、strict-clean1,648/4,761；1,592组历史A/B与242项规格及全部门禁通过。见report-config-strict-20261016.md。
+
+2026-10-16 10:58:53（上海）发布c1c74ba4d：六入口/34资源/17,098文件、容器挂载和真实折线/双轴图草稿切换通过；退出并刷新后仅原有2张图表。见production-20261016-report-config.md。
