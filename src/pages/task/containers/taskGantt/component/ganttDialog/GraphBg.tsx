@@ -2,24 +2,10 @@ import { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import config from './config';
-import type { GanttType } from './GanttHeader';
 
 const { TYPE_TO_WIDTH } = config;
-
-/** 与 ./time.ts 的 TimeBucketEntry 结构一致（该接口未导出，按同目录惯例在此局部声明） */
-interface TimeEntry {
-  pub: string;
-  sub: string[];
-}
-
-interface GraphBgProps {
-  time: TimeEntry[];
-  type: GanttType;
-  durFromBeginToToday: number;
-}
-
-export default class GraphBg extends Component<GraphBgProps> {
-  override shouldComponentUpdate(nextProp: GraphBgProps) {
+export default class GraphBg extends Component<any, any> {
+  override shouldComponentUpdate(nextProp) {
     return !_.isEqual(nextProp.time, this.props.time);
   }
 

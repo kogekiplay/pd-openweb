@@ -1,28 +1,8 @@
-import { Component, type MouseEvent } from 'react';
+import { Component } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
 import ProcessBar from './ProcessBar';
 import { durDays, parseTime } from './time';
-import type { GanttTaskNode } from './GanttHeader';
-
-/** 接口返回的任务节点时间字段：原始字符串，可能缺失 */
-interface GanttTaskTimeFields {
-  actualStartTime?: string | undefined;
-  completeTime?: string | undefined;
-  deadline?: string | undefined;
-  startTime?: string | undefined;
-}
-
-/** 绘制时间条所需的任务节点（时间字段先按原始字符串读取，再统一转成 moment） */
-export type GanttProcessTaskNode = GanttTaskNode & GanttTaskTimeFields;
-
-export interface GraphContentProps {
-  data: GanttProcessTaskNode[];
-  width: number;
-  beginTime: moment.Moment;
-  handleTaskItemHover: (visible: boolean, event?: MouseEvent<HTMLElement>) => void;
-  showDetail: (taskID: string) => void;
-}
 
 /**
  * 根据最早开始时间和实际起止时间计算时间跨度
@@ -30,7 +10,7 @@ export interface GraphContentProps {
  * @param {*} startTime 起始时间
  * @param {*} endTime 结束时间
  */
-const getWidthAndLeft = (beginTime: moment.Moment, startTime: moment.Moment, endTime: moment.Moment) => {
+const getWidthAndLeft = (beginTime, startTime, endTime) => {
   if (startTime.isValid() && endTime.isValid()) {
     return {
       leftDays: durDays(beginTime, startTime),
@@ -58,47 +38,42 @@ const getWidthAndLeft = (beginTime: moment.Moment, startTime: moment.Moment, end
   };
 };
 
-export default class GraphContent extends Component<GraphContentProps> {
-  constructor(props: GraphContentProps) {
+export default class GraphContent extends Component<any, any> {
+  constructor(props) {
     super(props);
   }
 
-  renderProcess(data: GanttProcessTaskNode[]) {
+  renderProcess(data) {
     const { width, handleTaskItemHover, beginTime } = this.props;
 
     return data.map((item, index: number) => {
-      let expectState: string | undefined;
-      let actualState: string | undefined;
-      let status: string | undefined;
-      const { actualStartTime: rawActualStartTime, completeTime: rawCompleteTime } = item;
-      const { deadline: rawDeadline, startTime: rawStartTime } = item;
+      let expectState, actualState, status;
+      let { actualStartTime, completeTime, deadline, startTime } = item;
 
       /**
        * 确定计划时间是否需要向前或向后补一天
        */
-      if (!rawStartTime && rawDeadline) expectState = 'noStart';
-      if (rawStartTime && !rawDeadline) expectState = 'noEnd';
+      if (!startTime && deadline) expectState = 'noStart';
+      if (startTime && !deadline) expectState = 'noEnd';
 
       /**
        * 确实实际时间是否需要向前或向后补一天
        */
-      if (!rawActualStartTime && rawCompleteTime) actualState = 'noStart';
-      if (rawActualStartTime && !rawCompleteTime) actualState = 'noEnd';
+      if (!actualStartTime && completeTime) actualState = 'noStart';
+      if (actualStartTime && !completeTime) actualState = 'noEnd';
 
       /**
        *  当有实际完成时间且时间早于此刻时,状态为超前
        */
-      if (rawCompleteTime && moment(rawCompleteTime).isBefore(moment())) status = 'inAdvance';
-      if ((rawActualStartTime && !rawCompleteTime) || (rawCompleteTime && moment(rawCompleteTime) > moment())) {
-        status = 'normal';
-      }
+      if (completeTime && moment(completeTime).isBefore(moment())) status = 'inAdvance';
+      if ((actualStartTime && !completeTime) || (completeTime && moment(completeTime) > moment())) status = 'normal';
       /**
        * 解析时间
        */
-      const actualStartTime = moment(parseTime(rawActualStartTime));
-      const completeTime = moment(parseTime(rawCompleteTime));
-      const deadline = moment(parseTime(rawDeadline));
-      const startTime = moment(parseTime(rawStartTime));
+      actualStartTime = moment(parseTime(actualStartTime));
+      completeTime = moment(parseTime(completeTime));
+      deadline = moment(parseTime(deadline));
+      startTime = moment(parseTime(startTime));
 
       /**
        * 获取时间条的宽度和距左边的距离
