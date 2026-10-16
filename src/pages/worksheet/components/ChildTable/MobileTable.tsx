@@ -22,6 +22,7 @@ interface MobileTableProps {
   rows: RecordRow[];
   isEdit?: boolean | undefined;
   allowcancel?: boolean | undefined;
+  allowadd?: boolean | undefined;
   disabled?: boolean | undefined;
   sheetSwitchPermit?: HapApi.MD.Entity.Worksheet.SwitchPermitModel[] | undefined;
   onDelete: (rowid: string) => void;
@@ -42,6 +43,7 @@ interface MobileTableProps {
   useUserPermission?: boolean | undefined;
   recordId?: string | undefined;
   onSave: (row: RecordRow, updatedControlIds?: string[]) => void;
+  getMasterFormData?: () => FormControl[];
   submitChildTableCheckData: () => void;
   updateIsAddByLine: (value: boolean) => void;
 }

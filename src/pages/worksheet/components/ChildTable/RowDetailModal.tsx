@@ -6,8 +6,20 @@ import { Tooltip } from 'ming-ui/antd-components';
 import IconBtn from 'worksheet/common/recordInfo/RecordForm/IconBtn.jsx';
 import { browserIsMobile } from 'src/utils/common';
 import RowDetail from './RowDetail';
+import type { RowDetailProps } from './RowDetail';
 
-export default function RowDetailModal(props) {
+interface RowDetailModalProps extends RowDetailProps {
+  disabled?: boolean | undefined;
+  allowDelete?: boolean | undefined;
+  title: React.ReactNode;
+  aglinBottom?: boolean | undefined;
+  switchDisabled?: { prev?: boolean; next?: boolean };
+  onDelete: (rowid: string | undefined) => void;
+  onSwitch: (value: { prev?: boolean; next?: boolean }) => void;
+  onClose: () => void;
+}
+
+export default function RowDetailModal(props: RowDetailModalProps) {
   const {
     disabled,
     allowDelete,

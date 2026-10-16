@@ -4,8 +4,23 @@ import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import RowDetail from './RowDetail';
+import type { RowDetailProps } from './RowDetail';
 
-export default function RowDetailModal(props) {
+interface RowDetailMobileModalProps extends RowDetailProps {
+  mobileIsEdit?: boolean | undefined;
+  className?: string | undefined;
+  title: React.ReactNode;
+  visible?: boolean | undefined;
+  switchDisabled?: { prev?: boolean; next?: boolean };
+  allowDelete?: boolean | undefined;
+  isExceed?: boolean | undefined;
+  isEditCurrentRow?: boolean | undefined;
+  onDelete: (rowid: string | undefined) => void;
+  onSwitch: (value: { prev?: boolean; next?: boolean }) => void;
+  onClose: () => void;
+}
+
+export default function RowDetailModal(props: RowDetailMobileModalProps) {
   const {
     mobileIsEdit,
     className,
@@ -28,17 +43,17 @@ export default function RowDetailModal(props) {
       : 'edit'
     : 'edit';
   const disabled = mobileIsEdit ? props.disabled : true;
-  let deleteConformAction = null;
+  let deleteConformAction: ReturnType<typeof ActionSheet.show> | null = null;
 
   // 切换上一条/下一条
-  const handleSwitch = (type: string) => {
+  const handleSwitch = (type: 'prev' | 'next') => {
     if ($('.childTableRowDetailMobileDialog').find('.fileUpdateLoading').length) {
       alert(_l('附件正在上传，请稍后'), 3);
       return;
     }
 
     if (!switchDisabled[type]) {
-      const hasError = formContent.current.handleSave(false, true);
+      const hasError = formContent.current?.handleSave(false, true);
 
       if (disabled || !(!_.isUndefined(hasError) && !hasError)) {
         onSwitch({ [type]: true });
@@ -47,7 +62,7 @@ export default function RowDetailModal(props) {
   };
 
   // 删除记录
-  const deleteRecord = (rowid: string) => {
+  const deleteRecord = (rowid: string | undefined) => {
     deleteConformAction = ActionSheet.show({
       popupClassName: 'md-adm-actionSheet',
       actions: [],
@@ -57,7 +72,7 @@ export default function RowDetailModal(props) {
           <div className="valignWrapper flexRow confirm mTop24">
             <Button
               className="flex mRight6 bold textSecondary flex ellipsis Font13"
-              onClick={() => deleteConformAction.close()}
+              onClick={() => deleteConformAction?.close()}
             >
               {_l('取消')}
             </Button>
@@ -65,7 +80,7 @@ export default function RowDetailModal(props) {
               className="flex mLeft6 bold flex ellipsis Font13"
               color="danger"
               onClick={() => {
-                deleteConformAction.close();
+                deleteConformAction?.close();
                 onDelete(rowid);
                 onClose();
               }}
@@ -89,7 +104,7 @@ export default function RowDetailModal(props) {
           className="headerBtn icon icon-cancel textTertiary Font20"
           onClick={() => {
             if (type === 'edit' && !disabled) {
-              formContent.current.handleSave(false, false, true);
+              formContent.current?.handleSave(false, false, true);
             }
 
             onClose();
@@ -150,8 +165,8 @@ export default function RowDetailModal(props) {
   return (
     <Popup
       className={cx('childTableRowDetailMobileDialog mobileModal minFull topRadius', className)}
-      onCancel={onClose}
-      visible={visible}
+      onClose={onClose}
+      visible={visible ?? false}
     >
       {content}
     </Popup>

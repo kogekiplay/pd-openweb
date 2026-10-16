@@ -5,6 +5,34 @@ import styled from 'styled-components';
 import { Checkbox } from 'ming-ui';
 import ChangeSheetLayout from 'worksheet/components/ChangeSheetLayout';
 import RecordOperate from 'worksheet/components/RecordOperate';
+import type { RecordRow } from 'src/utils/controlTypes';
+
+interface RowHeadProps {
+  useUserPermission?: boolean | undefined;
+  row?: RecordRow;
+  allowOpenRecord?: boolean | undefined;
+  allowCopy?: boolean | undefined;
+  changeSheetLayoutVisible?: boolean | undefined;
+  disabled?: boolean | undefined;
+  allowAdd?: boolean | undefined;
+  allowCancel?: boolean | undefined;
+  className?: string | undefined;
+  style: React.CSSProperties;
+  isSelectAll?: boolean | undefined;
+  rowIndex: number;
+  recordId?: string | undefined;
+  showCheckbox?: boolean | undefined;
+  selectedRowIds: string[];
+  showNumber?: boolean | undefined;
+  lineNumberBegin?: number | undefined;
+  onOpen?: (rowIndex: number) => void;
+  onDelete?: () => void;
+  onCopy?: () => void;
+  saveSheetLayout?: () => void;
+  resetSheetLayout?: () => void;
+  onSelect?: (rowId: string, selected: boolean) => void;
+  onSelectAll?: (selected: boolean) => void;
+}
 
 const Con = styled.span`
   padding: 0 !important;
@@ -107,7 +135,7 @@ const Con = styled.span`
   }
 `;
 
-export default function RowHead(props) {
+export default function RowHead(props: RowHeadProps) {
   const {
     useUserPermission,
     row = {},
@@ -118,7 +146,7 @@ export default function RowHead(props) {
     allowAdd,
     allowCancel,
     className,
-    style,
+    style = { width: 0 },
     isSelectAll,
     rowIndex,
     recordId,
@@ -134,7 +162,8 @@ export default function RowHead(props) {
     onSelect = () => {},
     onSelectAll = () => {},
   } = props;
-  const isSavedData = !/^temp/.test(row.rowid);
+  const rowid = row.rowid ?? '';
+  const isSavedData = !/^temp/.test(rowid);
   const hideOperate = disabled || (isSavedData && (!allowAdd || !allowCancel));
 
   if (rowIndex === -1) {
@@ -148,7 +177,7 @@ export default function RowHead(props) {
         >
           <Checkbox
             size="small"
-            clearselected={!isSelectAll && selectedRowIds.length}
+            clearselected={!isSelectAll && !!selectedRowIds.length}
             // disabled={!data.length}
             checked={isSelectAll}
             onClick={() => {
@@ -170,7 +199,7 @@ export default function RowHead(props) {
     );
   }
 
-  if (!row.rowid || row.rowid.startsWith('empty')) {
+  if (!rowid || rowid.startsWith('empty')) {
     return <Con className={cx(className, 'noRightBorder placeholder')} style={style} />;
   }
 
@@ -181,7 +210,7 @@ export default function RowHead(props) {
         showNumber,
         showCheckbox,
         isNew: !isSavedData,
-        oneColumn: style.width < 50,
+        oneColumn: Number(style.width || 0) < 50,
       })}
       style={style}
     >
@@ -193,7 +222,7 @@ export default function RowHead(props) {
             checked={_.includes(selectedRowIds, row.rowid)}
             size="small"
             onClick={() => {
-              onSelect(row.rowid, !_.includes(selectedRowIds, row.rowid));
+              onSelect(rowid, !_.includes(selectedRowIds, rowid));
             }}
           />
         )}
@@ -210,7 +239,7 @@ export default function RowHead(props) {
           defaultCustomButtons={[]}
           allowCopy={allowCopy}
           shows={['copy']}
-          allowDelete={useUserPermission && !!recordId ? row.allowdelete : true}
+          allowDelete={useUserPermission && !!recordId ? row['allowdelete'] : true}
           showTask={false}
           showHr={false}
           onDelete={onDelete}
@@ -224,7 +253,7 @@ export default function RowHead(props) {
         isSavedData &&
         allowCancel &&
         !allowAdd &&
-        ((useUserPermission ? row.allowdelete : true) ? (
+        ((useUserPermission ? row['allowdelete'] : true) ? (
           <i className="operateBtn delete icon icon-trash hand" onClick={onDelete}></i>
         ) : (
           <span className="operateBtn"></span>

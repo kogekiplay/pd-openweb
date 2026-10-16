@@ -1341,7 +1341,7 @@ class ChildTable extends React.Component<any, any> {
     );
   };
 
-  handleSwitch = ({ prev }: { prev: boolean }) => {
+  handleSwitch = ({ prev }: { prev?: boolean; next?: boolean }) => {
     const { previewRowIndex } = this.state;
     let newRowIndex;
 

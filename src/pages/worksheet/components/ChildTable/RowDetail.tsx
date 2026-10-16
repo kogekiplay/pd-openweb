@@ -31,6 +31,7 @@ export interface RowDetailProps {
   className?: string | undefined;
   projectId?: string | undefined;
   appId?: string | undefined;
+  controlName?: string | undefined;
   worksheetId?: string | undefined;
   controls?: FormControl[] | undefined;
   data: RecordRow;
