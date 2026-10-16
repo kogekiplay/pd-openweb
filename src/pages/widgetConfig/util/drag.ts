@@ -112,9 +112,13 @@ export const resetDisplay = ({ widgets, srcPath, srcItem, targetIndex }: ResetDi
   const [row, col] = srcPath;
   if (row === undefined || col === undefined || !widgets[row]?.[col]) return widgets;
   const removedSrcItem = removeSrcItem(widgets, srcPath);
-  const newWidgets = removedSrcItem.slice();
-  newWidgets.splice(targetIndex, 0, [srcItem]);
-  return genWidgetRowAndCol(removeEmptyRow(newWidgets));
+  // Remove the emptied source row before inserting the replacement row. This keeps the
+  // saved row numbers continuous when the source row contained only this control.
+  const newWidgets = removeEmptyRow(removedSrcItem).slice();
+  const [sourceRow] = srcPath;
+  const insertionIndex = sourceRow !== undefined && sourceRow < targetIndex ? targetIndex - 1 : targetIndex;
+  newWidgets.splice(insertionIndex, 0, [srcItem]);
+  return genWidgetRowAndCol(newWidgets);
 };
 
 // 在当前行最后插入元素
