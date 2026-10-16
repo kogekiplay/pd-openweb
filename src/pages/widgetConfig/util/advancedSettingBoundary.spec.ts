@@ -285,6 +285,7 @@ for (const [key, value] of Object.entries({
   assert.throws(() => read({ advancedSetting: { [key]: JSON.stringify(value) } }, key), /Invalid widget setting/);
 }
 const filterSettings = boundary.filterSettings as (value: unknown) => unknown;
+const regexSettings = boundary.regexSettings as (value: unknown) => unknown;
 const sortSettings = boundary.sortSettings as (value: unknown) => unknown;
 const styleSetting = boundary.styleSetting as (value: unknown) => unknown;
 const numberSetting = boundary.numberSetting as (value: unknown) => unknown;
@@ -292,6 +293,12 @@ assert.deepStrictEqual(filterSettings(''), []);
 assert.deepStrictEqual(sortSettings(''), []);
 assert.deepStrictEqual(styleSetting(''), {});
 assert.strictEqual(numberSetting({ value: 3 }), '');
+assert.deepStrictEqual(
+  regexSettings([null, { value: 4 }, { value: '^ok$', filters: [{ controlId: 'field' }] }]),
+  [{ value: '^ok$', filters: [{ controlId: 'field' }] }],
+  'Legacy malformed filterregex entries are ignored while valid rules remain',
+);
+assert.deepStrictEqual(regexSettings('not-json'), [], 'Malformed filterregex containers are treated as empty');
 assert.throws(() => filterSettings({ groupFilters: [] }), /Invalid widget setting list/);
 assert.throws(() => styleSetting({ color: { invalid: true } }), /Invalid widget setting object/);
 assert.deepStrictEqual(read({ advancedSetting: { widths: '["wrong", 240]' } }, 'widths'), [160, 240]);
