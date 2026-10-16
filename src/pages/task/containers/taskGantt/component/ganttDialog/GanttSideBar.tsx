@@ -1,21 +1,35 @@
-import { Component } from 'react';
+import { Component, type MouseEvent } from 'react';
 import cx from 'classnames';
 import config from './config';
+import type { GanttTaskNode } from './GanttHeader';
 
 const INDENT = 20;
-export default class GanttSideBar extends Component<any, any> {
+
+export interface GanttSideBarProps {
+  data: GanttTaskNode[];
+  handleTaskItemHover: (visible: boolean, event?: MouseEvent<HTMLElement>) => void;
+  toggleTask: (args: number[]) => void;
+  showDetail: (taskID: string) => void;
+}
+
+export default class GanttSideBar extends Component<GanttSideBarProps> {
   declare taskList: HTMLDivElement | null | undefined;
 
   override componentDidMount() {
-    const $graphWrap = document.querySelector('.graphWrap');
-    const { taskList } = this;
+    const graphWrap = document.querySelector('.graphWrap');
+    const taskList = this.taskList;
+
+    if (!taskList || !(graphWrap instanceof HTMLElement)) return undefined;
+
     // 监听挂在 taskList 自己身上（scroll 不冒泡），e.target / e.currentTarget 都是它
     taskList.addEventListener('scroll', () => {
-      taskList.className == config.scrollingEle && ($graphWrap.scrollTop = taskList.scrollTop);
+      taskList.className == config.scrollingEle && (graphWrap.scrollTop = taskList.scrollTop);
     });
     taskList.addEventListener('mouseover', () => {
       config.scrollingEle = taskList.className;
     });
+
+    return undefined;
   }
 
   /**
@@ -23,7 +37,7 @@ export default class GanttSideBar extends Component<any, any> {
    * @param {*} data
    * @param {*} args
    */
-  renderTaskList = (data, args = []) => {
+  renderTaskList = (data: GanttTaskNode[] | undefined, args: number[] = []) => {
     const prefix = args.length ? args.map(v => ++v).join('.') + '.' : '';
     return (
       data &&
@@ -35,7 +49,7 @@ export default class GanttSideBar extends Component<any, any> {
             <div
               style={{ paddingLeft: 12 + INDENT * args.length }}
               className={cx('taskInfo flexRow')}
-              onMouseOver={e => this.props.handleTaskItemHover(true, e)}
+              onMouseOver={(e: MouseEvent<HTMLDivElement>) => this.props.handleTaskItemHover(true, e)}
               onMouseOut={() => this.props.handleTaskItemHover(false)}
             >
               <div
