@@ -203,6 +203,24 @@ if (before) {
     'The actual producer reproduces the production exception before the fix',
   );
 }
+const filterRegexBefore = process.env['WIDGET_FILTERREGEX_BEFORE_REV'];
+if (filterRegexBefore) {
+  const previous = load(
+    path.join(__dirname, 'advancedSettingBoundary.ts'),
+    { 'src/utils/controlCommon': controlCommon },
+    filterRegexBefore,
+  );
+  const previousRead = previous.getWidgetAdvanceSetting as ReadSetting;
+  assert.throws(
+    () =>
+      previousRead(
+        { advancedSetting: { filterregex: JSON.stringify([null, { value: 4 }, { value: '^ok$' }]) } },
+        'filterregex',
+      ),
+    /Invalid widget setting list/,
+    'The production malformed filterregex payload reproduces the previous exception',
+  );
+}
 
 // Execute the actual pre-save and formatting functions with their real setting decoder.
 const dataSource = fs.readFileSync(path.join(__dirname, 'data.tsx'), 'utf8');
