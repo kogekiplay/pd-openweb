@@ -398,4 +398,6 @@ OnlySync、RecordInfo/DragCore、BaseColumnHead 及列头发布器的有限合�
 
 2026-10-15 标签Canvas核心/预览严格化：strict51,981→51,854，按文件/错误码无新增；fast8,571/2,307keys，欠债3,115，strict-clean1,646/4,761；83组公共函数A/B、200组真实编码器轨迹与原生像素对照、240项规格通过。旧前端副本归档释放约20GiB空间，当前回滚保留。见print-label-strict-20261015.md和frontend-archive-20261015.md。
 
-2026-10-16 拖拽 resetDisplay 回归修复：779组历史A/B、240项规格和全部门禁通过；strict保持51,854、fast8,571/2,307keys、欠债3,115。发布记录见production-20261016-drag.md。
+2026-10-16 拖拽候选051bfd24e未上线：发布空间前置检查停止。其重复索引调整在复核中发现顺序回归，后续恢复a4c95d520生产实现，并以781组全部参与的历史对照验证。原779组声明对resetDisplay跳过对比，已更正。见production-20261016-drag.md。
+
+2026-10-16 矢量标签PDF核心：strict51,854→51,798，文件/错误码无新增；欠债3,114，strict-clean1,647/4,761，fast8,571/2,307keys；88组真实PDF对象/指令对照、781组拖拽对照及241规格通过。见vector-label-strict-20261016.md。

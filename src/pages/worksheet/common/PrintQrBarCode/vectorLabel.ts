@@ -2,7 +2,7 @@ import QRCode from '@mdfe/qrcode-base';
 import JsBarcode from 'jsbarcode';
 import loadScript from 'load-script';
 import localForage from 'localforage';
-import _, { get } from 'lodash';
+import { get } from 'lodash';
 import {
   BAR_POSITION,
   LANDSCAPE_QR_CODE_SIZE,
@@ -13,6 +13,7 @@ import {
   QR_LAYOUT,
   QR_POSITION,
 } from 'worksheet/common/PrintQrBarCode/enum';
+import type { LabelRecord, LabelText } from './types';
 
 export const QRErrorCorrectLevel = {
   L: 1, // 7%
@@ -57,6 +58,7 @@ export interface PdfDocumentConfig {
  */
 export interface PdfDoc {
   pipe(destination: PdfBlobStream): PdfBlobStream;
+  on(event: 'error', handler: (error: unknown) => void): PdfDoc;
   addPage(): PdfDoc;
   end(): void;
   registerFont(name: string, src: ArrayBuffer): PdfDoc;
@@ -76,46 +78,118 @@ export interface PdfDoc {
 
 /** blob-stream 的返回值，只用到取最终 Blob 这一步（见 getBlobUrl）。 */
 export interface PdfBlobStream {
-  on(event: string, handler: () => void): void;
+  on(event: 'finish', handler: () => void): void;
+  on(event: 'error', handler: (error: unknown) => void): void;
   toBlob(type?: string): Blob;
   toBlobURL(type?: string): string;
 }
 
-/** 标签上的一行文本。renderTexts 会把整个对象展开，所以允许携带自己的排版覆盖项。 */
-export interface LabelText {
-  text?: string;
-  value?: string;
-  align?: 'left' | 'center' | 'right';
-  isBold?: boolean;
-}
+/** Text records are shared with the canvas renderer and the persisted print configuration. */
+export type { LabelText, LabelRecord } from './types';
 
-/** 一张标签要打印的内容：码里承载的值 + 标签上的文本行。 */
-export interface LabelRecord {
-  value: string;
-  texts: LabelText[];
-}
-
-/**
- * 标签打印配置。键名取自调用点实际读写的那些（含从 this.options 解构出来的），
- * 数值类字段对应 enum.ts 里的枚举（QR_LAYOUT / QR_LABEL_SIZE / PRINT_TYPE / QR_POSITION），
- * 那几个枚举的值都是 number，所以这里就是 number，不另造联合类型 ——
- * 造了也拦不住什么，enum.ts 里是普通对象字面量而非 as const。
- */
 export interface LabelOptions {
+  width?: number | undefined;
+  height?: number | undefined;
+  layout?: number | undefined;
+  labelSize?: number | undefined;
+  printType?: number | undefined;
+  position?: number | undefined;
+  codeSize?: number | string | undefined;
+  codeFaultTolerance?: number | undefined;
+  fontSize?: number | undefined;
+  firstIsBold?: boolean | undefined;
+  showBarValue?: boolean | undefined;
+  printData?: LabelRecord[] | undefined;
+  onProgress?: ((message?: string) => void) | undefined;
+}
+interface LabelSettings extends Omit<LabelOptions, 'width' | 'height'> {
+  width: number;
+  height: number;
+}
+interface QrCell {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  isDark: boolean;
+  color: string;
+}
+interface QrOptions {
+  value: string;
   width?: number;
   height?: number;
-  layout?: number;
-  labelSize?: number;
-  printType?: number;
-  position?: number;
-  codeSize?: number | string;
-  codeFaultTolerance?: number;
+  gap?: number;
+  typeNumber?: number;
+  correctLevel?: number;
+  background?: string;
+  foreground?: string;
+  renderCell(cell: QrCell): void;
+}
+interface TextLayout {
+  left?: number;
+  top?: number;
   fontSize?: number;
-  firstIsBold?: boolean;
-  showBarValue?: boolean;
-  printData?: LabelRecord[];
-  /** 加载字体时的进度提示；传 undefined 表示结束 */
-  onProgress?: (message?: string) => void;
+  color?: string;
+  width?: number;
+}
+interface RenderText extends Omit<LabelText, 'value'> {
+  value: string;
+}
+function required<T>(value: T | undefined, name: string): T {
+  if (value === undefined) throw new TypeError('Missing vector label ' + name);
+  return value;
+}
+
+function lookup<T>(table: Readonly<Record<string, T>>, key: string | number): T {
+  return required(table[key], String(key));
+}
+
+function property(value: unknown, key: string): unknown {
+  return value !== null && (typeof value === 'object' || typeof value === 'function')
+    ? Reflect.get(value, key)
+    : undefined;
+}
+
+function barcodeEncoding(value: string): Code128Encoding | undefined {
+  const encoded: unknown = JsBarcode({}, value, { format: 'CODE128' });
+  const first: unknown = property(property(property(encoded, '_encodings'), '0'), '0');
+  if (first === undefined) return undefined;
+  const data = property(first, 'data');
+  if (typeof data !== 'string') throw new TypeError('Invalid CODE128 vector encoding');
+  return { data };
+}
+
+function pdfDocument(value: unknown): value is PdfDoc {
+  const methods = [
+    'on',
+    'pipe',
+    'addPage',
+    'end',
+    'registerFont',
+    'font',
+    'fontSize',
+    'text',
+    'widthOfString',
+    'rect',
+    'fill',
+    'fillColor',
+    'stroke',
+    'strokeColor',
+    'lineWidth',
+    'moveTo',
+    'lineTo',
+  ];
+  return (
+    value !== null && typeof value === 'object' && methods.every(key => typeof Reflect.get(value, key) === 'function')
+  );
+}
+
+function blobDestination(value: unknown): value is PdfBlobStream {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    ['on', 'toBlob', 'toBlobURL'].every(key => typeof Reflect.get(value, key) === 'function')
+  );
 }
 
 const defaultOptions = {
@@ -132,8 +206,8 @@ const defaultOptions = {
   renderCell: () => {},
 };
 
-const renderQr = function (options) {
-  options = Object.assign({}, defaultOptions, options);
+const renderQr = function (input: QrOptions) {
+  const options = Object.assign({}, defaultOptions, input);
   const qrcode = new QRCode(options.typeNumber, options.correctLevel);
   qrcode.addData(options.value);
   qrcode.make();
@@ -158,7 +232,7 @@ const renderQr = function (options) {
   }
 };
 
-function mmToPt(mm) {
+function mmToPt(mm: number) {
   return mm * 2.83464567;
 }
 
@@ -175,7 +249,7 @@ function cutTextByWidth(doc: PdfDoc, text = '', maxWidth: number) {
 
     if (tempText && doc.widthOfString(nextText) > maxWidth) {
       result.push(tempText);
-      tempText = text[i];
+      tempText = text.charAt(i);
     } else {
       tempText = nextText;
     }
@@ -193,8 +267,7 @@ export default class Label {
   //
   // 用 declare 而不是普通字段声明：declare 是纯类型声明，babel 的 TS preset 会整行擦除，
   // 不会生成 `this.x = undefined` 这种类字段初始化，对运行时零影响。
-  declare options: LabelOptions;
-  declare PDFDocument: new (config: PdfDocumentConfig) => PdfDoc;
+  declare options: LabelSettings;
   declare doc: PdfDoc;
   declare stream: PdfBlobStream;
   /** 画尺寸的基准单位，init() 里按 min(width,height)/30 算出 */
@@ -221,8 +294,8 @@ export default class Label {
     // this.isDebug = true;
   }
   async loadScript(src: string) {
-    return new Promise(resolve => {
-      loadScript(src, {}, resolve);
+    return new Promise<void>((resolve, reject) => {
+      loadScript(src, {}, error => (error ? reject(error) : resolve()));
     });
   }
   async init() {
@@ -231,16 +304,23 @@ export default class Label {
     this.unitSize = Math.min(width, height) / 30;
     await this.loadScript('/staticfiles/pdf/pdfkit.standalone.min.js');
     await this.loadScript('/staticfiles/pdf/blob-stream.js');
-    this.PDFDocument = window.PDFDocument;
-    this.doc = new this.PDFDocument({
-      size: [mmToPt(width), mmToPt(height)], // width, height
-      font: null,
-      info: {
-        Title: printType === PRINT_TYPE.QR ? _l('打印二维码') : _l('打印条形码'),
-        Author: _l('HAP'),
+    const PDFDocument: unknown = window['PDFDocument'];
+    if (typeof PDFDocument !== 'function') throw new TypeError('PDFDocument was not loaded');
+    const document: unknown = Reflect.construct(PDFDocument, [
+      {
+        size: [mmToPt(width), mmToPt(height)], // width, height
+        font: null,
+        info: {
+          Title: printType === PRINT_TYPE.QR ? _l('打印二维码') : _l('打印条形码'),
+          Author: _l('HAP'),
+        },
       },
-    });
-    this.stream = this.doc.pipe(blobStream());
+    ]);
+    if (!pdfDocument(document)) throw new TypeError('Invalid PDFDocument interface');
+    this.doc = document;
+    const destination: unknown = blobStream();
+    if (!blobDestination(destination)) throw new TypeError('Invalid PDF blob stream');
+    this.stream = this.doc.pipe(destination);
     await this.loadFont();
   }
   setLayout() {
@@ -251,36 +331,46 @@ export default class Label {
     }
 
     const { layout } = this.options;
-    this.size = (layout === QR_LAYOUT.PORTRAIT ? PORTRAIT_QR_CODE_SIZE : LANDSCAPE_QR_CODE_SIZE).shorts[
-      Number(this.options.codeSize)
-    ];
+    this.size = lookup(
+      (layout === QR_LAYOUT.PORTRAIT ? PORTRAIT_QR_CODE_SIZE : LANDSCAPE_QR_CODE_SIZE).shorts,
+      Number(this.options.codeSize),
+    );
     this.paddingX = 3;
     this.paddingY = 2;
     this.fontSize = 5 * (this.options.fontSize || 1);
     if (layout === QR_LAYOUT.PORTRAIT) {
-      this.codeSize = {
-        s: 11,
-        m: 16,
-        l: 20,
-        h: 24,
-      }[this.size];
+      this.codeSize = lookup(
+        {
+          s: 11,
+          m: 16,
+          l: 20,
+          h: 24,
+        },
+        this.size,
+      );
     } else {
-      this.codeSize = {
-        s: 13,
-        m: 16,
-        l: 20,
-        h: 24,
-      }[this.size];
+      this.codeSize = lookup(
+        {
+          s: 13,
+          m: 16,
+          l: 20,
+          h: 24,
+        },
+        this.size,
+      );
     }
 
-    this.topTextNum = {
-      s: 2,
-      m: 1,
-      l: 0,
-      h: 0,
-    }[this.size];
-    this.barHeight =
-      (width > height
+    this.topTextNum = lookup(
+      {
+        s: 2,
+        m: 1,
+        l: 0,
+        h: 0,
+      },
+      this.size,
+    );
+    const heights =
+      width > height
         ? {
             l: 18,
             m: 14,
@@ -291,7 +381,10 @@ export default class Label {
             l: 19,
             m: 14,
             s: 9,
-          })[['l', 'm', 's'][Number(this.options.codeSize) - 1]] * 0.9;
+          };
+    const heightKey = ['l', 'm', 's'][Number(this.options.codeSize) - 1];
+    // QR size 4 has no barcode height; that field is unused for QR output.
+    this.barHeight = heightKey === undefined ? NaN : lookup(heights, heightKey) * 0.9;
   }
   async loadFont() {
     const { onProgress = () => {} } = this.options;
@@ -305,6 +398,7 @@ export default class Label {
       } else {
         onProgress(_l('正在加载字体，同一个浏览器只需要加载一次'));
         const font = await fetch(fontUrl);
+        if (!font.ok) throw new Error('Label font could not be loaded: ' + font.status);
         const fontArrayBuffer = await font.arrayBuffer();
         localForage.setItem(fontKey, fontArrayBuffer);
         doc.registerFont(fontName, fontArrayBuffer);
@@ -327,7 +421,7 @@ export default class Label {
     const { printType, printData } = this.options;
     await this.init();
     let isFirstPage = true;
-    const printDataForPrint = [...printData];
+    const printDataForPrint = [...required(printData, 'records')];
 
     while (printDataForPrint.length) {
       const labelData = printDataForPrint.shift();
@@ -345,7 +439,7 @@ export default class Label {
       isFirstPage = false;
     }
   }
-  renderQrLabel(labelData) {
+  renderQrLabel(labelData: LabelRecord | undefined) {
     if (!labelData) return;
     const { width, position, layout, firstIsBold } = this.options;
 
@@ -404,22 +498,15 @@ export default class Label {
 
     this.renderQrCode(labelData.value);
   }
-  renderBarCode(barValue) {
+  renderBarCode(barValue: string | undefined) {
     if (!barValue) return;
     const { width, height, showBarValue, position } = this.options;
     let barFontSize = 1.8 * this.unitSize;
     let barTextHeight = 1.5 * barFontSize;
     let barHeight = this.barHeight * this.unitSize;
 
-    function parseToCode128(value) {
-      const parsed = JsBarcode({}, value, {
-        format: 'CODE128',
-      });
-      return _.get(parsed, '_encodings.0.0') as Code128Encoding | undefined;
-    }
-
     if (barValue && barValue.trim()) {
-      const code128 = parseToCode128(barValue);
+      const code128 = barcodeEncoding(barValue);
 
       // JsBarcode 取不到编码时这里原本会在 code128.data 上直接抛 TypeError。
       // 加守卫既消掉 TS18048，也把崩溃变成「这张标签不画条码」，
@@ -427,13 +514,12 @@ export default class Label {
       if (!code128) return;
 
       const barWidth = width - this.paddingX * this.unitSize * 2;
-      let realBarWidth = barWidth;
       let leftOffset = 0;
       let barColumnWidth = barWidth / code128.data.length;
 
       if (barColumnWidth > 0.5 * this.unitSize) {
         barColumnWidth = 0.5 * this.unitSize;
-        realBarWidth = barColumnWidth * code128.data.length;
+        const realBarWidth = barColumnWidth * code128.data.length;
         leftOffset = (barWidth - realBarWidth) / 2;
       }
 
@@ -475,7 +561,7 @@ export default class Label {
       }
     }
   }
-  renderBarLabel(labelData) {
+  renderBarLabel(labelData: LabelRecord | undefined) {
     if (!labelData) return;
     const { position, width, showBarValue, firstIsBold } = this.options;
     // maxLineNumber
@@ -502,23 +588,26 @@ export default class Label {
     );
     this.renderBarCode(labelData.value);
   }
-  renderTexts(texts = [], { left = 0, top = 0, fontSize = 10, color = '#151515', width = 100 } = {}) {
+  renderTexts(
+    input: LabelText[] = [],
+    { left = 0, top = 0, fontSize = 10, color = '#151515', width = 100 }: TextLayout = {},
+  ) {
     const _this = this;
     this.drawLine(top, width);
-    if (!texts.length) return;
-    texts = texts.map(text => ({
+    if (!input.length) return;
+    const texts: RenderText[] = input.map(text => ({
       ...text,
-      value: _.replace(text.value, /\n/g, ''),
+      value: String(text.value ?? '').replace(/\n/g, ''),
     }));
     const { doc } = this;
     doc.fillColor(color);
     let textTop = top;
 
-    function applyFont(isBold, size: number) {
+    function applyFont(isBold: boolean | undefined, size: number) {
       doc.font(isBold ? 'alibabaBold' : 'alibaba').fontSize(size);
     }
 
-    function render(textsForRender) {
+    function render(textsForRender: RenderText[]) {
       textsForRender.forEach(text => {
         const { value, align = 'left', forceInLine, isBold } = text;
         let textFontSize = fontSize;
@@ -548,7 +637,7 @@ export default class Label {
     }
 
     texts.forEach(text => {
-      let cutTexts;
+      let cutTexts: RenderText[];
 
       if (text.forceInLine) {
         cutTexts = [text];
@@ -563,7 +652,7 @@ export default class Label {
       render(
         cutTexts.map(item => ({
           ...item,
-          ...(cutTexts.length > 1 ? { align: 'left' } : {}),
+          align: cutTexts.length > 1 ? 'left' : item.align,
         })),
       );
     });
@@ -596,7 +685,7 @@ export default class Label {
       height: this.codeSize * this.unitSize,
     };
   }
-  renderQrCode(qrValue) {
+  renderQrCode(qrValue: string | undefined) {
     if (!qrValue) return;
     const { codeFaultTolerance } = this.options;
     const { left, top, width, height } = this.getQrCodePosition();
@@ -630,11 +719,17 @@ export default class Label {
     const stream = this.stream;
     // 必须显式写 Promise<string>：不写的话 new Promise(...) 推成 Promise<unknown>，
     // 一路传到 GeneratingPdf.tsx 的 setEmbedUrl(blobUrl) 报 TS2345。
-    return new Promise<string>(resolve => {
-      this.doc.end();
-      stream.on('finish', function () {
-        resolve(stream.toBlobURL('application/pdf'));
+    return new Promise<string>((resolve, reject) => {
+      stream.on('error', reject);
+      this.doc.on('error', reject);
+      stream.on('finish', () => {
+        try {
+          resolve(stream.toBlobURL('application/pdf'));
+        } catch (error) {
+          reject(error);
+        }
       });
+      this.doc.end();
     });
   }
 }
@@ -649,11 +744,12 @@ export async function generateLabelPdf(config: GenerateLabelPdfConfig = {}) {
   let width, height;
 
   if (config.labelSize === QR_LABEL_SIZE.CUSTOM) {
-    width = config.labelCustomWidth;
-    height = config.labelCustomHeight;
+    width = required(config.labelCustomWidth, 'custom width');
+    height = required(config.labelCustomHeight, 'custom height');
   } else {
-    const configWidth = QR_LABEL_SIZES[config.labelSize].width;
-    const configHeight = QR_LABEL_SIZES[config.labelSize].height;
+    const size = lookup(QR_LABEL_SIZES, config.labelSize ?? -1);
+    const configWidth = size.width;
+    const configHeight = size.height;
     width = config.layout === QR_LAYOUT.LANDSCAPE ? configWidth : configHeight;
     height = config.layout === QR_LAYOUT.LANDSCAPE ? configHeight : configWidth;
   }
