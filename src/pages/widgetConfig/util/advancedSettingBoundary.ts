@@ -272,6 +272,14 @@ export function functionSetting(value: unknown): SettingFunction {
 export function filterSettings(value: unknown): SettingFilter[] {
   return listSetting(value, filter);
 }
+/** Legacy filterregex payloads may contain deleted or partially written rules.
+ * Runtime validation already ignores those entries; keep the decoder compatible
+ * so opening a record cannot fail before the field-level validator runs. */
+export function regexSettings(value: unknown): SettingRegex[] {
+  if (!Array.isArray(value)) return [];
+  if (value.every(regex)) return value;
+  return value.filter(regex);
+}
 export function stringSettings(value: unknown): string[] {
   return listSetting(value, (item): item is string => typeof item === 'string');
 }
@@ -320,7 +328,7 @@ const listDecoders: Record<string, (value: unknown) => unknown> = {
   topfilters: value => (!value ? '' : strings(value) ? value : filterSettings(value)),
   resultfilters: filterSettings,
   searchfilters: filterSettings,
-  filterregex: value => listSetting(value, regex),
+  filterregex: regexSettings,
   widths: widthSettings,
   itemdesc: value => listSetting(value, (item): item is string => typeof item === 'string'),
   requestmap: value => listSetting(value, mapping),
