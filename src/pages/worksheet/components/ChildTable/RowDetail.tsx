@@ -4,14 +4,54 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import RecordInfoContext from 'worksheet/common/recordInfo/RecordInfoContext';
 import CustomFields from 'src/components/Form';
+import type DataFormat from 'src/components/Form/core/DataFormat';
+import type { FormConditionRule } from 'src/components/Form/core/formUtils/types';
+import type { FormQueryConfig } from 'src/components/Form/core/queryTypes';
+import type { MasterData } from 'src/components/Form/core/types';
+import type { EntranceRef } from 'src/components/Form/store/entranceTypes';
 import { isRelateRecordTableControl } from 'src/utils/control';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { ControlValue, FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export interface RowDetailState {
   flag: number;
 }
 
-export default class RowDetail extends React.Component<any, RowDetailState> {
+interface RowDetailFormRef extends EntranceRef {
+  dataFormat: DataFormat | null;
+  getSubmitData: (options?: Record<string, unknown>) => {
+    fullData: FormControl[];
+    error?: unknown;
+  };
+}
+
+export interface RowDetailProps {
+  widgetStyle?: Record<string, unknown> | undefined;
+  ignoreLock?: boolean | undefined;
+  disabled?: boolean | undefined;
+  className?: string | undefined;
+  projectId?: string | undefined;
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+  controls?: FormControl[] | undefined;
+  data: RecordRow;
+  getMasterFormData?: (() => FormControl[]) | undefined;
+  handleUniqueValidate?:
+    ((controlId: string, value: ControlValue, rowId: string, backendCheck?: boolean) => void) | undefined;
+  onSave?: ((row: RecordRow, updatedControlIds?: string[]) => void) | undefined;
+  onClose?: (() => void) | undefined;
+  openNextRecord?: (() => void) | undefined;
+  onRulesLoad?: ((rules: FormConditionRule[]) => void) | undefined;
+  searchConfig?: FormQueryConfig[] | undefined;
+  sheetSwitchPermit?: HapApi.MD.Entity.Worksheet.SwitchPermitModel[] | undefined;
+  isMobile?: boolean | undefined;
+  isWorkflow?: boolean | undefined;
+  from?: number | undefined;
+  masterData?: MasterData | undefined;
+  rules?: FormConditionRule[] | undefined;
+  isDraft?: boolean | undefined;
+}
+
+export default class RowDetail extends React.Component<RowDetailProps, RowDetailState> {
   static override propTypes = {
     widgetStyle: PropTypes.shape({}),
     ignoreLock: PropTypes.bool,
@@ -33,14 +73,14 @@ export default class RowDetail extends React.Component<any, RowDetailState> {
     onClose: () => {},
   };
 
-  constructor(props) {
+  constructor(props: RowDetailProps) {
     super(props);
     this.state = {
       flag: Math.random(),
     };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: RowDetailProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.data &&
@@ -54,20 +94,25 @@ export default class RowDetail extends React.Component<any, RowDetailState> {
     }
   }
 
-  formcon = React.createRef();
-  customwidget = React.createRef();
+  formcon = React.createRef<HTMLDivElement>();
+  customwidget = React.createRef<RowDetailFormRef>();
 
   handleChange = () => {
-    const { data, isMobile, onSave } = this.props;
+    const { data, isMobile, onSave = () => {} } = this.props;
 
     if (!this.customwidget.current || isMobile) {
       return;
     }
 
     const submitData = this.customwidget.current.getSubmitData({ silent: true, noTriggerError: true });
-    const updateControlIds = this.customwidget.current.dataFormat.getUpdateControlIds();
+    const dataFormat = this.customwidget.current.dataFormat;
+    if (!dataFormat) return;
+    const updateControlIds = dataFormat.getUpdateControlIds();
     const formdata = submitData.fullData;
-    const row = [{}, ...formdata].reduce((a = {}, b = {}) => Object.assign(a, { [b.controlId]: b.value }));
+    const row = formdata.reduce<Record<string, unknown>>((result, field) => {
+      if (field.controlId) result[field.controlId] = field.value;
+      return result;
+    }, {});
     onSave({ ...data, ...row, empty: false }, updateControlIds);
   };
 
@@ -77,20 +122,25 @@ export default class RowDetail extends React.Component<any, RowDetailState> {
       return undefined;
     }
 
-    if ($(this.formcon.current).find('.Progress--circle').length > 0) {
+    if (this.formcon.current?.querySelector('.Progress--circle')) {
       alert(_l('附件正在上传，请稍后'), 3);
       return undefined;
     }
 
-    const { data, onSave, onClose, openNextRecord } = this.props;
+    const { data, onSave = () => {}, onClose = () => {}, openNextRecord = () => {} } = this.props;
     const submitData = this.customwidget.current.getSubmitData({ ignoreAlert });
-    const updateControlIds = this.customwidget.current.dataFormat.getUpdateControlIds();
+    const dataFormat = this.customwidget.current.dataFormat;
+    if (!dataFormat) return undefined;
+    const updateControlIds = dataFormat.getUpdateControlIds();
     const formdata = submitData.fullData;
 
     if (submitData.error) {
       return false;
     } else {
-      const row = [{}, ...formdata].reduce((a = {}, b = {}) => Object.assign(a, { [b.controlId]: b.value }));
+      const row = formdata.reduce<Record<string, unknown>>((result, field) => {
+        if (field.controlId) result[field.controlId] = field.value;
+        return result;
+      }, {});
       onSave({ ...data, ...row, empty: false }, updateControlIds);
       if (isSwitchSave) {
         return undefined;
@@ -101,7 +151,7 @@ export default class RowDetail extends React.Component<any, RowDetailState> {
               '.customFieldsContainer .customFormItem .customFormTextareaBox input.smallInput',
             );
 
-            if ($firstText) {
+            if ($firstText instanceof HTMLElement) {
               $firstText.click();
             }
           }
@@ -116,9 +166,9 @@ export default class RowDetail extends React.Component<any, RowDetailState> {
   };
 
   handleClose = () => {
-    const { onClose } = this.props;
+    const { onClose = () => {} } = this.props;
 
-    if ($(this.formcon.current).find('.Progress--circle').length > 0) {
+    if (this.formcon.current?.querySelector('.Progress--circle')) {
       alert(_l('附件正在上传，请稍后'), 3);
       return;
     }
@@ -132,10 +182,10 @@ export default class RowDetail extends React.Component<any, RowDetailState> {
       disabled,
       worksheetId,
       projectId,
-      controls,
+      controls = [],
       data,
-      getMasterFormData,
-      handleUniqueValidate,
+      getMasterFormData = () => [],
+      handleUniqueValidate = () => {},
       appId,
       onRulesLoad,
       searchConfig,
@@ -153,13 +203,15 @@ export default class RowDetail extends React.Component<any, RowDetailState> {
       ? controls
       : controls
           .filter((c: FormControl) => !_.includes(['ownerid', 'caid', 'ctime', 'utime'], c.controlId))
-          .map(c => ({
+          .map((c: FormControl) => ({
             ...c,
-            value:
-              _.includes([19, 23, 24], c.type) && _.isObject(data[c.controlId])
-                ? data[c.controlId].text
-                : data[c.controlId],
-            count: data[`rq${c.controlId}`],
+            value: (() => {
+              const value = c.controlId ? data[c.controlId] : undefined;
+              return _.includes([19, 23, 24], c.type) && value !== null && typeof value === 'object' && 'text' in value
+                ? value['text']
+                : value;
+            })(),
+            count: c.controlId ? data[`rq${c.controlId}`] : undefined,
           }));
     const recordId = data.rowid && data.rowid.startsWith('temp') ? undefined : data.rowid;
     return (
@@ -198,7 +250,9 @@ export default class RowDetail extends React.Component<any, RowDetailState> {
             flag={flag}
             projectId={projectId}
             appId={appId}
-            checkCellUnique={(...args) => handleUniqueValidate(...args, data.rowid)}
+            checkCellUnique={(controlId: string, value: ControlValue, backendCheck?: boolean) =>
+              handleUniqueValidate(controlId, value, data.rowid ?? '', backendCheck)
+            }
             onChange={this.handleChange}
             onRulesLoad={onRulesLoad}
             ignoreSection

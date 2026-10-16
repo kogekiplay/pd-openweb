@@ -2839,7 +2839,6 @@
     "src/pages/worksheet/components/ChildTable/ChildTableContext.ts",
     "src/pages/worksheet/components/ChildTable/ChildTableRowHead.tsx",
     "src/pages/worksheet/components/ChildTable/ChildTableSummaryCell.tsx",
-    "src/pages/worksheet/components/ChildTable/RowDetail.tsx",
     "src/pages/worksheet/components/ChildTable/RowDetailMobileModal.tsx",
     "src/pages/worksheet/components/ChildTable/RowDetailModal.tsx",
     "src/pages/worksheet/components/ChildTable/redux/actions.ts",
