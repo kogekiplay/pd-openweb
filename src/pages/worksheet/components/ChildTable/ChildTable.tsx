@@ -1967,7 +1967,7 @@ class ChildTable extends React.Component<any, any> {
                     _.get(this, 'props.masterData.formData')
                       ? getTitleTextFromControls(_.get(this, 'props.masterData.formData'))
                       : '',
-                })
+                } as import('src/pages/worksheet/components/ChildTableDialog').ChildTableDialogProps)
               }
             >
               <IconBtn className="Hand hoverColorPrimary">

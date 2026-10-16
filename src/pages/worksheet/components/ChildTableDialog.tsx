@@ -9,14 +9,21 @@ import functionWrap from 'ming-ui/components/FunctionWrap';
 import sheetAjax from 'src/api/worksheet';
 import worksheetAjax from 'src/api/worksheet';
 import ChildTable from 'worksheet/components/ChildTable';
-import type { ChildTableCellRef } from 'worksheet/components/ChildTable/publicTypes';
+import type {
+  ChildTableCellRef,
+  ChildTableChange,
+  ChildTableControl,
+} from 'worksheet/components/ChildTable/publicTypes';
 import { ROW_HEIGHT } from 'worksheet/constants/enum';
 import { onValidator } from 'src/components/Form/core/formUtils';
+import type { FormQueryConfig } from 'src/components/Form/core/queryTypes';
+import type { FormRule } from 'src/components/Form/core/types';
 import { formatControlToServer } from 'src/components/Form/core/utils';
 import { formatSearchConfigs } from 'src/pages/widgetConfig/util';
 import { getSubListErrorOfStore } from 'src/pages/worksheet/components/ChildTable/utils';
 import { emitter } from 'src/utils/common';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { FieldStoreMasterData } from 'src/utils/subListStoreTypes';
 
 const Con = styled.div`
   width: 100%;
@@ -127,7 +134,43 @@ function hasNoRelationRelateControl(controls: FormControl[]) {
   return !!_.find(controls, c => c.type === 29 && _.isEmpty(c.relationControls));
 }
 
-export default function ChildTableDialog(props) {
+interface ChildTableActionLike {
+  type?: string;
+  rowid?: string;
+  rowIds?: string[];
+  rows?: RecordRow[];
+  deleted?: string[];
+}
+interface DialogValue {
+  deleted: string[];
+  updated: string[];
+  rows?: RecordRow[];
+}
+export interface ChildTableDialogProps {
+  allowEdit?: boolean | undefined;
+  openFrom?: string | undefined;
+  isWorkflow?: boolean | undefined;
+  initSource?: boolean | undefined;
+  entityName?: string | undefined;
+  rules?: FormRule[] | undefined;
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+  viewId?: string | undefined;
+  from?: number | undefined;
+  control: ChildTableControl;
+  controls?: FormControl[] | undefined;
+  recordId?: string | undefined;
+  sheetSwitchPermit?: HapApi.MD.Entity.Worksheet.SwitchPermitModel[] | undefined;
+  masterData?: FieldStoreMasterData | undefined;
+  projectId?: string | undefined;
+  mobileIsEdit?: boolean | undefined;
+  searchConfig?: FormQueryConfig[] | undefined;
+  valueChanged?: boolean | undefined;
+  onClose?: (() => void) | undefined;
+  title?: React.ReactNode;
+}
+
+export default function ChildTableDialog(props: ChildTableDialogProps) {
   const {
     allowEdit = false,
     openFrom,
@@ -140,15 +183,20 @@ export default function ChildTableDialog(props) {
     viewId,
     from,
     control,
-    controls,
+    controls = [],
     recordId,
     sheetSwitchPermit,
     masterData,
     projectId,
     mobileIsEdit,
-    onClose,
-  }: { controls: FormControl[]; [key: string]: any } = props;
-  const cache = useRef<{ comp?: ChildTableCellRef | undefined; isSaving?: boolean | undefined; reload?: unknown }>({});
+    onClose = () => {},
+  } = props;
+  const cache = useRef<{
+    comp?: ChildTableCellRef | undefined;
+    isSaving?: boolean | undefined;
+    reload?: unknown;
+    [key: string]: unknown;
+  }>({});
   const callFromDialog = openFrom !== 'cell';
   const rowHeight = ROW_HEIGHT[Number(_.get(control, 'advancedSetting.rowheight'))] || 34;
   const needUpdateControls = _.isEmpty(controls) || hasNoRelationRelateControl(controls);
@@ -157,7 +205,7 @@ export default function ChildTableDialog(props) {
   const [changed, setChanged] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(openFrom !== 'cell');
   const [refreshFlag, setRefreshFlag] = useState(Math.random());
-  const [value, setValue] = useState({});
+  const [value, setValue] = useState<DialogValue>({ deleted: [], updated: [] });
   const [isSaving, setIsSaving] = useState(false);
   const conHeight = window.innerHeight - 32 - 50 - (callFromDialog ? FULL_SCREEN_TOP_OFFSET : 0);
   const maxHeight = conHeight - 31 - 36 - 10;
@@ -214,10 +262,10 @@ export default function ChildTableDialog(props) {
               onClose();
             }
 
-            setValue({});
+            setValue({ deleted: [], updated: [] });
             setRefreshFlag(Math.random());
             emitter.emit('RELOAD_RECORD_INFO', {
-              worksheetId,
+              dataSource: control.dataSource || worksheetId,
               recordId,
             });
           }
@@ -350,18 +398,23 @@ export default function ChildTableDialog(props) {
             worksheetId={worksheetId}
             viewId={viewId}
             from={from}
-            control={{
-              ...(allowEdit
-                ? control
-                : {
-                    ...control,
-                    fieldPermission: '100',
-                  }),
-              worksheetId,
-              addRefreshEvents: (_name: string, value) => {
-                cache.current.reload = value;
-              },
-            }}
+            control={
+              {
+                ...(allowEdit
+                  ? control
+                  : {
+                      ...control,
+                      fieldPermission: '100',
+                    }),
+                dataSource: control.dataSource || worksheetId,
+                addRefreshEvents: (
+                  _name: string,
+                  value: { needResetControls?: boolean; isRefresh?: boolean } | undefined,
+                ) => {
+                  cache.current.reload = value;
+                },
+              } as ChildTableControl & { addRefreshEvents: ChildTableDialogProps['control']['addRefreshEvents'] }
+            }
             controls={controls}
             recordId={recordId}
             searchConfig={searchConfig}
@@ -370,7 +423,8 @@ export default function ChildTableDialog(props) {
             projectId={projectId}
             onChange={changedValues => {
               if (openFrom === 'cell') {
-                const { rows, lastAction = {} }: { rows: RecordRow[]; [key: string]: any } = changedValues;
+                const { rows } = changedValues as ChildTableChange;
+                const lastAction = changedValues.lastAction as ChildTableActionLike;
 
                 if (
                   !_.includes(
@@ -389,7 +443,7 @@ export default function ChildTableDialog(props) {
                   return;
                 }
 
-                if (lastAction.type === 'ADD_ROWS' && _.find(lastAction.rows, row => row.isAddByTree)) {
+                if (lastAction.type === 'ADD_ROWS' && _.find(lastAction.rows, row => row['isAddByTree'] === true)) {
                   return;
                 }
 
@@ -397,19 +451,31 @@ export default function ChildTableDialog(props) {
                   let { deleted = [], updated = [] } = oldValue;
 
                   if (lastAction.type === 'DELETE_ROW') {
-                    deleted = _.uniqBy(deleted.concat(lastAction.rowid)).filter(id => !/^(temp|default)/.test(id));
+                    if (lastAction.rowid) {
+                      deleted = Array.from(new Set(deleted.concat(lastAction.rowid))).filter(
+                        id => !/^(temp|default)/.test(id),
+                      );
+                    }
                   } else if (lastAction.type === 'DELETE_ROWS') {
-                    deleted = _.uniqBy(deleted.concat(lastAction.rowIds)).filter(id => !/^(temp|default)/.test(id));
+                    deleted = Array.from(new Set(deleted.concat(lastAction.rowIds || []))).filter(
+                      id => !/^(temp|default)/.test(id),
+                    );
                   } else if (lastAction.type === 'CLEAR_AND_SET_ROWS') {
-                    deleted = lastAction.deleted;
+                    deleted = lastAction.deleted || [];
                   }
 
                   if (lastAction.type === 'ADD_ROW' || lastAction.type === 'UPDATE_ROW') {
-                    updated = _.uniqBy(updated.concat(lastAction.rowid));
+                    if (lastAction.rowid) updated = Array.from(new Set(updated.concat(lastAction.rowid)));
                   } else if (lastAction.type === 'UPDATE_ROWS') {
-                    updated = _.uniqBy(updated.concat(lastAction.rowIds));
+                    updated = Array.from(new Set(updated.concat(lastAction.rowIds || [])));
                   } else if (lastAction.type === 'ADD_ROWS' || lastAction.type === 'CLEAR_AND_SET_ROWS') {
-                    updated = _.uniqBy(updated.concat(lastAction.rows.map((r: RecordRow) => r.rowid)));
+                    updated = Array.from(
+                      new Set(
+                        updated.concat(
+                          (lastAction.rows || []).map((r: RecordRow) => r.rowid).filter(Boolean) as string[],
+                        ),
+                      ),
+                    );
                   }
 
                   return { ...oldValue, updated, deleted, rows };
@@ -443,4 +509,4 @@ export default function ChildTableDialog(props) {
   );
 }
 
-export const openChildTable = props => functionWrap(ChildTableDialog, props);
+export const openChildTable = (props: ChildTableDialogProps) => functionWrap(ChildTableDialog, props);
