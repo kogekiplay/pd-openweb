@@ -15,44 +15,73 @@ var NODE_TYPE = {
 };
 
 /** 把附件 / 知识文件存到知识中心的某个文件夹。nodeType 见 NODE_TYPE，决定 sourceData 里用哪几个字段 */
-interface SaveToKnowledgeFields {
-  sourceData: {
-    // 知识文件（NODE_TYPE.KC）
-    nodeId?: string;
-    isShareFolder?: boolean;
-    // 七牛附件（NODE_TYPE.QINIU）
-    name?: string;
-    filePath?: string;
-    // 普通附件（NODE_TYPE.COMMON）
-    fileID?: string;
-    originalFileName?: string;
-    // 通用
-    allowDown?: boolean;
-    des?: string;
+export interface KnowledgeSource {
+  nodeId?: string | undefined;
+  isShareFolder?: boolean | undefined;
+  name?: string | undefined;
+  filePath?: string | undefined;
+  fileID?: string | undefined;
+  originalFileName?: string | undefined;
+  allowDown?: boolean | undefined;
+  des?: string | undefined;
+}
+interface SaveOptions {
+  createShare?: boolean | undefined;
+}
+interface SaveTarget {
+  type: number;
+  node: {
+    id?: string | null | undefined;
+    rootId?: string | undefined;
+    position?: string | undefined;
+    name?: string | undefined;
   };
-  options: { createShare: boolean };
-  nodeType: number;
+}
+function object(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
-function SaveToKnowledge(this: SaveToKnowledgeInstance, nodeType, sourceData, options) {
-  this.sourceData = sourceData;
-  this.options = Object.assign(
-    {
-      createShare: true,
-    },
-    options,
+function target(value: unknown): value is SaveTarget {
+  if (!object(value) || typeof value['type'] !== 'number' || !object(value['node'])) return false;
+  const node = value['node'];
+  return (
+    (node['id'] == null || typeof node['id'] === 'string') &&
+    ['rootId', 'position', 'name'].every(key => node[key] === undefined || typeof node[key] === 'string')
   );
-  this.nodeType = nodeType;
+}
+
+function saveTarget(value: unknown): SaveTarget {
+  if (!target(value)) throw new TypeError('Invalid knowledge destination');
+  return value;
+}
+
+interface SaveToKnowledgeFields {
+  sourceData: KnowledgeSource;
+  options: SaveOptions;
+  nodeType: number | undefined;
+}
+function required<T>(value: T | undefined, key: string): T {
+  if (value === undefined) throw new TypeError('Missing knowledge target ' + key);
+  return value;
+}
+
+class SaveToKnowledge {
+  constructor(nodeType: number | undefined, sourceData: KnowledgeSource, options?: SaveOptions) {
+    this.sourceData = sourceData;
+    this.options = Object.assign({ createShare: true }, options);
+    this.nodeType = nodeType;
+  }
 }
 
 const saveToKnowledgeMethods = defineMethods<SaveToKnowledgeFields>()({
   /** path：folderSelectDialog 选中的目标，type 1 我的文件 / 2 共享文件夹根 / 3 子文件夹 */
-  save: function (path: { type: number; node: { id: string; rootId?: string; position?: string } }) {
+  save: async function (input: unknown): Promise<unknown> {
+    const path = saveTarget(input);
     var SK = this;
     var nodeType = SK.nodeType;
     var sourceData = SK.sourceData;
-    var rootId = '';
-    var parentId = '';
+    var rootId: string | null | undefined = '';
+    var parentId: string | null | undefined = '';
     var B_PICK_TYPE = {
       MYFILE: 1,
       ROOT: 2,
@@ -68,15 +97,15 @@ const saveToKnowledgeMethods = defineMethods<SaveToKnowledgeFields>()({
                 : path.type === 2
                   ? path.node.id
                   : path.node.rootId
-                    ? path.node.position.slice(1)
-                    : path.node.position.replace(/\/.{8}(-.{4}){3}-.{12}/, 'my')),
+                    ? required(path.node.position, 'position').slice(1)
+                    : required(path.node.position, 'position').replace(/\/.{8}(-.{4}){3}-.{12}/, 'my')),
           ),
           content: _l('保存成功'),
         });
       }
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise<unknown>((resolve, reject) => {
       if (nodeType === NODE_TYPE.KC) {
         copyNode({
           ids: [sourceData.nodeId],
@@ -87,8 +116,9 @@ const saveToKnowledgeMethods = defineMethods<SaveToKnowledgeFields>()({
           copySource: false,
           isShareFolder: sourceData.isShareFolder,
         })
-          .then(data => {
-            var successIds = data[1];
+          .then((data: unknown) => {
+            const successIds: unknown = Array.isArray(data) ? data[1] : undefined;
+            if (!Array.isArray(successIds)) throw new TypeError('Invalid copied knowledge result');
             var message = kcUtil.getKcFolderOperationTips(data, {
               success: _l('保存成功'),
             });
@@ -103,7 +133,7 @@ const saveToKnowledgeMethods = defineMethods<SaveToKnowledgeFields>()({
             reject();
           });
       } else if (nodeType === NODE_TYPE.QINIU) {
-        var attPath = sourceData.filePath;
+        var attPath = required(sourceData.filePath, 'source file path');
         var pathSuffix = attPath.indexOf('?') > 0 ? attPath.substring(attPath.indexOf('?'), attPath.length) : '';
         var filePath = attPath.replace(pathSuffix, '');
         if (path.type === B_PICK_TYPE.ROOT) {
@@ -130,7 +160,7 @@ const saveToKnowledgeMethods = defineMethods<SaveToKnowledgeFields>()({
             if (!data) {
               reject();
             } else {
-              resolve();
+              resolve(undefined);
               createShareFunc();
             }
           })
@@ -155,7 +185,7 @@ const saveToKnowledgeMethods = defineMethods<SaveToKnowledgeFields>()({
         )
           .then(data => {
             if (data === true) {
-              resolve();
+              resolve(undefined);
               createShareFunc();
             } else {
               reject();
@@ -167,7 +197,14 @@ const saveToKnowledgeMethods = defineMethods<SaveToKnowledgeFields>()({
       }
     });
   },
-  ajaxAttachmentToKc: function (fileID, toId, toRootId, originalFileName, allowDown, des) {
+  ajaxAttachmentToKc: function (
+    fileID: string | undefined,
+    toId: string | null | undefined,
+    toRootId: string | null | undefined,
+    originalFileName: string | undefined,
+    allowDown: boolean | undefined,
+    des: string | undefined,
+  ): ApiResultOf<unknown> {
     var SK = this;
     return attachmentAjax.saveToKnowledge(
       SK.filterUndefined({
@@ -180,7 +217,7 @@ const saveToKnowledgeMethods = defineMethods<SaveToKnowledgeFields>()({
       }),
     );
   },
-  filterUndefined: function (json) {
+  filterUndefined: function <T extends Record<string, unknown>>(json: T): Partial<T> {
     for (var key in json) {
       if (typeof json[key] === 'undefined') {
         delete json[key];
@@ -191,9 +228,10 @@ const saveToKnowledgeMethods = defineMethods<SaveToKnowledgeFields>()({
   },
 });
 
-SaveToKnowledge.prototype = saveToKnowledgeMethods;
-type SaveToKnowledgeInstance = SaveToKnowledgeFields & typeof saveToKnowledgeMethods;
+Object.assign(SaveToKnowledge.prototype, saveToKnowledgeMethods);
+type SaveMethods = typeof saveToKnowledgeMethods;
+interface SaveToKnowledge extends SaveToKnowledgeFields, SaveMethods {}
 
-export default function (nodeType, sourceData, options?) {
+export default function (nodeType: number | undefined, sourceData: KnowledgeSource, options?: SaveOptions) {
   return new SaveToKnowledge(nodeType, sourceData, options);
 }
