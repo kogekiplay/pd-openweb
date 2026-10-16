@@ -123,18 +123,6 @@ function compare(name: string, args: unknown[], expected?: unknown): unknown {
   return result;
 }
 
-// resetDisplay intentionally changes the historical result: empty source rows are removed
-// before row numbers are regenerated, which is the regression under test.
-function compareChanged(name: string, args: unknown[], expected?: unknown): unknown {
-  const inputs = structuredClone(args);
-  freeze(inputs);
-  const result = invoke(current, name, ...inputs);
-  if (expected !== undefined) assert.deepEqual(result, expected, name);
-  assert.deepEqual(inputs, args, name + ' preserves input');
-  checks++;
-  return result;
-}
-
 const a = { controlId: 'a', type: 2, size: 6, extra: 'retain' };
 const b = { controlId: 'b', type: 3, size: 6 };
 const c = { controlId: 'c', type: 4, size: 12 };
@@ -153,10 +141,23 @@ compare(
   ],
 );
 // The pending implementation left [] at the start and assigned saved rows 1 and 2.
-compareChanged(
+compare(
   'resetDisplay',
   [{ widgets: [[a], [c]], srcPath: [0, 0], srcItem: a, targetIndex: 1 }],
   [[{ ...a, row: 0, col: 0 }], [{ ...c, row: 1, col: 0 }]],
+);
+
+// The target index refers to the original grid. A populated source row must stay ahead
+// of its replacement, while an emptied source row is removed before assigning row numbers.
+compare(
+  'resetDisplay',
+  [{ widgets: [[a, b], [c]], srcPath: [0, 0], srcItem: a, targetIndex: 1 }],
+  [[{ ...b, size: 6, row: 0, col: 0 }], [{ ...a, row: 1, col: 0 }], [{ ...c, row: 2, col: 0 }]],
+);
+compare(
+  'resetDisplay',
+  [{ widgets: [[a], [c]], srcPath: [0, 0], srcItem: a, targetIndex: 2 }],
+  [[{ ...c, row: 0, col: 0 }], [{ ...a, row: 1, col: 0 }]],
 );
 
 for (let width = 1; width <= 4; width++) {
@@ -172,7 +173,7 @@ for (let width = 1; width <= 4; width++) {
     for (const [sourceCol, item] of row.entries()) {
       for (let targetIndex = 0; targetIndex <= layout.length; targetIndex++) {
         compare('insertNewLine', [{ widgets: layout, srcItem: item, targetIndex }]);
-        compareChanged('resetDisplay', [
+        compare('resetDisplay', [
           { widgets: layout, srcPath: [sourceRowIndex, sourceCol], srcItem: item, targetIndex },
         ]);
       }
