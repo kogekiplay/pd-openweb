@@ -2005,7 +2005,6 @@
     "src/pages/task/containers/taskGantt/component/ganttDialog/GraphContent.tsx",
     "src/pages/task/containers/taskGantt/component/ganttDialog/TimeHeader.tsx",
     "src/pages/task/containers/taskGantt/component/ganttDialog/index.tsx",
-    "src/pages/task/containers/taskGantt/component/ganttDialog/time.ts",
     "src/pages/task/containers/taskGantt/component/taskTimeBar/taskTimeBar.tsx",
     "src/pages/task/containers/taskGantt/component/timeBarFences/timeBarFences.tsx",
     "src/pages/task/containers/taskGantt/component/timeBars/timeBars.tsx",
