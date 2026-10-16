@@ -11,25 +11,32 @@ import type {
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
+
 export function valueRecord(value: unknown): Record<string, unknown> | undefined {
   return isRecord(value) ? value : undefined;
 }
+
 export function parseValue(value: unknown, array = false): unknown {
   return safeParse(value, array ? 'array' : undefined);
 }
+
 export function parsedRecord(value: unknown): Record<string, unknown> {
   return valueRecord(parseValue(value)) || {};
 }
+
 export function parsedArray(value: unknown): unknown[] {
   const parsed = parseValue(value, true);
   return Array.isArray(parsed) ? parsed : [];
 }
+
 export function parsedRecords(value: unknown): Record<string, unknown>[] {
   return parsedArray(value).filter((item): item is Record<string, unknown> => !!valueRecord(item));
 }
+
 export function parsedStrings(value: unknown): string[] {
   return parsedArray(value).filter((item): item is string => typeof item === 'string');
 }
+
 export function runtimeValue(value: unknown): FormRuntimeValue {
   if (value === null) return null;
   if (value === undefined) return undefined;
@@ -37,18 +44,22 @@ export function runtimeValue(value: unknown): FormRuntimeValue {
   if (Array.isArray(value)) return value;
   return valueRecord(value);
 }
+
 export function dateValue(value: unknown): MomentInput {
   if (value === undefined) return undefined;
   if (typeof value === 'string' || typeof value === 'number' || value instanceof Date || moment.isMoment(value))
     return value;
   return null;
 }
+
 export function stringValue(value: unknown): string | undefined {
   return typeof value === 'string' ? value : undefined;
 }
+
 function optionalString(value: unknown): boolean {
   return value === undefined || typeof value === 'string';
 }
+
 function isSource(value: unknown): value is DefaultSource {
   const record = valueRecord(value);
   return (
@@ -60,9 +71,11 @@ function isSource(value: unknown): value is DefaultSource {
     (record['isAsync'] === undefined || typeof record['isAsync'] === 'boolean')
   );
 }
+
 export function defaultSources(value: unknown): DefaultSource[] {
   return parsedArray(value).filter(isSource);
 }
+
 function isRuleItem(value: unknown): value is RuleFilterItem {
   const item = valueRecord(value);
   if (
@@ -96,6 +109,7 @@ function isRuleItem(value: unknown): value is RuleFilterItem {
       }))
   );
 }
+
 export function isRuleGroup(value: unknown): value is RuleFilterGroup {
   const group = valueRecord(value);
   return (
@@ -106,6 +120,7 @@ export function isRuleGroup(value: unknown): value is RuleFilterGroup {
       (Array.isArray(group['groupFilters']) && group['groupFilters'].every(isRuleItem)))
   );
 }
+
 function isRegexValidation(value: unknown): value is RegexValidation {
   const rule = valueRecord(value);
   return (
@@ -115,8 +130,16 @@ function isRegexValidation(value: unknown): value is RegexValidation {
     (rule['filters'] === undefined || (Array.isArray(rule['filters']) && rule['filters'].every(isRuleGroup)))
   );
 }
+
 export function regexValidations(value: unknown): RegexValidation[] {
-  return parsedArray(value).filter(isRegexValidation);
+  return parsedArray(value)
+    .map(item => {
+      const rule = valueRecord(item);
+      // Stored rules use null, and the field save formatter also writes ''. Both
+      // mean an unconditional rule; preserve the regex instead of dropping it.
+      return rule && (rule['filters'] === null || rule['filters'] === '') ? { ...rule, filters: [] } : item;
+    })
+    .filter(isRegexValidation);
 }
 
 /** Boundaries configured for date/time widgets only accept the stored string format. */
@@ -127,6 +150,7 @@ export function dateBoundaryValue(value: unknown, timeOnly = false): string | nu
       ? value
       : null;
   }
+
   return moment(
     value,
     ['YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DD HH:mm', 'YYYY-MM-DD HH', 'YYYY-MM-DD', 'YYYY-MM', 'YYYY'],
@@ -135,6 +159,7 @@ export function dateBoundaryValue(value: unknown, timeOnly = false): string | nu
     ? value
     : null;
 }
+
 /** Custom-event URLs have a scalar source contract; rows and array payloads are not links. */
 export function eventLinkValue(value: unknown): string | undefined {
   if (typeof value === 'string') return value;

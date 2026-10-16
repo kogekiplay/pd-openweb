@@ -80,7 +80,7 @@ export interface SettingFunction extends Record<string, unknown> {
 export interface SettingRegex extends Record<string, unknown> {
   name?: string | undefined;
   value?: string | undefined;
-  filters?: SettingFilter[] | undefined;
+  filters?: SettingFilter[] | null | '' | undefined;
 }
 export interface SettingIncrease extends Record<string, unknown> {
   controlId?: string | null | undefined;
@@ -140,15 +140,19 @@ export type WidgetAdvancedSettings = KnownAdvancedSettings & ComplexSettings;
 export function widgetObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
+
 const text = (value: unknown): boolean => value === undefined || typeof value === 'string';
 const nullableText = (value: unknown): boolean => value === null || text(value);
 const num = (value: unknown): boolean => value === undefined || (typeof value === 'number' && Number.isFinite(value));
 const bool = (value: unknown): boolean => value === undefined || typeof value === 'boolean';
+
 function arrayOf<T>(value: unknown, predicate: (item: unknown) => item is T): value is T[] {
   return Array.isArray(value) && value.every(predicate);
 }
+
 const strings = (value: unknown): value is string[] =>
   arrayOf(value, (item): item is string => typeof item === 'string');
+
 function source(value: unknown): value is DefaultSource {
   return (
     widgetObject(value) &&
@@ -157,9 +161,11 @@ function source(value: unknown): value is DefaultSource {
     bool(value['isAsync'])
   );
 }
+
 function optionalArray<T>(value: unknown, predicate: (item: unknown) => item is T): boolean {
   return value === undefined || arrayOf(value, predicate);
 }
+
 function filter(value: unknown): value is SettingFilter {
   return (
     widgetObject(value) &&
@@ -173,9 +179,11 @@ function filter(value: unknown): value is SettingFilter {
     optionalArray(value['groupFilters'], filter)
   );
 }
+
 function setting(value: unknown): value is ControlAdvancedSetting {
   return widgetObject(value) && Object.values(value).every(text);
 }
+
 function eventFilter(value: unknown): value is EventFilter {
   return (
     widgetObject(value) &&
@@ -186,9 +194,11 @@ function eventFilter(value: unknown): value is EventFilter {
     (value['advancedSetting'] === undefined || setting(value['advancedSetting']))
   );
 }
+
 function actionItem(value: unknown): value is EventActionItem {
   return widgetObject(value) && ['type', 'controlId', 'value'].every(k => text(value[k]));
 }
+
 function action(value: unknown): value is EventAction {
   return (
     widgetObject(value) &&
@@ -198,6 +208,7 @@ function action(value: unknown): value is EventAction {
     (value['advancedSetting'] === undefined || setting(value['advancedSetting']))
   );
 }
+
 function eventActions(value: unknown): value is EventActions {
   return (
     widgetObject(value) &&
@@ -206,6 +217,7 @@ function eventActions(value: unknown): value is EventActions {
     optionalArray(value['actions'], action)
   );
 }
+
 function event(value: unknown): value is WidgetEvent {
   return (
     widgetObject(value) &&
@@ -214,29 +226,41 @@ function event(value: unknown): value is WidgetEvent {
     optionalArray(value['eventActions'], eventActions)
   );
 }
+
 function mapping(value: unknown): value is SettingMapping {
   return (
     widgetObject(value) && ['id', 'cid', 'subid', 'pid', 'defsource'].every(k => text(value[k])) && num(value['type'])
   );
 }
+
 function reference(value: unknown): value is SettingReference {
   return widgetObject(value) && text(value['cid']) && text(value['name']);
 }
+
 function sort(value: unknown): value is SettingSort {
   return widgetObject(value) && text(value['controlId']) && bool(value['isAsc']);
 }
+
 function style(value: unknown): value is SettingStyle {
   return (
     widgetObject(value) &&
     ['size', 'color', 'style', 'direction', 'bordercolor', 'background'].every(k => text(value[k]))
   );
 }
+
 function fn(value: unknown): value is SettingFunction {
   return widgetObject(value) && ['type', 'expression', 'code', 'id'].every(k => text(value[k])) && num(value['status']);
 }
+
 function regex(value: unknown): value is SettingRegex {
-  return widgetObject(value) && text(value['name']) && text(value['value']) && optionalArray(value['filters'], filter);
+  return (
+    widgetObject(value) &&
+    text(value['name']) &&
+    text(value['value']) &&
+    (value['filters'] === null || value['filters'] === '' || optionalArray(value['filters'], filter))
+  );
 }
+
 function increase(value: unknown): value is SettingIncrease {
   return (
     widgetObject(value) &&
@@ -246,16 +270,19 @@ function increase(value: unknown): value is SettingIncrease {
     (value['start'] === null || text(value['start']) || num(value['start']))
   );
 }
+
 function summary(value: unknown): value is SettingSummary {
   return (
     widgetObject(value) && text(value['id']) && text(value['controlId']) && (text(value['type']) || num(value['type']))
   );
 }
+
 function objectOrEmpty<T>(value: unknown, predicate: (v: unknown) => v is T): T | undefined {
   if (!value) return undefined;
   if (!predicate(value)) throw new TypeError('Invalid widget setting object');
   return value;
 }
+
 export function countrySettings(value: unknown): SettingCountry[] {
   return listSetting(
     value,
@@ -263,15 +290,19 @@ export function countrySettings(value: unknown): SettingCountry[] {
       widgetObject(item) && ['name', 'iso2', 'dialCode', 'id'].every(key => text(item[key])),
   );
 }
+
 export function styleSetting(value: unknown): SettingStyle {
   return objectOrEmpty(value, style) || {};
 }
+
 export function functionSetting(value: unknown): SettingFunction {
   return objectOrEmpty(value, fn) || {};
 }
+
 export function filterSettings(value: unknown): SettingFilter[] {
   return listSetting(value, filter);
 }
+
 /** Legacy filterregex payloads may contain deleted or partially written rules.
  * Runtime validation already ignores those entries; keep the decoder compatible
  * so opening a record cannot fail before the field-level validator runs. */
@@ -280,30 +311,38 @@ export function regexSettings(value: unknown): SettingRegex[] {
   if (value.every(regex)) return value;
   return value.filter(regex);
 }
+
 export function stringSettings(value: unknown): string[] {
   return listSetting(value, (item): item is string => typeof item === 'string');
 }
+
 export function numberSetting(value: unknown): number | '' {
   return typeof value === 'number' ? value : '';
 }
+
 export function sortSettings(value: unknown): SettingSort[] {
   return listSetting(value, sort);
 }
+
 function listSetting<T>(value: unknown, predicate: (v: unknown) => v is T): T[] {
   if (!value) return [];
   if (!arrayOf(value, predicate)) throw new TypeError('Invalid widget setting list');
   return value;
 }
+
 function pixelWidth(value: unknown): number | undefined {
   const width = typeof value === 'number' ? value : typeof value === 'string' && value.trim() ? Number(value) : NaN;
   return Number.isFinite(width) && width > 0 ? width : undefined;
 }
+
 function validPixelWidth(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value) && value > 0;
 }
+
 function widthMap(value: unknown): value is Record<string, number> {
   return widgetObject(value) && Object.values(value).every(validPixelWidth);
 }
+
 function widthSettings(value: unknown): SettingWidths {
   // Old layouts store widths by position; current layout writers key them by control ID.
   // Widths only affect presentation, so an invalid entry uses the existing 160px default.
@@ -312,8 +351,10 @@ function widthSettings(value: unknown): SettingWidths {
   if (widgetObject(value)) {
     return Object.fromEntries(Object.entries(value).map(([id, width]) => [id, pixelWidth(width) ?? 160]));
   }
+
   return [];
 }
+
 export function getWidgetDisplayWidths(data: FormControl | undefined, showControls: readonly string[]): number[] {
   const widths = getWidgetAdvanceSetting(data, 'widths') || [];
   return showControls.map((id, index) => {
@@ -321,6 +362,7 @@ export function getWidgetDisplayWidths(data: FormControl | undefined, showContro
     return width ?? 160;
   });
 }
+
 const listDecoders: Record<string, (value: unknown) => unknown> = {
   custom_event: value => listSetting(value, event),
   filters: filterSettings,
@@ -374,5 +416,6 @@ export function getWidgetAdvanceSetting(data?: FormControl, key?: string | strin
       ) || {}
     );
   }
+
   return value;
 }

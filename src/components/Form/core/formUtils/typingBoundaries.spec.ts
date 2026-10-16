@@ -135,6 +135,7 @@ const stubs: Record<string, unknown> = {
   },
 };
 const moduleCache = new Map<string, Record<string, unknown> & Partial<FormUtils & HelperUtils & Boundaries>>();
+
 function loadModule(file: string): Record<string, unknown> & Partial<FormUtils & HelperUtils & Boundaries> {
   const full = path.resolve(file);
   const old = moduleCache.get(full);
@@ -154,6 +155,7 @@ function loadModule(file: string): Record<string, unknown> & Partial<FormUtils &
           path.resolve(__dirname, '../../../../ming-ui/components/PhoneNumberInput/DialCodeSelect/utils.ts'),
         );
       }
+
       if (name.startsWith('.')) {
         const original =
           full.startsWith('/private/tmp/hap-form-utils-strict-20261009/') && ['./helper', './ruleUtils'].includes(name)
@@ -161,6 +163,7 @@ function loadModule(file: string): Record<string, unknown> & Partial<FormUtils &
             : undefined;
         return loadModule(original || path.join(path.dirname(full), name.replace(/\.js$/, '') + '.ts'));
       }
+
       return require(name);
     },
     (value: unknown, fallback?: string) => {
@@ -177,6 +180,7 @@ function loadModule(file: string): Record<string, unknown> & Partial<FormUtils &
   );
   return moduleLike.exports;
 }
+
 const source = process.env.FORM_UTIL_SOURCE || path.join(__dirname, 'index.ts');
 const utils = loadModule(source) as FormUtils;
 const helper = loadModule(path.join(__dirname, 'helper.ts')) as HelperUtils;
@@ -331,6 +335,18 @@ assert.equal(
   ),
   '',
 );
+for (const filters of [null, '', [], undefined]) {
+  const areaCode = {
+    type: 2,
+    advancedSetting: {
+      filterregex: JSON.stringify([{ name: '区域代码', filters, value: '^(0[1-9]|[1-9][0-9])$', err: '请输入01-99' }]),
+    },
+  };
+  assert.equal(utils.checkValueByFilterRegex(areaCode, '01', []), '', 'Unconditional persisted rule accepts 01');
+  assert.equal(utils.checkValueByFilterRegex(areaCode, '00', []), '请输入01-99', 'Persisted rule still rejects 00');
+  assert.equal(utils.onValidator({ item: { ...areaCode, value: '00' } }).errorType, 'CUSTOM');
+}
+
 const rule = {
   ruleId: 'rule',
   type: 1,
@@ -466,6 +482,7 @@ if (process.env.FORM_NORMAL_ONLY !== '1') {
     './config': { DEFAULT_TYPES: {} },
     './util': { dealIds: (_type: number, value: unknown) => value, getControlType: () => 'score' },
   };
+
   function loadProducer<Model extends object>(file: string): Partial<Model> {
     const { code } = transformFileSync(file, { plugins: ['@babel/plugin-transform-modules-commonjs'] });
     const moduleLike: { exports: Partial<Model> } = { exports: {} };
@@ -481,6 +498,7 @@ if (process.env.FORM_NORMAL_ONLY !== '1') {
     );
     return moduleLike.exports;
   }
+
   const producerDirectory = path.resolve(
     __dirname,
     '../../../../pages/widgetConfig/widgetSetting/components/DynamicDefaultValue',
@@ -503,8 +521,10 @@ if (process.env.FORM_NORMAL_ONLY !== '1') {
       const found = nodeWithType(child, expectedType);
       if (found) return found;
     }
+
     return undefined;
   }
+
   function saveScore(input: string): Control {
     let saved: Control | undefined;
     const target: Control = { type: 28, enumDefault: 1, advancedSetting: {} };
@@ -526,6 +546,7 @@ if (process.env.FORM_NORMAL_ONLY !== '1') {
     assert.ok(saved);
     return saved as Control;
   }
+
   const numericFive = saveScore('5');
   assert.deepEqual(JSON.parse(numericFive.advancedSetting?.['defsource'] || '[]'), [
     { cid: '', rcid: '', staticValue: 5 },
