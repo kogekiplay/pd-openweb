@@ -24,6 +24,7 @@ function load(file: string, imports: Record<string, unknown>, revision?: string)
   });
   return loaded.exports;
 }
+
 const repo = path.resolve(__dirname, '../../../..');
 const sourceBoundary = load(path.join(repo, 'src/utils/advancedSettingBoundary.ts'), {});
 const controlCommon = load(path.join(repo, 'src/utils/controlCommon.ts'), {
@@ -78,6 +79,7 @@ const cases: Record<string, unknown> = {
   currency: { currencycode: 'USD' },
   defaultarea: { id: 'country', dialCode: '+86' },
 };
+
 for (const [key, value] of Object.entries(cases)) {
   assert.strictEqual(read({}, key), '', key + ' preserves missing sentinel and caller defaults');
   const data = { advancedSetting: { [key]: JSON.stringify(value) } };
@@ -88,6 +90,7 @@ for (const [key, value] of Object.entries(cases)) {
     key + ' retains already parsed object identity',
   );
 }
+
 assert.deepStrictEqual(
   read({ advancedSetting: { topfilters: JSON.stringify([{ controlId: 'field', filterType: 1 }]) } }, 'topfilters'),
   [{ controlId: 'field', filterType: 1 }],
@@ -96,6 +99,7 @@ assert.deepStrictEqual(
 for (const key of ['showtype', 'checktype', 'topshow', 'querytype', 'min', 'max', 'rownum', 'blankrow']) {
   assert.strictEqual(read({ advancedSetting: { [key]: '0' } }, key), 0, key + ' preserves numeric zero');
 }
+
 for (const key of ['allowcountries', 'commcountries']) {
   const countries = [{ name: 'China', iso2: 'cn', dialCode: '86' }];
   assert.deepStrictEqual(
@@ -104,6 +108,7 @@ for (const key of ['allowcountries', 'commcountries']) {
     key + ' retains full telephone country objects',
   );
 }
+
 assert.deepStrictEqual(
   read({ advancedSetting: { commcountries: '["CN","US"]' } }, 'commcountries'),
   ['CN', 'US'],
@@ -129,6 +134,7 @@ function field(value: unknown, name: string): unknown {
   if (value === null || typeof value !== 'object') throw new TypeError('Missing observed producer field');
   return Reflect.get(value, name);
 }
+
 const autoIdDefaults = field(field(widgetConfig.DEFAULT_DATA, 'AUTO_ID'), 'advancedSetting');
 const actualIncrease = field(autoIdDefaults, 'increase');
 assert.strictEqual(typeof actualIncrease, 'string');
@@ -183,13 +189,16 @@ for (const start of [null, '', 0, 1, '007', undefined]) {
     JSON.parse(JSON.stringify(value)),
   );
 }
+
 for (const start of [true, {}, []]) {
   assert.throws(
     () => read({ advancedSetting: { increase: JSON.stringify([{ type: 1, start }]) } }, 'increase'),
     /Invalid widget setting list/,
   );
 }
+
 const before = process.env['WIDGET_SETTING_BEFORE_REV'];
+
 if (before) {
   const previous = load(
     path.join(__dirname, 'advancedSettingBoundary.ts'),
@@ -203,7 +212,21 @@ if (before) {
     'The actual producer reproduces the production exception before the fix',
   );
 }
+
 const filterRegexBefore = process.env['WIDGET_FILTERREGEX_BEFORE_REV'];
+const productionRegexRules = [{ name: '区域代码', filters: null, value: '^(0[1-9]|[1-9][0-9])$', err: '请输入01-99' }];
+
+for (const filters of [null, '', [], undefined]) {
+  const rules = productionRegexRules.map(rule => ({ ...rule, filters }));
+  assert.strictEqual(
+    read({ advancedSetting: { filterregex: rules } }, 'filterregex'),
+    rules,
+    'Unconditional persisted rules retain their configuration and object identity',
+  );
+  const serialized = JSON.stringify(rules);
+  assert.deepStrictEqual(read({ advancedSetting: { filterregex: serialized } }, 'filterregex'), JSON.parse(serialized));
+}
+
 if (filterRegexBefore) {
   const previous = load(
     path.join(__dirname, 'advancedSettingBoundary.ts'),
@@ -211,6 +234,11 @@ if (filterRegexBefore) {
     filterRegexBefore,
   );
   const previousRead = previous.getWidgetAdvanceSetting as ReadSetting;
+  assert.throws(
+    () => previousRead({ advancedSetting: { filterregex: JSON.stringify(productionRegexRules) } }, 'filterregex'),
+    /Invalid widget setting list/,
+    'The actual production area-code rule reproduces the previous exception',
+  );
   assert.throws(
     () =>
       previousRead(
@@ -231,7 +259,13 @@ const settingSource = fs.readFileSync(path.join(__dirname, 'setting.ts'), 'utf8'
 const changeStart = settingSource.indexOf('export const handleAdvancedSettingChange =');
 const changeEnd = settingSource.indexOf('// 根据row、col排序controls', changeStart);
 assert.ok(changeStart >= 0 && changeEnd > changeStart);
-const consumerSource = settingSource.slice(changeStart, changeEnd) + dataSource.slice(saveStart, saveEnd);
+const extremeStart = dataSource.indexOf('export function handleExtremeValue(');
+const extremeEnd = dataSource.indexOf('export function dealRelateSheetDefaultValue(', extremeStart);
+assert.ok(extremeStart >= 0 && extremeEnd > extremeStart);
+const consumerSource =
+  settingSource.slice(changeStart, changeEnd) +
+  dataSource.slice(extremeStart, extremeEnd) +
+  dataSource.slice(saveStart, saveEnd);
 const consumerCode = transformSync(consumerSource, {
   filename: path.join(__dirname, 'save-chain.tsx'),
   plugins: ['@babel/plugin-transform-modules-commonjs'],
@@ -268,6 +302,22 @@ function callSave(name: string, ...args: unknown[]): unknown {
   if (typeof fn !== 'function') throw new TypeError('Missing actual save consumer');
   return Reflect.apply(fn, undefined, args);
 }
+
+for (const filters of [null, '']) {
+  const control = {
+    controlId: 'area-code',
+    type: 2,
+    advancedSetting: { filterregex: JSON.stringify(productionRegexRules.map(rule => ({ ...rule, filters }))) },
+  };
+  const formatted = callSave('formatControlsData', [control]);
+  if (!Array.isArray(formatted)) throw new TypeError('Expected saved regex control');
+  assert.deepStrictEqual(
+    field(field(formatted[0], 'advancedSetting'), 'filterregex'),
+    control.advancedSetting.filterregex,
+    'Saving retains the actual rule and its unconditional sentinel',
+  );
+}
+
 const actualControl = { controlId: 'autonumber', type: 33, advancedSetting: { increase: actualIncrease } };
 const scope = { appId: 'app', worksheetId: 'worksheet' };
 assert.doesNotThrow(() => callSave('checkWidgetBeforeSave', [actualControl], [actualControl], scope));
@@ -302,6 +352,7 @@ for (const [key, value] of Object.entries({
 })) {
   assert.throws(() => read({ advancedSetting: { [key]: JSON.stringify(value) } }, key), /Invalid widget setting/);
 }
+
 const filterSettings = boundary.filterSettings as (value: unknown) => unknown;
 const regexSettings = boundary.regexSettings as (value: unknown) => unknown;
 const sortSettings = boundary.sortSettings as (value: unknown) => unknown;
