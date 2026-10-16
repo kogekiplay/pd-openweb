@@ -2,7 +2,12 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { parseJsFilenameMaps, parseCssFilenameMap, verifyRuntime } = require('./verifyWebpackAssets.ts');
+const {
+  parseJsFilenameMaps,
+  parseCssFilenameMap,
+  parseCssChunkMap,
+  verifyRuntime,
+} = require('./verifyWebpackAssets.ts');
 
 // These two shapes are emitted by the main and extracted single-page builds.
 const named = 'r.u=e=>e===3?"shared.entry.js":({1:"calendar"}[e]||e)+"."+{1:"abc",2:"def"}[e]+".chunk.js";';
@@ -26,7 +31,22 @@ for (const code of ['r.miniCssF=e=>({1:"style"})[e]+".css";', 'r.miniCssF=e=>""+
   assert.deepEqual([...parseCssFilenameMap(code)[0]], [['1', 'style.css']]);
 }
 
+// Production minification emits 9000 as 9e3. Compare against JavaScript's
+// actual filename resolution, and retain the missing-file check for this ID.
+const exponential = 'r.u=e=>e+"."+{3:"small",9e3:"7eb52d42"}[e]+".chunk.js";';
+const loader = new Function('r', exponential + 'return r.u;')({});
+assert.deepEqual(
+  [...parseJsFilenameMaps(exponential)[0]],
+  [
+    ['3', loader(3)],
+    ['9000', loader(9000)],
+  ],
+);
+assert.deepEqual([...parseCssFilenameMap('r.miniCssF=e=>({9e3:"large"})[e]+".css";')[0]], [['9000', 'large.css']]);
+assert.deepEqual([...parseCssChunkMap('r.f.miniCss=(e,t)=>{var a={9e3:1};};')[0]], ['9000']);
+
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hap-webpack-assets-spec-'));
+
 try {
   const runtime = path.join(dir, 'runtime.entry.js');
   fs.writeFileSync(runtime, numeric + 'r.miniCssF=e=>({1:"style"})[e]+".css";r.f.miniCss=(e,t)=>{var a={1:1};};');
@@ -40,7 +60,13 @@ try {
   assert.match(verifyRuntime(runtime).missingCssFiles[0], /style\.css/);
   fs.writeFileSync(runtime, 'r.u=e=>unknownMap[e];');
   assert.match(verifyRuntime(runtime).missingMappings[0], /could not parse/);
+  fs.writeFileSync(runtime, exponential);
+  for (const id of [3, 9000]) fs.writeFileSync(path.join(dir, loader(id)), '');
+  assert.equal(verifyRuntime(runtime).missingJsFiles.length, 0);
+  fs.unlinkSync(path.join(dir, loader(9000)));
+  assert.match(verifyRuntime(runtime).missingJsFiles[0], /chunk 9000 -> 9000\.7eb52d42\.chunk\.js/);
 } finally {
   fs.rmSync(dir, { recursive: true, force: true });
 }
+
 console.log('Runtime asset validation detects missing JS/CSS and unsupported loader maps.');

@@ -5,11 +5,11 @@ const PACK_DIRS = ['build/dist/pack', 'build/dist/single/pack', 'build/dist/sing
 
 function parseObjectEntries(objectCode) {
   const entries = new Map();
-  const entryReg = /(\d+)\s*:\s*["']([^"']+)["']/g;
+  const entryReg = /(?:^|,)\s*(\d+(?:e\+?\d+)?)\s*:\s*["']([^"']+)["']/gi;
   let entryMatch;
 
   while ((entryMatch = entryReg.exec(objectCode))) {
-    entries.set(entryMatch[1], entryMatch[2]);
+    entries.set(String(Number(entryMatch[1])), entryMatch[2]);
   }
 
   return entries;
@@ -25,7 +25,7 @@ function parseJsFilenameMaps(runtimeCode) {
     const entries = new Map();
     const variableName = match[1];
     const expression = match[2];
-    const conditionReg = new RegExp(`${variableName}===([0-9]+)\\?["']([^"']+\\.js)["']`, 'g');
+    const conditionReg = new RegExp(`${variableName}===([0-9]+(?:[eE]\\+?[0-9]+)?)\\?["']([^"']+\\.js)["']`, 'g');
     const hashMapReg = new RegExp(
       `\\(\\{([\\s\\S]*?)\\}\\[${variableName}\\]\\|\\|${variableName}\\)\\s*\\+\\s*["']\\.["']\\s*\\+\\s*\\{([\\s\\S]*?)\\}\\[${variableName}\\]\\s*\\+\\s*["']\\.chunk\\.js["']`,
     );
@@ -35,7 +35,7 @@ function parseJsFilenameMaps(runtimeCode) {
     let conditionMatch;
 
     while ((conditionMatch = conditionReg.exec(expression))) {
-      entries.set(conditionMatch[1], conditionMatch[2]);
+      entries.set(String(Number(conditionMatch[1])), conditionMatch[2]);
     }
 
     const hashMapMatch = expression.match(hashMapReg);
@@ -49,6 +49,7 @@ function parseJsFilenameMaps(runtimeCode) {
       });
     } else {
       const numericNameHashMatch = expression.match(numericNameHashReg);
+
       if (numericNameHashMatch) {
         parseObjectEntries(numericNameHashMatch[1]).forEach((chunkHash, chunkId) => {
           entries.set(chunkId, `${chunkId}.${chunkHash}.chunk.js`);
@@ -84,11 +85,11 @@ function parseCssChunkMap(runtimeCode) {
 
   while ((match = reg.exec(runtimeCode))) {
     const chunkIds = new Set();
-    const entryReg = /(\d+)\s*:\s*1/g;
+    const entryReg = /(?:^|,)\s*(\d+(?:e\+?\d+)?)\s*:\s*1\s*(?=,|$)/gi;
     let entryMatch;
 
     while ((entryMatch = entryReg.exec(match[1]))) {
-      chunkIds.add(entryMatch[1]);
+      chunkIds.add(String(Number(entryMatch[1])));
     }
 
     maps.push(chunkIds);
@@ -138,6 +139,7 @@ function verifyRuntime(runtimePath) {
   const jsFilenameMap = mergeFilenameMaps(jsFilenameMaps, runtimePath, 'js', duplicateMappings);
   const cssFilenameMap = mergeFilenameMaps(cssFilenameMaps, runtimePath, 'css', duplicateMappings);
   const cssChunkMap = mergeChunkMaps(cssChunkMaps);
+
   if (/\.u\s*=\s*[a-zA-Z_$][\w$]*\s*=>/.test(runtimeCode) && !jsFilenameMap.size) {
     missingMappings.push(`${runtimePath}: found JS runtime loader but could not parse filename mappings`);
   }
