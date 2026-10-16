@@ -99,16 +99,22 @@ export const createFontLink = () => {
   });
 };
 
-export const exportImage = ({ pageBgColor, isUserWatermark, currentProject }) => {
-  return new Promise(resolve => {
+export const exportImage = ({ pageBgColor, isUserWatermark, currentProject }): Promise<Blob | undefined> => {
+  return new Promise<Blob | undefined>(resolve => {
     const wrap =
       document.querySelector('.componentsWrap .react-grid-layout') || document.querySelector('.customPageContent');
+    if (!(wrap instanceof HTMLElement)) {
+      resolve(undefined);
+      return;
+    }
     const { left: wrapLeft, top: wrapTop } = wrap.getBoundingClientRect();
     const embedUrls = wrap.querySelectorAll('.widgetContent.embedUrl');
     const countryLayers = [
       ...wrap.querySelectorAll(`.statisticsCard-${reportTypes.CountryLayer}`),
       ...wrap.querySelectorAll(`.statisticsCard-${reportTypes.WorldMap}`),
-    ].map(item => item.parentNode.parentNode);
+    ]
+      .map(item => item.parentElement?.parentElement)
+      .filter((item): item is HTMLElement => item instanceof HTMLElement);
     const { offsetWidth, offsetHeight } = wrap;
     const fontlinksheet = document.querySelector('.fontlinksheet');
     document.querySelectorAll('.mapboxgl-ctrl').forEach(item => {
@@ -130,8 +136,8 @@ export const exportImage = ({ pageBgColor, isUserWatermark, currentProject }) =>
             top: top - wrapTop + height / 2,
           };
         });
-        let newCanvas = null;
-        newCanvas = await addHintWatermark(canvas, layouts);
+        let newCanvas = await addHintWatermark(canvas, layouts);
+
         if (isUserWatermark) {
           newCanvas = await addUserWatermark(newCanvas, currentProject);
         }
@@ -142,7 +148,7 @@ export const exportImage = ({ pageBgColor, isUserWatermark, currentProject }) =>
       .catch((error, data) => {
         fontlinksheet && fontlinksheet.remove();
         console.log(error, data);
-        resolve();
+        resolve(undefined);
       });
   });
 };
