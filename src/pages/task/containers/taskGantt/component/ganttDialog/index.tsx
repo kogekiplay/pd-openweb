@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component, Fragment, type MouseEvent } from 'react';
 import axios from 'axios';
 import html2canvas from 'html2canvas';
 import _ from 'lodash';
@@ -14,9 +14,10 @@ import { requireBase64FileToken } from 'src/utils/commonRequestBoundary';
 import TaskDetail from '../../../taskDetail/taskDetail';
 import config from './config';
 import GanttContent from './GanttContent';
-import GanttHeader from './GanttHeader';
+import GanttHeader, { type GanttType } from './GanttHeader';
 import GanttSideBar from './GanttSideBar';
 import { durDays, momentTime } from './time';
+import type { GanttProcessTaskNode } from './GraphContent';
 import './index.less';
 
 export interface GanttDialogProps {
@@ -24,7 +25,25 @@ export interface GanttDialogProps {
   folderID: string;
 }
 
-export default class GanttDialog extends Component<GanttDialogProps, any> {
+interface GanttDialogState {
+  taskID: string;
+  name: string;
+  /** 未加载完成前没有有效时间范围，此时不会被任何子组件读取 */
+  beginTime: moment.Moment;
+  endTime: moment.Moment;
+  data: GanttProcessTaskNode[];
+  type: GanttType;
+  taskDetailVisible: boolean;
+  loading: boolean;
+  refreshLoading: boolean;
+  showExportDialog: boolean;
+  buildImgSuccess: boolean;
+  errorMsg: string;
+  /** 导出图片上传成功后的下载地址 */
+  url?: string | undefined;
+}
+
+export default class GanttDialog extends Component<GanttDialogProps, GanttDialogState> {
   static override propTypes = {
     folderID: PropTypes.string.isRequired,
     closeLayer: PropTypes.func,
@@ -32,11 +51,11 @@ export default class GanttDialog extends Component<GanttDialogProps, any> {
   static defaultProps = {
     closeLayer: () => {},
   };
-  override state = {
+  override state: GanttDialogState = {
     taskID: '',
     name: '',
-    beginTime: '',
-    endTime: '',
+    beginTime: moment.invalid(),
+    endTime: moment.invalid(),
     data: [],
     type: 'day',
     taskDetailVisible: false,
@@ -70,7 +89,9 @@ export default class GanttDialog extends Component<GanttDialogProps, any> {
       }
 
       const { taskData, maxCompleteTime, minStartTime, folderName } = res.data;
-      const data = this.dealWithData(taskData);
+      // 接口异常返回非数组时退化为空列表：原实现会把 undefined 写进 state，
+      // 渲染时 data.length 会抛错；这里改为展示“暂无任务”空状态。
+      const data = this.dealWithData(taskData) ?? [];
       const formatBeginTime = momentTime(minStartTime);
       const formatEndTime = momentTime(maxCompleteTime);
       config.beginTime = formatBeginTime;
@@ -90,7 +111,7 @@ export default class GanttDialog extends Component<GanttDialogProps, any> {
   /**
    * 处理时间
    */
-  handleTime = (beginTime, endTime) => {
+  handleTime = (beginTime: moment.Moment, endTime: moment.Moment) => {
     const { type } = this.state;
 
     if (type === 'day') {
@@ -115,19 +136,19 @@ export default class GanttDialog extends Component<GanttDialogProps, any> {
    * 数据处理 为每个任务添加一个是否显示子项目的标识
    * @param {Array} data
    */
-  dealWithData(data) {
+  dealWithData(data: unknown): GanttProcessTaskNode[] | undefined {
     if (!Array.isArray(data)) return undefined;
-    data.forEach(item => {
+    data.forEach((item: GanttProcessTaskNode) => {
       item.child && (item.childrenVisible = true);
       this.dealWithData(item.child);
     });
-    return data;
+    return data as GanttProcessTaskNode[];
   }
 
   /**
    * 切换日期显示形式
    */
-  switchDisplayType = type => {
+  switchDisplayType = (type: GanttType) => {
     this.setState({ type }, () => {
       const { beginTime, endTime } = this.handleTime(config.beginTime.clone(), config.endTime.clone());
       this.setState({
@@ -152,8 +173,8 @@ export default class GanttDialog extends Component<GanttDialogProps, any> {
   exportData = () => {
     const { name } = this.state;
     const $el = $('.ganttContentBox');
-    const width = $el.find('.graphWrap').width();
-    const height = $el.find('.graphContent').height() + 70;
+    const width = $el.find('.graphWrap').width() ?? 0;
+    const height = ($el.find('.graphContent').height() ?? 0) + 70;
     const $box = $el.clone(true);
     $box.css({
       minWidth: width,
@@ -162,13 +183,26 @@ export default class GanttDialog extends Component<GanttDialogProps, any> {
     });
 
     $('body').append($box);
-    html2canvas($('body > .ganttContentBox')[0]).then(canvas => {
+
+    const target = $('body > .ganttContentBox')[0];
+
+    if (!(target instanceof HTMLElement)) {
+      $('body > .ganttContentBox').remove();
+      return undefined;
+    }
+
+    html2canvas(target).then(canvas => {
       const newCanvas = document.getElementById('ganttCanvas');
+
+      if (!(newCanvas instanceof HTMLCanvasElement)) return;
 
       newCanvas.width = width;
       newCanvas.height = height + 51;
 
       const ctx = newCanvas.getContext('2d');
+
+      if (!ctx) return;
+
       ctx.fillStyle = '#fff';
       ctx.fillRect(0, 0, width, 50);
       ctx.font = '20px Microsoft YaHei';
@@ -191,12 +225,14 @@ export default class GanttDialog extends Component<GanttDialogProps, any> {
 
       $('body > .ganttContentBox').remove();
     });
+
+    return undefined;
   };
 
   /**
    * 上传到七牛
    */
-  putb64(base64) {
+  putb64(base64: string) {
     getToken([{ bucket: 2, ext: '.png' }])
       .then(res => {
         if (!Array.isArray(res)) {
@@ -235,7 +271,7 @@ export default class GanttDialog extends Component<GanttDialogProps, any> {
   /**
    * 获取文件key
    */
-  getFileKey(length) {
+  getFileKey(length: number) {
     const randStrArr = [
       'A',
       'B',
@@ -304,13 +340,15 @@ export default class GanttDialog extends Component<GanttDialogProps, any> {
    * 关闭弹窗
    */
   closeLayer = () => {
-    this.props.closeLayer(false);
+    this.props.closeLayer?.(false);
+
+    return undefined;
   };
 
   /**
    * 切换子项目的显示隐藏
    */
-  toggleTask = args => {
+  toggleTask = (args: number[]) => {
     const { data } = this.state;
     const cloneData = _.cloneDeep(data);
 
@@ -323,21 +361,34 @@ export default class GanttDialog extends Component<GanttDialogProps, any> {
   /**
    * 递归改变子数据的属性
    */
-  toggleData = (data, args) => {
+  toggleData = (data: GanttProcessTaskNode[], args: number[]) => {
+    const currentIndex = args[0];
+    const current = currentIndex === undefined ? undefined : data[currentIndex];
+
+    if (current === undefined) return undefined;
+
     if (args.length === 1) {
-      data[args[0]].childrenVisible = !data[args[0]].childrenVisible;
-    } else {
-      this.toggleData(data[args[0]].child, args.slice(1));
+      current.childrenVisible = !current.childrenVisible;
+
+      return undefined;
     }
+
+    this.toggleData((current.child ?? []) as GanttProcessTaskNode[], args.slice(1));
+
+    return undefined;
   };
 
   /**
    * 处理子任务hover状态
    */
-  handleTaskItemHover = (layerVisible, e) => {
+  handleTaskItemHover = (layerVisible: boolean, e?: MouseEvent<HTMLElement>) => {
     const activeLayer = document.querySelector('.activeLayer');
 
+    if (!(activeLayer instanceof HTMLElement)) return undefined;
+
     if (layerVisible) {
+      if (!e) return undefined;
+
       const $el = e.currentTarget;
       const top = $el.getBoundingClientRect().top - 51;
 
@@ -348,12 +399,14 @@ export default class GanttDialog extends Component<GanttDialogProps, any> {
     } else {
       activeLayer.style.display = 'none';
     }
+
+    return undefined;
   };
 
   /**
    * 显示任务详情
    */
-  showDetail = taskID => {
+  showDetail = (taskID: string) => {
     this.setState({
       taskID,
       taskDetailVisible: true,
@@ -368,9 +421,14 @@ export default class GanttDialog extends Component<GanttDialogProps, any> {
     const { TYPE_TO_WIDTH } = config;
     const width = TYPE_TO_WIDTH[type];
     const $el = document.querySelector('.ganttContentBox');
+
+    if (!($el instanceof HTMLElement)) return undefined;
+
     const elWidth = Math.round($el.getBoundingClientRect().width / 2);
     const durWidth = Math.round(durDays(beginTime, moment()) * width + width / 2 - elWidth);
     $el.scrollLeft = durWidth;
+
+    return undefined;
   };
 
   /**
@@ -379,7 +437,7 @@ export default class GanttDialog extends Component<GanttDialogProps, any> {
   onOk = () => {
     const { buildImgSuccess, url } = this.state;
 
-    if (buildImgSuccess) {
+    if (buildImgSuccess && url) {
       window.open(downloadFile(url));
       this.setState({ showExportDialog: false });
     }
@@ -411,14 +469,14 @@ export default class GanttDialog extends Component<GanttDialogProps, any> {
     let width = 0;
 
     if (refreshLoading) {
-      width =
-        $('.timeHeader').width() > $('.ganttContentBox').width()
-          ? $('.ganttContentBox').width()
-          : $('.timeHeader').width();
+      const timeHeaderWidth = $('.timeHeader').width() ?? 0;
+      const contentWidth = $('.ganttContentBox').width() ?? 0;
+
+      width = timeHeaderWidth > contentWidth ? contentWidth : timeHeaderWidth;
     }
 
     return (
-      <DialogBase dialogClasses="flatFishGanttDialog" visible onCancel={this.handleClose}>
+      <DialogBase dialogClasses="flatFishGanttDialog" visible onCancel={closeLayer}>
         <div className="flatFishGanttWrap flexColumn">
           <GanttHeader {...{ type, name, data, switchDisplayType, refresh, exportData, closeLayer, scrollToToday }} />
           {loading ? (
