@@ -494,7 +494,7 @@ class ChildTable extends React.Component<any, any> {
   }
 
   worksheettable = React.createRef();
-  searchRef = React.createRef();
+  searchRef = React.createRef<React.ElementRef<typeof MobileSearchInput>>();
 
   get settings() {
     const { control = {} } = this.props;
@@ -944,7 +944,7 @@ class ChildTable extends React.Component<any, any> {
       );
     };
 
-    let formdata = null;
+    let formdata: DataFormat;
     const isNewRecord = isCreate || !row;
     const cacheKey = isNewRecord ? rowId : row?.rowid;
 
@@ -1090,25 +1090,19 @@ class ChildTable extends React.Component<any, any> {
           if (!this.worksheettable.current || !this.worksheettable.current.table) {
             return;
           }
-          let activeCell = null;
-
-          if (layoutDirection === 'horizontal') {
-            activeCell = this.worksheettable.current.table.refs.dom.current.querySelector(
-              '.cell.row-' +
+          const selector =
+            layoutDirection === 'horizontal'
+              ? '.cell.row-' +
                 (this.showAsPages && newPageIndex > 1
                   ? filteredRows.length % (pageSize * (newPageIndex - 1))
                   : filteredRows.length) +
-                '.canedit',
-            );
-          } else {
-            activeCell = this.worksheettable.current.table.refs.dom.current.querySelector(
-              '.cell.col-' +
+                '.canedit'
+              : '.cell.col-' +
                 (this.showAsPages && newPageIndex > 1
                   ? (filteredRows.length % (pageSize * (newPageIndex - 1))) + 1
                   : filteredRows.length + 1) +
-                '.canedit',
-            );
-          }
+                '.canedit';
+          const activeCell = this.worksheettable.current.table.refs.dom.current.querySelector(selector);
 
           if (activeCell) {
             activeCell.click();
@@ -2079,7 +2073,7 @@ class ChildTable extends React.Component<any, any> {
                     >
                       <div className={cx('importFromFile', { disabled: isExceed })}>
                         <Tooltip placement="bottom" title={<span className="preWrap">{_l('导入数据')}</span>}>
-                          <div className="content" onClick={isExceed ? () => {} : this.handleImport}>
+                          <div className="content" onClick={isExceed ? () => {} : () => this.handleImport()}>
                             <i className="icon icon-worksheet_import Font16 textSecondary"></i>
                           </div>
                         </Tooltip>

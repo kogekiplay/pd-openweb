@@ -7,30 +7,39 @@ import type { MasterData } from 'src/components/Form/core/types';
 import { browserIsMobile } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
 import { checkCellIsEmpty } from 'src/utils/control';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { ControlValue, FormControl, RecordRow } from 'src/utils/controlTypes';
 import { filterEmptyChildTableRows } from 'src/utils/record';
 import { checkRulesErrorOfRow } from 'src/utils/rule';
 import type { ChildTableStore } from 'src/utils/subListStoreTypes';
 
-function getControlCompareValue(c: FormControl, value) {
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function parsedRecords(value: ControlValue): Record<string, unknown>[] {
+  const parsed: unknown = safeParse(value, 'array');
+  return Array.isArray(parsed) ? parsed.filter(isRecord) : [];
+}
+
+function getControlCompareValue(c: FormControl, value: ControlValue) {
   if (c.type === 26) {
-    return safeParse(value, 'array')
-      .map(u => u.accountId)
+    return parsedRecords(value)
+      .map(u => u['accountId'])
       .sort()
       .join('');
   } else if (c.type === 29) {
-    return safeParse(value, 'array')
-      .map(u => u.sid)
+    return parsedRecords(value)
+      .map(u => u['sid'])
       .sort()
       .join('');
   } else if (c.type === 27) {
-    return safeParse(value, 'array')
-      .map(u => u.departmentId)
+    return parsedRecords(value)
+      .map(u => u['departmentId'])
       .sort()
       .join('');
   } else if (c.type === 48) {
-    return safeParse(value, 'array')
-      .map(u => u.organizeId)
+    return parsedRecords(value)
+      .map(u => u['organizeId'])
       .sort()
       .join('');
   } else {
@@ -115,41 +124,42 @@ export function getSubListError(
       });
       errorItems.forEach(errorItem => {
         const errorControl = _.find(controldata, c => c.controlId === errorItem.controlId);
+        const errorText = Object.entries(FORM_ERROR_TYPE_TEXT).find(([key]) => key === errorItem.errorType)?.[1];
+        const formatted =
+          typeof errorText === 'function' ? Reflect.apply(errorText, undefined, [errorControl]) : errorText;
         result[row.rowid + '-' + errorItem.controlId] =
           errorItem.errorType === FORM_ERROR_TYPE.CUSTOM
             ? checkValueByFilterRegex(errorControl, _.get(errorControl, 'value'), controldata)
-            : typeof FORM_ERROR_TYPE_TEXT[errorItem.errorType] === 'string'
-              ? FORM_ERROR_TYPE_TEXT[errorItem.errorType]
-              : FORM_ERROR_TYPE_TEXT[errorItem.errorType](errorControl);
+            : typeof formatted === 'string'
+              ? formatted
+              : undefined;
       });
     });
     const uniqueControls = controls.filter(
       (c: FormControl) => _.find(showControls, id => id === c.controlId) && (c.unique || c.uniqueInRecord),
     );
     uniqueControls.forEach(c => {
+      const controlId = c.controlId ?? 'undefined';
       const hadValueRows = rows.filter(
         (row: RecordRow) =>
-          !isUndefined(row[c.controlId === undefined ? 'undefined' : c.controlId]) &&
-          !isNull(row[c.controlId === undefined ? 'undefined' : c.controlId]) &&
-          !row[c.controlId === undefined ? 'undefined' : c.controlId].startsWith('deleteRowIds') &&
-          !checkCellIsEmpty(row[c.controlId === undefined ? 'undefined' : c.controlId]),
+          !isUndefined(row[controlId]) &&
+          !isNull(row[controlId]) &&
+          typeof row[controlId] === 'string' &&
+          !row[controlId].startsWith('deleteRowIds') &&
+          !checkCellIsEmpty(row[controlId]),
       );
-      const uniqueValueRows = _.uniqBy(hadValueRows, row =>
-        getControlCompareValue(c, row[c.controlId === undefined ? 'undefined' : c.controlId]),
-      );
+      const uniqueValueRows = _.uniqBy(hadValueRows, row => getControlCompareValue(c, row[controlId]));
 
       if (hadValueRows.length !== uniqueValueRows.length) {
         const duplicateValueRows = hadValueRows.filter(vr => !_.find(uniqueValueRows, r => r.rowid === vr.rowid));
         duplicateValueRows.forEach(row => {
           const sameValueRows = hadValueRows.filter(
-            r =>
-              getControlCompareValue(c, r[c.controlId === undefined ? 'undefined' : c.controlId]) ===
-              getControlCompareValue(c, row[c.controlId === undefined ? 'undefined' : c.controlId]),
+            r => getControlCompareValue(c, r[controlId]) === getControlCompareValue(c, row[controlId]),
           );
 
           if (sameValueRows.length > 1) {
             sameValueRows.forEach(r => {
-              result[r.rowid + '-' + c.controlId] = FORM_ERROR_TYPE_TEXT.UNIQUE(c, true);
+              result[r.rowid + '-' + c.controlId] = FORM_ERROR_TYPE_TEXT.UNIQUE();
             });
           }
         });
@@ -177,7 +187,7 @@ function filterPendingCellErrors(
 
     if (!row) return false;
 
-    const controlId = key.slice(row.rowid.length + 1);
+    const controlId = key.slice((row.rowid || '').length + 1);
 
     if (!_.some(showControls, id => id === controlId)) return false;
 

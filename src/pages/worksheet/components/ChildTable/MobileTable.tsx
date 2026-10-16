@@ -7,10 +7,44 @@ import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import CellControl from 'worksheet/components/CellControls';
 import CustomFields from 'src/components/Form';
+import type { FormConditionRule } from 'src/components/Form/core/formUtils/types';
 import { updateRulesData } from 'src/components/Form/core/formUtils/updateRulesData';
+import type { MasterData } from 'src/components/Form/core/types';
+import type { EntranceRef } from 'src/components/Form/store/entranceTypes';
 import { getAdvanceSetting } from 'src/utils/control';
 import { isRelateRecordTableControl } from 'src/utils/control';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { ControlValue, FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { CellErrors, FieldStoreMasterData } from 'src/utils/subListStoreTypes';
+
+interface MobileTableProps {
+  onOpen: (index: number) => void;
+  controls: FormControl[];
+  rows: RecordRow[];
+  isEdit?: boolean | undefined;
+  allowcancel?: boolean | undefined;
+  disabled?: boolean | undefined;
+  sheetSwitchPermit?: HapApi.MD.Entity.Worksheet.SwitchPermitModel[] | undefined;
+  onDelete: (rowid: string) => void;
+  showNumber?: boolean | undefined;
+  masterData?: MasterData | FieldStoreMasterData | (() => MasterData | FieldStoreMasterData) | undefined;
+  h5showtype?: string | undefined;
+  h5abstractids?: string[] | undefined;
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+  rules?: FormConditionRule[] | undefined;
+  cellErrors: CellErrors;
+  projectId?: string | undefined;
+  controlPermission: { editable: boolean };
+  allowedit?: boolean | undefined;
+  isAddRowByLine?: boolean | undefined;
+  from?: number | undefined;
+  isDraft?: boolean | undefined;
+  useUserPermission?: boolean | undefined;
+  recordId?: string | undefined;
+  onSave: (row: RecordRow, updatedControlIds?: string[]) => void;
+  submitChildTableCheckData: () => void;
+  updateIsAddByLine: (value: boolean) => void;
+}
 
 const MobileTableContent = styled.div`
   .mobileTableHeader {
@@ -93,7 +127,7 @@ const FlattenContent = styled.div`
   }
 `;
 
-export default function MobileTable(props) {
+export default function MobileTable(props: MobileTableProps) {
   const {
     onOpen,
     controls,
@@ -122,13 +156,14 @@ export default function MobileTable(props) {
     onSave = () => {},
     submitChildTableCheckData = () => {},
     updateIsAddByLine = () => {},
-  }: { controls: FormControl[]; rows: RecordRow[]; [key: string]: any } = props;
+  } = props;
+  const masterDataValue = typeof masterData === 'function' ? masterData() : masterData;
 
   const defaultMaxLength = 10;
   const [maxShowLength, setMaxShowLength] = useState(defaultMaxLength);
   const [expandRowIndex, setExpandRowIndex] = useState<number | undefined>();
   const [random, setRandom] = useState(Date.now());
-  const customWidgetRefs = useRef([]);
+  const customWidgetRefs = useRef<Array<EntranceRef | null>>([]);
 
   const showRows = isEdit ? rows : rows.slice(0, maxShowLength);
   const showControls =
@@ -137,9 +172,9 @@ export default function MobileTable(props) {
       : controls.filter((v: FormControl) => _.includes(h5abstractids, v.controlId));
 
   const isShowAll = maxShowLength === rows.length;
-  let deleteConformAction = null;
+  let deleteConformAction: ReturnType<typeof ActionSheet.show> | null = null;
 
-  let timer: NodeJS.Timeout | null = null;
+  let timer: number | null = null;
 
   // 删除记录
   const deleteRecord = (rowid: string) => {
@@ -152,7 +187,7 @@ export default function MobileTable(props) {
           <div className="valignWrapper flexRow confirm mTop24">
             <Button
               className="flex mRight6 bold textSecondary flex ellipsis Font13"
-              onClick={() => deleteConformAction.close()}
+              onClick={() => deleteConformAction?.close()}
             >
               {_l('取消')}
             </Button>
@@ -160,7 +195,7 @@ export default function MobileTable(props) {
               className="flex mLeft6 bold flex ellipsis Font13"
               color="danger"
               onClick={() => {
-                deleteConformAction.close();
+                deleteConformAction?.close();
                 onDelete(rowid);
               }}
             >
@@ -191,10 +226,20 @@ export default function MobileTable(props) {
   };
 
   // 编辑平铺记录
-  const handleChangeFlattenRow = (data, _ids, item: RecordRow, customWidgetRef) => {
+  const handleChangeFlattenRow = (
+    data: FormControl[],
+    _ids: string[],
+    item: RecordRow,
+    customWidgetRef: EntranceRef | null | undefined,
+  ) => {
     if (!customWidgetRef) return;
-    const updateControlIds = customWidgetRef.dataFormat.getUpdateControlIds();
-    const row = [{}, ...data].reduce((a = {}, b = {}) => Object.assign(a, { [b.controlId]: b.value }));
+    const dataFormat = customWidgetRef.dataFormat;
+    if (!dataFormat) return;
+    const updateControlIds = dataFormat.getUpdateControlIds();
+    const row = data.reduce<Record<string, unknown>>((result, field) => {
+      if (field.controlId) result[field.controlId] = field.value;
+      return result;
+    }, {});
 
     onSave({ ...item, ...row, empty: false }, updateControlIds);
   };
@@ -206,7 +251,7 @@ export default function MobileTable(props) {
   useEffect(() => {
     if (h5showtype !== '2' || !isAddRowByLine) return;
     // 【已知 bug，先不动行为】useState 的 setter 只收一个参数，isAddRowByLine 从来没传进去过
-    (setExpandRowIndex as any)(rows.length - 1, isAddRowByLine);
+    setExpandRowIndex(rows.length - 1);
   }, [rows]);
 
   // 记录为空
@@ -218,7 +263,7 @@ export default function MobileTable(props) {
     return (
       <FlattenContent>
         {showRows.map((item, index) => {
-          const { rowid } = item;
+          const rowid = item.rowid ?? '';
           const isExpand = expandRowIndex === index;
           const ignoreLock = /^(temp|default|empty)/.test(rowid);
 
@@ -272,7 +317,7 @@ export default function MobileTable(props) {
                 recordId={rowid}
                 data={(expandRowIndex === index ? controls : showControls).map(c => ({
                   ...c,
-                  value: item[c.controlId],
+                  value: c.controlId ? item[c.controlId] : undefined,
                   ignoreDisabled: c.type === 36 && controlPermission.editable,
                   fieldPermission: isRelateRecordTableControl(c) ? '000' : c.fieldPermission,
                   controlPermissions: isRelateRecordTableControl(c) ? '000' : c.controlPermissions,
@@ -286,14 +331,14 @@ export default function MobileTable(props) {
                 sheetSwitchPermit={sheetSwitchPermit}
                 rules={rules}
                 projectId={projectId}
-                masterData={masterData}
-                onChange={(data, ids) => {
+                masterData={masterDataValue}
+                onChange={(data: FormControl[], ids: string[]) => {
                   handleChangeFlattenRow(data, ids, item, customWidgetRefs.current[index]);
 
                   if (isEdit) return;
 
-                  clearTimeout(timer);
-                  timer = setTimeout(() => {
+                  if (timer !== null) window.clearTimeout(timer);
+                  timer = window.setTimeout(() => {
                     submitChildTableCheckData();
                   }, 500);
                 }}
@@ -323,20 +368,23 @@ export default function MobileTable(props) {
       </div>
       {showRows.map((row, i) => {
         const allowDelete =
-          /^temp/.test(row.rowid) || (allowcancel && (useUserPermission && !!recordId ? row.allowdelete : true));
+          /^temp/.test(row.rowid ?? '') ||
+          (allowcancel && (useUserPermission && !!recordId ? row['allowdelete'] === true : true));
 
         return (
           <div className="flexRow valignWrapper Font12" key={i}>
             <div className="mobileTableItem tableIndex">
               {isEdit && !disabled && allowDelete && showNumber ? (
-                <div className="action" onClick={() => deleteRecord(row.rowid)}>
+                <div className="action" onClick={() => deleteRecord(row.rowid ?? '')}>
                   <i className="icon icon-trash Font16 Red mRight10" style={{ marginLeft: -20 }}></i>
-                  <span className={cx({ Red: _.some(controls, v => cellErrors[row.rowid + '-' + v.controlId]) })}>
+                  <span
+                    className={cx({ Red: _.some(controls, v => cellErrors[(row.rowid ?? '') + '-' + v.controlId]) })}
+                  >
                     {i + 1}
                   </span>
                 </div>
               ) : isEdit && !disabled && allowDelete ? (
-                <i className="icon icon-trash Font16 Red" onClick={() => deleteRecord(row.rowid)}></i>
+                <i className="icon icon-trash Font16 Red" onClick={() => deleteRecord(row.rowid ?? '')}></i>
               ) : showNumber ? (
                 i + 1
               ) : (
@@ -347,11 +395,12 @@ export default function MobileTable(props) {
               const tableFormData = updateRulesData({
                 rules,
                 recordId: row.rowid,
-                data: controls.map((v: FormControl) => ({ ...v, value: row[v.controlId] })),
+                data: controls.map((v: FormControl) => ({ ...v, value: v.controlId ? row[v.controlId] : undefined })),
               });
 
               const currentCell = _.find(tableFormData, v => v.controlId === c.controlId);
               c = { ...c, fieldPermission: currentCell?.fieldPermission || c.fieldPermission || '111' };
+              const controlId = c.controlId ?? '';
 
               const visible =
                 (c.fieldPermission || '111')[0] === '1' &&
@@ -384,28 +433,30 @@ export default function MobileTable(props) {
                     sheetSwitchPermit={sheetSwitchPermit}
                     cell={{
                       ...c,
-                      value: row[c.controlId],
+                      value: row[controlId],
                       advancedSetting: c.type === 36 ? { ...getAdvanceSetting(c), showtype: '0' } : c.advancedSetting,
                     }}
                     row={row}
                     rowHeight={30}
                     from={4}
                     mode="mobileSub"
-                    masterData={masterData}
+                    masterData={masterDataValue}
                     rowFormData={() =>
-                      controls.map((c: FormControl) => Object.assign({}, c, { value: row[c.controlId] }))
+                      controls.map((c: FormControl) =>
+                        Object.assign({}, c, { value: c.controlId ? row[c.controlId] : undefined }),
+                      )
                     }
                     projectId={projectId}
                     worksheetId={worksheetId}
                     canedit={c.type === 36 && controlPermission.editable}
-                    updateCell={({ value }) => {
+                    updateCell={({ value }: { value: ControlValue }) => {
                       if (c.type !== 36) return;
 
-                      onSave({ ...row, [c.controlId]: value }, [c.controlId]);
+                      onSave({ ...row, [controlId]: value }, [controlId]);
 
                       if (isEdit) return;
-                      clearTimeout(timer);
-                      timer = setTimeout(() => {
+                      if (timer !== null) window.clearTimeout(timer);
+                      timer = window.setTimeout(() => {
                         submitChildTableCheckData();
                       }, 500);
                     }}
