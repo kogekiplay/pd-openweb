@@ -401,3 +401,5 @@ OnlySync、RecordInfo/DragCore、BaseColumnHead 及列头发布器的有限合�
 2026-10-16 拖拽候选051bfd24e未上线：发布空间前置检查停止。其重复索引调整在复核中发现顺序回归，后续恢复a4c95d520生产实现，并以781组全部参与的历史对照验证。原779组声明对resetDisplay跳过对比，已更正。见production-20261016-drag.md。
 
 2026-10-16 矢量标签PDF核心：strict51,854→51,798，文件/错误码无新增；欠债3,114，strict-clean1,647/4,761，fast8,571/2,307keys；88组真实PDF对象/指令对照、781组拖拽对照及241规格通过。见vector-label-strict-20261016.md。
+
+2026-10-16 10:09:48（上海）已发布63d1f52a0：六入口/34资源/17,098文件、容器挂载及已登录单记录二维码PDF生成验收通过。见production-20261016-vector-label.md。补记15日a4c95d520发布证据见production-20261015-print-label.md。
