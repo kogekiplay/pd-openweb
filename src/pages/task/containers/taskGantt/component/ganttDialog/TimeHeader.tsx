@@ -6,14 +6,25 @@ import config from './config';
 
 const { TYPE_TO_WIDTH } = config;
 
+type GanttType = keyof typeof TYPE_TO_WIDTH;
+interface TimeEntry {
+  pub: string;
+  sub: string[];
+}
+interface TimeHeaderProps {
+  time: TimeEntry[];
+  type: GanttType;
+  getPosList: (timeBox: NodeListOf<Element>) => void;
+}
+
 /**
  * 获取总共的天数
  * @param {*} data
  */
-const getDays = data =>
+const getDays = (data: TimeEntry): number =>
   data.sub.reduce((prev, curr) => prev + moment(`${data.pub}${curr}`, 'YYYYM月').daysInMonth(), 0);
 
-export default class TimeHeader extends Component<any, any> {
+export default class TimeHeader extends Component<TimeHeaderProps> {
   override componentDidMount() {
     const timeBox = document.querySelectorAll('.pubTime');
     this.props.getPosList(timeBox);
@@ -23,14 +34,15 @@ export default class TimeHeader extends Component<any, any> {
     this.props.getPosList(timeBox);
   }
 
-  override shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps: TimeHeaderProps) {
     return !_.isEqual(this.props.time, nextProps.time);
   }
 
   override render() {
     const { time, type } = this.props;
     const width = TYPE_TO_WIDTH[type];
-    let pubWidth: number | undefined, subWidth;
+    let pubWidth: number | undefined;
+    let subWidth: number | undefined;
     return (
       <div className="timeHeader flexRow">
         {time.map((item, index: number) => {
