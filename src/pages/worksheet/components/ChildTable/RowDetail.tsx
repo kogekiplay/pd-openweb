@@ -37,7 +37,8 @@ export interface RowDetailProps {
   data: RecordRow;
   getMasterFormData?: (() => FormControl[]) | undefined;
   handleUniqueValidate?:
-    ((controlId: string, value: ControlValue, rowId: string, backendCheck?: boolean) => void) | undefined;
+    | ((controlId: string, value: ControlValue, rowId: string, backendCheck?: boolean) => boolean | undefined)
+    | undefined;
   onSave?: ((row: RecordRow, updatedControlIds?: string[]) => void) | undefined;
   onClose?: (() => void) | undefined;
   openNextRecord?: (() => void) | undefined;
