@@ -30,6 +30,12 @@ def file_digest(path):
         return digest(stream)
 
 
+def archive_identity(path):
+    stat = path.stat()
+    # Reading an old package may update atime. It does not change its content.
+    return stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns
+
+
 def durable(path, text):
     with path.open('x') as stream:
         stream.write(text)
@@ -103,7 +109,7 @@ def verify_candidate(root):
     archive = root / 'frontend.tar.gz'
     if archive.is_symlink() or not archive.is_file():
         raise ValueError('Missing or linked recovery archive')
-    archive_stat = archive.stat()
+    archive_stat = archive_identity(archive)
     archive_sha = file_digest(archive)
     seen = set()
     metadata = {'artifact.json', 'candidate-sha256.txt', 'deploy.py'}
@@ -133,7 +139,7 @@ def verify_candidate(root):
             raise ValueError('Extracted candidate mismatch: ' + name)
     if artifact['revision'].encode() not in (root / 'files/index.html').read_bytes():
         raise ValueError('Extracted index lacks its source revision')
-    if inventory(root) != before or archive.stat() != archive_stat:
+    if inventory(root) != before or archive_identity(archive) != archive_stat:
         raise RuntimeError('Candidate changed during verification')
     return artifact, archive_sha, before
 

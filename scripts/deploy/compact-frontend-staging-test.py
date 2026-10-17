@@ -2,6 +2,7 @@ import contextlib
 import importlib.util
 import io
 import json
+import os
 import pathlib
 import subprocess
 import tarfile
@@ -96,6 +97,17 @@ class CompactionTests(unittest.TestCase):
                 self.assertTrue((stage / 'files/index.html').is_file())
                 self.assertTrue((stage / 'dist/chunk.js').is_file())
                 self.assertFalse((stage / 'restore-staging.sh').exists())
+
+    def test_reading_an_old_package_does_not_count_as_a_content_change(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary).resolve()
+            stage, current = self.fixture(root)
+            package = stage / 'frontend.tar.gz'
+            stat = package.stat()
+            os.utime(package, ns=(1, stat.st_mtime_ns))
+            self.run_compact(root, stage, current)
+            self.assertEqual(json.loads((stage / 'staging-compaction.json').read_text())['phase'], 'compacted')
+            self.assertTrue(package.is_file())
 
     def test_current_release_is_protected(self):
         with tempfile.TemporaryDirectory() as temporary:
