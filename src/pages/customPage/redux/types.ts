@@ -76,8 +76,13 @@ export interface AppWidget {
   button?: AppWidgetButtonGroup | undefined;
   /** `ADD_WIDGET` 的入参里可能带 `filter`（仅 type==='filter' 时使用） */
   filter?: AppWidgetFilterPayload | undefined;
-  /** 其它随 type 变化、形状未逐个建模的扩展元数据 */
-  [key: string]: unknown;
+  /**
+   * 【不再使用索引签名】原先这里写 `[key: string]: unknown` 承载"随 type 变化的
+   * 扩展元数据"，但它会让 `immutability-helper` 的 `Spec<AppWidget>` 推断失效
+   * （索引签名把每层都推成 unknown，`{ web: { layout: … } }` 无法匹配）。
+   * 已知业务字段上面已逐个声明；未被声明字段的读取需要显式加到这里，
+   * 这比索引签名更严格，也符合 lead「不能把所有业务字段丢进索引签名」的要求。
+   */
 }
 
 /** `ADD_WIDGET` 里 filter widget 的入参形状（reducers.ts:243-257 读取） */

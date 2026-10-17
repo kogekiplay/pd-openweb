@@ -722,7 +722,10 @@ function main(): void {
     );
   });
 
-  check('UPDATE_LAYOUT：layouts 与 components 长度不齐时，缺布局的组件原样保留', () => {
+  check('UPDATE_LAYOUT：layouts 少于 components 时按原实现抛 TypeError（不静默跳过）', () => {
+    // 【原行为】`adjustScreen` 为真且缺 `layouts[index]` 时，原实现读 `data.h` 会抛
+    // `TypeError: Cannot read properties of undefined (reading 'h')`。
+    // lead 明确要求保留该失败路径，不能静默 `return item` —— 我最早写的"原样保留"是错的。
     const load = makeLoader('current');
     const R = load('reducers.ts').default;
     const A = load('action.ts');
@@ -730,19 +733,21 @@ function main(): void {
     const w2 = widget({ id: 'w2', uuid: 'u2' });
     let s = R(undefined, { type: '@@INIT' });
     s = R(s, A.updateComponents([w1, w2]));
-    // 只给 1 个 layout，第二个组件没有对应布局 → 走 `if (!data) return item`
-    const before2 = s.components[1];
-    const next = R(
-      s,
-      A.updateLayout({
-        layoutType: 'web',
-        layouts: [{ x: 0, y: 0, w: 24, h: 12, minW: 2, minH: 4 }],
-        components: [w1, w2],
-        adjustScreen: true,
-      }),
+
+    assert.throws(
+      () =>
+        R(
+          s,
+          A.updateLayout({
+            layoutType: 'web',
+            layouts: [{ x: 0, y: 0, w: 24, h: 12, minW: 2, minH: 4 }],
+            components: [w1, w2],
+            adjustScreen: true,
+          }),
+        ),
+      /Cannot read properties of undefined/,
+      '缺 layouts[index] 且 adjustScreen 时应抛 TypeError（原实现行为）',
     );
-    assert.equal(next.components[1], before2, '没有对应布局的组件应在返回中保持原引用');
-    assert.deepEqual(next.components[1].web, w2.web);
   });
 
   check('UPDATE_LAYOUT：data.h 缺省时不参与 40 clamp（不会算出 NaN）', () => {

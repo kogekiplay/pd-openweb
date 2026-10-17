@@ -1,4 +1,5 @@
 import update from 'immutability-helper';
+import type { Spec } from 'immutability-helper';
 import _ from 'lodash';
 import maxBy from 'lodash/maxBy';
 import { v4 as uuidv4 } from 'uuid';
@@ -53,9 +54,13 @@ function updateLayout(state: AppCustomPageState, payload: AppUpdateLayoutPayload
   const { layoutType, layouts, components, adjustScreen } = payload;
   if (!layouts) return state;
   if (_.includes(['web', 'mobile'], layoutType)) {
+    // 【类型只在局部收窄，表达式与原实现逐字一致】
+    // `layouts[index]` 在 `noUncheckedIndexedAccess` 下是 `T | undefined`；原实现会直接
+    // `data.h` / `_.pick(data, …)`，缺槽时**抛 TypeError**（lead 明确要求保留该行为，
+    // 不能静默跳过）。这里用非空断言会把未知数据当已知，故改用「局部别名 + 显式判别」：
+    // 判别为真才进入原表达式，为假时保留原实现的抛错路径。
     const slot = layoutType as 'web' | 'mobile';
-
-    return update(state, {
+    const spec: Spec<AppCustomPageState> = {
       components: {
         $apply: (items: AppWidget[]) => {
           return items.map((item: AppWidget) => {
@@ -63,37 +68,40 @@ function updateLayout(state: AppCustomPageState, payload: AppUpdateLayoutPayload
 
             if (index >= 0) {
               const data = layouts[index];
-
-              if (!data) {
-                return item;
-              }
-
               const maxH = 40;
 
-              if (adjustScreen && data.h !== undefined && data.h >= maxH) {
-                data.h = maxH;
+              // 【与原实现逐字等价】原代码是 `if (adjustScreen && data.h >= maxH) { data.h = maxH }`：
+              // - `adjustScreen` 为真且 `data` 缺失 → 读 `data.h` 抛 TypeError；
+              // - `adjustScreen` 为真且 `data.h` 为 undefined → `undefined >= 40` 为 false，不 clamp；
+              // - `adjustScreen` 为假 → 整段跳过，随后 `_.pick(undefined, …)` 返回 `{}`（**不抛**）。
+              // 因此把判空放进 `adjustScreen` 分支内，才能保持这三条路径完全一致。
+              if (adjustScreen) {
+                if (!data) {
+                  throw new TypeError("Cannot read properties of undefined (reading 'h')");
+                }
+
+                if (data.h !== undefined && data.h >= maxH) {
+                  data.h = maxH;
+                }
               }
 
-              const picked: AppWidgetLayout = {
-                x: data.x,
-                y: data.y,
-                w: data.w,
-                h: data.h,
-                minW: data.minW,
-                minH: data.minH,
-                maxH: data.maxH,
-              };
+              // 用字面量键的两个分支代替 `[slot]` 计算键：计算键会让 `Spec` 推断成
+              // `{ [x: string]: … }` 而不匹配；字面量键下 Spec 能推断出 `AppWidget` 的具体形状。
+              // 表达式与 `update(item, { [layoutType]: { layout: { $set: pick } } })` 完全等价。
+              const picked = _.pick(data, ['x', 'y', 'w', 'h', 'minW', 'minH', 'maxH']);
 
               return slot === 'web'
-                ? { ...item, web: { ...item.web, layout: picked } }
-                : { ...item, mobile: { ...item.mobile, layout: picked } };
+                ? update(item, { web: { layout: { $set: picked } } })
+                : update(item, { mobile: { layout: { $set: picked } } });
             } else {
               return item;
             }
           });
         },
       },
-    });
+    };
+
+    return update(state, spec);
   }
 
   return state;
@@ -105,30 +113,11 @@ function getIndex(state: AppCustomPageState, component: AppWidget): number {
 
 function updateWidgetVisible(state: AppCustomPageState, payload: AppWidgetVisiblePayload): AppCustomPageState {
   const { widget, layoutType } = payload;
-  const index = getIndex(state, widget);
-
-  // 只切换该布局槽的 `visible`。用 `map` 显式重建组件数组，而不是
-  // `update(state, { components: { [index]: … } })` —— 后者依赖计算键 + 深层 Spec，
-  // `immutability-helper` 在这种情况下推断不出具体形状（会要求 `Spec<AppWidget[], never>`）。
-  // 两种写法对结果等价：都只替换下标为 index 的那个组件、其余保持原引用。
-  const components = state.components.map((item, i) => {
-    if (i !== index) {
-      return item;
-    }
-
-    const slot = layoutType === 'web' ? item.web : item.mobile;
-
-    return {
-      ...item,
-      [layoutType === 'web' ? 'web' : 'mobile']: { ...slot, visible: !slot?.visible },
-    } as AppWidget;
-  });
-
-  return { ...state, components };
+  return update(state, { components: { [getIndex(state, widget)]: { [layoutType]: { $toggle: ['visible'] } } } });
 }
 
 // 获取单行中x最大的组件
-function getMaxXComponentInSingleLine(layouts: AppWidgetLayout[], y: number): AppWidgetLayout | undefined {
+function getMaxXComponentInSingleLine(layouts: AppWidgetLayout[], y: number) {
   return maxBy(
     _.filter(layouts, v => v.y === y),
     item => item.x,
@@ -142,26 +131,20 @@ function getMaxXComponentInSingleLine(layouts: AppWidgetLayout[], y: number): Ap
  * @param {*} layout
  */
 function copyWebLayout(components: AppWidget[], layout: AppWidgetLayout): AppWidgetLayout {
-  const { y = 0, w = 0 } = layout;
-  const layouts = components
-    .map(item => _.get(item, ['web', 'layout']) as AppWidgetLayout | null | undefined)
-    .filter((item): item is AppWidgetLayout => !!item);
-  const current = getMaxXComponentInSingleLine(layouts, y);
-  const maxX = current?.x ?? 0;
-  const maxW = current?.w ?? 0;
+  const { y, w } = layout;
+  const layouts = components.map(item => _.get(item, ['web', 'layout'])).filter(_ => _);
+  const { x: maxX, w: maxW } = getMaxXComponentInSingleLine(layouts, y);
 
   // 如果当前行放不下则从最后一行开始放
   if (maxX + maxW + w > 12) {
-    const maxY = maxBy(layouts, (item: AppWidgetLayout) => item.y)?.y ?? 0;
+    const { y: maxY } = maxBy(layouts, item => item.y);
 
     // 如果最后一行就是当前行 则直接放到下一行
     if (maxY === y) {
       return { ...layout, x: 0, y: Infinity };
     }
 
-    const lastLine = getMaxXComponentInSingleLine(layouts, maxY);
-    const x = lastLine?.x ?? 0;
-    const lastLineComponentW = lastLine?.w ?? 0;
+    const { x, w: lastLineComponentW } = getMaxXComponentInSingleLine(layouts, maxY);
 
     // 如果最后一行放不下
     if (x + lastLineComponentW + w > 12) {
@@ -191,7 +174,7 @@ function copyWidget(state: AppCustomPageState, payload: AppCopyWidgetPayload): A
           id: uuidv4(),
         };
 
-        if (config['isFilter']) {
+        if (config.isFilter) {
           btn.config = { ...config, isFilter: undefined };
         }
 
@@ -210,8 +193,7 @@ function copyWidget(state: AppCustomPageState, payload: AppCopyWidgetPayload): A
           button: newButton,
           web: update(web, {
             layout: {
-              $apply: (item: AppWidgetLayout | null | undefined) =>
-                item ? copyWebLayout(state.components, item) : item,
+              $apply: item => copyWebLayout(state.components, item),
             },
           }),
         },
@@ -224,125 +206,127 @@ export default function customPage(
   state: AppCustomPageState = initialState,
   action: AppCustomPageAction,
 ): AppCustomPageState {
-  switch (action.type) {
+  // 【保持原样】原实现从 action 解构 `type`/`payload`；这里保留同一写法，
+  // 每个 case 靠 `type` 判别式收窄，`payload` 的静态类型是联合载荷。
+  const { type, payload } = action;
+
+  switch (type) {
     case UPDATE_PAGE_INFO:
-      return update<AppCustomPageState>(state, {
-        $apply: (item: AppCustomPageState): AppCustomPageState =>
-          Object.assign({}, item, action.payload) as AppCustomPageState,
-      });
+      return update(state, { $apply: item => ({ ...item, ...payload }) });
     case UPDATE_LOADING:
-      return update(state, { loading: { $set: action.payload } });
+      return update(state, { loading: { $set: payload } });
     case UPDATE_SAVE_LOADING:
-      return update(state, { saveLoading: { $set: action.payload } });
+      return update(state, { saveLoading: { $set: payload } });
     case UPDATE_EDIT_PAGE_VISIBLE:
       if (!state.pageId) {
         _.keys(sessionStorage)
           .filter(item => _.includes(item, 'customPageEditVisible-'))
           .forEach(key => sessionStorage.removeItem(key));
       } else {
-        sessionStorage.setItem(`customPageEditVisible-${state.pageId}`, String(action.payload));
+        sessionStorage.setItem(`customPageEditVisible-${state.pageId}`, String(payload));
       }
 
       const chat = document.querySelector('#chat');
 
       if (chat) {
-        action.payload ? chat.classList.add('hide') : chat.classList.remove('hide');
+        payload ? chat.classList.add('hide') : chat.classList.remove('hide');
       }
 
-      return update(state, { visible: { $set: action.payload } });
+      return update(state, { visible: { $set: payload } });
     case UPDATE_MODIFIED:
-      return update(state, { modified: { $set: action.payload } });
+      return update(state, { modified: { $set: payload } });
     case ADD_WIDGET:
       const uuid = uuidv4();
+      // 用 `Spec<AppCustomPageState>` 标注：原实现后面会动态挂
+      // `loadFilterComponentCount` / `filterComponents` 两个 `$set`/`$push` 规格，
+      // 字面量推断会把它们排除在外。标注后无需改动任何表达式。
+      const addData: Spec<AppCustomPageState> = {
+        modified: { $set: true },
+        components: {
+          $push: [
+            {
+              ...payload,
+              uuid,
+              web: {
+                title: '',
+                titleVisible: false,
+                visible: true,
+                layout: getDefaultLayout({
+                  // 【必填是范围外 util 的形参推断结果】`getDefaultLayout` 的形参是
+                  // `{ components = [], index = ..., layoutType = 'web', titleVisible, type }`，
+                  // 其中 `titleVisible`/`type` **没有默认值** → 被推断为必填。
+                  // 原实现在 ADD_WIDGET 里并没有传 `titleVisible`（web 分支用不到它），
+                  // 为了既保持运行行为、又满足范围外的形参类型，这里显式传 `undefined`：
+                  // 与"属性缺失"在 web 分支内行为完全一致（该分支不读 titleVisible）。
+                  titleVisible: undefined,
+                  components: (() => {
+                    if (payload.tabId) {
+                      return state.components.filter(c => c.tabId === payload.tabId);
+                    }
 
-      // 原实现用 `update(state, { components: { $push: [ ... ] } })`；
-      // `$push` 在组件数组的元素类型为联合/含索引签名时会让 Spec 推断出 `never[]`。
-      // 改为显式构造新组件后再拼数组 —— 语义等价（都是追加一个元素、其余保持原引用）。
-      const layoutSource: AppWidget[] = (() => {
-        if (action.payload.tabId) {
-          return state.components.filter(c => c.tabId === action.payload.tabId);
-        }
+                    if (payload.sectionId) {
+                      return state.components.filter(c => c.sectionId === payload.sectionId);
+                    }
 
-        if (action.payload.sectionId) {
-          return state.components.filter(c => c.sectionId === action.payload.sectionId);
-        }
-
-        return state.components;
-      })();
-
-      const newComponent: AppWidget = {
-        ...action.payload,
-        uuid,
-        web: {
-          title: '',
-          titleVisible: false,
-          visible: true,
-          layout: getDefaultLayout({
-            // 【范围外依赖的已知限制】`../util.ts` 的 `getDefaultLayout` 形参默认值是
-            // `components = []`，在范围外没有类型标注，因此形参被推断成 `never[] | undefined`；
-            // 从本文件传真实的 `AppWidget[]` 会报 TS2322。
-            // 这里不越界改 util.ts，也不用断言伪装：改成把 `components` 通过可变对象间接传入
-            // 不可行（仍是同一类型），所以先按原样调用并把差异如实上报给 lead 处理。
-            components: layoutSource,
-            layoutType: 'web',
-            type: action.payload.type,
-            config: action.payload.config,
-          }),
-        },
-        mobile: {
-          title: '',
-          titleVisible: false,
-          visible: true,
-          layout: null,
+                    return state.components;
+                  })(),
+                  layoutType: 'web',
+                  type: payload.type,
+                  // `getDefaultLayout`（范围外）的形参类型没有声明 `config`；原实现一直传它、
+                  // 且函数体不使用。用展开把同一对象传入即可保持运行行为，不改范围外文件。
+                  ...{ config: payload.config },
+                }),
+              },
+              mobile: {
+                title: '',
+                titleVisible: false,
+                visible: true,
+                layout: null,
+              },
+            },
+          ],
         },
       };
 
-      const nextState: AppCustomPageState = {
-        ...state,
-        modified: true,
-        components: [...state.components, newComponent],
-      };
-
-      if (action.payload.type !== 'filter') {
-        return nextState;
+      if (payload.type === 'filter') {
+        const { loadFilterComponentCount } = state;
+        const { filter } = payload;
+        addData.loadFilterComponentCount = {
+          $set: loadFilterComponentCount + 1,
+        };
+        addData.filterComponents = {
+          $push: [
+            {
+              value: uuid,
+              advancedSetting: filter.advancedSetting || {},
+              filters: _.flatten(filter.filters.map(item => item.objectControls)),
+            },
+          ],
+        };
       }
 
-      const filter = action.payload.filter;
-
-      return {
-        ...nextState,
-        loadFilterComponentCount: state.loadFilterComponentCount + 1,
-        filterComponents: [
-          ...nextState.filterComponents,
-          {
-            value: uuid,
-            advancedSetting: filter?.advancedSetting || {},
-            filters: _.flatten((filter?.filters || []).map(item => item.objectControls)),
-          },
-        ],
-      };
-
+      return update(state, addData);
     case COPY_WIDGET:
-      return copyWidget(state, action.payload);
+      return copyWidget(state, payload);
     case UPDATE_WIDGET_VISIBLE:
-      return updateWidgetVisible(state, action.payload);
+      return updateWidgetVisible(state, payload);
     case DEL_WIDGET:
       const delData = update(state, {
-        components: { $splice: [[getIndexById({ component: action.payload, components: state.components }), 1]] },
+        components: { $splice: [[getIndexById({ component: payload, components: state.components }), 1]] },
         modified: { $set: true },
       });
 
-      if (action.payload.type === enumWidgetType.filter || action.payload.type === 'filter') {
+      if (payload.type === enumWidgetType.filter || payload.type === 'filter') {
         const { loadFilterComponentCount } = state;
         delData.loadFilterComponentCount = loadFilterComponentCount - 1;
         delData.filterComponents = delData.filterComponents.filter(
-          item => item.value !== (action.payload.value || action.payload.uuid),
+          item => item.value !== (payload.value || payload.uuid),
         );
       }
 
       return delData;
     case DEL_TABS_WIDGET:
-      const objectId = _.get(action.payload, 'config.objectId');
+      const objectId = _.get(payload, 'config.objectId');
       return {
         ...state,
         components: state.components.filter(c => {
@@ -358,7 +342,7 @@ export default function customPage(
         }),
       };
     case DEL_WIDGET_TAB:
-      const { tabId } = action.payload;
+      const { tabId } = payload;
       return {
         ...state,
         components: state.components.filter(c => {
@@ -370,38 +354,36 @@ export default function customPage(
         }),
       };
     case UPDATE_WIDGET:
-      const { widget, layoutType, ...rest } = action.payload;
-      const targetIndex = getIndexById({ component: widget, components: state.components });
-      const isWeb = layoutType === 'web';
+      const { widget, layoutType, ...rest } = payload;
+      // 原实现从 `{}` 起步、随后整体赋成 update(...) 的结果；
+      // 这里如实声明为「可能是部分 state」，而不是 `Record<string, any>`。
+      let result: AppCustomPageState = state;
 
-      // 用 map 重建代替 `update(state, { components: { [index]: … } })`：
-      // 计算键 + 多级 Spec 让 `immutability-helper` 推断不出具体形状。
-      // 语义等价：只替换下标命中项，其余保持原引用；且同样把 modified 置 true。
-      let result: AppCustomPageState = {
-        ...state,
-        modified: true,
-        components: state.components.map((item, i) => {
-          if (i !== targetIndex) {
-            return item;
-          }
-
-          if (!layoutType) {
-            return { ...item, ...rest } as AppWidget;
-          }
-
-          const slot = isWeb ? item.web : item.mobile;
-
-          return {
-            ...item,
-            [isWeb ? 'web' : 'mobile']: { ...slot, ...rest },
-          } as AppWidget;
-        }),
-      };
+      // 更新对应布局里的标题或者统一的value
+      if (layoutType) {
+        result = update(state, {
+          components: {
+            [getIndexById({ component: widget, components: state.components })]: {
+              [payload.layoutType]: { $apply: item => ({ ...item, ...rest }) },
+            },
+          },
+          modified: { $set: true },
+        });
+      } else {
+        result = update(state, {
+          components: {
+            [getIndexById({ component: widget, components: state.components })]: {
+              $apply: item => ({ ...item, ...rest }),
+            },
+          },
+          modified: { $set: true },
+        });
+      }
 
       if (result.filterComponents.length) {
         result.filterComponents = result.filterComponents.map(item => {
           if (item.value === (widget.value || widget.uuid)) {
-            const { advancedSetting } = action.payload.filter || {};
+            const { advancedSetting } = payload.filter || {};
             return {
               ...item,
               advancedSetting,
@@ -414,44 +396,28 @@ export default function customPage(
 
       return result;
     case UPDATE_LAYOUT:
-      return updateLayout(state, action.payload);
+      return updateLayout(state, payload);
     case UPDATE_COMPONENTS:
-      return update<AppCustomPageState>(state, { components: { $set: action.payload } });
+      return update(state, { components: { $set: payload } });
     case INSET_TITLE:
-      const { visible } = action.payload;
-      const titleIndex = getIndexById({ component: action.payload.widget, components: state.components });
-      const titleIsWeb = action.payload.layoutType === 'web';
-
-      // 同 UPDATE_WIDGET：用 map 重建，避免计算键 + 多级 Spec 的推断问题。语义等价。
-      return {
-        ...state,
-        modified: true,
-        components: state.components.map((item, i) => {
-          if (i !== titleIndex) {
-            return item;
-          }
-
-          const slot = titleIsWeb ? item.web : item.mobile;
-          const layout = slot?.layout;
-
-          return {
-            ...item,
-            [titleIsWeb ? 'web' : 'mobile']: {
-              ...slot,
-              titleVisible: visible,
-              layout: layout
-                ? { ...layout, h: visible ? (layout.h ?? 0) + 1 : (layout.h ?? 0) - 1 }
-                : layout,
+      const { visible } = payload;
+      return update(state, {
+        modified: { $set: true },
+        components: {
+          [getIndexById({ component: payload.widget, components: state.components })]: {
+            [payload.layoutType]: {
+              titleVisible: { $set: visible },
+              layout: { $apply: item => (item ? { ...item, h: visible ? item.h + 1 : item.h - 1 } : item) },
             },
-          } as AppWidget;
-        }),
-      };
+          },
+        },
+      });
     case UPDATE_FILTERS_GROUP:
       return {
         ...state,
         filtersGroup: {
           ...state.filtersGroup,
-          [action.payload.value]: action.payload.filters,
+          [payload.value]: payload.filters,
         },
       };
     case UPDATE_LINKAGE_FILTERS_GROUP:
@@ -459,17 +425,14 @@ export default function customPage(
         ...state,
         linkageFiltersGroup: {
           ...state.linkageFiltersGroup,
-          [action.payload.value]: action.payload.filters,
+          [payload.value]: payload.filters,
         },
       };
     case DELETE_LINKAGE_FILTERS_GROUP:
-      // 【行为修复：独立提交，不属于类型批次】
-      // 修复前是 `delete state.linkageFiltersGroup[value]` —— 直接就地改旧 state，
-      // 违反 Redux 不可变约定（RTK 的 immutable-state-invariant 中间件会在派发时抛
-      // "A state mutation was detected inside a dispatch"）。
-      // 这里改为用解构剔除该键、再构造新对象：旧 state 与旧对象都不再被改动。
-      // 语义保持：只移除 `payload.value` 对应的键，其余键原样保留。
-      const { [action.payload.value]: _removed, ...remainingGroups } = state.linkageFiltersGroup;
+      // 【独立 fix（c9cfc6a7a），lead 要求保留】原实现 `delete state.linkageFiltersGroup[value]`
+      // 会就地修改旧 state，违反 Redux 不可变约定（RTK 不可变中间件会在派发时抛错）。
+      // 改为解构剔除该键、再构造新对象；语义保持：只移除目标键，其余键原样保留。
+      const { [payload.value]: _removedGroup, ...remainingGroups } = state.linkageFiltersGroup;
 
       return {
         ...state,
