@@ -661,6 +661,48 @@ function main(): void {
     assert.equal(s.components[0].web.layout.h, 40, 'adjustScreen 时高度必须被压到 40');
   });
 
+  /**
+   * 【历史契约记录 —— 按 lead 决定，类型批次不改这里】
+   * `updateLayout` 在 `adjustScreen && data.h >= 40` 时写的是 `data.h = maxH`，
+   * 而 `data` 是 `layouts[index]` 的**引用**，因此会**就地改写调用方传入的 payload**。
+   *
+   * lead 的决定：类型批次先与历史 A/B 保持一致、把这个副作用如实记录，
+   * 在没有"调用方依赖/不依赖被改写"的证据前，不顺手改成克隆（改克隆会改变行为）。
+   */
+  check('历史契约：updateLayout 会把传入 layouts 的 h 就地 clamp 到 40（副作用已记录）', () => {
+    const load = makeLoader('current');
+    const R = load('reducers.ts').default;
+    const A = load('action.ts');
+
+    const w = widget();
+    let s = R(undefined, { type: '@@INIT' });
+    s = R(s, A.updateComponents([w]));
+
+    // 构造调用方自己的 layouts 数组；派发后检查它是否被就地改写
+    const callerLayouts = [{ x: 0, y: 0, w: 24, h: 50, minW: 2, minH: 4 }];
+    const callerHBefore = callerLayouts[0].h;
+
+    const next = R(
+      s,
+      A.updateLayout({
+        layoutType: 'web',
+        layouts: callerLayouts as never,
+        components: [w],
+        adjustScreen: true,
+      }),
+    );
+
+    // 1) reducer 产出的新组件里 h 被压到 40
+    assert.equal(next.components[0].web.layout.h, 40);
+    // 2) 调用方传入的数组对象也被就地改写了（这正是被记录的副作用）
+    assert.equal(callerHBefore, 50, '夹具前提：调用方原始 h 应为 50');
+    assert.equal(
+      callerLayouts[0].h,
+      40,
+      '历史契约：调用方的 layouts 会被就地 clamp（副作用；本次类型批次不修）',
+    );
+  });
+
   check('COPY_WIDGET 的 Infinity 位置（当前行放不下且末行即当前行 → y=Infinity）', () => {
     const load = makeLoader('current');
     const R = load('reducers.ts').default;
