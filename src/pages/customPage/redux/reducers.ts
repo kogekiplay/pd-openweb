@@ -4,6 +4,12 @@ import _ from 'lodash';
 import maxBy from 'lodash/maxBy';
 import { v4 as uuidv4 } from 'uuid';
 import { enumWidgetType, getDefaultLayout, getIndexById } from '../util';
+import type {
+  AppCopyWidgetPayload,
+  AppCustomPageAction,
+  AppUpdateLayoutPayload,
+  AppWidgetVisiblePayload,
+} from './action';
 import {
   ADD_WIDGET,
   COPY_WIDGET,
@@ -24,13 +30,7 @@ import {
   UPDATE_WIDGET,
   UPDATE_WIDGET_VISIBLE,
 } from './actionType';
-import type { AppCustomPageState, AppWidget, AppWidgetLayout } from './types';
-import type {
-  AppCustomPageAction,
-  AppUpdateLayoutPayload,
-  AppWidgetVisiblePayload,
-  AppCopyWidgetPayload,
-} from './action';
+import type { AppCustomPageState, AppWidget, AppWidgetLayout, AppWidgetSlot } from './types';
 
 const initialState: AppCustomPageState = {
   loading: true,
@@ -225,8 +225,7 @@ function copyWidget(state: AppCustomPageState, payload: AppCopyWidgetPayload): A
           button: newButton,
           web: update(web, {
             layout: {
-              $apply: (item: AppWidgetLayout | null | undefined) =>
-                copyWebLayout(state.components, item ?? undefined),
+              $apply: (item: AppWidgetLayout | null | undefined) => copyWebLayout(state.components, item ?? undefined),
             },
           }),
         },
@@ -249,7 +248,7 @@ export default function customPage(
       // 否则 own `__proto__` 元数据会变成原型）。用 Spec 标注让 patch 的可选字段通过。
       return update(state, {
         $apply: (item: AppCustomPageState): AppCustomPageState => ({ ...item, ...payload }),
-      } as Spec<AppCustomPageState>);
+      });
     case UPDATE_LOADING:
       return update(state, { loading: { $set: payload } });
     case UPDATE_SAVE_LOADING:
@@ -410,17 +409,16 @@ export default function customPage(
       if (layoutType) {
         // 保留实际 layoutType 计算键（lead 要求：不能把所有非 web 键映射成 mobile）。
         const slotIndex = getIndexById({ component: widget, components: state.components });
-        const layoutKey = payload.layoutType as string;
+        const layoutKey = layoutType;
 
-        result = update(
-          state,
-          {
-            components: {
-              [slotIndex]: { [layoutKey]: { $apply: (item: AppWidget) => ({ ...item, ...rest }) } },
+        result = update(state, {
+          components: {
+            [slotIndex]: {
+              [layoutKey]: { $apply: (item: AppWidgetSlot | null | undefined) => ({ ...item, ...rest }) },
             },
-            modified: { $set: true },
-          } as Spec<AppCustomPageState>,
-        );
+          },
+          modified: { $set: true },
+        });
       } else {
         result = update(state, {
           components: {

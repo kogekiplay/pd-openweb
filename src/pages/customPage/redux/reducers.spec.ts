@@ -69,23 +69,31 @@ function makeUuidStub() {
 const helperCodeCache = new Map<string, string>();
 function loadUtil(variant: 'orig' | 'current') {
   const filename = path.resolve(DIR, '../util.ts');
-  const source = variant === 'orig'
-    ? execFileSync('git', ['show', `${BASE_REV}:src/pages/customPage/util.ts`], { cwd: ROOT, encoding: 'utf8' })
-    : fs.readFileSync(filename, 'utf8');
+  const source =
+    variant === 'orig'
+      ? execFileSync('git', ['show', `${BASE_REV}:src/pages/customPage/util.ts`], { cwd: ROOT, encoding: 'utf8' })
+      : fs.readFileSync(filename, 'utf8');
   let code = helperCodeCache.get(source);
   if (code === undefined) {
     const tree = parser.parse(source, { sourceType: 'module', plugins: ['typescript', 'jsx'] });
     const names = ['enumObj', 'enumWidgetType', 'getEnumType', 'getIndexById', 'getDefaultLayout'];
-    const declarations = names.map(name => {
-      const statement = tree.program.body.find(item => {
-        const value = item.type === 'ExportNamedDeclaration' ? item.declaration : item;
-        return (value?.type === 'VariableDeclaration' && value.declarations.some(entry => entry.id.name === name)) ||
-          (value?.type === 'FunctionDeclaration' && value.id?.name === name && value.body);
-      });
-      if (!statement || statement.start == null || statement.end == null) throw new Error('Missing real helper ' + name);
-      return source.slice(statement.start, statement.end).replace(/^export /, '');
-    }).join('\n');
-    code = transformSync(declarations + '\nmodule.exports = { enumWidgetType, getIndexById, getDefaultLayout };', { filename }).code;
+    const declarations = names
+      .map(name => {
+        const statement = tree.program.body.find(item => {
+          const value = item.type === 'ExportNamedDeclaration' ? item.declaration : item;
+          return (
+            (value?.type === 'VariableDeclaration' && value.declarations.some(entry => entry.id.name === name)) ||
+            (value?.type === 'FunctionDeclaration' && value.id?.name === name && value.body)
+          );
+        });
+        if (!statement || statement.start == null || statement.end == null)
+          throw new Error('Missing real helper ' + name);
+        return source.slice(statement.start, statement.end).replace(/^export /, '');
+      })
+      .join('\n');
+    code = transformSync(declarations + '\nmodule.exports = { enumWidgetType, getIndexById, getDefaultLayout };', {
+      filename,
+    }).code;
     helperCodeCache.set(source, code);
   }
   const target = { exports: {} as Record<string, unknown> };
@@ -96,7 +104,6 @@ function loadUtil(variant: 'orig' | 'current') {
 const realLodash = require('lodash');
 const realMaxBy = require('lodash/maxBy');
 const realUpdate = require('immutability-helper').default || require('immutability-helper');
-
 
 /** 文档 / sessionStorage 替身（UPDATE_EDIT_PAGE_VISIBLE 会碰它们） */
 const sessionStore: Record<string, string> = {};
@@ -450,10 +457,7 @@ const SCENARIOS: Scenario[] = [
     name: 'DEL_WIDGET：filter 组件（loadFilterComponentCount-1 且 filterComponents 被过滤）',
     run: (R, A) => {
       let s = R(undefined, { type: '@@INIT' });
-      s = R(
-        s,
-        A.updateComponents([widget({ type: 'filter', value: 'f1' }), widget({ id: 'w2', uuid: 'u2' })]),
-      );
+      s = R(s, A.updateComponents([widget({ type: 'filter', value: 'f1' }), widget({ id: 'w2', uuid: 'u2' })]));
       s = R(
         s,
         A.updatePageInfo({
@@ -620,11 +624,7 @@ function main(): void {
       const CurrentActions = loadCurrent('action.ts');
       const currentValue = scenario.run(CurrentReducer, CurrentActions);
 
-      assert.deepEqual(
-        currentValue,
-        origValue,
-        `A/B 不一致 → ${firstDiff(origValue, currentValue)}`,
-      );
+      assert.deepEqual(currentValue, origValue, `A/B 不一致 → ${firstDiff(origValue, currentValue)}`);
     });
   }
 
@@ -723,11 +723,7 @@ function main(): void {
     assert.equal(next.components[0].web.layout.h, 40);
     // 2) 调用方传入的数组对象也被就地改写了（这正是被记录的副作用）
     assert.equal(callerHBefore, 50, '夹具前提：调用方原始 h 应为 50');
-    assert.equal(
-      callerLayouts[0].h,
-      40,
-      '历史契约：调用方的 layouts 会被就地 clamp（副作用；本次类型批次不修）',
-    );
+    assert.equal(callerLayouts[0].h, 40, '历史契约：调用方的 layouts 会被就地 clamp（副作用；本次类型批次不修）');
   });
 
   check('UPDATE_LAYOUT：layouts 少于 components 时按原实现抛 TypeError（不静默跳过）', () => {
@@ -806,7 +802,7 @@ function main(): void {
     // 预置一个同前缀键
     (globalThis as any).sessionStorage.setItem('customPageEditVisible-p0', 'true');
     (globalThis as any).sessionStorage.setItem('unrelated-key', 'x');
-    const s0 = R(undefined, { type: '@@INIT' });   // pageId 初始为 ''
+    const s0 = R(undefined, { type: '@@INIT' }); // pageId 初始为 ''
     const next = R(s0, A.updateEditPageVisible(true));
     assert.equal(next.visible, true);
     // pageId 为空 → 应清理同前缀键，但不碰无关键
@@ -828,7 +824,10 @@ function main(): void {
       ]),
     );
     uuidSeq = 0;
-    s = R(s, A.copyWidget({ ...widget({ id: undefined, uuid: undefined }), web: { layout: { x: 0, y: 0, w: 48, h: 10 } } }));
+    s = R(
+      s,
+      A.copyWidget({ ...widget({ id: undefined, uuid: undefined }), web: { layout: { x: 0, y: 0, w: 48, h: 10 } } }),
+    );
     const copied = s.components[s.components.length - 1];
     assert.equal(copied.web.layout.y, Infinity, '复制到放不下的行时应使用 Infinity 排到末尾');
     assert.equal(copied.web.layout.x, 0);
@@ -928,14 +927,16 @@ function main(): void {
     return;
   }
   realConsole.log(
-    `customPage/redux 行为规格通过：${checks} 项（${SCENARIOS.length} 个历史 A/B 场景 + 6 条绝对断言）`,
+    `customPage/redux 行为规格通过：${checks} 项（${SCENARIOS.length} 个历史 A/B 场景 + ${checks - SCENARIOS.length} 条绝对断言）`,
   );
 }
 
 /* ── 防假绿：异步异常与非零退出 ── */
 
 process.on('unhandledRejection', reason => {
-  realConsole.error(`未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`);
+  realConsole.error(
+    `未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`,
+  );
   process.exitCode = 1;
 });
 process.on('uncaughtException', error => {

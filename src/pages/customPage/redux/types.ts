@@ -1,6 +1,8 @@
 import type { AppDetail } from 'src/pages/PageHeader/redux/types';
 import type { CustomPageConfig } from '../configTypes';
 
+export type AppLayoutType = 'web' | 'mobile';
+
 /**
  * 自定义页面（`customPage`）redux 切片的有限类型。
  *

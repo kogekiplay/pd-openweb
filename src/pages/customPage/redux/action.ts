@@ -18,7 +18,7 @@ import {
   UPDATE_WIDGET,
   UPDATE_WIDGET_VISIBLE,
 } from './actionType';
-import type { AppCustomPageState, AppWidget, AppWidgetLayout, AppWidgetSlot } from './types';
+import type { AppCustomPageState, AppLayoutType, AppWidget, AppWidgetLayout, AppWidgetSlot } from './types';
 
 /**
  * `UPDATE_PAGE_INFO` 的载荷：`reducers.ts:179` 做 `{ ...item, ...payload }`，
@@ -39,20 +39,20 @@ export interface AppUpdateLayoutPayload {
 /** `UPDATE_WIDGET_VISIBLE` 的载荷 */
 export interface AppWidgetVisiblePayload {
   widget: AppWidget;
-  layoutType: string;
+  layoutType: AppLayoutType;
 }
 
 /** `INSET_TITLE` 的载荷 */
 export interface AppInsertTitlePayload {
   widget: AppWidget;
-  layoutType: string;
+  layoutType: AppLayoutType;
   visible: boolean;
 }
 
 /** `UPDATE_WIDGET` 的载荷：`{ widget, layoutType, ...rest }`，其中 rest 合并进组件或该端槽位 */
 export interface AppUpdateWidgetPayload extends AppWidget, AppWidgetSlot {
   widget: AppWidget;
-  layoutType?: string | undefined;
+  layoutType?: AppLayoutType | '' | undefined;
   [key: string]: unknown;
 }
 
