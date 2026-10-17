@@ -21,8 +21,8 @@ FormSet 原路由 props 和回调为隐式 any，生成的 WorksheetModel 含显
 
 ## 构建与生产状态
 
-本批**尚未部署**。冻结构建 **ff0e13c7e4aea68fb4079c345b2f006c26ea11d0**，入口 SHA256 **fc32352b362031e68769abe0edd4e4a4ff24734fe9fe6071083f8c10b17f1b3b**，包 SHA256 **9cb940a1c7208a6633bb4cc189d0cf5472e4bb35179468540276660792474ffb**，17,098 文件与三项元数据逐条读取通过，包261,562,741bytes。材料 `/private/tmp/hap-formset-entry-ff0e13c7e-artifact-20261018/`，原始证据 `/private/tmp/hap-formset-entry-20261018/`。
+本批已于 **2026-10-18T02:49:17.814138+08:00** 随整合版本 **fbaa6cbfb059a5986cda13e64755266641d823d3** 发布生产。原冻结构建 **ff0e13c7e4aea68fb4079c345b2f006c26ea11d0** 未单独部署，其代码已合并上线，原包/证据保留。最终生产、完整回滚、六入口/34资源和登录只读验收见 [功能开关整合发布结果](functional-switch-strict-20261018.md)。
 
-当前生产仍 **6a6f6defe7d336e45515218b5a9b8fd56adc8561**，本轮六入口/34资源、五服务完整Mounts/nginx和现网/快速回滚入口摘要复核通过。当前完整快回滚仍 `/usr/local/MDPrivateDeployment/www-prev-20261018-6a6f6defe7`（原ae），五份已实际全恢复验证的持久归档、厂商/文档四外部卷、a4c95和历史恢复链保留。本轮无远端写作业。
+原候选入口SHA **fc32352b362031e68769abe0edd4e4a4ff24734fe9fe6071083f8c10b17f1b3b**，包SHA **9cb940a1c7208a6633bb4cc189d0cf5472e4bb35179468540276660792474ffb**，17,098文件/三元数据/261,562,741bytes，材料 `/private/tmp/hap-formset-entry-ff0e13c7e-artifact-20261018/`，证据 `/private/tmp/hap-formset-entry-20261018/`，不覆盖旧包或改写冻结metadata。
 
-本批先main同步与冻结，后续与 FunctionalSwitch 验证批次整合发布。实测/data余 **12,536,070,144bytes**，低于完整复制/两候选/包/4GiB+256MiB预算 **18,584,381,553bytes**；发布前按既有可恢复流程处理并重新实测，不降低保护。下一批 FunctionalSwitch 当前54条strict，其合成统计type500、批量/范围/弹窗/存储路径尚待建模；全仓强类型/正式strict目标继续active。
+本批冻结时空间12,536,070,144bytes低于完整预算18,584,381,553，故先main同步和冻结。随后旧不活动da标签回滚完整归档/实际恢复/全文件与元数据通过后释放重复树，再按足够预算整合发布，未降低4GiB保护。本版FunctionalSwitch/Range/自动编号类型边界也已完成，下一批打印/动作范围下拉，完整全仓目标继续active。
