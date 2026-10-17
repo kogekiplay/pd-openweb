@@ -1,4 +1,3 @@
-import type { AppWidget, AppWidgetButtonGroup, AppFilterComponent, AppCustomPageConfig, AppActiveContainerInfo, AppWidgetLayout } from './types';
 import {
   ADD_WIDGET,
   COPY_WIDGET,
@@ -19,39 +18,13 @@ import {
   UPDATE_WIDGET,
   UPDATE_WIDGET_VISIBLE,
 } from './actionType';
+import type { AppCustomPageState, AppWidget, AppWidgetLayout, AppWidgetSlot } from './types';
 
 /**
  * `UPDATE_PAGE_INFO` 的载荷：`reducers.ts:179` 做 `{ ...item, ...payload }`，
  * 因此是状态的**部分**更新。3 个不在 initialState 的字段也经这里注入。
  */
-export interface AppPageInfoPatch {
-  loading?: boolean | undefined;
-  modified?: boolean | undefined;
-  pageName?: string | undefined;
-  visible?: boolean | undefined;
-  pageId?: string | undefined;
-  desc?: string | undefined;
-  adjustScreen?: boolean | undefined;
-  version?: string | null | undefined;
-  apk?: Record<string, unknown> | undefined;
-  components?: AppWidget[] | undefined;
-  filtersGroup?: Record<string, unknown[]> | undefined;
-  linkageFiltersGroup?: Record<string, unknown[]> | undefined;
-  filterComponents?: AppFilterComponent[] | undefined;
-  loadFilterComponentCount?: number | undefined;
-  saveLoading?: boolean | undefined;
-  activeContainerInfo?: AppActiveContainerInfo | undefined;
-  urlParams?: string[] | undefined;
-  config?: AppCustomPageConfig | undefined;
-  /**
-   * 时间戳标记。
-   *
-   * 【来源】`worksheet/common/WorkSheetLeft/ExternalLink.tsx:86` 调
-   * `updatePageInfo({ flag: Date.now() })`，用于触发更新。原实现里 payload 是 any，
-   * 这个键被 `{ ...item, ...payload }` 原样并进 state，因此如实声明为可选数字。
-   */
-  flag?: number | undefined;
-}
+export type AppPageInfoPatch = Partial<AppCustomPageState>;
 
 /** `UPDATE_LAYOUT` 的载荷（reducers.ts:45-77 读取 layoutType/layouts/components/adjustScreen） */
 export interface AppUpdateLayoutPayload {
@@ -77,18 +50,14 @@ export interface AppInsertTitlePayload {
 }
 
 /** `UPDATE_WIDGET` 的载荷：`{ widget, layoutType, ...rest }`，其中 rest 合并进组件或该端槽位 */
-export interface AppUpdateWidgetPayload {
+export interface AppUpdateWidgetPayload extends AppWidget, AppWidgetSlot {
   widget: AppWidget;
   layoutType?: string | undefined;
-  filter?: { advancedSetting?: Record<string, unknown> | undefined } | undefined;
   [key: string]: unknown;
 }
 
 /** `DEL_WIDGET` 的载荷 */
-export interface AppDelWidgetPayload {
-  type?: string | number | undefined;
-  value?: string | undefined;
-  uuid?: string | null | undefined;
+export interface AppDelWidgetPayload extends Pick<AppWidget, 'id' | 'type' | 'value' | 'uuid'> {
   [key: string]: unknown;
 }
 
@@ -111,21 +80,13 @@ export interface AppDeleteLinkageGroupPayload {
 }
 
 /** `ADD_WIDGET` 的载荷：`{ ...payload }` 整体展开进新组件 */
-export interface AppAddWidgetPayload {
+export interface AppAddWidgetPayload extends AppWidget {
   type: string | number;
-  config?: Record<string, unknown> | undefined;
-  tabId?: string | undefined;
-  sectionId?: string | undefined;
-  value?: string | undefined;
-  filter?: { advancedSetting?: Record<string, unknown> | undefined; filters?: { objectControls?: unknown[] | undefined }[] | undefined } | undefined;
   [key: string]: unknown;
 }
 
 /** `COPY_WIDGET` 的载荷：`{ web, button, ...rest }` */
-export interface AppCopyWidgetPayload {
-  web?: { layout?: AppWidgetLayout | null | undefined } | undefined;
-  button?: AppWidgetButtonGroup | undefined;
-  type?: string | number | undefined;
+export interface AppCopyWidgetPayload extends AppWidget {
   [key: string]: unknown;
 }
 
@@ -190,7 +151,9 @@ export const delWidgetTab = createAction<typeof DEL_WIDGET_TAB, AppDelByContaine
 
 export const copyWidget = createAction<typeof COPY_WIDGET, AppCopyWidgetPayload>(COPY_WIDGET);
 
-export const updateWidgetVisible = createAction<typeof UPDATE_WIDGET_VISIBLE, AppWidgetVisiblePayload>(UPDATE_WIDGET_VISIBLE);
+export const updateWidgetVisible = createAction<typeof UPDATE_WIDGET_VISIBLE, AppWidgetVisiblePayload>(
+  UPDATE_WIDGET_VISIBLE,
+);
 
 export const updateWidget = createAction<typeof UPDATE_WIDGET, AppUpdateWidgetPayload>(UPDATE_WIDGET);
 
@@ -208,8 +171,15 @@ export const updateModified = createAction<typeof UPDATE_MODIFIED, boolean>(UPDA
 
 export const updateComponents = createAction<typeof UPDATE_COMPONENTS, AppWidget[]>(UPDATE_COMPONENTS);
 
-export const updateFiltersGroup = createAction<typeof UPDATE_FILTERS_GROUP, AppFiltersGroupPayload>(UPDATE_FILTERS_GROUP);
+export const updateFiltersGroup = createAction<typeof UPDATE_FILTERS_GROUP, AppFiltersGroupPayload>(
+  UPDATE_FILTERS_GROUP,
+);
 
-export const updateLinkageFiltersGroup = createAction<typeof UPDATE_LINKAGE_FILTERS_GROUP, AppFiltersGroupPayload>(UPDATE_LINKAGE_FILTERS_GROUP);
+export const updateLinkageFiltersGroup = createAction<typeof UPDATE_LINKAGE_FILTERS_GROUP, AppFiltersGroupPayload>(
+  UPDATE_LINKAGE_FILTERS_GROUP,
+);
 
-export const deleteLinkageFiltersGroup = createAction<typeof DELETE_LINKAGE_FILTERS_GROUP, AppDeleteLinkageGroupPayload>(DELETE_LINKAGE_FILTERS_GROUP);
+export const deleteLinkageFiltersGroup = createAction<
+  typeof DELETE_LINKAGE_FILTERS_GROUP,
+  AppDeleteLinkageGroupPayload
+>(DELETE_LINKAGE_FILTERS_GROUP);

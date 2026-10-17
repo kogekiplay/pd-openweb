@@ -541,6 +541,14 @@ SCENARIOS.push(
     run: (R, A) => outcome(() => R(R(undefined, { type: '@@INIT' }), A.copyWidget({ web: {} }))),
   },
   {
+    name: 'COPY_WIDGET preserves a row whose y is omitted',
+    run: (R, A) => {
+      const item = widget({ web: { layout: { x: 0, w: 2 } } });
+      const state = R(R(undefined, { type: '@@INIT' }), A.updateComponents([item]));
+      return outcome(() => R(state, A.copyWidget(item)));
+    },
+  },
+  {
     name: 'INSET_TITLE preserves missing height arithmetic',
     run: (R, A) => {
       const item = widget({ web: { layout: { x: 0 } } });

@@ -137,7 +137,8 @@ export interface AppCustomPageState {
   pageId: string;
   desc: string;
   adjustScreen: boolean;
-  version: string | null;
+  /** Current APIs return numeric versions; retain legacy string versions and the initial null. */
+  version: number | string | null;
   apk: AppCustomPageApk;
   components: AppWidget[];
   /** 以 widget 的 `value` 为键，值是一组筛选条件（reducers.ts 以 `[payload.value]` 写入） */
@@ -152,4 +153,6 @@ export interface AppCustomPageState {
   activeContainerInfo?: AppActiveContainerInfo | undefined;
   urlParams?: string[] | undefined;
   config?: AppCustomPageConfig | undefined;
+  /** ExternalLink uses this timestamp to request a page refresh. */
+  flag?: number | undefined;
 }
