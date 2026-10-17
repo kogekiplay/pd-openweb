@@ -7,7 +7,14 @@ import sheetAjax from 'src/api/worksheet';
 import { SHARECARDTYPS } from 'src/components/ShareCardConfig/config';
 import SelectExDrop from 'src/pages/Role/PortalCon/components/SelectExDrop';
 import { sharingSwitches } from './settings';
-
+import type {
+  DiscussionPermissionPatch,
+  SharingSettingsProps,
+  SharingSettingsState,
+  SharingSwitch,
+  SharingSwitchPatch,
+  SharingTab,
+} from './settings';
 import ShareCardSetting from './ShareCardSet';
 
 const Container = styled.div`
@@ -76,7 +83,7 @@ const RecordSharing = styled.div`
   }
 `;
 
-const TYPES = [
+const TYPES: Array<{ key: SharingTab; lab: string }> = [
   {
     key: 'view',
     lab: _l('视图'),
@@ -91,12 +98,12 @@ const TYPES = [
   },
 ];
 
-const SharingSettings = (props) => {
+const SharingSettings = (props: SharingSettingsProps) => {
   const { worksheetId, worksheetInfo, onChange, worksheetControls } = props;
   const { views = [], appId } = worksheetInfo;
-  const [activeTab, setActiveTab] = useState('view');
+  const [activeTab, setActiveTab] = useState<SharingTab>('view');
   const [isView, setIsView] = useState(false);
-  const [info, setInfo] = useState({
+  const [info, setInfo] = useState<SharingSettingsState>({
     loading: true,
   });
 
@@ -112,24 +119,24 @@ const SharingSettings = (props) => {
   const getSwitchData = () => {
     sheetAjax
       .getSwitch({ worksheetId })
-      .then((res) => {
+      .then((res: unknown) => {
         const data = sharingSwitches(res);
         setInfo({ loading: false, data });
       })
       .catch(() => setInfo({ loading: false, loadError: true }));
   };
 
-  const edit = (data) => {
+  const edit = (data: SharingSwitchPatch) => {
     sheetAjax
       .batchEditSwitch({
         worksheetId,
         switchList: [data],
       })
-      .then((res) => {
+      .then((res: unknown) => {
         if (res) {
           setInfo({
             ...info,
-            data: info.data.map(o => {
+            data: info.data!.map(o => {
               if (o.type === data.type) {
                 return { ...o, ...data };
               } else {
@@ -144,10 +151,10 @@ const SharingSettings = (props) => {
       .catch(() => alert(_l('修改失败，请稍后再试！'), 2));
   };
 
-  const onChangeSetting = (data) => {
+  const onChangeSetting = (data: DiscussionPermissionPatch) => {
     sheetAjax
       .editWorksheetSetting({ workSheetId: worksheetId, appId, advancedSetting: data, editAdKeys: Object.keys(data) })
-      .then((res) => {
+      .then((res: unknown) => {
         if (!res) {
           alert(_l('修改失败，请稍后再试'), 2);
           return;
@@ -199,7 +206,7 @@ const SharingSettings = (props) => {
           </>
         );
       default:
-        const data = info?.data.find(o => o.type === (activeTab === 'view' ? 20 : 30)) || {};
+        const data: SharingSwitch = info?.data!.find(o => o.type === (activeTab === 'view' ? 20 : 30)) || {};
         const isSharingEnabled = data.state;
         return (
           <RecordSharing>
@@ -266,7 +273,7 @@ const SharingSettings = (props) => {
                       <Radio
                         className="InlineFlex"
                         text={_l('所有视图')}
-                        checked={data?.viewIds?.length <= 0 && !isView}
+                        checked={data?.viewIds?.length! <= 0 && !isView}
                         onClick={() => {
                           edit({
                             ...data,
@@ -278,7 +285,7 @@ const SharingSettings = (props) => {
                       <Radio
                         className="InlineFlex mLeft50"
                         text={_l('指定视图')}
-                        checked={data?.viewIds?.length > 0 || isView}
+                        checked={data?.viewIds?.length! > 0 || isView}
                         onClick={() => {
                           edit({
                             ...data,
@@ -288,7 +295,7 @@ const SharingSettings = (props) => {
                         }}
                       />
                     </RadioGroup>
-                    {(data?.viewIds?.length > 0 || isView) && (
+                    {(data?.viewIds?.length! > 0 || isView) && (
                       <SelectExDrop
                         className="mTop8"
                         noTxt={_l('无相关数据')}
@@ -298,7 +305,7 @@ const SharingSettings = (props) => {
                         keyId="viewId"
                         name="name"
                         controls={views.filter(l => l.viewId !== l.worksheetId)}
-                        onChange={(viewIds) => {
+                        onChange={(viewIds: string[]) => {
                           edit({ ...data, viewIds: viewIds });
                         }}
                       />
@@ -323,7 +330,7 @@ const SharingSettings = (props) => {
                       desTxt={_l('描述')}
                       canUseControl={activeTab !== 'view'}
                       //标题支持文本、数值、金额、邮箱、文本组合
-                      controls={worksheetControls.filter(o => [2, 6, 8, 5, 32].includes(o.type))}
+                      controls={worksheetControls.filter(o => [2, 6, 8, 5, 32].includes(o.type!))}
                       showTips={false}
                       showBaseImg={activeTab !== 'view'}
                       autoSave
