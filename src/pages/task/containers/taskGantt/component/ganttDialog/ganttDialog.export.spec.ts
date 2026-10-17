@@ -419,7 +419,9 @@ function stable(value: unknown): string {
   return JSON.stringify(value);
 }
 
-(async () => {
+let activeCase = 'snapshot';
+
+async function main(): Promise<void> {
   let failed = 0;
 
   try {
@@ -431,6 +433,7 @@ function stable(value: unknown): string {
   }
 
   for (const item of cases) {
+    activeCase = item.name;
     // 两侧各自从同一初始状态出发
     resetStub();
     item.setup();
@@ -492,4 +495,11 @@ function stable(value: unknown): string {
   realConsole.log(
     `ganttDialog 导出/上传规格通过：${cases.length} 项；正常路径与历史一致；错误路径显式验证关闭待处理弹窗、清理容器及处理拒绝`,
   );
-})();
+}
+
+// The unhandledRejection observer above records the legacy implementation's
+// defect. Assertion/setup failures belong to the spec and must fail its process.
+main().catch((error: unknown) => {
+  realConsole.error(`Gantt export spec failed in ${activeCase}:`, error);
+  process.exitCode = 1;
+});
