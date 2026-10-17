@@ -13,11 +13,13 @@ const TYPE_TO_COMPONENTS = {
   filter: lazy(() => import('./filter')),
   carousel: lazy(() => import('./carousel')),
 };
+const componentLookup: Partial<Record<string, (typeof TYPE_TO_COMPONENTS)[keyof typeof TYPE_TO_COMPONENTS]>> =
+  TYPE_TO_COMPONENTS;
 
 function EditWidget(props) {
   const { components, widget, onClose, mode, activeContainerInfo = {}, addWidget, updateWidget } = props;
   const type = getEnumType(widget.type);
-  const Comp = TYPE_TO_COMPONENTS[type];
+  const Comp = componentLookup[String(type)];
 
   const handleEdit = obj => {
     if (mode === 'add') {

@@ -1,4 +1,6 @@
-export const defaultConfig = {
+import type { CustomPageConfig } from '../../configTypes';
+
+export const defaultConfig: CustomPageConfig = {
   pageStyleType: 'light',
   pageBgColor: 'lightColor',
   chartColor: {

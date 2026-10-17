@@ -1,5 +1,3 @@
-import { sanitizeIframeHtml } from 'src/utils/core/sanitizeHtml';
-import { MAX_COMPONENT_COUNT } from './config';
 import { generate } from '@ant-design/colors';
 import { TinyColor } from '@ctrl/tinycolor';
 import { get } from 'lodash';
@@ -19,17 +17,25 @@ import {
   redefineComplexControl,
 } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { isLightColor as utilsIsLightColor } from 'src/utils/control';
+import { sanitizeIframeHtml } from 'src/utils/core/sanitizeHtml';
+import { MAX_COMPONENT_COUNT } from './config';
+import type { CustomPageConfig } from './configTypes';
 import { containerWidgets, widgets } from './enum';
+import type { AppWidget, AppWidgetLayout } from './redux/types';
 
 export const FlexCenter = styled.div`
   display: flex;
   align-items: center;
 `;
 
-const enumObj = obj => {
-  _.keys(obj).forEach(key => (obj[obj[key]] = key));
+function enumObj<const T extends Record<string, number>>(
+  obj: T,
+): T & { [id: number]: (keyof T & string) | undefined } & { [name: string]: string | number | undefined };
+function enumObj(obj: Record<string, string | number>): Record<string, string | number> {
+  // Every key comes from this object; the non-null assertion only expresses that relation.
+  _.keys(obj).forEach(key => (obj[obj[key]!] = key));
   return obj;
-};
+}
 
 export const enumWidgetType = enumObj({
   analysis: 1,
@@ -87,21 +93,46 @@ export const addIframePermissions = html => {
   return sanitizeIframeHtml(wrap.innerHTML);
 };
 
-export const getEnumType = type => (typeof type === 'number' ? enumWidgetType[type] : type);
-export const getIndexById = ({ component, components }) => {
+export const getEnumType = (type: string | number | undefined): string | undefined =>
+  typeof type === 'number' ? enumWidgetType[type] : type;
+export const getIndexById = ({
+  component,
+  components,
+}: {
+  component: Pick<AppWidget, 'id' | 'uuid'>;
+  components?: readonly Pick<AppWidget, 'id' | 'uuid'>[] | undefined;
+}): number => {
   const id = component.id || component.uuid;
   return _.findIndex(components, item => item.id === id || item.uuid === id);
 };
 
-export const getDefaultLayout = ({
+export interface DefaultLayoutOptions {
+  components?: readonly AppWidget[] | undefined;
+  index?: number | undefined;
+  layoutType?: string | undefined;
+  titleVisible?: boolean | undefined;
+  type?: string | number | undefined;
+  /** Existing callers pass config; the historical layout function does not read it. */
+  config?: AppWidget['config'];
+}
+
+export type DefaultWidgetLayout = {
+  [K in 'x' | 'y' | 'w' | 'h' | 'minW' | 'minH']: NonNullable<AppWidgetLayout[K]>;
+};
+
+export function getDefaultLayout(
+  options: DefaultLayoutOptions & { layoutType?: 'web' | 'mobile' | undefined },
+): DefaultWidgetLayout;
+export function getDefaultLayout(options: DefaultLayoutOptions): DefaultWidgetLayout | undefined;
+export function getDefaultLayout({
   components = [],
   index = components.length,
   layoutType = 'web',
   titleVisible,
   type,
-}) => {
+}: DefaultLayoutOptions): DefaultWidgetLayout | undefined {
   if (layoutType === 'web') {
-    if (['view', 'tabs'].includes(type)) {
+    if (_.includes(['view', 'tabs'], type)) {
       return { x: (components.length * 24) % 48, y: Infinity, w: 48, h: 10, minW: 2, minH: 6 };
     } else if (type === 'filter') {
       return { x: (components.length * 24) % 48, y: Infinity, w: 48, h: 4, minW: 2, minH: 3 };
@@ -120,7 +151,7 @@ export const getDefaultLayout = ({
     const enumType = getEnumType(type);
     const minW = _.includes(['button'], enumType) ? 2 : 1;
 
-    if (['view', 'tabs'].includes(enumType)) {
+    if (_.includes(['view', 'tabs'], enumType)) {
       return { x: 0, y: y + h, w: 4, h: titleVisible ? 9 : 8, minW, minH: 4 };
     } else if (enumType === 'filter') {
       return { x: 0, y: y + h, w: 4, h: 2, minW, minH: 1 };
@@ -133,7 +164,7 @@ export const getDefaultLayout = ({
     }
   }
   return undefined;
-};
+}
 
 // export const formatComponents = components => components.map(item => ({ ...item, layout: JSON.parse(item.layout || '{}') }));
 
@@ -146,7 +177,7 @@ export const componentCountLimit = (components: readonly unknown[] = []) => {
 };
 
 export const getIconByType = type => {
-  return _.get({ ...widgets, ...containerWidgets }[getEnumType(type)], 'icon');
+  return _.get({ ...widgets, ...containerWidgets }[String(getEnumType(type))], 'icon');
 };
 
 function filterHTML(input) {
@@ -607,7 +638,10 @@ export const insertPortal = url => {
   return url;
 };
 
-export const syncThemeConfig = (config, themeMode = window.themeMode || 'light') => {
+export const syncThemeConfig = (
+  config: CustomPageConfig,
+  themeMode = window.themeMode || 'light',
+): CustomPageConfig => {
   if (config.pageStyleType === themeMode) {
     return config;
   } else {

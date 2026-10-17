@@ -291,7 +291,7 @@ const WidgetDisplay = forwardRef((props, $cardRef) => {
       className={cx(
         componentType,
         `${componentType}-${
-          ['tabs', 'card'].includes(componentType) ? _.get(widget, 'config.objectId') : widget.id || widget.uuid
+          _.includes(['tabs', 'card'], componentType) ? _.get(widget, 'config.objectId') : widget.id || widget.uuid
         }`,
       )}
       ref={ref}

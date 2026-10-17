@@ -151,7 +151,7 @@ const getTools = ({ widget, widgetType, layoutType, reportType, containerCompone
       pcTools = pcTools.filter(item => !['move', 'copy', 'insertTitle'].includes(item.type));
     }
 
-    if (['image'].includes(widgetType)) {
+    if (_.includes(['image'], widgetType)) {
       pcTools = pcTools.filter(item => !['copy', 'insertTitle'].includes(item.type));
     }
 
@@ -193,7 +193,7 @@ export default function Tools(props) {
   const handleUpdateDropdownVisible = (visible: boolean) => {
     setDropdownVisible(visible);
     if (visible) {
-      const className = `${widgetType}-${['tabs', 'card'].includes(widgetType) ? objectId : widget.id || widget.uuid}`;
+      const className = `${widgetType}-${_.includes(['tabs', 'card'], widgetType) ? objectId : widget.id || widget.uuid}`;
       const container = document.querySelector('#componentsWrap');
       const card = _.get(
         document.querySelector(`.${className}`),
@@ -350,19 +350,19 @@ export default function Tools(props) {
       return <ChangeFontSize toolsWrapRef={ref} {...itemProps} />;
     }
 
-    if (type === 'setting' && ['image'].includes(widgetType)) {
+    if (type === 'setting' && _.includes(['image'], widgetType)) {
       return <ImageTool {...itemProps} />;
     }
 
-    if (type === 'setting' && ['richText'].includes(widgetType)) {
+    if (type === 'setting' && _.includes(['richText'], widgetType)) {
       return <RichTextTool {...itemProps} />;
     }
 
-    if (type === 'setting' && ['tabs', 'card'].includes(widgetType)) {
+    if (type === 'setting' && _.includes(['tabs', 'card'], widgetType)) {
       return <ContainerSetting {...itemProps} />;
     }
 
-    if (type === 'setting' && ['subsection'].includes(widgetType)) {
+    if (type === 'setting' && _.includes(['subsection'], widgetType)) {
       return (
         <li
           className="setting"
@@ -378,7 +378,7 @@ export default function Tools(props) {
       );
     }
 
-    if (type === 'filter' && ['filter'].includes(widgetType)) {
+    if (type === 'filter' && _.includes(['filter'], widgetType)) {
       return <MobileFilter {...itemProps} />;
     }
 

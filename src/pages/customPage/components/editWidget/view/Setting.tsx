@@ -76,12 +76,23 @@ function Setting(props) {
         .then(res => {
           const { views = [] } = res;
           setDataSource({
-            views: getShowViews(views).map(({ viewId, name, viewType, advancedSetting }: { viewId?: string; name?: string; [key: string]: any }) => ({
-              text: getTranslateInfo(appId, null, viewId).name || name,
-              value: viewId,
-              viewType: String(viewType),
-              advancedSetting,
-            })),
+            views: getShowViews(views).map(
+              ({
+                viewId,
+                name,
+                viewType,
+                advancedSetting,
+              }: {
+                viewId?: string;
+                name?: string;
+                [key: string]: any;
+              }) => ({
+                text: getTranslateInfo(appId, null, viewId).name || name,
+                value: viewId,
+                viewType: String(viewType),
+                advancedSetting,
+              }),
+            ),
           });
         });
     }
@@ -241,5 +252,5 @@ function Setting(props) {
 
 export default connect((state: RootState) => ({
   appPkg: state.appPkg,
-  components: state.customPage.components.filter(c => [enumWidgetType.view, 'view'].includes(c.type)),
+  components: state.customPage.components.filter(c => _.includes([enumWidgetType.view, 'view'], c.type)),
 }))(Setting);

@@ -1,3 +1,6 @@
+import type { AppDetail } from 'src/pages/PageHeader/redux/types';
+import type { CustomPageConfig } from '../configTypes';
+
 /**
  * 自定义页面（`customPage`）redux 切片的有限类型。
  *
@@ -58,6 +61,9 @@ export interface AppWidgetButtonGroup {
  * 两种写法在 reducer 与消费方里都真实存在，所以类型如实写成联合。
  */
 export interface AppWidget {
+  /** The legacy mobile default-layout helper reads these top-level coordinates. */
+  y?: number | undefined;
+  h?: number | undefined;
   id?: string | undefined;
   uuid?: string | null | undefined;
   type?: string | number | undefined;
@@ -97,12 +103,9 @@ export interface AppFilterComponent {
 }
 
 /** 应用信息（`apk`）：消费方读 appId / appName / iconColor / projectId */
-export interface AppCustomPageApk {
+export interface AppCustomPageApk extends Pick<AppDetail, 'iconColor' | 'iconUrl' | 'projectId'> {
   appId?: string | undefined;
   appName?: string | undefined;
-  iconColor?: string | undefined;
-  projectId?: string | undefined;
-  [key: string]: unknown;
 }
 
 /** 页头里"当前激活容器"的定位信息：消费方读 sectionId / tabId */
@@ -111,8 +114,8 @@ export interface AppActiveContainerInfo {
   tabId?: string | undefined;
 }
 
-/** 自定义页面主题/布局配置：结构由 `syncThemeConfig` 生成，这里不重复建模 */
-export type AppCustomPageConfig = Record<string, unknown>;
+/** Known persisted fields are shared with the theme and page-setting producers. */
+export type AppCustomPageConfig = CustomPageConfig;
 
 /**
  * store 里 `customPage` 切片（`RootState['customPage']`）。

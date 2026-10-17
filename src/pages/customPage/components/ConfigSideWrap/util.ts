@@ -1,4 +1,5 @@
 import { generate } from '@ant-design/colors';
+import type { CustomPageTitleStyles } from '../../configTypes';
 
 export const defaultTitleStyles = {
   color: 'var(--color-text-primary)',
@@ -7,7 +8,7 @@ export const defaultTitleStyles = {
   fontItalic: false,
   textAlign: 'left',
   index: 0,
-};
+} satisfies CustomPageTitleStyles;
 
 export const replaceTitleColor = (data, themeColor) => {
   data = { ...data };
