@@ -18,7 +18,7 @@ const path = require('node:path');
 const fs = require('node:fs');
 const crypto = require('node:crypto');
 const { execFileSync } = require('node:child_process');
-const { transformFileSync, transformSync, ROOT } = require('../../../../scripts/spec-harness.ts');
+const { parser, transformFileSync, transformSync, ROOT } = require('../../../../scripts/spec-harness.ts');
 
 const realConsole = { log: console.log.bind(console), error: console.error.bind(console) };
 (globalThis as Record<string, unknown>)['_l'] = (s: string) => String(s);
@@ -65,86 +65,32 @@ function makeUuidStub() {
   return { v4: () => `uuid-${++uuidSeq}` };
 }
 
-/**
- * `../util` 的**最小替身**（只含 reducer 真正用到的 3 个导出）。
- *
- * 【为什么不能直接加载真实 util.ts】它是范围外文件，依赖链很深
- * （`src/...` webpack alias、styled-components、antd colors、moment 等），
- * 在 spec 的 `new Function` 沙箱里无法解析 —— 这不是本批要验证的东西。
- *
- * 【为什么这个替身不算"假实现"】这三段是**从真实文件逐字复制**的：
- * `enumWidgetType`（util.ts:34-47）、`getIndexById`（util.ts:91-94）、
- * `getDefaultLayout`（util.ts:96-136）。它们与真实实现同源同义，
- * 且 **A/B 两侧共用同一份替身**，因此对比的仍是 reducer 自身的行为差异。
- */
-function makeUtilStub(_realUtil?: unknown) {
-  const enumWidgetType = {
-    analysis: 1,
-    richText: 2,
-    embedUrl: 3,
-    button: 4,
-    view: 5,
-    filter: 6,
-    carousel: 7,
-    ai: 8,
-    tabs: 9,
-    card: 10,
-    image: 11,
-    subsection: 12,
-  };
-
-  const getIndexById = ({ component, components }: any) => {
-    const id = component.id || component.uuid;
-    return realLodash.findIndex(components, (item: any) => item.id === id || item.uuid === id);
-  };
-
-  const getDefaultLayout = ({
-    components = [],
-    index = components.length,
-    layoutType = 'web',
-    titleVisible,
-    type,
-  }: any) => {
-    if (layoutType === 'web') {
-      if (['view', 'tabs'].includes(type)) {
-        return { x: (components.length * 24) % 48, y: Infinity, w: 48, h: 10, minW: 2, minH: 6 };
-      } else if (type === 'filter') {
-        return { x: (components.length * 24) % 48, y: Infinity, w: 48, h: 4, minW: 2, minH: 3 };
-      } else if (type === 'image') {
-        return { x: (components.length * 24) % 48, y: Infinity, w: 48, h: 10, minW: 2, minH: 4 };
-      } else if (type === 'subsection') {
-        return { x: (components.length * 24) % 48, y: Infinity, w: 48, h: 3, minW: 48, minH: 2 };
-      }
-      return { x: (components.length * 24) % 48, y: Infinity, w: 24, h: 12, minW: 2, minH: 4 };
-    }
-
-    if (layoutType === 'mobile') {
-      const pickedType = realLodash.pick(components[index], 'type');
-      const last = realMaxBy(components, (item: any) => realLodash.get(item, ['mobile', 'layout', 'y'])) || {};
-      const y = (last as any).y ?? 0;
-      const h = (last as any).h ?? 6;
-      const typeName = Object.keys(enumWidgetType).find(
-        key => (enumWidgetType as any)[key] === (pickedType as any).type,
-      );
-      const isButton = typeName === 'button';
-      const minW = isButton ? 2 : 1;
-
-      if (['view', 'tabs'].includes(typeName as string)) {
-        return { x: 0, y: y + h, w: 4, h: titleVisible ? 9 : 8, minW, minH: 4 };
-      } else if (typeName === 'filter') {
-        return { x: 0, y: y + h, w: 4, h: 2, minW, minH: 1 };
-      } else if (typeName === 'image') {
-        return { x: 0, y: y + h, w: 4, h: titleVisible ? 9 : 8, minW, minH: 2 };
-      } else if (typeName === 'subsection') {
-        return { x: 0, y: y + h, w: 4, h: 1, minW: 4, minH: 1 };
-      }
-      return { x: 0, y: y + h, w: 4, h: titleVisible ? 7 : 6, minW, minH: 2 };
-    }
-
-    return undefined;
-  };
-
-  return { enumWidgetType, getIndexById, getDefaultLayout };
+/** Load the actual helper declarations verbatim, without importing unrelated UI/assets. */
+const helperCodeCache = new Map<string, string>();
+function loadUtil(variant: 'orig' | 'current') {
+  const filename = path.resolve(DIR, '../util.ts');
+  const source = variant === 'orig'
+    ? execFileSync('git', ['show', `${BASE_REV}:src/pages/customPage/util.ts`], { cwd: ROOT, encoding: 'utf8' })
+    : fs.readFileSync(filename, 'utf8');
+  let code = helperCodeCache.get(source);
+  if (code === undefined) {
+    const tree = parser.parse(source, { sourceType: 'module', plugins: ['typescript', 'jsx'] });
+    const names = ['enumObj', 'enumWidgetType', 'getEnumType', 'getIndexById', 'getDefaultLayout'];
+    const declarations = names.map(name => {
+      const statement = tree.program.body.find(item => {
+        const value = item.type === 'ExportNamedDeclaration' ? item.declaration : item;
+        return (value?.type === 'VariableDeclaration' && value.declarations.some(entry => entry.id.name === name)) ||
+          (value?.type === 'FunctionDeclaration' && value.id?.name === name && value.body);
+      });
+      if (!statement || statement.start == null || statement.end == null) throw new Error('Missing real helper ' + name);
+      return source.slice(statement.start, statement.end).replace(/^export /, '');
+    }).join('\n');
+    code = transformSync(declarations + '\nmodule.exports = { enumWidgetType, getIndexById, getDefaultLayout };', { filename }).code;
+    helperCodeCache.set(source, code);
+  }
+  const target = { exports: {} as Record<string, unknown> };
+  new Function('module', '_', 'maxBy', 'get', code)(target, realLodash, realMaxBy, realLodash.get);
+  return target.exports;
 }
 
 const realLodash = require('lodash');
@@ -204,12 +150,7 @@ function makeLoader(variant: 'orig' | 'current') {
       if (r === 'lodash') return realLodash;
       if (r === 'lodash/maxBy') return realMaxBy;
       if (r === 'uuid') return makeUuidStub();
-      if (r === '../util') {
-        // 【不要 require 真实 util.ts】它依赖 `src/...` alias、styled-components、
-        // antd colors、moment 等，在 `new Function` 沙箱里会一路 require 到 PNG 资源并崩。
-        // 用上面那份**逐字复制**的三函数替身；A/B 两侧共用，对比的仍是 reducer 自身。
-        return makeUtilStub();
-      }
+      if (r === '../util') return loadUtil(variant);
       if (r === 'src/redux/types') return {};
       if (r.startsWith('./')) return load(`${r.slice(2)}.ts`);
       if (r.endsWith('.less') || r.endsWith('.html')) return {};
@@ -241,7 +182,7 @@ function check(name: string, fn: () => void): void {
 }
 
 function firstDiff(a: unknown, b: unknown, at = '$'): string {
-  if (a === b) return '';
+  if (Object.is(a, b)) return '';
   if (typeof a !== typeof b) return `${at}: 类型 ${typeof a} vs ${typeof b}`;
   if (Array.isArray(a) || Array.isArray(b)) {
     if (!Array.isArray(a) || !Array.isArray(b)) return `${at}: 一侧非数组`;
@@ -262,7 +203,7 @@ function firstDiff(a: unknown, b: unknown, at = '$'): string {
     }
     return '';
   }
-  return `${at}: ${JSON.stringify(a)} vs ${JSON.stringify(b)}`;
+  return `${at}: ${String(a)} vs ${String(b)}`;
 }
 
 /* ────────────────────────── 场景 ────────────────────────── */
@@ -555,6 +496,78 @@ const SCENARIOS: Scenario[] = [
   },
 ];
 
+function outcome(run: () => unknown): unknown {
+  try {
+    return { value: run() };
+  } catch (error) {
+    return { error: error instanceof Error ? error.name : String(error) };
+  }
+}
+
+SCENARIOS.push(
+  {
+    name: 'UPDATE_PAGE_INFO preserves own __proto__ metadata',
+    run: (R, A) => R(R(undefined, { type: '@@INIT' }), A.updatePageInfo(JSON.parse('{"__proto__":{"metadata":true}}'))),
+  },
+  {
+    name: 'COPY_WIDGET preserves incomplete layout arithmetic',
+    run: (R, A) => {
+      const item = widget({ web: { layout: { x: 0, y: 0, h: 3 } } });
+      const state = R(R(undefined, { type: '@@INIT' }), A.updateComponents([item]));
+      return outcome(() => R(state, A.copyWidget(item)));
+    },
+  },
+  {
+    name: 'COPY_WIDGET preserves missing layout failure',
+    run: (R, A) => outcome(() => R(R(undefined, { type: '@@INIT' }), A.copyWidget({ web: {} }))),
+  },
+  {
+    name: 'INSET_TITLE preserves missing height arithmetic',
+    run: (R, A) => {
+      const item = widget({ web: { layout: { x: 0 } } });
+      const state = R(R(undefined, { type: '@@INIT' }), A.updateComponents([item]));
+      return R(state, A.insertTitle({ widget: item, layoutType: 'web', visible: true }));
+    },
+  },
+  {
+    name: 'INSET_TITLE preserves a no-op state reference with null layout',
+    run: (R, A) => {
+      const item = widget({ web: { titleVisible: false, layout: null } });
+      const state = R(R(undefined, { type: '@@INIT' }), A.updateComponents([item]));
+      state.modified = true;
+      const next = R(state, A.insertTitle({ widget: item, layoutType: 'web', visible: false }));
+      return { sameState: state === next, sameComponents: state.components === next.components };
+    },
+  },
+  {
+    name: 'UPDATE_WIDGET preserves the supplied layout key',
+    run: (R, A) => {
+      const item = widget({ tablet: { title: 'before' } });
+      const state = R(R(undefined, { type: '@@INIT' }), A.updateComponents([item]));
+      return R(state, A.updateWidget({ widget: item, layoutType: 'tablet', title: 'after' }));
+    },
+  },
+  {
+    name: 'UPDATE_WIDGET preserves the library behavior for a missing target',
+    run: (R, A) => {
+      const state = R(R(undefined, { type: '@@INIT' }), A.updateComponents([widget()]));
+      return outcome(() => R(state, A.updateWidget({ widget: { id: 'absent', uuid: 'absent' }, value: 'new' })));
+    },
+  },
+  {
+    name: 'UPDATE_WIDGET_VISIBLE preserves missing slot failure',
+    run: (R, A) => {
+      const item = widget({ web: undefined });
+      const state = R(R(undefined, { type: '@@INIT' }), A.updateComponents([item]));
+      return outcome(() => R(state, A.updateWidgetVisible({ widget: item, layoutType: 'web' })));
+    },
+  },
+  {
+    name: 'ADD_WIDGET does not silently replace missing filter data',
+    run: (R, A) => outcome(() => R(R(undefined, { type: '@@INIT' }), A.addWidget({ type: 'filter' }))),
+  },
+);
+
 /* ────────────────────────── 执行 ────────────────────────── */
 
 function main(): void {
@@ -580,9 +593,9 @@ function main(): void {
       const CurrentActions = loadCurrent('action.ts');
       const currentValue = scenario.run(CurrentReducer, CurrentActions);
 
-      assert.equal(
-        JSON.stringify(currentValue),
-        JSON.stringify(origValue),
+      assert.deepEqual(
+        currentValue,
+        origValue,
         `A/B 不一致 → ${firstDiff(origValue, currentValue)}`,
       );
     });
