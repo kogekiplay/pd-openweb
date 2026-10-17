@@ -951,7 +951,6 @@
     "src/pages/FormSet/containers/SubmitFormSetting/OtherSettings.tsx",
     "src/pages/FormSet/containers/SubmitFormSetting/SubmitButtonSettings.tsx",
     "src/pages/FormSet/containers/SubmitFormSetting/index.tsx",
-    "src/pages/FormSet/index.tsx",
     "src/pages/FormSet/util.ts",
     "src/pages/Group/createGroup/SelectAvatarTrigger.tsx",
     "src/pages/Group/createGroup/index.tsx",
