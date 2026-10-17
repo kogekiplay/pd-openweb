@@ -236,6 +236,42 @@ const SCENARIOS: Scenario[] = [
     },
   },
   {
+    name: 'SYNC_APP_DETAIL：license / managers / fixAccount 等新建模字段原样透传',
+    run: (R, A) => {
+      const s0 = R.default(undefined, { type: '@@INIT' });
+      const payload = {
+        license: { status: 2, id: 'lic-1', planType: 3 },
+        managers: [{ accountId: 'u1', avatar: 'https://a/1.png' }, { accountId: 'u2', avatar: 'https://a/2.png' }],
+        fixAccount: { accountId: 'u9', fullName: '张三' },
+        fixRemark: '维护中',
+        fixed: true,
+        pcDisplay: false,
+        goodsId: 'g-1',
+        debugRole: { canDebug: true },
+      };
+      const s1 = R.default(s0, A.syncAppDetail(payload));
+      return {
+        // 逐字段透传，且深层结构不被改写
+        license: s1.license,
+        managers: s1.managers,
+        fixAccount: s1.fixAccount,
+        fixRemark: s1.fixRemark,
+        fixed: s1.fixed,
+        pcDisplay: s1.pcDisplay,
+        goodsId: s1.goodsId,
+        debugRole: s1.debugRole,
+        deepEqual: JSON.stringify({
+          license: s1.license, managers: s1.managers, fixAccount: s1.fixAccount,
+          fixRemark: s1.fixRemark, fixed: s1.fixed, pcDisplay: s1.pcDisplay,
+          goodsId: s1.goodsId, debugRole: s1.debugRole,
+        }) === JSON.stringify(payload),
+        // 默认字段不被误伤
+        iconColor: s1.iconColor,
+        name: s1.name,
+      };
+    },
+  },
+  {
     name: 'CHANGE_APP_COLOR / CHANGE_NAV_COLOR：只改对应字段',
     run: (R, A) => {
       const s0 = R.default(undefined, { type: '@@INIT' });
@@ -444,6 +480,26 @@ async function main(): Promise<void> {
       ['w2'],
       'status=0 与 navigateHide=true 的两条都应被过滤掉，只剩 status=1 的 w2',
     );
+  });
+
+  check('managers / fixAccount 的字段级读取（模拟 UnusualContent 与 FixedContent）', () => {
+    const s0 = CurrentReducer.default(undefined, { type: '@@INIT' });
+    const s1 = CurrentReducer.default(
+      s0,
+      CurrentAction.syncAppDetail({
+        managers: [{ accountId: 'u1', avatar: 'a1' }, { accountId: 'u2', avatar: 'a2' }],
+        fixAccount: { accountId: 'u9', fullName: '张三' },
+      }),
+    );
+    // UnusualContent/index.tsx:80-90 的写法：slice + map + 读 accountId/avatar
+    const heads = s1.managers.slice(0, 20).map(m => ({ accountId: m.accountId, userHead: m.avatar }));
+    assert.deepEqual(heads, [
+      { accountId: 'u1', userHead: 'a1' },
+      { accountId: 'u2', userHead: 'a2' },
+    ]);
+    // FixedContent/index.tsx:11/44 的写法
+    assert.equal(`/user_${s1.fixAccount.accountId}`, '/user_u9');
+    assert.equal((s1.fixAccount || {}).fullName, '张三');
   });
 
   check('未知 action 必须原样返回同一引用', () => {

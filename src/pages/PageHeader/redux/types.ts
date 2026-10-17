@@ -91,8 +91,8 @@ export interface AppDetail {
   // ── 真实存在但形状未建模：留 unknown，不放进索引签名 ──
   /** 授权/购买信息：字段取自真实读取点，见下方 AppLicense */
   license?: AppLicense | undefined;
-  /** 管理员列表（消费方只判空/取长度，不读元素字段） */
-  managers?: unknown[] | undefined;
+  /** 管理员列表：消费方会渲染元素（读 accountId / avatar），见下方 AppManager */
+  managers?: AppManager[] | undefined;
   /**
    * 分组/区块数据。
    *
@@ -103,12 +103,36 @@ export interface AppDetail {
   sections?: AppSectionView[] | undefined;
   /** 固定态文案与账号（见 components/FixedContent） */
   fixRemark?: string | undefined;
-  fixAccount?: Record<string, unknown> | undefined;
+  fixAccount?: AppFixAccount | undefined;
   fixed?: boolean | undefined;
   pcDisplay?: boolean | undefined;
   goodsId?: string | undefined;
   /** 调试角色；代码里用 `(appPkg.debugRole || {}).canDebug` 访问 */
   debugRole?: { canDebug?: boolean | undefined } | undefined;
+}
+
+/**
+ * 管理员（`appPkg.managers` 的元素）。
+ *
+ * 【字段来自真实渲染路径】`components/UnusualContent/index.tsx:80-91` 会
+ * `managers.slice(0, 20).map(data => <UserHead user={{ ...data, accountId: data.accountId, userHead: data.avatar }} />)`：
+ * 读 `accountId`、`avatar`，并把整个元素展开给 `UserHead`。
+ */
+export interface AppManager {
+  accountId?: string | undefined;
+  /** 头像地址（在组件里映射成 `user.userHead`） */
+  avatar?: string | undefined;
+}
+
+/**
+ * 固定态（应用维护中/停用）时展示的负责人。
+ *
+ * 【字段来自真实读取】`components/FixedContent/index.tsx:11` 用 `fixAccount.accountId`
+ * 拼用户链接；同文件 :44 用 `(fixAccount || {}).fullName` 展示姓名。
+ */
+export interface AppFixAccount {
+  accountId?: string | undefined;
+  fullName?: string | undefined;
 }
 
 /**
