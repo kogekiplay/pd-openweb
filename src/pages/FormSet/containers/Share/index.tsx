@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import cx from 'classnames';
 import styled from 'styled-components';
-import { Icon, LoadDiv, Radio, ScrollView, Switch } from 'ming-ui';
+import { Button, Icon, LoadDiv, Radio, ScrollView, Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import sheetAjax from 'src/api/worksheet';
 import { SHARECARDTYPS } from 'src/components/ShareCardConfig/config';
 import SelectExDrop from 'src/pages/Role/PortalCon/components/SelectExDrop';
-import type { FormControl } from 'src/utils/controlTypes';
+import { sharingSwitches } from './settings';
+
 import ShareCardSetting from './ShareCardSet';
 
 const Container = styled.div`
@@ -90,13 +91,8 @@ const TYPES = [
   },
 ];
 
-const SharingSettings = props => {
-  const {
-    worksheetId,
-    worksheetInfo,
-    onChange,
-    worksheetControls,
-  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
+const SharingSettings = (props) => {
+  const { worksheetId, worksheetInfo, onChange, worksheetControls } = props;
   const { views = [], appId } = worksheetInfo;
   const [activeTab, setActiveTab] = useState('view');
   const [isView, setIsView] = useState(false);
@@ -114,22 +110,22 @@ const SharingSettings = props => {
   }, [worksheetId]);
 
   const getSwitchData = () => {
-    sheetAjax.getSwitch({ worksheetId }).then(res => {
-      let data = res;
-      setInfo({
-        loading: false,
-        data,
-      });
-    });
+    sheetAjax
+      .getSwitch({ worksheetId })
+      .then((res) => {
+        const data = sharingSwitches(res);
+        setInfo({ loading: false, data });
+      })
+      .catch(() => setInfo({ loading: false, loadError: true }));
   };
 
-  const edit = data => {
+  const edit = (data) => {
     sheetAjax
       .batchEditSwitch({
         worksheetId,
         switchList: [data],
       })
-      .then(res => {
+      .then((res) => {
         if (res) {
           setInfo({
             ...info,
@@ -144,13 +140,14 @@ const SharingSettings = props => {
         } else {
           alert(_l('修改失败，请稍后再试！'), 2);
         }
-      });
+      })
+      .catch(() => alert(_l('修改失败，请稍后再试！'), 2));
   };
 
-  const onChangeSetting = data => {
+  const onChangeSetting = (data) => {
     sheetAjax
       .editWorksheetSetting({ workSheetId: worksheetId, appId, advancedSetting: data, editAdKeys: Object.keys(data) })
-      .then(res => {
+      .then((res) => {
         if (!res) {
           alert(_l('修改失败，请稍后再试'), 2);
           return;
@@ -159,7 +156,8 @@ const SharingSettings = props => {
           let newValues = { ...advancedSetting, ...data };
           onChange({ ...worksheetInfo, advancedSetting: newValues });
         }
-      });
+      })
+      .catch(() => alert(_l('修改失败，请稍后再试'), 2));
   };
 
   const renderCon = () => {
@@ -188,13 +186,13 @@ const SharingSettings = props => {
             <RadioGroup className="flexColumn mTop20">
               <Radio
                 text={_l('如果用户有工作表权限，允许以只读方式查看记录（默认）')}
-                checked={props?.worksheetInfo?.advancedSetting?.discusspermission !== '2'}
+                checked={props?.worksheetInfo?.advancedSetting?.['discusspermission'] !== '2'}
                 onClick={() => onChangeSetting({ discusspermission: '' })}
               />
               <Radio
                 className="mTop20"
                 text={_l('不允许查看')}
-                checked={props?.worksheetInfo?.advancedSetting?.discusspermission === '2'}
+                checked={props?.worksheetInfo?.advancedSetting?.['discusspermission'] === '2'}
                 onClick={() => onChangeSetting({ discusspermission: '2' })}
               />
             </RadioGroup>
@@ -300,7 +298,7 @@ const SharingSettings = props => {
                         keyId="viewId"
                         name="name"
                         controls={views.filter(l => l.viewId !== l.worksheetId)}
-                        onChange={viewIds => {
+                        onChange={(viewIds) => {
                           edit({ ...data, viewIds: viewIds });
                         }}
                       />
@@ -340,6 +338,22 @@ const SharingSettings = props => {
   };
 
   if (info.loading) return <LoadDiv />;
+  if (info.loadError)
+    return (
+      <div role="alert">
+        <span>{_l('加载失败')}</span>
+        <Button
+          type="link"
+          className="mLeft10"
+          onClick={() => {
+            setInfo({ loading: true });
+            getSwitchData();
+          }}
+        >
+          {_l('重试')}
+        </Button>
+      </div>
+    );
 
   return (
     <ScrollView>
