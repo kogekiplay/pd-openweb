@@ -6,15 +6,40 @@ import type { FormControl } from 'src/utils/controlTypes';
 import { TIME_PERIOD_TYPE, TIME_TYPE, WEEKS } from './enum';
 import CountDown from './PublicWorksheetConfig/CountDown';
 
+// These shapes are derived from the wire DTOs; omitted settings stay omitted.
+type TimePeriodSetting = Partial<
+  HapApi.MD.Entity.Worksheet.PublicForm.MonthSetting &
+    HapApi.MD.Entity.Worksheet.PublicForm.DaySetting &
+    HapApi.MD.Entity.Worksheet.PublicForm.HourSetting
+>;
+type WireWriteTime = HapApi.MD.Entity.Worksheet.PublicForm.LimitWriteTime;
+type TimeSettingKey = Extract<keyof WireWriteTime, `${string}Setting`>;
+export type DisplayWriteTime = Partial<{
+  [K in keyof WireWriteTime]: K extends TimeSettingKey ? TimePeriodSetting | undefined : WireWriteTime[K];
+}>;
+export interface LimitInfoSettings {
+  linkSwitchTime?: Partial<HapApi.MD.Entity.Worksheet.PublicForm.LinkSwitchTime> | undefined;
+  limitWriteCount?: Partial<HapApi.MD.Entity.Worksheet.PublicForm.LimitWriteCountSetting> | undefined;
+  limitWriteTime?: Partial<HapApi.MD.Entity.Worksheet.PublicForm.LimitWriteTime> | undefined;
+  completeNumber?: number | undefined;
+}
+type ControlPosition = Pick<FormControl, 'col' | 'row' | 'size'>;
+type PositionMap = Partial<Record<PropertyKey, ControlPosition>>;
+// Native computed keys coerce an absent ID to the string "undefined".
+function positionKey(id: FormControl['controlId']): string {
+  return id === undefined ? 'undefined' : id;
+}
+
 export function getNewControlColRow(controls: FormControl[], halfOfNewControl = true) {
   if (!controls.length) {
     return { col: 0, row: 0 };
   }
 
-  const maxRow = Math.max(...controls.map(c => c.row));
+  // Erased assertions preserve Math.max's native undefined -> NaN coercion.
+  const maxRow = Math.max(...controls.map(c => c.row!));
   const lastRowWidgets = controls.filter(c => c.row === maxRow);
   const lastRowFirstWidget = _.find(controls, c => c.row === maxRow && c.col === 0) || { half: true };
-  const maxCol = Math.max(...lastRowWidgets.map(c => c.col));
+  const maxCol = Math.max(...lastRowWidgets.map(c => c.col!));
   return {
     col: halfOfNewControl && lastRowFirstWidget.half ? (maxCol > 0 ? 0 : 1) : 0,
     row: halfOfNewControl && lastRowFirstWidget.half ? (maxCol > 0 ? maxRow + 1 : maxRow) : maxRow + 1,
@@ -79,21 +104,28 @@ export function getDisabledControls(
   return _.uniqBy(defaultHided.concat(systemRelated).concat(hidedWhenNew), id => id);
 }
 
-export function overridePos(controls: FormControl[] = [], newPosControls = []) {
-  const newPos = [{}, ...newPosControls].reduce((a, b) =>
-    _.assign({}, a, { [(b || {}).controlId]: _.pick(b || {}, ['col', 'row', 'size']) }),
+export function overridePos(controls: FormControl[] = [], newPosControls: FormControl[] = []) {
+  // Keep the spread: it materializes sparse entries as undefined before the fold.
+  const newPos = [...newPosControls].reduce<PositionMap>(
+    (a, b) => _.assign({}, a, { [positionKey((b || {}).controlId)]: _.pick(b || {}, ['col', 'row', 'size']) }),
+    {},
   );
   const newControls: FormControl[] = controls.map(control =>
-    _.assign({}, control, newPos[control.controlId] ? newPos[control.controlId] : { col: -1, row: -1 }),
+    _.assign(
+      {},
+      control,
+      newPos[positionKey(control.controlId)] ? newPos[positionKey(control.controlId)] : { col: -1, row: -1 },
+    ),
   );
   newControls.forEach((control, index) => {
     if (control.type === 34) {
-      const hiddenIds = control.relationControls
-        .filter(c => _.includes(defaultHidedControlTypes, c.type))
+      // Incomplete subtable data still throws natively; do not replace it with empty arrays.
+      const hiddenIds = control
+        .relationControls!.filter(c => _.includes(defaultHidedControlTypes, c.type))
         .map(c => c.controlId);
 
       if (hiddenIds.length) {
-        control.showControls = control.showControls.filter(id => !_.includes(hiddenIds, id));
+        control.showControls = control.showControls!.filter(id => !_.includes(hiddenIds, id));
       }
     }
 
@@ -107,42 +139,43 @@ export function overridePos(controls: FormControl[] = [], newPosControls = []) {
   return newControls;
 }
 
-export function getLimitWriteTimeDisplayText(type: string, limitWriteTime) {
-  const setting = limitWriteTime[`${type}Setting`];
+export function getLimitWriteTimeDisplayText(type: string, limitWriteTime: DisplayWriteTime) {
+  // These are the wire keys; retain the dynamic lookup and its native failure for unknown names.
+  const setting = limitWriteTime[`${type}Setting` as TimeSettingKey]!;
 
   if (type === TIME_TYPE.MONTH) {
     switch (setting.monthType) {
       case TIME_PERIOD_TYPE.MONTHLY:
         return _l('每月');
       case TIME_PERIOD_TYPE.SPECIFY_MONTH:
-        return setting.defineMonth.join('、') + _l('月');
+        return setting.defineMonth!.join('、') + _l('月');
       case TIME_PERIOD_TYPE.SPECIFY_RANGE_MONTH:
-        return setting.defineMonth[0] + _l('至') + setting.defineMonth[setting.defineMonth.length - 1] + _l('月');
+        return setting.defineMonth![0] + _l('至') + setting.defineMonth![setting.defineMonth!.length - 1] + _l('月');
       default:
-        return;
+        return undefined;
     }
   } else if (type === TIME_TYPE.DAY) {
     switch (setting.dayType) {
       case TIME_PERIOD_TYPE.DAILY:
         return _l('每天');
       case TIME_PERIOD_TYPE.SPECIFY_DAY:
-        return setting.defineDay.join('、') + _l('日');
+        return setting.defineDay!.join('、') + _l('日');
       case TIME_PERIOD_TYPE.SPECIFY_RANGE_DAY:
-        return setting.defineDay[0] + _l('至') + setting.defineDay[setting.defineDay.length - 1] + _l('日');
+        return setting.defineDay![0] + _l('至') + setting.defineDay![setting.defineDay!.length - 1] + _l('日');
       case TIME_PERIOD_TYPE.WEEKLY:
-        const weekTextArr = setting.defineWeek.map(item => {
-          return WEEKS.filter(w => w.value === item)[0].text;
+        const weekTextArr = setting.defineWeek!.map(item => {
+          return WEEKS.filter(w => w.value === item)[0]!.text;
         });
         return weekTextArr.join('、');
       default:
-        return;
+        return undefined;
     }
   } else {
-    return setting.hourType === TIME_PERIOD_TYPE.SPECIFY_RANGE_HOUR ? setting.rangHour.join('、') : '';
+    return setting.hourType === TIME_PERIOD_TYPE.SPECIFY_RANGE_HOUR ? setting.rangHour!.join('、') : '';
   }
 }
 
-export function isDisplayPromptText(worksheetSettings) {
+export function isDisplayPromptText(worksheetSettings: LimitInfoSettings) {
   const displayPromptText =
     _.get(worksheetSettings, 'linkSwitchTime.isEnable') ||
     _.get(worksheetSettings, 'limitWriteCount.isEnable') ||
@@ -150,9 +183,9 @@ export function isDisplayPromptText(worksheetSettings) {
   return displayPromptText;
 }
 
-export function renderLimitInfo(worksheetSettings) {
+export function renderLimitInfo(worksheetSettings: LimitInfoSettings) {
   const { linkSwitchTime = {}, limitWriteCount = {}, completeNumber, limitWriteTime } = worksheetSettings;
-  const remainCount = limitWriteCount.limitWriteCount - (completeNumber || 0);
+  const remainCount = limitWriteCount.limitWriteCount! - (completeNumber || 0);
 
   return (
     <React.Fragment>
@@ -188,15 +221,15 @@ export function renderLimitInfo(worksheetSettings) {
           <span>{_l('份结束收集')};</span>
         </span>
       )}
-      {limitWriteTime.isEnable && (
+      {limitWriteTime!.isEnable && (
         <span>
-          <span className="bold textPrimary">{getLimitWriteTimeDisplayText(TIME_TYPE.MONTH, limitWriteTime)}</span>
+          <span className="bold textPrimary">{getLimitWriteTimeDisplayText(TIME_TYPE.MONTH, limitWriteTime!)}</span>
           <span className="mLeft5 mRight5">{_l('的')}</span>
-          <span className="bold textPrimary">{getLimitWriteTimeDisplayText(TIME_TYPE.DAY, limitWriteTime)}</span>
-          {!!getLimitWriteTimeDisplayText(TIME_TYPE.HOUR, limitWriteTime) && (
+          <span className="bold textPrimary">{getLimitWriteTimeDisplayText(TIME_TYPE.DAY, limitWriteTime!)}</span>
+          {!!getLimitWriteTimeDisplayText(TIME_TYPE.HOUR, limitWriteTime!) && (
             <span className="mLeft5 mRight5">{_l('的')}</span>
           )}
-          <span className="bold textPrimary">{getLimitWriteTimeDisplayText(TIME_TYPE.HOUR, limitWriteTime)}</span>
+          <span className="bold textPrimary">{getLimitWriteTimeDisplayText(TIME_TYPE.HOUR, limitWriteTime!)}</span>
           <span className="mLeft5">{_l('可填写')}</span>
         </span>
       )}
@@ -204,7 +237,9 @@ export function renderLimitInfo(worksheetSettings) {
   );
 }
 
-export const getPageConfig = (pageConfigs = '[]', pageConfigKey?) => {
+// Remaining boundary debt: safeParse's global any still reaches this return value.
+// Validate it with its consumers in a separate batch; strict-clean is not proof of a typed JSON boundary.
+export const getPageConfig = (pageConfigs = '[]', pageConfigKey?: string) => {
   const configs = safeParse(pageConfigs);
 
   if (!pageConfigKey) return configs[0] || {};
@@ -212,4 +247,5 @@ export const getPageConfig = (pageConfigs = '[]', pageConfigKey?) => {
   return _.find(configs, l => l.key === pageConfigKey) || configs[0] || {};
 };
 
-export const checkIsDeleted = (value, data = []) => !value || _.findIndex(data, v => v.controlId === value) === -1;
+export const checkIsDeleted = (value: FormControl['controlId'], data: Pick<FormControl, 'controlId'>[] = []) =>
+  !value || _.findIndex(data, v => v.controlId === value) === -1;

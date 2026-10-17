@@ -917,7 +917,6 @@
     "src/pages/FormExtend/PublicWorksheetConfig/index.tsx",
     "src/pages/FormExtend/common/MapField.tsx",
     "src/pages/FormExtend/index.tsx",
-    "src/pages/FormExtend/utils.tsx",
     "src/pages/FormSet/components/AliasDialog/index.tsx",
     "src/pages/FormSet/components/BtnRangeDrop.tsx",
     "src/pages/FormSet/components/BtnTd.tsx",
