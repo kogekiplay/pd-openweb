@@ -1,4 +1,6 @@
 import contextlib
+from decimal import Decimal
+import stat
 import hashlib
 import importlib.util
 import io
@@ -32,15 +34,29 @@ class Backend:
             os.utime(str(item), (1700000000, 1700000000))
         self.settings = dict(host='fixture', currentRelease='fixture', port=22, identity='fixture')
         self.compare_failure = self.change_production = self.restore_failure = self.unsafe_export = False
+        self.after_restore = False
+        self.directory_allocation_drift = 0
+        self.change_original_allocation = False
         self.removals = self.compares = 0
         self.records = []
 
     def snapshot(self):
         entries = [self.source] + sorted(self.source.rglob('*'))
-        inventory = [(str(p.relative_to(self.source)), p.is_dir(), p.stat().st_size,
-                      p.stat().st_mtime_ns, p.stat().st_mode) for p in entries]
+        rows = []
+        for path in entries:
+            info = path.stat()
+            relative = str(path.relative_to(self.source))
+            relative = '' if relative == '.' else relative
+            size = info.st_size + (4096 if self.after_restore and path.is_dir() else 0)
+            if path.is_dir(): size += self.directory_allocation_drift
+            values = [relative, 'd' if path.is_dir() else 'f', str(size),
+                      format(Decimal(info.st_mtime_ns) / Decimal(1000000000), '.10f'),
+                      format(stat.S_IMODE(info.st_mode), 'o'), str(info.st_uid), str(info.st_gid), '']
+            rows.append(tuple(value.encode() for value in values))
+        normalized = [tuple(list(row[:2]) + ([b'0'] if row[1] == b'd' else list(row[2:3])) + list(row[3:])) for row in rows]
         return dict(source=module.BASE + '/' + NAME, entries=len(entries),
-                    inventorySha256=hashlib.sha256(repr(inventory).encode()).hexdigest(),
+                    inventorySha256=hashlib.sha256(repr(sorted(rows)).encode()).hexdigest(),
+                    restorableInventorySha256=hashlib.sha256(repr(sorted(normalized)).encode()).hexdigest(),
                     sourceIndexSha256=module.digest(self.source / 'index.html'),
                     logicalBytes=312, physicalBytes=16384, dataFree=10**10,
                     liveIndexSha256='changed' if self.change_production and self.compares else 'live',
@@ -58,6 +74,7 @@ class Backend:
 
     def compare(self, package):
         self.compares += 1
+        if self.change_original_allocation: self.directory_allocation_drift = 4096
         if self.compare_failure:
             raise RuntimeError('tar comparison failed')
         with tarfile.open(str(package), 'r:gz') as archive:
@@ -83,6 +100,7 @@ class Backend:
             assert module.digest(self.root / name) == checksum
             verified += 1
         assert verified == count
+        self.after_restore = True
         return {'filesVerified': count}
 
     def record(self, data):
@@ -107,6 +125,7 @@ class OffloadTests(unittest.TestCase):
     def test_full_archive_restore_compare_and_release(self):
         result = self.run_archive()
         self.assertTrue(result['restorationVerified'])
+        self.assertNotEqual(result['before']['inventorySha256'], result['restoredInventorySha256'])
         self.assertEqual(result['phase'], 'offloaded')
         self.assertEqual(self.backend.removals, 2)
         self.assertEqual(self.backend.compares, 2)
@@ -200,6 +219,47 @@ class OffloadTests(unittest.TestCase):
             self.run_archive()
         self.assertTrue(self.backend.source.exists())
         self.assertEqual(self.backend.removals, 1)
+
+    def test_original_tree_still_checks_directory_allocation_before_first_release(self):
+        self.backend.change_original_allocation = True
+        with self.assertRaisesRegex(RuntimeError, 'Source or production changed'):
+            self.run_archive()
+        self.assertEqual(self.backend.removals, 0)
+        self.assertTrue(self.backend.source.exists())
+
+    def test_restore_permission_change_is_still_rejected(self):
+        restore = self.backend.restore
+        def change_mode(*args):
+            result = restore(*args)
+            os.chmod(str(self.backend.source / 'assets/data.bin'), 0o600)
+            return result
+        self.backend.restore = change_mode
+        with self.assertRaisesRegex(RuntimeError, 'Source or production changed'):
+            self.run_archive()
+        self.assertEqual(self.backend.removals, 1)
+        self.assertTrue(self.backend.source.exists())
+
+    def test_restore_mtime_change_is_still_rejected(self):
+        restore = self.backend.restore
+        def change_time(*args):
+            result = restore(*args)
+            os.utime(str(self.backend.source / 'assets/data.bin'), (1700000001, 1700000001))
+            return result
+        self.backend.restore = change_time
+        with self.assertRaisesRegex(RuntimeError, 'Source or production changed'):
+            self.run_archive()
+        self.assertEqual(self.backend.removals, 1)
+        self.assertTrue(self.backend.source.exists())
+
+    def test_standalone_recovery_accepts_only_directory_allocation_variation(self):
+        result = self.run_archive()
+        receipt = self.destination / (NAME + '.json')
+        with mock.patch.object(module, 'SSHBackend', return_value=contextlib.nullcontext(self.backend)):
+            with contextlib.redirect_stdout(io.StringIO()):
+                module.restore(receipt, '/data/mingdao/frontend-550d6d1cc1-20261017')
+        self.assertTrue(self.backend.source.exists())
+        self.assertEqual(self.backend.snapshot()['restorableInventorySha256'], result['before']['restorableInventorySha256'])
+        self.assertNotEqual(self.backend.snapshot()['inventorySha256'], result['before']['inventorySha256'])
 
     def test_invalid_name_cannot_be_used_as_path(self):
         with self.assertRaises(ValueError):

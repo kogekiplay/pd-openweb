@@ -2,6 +2,7 @@
 """Stream an inactive rollback to durable client storage, compare it, and verify a full restoration before releasing it."""
 import argparse
 import contextlib
+from decimal import Decimal
 import hashlib
 import json
 import os
@@ -18,7 +19,7 @@ import uuid
 RESERVE = 4 * 1024 ** 3
 BASE = '/usr/local/MDPrivateDeployment'
 STABLE = ['source', 'entries', 'inventorySha256', 'sourceIndexSha256', 'logicalBytes', 'liveIndexSha256',
-          'rollbackIndexSha256', 'protectedRollback', 'services', 'nginxSha256']
+          'rollbackIndexSha256', 'protectedRollback', 'services', 'nginxSha256', 'restorableInventorySha256']
 
 
 def digest(path):
@@ -48,9 +49,35 @@ def save(path, data):
     durable(path, json.dumps(data, indent=2) + '\n')
 
 
-def stable(before, after):
-    if any(before[k] != after[k] for k in STABLE):
+def stable(before, after, restored=False):
+    keys = [key for key in STABLE if not (restored and key == 'inventorySha256')]
+    if any(before[k] != after[k] for k in keys):
         raise RuntimeError('Source or production changed; retain recovery materials and inspect')
+
+
+def projected_inventory(records, name):
+    # Directory st_size is filesystem allocation, not recoverable tar metadata.
+    # All file sizes, names, types, permissions, owners, mtime and link semantics remain checked.
+    by_path = {r['path']: r for r in records}
+    rows = []
+    for original in records:
+        relative = str(pathlib.PurePosixPath(original['path']).relative_to(name))
+        relative = '' if relative == '.' else relative
+        item = by_path[str(pathlib.PurePosixPath(original['link']))] if original['type'] == '1' else original
+        kind = 'd' if original['type'] == '5' else 'f'
+        row = [relative, kind, '0' if kind == 'd' else str(item['size']),
+               format(Decimal(str(item['mtime'])), '.10f'), format(item['mode'], 'o'),
+               str(item['uid']), str(item['gid']), '']
+        rows.append(tuple(value.encode('utf8', 'surrogateescape') for value in row))
+    return hashlib.sha256(repr(sorted(rows)).encode()).hexdigest()
+
+
+def receipt_projection(receipt, data):
+    manifest_path = pathlib.Path(receipt).parent / data['memberManifest']
+    if digest(manifest_path) != data['memberManifestSha256']:
+        raise RuntimeError('Member manifest changed')
+    records = [json.loads(line) for line in manifest_path.read_text().splitlines()]
+    return projected_inventory(records, pathlib.PurePosixPath(data['source']).name)
 
 
 def manifest(package, name, before, destination):
@@ -58,6 +85,7 @@ def manifest(package, name, before, destination):
     member_path = destination / (name + '-members.jsonl')
     checksum_path = destination / (name + '-files.sha256')
     regular = 0
+    metadata = []
     with member_path.open('x') as writer, checksum_path.open('x') as checksums, tarfile.open(str(package), 'r|gz') as archive:
         for member in archive:
             path = pathlib.PurePosixPath(member.name.rstrip('/'))
@@ -89,15 +117,20 @@ def manifest(package, name, before, destination):
                 escaped = key.replace('\\', '\\\\').replace('\n', '\\n')
                 prefix = '\\' if escaped != key else ''
                 checksums.write(prefix + checksum + '  ' + escaped + '\n')
-            writer.write(json.dumps(dict(path=key, sha256=checksum, type=member.type.decode('ascii'), size=member.size,
-                                         uid=member.uid, gid=member.gid, mode=member.mode,
-                                         mtime=member.pax_headers.get('mtime', str(member.mtime)), link=member.linkname)) + '\n')
+            item = dict(path=key, sha256=checksum, type=member.type.decode('ascii'), size=member.size,
+                        uid=member.uid, gid=member.gid, mode=member.mode,
+                        mtime=member.pax_headers.get('mtime', str(member.mtime)), link=member.linkname)
+            metadata.append(item)
+            writer.write(json.dumps(item) + '\n')
         for stream in [writer, checksums]:
             stream.flush()
             os.fsync(stream.fileno())
     if len(seen) != before['entries'] or hashes.get(name + '/index.html') != before['sourceIndexSha256']:
         raise RuntimeError('Archive inventory or entry digest differs from the source snapshot')
-    return dict(entries=len(seen), regularFiles=regular, filesWithDigests=len(hashes),
+    projection = projected_inventory(metadata, name)
+    if projection != before['restorableInventorySha256']:
+        raise RuntimeError('Archive metadata differs from the source')
+    return dict(entries=len(seen), regularFiles=regular, filesWithDigests=len(hashes), archiveInventorySha256=projection,
                 memberManifest=member_path.name, memberManifestSha256=digest(member_path),
                 fileManifest=checksum_path.name, fileManifestSha256=digest(checksum_path))
 
@@ -120,7 +153,7 @@ def state():
  live=d.digest(d.LIVE+'/index.html');rollback=d.digest(before['rollbackDirectory']+'/index.html')
  assert live==artifact['indexSha256'] and rollback==before['previousIndexSha256']
  nginx=output(['docker','exec',d.APP,'/usr/local/nginx/sbin/nginx','-T'])
- assert source.encode() not in nginx
+ assert source.encode() not in nginx and config['name'].encode() not in nginx
  links=output(['docker','exec',d.APP,'find',d.LIVE,before['rollbackDirectory'],'-type','l'])
  assert not links.strip()
  return dict(liveIndexSha256=live,rollbackIndexSha256=rollback,protectedRollback=before['rollbackDirectory'],
@@ -131,7 +164,9 @@ def snapshot():
  raw=output(['docker','exec',d.APP,'find',source,'-printf',r'%P\0%y\0%s\0%T@\0%m\0%U\0%G\0%l\0'])
  fields=raw.split(b'\0');assert fields.pop()==b'' and len(fields)%8==0
  entries=sorted(tuple(fields[i:i+8])for i in range(0,len(fields),8));assert all(e[1]in[b'f',b'd']for e in entries)
+ normalized=[tuple(list(e[:2])+([b'0']if e[1]==b'd'else list(e[2:3]))+list(e[3:]))for e in entries]
  result.update(source=source,entries=len(entries),inventorySha256=hashlib.sha256(repr(entries).encode()).hexdigest(),
+ restorableInventorySha256=hashlib.sha256(repr(sorted(normalized)).encode()).hexdigest(),
  sourceIndexSha256=d.digest(source+'/index.html'),logicalBytes=sum(int(e[2])for e in entries if e[1]==b'f'),
  physicalBytes=int(output(['docker','exec',d.APP,'du','-sk',source]).decode().split()[0])*1024,
  dataFree=shutil.disk_usage('/data').free)
@@ -249,6 +284,27 @@ class SSHBackend:
         return self.call('record', record=data)
 
 
+def install_recovery(receipt, data):
+    destination = pathlib.Path(receipt).parent
+    name = pathlib.PurePosixPath(data['source']).name
+    tool_sha = digest(__file__)
+    tool = destination / ('offload-tool-' + tool_sha[:12] + '.py')
+    if not tool.exists():
+        with tool.open('xb') as out:
+            out.write(pathlib.Path(__file__).read_bytes())
+            out.flush()
+            os.fsync(out.fileno())
+    if digest(tool) != tool_sha:
+        raise RuntimeError('Recovery tool copy differs')
+    restore = destination / (name + '-restore.sh')
+    script = '#!/bin/sh\nset -eu\n' + 'test "$#" -eq 1\n' + 'exec python3 ' + shlex.quote(str(tool)) + ' restore ' + shlex.quote(str(receipt)) + ' --current-release "$1"\n'
+    durable(restore, script)
+    subprocess.check_call(['sh', '-n', str(restore)])
+    data.update(restore=str(restore), restoreSha256=digest(restore), tool=tool.name, toolSha256=tool_sha)
+    save(receipt, data)
+    return tool, tool_sha, restore
+
+
 def offload(name, destination, backend):
     if not re.fullmatch(r'www-prev-\d{8}-[a-f0-9]{10}', name):
         raise ValueError('Only an exact named rollback directory can be offloaded')
@@ -288,21 +344,7 @@ def offload(name, destination, backend):
     partial.rename(package)
     os.chmod(str(package), 0o600)
     data.update(info, archiveSha256=checksum, phase='verified-before-release')
-    tool_sha = digest(__file__)
-    tool = destination / ('offload-tool-' + tool_sha[:12] + '.py')
-    if not tool.exists():
-        with tool.open('xb') as out:
-            out.write(pathlib.Path(__file__).read_bytes())
-            out.flush()
-            os.fsync(out.fileno())
-    if digest(tool) != tool_sha:
-        raise RuntimeError('Recovery tool copy differs')
-    restore = destination / (name + '-restore.sh')
-    script = '#!/bin/sh\nset -eu\n' + 'test "$#" -eq 1\n' + 'exec python3 ' + shlex.quote(str(tool)) + ' restore ' + shlex.quote(str(receipt)) + ' --current-release "$1"\n'
-    durable(restore, script)
-    subprocess.check_call(['sh', '-n', str(restore)])
-    data.update(restore=str(restore), restoreSha256=digest(restore), tool=tool.name, toolSha256=tool_sha)
-    save(receipt, data)
+    tool, tool_sha, restore = install_recovery(receipt, data)
     backend.record(data)
     if digest(package) != checksum:
         raise RuntimeError('Durable archive changed')
@@ -311,8 +353,10 @@ def offload(name, destination, backend):
     save(receipt, data)
     restored = backend.restore(package, before, destination / info['fileManifest'], info['filesWithDigests'])
     backend.compare(package)
-    stable(before, backend.snapshot())
-    data.update(phase='restoration-verified-before-final-release', restorationVerified=True, restoration=restored)
+    restored_snapshot = backend.snapshot()
+    stable(before, restored_snapshot, restored=True)
+    data.update(phase='restoration-verified-before-final-release', restorationVerified=True, restoration=restored,
+                restoredInventorySha256=restored_snapshot['inventorySha256'])
     save(receipt, data)
     backend.record(data)
     for material, expected in [(package, checksum), (destination / info['fileManifest'], info['fileManifestSha256']),
@@ -320,7 +364,7 @@ def offload(name, destination, backend):
                                (tool, tool_sha), (restore, data['restoreSha256'])]:
         if digest(material) != expected:
             raise RuntimeError('Recovery material changed before final release: ' + str(material))
-    backend.remove(before)
+    backend.remove(restored_snapshot)
     data.update(phase='offloaded', completedAt=time.time())
     remote = backend.record(data)
     data.update(dataFreeAfter=remote.get('dataFree'))
@@ -328,6 +372,54 @@ def offload(name, destination, backend):
     print(json.dumps(dict(phase=data['phase'], source=data['source'], archive=str(package), archiveSha256=checksum,
                           entries=data['entries'], restorationVerified=True, dataFreeAfter=data['dataFreeAfter'])), flush=True)
     return data
+
+
+def finish_restored(receipt, current_release):
+    receipt = pathlib.Path(receipt).resolve()
+    data = json.loads(receipt.read_text())
+    if data['phase'] != 'verifying-full-restoration':
+        raise RuntimeError('Only a stopped full-restoration verification can be reviewed here')
+    destination = receipt.parent
+    package = destination / data['archive']
+    if digest(package) != data['archiveSha256'] or digest(destination / data['fileManifest']) != data['fileManifestSha256']:
+        raise RuntimeError('Recovery data changed')
+    projection = receipt_projection(receipt, data)
+    old = receipt.with_name(receipt.stem + '-before-directory-inventory-review.json')
+    if old.exists():
+        raise FileExistsError('Inventory review already exists; inspect its stopped handle')
+    durable(old, receipt.read_text())
+    old_restore = pathlib.Path(data['restore'])
+    durable(old_restore.with_name(old_restore.stem + '-before-directory-inventory-review.sh'), old_restore.read_text())
+    data['before']['restorableInventorySha256'] = projection
+    data.update(archiveInventorySha256=projection, finishPid=os.getpid(), finishStartedAt=time.time())
+    settings = dict(data['remote'], currentRelease=current_release)
+    with (destination / (receipt.stem + '-finish-restoration.log')).open('a') as log:
+        with SSHBackend(settings, pathlib.PurePosixPath(data['source']).name, log) as backend:
+            actual = backend.snapshot()
+            stable(data['before'], actual, restored=True)
+            data['inventoryReview'] = dict(originalRaw=data['before']['inventorySha256'], restoredRaw=actual['inventorySha256'],
+                                           archiveRestorable=projection, ignoredPhysicalField='directory st_size')
+            tool, tool_sha, recovery = install_recovery(receipt, data)
+            with (destination / data['fileManifest']).open('rb') as checksums:
+                verified = backend.call('verify-files', stdin=checksums, filesWithDigests=data['filesWithDigests'])
+            backend.compare(package)
+            actual = backend.snapshot()
+            stable(data['before'], actual, restored=True)
+            data.update(phase='restoration-verified-before-final-release', restorationVerified=True,
+                        restoration=verified, restoredInventorySha256=actual['inventorySha256'])
+            save(receipt, data)
+            backend.record(data)
+            for asset, checksum in [(package, data['archiveSha256']), (destination / data['fileManifest'], data['fileManifestSha256']),
+                                    (destination / data['memberManifest'], data['memberManifestSha256']), (tool, tool_sha),
+                                    (recovery, data['restoreSha256'])]:
+                if digest(asset) != checksum:
+                    raise RuntimeError('Recovery material changed during inventory review')
+            backend.remove(actual)
+            data.update(phase='offloaded', completedAt=time.time())
+            remote = backend.record(data)
+            data.update(dataFreeAfter=remote.get('dataFree'))
+            save(receipt, data)
+    print(json.dumps(dict(phase='offloaded', archive=str(package), restorationVerified=True, dataFreeAfter=data['dataFreeAfter'])))
 
 
 def restore(receipt, current_release):
@@ -349,8 +441,9 @@ def restore(receipt, current_release):
             backend.restore(package, data['before'], file_manifest, data['filesWithDigests'])
             backend.compare(package)
             actual = backend.snapshot()
-            for key in ['entries', 'inventorySha256', 'sourceIndexSha256', 'logicalBytes']:
-                if actual[key] != data['before'][key]:
+            expected = dict(data['before'], restorableInventorySha256=receipt_projection(receipt, data))
+            for key in ['entries', 'restorableInventorySha256', 'sourceIndexSha256', 'logicalBytes']:
+                if actual[key] != expected[key]:
                     raise RuntimeError('Restored rollback differs: ' + key)
     print('Inactive rollback restored and verified: ' + data['source'])
 
@@ -368,8 +461,13 @@ def main():
     recovery = actions.add_parser('restore')
     recovery.add_argument('receipt')
     recovery.add_argument('--current-release', required=True)
+    finish = actions.add_parser('finish-restored')
+    finish.add_argument('receipt')
+    finish.add_argument('--current-release', required=True)
     args = parser.parse_args()
-    if args.action == 'restore':
+    if args.action == 'finish-restored':
+        finish_restored(args.receipt, args.current_release)
+    elif args.action == 'restore':
         restore(args.receipt, args.current_release)
     elif args.action == 'archive':
         if not re.fullmatch(r'www-prev-\d{8}-[a-f0-9]{10}', args.source):
