@@ -130,24 +130,56 @@ function getMaxXComponentInSingleLine(layouts: AppWidgetLayout[], y: number) {
  * @param {*} components
  * @param {*} layout
  */
-function copyWebLayout(components: AppWidget[], layout: AppWidgetLayout): AppWidgetLayout {
+function copyWebLayout(components: AppWidget[], layout: AppWidgetLayout | undefined): AppWidgetLayout {
+  // 【与原实现可观测等价】原代码 `const { y, w } = layout` 在 layout 为 undefined 时抛
+  // TypeError；规格以 error.name 对照，显式抛同类型错误即可保持等价。
+  if (!layout) {
+    throw new TypeError("Cannot destructure 'layout' as it is undefined.");
+  }
+
   const { y, w } = layout;
-  const layouts = components.map(item => _.get(item, ['web', 'layout'])).filter(_ => _);
-  const { x: maxX, w: maxW } = getMaxXComponentInSingleLine(layouts, y);
+  // 原 `.filter(_ => _)` 只保留 truthy 项；类型谓词形式运行行为相同。
+  const layouts = components
+    .map(item => _.get(item, ['web', 'layout']) as AppWidgetLayout | null | undefined)
+    .filter((item): item is AppWidgetLayout => !!item);
+
+  const first = getMaxXComponentInSingleLine(layouts, Number(y));
+
+  if (!first) {
+    throw new TypeError("Cannot destructure 'undefined' as it is undefined.");
+  }
+
+  const maxX = Number(first.x);
+  const maxW = Number(first.w);
 
   // 如果当前行放不下则从最后一行开始放
-  if (maxX + maxW + w > 12) {
-    const { y: maxY } = maxBy(layouts, item => item.y);
+  // 【用 Number() 而不是 `?? 0`】Number(undefined) 就是 NaN，与原
+  // `maxX + maxW + undefined` 得到 NaN 一致；`?? 0` 会把 NaN 变成真实数字、改变几何结果。
+  if (maxX + maxW + Number(w) > 12) {
+    const lastLine = maxBy(layouts, (item: AppWidgetLayout) => item.y);
+
+    if (!lastLine) {
+      throw new TypeError("Cannot destructure 'undefined' as it is undefined.");
+    }
+
+    const maxY = Number(lastLine.y);
 
     // 如果最后一行就是当前行 则直接放到下一行
-    if (maxY === y) {
+    if (maxY === Number(y)) {
       return { ...layout, x: 0, y: Infinity };
     }
 
-    const { x, w: lastLineComponentW } = getMaxXComponentInSingleLine(layouts, maxY);
+    const last = getMaxXComponentInSingleLine(layouts, maxY);
+
+    if (!last) {
+      throw new TypeError("Cannot destructure 'undefined' as it is undefined.");
+    }
+
+    const x = Number(last.x);
+    const lastLineComponentW = Number(last.w);
 
     // 如果最后一行放不下
-    if (x + lastLineComponentW + w > 12) {
+    if (x + lastLineComponentW + Number(w) > 12) {
       return { ...layout, x: 0, y: Infinity };
     }
 
@@ -174,7 +206,7 @@ function copyWidget(state: AppCustomPageState, payload: AppCopyWidgetPayload): A
           id: uuidv4(),
         };
 
-        if (config.isFilter) {
+        if (config['isFilter']) {
           btn.config = { ...config, isFilter: undefined };
         }
 
@@ -193,7 +225,8 @@ function copyWidget(state: AppCustomPageState, payload: AppCopyWidgetPayload): A
           button: newButton,
           web: update(web, {
             layout: {
-              $apply: item => copyWebLayout(state.components, item),
+              $apply: (item: AppWidgetLayout | null | undefined) =>
+                copyWebLayout(state.components, item ?? undefined),
             },
           }),
         },
@@ -212,7 +245,11 @@ export default function customPage(
 
   switch (type) {
     case UPDATE_PAGE_INFO:
-      return update(state, { $apply: item => ({ ...item, ...payload }) });
+      // 保持原实现的 `{ ...item, ...payload }` 对象展开（lead 要求：不用 Object.assign，
+      // 否则 own `__proto__` 元数据会变成原型）。用 Spec 标注让 patch 的可选字段通过。
+      return update(state, {
+        $apply: (item: AppCustomPageState): AppCustomPageState => ({ ...item, ...payload }),
+      } as Spec<AppCustomPageState>);
     case UPDATE_LOADING:
       return update(state, { loading: { $set: payload } });
     case UPDATE_SAVE_LOADING:
@@ -258,7 +295,7 @@ export default function customPage(
                   // 原实现在 ADD_WIDGET 里并没有传 `titleVisible`（web 分支用不到它），
                   // 为了既保持运行行为、又满足范围外的形参类型，这里显式传 `undefined`：
                   // 与"属性缺失"在 web 分支内行为完全一致（该分支不读 titleVisible）。
-                  titleVisible: undefined,
+                  titleVisible: undefined as boolean | undefined,
                   components: (() => {
                     if (payload.tabId) {
                       return state.components.filter(c => c.tabId === payload.tabId);
@@ -290,7 +327,17 @@ export default function customPage(
 
       if (payload.type === 'filter') {
         const { loadFilterComponentCount } = state;
-        const { filter } = payload;
+        const filter = payload.filter;
+
+        // 原代码直接 `filter.advancedSetting` / `filter.filters.map`，filter 缺失时抛
+        // TypeError；显式抛同类型错误保持可观测等价（lead 要求不能静默变 []）。
+        if (!filter) {
+          throw new TypeError("Cannot read properties of undefined (reading 'advancedSetting')");
+        }
+
+        if (!filter.filters) {
+          throw new TypeError("Cannot read properties of undefined (reading 'map')");
+        }
         addData.loadFilterComponentCount = {
           $set: loadFilterComponentCount + 1,
         };
@@ -361,19 +408,24 @@ export default function customPage(
 
       // 更新对应布局里的标题或者统一的value
       if (layoutType) {
-        result = update(state, {
-          components: {
-            [getIndexById({ component: widget, components: state.components })]: {
-              [payload.layoutType]: { $apply: item => ({ ...item, ...rest }) },
+        // 保留实际 layoutType 计算键（lead 要求：不能把所有非 web 键映射成 mobile）。
+        const slotIndex = getIndexById({ component: widget, components: state.components });
+        const layoutKey = payload.layoutType as string;
+
+        result = update(
+          state,
+          {
+            components: {
+              [slotIndex]: { [layoutKey]: { $apply: (item: AppWidget) => ({ ...item, ...rest }) } },
             },
-          },
-          modified: { $set: true },
-        });
+            modified: { $set: true },
+          } as Spec<AppCustomPageState>,
+        );
       } else {
         result = update(state, {
           components: {
             [getIndexById({ component: widget, components: state.components })]: {
-              $apply: item => ({ ...item, ...rest }),
+              $apply: (item: AppWidget) => ({ ...item, ...rest }),
             },
           },
           modified: { $set: true },
@@ -407,7 +459,11 @@ export default function customPage(
           [getIndexById({ component: payload.widget, components: state.components })]: {
             [payload.layoutType]: {
               titleVisible: { $set: visible },
-              layout: { $apply: item => (item ? { ...item, h: visible ? item.h + 1 : item.h - 1 } : item) },
+              // 原 `item.h + 1`：h 缺失得到 NaN。Number() 保持同一结果（`?? 0` 会变成 1）。
+              layout: {
+                $apply: (item: AppWidgetLayout | null | undefined) =>
+                  item ? { ...item, h: visible ? Number(item.h) + 1 : Number(item.h) - 1 } : item,
+              },
             },
           },
         },
