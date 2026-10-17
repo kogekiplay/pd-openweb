@@ -782,6 +782,42 @@ async function main(): Promise<void> {
     assert.equal(action.url, 'https://new.example.com/p/xyz', 'url 仍原样落值');
   });
 
+  await check('getDispatchData 的形参默认值与基线一致（剥离类型后的结构比对）', async () => {
+    /**
+     * 【我引入过的一次真实行为偏离】类型化时我把 `(data = {})` 改成 `(data)`，
+     * 于是同一输入（undefined）的错误信息从 `reading 'map'` 变成更早的 `reading 'extendDatas'` ——
+     * 异常类型相同但**信息不同**。剥离类型比对字节码时发现，已恢复默认值。
+     *
+     * 【为什么用结构比对而不是行为断言】该错误在 `resetControls` 的 `.then` 里抛出，
+     * 被同函数的 `.catch` 吃掉后只表现为 `重置失败` alert —— 从行为侧观测不到错误信息差异。
+     * 因此直接比对**编译产物**里 `getDispatchData` 的签名：基线与当前必须同为 `= {}`。
+     */
+    const compiled = (source: string) =>
+      (transformSync(source, {
+        comments: false,
+        presets: [require.resolve('@babel/preset-react')],
+        plugins: ['@babel/plugin-transform-modules-commonjs'],
+        filename: 'actions.ts',
+      }) as { code: string }).code;
+
+    const pickSignature = (code: string) => {
+      const line = code
+        .split('\n')
+        .map(l => l.trim())
+        .find(l => l.includes('getDispatchData ='));
+      assert.ok(line, '编译产物里应能定位 getDispatchData 的定义');
+      return line as string;
+    };
+
+    const origSig = pickSignature(compiled(gitShow(`${REL_DIR}/actions.ts`)));
+    const currentSig = pickSignature(compiled(fs.readFileSync(path.join(DIR, 'actions.ts'), 'utf8')));
+
+    // 基线必须是带默认值的形式；当前必须与之一致
+    // 基线形如 `const getDispatchData = (data = {}) => {`
+    assert.match(origSig, /\(\s*data\s*=\s*\{\s*\}\s*\)/, `基线签名应带 = {} 默认值，实际：${origSig}`);
+    assert.equal(currentSig, origSig, `当前签名必须与基线一致（防再次丢失默认值）\n  基线：${origSig}\n  当前：${currentSig}`);
+  });
+
   /* ── 8a.【保留旧基线证据】子进程：旧路径未处理拒绝 → 非零退出；修复后 → 0 ── */
 
   await check('子进程证据：基线路径因未处理拒绝非零退出，修复后为 0（不全局吞掉拒绝）', async () => {

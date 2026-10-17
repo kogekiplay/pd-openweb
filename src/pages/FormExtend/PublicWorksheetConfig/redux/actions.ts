@@ -175,7 +175,15 @@ export function addWorksheetControl(controlName: string, cb: (control: FormContr
  */
 type PublicFormDispatchSource = HapApi.MD.Web.Ajax.ResultModel.Worksheet.PublicForm.PublicFormDomainDto;
 
-const getDispatchData = (data: PublicFormDispatchSource) => {
+/**
+ * 【必须保留 `= {}` 默认值】原实现是 `(data = {})`：当调用方传入 `undefined` 时，
+ * `data` 变成 `{}`，随后 `data.originalControls.map(...)` 抛
+ * `Cannot read properties of undefined (reading 'map')`。
+ * 我一度把它改成**无默认值**的 `(data)`，那会让同一输入在更早的位置抛
+ * `reading 'extendDatas'` —— 异常类型相同但**信息不同**，属真实行为偏离（本轮剥离类型比对时发现）。
+ * 因此恢复默认值，并用 `Partial<>` 如实表达"形参可能不完整"（不改运行时）。
+ */
+const getDispatchData = (data: Partial<PublicFormDispatchSource> = {}) => {
   // `extendDatas` 由接口扩展下发，DTO 未声明该键 → 保留索引访问语义但给出真实局部类型
   const extendDatas: PublicWorksheetExtendDatas =
     (data as unknown as { extendDatas?: PublicWorksheetExtendDatas }).extendDatas || {};
