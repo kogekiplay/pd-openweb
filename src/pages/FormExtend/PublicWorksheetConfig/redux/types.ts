@@ -51,13 +51,18 @@ export interface PublicWorksheetInfo {
   visibleType?: number;
   submitBtnName?: string;
   appId?: string;
-  /** 主题色索引（生产方来自 `data.themeColor`） */
-  themeIndex?: number;
-  themeBgColor?: string;
-  /** 生产方来自 `data.logo`，经 `changeKeyToServer` 反向后为 `logoUrl` */
-  logoUrl?: string;
-  /** 生产方来自 `data.cover` */
-  coverUrl?: string;
+  /**
+   * 【这 4 个字段必须是 `?: T | undefined` 而不是 `?: T`】
+   * `getDispatchData` 里它们是**直接赋值**（`themeIndex: data.themeColor` 等），
+   * 所以键**始终存在**；当 DTO 缺对应字段时，值为**显式 `undefined`**（已实测确认）。
+   * 而 `exactOptionalPropertyTypes` 下 `?: T` 表示"可缺失、不可显式 undefined"，
+   * 用它描述这 4 个字段是**不诚实**的。其余字段由 `_.pick` 构造，缺键时键本身不出现，
+   * 因此保持 `?: T` 才是正确建模。
+   */
+  themeIndex?: number | undefined;
+  themeBgColor?: string | undefined;
+  logoUrl?: string | undefined;
+  coverUrl?: string | undefined;
   /**
    * 高级设置。生产方来自 DTO 的 `advancedSetting`（`Record<string, string>`），
    * 形状为"字符串到字符串"的映射，已按 DTO 声明。
