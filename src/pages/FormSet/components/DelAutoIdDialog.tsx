@@ -7,6 +7,51 @@ import processAjax from 'src/pages/workflow/api/process';
 
 const Wrap = styled.div``;
 
+export interface DeleteAutoIdProps {
+  show;
+  worksheetId?;
+  companyId?;
+  appId?;
+  onClose;
+  delCallback;
+}
+export interface AutoIdUsage {
+  name?;
+  flowNodes?;
+}
+function usageEntry(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  if ('name' in value && value.name !== undefined && value.name !== null && typeof value.name !== 'string')
+    return false;
+  if ('flowNodes' in value && value.flowNodes !== undefined && value.flowNodes !== null) {
+    if (
+      !Array.isArray(value.flowNodes) ||
+      !value.flowNodes.every(
+        (node) =>
+          !!node &&
+          typeof node === 'object' &&
+          !Array.isArray(node) &&
+          (!('name' in node) || node.name === undefined || node.name === null || typeof node.name === 'string'),
+      )
+    )
+      return false;
+  }
+
+  return true;
+}
+
+export function autoIdUsages(value) {
+  if (!Array.isArray(value)) throw new TypeError('Invalid automatic ID usage list');
+  for (const item of value) if (!usageEntry(item)) throw new TypeError('Invalid automatic ID usage fields');
+  return value;
+}
+
+/** This endpoint's wrapper is opaque; the existing consumer only tests its data field's truthiness. */
+export function autoIdDeletionResult(value) {
+  if (value === null || value === undefined) return (value as never)['data'];
+  return Reflect.get(Object(value), 'data', value);
+}
+
 export default function DelDialog(props) {
   const { show, onClose, worksheetId, companyId, delCallback } = props;
   const [loading, setLoading] = useState(false);
@@ -25,24 +70,32 @@ export default function DelDialog(props) {
         appId: worksheetId,
         companyId,
       })
-      .then(res => {
-        setList(res);
+      .then((res) => {
+        setList(autoIdUsages(res));
         setLoading(false);
         setHasCheck(true);
+      })
+      .catch(() => {
+        setLoading(false);
+        setHasCheck(false);
+        alert(_l('检查失败，请稍后再试！'), 2);
       });
   };
 
   const delAutoID = () => {
-    worksheetAjax.deleteWorksheetAutoID({ worksheetId }).then((res = {}) => {
-      if (res.data) {
-        alert(_l('删除成功'));
-        delCallback();
-      } else {
-        alert(_l('删除失败，请稍后再试！'), 2);
-      }
+    worksheetAjax
+      .deleteWorksheetAutoID({ worksheetId })
+      .then((res = {}) => {
+        if (autoIdDeletionResult(res)) {
+          alert(_l('删除成功'));
+          delCallback();
+        } else {
+          alert(_l('删除失败，请稍后再试！'), 2);
+        }
 
-      onClose();
-    });
+        onClose();
+      })
+      .catch(() => alert(_l('删除失败，请稍后再试！'), 2));
   };
 
   return (

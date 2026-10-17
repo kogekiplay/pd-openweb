@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
-import { Dialog, Icon, LoadDiv, ScrollView, Switch } from 'ming-ui';
+import { Button, Dialog, Icon, LoadDiv, ScrollView, Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import sheetAjax from 'src/api/worksheet';
+
 import DelDialog from '../../components/DelAutoIdDialog';
 import Range from '../../components/Range';
+
 import {
   allSwitch,
   batch,
@@ -22,10 +24,38 @@ import {
 import './style.less';
 
 const confirm = Dialog.confirm;
+const rangeExclusions = noRangeList;
+
+function excludesViewRange(type) {
+  const excluded = [...statistics, 10, 11, 13, 14];
+  return excluded.includes(type || '');
+}
 
 // "state": true,  //开关状态
 // "type": 10,  //业务类型枚举
 // "roleType": 0 //角色类型   0=所有人 100=管理员
+
+type WireSwitch = HapApi.MD.Web.Ajax.ResultModel.Worksheet.SwitchConfigDto;
+export interface FunctionalSwitchItem extends FunctionalRangeData {
+  type?;
+  state?;
+  roleType?;
+  view?;
+}
+export interface FunctionalSwitchProps {
+  worksheetId?;
+  worksheetInfo;
+}
+export interface FunctionalSwitchState {
+  loading;
+  worksheetId;
+  showDialog;
+  showData;
+  showLocation;
+  key;
+  data?;
+  loadError?;
+}
 
 function FunctionalSwitch(props) {
   const { worksheetId, worksheetInfo } = props;
@@ -59,28 +89,32 @@ function FunctionalSwitch(props) {
   }, []);
 
   const getSwitchData = () => {
-    sheetAjax.getSwitch({ worksheetId: info.worksheetId }).then(res => {
-      // 末尾拼一个前端自己的「统计」总开关：type 500 不在后端的 SwitchType 枚举里，所以用展开而不是 concat
-      // （concat 要求元素类型和接口返回的完全一致；两种写法运行时等价）
-      let data = [
-        ...res,
-        {
-          view: [],
-          state: res.filter(o => statistics.includes(o.type) && o.state).length > 0,
-          type: statisticsConst, //统计
-          roleType: 0,
-          viewIds: [],
-        },
-      ];
-      setInfo({
-        ...info,
-        loading: false,
-        data,
-      });
-    });
+    sheetAjax
+      .getSwitch({ worksheetId: info.worksheetId })
+      .then(res => {
+        // 末尾拼一个前端自己的「统计」总开关：type 500 不在后端的 SwitchType 枚举里，所以用展开而不是 concat
+        // （concat 要求元素类型和接口返回的完全一致；两种写法运行时等价）
+        let data = [
+          ...res,
+          {
+            view: [],
+            state: res.filter(o => statistics.includes(o.type) && o.state).length > 0,
+            type: statisticsConst, //统计
+            roleType: 0,
+            viewIds: [],
+          },
+        ];
+        setInfo({
+          ...info,
+          loading: false,
+          loadError: false,
+          data,
+        });
+      })
+      .catch(() => setInfo({ ...info, loading: false, loadError: true }));
   };
 
-  const edit = props => {
+  const edit = (props) => {
     const { type, state } = props;
     let switchList = [{ ...props }]; //非批量操作相关，直接操作
 
@@ -89,8 +123,8 @@ function FunctionalSwitch(props) {
       if (type === 25) {
         //批量操作关闭，批量下的操作全部关闭
         switchList.push(
-          ...info.data
-            .filter(o => batch.includes(o.type))
+          ...info
+            .data.filter(o => batch.includes(o.type))
             .map(o => {
               return { ..._.pick(o, ['roleType', 'type', 'state', 'viewIds']), state: state };
             }),
@@ -104,8 +138,8 @@ function FunctionalSwitch(props) {
     if ([statisticsConst, ...statistics].includes(type)) {
       if (type === statisticsConst) {
         switchList.push(
-          ...info.data
-            .filter(o => statistics.includes(o.type))
+          ...info
+            .data.filter(o => statistics.includes(o.type))
             .map(o => {
               return { ..._.pick(o, ['roleType', 'type', 'state', 'viewIds']), state: state };
             }),
@@ -119,8 +153,8 @@ function FunctionalSwitch(props) {
         if (noBatch) {
           //下面批量操作全部关闭，批量操作按钮也关闭
           switchList.push(
-            ...info.data
-              .filter(o => o.type === statisticsConst)
+            ...info
+              .data.filter(o => o.type === statisticsConst)
               .map(o => {
                 return { ..._.pick(o, ['roleType', 'type', 'state', 'viewIds']), state: false };
               }),
@@ -134,7 +168,7 @@ function FunctionalSwitch(props) {
         worksheetId: info.worksheetId,
         switchList: switchList.filter(o => o.type !== statisticsConst),
       })
-      .then(data => {
+      .then((data) => {
         if (data) {
           let typeList = switchList.map(item => item.type);
           let da = info.data.filter(o => !typeList.includes(o.type));
@@ -147,10 +181,11 @@ function FunctionalSwitch(props) {
         } else {
           alert(_l('修改失败，请稍后再试！'), 2);
         }
-      });
+      })
+      .catch(() => alert(_l('修改失败，请稍后再试！'), 2));
   };
 
-  const strRight = (key: string, data) => {
+  const strRight = (key, data) => {
     const { viewIds = [] } = data;
     let len = viewIds.length;
     let Ids = views.map(o => o.viewId);
@@ -163,10 +198,11 @@ function FunctionalSwitch(props) {
       case '3':
         return len <= 0 ? _l('所有记录') : _l('%0个视图下的记录', l);
     }
+
     return undefined;
   };
 
-  const closeRangeDiaFn = info => {
+  const closeRangeDiaFn = (info) => {
     const { viewIds = [], state } = info.showData;
 
     if (viewIds.length <= 0 && !diaRang && state) {
@@ -182,7 +218,7 @@ function FunctionalSwitch(props) {
     setRang(false);
   };
 
-  const renderSwitch = o => {
+  const renderSwitch = (o) => {
     return (
       <Switch
         checked={o.state}
@@ -211,6 +247,7 @@ function FunctionalSwitch(props) {
               roleType: o.roleType,
             });
           }
+
           return undefined;
         }}
         className="mRight18"
@@ -222,6 +259,20 @@ function FunctionalSwitch(props) {
     <React.Fragment>
       {info.loading ? (
         <LoadDiv />
+      ) : info.loadError ? (
+        <div role="alert">
+          <span>{_l('加载失败')}</span>
+          <Button
+            type="link"
+            className="mLeft10"
+            onClick={() => {
+              setInfo({ ...info, loading: true, loadError: false });
+              getSwitchData();
+            }}
+          >
+            {_l('重试')}
+          </Button>
+        </div>
       ) : (
         <ScrollView>
           <div className="switchBox">
@@ -271,7 +322,7 @@ function FunctionalSwitch(props) {
                               {[...batch, ...statistics].includes(oo) && renderSwitch(o)}
                               <span
                                 className="con flexRow"
-                                onClick={e => {
+                                onClick={(e) => {
                                   const target = e.target;
 
                                   if (o.state) {
@@ -370,10 +421,10 @@ function FunctionalSwitch(props) {
               })}
             </div>
             {/* 10, 11, 25, 40 没有范围选择 */}
-            {info.showDialog && !noRangeList.includes(info.showData.type || '') && (
+            {info.showDialog && !rangeExclusions.includes(info.showData.type || '') && (
               <Range
                 showDialog={info.showDialog}
-                hasViewRange={![...statistics, 10, 11, 13, 14].includes(info.showData.type || '')} //是否可选视图范围
+                hasViewRange={!excludesViewRange(info.showData.type)} //是否可选视图范围
                 text={{
                   allview: ['3'].includes(info.key) ? _l('所有记录') : '',
                   assignview: ['3'].includes(info.key) ? _l('应用于指定的视图下的记录') : '',
@@ -387,14 +438,14 @@ function FunctionalSwitch(props) {
                   closeRangeDiaFn(info);
                 }}
                 roleType={info.showData.roleType}
-                change={roleType => {
+                change={(roleType) => {
                   edit({
                     ...info.showData,
                     roleType: roleType,
                   });
                 }}
                 top={info.showLocation.top}
-                changeViewRange={data => {
+                changeViewRange={(data) => {
                   edit({
                     ...info.showData,
                     ..._.omit(data, 'diaRang'),
@@ -404,7 +455,7 @@ function FunctionalSwitch(props) {
                 views={views.filter(l => l.viewId !== l.worksheetId)}
                 data={info.showData}
                 otherSet={41 === info.showData.type}
-                changeOtherSet={otherSet => {
+                changeOtherSet={(otherSet) => {
                   edit({
                     ...info.showData,
                     ...otherSet,
