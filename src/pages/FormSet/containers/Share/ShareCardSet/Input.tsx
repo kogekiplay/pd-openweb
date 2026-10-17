@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Input } from 'ming-ui';
 import DynamicDefaultValue from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue';
 import type { FormControl } from 'src/utils/controlTypes';
+import type { ShareInputProps } from './value';
 
 const Wrap = styled.div`
   &.chooseControl {
@@ -15,16 +16,16 @@ const Wrap = styled.div`
   }
 `;
 
-function InputForShare(props) {
-  const { canUseControl, controls, defaultValue, onChangeValue, worksheetInfo, placeholder }: { controls: FormControl[]; [key: string]: any } = props;
+function InputForShare(props: ShareInputProps) {
+  const { canUseControl, controls, defaultValue, onChangeValue, worksheetInfo, placeholder } = props;
 
   const renderInput = () => {
     return (
       <Input
         className="flex"
         {...props}
-        onClick={e => e.stopPropagation()}
-        onBlur={e => {
+        onClick={(e: React.MouseEvent<HTMLInputElement>) => e.stopPropagation()}
+        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
           e.stopPropagation();
           const newValue = e.target.value;
 
@@ -46,7 +47,7 @@ function InputForShare(props) {
           hideSearchAndFun
           globalSheetInfo={_.pick(worksheetInfo, ['appId', 'groupId', 'name', 'projectId', 'worksheetId'])}
           placeholder={placeholder}
-          onChange={d => {
+          onChange={(d: Pick<FormControl, 'advancedSetting'>) => {
             const { advancedSetting = {} } = d;
             let { defsource } = advancedSetting;
             onChangeValue(defsource);

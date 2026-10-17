@@ -101,17 +101,10 @@ export interface PublicDropdownOption {
   value?: string | undefined;
   style?: React.CSSProperties;
 }
-/** The parent forwards the full share-card value; extension fields are retained by the actual ref. */
-export interface PublicShareCardValue {
-  title?: string | undefined;
-  desc?: string | undefined;
-  icon?: string | undefined;
-  iconUrl?: string | undefined;
-}
-export interface PublicShareCardHandle {
-  shareConfigValue?: PublicShareCardValue | undefined;
-  onSave(info: PublicShareCardValue, shareCardId: string): void;
-}
+export type {
+  ShareCardValue as PublicShareCardValue,
+  ShareCardHandle as PublicShareCardHandle,
+} from 'src/pages/FormSet/containers/Share/ShareCardSet/value';
 
 export function publicSettingText(value: unknown, key: 'title' | 'content'): string | null | undefined {
   const field = readPageProperty(value, key);
