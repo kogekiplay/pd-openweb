@@ -423,3 +423,7 @@ OnlySync、RecordInfo/DragCore、BaseColumnHead 及列头发布器的有限合�
 2026-10-16 统计图表公共配置：strict51,798→51,692，文件/错误码无新增；fast8,570/2,306keys，欠债3,113、strict-clean1,648/4,761；1,592组历史A/B与242项规格及全部门禁通过。见report-config-strict-20261016.md。
 
 2026-10-16 10:58:53（上海）发布c1c74ba4d：六入口/34资源/17,098文件、容器挂载和真实折线/双轴图草稿切换通过；退出并刷新后仅原有2张图表。见production-20261016-report-config.md。
+# 2026-10-18 打印/动作范围下拉
+
+RangeDrop/BtnRangeDrop及真实getShowViews视图消费边界：strict50,856→50,808（逐文件/错误码无新增），fast8416/2269keys原基线不变，debt3072→3070，clean1707/4777。12组真实组件/helper/打印父回调对照、11非法编译及未知扩展过滤变异通过；273/273正式release、全部门禁/四项编译/runtime/publish通过。容器/序列化错误为独立fix，未知数组条目与引用保留，类型层擦除证据通过。候选9cd5c15d08已冻结、尚未部署，现网fbaa复核正常；详见[范围下拉质量记录](range-dropdown-strict-20261018.md)。全仓目标仍active。
+
