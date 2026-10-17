@@ -476,7 +476,11 @@ export default class GanttDialog extends Component<GanttDialogProps, GanttDialog
     }
 
     return (
-      <DialogBase dialogClasses="flatFishGanttDialog" visible onCancel={closeLayer}>
+      // 原实现写的是 onCancel={this.handleClose}，而 handleClose 并不存在，
+      // 因此该 prop 的运行时值一直是 undefined（React 会把 undefined 的 prop 省略）。
+      // 为保持与原行为一致，这里不再传 onCancel；关闭弹窗仍由 GanttHeader 的关闭入口
+      // 走 closeLayer。若要开启遮罩/ESC 关闭，应作为独立行为修复单独提交。
+      <DialogBase dialogClasses="flatFishGanttDialog" visible>
         <div className="flatFishGanttWrap flexColumn">
           <GanttHeader {...{ type, name, data, switchDisplayType, refresh, exportData, closeLayer, scrollToToday }} />
           {loading ? (
