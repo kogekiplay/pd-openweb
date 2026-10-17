@@ -12,6 +12,7 @@ import { Absolute, BlackBtn, FormTopImgCon, Hr } from 'worksheet/components/Basi
 import type { RootState } from 'src/redux/configureStore';
 import { pathCompletion } from 'src/utils/common';
 import { getRgbaByColor } from 'src/utils/controlCommon';
+import { serializeVisibleHeaders, visibleHeaderList } from '../headerConfig';
 import { getPageThemeColor, readPageConfig } from '../pageConfig';
 import * as actions from '../PublicWorksheetConfig/redux/actions';
 import { getDisabledControls, getPageConfig, overridePos } from '../utils';
@@ -114,7 +115,8 @@ class PublicWorksheetConfigForm extends React.Component<any, PublicWorksheetConf
   renderAddHeader = () => {
     const { headerPopupVisible } = this.state;
     const headerConfig = _.get(this.props, 'worksheetSettings.extendDatas.visibleHeaders');
-    const visibleHeaders = _.isUndefined(headerConfig) ? ['logo', 'title', 'description'] : safeParse(headerConfig);
+    const decodedHeaders: unknown = _.isUndefined(headerConfig) ? ['logo', 'title', 'description'] : safeParse(headerConfig);
+    const visibleHeaders = visibleHeaderList(decodedHeaders);
 
     const menuList = [
       { key: 'logo', text: _l('Logo'), icon: 'picture' },
@@ -134,7 +136,7 @@ class PublicWorksheetConfigForm extends React.Component<any, PublicWorksheetConf
                   icon={<Icon icon={item.icon} className="Font16" />}
                   onClick={() => {
                     const newVisibleHeaders = visibleHeaders.concat(item.key);
-                    this.saveExtendDatas({ visibleHeaders: JSON.stringify(newVisibleHeaders) });
+                    this.saveExtendDatas({ visibleHeaders: serializeVisibleHeaders(newVisibleHeaders) });
                   }}
                 >
                   <span className="mLeft8">{item.text}</span>
@@ -177,14 +179,15 @@ class PublicWorksheetConfigForm extends React.Component<any, PublicWorksheetConf
     const needHidedControlIds = hidedControlIds.concat(disabledControlIds);
     const theme = this.getThemeBgColor();
     const extendDatas = worksheetSettings.extendDatas || {};
-    const config = readPageConfig(getPageConfig(extendDatas.pageConfigs));
-    const visibleHeaders = _.isUndefined(extendDatas.visibleHeaders)
+    const config = readPageConfig(getPageConfig(extendDatas['pageConfigs']));
+    const decodedHeaders: unknown = _.isUndefined(extendDatas['visibleHeaders'])
       ? ['logo', 'title', 'description']
-      : safeParse(extendDatas.visibleHeaders);
+      : safeParse(extendDatas['visibleHeaders']);
+    const visibleHeaders = visibleHeaderList(decodedHeaders);
 
     const hideHeader = (key: string) => {
       const newVisibleHeaders = visibleHeaders.filter(item => item !== key);
-      this.saveExtendDatas({ visibleHeaders: JSON.stringify(newVisibleHeaders) });
+      this.saveExtendDatas({ visibleHeaders: serializeVisibleHeaders(newVisibleHeaders) });
     };
 
     const renderContent = () => {
