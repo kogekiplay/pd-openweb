@@ -11,6 +11,7 @@ import { Button, Checkbox, Dialog, Dropdown, Radio, Tabs } from 'ming-ui';
 import { H1, H3, Hr, Tip75, Tipbd, TipBlock } from 'worksheet/components/Basics';
 import { SHARECARDTYPS } from 'src/components/ShareCardConfig/config';
 import type { RootState } from 'src/redux/configureStore';
+import type { AppDispatch } from 'src/redux/types';
 import copy from 'src/utils/copyToClipboard';
 import {
   BUTTON_POSITION_OPTIONS,
@@ -23,15 +24,27 @@ import {
 } from '../../enum';
 import { appendPageConfig } from '../../pageConfigWrite';
 import * as actions from '../../PublicWorksheetConfig/redux/actions';
+import type { DisplayWriteTime } from '../../utils';
 import AddControlDialog from '../components/AddControlDialog';
 import SourceKeys from '../components/SourceKeys';
+import type { PublicWorksheetSettings } from '../redux/types';
 import AbilityExpandSettings from './AbilityExpandSettings';
 import DataCollectionSettings from './DataCollectionSettings';
 import FillSettings from './FillSettings';
+import { publicReceiptAction, publicSettingText } from './models';
+import type {
+  ImmediateSettingChange,
+  PublicConfigProps,
+  PublicConfigState,
+  PublicDropdownOption,
+  PublicLinkKey,
+  PublicShareCardHandle,
+  PublicTimeRange,
+  SystemSourceKey,
+} from './models';
 import ReceiptSettings from './ReceiptSettings';
 import SectionTitle from './SectionTitle';
 import WeChatEnhance from './WeChatEnhance';
-import { publicReceiptAction, publicSettingText } from './models';
 
 const NewDropdown = styled(Dropdown)`
   width: 250px;
@@ -48,15 +61,17 @@ const AddControl = styled.div`
   }
 `;
 
-const DEFAULT_TEXT: Record<string, string> = {
+const DEFAULT_TEXT: Record<SystemSourceKey, string> = {
   ipControlId: _l('IP地址'),
   browserControlId: _l('浏览器'),
   deviceControlId: _l('设备'),
   systemControlId: _l('系统'),
   extendSourceId: _l('扩展值'),
 };
-class PublicConfig extends React.Component<any, any> {
+class PublicConfig extends React.Component<PublicConfigProps, PublicConfigState> {
   declare keyinput: HTMLInputElement | null | undefined;
+  declare cacheSettings: PublicWorksheetSettings;
+  declare shareCardSetRef: React.RefObject<PublicShareCardHandle | null>;
 
   static override propTypes = {
     originalControls: PropTypes.arrayOf(PropTypes.shape({})),
@@ -69,7 +84,7 @@ class PublicConfig extends React.Component<any, any> {
     hideControl: PropTypes.func,
   };
 
-  constructor(props) {
+  constructor(props: PublicConfigProps) {
     super(props);
     const settings = props.worksheetSettings;
     this.cacheSettings = props.worksheetSettings;
@@ -118,16 +133,16 @@ class PublicConfig extends React.Component<any, any> {
       limitWriteFrequencySetting:
         _.get(settings, 'limitWriteFrequencySetting.isEnable') &&
         _.get(settings, 'limitWriteFrequencySetting.limitRangType') === 0
-          ? { ...settings.limitWriteFrequencySetting, limitRangType: 1 }
+          ? { ...settings.limitWriteFrequencySetting!, limitRangType: 1 }
           : settings.limitWriteFrequencySetting,
       displayContent: [1, 2, 3, 4],
       buttonPosition: 'center',
     };
-    this.shareCardSetRef = React.createRef();
+    this.shareCardSetRef = React.createRef<PublicShareCardHandle>();
   }
 
-  getTimeRange = settings => {
-    const { monthSetting = {}, daySetting = {}, hourSetting = {} } = _.get(settings, 'limitWriteTime');
+  getTimeRange = (settings: { limitWriteTime?: DisplayWriteTime | undefined }): PublicTimeRange => {
+    const { monthSetting = {}, daySetting = {}, hourSetting = {} } = _.get(settings, 'limitWriteTime')!;
     const { defineMonth = [], monthType } = monthSetting;
     const { defineDay = [], dayType } = daySetting;
     const { rangHour = [], hourType } = hourSetting;
@@ -186,6 +201,7 @@ class PublicConfig extends React.Component<any, any> {
         worksheetSettings.systemControlId,
         worksheetSettings.extendSourceId,
       ].filter(_.identity),
+      id => id,
     );
     return oldIds.filter(
       id => [ipControlId, browserControlId, deviceControlId, systemControlId, extendSourceId].indexOf(id) < 0,
@@ -210,21 +226,21 @@ class PublicConfig extends React.Component<any, any> {
     } = this.state;
 
     //开启"设置链接开启/停止时间",未设置时间
-    if (linkSwitchTime.isEnable) {
-      if (!linkSwitchTime.startTime || linkSwitchTime.startTime.substr(0, 4) === '0001') {
+    if (linkSwitchTime!.isEnable) {
+      if (!linkSwitchTime!.startTime || linkSwitchTime!.startTime.substr(0, 4) === '0001') {
         alert(_l('已开启链接时间设置，但未选择开始/停止时间'), 3);
         return false;
       }
     }
 
     //填写时段校验
-    if (limitWriteTime.isEnable) {
-      const monthType = limitWriteTime.monthSetting.monthType;
-      const dayType = limitWriteTime.daySetting.dayType;
-      const hourType = limitWriteTime.hourSetting.hourType;
+    if (limitWriteTime!.isEnable) {
+      const monthType = limitWriteTime!.monthSetting!.monthType;
+      const dayType = limitWriteTime!.daySetting!.dayType;
+      const hourType = limitWriteTime!.hourSetting!.hourType;
 
       if (monthType !== TIME_PERIOD_TYPE.MONTHLY) {
-        if (_.isEmpty(limitWriteTime.monthSetting.defineMonth)) {
+        if (_.isEmpty(limitWriteTime!.monthSetting!.defineMonth)) {
           alert(
             monthType === TIME_PERIOD_TYPE.SPECIFY_RANGE_MONTH ? _l('请完整填写月份指定范围') : _l('请选择指定月份'),
             3,
@@ -235,12 +251,12 @@ class PublicConfig extends React.Component<any, any> {
 
       if (dayType !== TIME_PERIOD_TYPE.DAILY) {
         if (dayType === TIME_PERIOD_TYPE.WEEKLY) {
-          if (_.isEmpty(limitWriteTime.daySetting.defineWeek)) {
+          if (_.isEmpty(limitWriteTime!.daySetting!.defineWeek)) {
             alert(_l('请选择指定星期'), 3);
             return false;
           }
         } else {
-          if (_.isEmpty(limitWriteTime.daySetting.defineDay)) {
+          if (_.isEmpty(limitWriteTime!.daySetting!.defineDay)) {
             alert(
               dayType === TIME_PERIOD_TYPE.SPECIFY_RANGE_DAY ? _l('请完整填写日期指定范围') : _l('请选择指定日期'),
               3,
@@ -261,44 +277,44 @@ class PublicConfig extends React.Component<any, any> {
             .filter(item => item.start && item.end)
             .map(item => `${item.start}-${item.end}`);
           const newLimitWriteTime = limitWriteTime;
-          newLimitWriteTime.hourSetting.rangHour = rangeHour;
+          newLimitWriteTime!.hourSetting!.rangHour = rangeHour;
           this.setState({ limitWriteTime: newLimitWriteTime });
         }
       }
     }
 
     //数量上限设置校验
-    if (limitWriteCount.isEnable) {
-      if (!limitWriteCount.limitWriteCount) {
+    if (limitWriteCount!.isEnable) {
+      if (!limitWriteCount!.limitWriteCount) {
         alert(_l('请填写收集数量上限'), 3);
         return false;
       }
     }
 
     //填写次数校验
-    if (limitWriteFrequencySetting.isEnable) {
-      if (!limitWriteFrequencySetting.limitWriteCount) {
+    if (limitWriteFrequencySetting!.isEnable) {
+      if (!limitWriteFrequencySetting!.limitWriteCount) {
         alert(_l('请填写限制次数'), 3);
         return false;
       }
     }
 
     //密码设置校验
-    if (limitPasswordWrite.isEnable) {
-      if (!limitPasswordWrite.limitPasswordWrite) {
+    if (limitPasswordWrite!.isEnable) {
+      if (!limitPasswordWrite!.limitPasswordWrite) {
         alert(_l('已开启凭密码填写，请设置密码'), 3);
         return false;
       }
 
-      if (!/^\w{4,8}$/.test(limitPasswordWrite.limitPasswordWrite)) {
+      if (!/^\w{4,8}$/.test(limitPasswordWrite!.limitPasswordWrite)) {
         alert(_l('密码必须为4-8位的英文或数字'), 3);
         return false;
       }
     }
 
     //缓存设置校验
-    if (cacheFieldData.isEnable) {
-      const cacheFieldArr = cacheFieldData.cacheField || [];
+    if (cacheFieldData!.isEnable) {
+      const cacheFieldArr = cacheFieldData!.cacheField || [];
       const selectedCount = originalControls.filter(item => _.includes(cacheFieldArr, item.controlId)).length;
 
       if (!cacheFieldArr.length || !selectedCount) {
@@ -308,30 +324,30 @@ class PublicConfig extends React.Component<any, any> {
     }
 
     //微信设置校验
-    if (weChatSetting.isCollectWxInfo && activeTab === 2) {
-      if (_.isEmpty(weChatSetting.fieldMaps) || !weChatSetting.fieldMaps[WECHAT_FIELD_KEY.OPEN_ID]) {
+    if (weChatSetting!.isCollectWxInfo && activeTab === 2) {
+      if (_.isEmpty(weChatSetting!.fieldMaps) || !weChatSetting!.fieldMaps![WECHAT_FIELD_KEY.OPEN_ID]) {
         alert(_l('微信OpenID不能为空'), 3);
         return false;
       }
 
-      if (weChatSetting.collectChannel === 2 && !weChatBind.isBind) {
+      if (weChatSetting!.collectChannel === 2 && !weChatBind.isBind) {
         alert(_l('微信登录必须绑定微信服务号'), 2);
         return false;
       }
 
-      if (weChatSetting.collectChannel === 2 && !weChatBind.appId) {
+      if (weChatSetting!.collectChannel === 2 && !weChatBind.appId) {
         alert(_l('请设置服务号'), 2);
         return false;
       }
     }
 
-    if (weChatSetting.collectChannel === 2) {
-      weChatSetting.appId = weChatBind.appId || '';
+    if (weChatSetting!.collectChannel === 2) {
+      weChatSetting!.appId = weChatBind.appId || '';
     }
 
     //功能增强校验
-    if (abilityExpand.autoFillField.isAutoFillField) {
-      const autoFillFieldArr = abilityExpand.autoFillField.autoFillFields || [];
+    if (abilityExpand!.autoFillField!.isAutoFillField) {
+      const autoFillFieldArr = abilityExpand!.autoFillField!.autoFillFields || [];
       const selectedCount = originalControls.filter(item => _.includes(autoFillFieldArr, item.controlId)).length;
 
       if (!autoFillFieldArr.length || !selectedCount) {
@@ -340,10 +356,10 @@ class PublicConfig extends React.Component<any, any> {
       }
     }
 
-    if (abilityExpand.allowViewChange.isAllowViewChange && abilityExpand.allowViewChange.changeSetting) {
+    if (abilityExpand!.allowViewChange!.isAllowViewChange && abilityExpand!.allowViewChange!.changeSetting) {
       if (
-        abilityExpand.allowViewChange.changeSetting.changeType === 2 &&
-        !abilityExpand.allowViewChange.changeSetting.expireTime
+        abilityExpand!.allowViewChange!.changeSetting.changeType === 2 &&
+        !abilityExpand!.allowViewChange!.changeSetting.expireTime
       ) {
         alert(_l('请填写修改时效'), 3);
         return false;
@@ -401,8 +417,8 @@ class PublicConfig extends React.Component<any, any> {
       hideControl(changesIds);
     }
 
-    const setWechatSetting = !weChatSetting.isRequireAuth
-      ? Object.assign({}, weChatSetting, { fieldMaps: _.pick(weChatSetting.fieldMaps, [WECHAT_FIELD_KEY.OPEN_ID]) })
+    const setWechatSetting = !weChatSetting!.isRequireAuth
+      ? Object.assign({}, weChatSetting, { fieldMaps: _.pick(weChatSetting!.fieldMaps, [WECHAT_FIELD_KEY.OPEN_ID]) })
       : weChatSetting;
     const newSettings = {
       limitWriteFrequencySetting,
@@ -442,17 +458,33 @@ class PublicConfig extends React.Component<any, any> {
     });
   };
 
-  handleChange = (key: string, value: unknown, cb: () => void = () => {}) => {
-    const changed: Record<string, unknown> = {};
-    changed[key] = value;
-    this.setState(changed, () => {
+  handleChange = (...[key, value, cb = () => {}]: ImmediateSettingChange) => {
+    const afterChange = () => {
       cb();
       this.saveSetting();
-    });
+    };
+
+    // Each supported key keeps its actual value type and produces the same single-key state patch.
+    switch (key) {
+      case 'sourceKeys':
+        this.setState({ [key]: value }, afterChange);
+        break;
+      case 'extendDatas':
+        this.setState({ [key]: value }, afterChange);
+        break;
+      default: {
+        const changed: Pick<PublicConfigState, SystemSourceKey> = {};
+        changed[key] = value;
+        this.setState(changed, afterChange);
+      }
+    }
   };
 
-  handleLinkSettingChange = (stateObj, changeSettingChange = true) => {
-    this.setState({ ...stateObj, settingChanged: changeSettingChange || this.state.settingChanged });
+  handleLinkSettingChange = <K extends PublicLinkKey>(
+    stateObj: Pick<PublicConfigState, K>,
+    changeSettingChange = true,
+  ) => {
+    this.setState<K>({ ...stateObj, settingChanged: changeSettingChange || this.state.settingChanged });
   };
 
   handleGenUrl = () => {
@@ -464,7 +496,7 @@ class PublicConfig extends React.Component<any, any> {
       return;
     }
 
-    const configs: unknown = safeParse(extendDatas?.pageConfigs);
+    const configs: unknown = safeParse(extendDatas?.['pageConfigs']);
     this.handleChange('sourceKeys', update(sourceKeys, { $push: [value] }), () => {
       this.keyinput!.value = '';
     });
@@ -476,11 +508,11 @@ class PublicConfig extends React.Component<any, any> {
     this.handleChange('sourceKeys', update(sourceKeys, { $splice: [[index, 1]] }));
   };
 
-  handleShowControl = (key: string) => {
+  handleShowControl = (key: SystemSourceKey) => {
     this.setState({ addControlVisible: true, activeSourceKey: key });
   };
 
-  handleAddControl = controlName => {
+  handleAddControl = (controlName: string) => {
     const { addWorksheetControl } = this.props;
     const { activeSourceKey } = this.state;
     addWorksheetControl(controlName, control => {
@@ -493,7 +525,7 @@ class PublicConfig extends React.Component<any, any> {
     });
   };
 
-  handleUpdateExpandDatas = (value: Record<string, string | undefined>, immediately = false) => {
+  handleUpdateExpandDatas = (value: Record<string, string>, immediately = false) => {
     const { extendDatas } = this.state;
     const newValue = { ...extendDatas, ...value };
 
@@ -513,16 +545,19 @@ class PublicConfig extends React.Component<any, any> {
     return `${this.props.shareUrl}?bg=no&submit=${buttonPosition}${coverPic}${logo}${title}${description}`;
   }
 
-  getDropdownControls(key: string) {
+  getDropdownControls(key: SystemSourceKey) {
     const { originalControls, worksheetSettings } = this.props;
     const { extendSourceId, ipControlId, browserControlId, deviceControlId, systemControlId, weChatSetting } =
       this.state;
-    const wxMapControlIds = Object.values(weChatSetting.fieldMaps || {});
+    const wxMapControlIds = Object.values(weChatSetting!.fieldMaps || {});
     const needFilterIds = [extendSourceId, ipControlId, browserControlId, deviceControlId, systemControlId]
       .concat(wxMapControlIds)
       .concat(worksheetSettings.boundControlIds);
 
-    return [{ style: { color: 'var(--color-text-secondary)' }, text: <span>{_l('清除')}</span>, value: 'clear' }]
+    const options: PublicDropdownOption[] = [
+      { style: { color: 'var(--color-text-secondary)' }, text: <span>{_l('清除')}</span>, value: 'clear' },
+    ];
+    return options
       .concat(
         originalControls
           .filter(
@@ -597,8 +632,8 @@ class PublicConfig extends React.Component<any, any> {
           tabs={PUBLISH_CONFIG_TABS}
           active={activeTab}
           tabStyle={{ lineHeight: '34px' }}
-          onChange={tab => {
-            [1, 2].includes(activeTab) && settingChanged
+          onChange={(tab: { value: number }) => {
+            [1, 2].includes(activeTab!) && settingChanged
               ? this.setState({ confirmDialog: { visible: true, tabValue: tab.value } })
               : this.setState({ activeTab: tab.value });
           }}
@@ -724,9 +759,13 @@ class PublicConfig extends React.Component<any, any> {
                 isAppendToBody
                 border
                 value={extendSourceId}
-                renderTitle={selected => (selected ? selected.text : <Tipbd>{_l('请选择...')}</Tipbd>)}
+                renderTitle={(selected: PublicDropdownOption | undefined) =>
+                  selected ? selected.text : <Tipbd>{_l('请选择...')}</Tipbd>
+                }
                 data={this.getDropdownControls('extendSourceId')}
-                onChange={value => this.handleChange('extendSourceId', value === 'clear' ? '' : value)}
+                onChange={(value: string | undefined) =>
+                  this.handleChange('extendSourceId', value === 'clear' ? '' : value)
+                }
               />
               <H3>{_l('生成地址')}</H3>
               <Tip75 className="mBottom10">
@@ -752,9 +791,7 @@ class PublicConfig extends React.Component<any, any> {
                 url={shareUrl}
                 pageConfigs={_.get(extendDatas, 'pageConfigs')}
                 onDelete={this.handleRemoveUrl}
-                handleUpdateExpandDatas={(value: Record<string, string | undefined>) =>
-                  this.handleUpdateExpandDatas(value, true)
-                }
+                handleUpdateExpandDatas={(value: Record<string, string>) => this.handleUpdateExpandDatas(value, true)}
               />
               <Hr />
               <H1>{_l('设备信息')}</H1>
@@ -762,12 +799,14 @@ class PublicConfig extends React.Component<any, any> {
                 {_l('将用户填写表单时的IP地址、浏览器、填写设备、操作系统记录到工作表字段中（文本字段）。')}
               </Tip75>
               <H3>{_l('选择记录设备信息的文本字段')}</H3>
-              {[
-                { name: _l('IP地址'), key: 'ipControlId' },
-                { name: _l('浏览器'), key: 'browserControlId' },
-                { name: _l('设备'), key: 'deviceControlId' },
-                { name: _l('系统'), key: 'systemControlId' },
-              ].map((item, index) => (
+              {(
+                [
+                  { name: _l('IP地址'), key: 'ipControlId' },
+                  { name: _l('浏览器'), key: 'browserControlId' },
+                  { name: _l('设备'), key: 'deviceControlId' },
+                  { name: _l('系统'), key: 'systemControlId' },
+                ] satisfies Array<{ name: string; key: SystemSourceKey }>
+              ).map((item, index) => (
                 <React.Fragment key={index}>
                   <div className="mBottom8">{item.name}</div>
                   <NewDropdown
@@ -775,9 +814,11 @@ class PublicConfig extends React.Component<any, any> {
                     className="mBottom10"
                     border
                     value={this.state[item.key]}
-                    renderTitle={selected => (selected ? selected.text : <Tipbd>{_l('请选择...')}</Tipbd>)}
+                    renderTitle={(selected: PublicDropdownOption | undefined) =>
+                      selected ? selected.text : <Tipbd>{_l('请选择...')}</Tipbd>
+                    }
                     data={this.getDropdownControls(item.key)}
-                    onChange={value => {
+                    onChange={(value: string | undefined) => {
                       this.handleChange(item.key, value === 'clear' ? '' : value);
                     }}
                   />
@@ -838,7 +879,7 @@ class PublicConfig extends React.Component<any, any> {
             </React.Fragment>
           )}
         </div>
-        {[1, 2].includes(activeTab) && (
+        {[1, 2].includes(activeTab!) && (
           <div className="footer flexRow">
             <div className="flex">
               <Button
@@ -862,7 +903,7 @@ class PublicConfig extends React.Component<any, any> {
         )}
         {addControlVisible && (
           <AddControlDialog
-            defaultText={DEFAULT_TEXT[activeSourceKey] || ''}
+            defaultText={DEFAULT_TEXT[activeSourceKey!] || ''}
             onOk={this.handleAddControl}
             onClose={() => {
               this.setState({ addControlVisible: false });
@@ -941,6 +982,6 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+const mapDispatchToProps = (dispatch: AppDispatch) => bindActionCreators(actions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(PublicConfig);

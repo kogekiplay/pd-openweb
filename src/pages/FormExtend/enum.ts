@@ -96,7 +96,7 @@ export const TIME_TYPE = {
   MONTH: 'month',
   DAY: 'day',
   HOUR: 'hour',
-};
+} as const;
 
 export const TIME_PERIOD_TYPE = {
   MONTHLY: 1,

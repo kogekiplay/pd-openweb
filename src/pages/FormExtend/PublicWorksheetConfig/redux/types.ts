@@ -31,35 +31,37 @@ export type PublicWorksheetInfo = Partial<
 };
 
 /** Pick preserves explicit undefined from the wire, including keys copied by lodash.pick. */
-export type PublicWorksheetSettings = Partial<
-  Pick<
-    PublicFormSource,
-    | 'extendDatas'
-    | 'limitWriteFrequencySetting'
-    | 'ipControlId'
-    | 'browserControlId'
-    | 'deviceControlId'
-    | 'systemControlId'
-    | 'receipt'
-    | 'extendSourceId'
-    | 'extends'
-    | 'needCaptcha'
-    | 'smsVerification'
-    | 'smsVerificationFiled'
-    | 'smsSignature'
-    | 'writeScope'
-    | 'linkSwitchTime'
-    | 'limitWriteTime'
-    | 'limitWriteCount'
-    | 'limitPasswordWrite'
-    | 'cacheDraft'
-    | 'cacheFieldData'
-    | 'weChatSetting'
-    | 'abilityExpand'
-    | 'completeNumber'
-    | 'boundControlIds'
-  >
+type WirePublicWorksheetSettings = Pick<
+  PublicFormSource,
+  | 'extendDatas'
+  | 'limitWriteFrequencySetting'
+  | 'ipControlId'
+  | 'browserControlId'
+  | 'deviceControlId'
+  | 'systemControlId'
+  | 'receipt'
+  | 'extendSourceId'
+  | 'extends'
+  | 'needCaptcha'
+  | 'smsVerification'
+  | 'smsVerificationFiled'
+  | 'smsSignature'
+  | 'writeScope'
+  | 'linkSwitchTime'
+  | 'limitWriteTime'
+  | 'limitWriteCount'
+  | 'limitPasswordWrite'
+  | 'cacheDraft'
+  | 'cacheFieldData'
+  | 'weChatSetting'
+  | 'abilityExpand'
+  | 'completeNumber'
+  | 'boundControlIds'
 >;
+/** Editing forwards own undefined values too; Partial alone excludes them on required wire booleans/numbers. */
+export type PublicWorksheetSettings = {
+  [K in keyof WirePublicWorksheetSettings]?: WirePublicWorksheetSettings[K] | undefined;
+};
 
 export interface PublicWorksheetState {
   loading: boolean;
