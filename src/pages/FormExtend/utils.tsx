@@ -23,20 +23,23 @@ export function getNewControlColRow(controls: FormControl[], halfOfNewControl = 
 
 const defaultHidedControlTypes = [26, 27, 21, 48];
 
-export function getNotSupportControlIds(controls) {
+export function getNotSupportControlIds(controls: FormControl[]) {
   const notSupportIds = controls
     .filter(
       control =>
-        defaultHidedControlTypes.includes(control.type) ||
-        (defaultHidedControlTypes.includes(control.sourceControlType) && control.type !== 29) ||
+        _.includes(defaultHidedControlTypes, control.type) ||
+        (_.includes(defaultHidedControlTypes, control.sourceControlType) && control.type !== 29) ||
         (control.type === 29 && !_.includes([0, 1], control.enumDefault2)) || //关联记录不允许选择已有
         (control.type === 51 &&
-          [
-            String(RELATION_SEARCH_SHOW_TYPE.EMBED_LIST),
-            String(RELATION_SEARCH_SHOW_TYPE.TAB_LIST),
-            String(RELATION_SEARCH_SHOW_TYPE.LIST),
-          ].includes(_.get(control, 'advancedSetting.showtype'))) || // 过滤查询记录列表，表格,标签页表格
-        ['caid', 'ownerid', 'ctime', 'utime', 'wfdtime'].includes(control.controlId),
+          _.includes(
+            [
+              String(RELATION_SEARCH_SHOW_TYPE.EMBED_LIST),
+              String(RELATION_SEARCH_SHOW_TYPE.TAB_LIST),
+              String(RELATION_SEARCH_SHOW_TYPE.LIST),
+            ],
+            _.get(control, 'advancedSetting.showtype'),
+          )) || // 过滤查询记录列表，表格,标签页表格
+        _.includes(['caid', 'ownerid', 'ctime', 'utime', 'wfdtime'], control.controlId),
     )
     .map(control => control.controlId);
   return notSupportIds;
@@ -47,15 +50,13 @@ export function getNotSupportControlIds(controls) {
  *（IP / 浏览器 / 设备 / 系统 / 来源，以及微信授权拿到的三项），这些字段不允许用户自己填。
  */
 export function getDisabledControls(
-  controls,
-  systemRelatedIds: {
-    ipControlId?: string;
-    browserControlId?: string;
-    deviceControlId?: string;
-    systemControlId?: string;
-    extendSourceId?: string;
-    weChatSetting?: { fieldMaps?: { openId?: string; nickName?: string; headImgUrl?: string } };
-  } = {},
+  controls: FormControl[],
+  systemRelatedIds: Partial<
+    Pick<
+      HapApi.MD.Web.Ajax.ResultModel.Worksheet.PublicForm.PublicFormDomainDto,
+      'ipControlId' | 'browserControlId' | 'deviceControlId' | 'systemControlId' | 'extendSourceId' | 'weChatSetting'
+    >
+  > = {},
 ) {
   const defaultHided = getNotSupportControlIds(controls);
   const hidedWhenNew = controls
@@ -75,7 +76,7 @@ export function getDisabledControls(
       ].includes(control.controlId),
     )
     .map(control => control.controlId);
-  return _.uniqBy(defaultHided.concat(systemRelated).concat(hidedWhenNew));
+  return _.uniqBy(defaultHided.concat(systemRelated).concat(hidedWhenNew), id => id);
 }
 
 export function overridePos(controls: FormControl[] = [], newPosControls = []) {

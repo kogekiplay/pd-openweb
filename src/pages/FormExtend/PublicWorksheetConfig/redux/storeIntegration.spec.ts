@@ -55,7 +55,10 @@ function gitShow(relPath: string): string {
 
 function assertBaselineIntact(): void {
   for (const [file, expected] of Object.entries(FROZEN)) {
-    const actual = crypto.createHash('sha256').update(gitShow(`${REL_DIR}/${file}`)).digest('hex');
+    const actual = crypto
+      .createHash('sha256')
+      .update(gitShow(`${REL_DIR}/${file}`))
+      .digest('hex');
     assert.equal(actual, expected, `A 侧 ${file} 在 ${BASE_REV} 的 sha256 与冻结值不符`);
   }
 }
@@ -124,10 +127,7 @@ function loadRealUtils(): Record<string, any> {
   }
   for (const name of names) parts.push(grab(name, 'fn'));
 
-  const code = transformSync(
-    `${parts.join('\n')}\nmodule.exports = { ${names.join(', ')} };`,
-    { filename },
-  ).code;
+  const code = transformSync(`${parts.join('\n')}\nmodule.exports = { ${names.join(', ')} };`, { filename }).code;
 
   const target: { exports: Record<string, any> } = { exports: {} };
   new Function('module', 'exports', '_', code)(target, target.exports, realLodash);
@@ -229,9 +229,7 @@ process.on('unhandledRejection', reason => {
   process.exitCode = 1;
 });
 process.on('uncaughtException', error => {
-  realConsole.error(
-    `未捕获异常，判为失败：${error instanceof Error ? error.stack || error.message : String(error)}`,
-  );
+  realConsole.error(`未捕获异常，判为失败：${error instanceof Error ? error.stack || error.message : String(error)}`);
   process.exitCode = 1;
 });
 process.on('beforeExit', () => {
@@ -244,8 +242,7 @@ process.on('beforeExit', () => {
 /* ────────────────────────── 造一个真实 store ────────────────────────── */
 
 function makeStore(variants: VariantSet | 'orig' | 'current') {
-  const set: VariantSet =
-    typeof variants === 'string' ? { reducers: variants, actions: variants } : variants;
+  const set: VariantSet = typeof variants === 'string' ? { reducers: variants, actions: variants } : variants;
   installGlobals();
   alerts.length = 0;
 
@@ -305,6 +302,25 @@ function makeDto() {
 /* ────────────────────────── 执行 ────────────────────────── */
 
 async function main(): Promise<void> {
+  await check('Redux rejects missing controls without storing undefined; thunks read assembled stores', () => {
+    for (const variant of ['orig', 'current'] as const) {
+      const { store } = makeStore(variant);
+      const before = store.getState();
+      assert.throws(() =>
+        store.dispatch({
+          type: 'PUBLICWORKSHEET_LOAD_SUCCESS',
+          originalControls: [],
+          controls: undefined,
+          worksheetInfo: {},
+          worksheetSettings: {},
+          hidedControlIds: [],
+          url: '',
+        } as any),
+      );
+      assert.equal(store.getState(), before);
+      assert.deepEqual(store.getState().publicWorksheet.controls, []);
+    }
+  });
   assertBaselineIntact();
   realConsole.log(`  ✓ A 侧基线 ${BASE_REV.slice(0, 9)} 的 reducers/actions sha256 已实际断言`);
 
@@ -460,11 +476,7 @@ async function main(): Promise<void> {
     await pwApi.pending[1].def.promise.catch(() => undefined);
     await flush();
 
-    assert.equal(
-      store.getState().publicWorksheet.worksheetSettings,
-      before,
-      '失败时不应产生新的 settings 引用',
-    );
+    assert.equal(store.getState().publicWorksheet.worksheetSettings, before, '失败时不应产生新的 settings 引用');
   });
 
   /* ── 7. A/B：同一序列下基线与工作区版本的最终 state 一致 ── */
@@ -520,11 +532,7 @@ async function main(): Promise<void> {
 
     const baseline = results[0];
     for (const result of results.slice(1)) {
-      assert.deepEqual(
-        result.value,
-        baseline.value,
-        `组合 ${result.combo} 的最终 state 与 ${baseline.combo} 不一致`,
-      );
+      assert.deepEqual(result.value, baseline.value, `组合 ${result.combo} 的最终 state 与 ${baseline.combo} 不一致`);
     }
   });
 
@@ -540,8 +548,6 @@ async function main(): Promise<void> {
 }
 
 main().catch(error => {
-  realConsole.error(
-    `主流程异常，判为失败：${error instanceof Error ? error.stack || error.message : String(error)}`,
-  );
+  realConsole.error(`主流程异常，判为失败：${error instanceof Error ? error.stack || error.message : String(error)}`);
   process.exitCode = 1;
 });

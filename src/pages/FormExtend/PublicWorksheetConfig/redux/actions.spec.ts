@@ -52,7 +52,10 @@ function gitShow(relPath: string): string {
 
 function assertBaselineIntact(): void {
   for (const [file, expected] of Object.entries(FROZEN)) {
-    const actual = crypto.createHash('sha256').update(gitShow(`${REL_DIR}/${file}`)).digest('hex');
+    const actual = crypto
+      .createHash('sha256')
+      .update(gitShow(`${REL_DIR}/${file}`))
+      .digest('hex');
     assert.equal(actual, expected, `A 侧 ${file} 在 ${BASE_REV} 的 sha256 与冻结值不符`);
   }
 }
@@ -124,16 +127,14 @@ function loadRealUtils(): Record<string, any> {
    * 这两个函数还引用**模块级常量** `defaultHidedControlTypes`（utils.tsx:24）。
    * 抽不到就会 `ReferenceError`；这里把它一并抽出，仍然"跑真实声明"，不手抄数值。
    */
-  const moduleConstants = [
-    'defaultHidedControlTypes',
-  ]
+  const moduleConstants = ['defaultHidedControlTypes']
     .map(name => {
       const statement = tree.program.body.find((item: any) => {
         const value = item.type === 'ExportNamedDeclaration' ? item.declaration : item;
         return Boolean(
           value &&
-            value.type === 'VariableDeclaration' &&
-            value.declarations.some((entry: any) => entry.id && entry.id.name === name),
+          value.type === 'VariableDeclaration' &&
+          value.declarations.some((entry: any) => entry.id && entry.id.name === name),
         );
       });
       if (!statement || statement.start == null || statement.end == null) {
@@ -213,10 +214,7 @@ interface Harness {
  * `$variant` 为 `orig` 时加载基线 `actions.ts`，否则加载工作区文件。
  * 两者都用**同一套替身**，因此对照的只是 actions.ts 自身的差异。
  */
-function makeHarness(
-  variant: 'orig' | 'current',
-  initialState: Record<string, unknown>,
-): Harness {
+function makeHarness(variant: 'orig' | 'current', initialState: Record<string, unknown>): Harness {
   installGlobals();
   resetObservations();
 
@@ -282,7 +280,8 @@ function makeHarness(
       throw new Error(`spec 没给 ${r} 打桩（${variant}/${rel}）`);
     };
 
-    new Function('module', 'exports', 'require', code)(moduleLike, moduleLike.exports, req);
+    const testCode = rel === 'actions.ts' ? code + '\nmodule.exports.__getDispatchData = getDispatchData;' : code;
+    new Function('module', 'exports', 'require', testCode)(moduleLike, moduleLike.exports, req);
     return moduleLike.exports;
   };
 
@@ -354,9 +353,7 @@ process.on('unhandledRejection', reason => {
 });
 
 process.on('uncaughtException', error => {
-  realConsole.error(
-    `未捕获异常，判为失败：${error instanceof Error ? error.stack || error.message : String(error)}`,
-  );
+  realConsole.error(`未捕获异常，判为失败：${error instanceof Error ? error.stack || error.message : String(error)}`);
   process.exitCode = 1;
 });
 process.on('beforeExit', () => {
@@ -411,6 +408,64 @@ function makeDto() {
 }
 
 async function main(): Promise<void> {
+  await check('native map failures preserve null/undefined error messages and prior mutation', () => {
+    for (const source of [null, undefined]) {
+      const outcomes = ['orig', 'current'].map(variant => {
+        const h = makeHarness(variant as 'orig' | 'current', BASE_STATE);
+        const dto = { originalControls: source, extendDatas: {} };
+        let error: Error | undefined;
+        try {
+          h.actions.__getDispatchData(dto);
+        } catch (thrown) {
+          error = thrown as Error;
+        }
+        assert.ok(error instanceof TypeError);
+        return { name: error!.name, message: error!.message, extendDatas: dto.extendDatas };
+      });
+      assert.deepEqual(outcomes[1], outcomes[0]);
+      assert.ok(outcomes[0].message.includes(String(source)));
+    }
+  });
+
+  await check('wire omissions and own undefined are forwarded without invented defaults', () => {
+    const outputs = ['orig', 'current'].map(variant => {
+      const h = makeHarness(variant as 'orig' | 'current', BASE_STATE);
+      return h.actions.__getDispatchData({ originalControls: [], name: undefined, ipControlId: undefined });
+    });
+    assert.deepEqual(outputs[1], outputs[0]);
+    assert.ok(Object.hasOwn(outputs[1], 'controls'));
+    assert.equal(outputs[1].controls, undefined);
+    assert.ok(Object.hasOwn(outputs[1].worksheetInfo, 'name'));
+    assert.ok(Object.hasOwn(outputs[1].worksheetSettings, 'ipControlId'));
+  });
+
+  await check('hideControl accepts the array used by section consumers and preserves dispatch order', () => {
+    const outputs = ['orig', 'current'].map(variant => {
+      const h = makeHarness(variant as 'orig' | 'current', BASE_STATE);
+      h.actions.hideControl(['c1', 'c2'])(h.dispatch, h.getState);
+      return { dispatched: h.dispatched, calls: h.apiCalls };
+    });
+    assert.deepEqual(outputs[1], outputs[0]);
+    assert.deepEqual((outputs[1].dispatched[0] as { controlId: string[] }).controlId, ['c1', 'c2']);
+  });
+
+  await check('URL property getters retain their original read count before in-place rewriting', () => {
+    const outputs = ['orig', 'current'].map(variant => {
+      const h = makeHarness(variant as 'orig' | 'current', BASE_STATE);
+      let reads = 0;
+      const value = {
+        get coverUrl() {
+          reads += 1;
+          return 'https://cdn/a?x=1';
+        },
+      };
+      h.actions.updateWorksheetInfo(value)(h.dispatch, h.getState);
+      return { reads, keys: Object.keys(value), calls: h.apiCalls };
+    });
+    assert.deepEqual(outputs[1], outputs[0]);
+    assert.equal(outputs[1].reads, 2);
+  });
+
   assertBaselineIntact();
   realConsole.log(`  ✓ A 侧基线 ${BASE_REV.slice(0, 9)} 的 reducers/actions sha256 已实际断言`);
   realConsole.log(`  ✓ 真实 utils 声明抽取：${Object.keys(loadRealUtils()).join(', ')}`);
@@ -429,9 +484,7 @@ async function main(): Promise<void> {
     await def.promise;
     await flush();
 
-    const loadAction = h.dispatched.find(
-      (a: any) => a && a.type === 'PUBLICWORKSHEET_LOAD_SUCCESS',
-    ) as any;
+    const loadAction = h.dispatched.find((a: any) => a && a.type === 'PUBLICWORKSHEET_LOAD_SUCCESS') as any;
     assert.ok(loadAction, '应派发 PUBLICWORKSHEET_LOAD_SUCCESS');
 
     // 业务字段映射
@@ -448,28 +501,31 @@ async function main(): Promise<void> {
     assert.equal(rewritten.advancedSetting.showtype, '5', 'type=29 且 showtype∈{2,6} 时应改写为 5');
   });
 
-  await check('loadPublicWorksheet：getDispatchData 会原地改写传入的 extendDatas.shareConfig（副作用如实记录）', async () => {
-    const h = makeHarness('current', BASE_STATE);
-    const dto = makeDto() as any;
-    dto.extendDatas = { shareConfig: '{"title":"原值"}' };
-    const extendDatasRef = dto.extendDatas;
+  await check(
+    'loadPublicWorksheet：getDispatchData 会原地改写传入的 extendDatas.shareConfig（副作用如实记录）',
+    async () => {
+      const h = makeHarness('current', BASE_STATE);
+      const dto = makeDto() as any;
+      dto.extendDatas = { shareConfig: '{"title":"原值"}' };
+      const extendDatasRef = dto.extendDatas;
 
-    h.actions.loadPublicWorksheet({ worksheetId: 'w1' })(h.dispatch, h.getState);
-    h.pending[0].def.resolve(dto);
-    await h.pending[0].def.promise;
-    await flush();
+      h.actions.loadPublicWorksheet({ worksheetId: 'w1' })(h.dispatch, h.getState);
+      h.pending[0].def.resolve(dto);
+      await h.pending[0].def.promise;
+      await flush();
 
-    // 【原地副作用】原实现直接写 dto.extendDatas.shareConfig，没有克隆
-    assert.equal(
-      extendDatasRef.shareConfig !== '{"title":"原值"}',
-      true,
-      '传入对象的 extendDatas.shareConfig 应被原地改写为 JSON 字符串',
-    );
-    assert.equal(typeof extendDatasRef.shareConfig, 'string');
-    const parsed = JSON.parse(extendDatasRef.shareConfig);
-    assert.equal(parsed.title, '原值', '已有 title 应保留');
-    assert.ok(parsed.desc, 'desc 缺省时应补默认文案');
-  });
+      // 【原地副作用】原实现直接写 dto.extendDatas.shareConfig，没有克隆
+      assert.equal(
+        extendDatasRef.shareConfig !== '{"title":"原值"}',
+        true,
+        '传入对象的 extendDatas.shareConfig 应被原地改写为 JSON 字符串',
+      );
+      assert.equal(typeof extendDatasRef.shareConfig, 'string');
+      const parsed = JSON.parse(extendDatasRef.shareConfig);
+      assert.equal(parsed.title, '原值', '已有 title 应保留');
+      assert.ok(parsed.desc, 'desc 缺省时应补默认文案');
+    },
+  );
 
   /* ── 2. 保存成功/失败的回调与 alert 顺序 ── */
 
@@ -615,10 +671,10 @@ async function main(): Promise<void> {
 
   await check('changeControls：isSave=true 时 dispatch 后调用 saveWorksheet，且只上报布局字段', async () => {
     const h = makeHarness('current', BASE_STATE);
-    h.actions.changeControls(
-      [{ controlId: 'c1', col: 1, row: 2, size: 2, advancedSetting: { x: 1 } }],
-      true,
-    )(h.dispatch, h.getState);
+    h.actions.changeControls([{ controlId: 'c1', col: 1, row: 2, size: 2, advancedSetting: { x: 1 } }], true)(
+      h.dispatch,
+      h.getState,
+    );
 
     assert.equal(h.apiCalls.length, 1);
     assert.equal(h.apiCalls[0].method, 'saveWorksheet');
@@ -630,31 +686,34 @@ async function main(): Promise<void> {
 
   /* ── 5. 原地副作用：changeKeyToServer 会改传入 value 并删除字段 ── */
 
-  await check('updateWorksheetInfo：changeKeyToServer 原地改写调用方 value 并删除 camel 键（副作用如实记录）', async () => {
-    const h = makeHarness('current', BASE_STATE);
-    const value: Record<string, unknown> = {
-      coverUrl: 'https://cdn/cover.png?q=1',
-      logoUrl: 'https://cdn/logo.png?q=2',
-      themeIndex: 7,
-      visibleType: 2,
-    };
-    const sameRef = value;
+  await check(
+    'updateWorksheetInfo：changeKeyToServer 原地改写调用方 value 并删除 camel 键（副作用如实记录）',
+    async () => {
+      const h = makeHarness('current', BASE_STATE);
+      const value: Record<string, unknown> = {
+        coverUrl: 'https://cdn/cover.png?q=1',
+        logoUrl: 'https://cdn/logo.png?q=2',
+        themeIndex: 7,
+        visibleType: 2,
+      };
+      const sameRef = value;
 
-    h.actions.updateWorksheetInfo(value)(h.dispatch, h.getState);
+      h.actions.updateWorksheetInfo(value)(h.dispatch, h.getState);
 
-    // 【原地副作用】原实现直接改同一个对象：新增接口键、删除前端键
-    assert.equal(sameRef.cover, 'https://cdn/cover.png', 'coverUrl 去掉 query 后写入 cover');
-    assert.equal(sameRef.logo, 'https://cdn/logo.png');
-    assert.equal(sameRef.themeColor, 7);
-    assert.equal('coverUrl' in sameRef, false, 'coverUrl 应被删除');
-    assert.equal('logoUrl' in sameRef, false);
-    assert.equal('themeIndex' in sameRef, false);
-    assert.equal(sameRef.visibleType, 2, '无关字段保留');
+      // 【原地副作用】原实现直接改同一个对象：新增接口键、删除前端键
+      assert.equal(sameRef.cover, 'https://cdn/cover.png', 'coverUrl 去掉 query 后写入 cover');
+      assert.equal(sameRef.logo, 'https://cdn/logo.png');
+      assert.equal(sameRef.themeColor, 7);
+      assert.equal('coverUrl' in sameRef, false, 'coverUrl 应被删除');
+      assert.equal('logoUrl' in sameRef, false);
+      assert.equal('themeIndex' in sameRef, false);
+      assert.equal(sameRef.visibleType, 2, '无关字段保留');
 
-    // 且该对象被送进 saveWorksheet
-    assert.equal(h.apiCalls.length, 1);
-    assert.equal(h.apiCalls[0].args.cover, 'https://cdn/cover.png');
-  });
+      // 且该对象被送进 saveWorksheet
+      assert.equal(h.apiCalls.length, 1);
+      assert.equal(h.apiCalls[0].args.cover, 'https://cdn/cover.png');
+    },
+  );
 
   /* ── 6. hideControl / showControl 的分发顺序与状态联动 ── */
 
@@ -707,9 +766,7 @@ async function main(): Promise<void> {
     assert.ok(dispatchIndex >= 0, '应派发 UPDATE_URL');
     assert.ok(alertIndex < dispatchIndex, '原实现是先 alert 再 dispatch');
 
-    const action = h.dispatched.find(
-      (a: any) => a && a.type === 'PUBLICWORKSHEET_UPDATE_URL',
-    ) as any;
+    const action = h.dispatched.find((a: any) => a && a.type === 'PUBLICWORKSHEET_UPDATE_URL') as any;
     assert.equal(action.url, 'https://new.example.com/p/xyz', 'url 应原样落值（不经 || 归一）');
   });
 
@@ -720,10 +777,8 @@ async function main(): Promise<void> {
     await h.pending[0].def.promise;
     await flush();
 
-    const action = h.dispatched.find(
-      (a: any) => a && a.type === 'PUBLICWORKSHEET_UPDATE_URL',
-    ) as any;
-    assert.equal(action.url, '', "thunk 不改变 url，归一交给 reducer 的 || 规则");
+    const action = h.dispatched.find((a: any) => a && a.type === 'PUBLICWORKSHEET_UPDATE_URL') as any;
+    assert.equal(action.url, '', 'thunk 不改变 url，归一交给 reducer 的 || 规则');
   });
 
   await check('refreshShareUrl（修复后）：失败时显示本地错误提示、不派发、不显示成功提示', async () => {
@@ -776,9 +831,7 @@ async function main(): Promise<void> {
     assert.ok(alertIndex < dispatchIndex, '成功路径顺序保持：先 alert 再 dispatch');
     assert.equal(alerts.length, 1, '成功路径只应有一次提示');
 
-    const action = h.dispatched.find(
-      (a: any) => a && a.type === 'PUBLICWORKSHEET_UPDATE_URL',
-    ) as any;
+    const action = h.dispatched.find((a: any) => a && a.type === 'PUBLICWORKSHEET_UPDATE_URL') as any;
     assert.equal(action.url, 'https://new.example.com/p/xyz', 'url 仍原样落值');
   });
 
@@ -793,12 +846,14 @@ async function main(): Promise<void> {
      * 因此直接比对**编译产物**里 `getDispatchData` 的签名：基线与当前必须同为 `= {}`。
      */
     const compiled = (source: string) =>
-      (transformSync(source, {
-        comments: false,
-        presets: [require.resolve('@babel/preset-react')],
-        plugins: ['@babel/plugin-transform-modules-commonjs'],
-        filename: 'actions.ts',
-      }) as { code: string }).code;
+      (
+        transformSync(source, {
+          comments: false,
+          presets: [require.resolve('@babel/preset-react')],
+          plugins: ['@babel/plugin-transform-modules-commonjs'],
+          filename: 'actions.ts',
+        }) as { code: string }
+      ).code;
 
     const pickSignature = (code: string) => {
       const line = code
@@ -815,7 +870,11 @@ async function main(): Promise<void> {
     // 基线必须是带默认值的形式；当前必须与之一致
     // 基线形如 `const getDispatchData = (data = {}) => {`
     assert.match(origSig, /\(\s*data\s*=\s*\{\s*\}\s*\)/, `基线签名应带 = {} 默认值，实际：${origSig}`);
-    assert.equal(currentSig, origSig, `当前签名必须与基线一致（防再次丢失默认值）\n  基线：${origSig}\n  当前：${currentSig}`);
+    assert.equal(
+      currentSig,
+      origSig,
+      `当前签名必须与基线一致（防再次丢失默认值）\n  基线：${origSig}\n  当前：${currentSig}`,
+    );
   });
 
   await check('API 替身的方法名与真实 src/api 一致（防替身凭空发明方法）', async () => {
@@ -865,13 +924,17 @@ async function main(): Promise<void> {
      * 这也满足 lead 的"不要全局吞掉未处理拒绝"。
      */
     const { spawnSync } = require('node:child_process');
-    const fixture = path.join(DIR, 'refreshFailureFixture.ts');
+    const fixture = path.join(ROOT, 'scripts/spec-fixtures/publicWorksheetRefreshFailure.ts');
 
     const orig = spawnSync(process.execPath, [fixture, 'orig'], { encoding: 'utf8', cwd: ROOT });
     assert.notEqual(orig.status, 0, `基线路径应因未处理拒绝非零退出，实际 status=${orig.status}`);
 
     const current = spawnSync(process.execPath, [fixture, 'current'], { encoding: 'utf8', cwd: ROOT });
-    assert.equal(current.status, 0, `修复后不应出现未处理拒绝，实际 status=${current.status}；stderr=${current.stderr}`);
+    assert.equal(
+      current.status,
+      0,
+      `修复后不应出现未处理拒绝，实际 status=${current.status}；stderr=${current.stderr}`,
+    );
     assert.match(current.stdout, /alerts=\["刷新失败"\]/, '修复后应输出本地错误提示');
     assert.match(current.stdout, /dispatched=\[\]/, '修复后不应派发成功 URL');
   });
@@ -911,10 +974,10 @@ async function main(): Promise<void> {
       // 因此序列里加入 isSave=true、updateWorksheetInfo（走 changeKeyToServer）与
       // updateSettings（走 saveSetting 参数拼装）。
       h.actions.changeControls([{ controlId: 'c1', col: 1, row: 2 }], false)(h.dispatch, h.getState);
-      h.actions.changeControls(
-        [{ controlId: 'c1', col: 1, row: 2, size: 2, advancedSetting: { x: 1 } }],
-        true,
-      )(h.dispatch, h.getState);
+      h.actions.changeControls([{ controlId: 'c1', col: 1, row: 2, size: 2, advancedSetting: { x: 1 } }], true)(
+        h.dispatch,
+        h.getState,
+      );
       h.actions.updateWorksheetInfo({
         coverUrl: 'https://cdn/cover.png?q=1',
         themeIndex: 7,
@@ -956,14 +1019,10 @@ async function main(): Promise<void> {
     process.exitCode = 1;
     return;
   }
-  realConsole.log(
-    `PublicWorksheetConfig thunk 异步规格通过：${checks} 项（受控 Promise + 真实 utils 声明抽取）`,
-  );
+  realConsole.log(`PublicWorksheetConfig thunk 异步规格通过：${checks} 项（受控 Promise + 真实 utils 声明抽取）`);
 }
 
 main().catch(error => {
-  realConsole.error(
-    `主流程异常，判为失败：${error instanceof Error ? error.stack || error.message : String(error)}`,
-  );
+  realConsole.error(`主流程异常，判为失败：${error instanceof Error ? error.stack || error.message : String(error)}`);
   process.exitCode = 1;
 });

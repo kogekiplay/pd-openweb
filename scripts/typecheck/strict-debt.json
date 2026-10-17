@@ -915,8 +915,6 @@
     "src/pages/FormExtend/PublicWorksheetConfig/components/Qr.tsx",
     "src/pages/FormExtend/PublicWorksheetConfig/components/SourceKeys.tsx",
     "src/pages/FormExtend/PublicWorksheetConfig/index.tsx",
-    "src/pages/FormExtend/PublicWorksheetConfig/redux/actions.ts",
-    "src/pages/FormExtend/PublicWorksheetConfig/redux/reducers.ts",
     "src/pages/FormExtend/common/MapField.tsx",
     "src/pages/FormExtend/index.tsx",
     "src/pages/FormExtend/utils.tsx",

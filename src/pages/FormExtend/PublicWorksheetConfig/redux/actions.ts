@@ -1,50 +1,50 @@
 import _ from 'lodash';
 import formAjax from 'src/api/form';
 import publicWorksheetAjax from 'src/api/publicWorksheet';
-import { getDisabledControls, getNewControlColRow } from '../../utils';
 import type { AppDispatch, GetState } from 'src/redux/types';
 import type { FormControl } from 'src/utils/controlTypes';
-import type { HidedControlId, PublicWorksheetExtendDatas } from './types';
+import { getDisabledControls, getNewControlColRow } from '../../utils';
+import type {
+  HidedControlId,
+  PublicFormSource,
+  PublicWorksheetAction,
+  PublicWorksheetExtendDatas,
+  PublicWorksheetInfo,
+  PublicWorksheetPayload,
+} from './types';
 
-/**
- * 把前端字段名改写成接口字段名（原地修改并返回同一对象 —— 原实现即如此）。
- *
- * 【为什么参数是 `Record<string, unknown>`】调用方传的是各不相同的局部对象
- * （`{controls}` / `{hidedControlIds, controls}` / `{visibleType}` / 信息补丁），
- * 形状随调用点变化；限定成某个固定接口会把**范围外调用方**一起卡住。
- *
- * 【为什么这里对取值做标量窄化】原实现直接 `value.coverUrl.split('?')[0]`：
- * 键存在时按 URL 字符串处理。标量窄化只声明"存在时是字符串"这一协议事实，
- * **不改变失败路径**（若真不是字符串，`.split` 仍会抛错，与原实现一致）。
- * 这里只窄化单个标量，不做整对象断言。
- */
-function changeKeyToServer(value: Record<string, unknown>): Record<string, unknown> {
-  const coverUrl = value['coverUrl'] as string | undefined;
+type BaseConfigPatch = Partial<PublicWorksheetInfo> & {
+  controls?: FormControl[] | undefined;
+  hidedControlIds?: HidedControlId[] | undefined;
+  cover?: string | undefined;
+  logo?: string | undefined;
+  themeColor?: number | undefined;
+};
 
-  if (!_.isUndefined(coverUrl)) {
-    value['cover'] = coverUrl.split('?')[0];
-    delete value['coverUrl'];
+function changeKeyToServer(value: BaseConfigPatch) {
+  if (!_.isUndefined(value.coverUrl)) {
+    value.cover = value.coverUrl.split('?')[0];
+    delete value.coverUrl;
   }
 
-  const logoUrl = value['logoUrl'] as string | undefined;
-
-  if (!_.isUndefined(logoUrl)) {
-    value['logo'] = logoUrl.split('?')[0];
-    delete value['logoUrl'];
+  if (!_.isUndefined(value.logoUrl)) {
+    value.logo = value.logoUrl.split('?')[0];
+    delete value.logoUrl;
   }
 
-  const themeIndex = value['themeIndex'] as number | undefined;
-
-  if (!_.isUndefined(themeIndex)) {
-    value['themeColor'] = themeIndex;
-    delete value['themeIndex'];
+  if (!_.isUndefined(value.themeIndex)) {
+    value.themeColor = value.themeIndex;
+    delete value.themeIndex;
   }
 
   return value;
 }
 
 export const updateSettings =
-  (value: Record<string, unknown>, cb: (success: boolean) => void = () => {}) =>
+  (
+    value: PublicWorksheetPayload<'PUBLICWORKSHEET_UPDATE_SETTINGS'>['value'],
+    cb: (success: boolean) => void = () => {},
+  ) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const {
       publicWorksheet: {
@@ -61,7 +61,7 @@ export const updateSettings =
         if (data) {
           cb(true);
           console.log('save success');
-          dispatch({ type: 'PUBLICWORKSHEET_UPDATE_SETTINGS', value });
+          dispatch({ type: 'PUBLICWORKSHEET_UPDATE_SETTINGS', value } satisfies PublicWorksheetAction);
         }
       })
       .catch(() => {
@@ -72,7 +72,7 @@ export const updateSettings =
 function updateBaseConfig(
   _dispatch: AppDispatch,
   getState: GetState,
-  value: Record<string, unknown>,
+  value: BaseConfigPatch,
   cb?: ((worksheetId: string | undefined) => void) | undefined,
 ) {
   const {
@@ -111,20 +111,8 @@ export function refreshShareUrl() {
       .refreshPublicWorksheetUrl({ worksheetId })
       .then(data => {
         alert(_l('刷新成功'));
-        dispatch({ type: 'PUBLICWORKSHEET_UPDATE_URL', url: data.url });
+        dispatch({ type: 'PUBLICWORKSHEET_UPDATE_URL', url: data.url } satisfies PublicWorksheetAction);
       })
-      /**
-       * 【独立行为修复】原实现只挂 `.then`、**没有 `.catch`**：接口失败时该 Promise
-       * 无人处理 → 产生**未处理拒绝**（可在子进程中稳定复现为进程非零退出），
-       * 且用户看不到任何失败反馈。
-       *
-       * 修复遵循既有风格与 lead 的要求：
-       * - **本地错误提示**：与同文件 `保存失败` / `添加文本字段失败` 一致，用
-       *   `alert(_l('刷新失败'), 3)`（type 3 = 错误级）；
-       * - **不派发成功 URL**、**不显示成功提示**（成功路径的 alert 与 dispatch 顺序、
-       *   参数与 thunk 原返回协议都保持不变）；
-       * - **不做全局兜底**：只在本调用处处理，未改动任何全局 `unhandledRejection`。
-       */
       .catch(() => {
         alert(_l('刷新失败'), 3);
       });
@@ -151,7 +139,7 @@ export function addWorksheetControl(controlName: string, cb: (control: FormContr
         name: controlName,
       })
       .then(data => {
-        dispatch({ type: 'PUBLICWORKSHEET_ADD_CONTROL', control: data });
+        dispatch({ type: 'PUBLICWORKSHEET_ADD_CONTROL', control: data } satisfies PublicWorksheetAction);
         dispatch(hideControl(data.controlId));
         cb(data);
       })
@@ -161,32 +149,8 @@ export function addWorksheetControl(controlName: string, cb: (control: FormContr
   };
 }
 
-/**
- * 把接口返回的公开表单 DTO 映射成 `PUBLICWORKSHEET_LOAD_SUCCESS` 载荷。
- *
- * 【入参类型用仓内生成类型】`src/api/publicWorksheet.ts` 的 `getPublicWorksheetInfo`
- * 返回 `ApiResultOf<PublicWorksheet...PublicFormDomainDto>`，`types/hap-api.d.ts` 里
- * 有完整声明（`themeColor`/`visibleType`/`controls`/`originalControls`/`url`/
- * `hidedControlIds`/`advancedSetting` … 都在其中）。原先写成 `Record<string, any>`
- * 才导致 `data.extendDatas` 这类访问触发 `noPropertyAccessFromIndexSignature`。
- *
- * 【缺字段时保持原失败路径】原实现直接 `data.originalControls.map(...)`，
- * 缺字段会抛 TypeError；这里显式抛同类型错误而不是静默兜底成 `[]`。
- */
-type PublicFormDispatchSource = HapApi.MD.Web.Ajax.ResultModel.Worksheet.PublicForm.PublicFormDomainDto;
-
-/**
- * 【必须保留 `= {}` 默认值】原实现是 `(data = {})`：当调用方传入 `undefined` 时，
- * `data` 变成 `{}`，随后 `data.originalControls.map(...)` 抛
- * `Cannot read properties of undefined (reading 'map')`。
- * 我一度把它改成**无默认值**的 `(data)`，那会让同一输入在更早的位置抛
- * `reading 'extendDatas'` —— 异常类型相同但**信息不同**，属真实行为偏离（本轮剥离类型比对时发现）。
- * 因此恢复默认值，并用 `Partial<>` 如实表达"形参可能不完整"（不改运行时）。
- */
-const getDispatchData = (data: Partial<PublicFormDispatchSource> = {}) => {
-  // `extendDatas` 由接口扩展下发，DTO 未声明该键 → 保留索引访问语义但给出真实局部类型
-  const extendDatas: PublicWorksheetExtendDatas =
-    (data as unknown as { extendDatas?: PublicWorksheetExtendDatas }).extendDatas || {};
+const getDispatchData = (data: Partial<PublicFormSource> = {}) => {
+  const extendDatas: PublicWorksheetExtendDatas = data.extendDatas || {};
   const shareConfig = safeParse(extendDatas.shareConfig) || {};
   shareConfig.title = shareConfig.title || `${data.name} - ${_l('公开填写')}`;
   shareConfig.desc = shareConfig.desc || _l('请填写内容');
@@ -195,16 +159,8 @@ const getDispatchData = (data: Partial<PublicFormDispatchSource> = {}) => {
   return {
     type: 'PUBLICWORKSHEET_LOAD_SUCCESS',
     controls: data.controls,
-    originalControls: (() => {
-      const source = data.originalControls;
-
-      if (!source) {
-        // 原实现会在此处抛 `Cannot read properties of undefined (reading 'map')`
-        throw new TypeError("Cannot read properties of undefined (reading 'map')");
-      }
-
-      return source;
-    })().map(c => ({
+    // Native map preserves missing/null failure behavior; a successful map yields an array.
+    originalControls: data.originalControls!.map(c => ({
       ...c,
       advancedSetting:
         c.type === 29 && _.includes(['2', '6'], _.get(c, 'advancedSetting.showtype'))
@@ -260,14 +216,10 @@ const getDispatchData = (data: Partial<PublicFormDispatchSource> = {}) => {
       ]),
     },
     hidedControlIds: data.hidedControlIds || [],
-  };
+  } satisfies PublicWorksheetAction;
 };
 
-export function loadPublicWorksheet({
-  worksheetId,
-}: {
-  worksheetId?: string | undefined;
-}) {
+export function loadPublicWorksheet({ worksheetId }: { worksheetId?: string | undefined }) {
   return (dispatch: AppDispatch) => {
     publicWorksheetAjax.getPublicWorksheetInfo({ worksheetId }).then(data => {
       dispatch(getDispatchData(data));
@@ -276,9 +228,9 @@ export function loadPublicWorksheet({
 }
 
 export const changeControls =
-  (controls: FormControl[], isSave = true) =>
+  (controls: PublicWorksheetPayload<'PUBLICWORKSHEET_UPDATE_CONTROLS'>['controls'], isSave = true) =>
   (dispatch: AppDispatch, getState: GetState) => {
-    dispatch({ type: 'PUBLICWORKSHEET_UPDATE_CONTROLS', controls });
+    dispatch({ type: 'PUBLICWORKSHEET_UPDATE_CONTROLS', controls } satisfies PublicWorksheetAction);
     isSave &&
       updateBaseConfig(dispatch, getState, {
         controls: controls.map(c => _.pick(c, ['controlId', 'col', 'row', 'size'])),
@@ -286,10 +238,11 @@ export const changeControls =
   };
 
 export const updateWorksheetInfo =
-  (value: Record<string, unknown>) => (dispatch: AppDispatch, getState: GetState) => {
-  dispatch({ type: 'PUBLICWORKSHEET_UPDATE_INFO', value });
-  updateBaseConfig(dispatch, getState, value);
-};
+  (value: PublicWorksheetPayload<'PUBLICWORKSHEET_UPDATE_INFO'>['value']) =>
+  (dispatch: AppDispatch, getState: GetState) => {
+    dispatch({ type: 'PUBLICWORKSHEET_UPDATE_INFO', value } satisfies PublicWorksheetAction);
+    updateBaseConfig(dispatch, getState, value);
+  };
 
 export const updateWorksheetVisibleType =
   (value: number, cb: () => void = () => {}) =>
@@ -297,40 +250,32 @@ export const updateWorksheetVisibleType =
     updateBaseConfig(dispatch, getState, { visibleType: value }, (worksheetId: string | undefined) => {
       cb();
       if (value === 1) {
-        dispatch({ type: 'PUBLICWORKSHEET_UPDATE_INFO', value: { visibleType: value } });
+        dispatch({
+          type: 'PUBLICWORKSHEET_UPDATE_INFO',
+          value: { visibleType: value },
+        } satisfies PublicWorksheetAction);
       } else {
         dispatch(loadPublicWorksheet({ worksheetId }));
       }
     });
   };
 
-export const hideControl = (controlId: string) => (dispatch: AppDispatch, getState: GetState) => {
-  const {
-    publicWorksheet: { hidedControlIds, controls, worksheetSettings, originalControls },
-  } = getState();
+export const hideControl =
+  (controlId: PublicWorksheetPayload<'WORKSHEET_HIDE_CONTROL'>['controlId']) =>
+  (dispatch: AppDispatch, getState: GetState) => {
+    const {
+      publicWorksheet: { hidedControlIds, controls, worksheetSettings, originalControls },
+    } = getState();
 
-  //每次更改字段显隐时，需要将禁用的字段隐藏
-  /**
-   * 【范围外签名不足，在此边界标注】`getDisabledControls`（`src/pages/FormExtend/utils.tsx:49`）
-   * 的 `controls` 形参未标注，其内部 `_.uniqBy(...)` 被推断成 `unknown[]`。
-   * 它按契约返回**控件 id 数组**，这里在调用边界声明该事实（运行时不改变任何东西）。
-   * **范围外签名由 lead 统一处理**，我不改那个文件。
-   */
-  const disabledControlIds = getDisabledControls(
-    originalControls,
-    worksheetSettings,
-  ) as HidedControlId[];
-  // 【等价修法】`_.uniqBy(arr)` 不带 iteratee 时按自身去重；类型要求显式传恒等函数。
-  const newHidedControlIds = _.uniqBy(
-    hidedControlIds.concat(controlId).concat(disabledControlIds),
-    (id: string) => id,
-  );
-  const newControls: FormControl[] = controls.filter(item => !_.includes(newHidedControlIds, item.controlId));
+    //每次更改字段显隐时，需要将禁用的字段隐藏
+    const disabledControlIds = getDisabledControls(originalControls, worksheetSettings);
+    const newHidedControlIds = _.uniqBy(hidedControlIds.concat(controlId).concat(disabledControlIds), id => id);
+    const newControls: FormControl[] = controls!.filter(item => !_.includes(newHidedControlIds, item.controlId));
 
-  updateBaseConfig(dispatch, getState, { hidedControlIds: newHidedControlIds, controls: newControls });
-  dispatch({ type: 'WORKSHEET_HIDE_CONTROL', controlId });
-  dispatch({ type: 'PUBLICWORKSHEET_UPDATE_CONTROLS', controls: newControls });
-};
+    updateBaseConfig(dispatch, getState, { hidedControlIds: newHidedControlIds, controls: newControls });
+    dispatch({ type: 'WORKSHEET_HIDE_CONTROL', controlId } satisfies PublicWorksheetAction);
+    dispatch({ type: 'PUBLICWORKSHEET_UPDATE_CONTROLS', controls: newControls } satisfies PublicWorksheetAction);
+  };
 
 export function showControl(showControls: FormControl[] = []) {
   return (dispatch: AppDispatch, getState: GetState) => {
@@ -339,30 +284,20 @@ export function showControl(showControls: FormControl[] = []) {
       publicWorksheet: { controls, hidedControlIds, originalControls, worksheetSettings },
     } = state;
 
-    // 【显式泛型】原 `reduce(…, [])` 的累加器被推断成 `never[]`；
-    // 声明为 `FormControl[]` 后 `acc.concat(...)` 与后续 `control.controlId` 才成立，
-    // 运行行为不变。
     const newShowControls = showControls.reduce<FormControl[]>((acc, control) => {
       // 将原始 controls 和已经处理过的控件合并，用于计算新控件位置
-      const currentControls: FormControl[] = controls.concat(acc);
+      const currentControls: FormControl[] = controls!.concat(acc);
       const rowCol = getNewControlColRow(currentControls, control.half);
       return acc.concat({ ...control, col: rowCol.col, row: rowCol.row });
     }, []);
 
     //每次更改字段显隐时，需要将禁用的字段隐藏
-    // 同 hideControl：范围外 helper 返回 unknown[]，在边界声明其契约类型
-    const disabledControlIds = getDisabledControls(
-      originalControls,
-      worksheetSettings,
-    ) as HidedControlId[];
-    // 【等价修法】同 hideControl：显式传恒等 iteratee。
+    const disabledControlIds = getDisabledControls(originalControls, worksheetSettings);
     const newHidedControlIds = _.uniqBy(
-      hidedControlIds
-        .concat(disabledControlIds)
-        .filter((controlId: string) => !_.find(newShowControls, { controlId })),
-      (id: string) => id,
+      hidedControlIds.concat(disabledControlIds).filter(controlId => !_.find(newShowControls, { controlId })),
+      id => id,
     );
-    const newControls: FormControl[] = controls.concat(
+    const newControls: FormControl[] = controls!.concat(
       newShowControls.map(control => _.pick(control, ['controlId', 'col', 'row', 'size'])),
     );
 
@@ -375,7 +310,7 @@ export function showControl(showControls: FormControl[] = []) {
       type: 'WORKSHEET_SHOW_CONTROL',
       controlIds: newShowControls.map(control => control.controlId),
       controls: newShowControls.map(control => _.pick(control, ['controlId', 'col', 'row', 'size'])),
-    });
+    } satisfies PublicWorksheetAction);
   };
 }
 
@@ -400,4 +335,4 @@ export function resetControls() {
 }
 
 // 清空数据
-export const clear = () => ({ type: 'PUBLICWORKSHEET_CLEAR' });
+export const clear = () => ({ type: 'PUBLICWORKSHEET_CLEAR' }) satisfies PublicWorksheetAction;

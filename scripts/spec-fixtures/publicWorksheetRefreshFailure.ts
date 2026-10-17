@@ -15,7 +15,7 @@
  */
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
-const { transformFileSync, transformSync, ROOT } = require('../../../../../scripts/spec-harness.ts');
+const { transformFileSync, transformSync, ROOT } = require('../spec-harness.ts');
 
 const variant = process.argv[2] === 'orig' ? 'orig' : 'current';
 const REL_DIR = 'src/pages/FormExtend/PublicWorksheetConfig/redux';
@@ -52,21 +52,23 @@ const load = (rel: string): any => {
   const moduleLike: any = { exports: {} };
   cache.set(rel, moduleLike);
 
-  const filename = path.join(__dirname, rel);
+  const filename = path.join(ROOT, REL_DIR, rel);
   const babelOpts = {
     presets: [require.resolve('@babel/preset-react')],
     plugins: ['@babel/plugin-transform-modules-commonjs'],
   };
   const code =
     variant === 'orig' && rel === 'actions.ts'
-      ? (transformSync(
-          execFileSync('git', ['show', `${BASE_REV}:${REL_DIR}/${rel}`], {
-            cwd: ROOT,
-            encoding: 'utf8',
-            maxBuffer: 16 * 1024 * 1024,
-          }),
-          { ...babelOpts, filename },
-        ) as { code: string }).code
+      ? (
+          transformSync(
+            execFileSync('git', ['show', `${BASE_REV}:${REL_DIR}/${rel}`], {
+              cwd: ROOT,
+              encoding: 'utf8',
+              maxBuffer: 16 * 1024 * 1024,
+            }),
+            { ...babelOpts, filename },
+          ) as { code: string }
+        ).code
       : (transformFileSync(filename, babelOpts) as { code: string }).code;
 
   const req = (r: string) => {
