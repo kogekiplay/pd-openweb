@@ -8,6 +8,7 @@ const React = require('react');
 const EventEmitter = require('node:events');
 const root = path.resolve(__dirname, '../../../../..');
 const file = 'src/pages/worksheet/components/ChildTableDialog.tsx';
+const compiledSources = new Map<string, string>();
 global._l = (text: string) => text;
 global.alert = () => {};
 
@@ -45,7 +46,11 @@ function invoke(node: ElementFixture, key: string, ...args: unknown[]) {
 
 function load(source: string, imports: Record<string, unknown>, timers: number[]) {
   const target = { exports: {} as Record<string, unknown> };
-  const code = transformSync(source, { filename: path.join(root, file) }).code;
+  let code = compiledSources.get(source);
+  if (code === undefined) {
+    code = transformSync(source, { filename: path.join(root, file) }).code;
+    compiledSources.set(source, code);
+  }
   new Function('module', 'exports', 'require', 'setTimeout', code)(
     target,
     target.exports,
