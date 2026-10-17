@@ -82,24 +82,32 @@ export interface PublicWorksheetSettings {
   systemControlId?: string;
   extendSourceId?: string;
   weChatSetting?: PublicWorksheetWeChatSetting;
-  /** 以下由 `_.pick(data, [...])` 直取，形状随接口，未逐个建模 */
-  limitWriteFrequencySetting?: unknown;
-  receipt?: unknown;
-  extends?: unknown;
-  needCaptcha?: unknown;
-  smsVerification?: unknown;
-  smsVerificationFiled?: unknown;
-  smsSignature?: unknown;
-  writeScope?: unknown;
-  linkSwitchTime?: unknown;
-  limitWriteTime?: unknown;
-  limitWriteCount?: unknown;
-  limitPasswordWrite?: unknown;
-  cacheDraft?: unknown;
-  cacheFieldData?: unknown;
-  abilityExpand?: unknown;
-  completeNumber?: unknown;
-  boundControlIds?: unknown;
+  /**
+   * 以下由 `_.pick(data, [...])` 直取。
+   *
+   * 【类型来源：接口生成的权威声明】这些键在 `types/hap-api.d.ts` 的
+   * `PublicFormDomainDto` 里**都有明确声明**，因此不再标 `unknown`，
+   * 直接沿用生成类型（如 `receipt: string`、`writeScope: number`、
+   * `boundControlIds: string[]`、`limitWriteTime: LimitWriteTime` 等）。
+   * 这比"unknown + 让消费方自行收窄"更诚实：形状是已知的，只是不在本 redux 内定义。
+   */
+  limitWriteFrequencySetting?: HapApi.MD.Entity.Worksheet.PublicForm.LimitWriteFrequencySetting;
+  receipt?: string;
+  extends?: string[];
+  needCaptcha?: boolean;
+  smsVerification?: boolean;
+  smsVerificationFiled?: string;
+  smsSignature?: string;
+  writeScope?: number;
+  linkSwitchTime?: HapApi.MD.Entity.Worksheet.PublicForm.LinkSwitchTime;
+  limitWriteTime?: HapApi.MD.Entity.Worksheet.PublicForm.LimitWriteTime;
+  limitWriteCount?: HapApi.MD.Entity.Worksheet.PublicForm.LimitWriteCountSetting;
+  limitPasswordWrite?: HapApi.MD.Entity.Worksheet.PublicForm.LimitPasswordWriteSetting;
+  cacheDraft?: boolean;
+  cacheFieldData?: HapApi.MD.Entity.Worksheet.PublicForm.CacheFieldData;
+  abilityExpand?: HapApi.MD.Entity.Worksheet.PublicForm.AbilityExpand;
+  completeNumber?: number;
+  boundControlIds?: string[];
   [key: string]: unknown;
 }
 
