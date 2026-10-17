@@ -21,3 +21,18 @@ SharingSettings 原 props 为隐式 any，加载状态只推断出 loading，却
 冻结整合构建 **6a6f6defe7d336e45515218b5a9b8fd56adc8561**，包含上一批尚未单独部署的分享卡片修复。入口 SHA256 **04ac80a75b49ce55ea8bbbf8684814bca072abf92f235865ba2af07c9ff19b0a**，包 SHA256 **9a6e64e9a51777190ca8d9795c0a56294fed2cd019c0f7e0824f4a9c8dc33cd9**，17,098文件/三元数据逐条读取通过，包261,558,680bytes。材料 `/private/tmp/hap-share-settings-6a6f6defe7-artifact-20261018/`，原始证据 `/private/tmp/hap-share-settings-20261018/`。冻结不表示已部署，最终以独立生产记录为准。
 
 发布前现网仍ae026c501c，六入口/34资源复核正常。为满足完整复制/候选/压缩包与4GiB预留，正在用既有工具完整归档一份不活动旧3b标签回滚；只有实际完整恢复、全文件/元数据验证并释放已验证重复副本后，才按实时预算上传发布。当前生产/完整快速回滚、厂商资源、doc四外部卷、a4c95和其他历史恢复链保留，不降低门禁或空间保护。下一批处理FormSet入口的路由/加载与权限边界（当前13条），全仓目标继续active。
+
+
+## 整合生产发布结果
+
+上海时间 **2026-10-18T01:45:51.481730+08:00** 完成生产切换，revision **6a6f6defe7d336e45515218b5a9b8fd56adc8561**，包含上一批分享卡片b84255c504；b842冻结包未单独部署，其代码已随本版上线。相对原ae生产 strict **51,003→50,955**（减少48），相对上一main减少12，口径不混算。公网六入口/34资源、现网及完整快速回滚各17,098文件全部匹配。五服务ID/镜像/端口/完整Mounts与nginx全配置SHA不变，后端7.5.1、doc2.1.0四external卷及厂商资源保留；PM两资源仍200/0bytes/SHA e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855。upstream8360adec0实际未更新，无后端升级。
+
+当前release **/data/mingdao/frontend-6a6f6defe7-20261018/**；完整快速回滚 **/usr/local/MDPrivateDeployment/www-prev-20261018-6a6f6defe7** 含原ae，入口SHA **111b415762ce6022f7f6aaf3d9bf54612a17b4c675615ce1cca233c86a638960**，rollback.sh语法通过。旧ae标签回滚仍含97f、摘要未变；a4c95/未完成旧批/其他恢复链保留。
+
+旧不活动www-prev-20261017-3b0ff2ea0c经既有工具全程持有生产锁，完整流式归档至 **/Users/kogeki/dev/HAP-release-archives/20261017/**，81,603条目/81,396文件；独立成员SHA、回传tar compare、实际完整恢复、全文件SHA/元数据全部通过后才释放验证过的重复树。receipt.phase=offloaded/restorationVerified=true，包SHA **71ce0cdd8732e668de4c15b9bf34ba2171ad6d514979add469830e8485891fdf**，成员清单SHA **717ff732caa0111751dcac862e69ac853c634298975006d394cc34320f9edfb2**，文件清单SHA **c8a7750934f90a3873f95cfe6725002485c254794a907e28e8cdb1bce3e3fe49**。与旧e494/23358/63d/c1共五份持久包/收据/清单/恢复脚本/固定工具/README及失败证据全保留，服务器索引/data/mingdao/hap-offloaded-rollbacks/。原tree raw守卫和文件权限/mtime/长度等检查不放宽，恢复投影仅排除目录物理allocation大小。
+
+上传前 **25953218560bytes** 大于完整预算 **18578667222**；解包后 **25008271360** 大于部署预算 **17679706783**，均保留4GiB；发布后/data余 **12514451456bytes**，下版重新实时预算。当前生产/完整快速回滚始终在服务器；归档/恢复/上传/部署全部终态，无活作业，未因观察超时重复启动；pre-push/release顺序执行。
+
+1280×720已登录只读验收保存真正切换前后截图：MOM数值卡、库位2,036、ERP工作台四常用导航正常，两页DOM为6a、console warn/error均0，无viewport override，临时页已关闭。未保存业务记录/配置/权限、刷新公开链接、上传、执行业务导航按钮或发消息；真实分享权限写接口/公开设置/微信/上传未验收，既有“盘具构成·新旧”后端缺维度仍不计通过项。
+
+完整生产证据 **/private/tmp/hap-production-share-settings-6a6f6defe7-20261018/** 包含冻结版http-verify-frozen.py、上传预算/包与逐文件验证、前后截图/DOM、完整远端终态记录。冻结artifact.json的productionDeployed:false保持原样；实际部署以新verification/phase/job及线上revision与SHA为准。下一批处理FormSet入口13条strict，保持实际请求/卸载守卫、权限/翻译/导航时序；全仓目标继续active。

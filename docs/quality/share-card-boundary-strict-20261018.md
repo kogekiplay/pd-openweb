@@ -19,10 +19,10 @@ ShareCardSet 原 forwardRef 未声明 props/ref，状态从空对象推断，网
 - strict **51,003→50,967**，逐文件/错误码无新增。移除 ShareCardSet 的 TS2339×25/TS7006×8、Input 的 TS7006×1、WeChatEnhance 与 Share 父各 TS2322×1。fast **8,470→8,443**、keys **2,276→2,273**；debt **3,080→3,077**，仅移出两个真实分享卡片组件与 WeChatEnhance，clean **1,698/4,775**。新增产品文件仅 value.ts。baseline SHA256 **579b48089978a47c822ccfde1c4eb9ebec65b9a453f2a06bfcea74b0a91cd3b5**，strict-debt SHA256 **cf3ce941e73181a316a2c56b94383e58a3ea4c0b2afe98d38ff3b3bdfedeab8f**，集合与逐项计数只收紧。
 - 正式 release **269/269**、全部前置门禁与四项编译通过，耗时 1m；颜色/圆角/排版/JSX key/四产品文件 ESLint 零错误、runtime **1,095 JS/387 CSS chunks** 和 publish 通过。原有仅依赖 type 的 useEffect 警告在新旧代码各一条，未改请求触发条件或新增禁用规则。原 subPathNavigation 隔离 known-failure 保留，release 与 pre-push 顺序执行。首轮夹具路径、未覆盖 helper 分支和图标测试输入问题已纠正，后续才计入通过；私有编译探针初次未用类型导入的诊断已修正，原编译日志保留。
 
-## 候选与生产状态
+## 构建与生产状态
 
-本批**尚未部署**。冻结 revision **b84255c504a74c62879d9f7f444c8702994f3006**，入口 SHA256 **4199c90a4ee7d608f56db4e4b9e03dd78888cf2a7229b1044d25eb826f2616d8**，包 SHA256 **83e8dda97b98310c066ef756ff72686f1bac5d1018d6144c138926912f567de0**，17,098 文件和三项元数据逐条读取通过，包261,561,589bytes。材料 `/private/tmp/hap-sharecard-b84255c504-artifact-20261018/`，原始证据 `/private/tmp/hap-sharecard-20261018/`。
+本批已于 **2026-10-18T01:45:51.481730+08:00** 随整合版本 **6a6f6defe7d336e45515218b5a9b8fd56adc8561** 发布生产。原冻结构建 **b84255c504a74c62879d9f7f444c8702994f3006** 未单独部署，其源码已合并上线；原冻结包17,098文件/三元数据及历史证据保留。最终生产与完整回滚、六入口/34资源及登录只读验收见 [分享设置整合发布结果](sharing-settings-strict-20261018.md)。
 
-当前生产仍 **ae026c501c453a0ea8fc6af30f8314c76ad201c5**。六入口/34资源、五服务完整Mounts/nginx、生产/快回滚入口摘要复核通过；当前完整快回滚仍 `/usr/local/MDPrivateDeployment/www-prev-20261018-ae026c501c`（原97f）。本轮无远端写操作，厂商/文档四外部卷、四份已实际完整恢复验证的持久归档与历史恢复链保留。
+原候选入口SHA **4199c90a4ee7d608f56db4e4b9e03dd78888cf2a7229b1044d25eb826f2616d8**，包SHA **83e8dda97b98310c066ef756ff72686f1bac5d1018d6144c138926912f567de0**，261,561,589bytes，材料 `/private/tmp/hap-sharecard-b84255c504-artifact-20261018/`，原始证据 `/private/tmp/hap-sharecard-20261018/`，不覆盖旧包或改写冻结metadata。
 
-本批先普通同步main与冻结候选，后续与分享设置父容器批次整合发布。实测/data可用 **13,546,840,064bytes** 低于完整复制/两候选/压缩包/4GiB/256MiB预算 **18,578,668,049bytes**，发布前按既有可恢复流程处理并重新实测，不降低保护。Share/index.tsx仍12条strict及其他API消费者仍待后续，完整全仓强类型/正式strict目标继续active。
+本批冻结时/data仅13,546,840,064bytes，低于完整预算18,578,668,049，因此先main同步与冻结。随后旧不活动3b回滚完整归档/实际恢复/全文件和元数据验证后释放重复树，再按足够预算整合发布，未降低4GiB保护。Share父容器本版也已完成，下一批FormSet入口/路由/加载与权限边界；全仓强类型/正式strict目标仍active。
