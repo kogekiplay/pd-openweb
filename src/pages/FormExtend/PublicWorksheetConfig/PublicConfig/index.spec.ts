@@ -457,78 +457,80 @@ check('unknown JSON readers retain lazy property access and reject wrong known f
 });
 check('real share-card imperative binding and save declaration match the parent ref protocol', () => {
   const rel = 'src/pages/FormSet/containers/Share/ShareCardSet/index.tsx';
-  const source = fs.readFileSync(path.join(h.ROOT, rel), 'utf8');
+  const historical = execFileSync('git', ['show', `${h.BASE}:${rel}`], { cwd: h.ROOT, encoding: 'utf8' });
   assert.equal(
-    crypto.createHash('sha256').update(source).digest('hex'),
+    crypto.createHash('sha256').update(historical).digest('hex'),
     '63b25e50d8deaf04f1b375b0d64a9633a3d720b5026193649fe35f2b73042e14',
   );
-  const events = [];
-  const info = { title: 'Title', desc: 'Desc', icon: 'icon', iconUrl: 'url', extension: { keep: true } };
-  const onSave = new Function(
-    'sheetSetAjax',
-    '_',
-    'appId',
-    'worksheetId',
-    'alert',
-    '_l',
-    `return (${h
-      .compile('const actual = ' + h.expression(source, 'onSave') + ';', rel)
-      .replace(/^.*?const actual=/, '')
-      .replace(/;$/, '')})`,
-  )(
-    {
-      shareCardSetting: payload => {
-        events.push(payload);
-        return { then: cb => cb(true) };
+  for (const source of [historical, fs.readFileSync(path.join(h.ROOT, rel), 'utf8')]) {
+    const events = [];
+    const info = { title: 'Title', desc: 'Desc', icon: 'icon', iconUrl: 'url', extension: { keep: true } };
+    const onSave = new Function(
+      'sheetSetAjax',
+      '_',
+      'appId',
+      'worksheetId',
+      'alert',
+      '_l',
+      `return (${h
+        .compile('const actual = ' + h.expression(source, 'onSave') + ';', rel)
+        .replace(/^.*?const actual=/, '')
+        .replace(/;$/, '')})`,
+    )(
+      {
+        shareCardSetting: payload => {
+          events.push(payload);
+          return Promise.resolve(true);
+        },
       },
-    },
-    require('lodash'),
-    'app',
-    'sheet',
-    () => {},
-    x => x,
-  );
-  onSave(info, 'sheet_5');
-  assert.deepEqual(events[0], {
-    title: 'Title',
-    desc: 'Desc',
-    icon: 'icon',
-    extension: info.extension,
-    appId: 'app',
-    appItemId: 'sheet',
-    shareCardId: 'sheet_5',
-  });
-  // Execute the actual imperative-handle expression with controlled hook/ref bindings.
-  let bind;
-  function walk(node) {
-    if (!node || typeof node !== 'object') return;
-    if (Array.isArray(node)) {
-      node.forEach(walk);
-      return;
+      require('lodash'),
+      'app',
+      'sheet',
+      () => {},
+      x => x,
+    );
+    onSave(info, 'sheet_5');
+    assert.deepEqual(events[0], {
+      title: 'Title',
+      desc: 'Desc',
+      icon: 'icon',
+      extension: info.extension,
+      appId: 'app',
+      appItemId: 'sheet',
+      shareCardId: 'sheet_5',
+    });
+    // Execute the actual imperative-handle expression with controlled hook/ref bindings.
+    let bind;
+    function walk(node) {
+      if (!node || typeof node !== 'object') return;
+      if (Array.isArray(node)) {
+        node.forEach(walk);
+        return;
+      }
+      if (node.type === 'CallExpression' && node.callee.name === 'useImperativeHandle') bind = node;
+      Object.values(node).forEach(walk);
     }
-    if (node.type === 'CallExpression' && node.callee.name === 'useImperativeHandle') bind = node;
-    Object.values(node).forEach(walk);
+    walk(h.parse(source));
+    assert.ok(bind);
+    const ref = { current: null };
+    new Function(
+      'useImperativeHandle',
+      'ref',
+      'onSave',
+      'shareConfigValue',
+      h.compile(source.slice(bind.start, bind.end) + ';', rel),
+    )(
+      (r, make) => {
+        r.current = make();
+      },
+      ref,
+      onSave,
+      info,
+    );
+    assert.equal(ref.current.shareConfigValue, info);
+    assert.equal(ref.current.onSave, onSave);
+    assert.deepEqual(Reflect.ownKeys(ref.current), ['onSave', 'shareConfigValue']);
   }
-  walk(h.parse(source));
-  assert.ok(bind);
-  const ref = { current: null };
-  new Function(
-    'useImperativeHandle',
-    'ref',
-    'onSave',
-    'shareConfigValue',
-    h.compile(source.slice(bind.start, bind.end) + ';', rel),
-  )(
-    (r, make) => {
-      r.current = make();
-    },
-    ref,
-    onSave,
-    info,
-  );
-  assert.equal(ref.current.shareConfigValue, info);
-  assert.equal(ref.current.onSave, onSave);
-  assert.deepEqual(Reflect.ownKeys(ref.current), ['onSave', 'shareConfigValue']);
 });
 check('WeChat forwarding and time constants erase identically; binding/read-only changes are type-only', () => {
   for (const rel of [

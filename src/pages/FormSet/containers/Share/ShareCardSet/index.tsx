@@ -1,13 +1,16 @@
 import { forwardRef, Fragment, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
-import { Icon, LoadDiv, QiniuUpload } from 'ming-ui';
+import { Button, Icon, LoadDiv, QiniuUpload } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import sheetSetAjax from 'src/api/worksheetSetting';
 import { getDynamicValue } from 'src/components/Form/core/formUtils';
 import { SHARECARDTYPS, VIEW_TYPE_ICON_LIST, WX_ICON_LIST } from 'src/components/ShareCardConfig/config';
+
 import Input from './Input';
 import { Con, UploadBtn } from './style';
+import { loadedShareCard, shareCardDynamicText, shareCardIconText } from './value';
+
 
 const ShareCardSet = forwardRef((props, ref) => {
   const {
@@ -26,6 +29,7 @@ const ShareCardSet = forwardRef((props, ref) => {
   const [shareConfigValue, setConfig] = useState({});
   const [isUploading, setIsUploading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const shareData = useRef({ ...shareConfigValue, title: shareConfigValue?.title });
 
   // 暴露方法给父组件
@@ -40,16 +44,23 @@ const ShareCardSet = forwardRef((props, ref) => {
 
   const getShareCardSet = () => {
     if (worksheetId) {
-      sheetSetAjax.getShareCardSetting({ shareCardId: `${worksheetId}_${type}` }).then(res => {
-        setConfig({
-          ...res,
-          title:
-            res.title ||
-            (type === SHARECARDTYPS.PUBLICWORKSHEET ? `${worksheetInfo.worksheetName} - ${_l('公开填写')}` : ''),
-          desc: res.desc || (type === SHARECARDTYPS.PUBLICWORKSHEET ? _l('请填写内容') : ''),
+      sheetSetAjax
+        .getShareCardSetting({ shareCardId: `${worksheetId}_${type}` })
+        .then((res) => {
+          setConfig(
+            loadedShareCard(res, {
+              title: () =>
+                type === SHARECARDTYPS.PUBLICWORKSHEET ? `${worksheetInfo.worksheetName} - ${_l('公开填写')}` : '',
+              desc: () => (type === SHARECARDTYPS.PUBLICWORKSHEET ? _l('请填写内容') : ''),
+            }),
+          );
+          if (loadError) setLoadError(false);
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoadError(true);
+          setLoading(false);
         });
-        setLoading(false);
-      });
     }
   };
 
@@ -61,14 +72,15 @@ const ShareCardSet = forwardRef((props, ref) => {
         appItemId: worksheetId,
         shareCardId,
       })
-      .then(res => {
+      .then((res) => {
         if (!res) {
           alert(_l('保存失败'), 2);
         }
-      });
+      })
+      .catch(() => alert(_l('保存失败'), 2));
   };
 
-  const handleUpdateData = info => {
+  const handleUpdateData = (info) => {
     setConfig(prevConfig => ({ ...prevConfig, ...info }));
     handleSettingChanged();
     autoSave && onSave(info, `${worksheetId}_${type}`);
@@ -82,7 +94,7 @@ const ShareCardSet = forwardRef((props, ref) => {
 
   const getIconUrl = () => {
     return shareConfigValue?.icon
-      ? shareConfigValue?.icon.indexOf('http') < 0
+      ? shareCardIconText(shareConfigValue?.icon).indexOf('http') < 0
         ? shareConfigValue?.iconUrl
         : shareConfigValue?.icon
       : '';
@@ -110,7 +122,7 @@ const ShareCardSet = forwardRef((props, ref) => {
           }}
           bucket={4}
           onUploaded={handleUploaded}
-          onAdd={up => {
+          onAdd={(up) => {
             setIsUploading(true);
             up.disableBrowse();
           }}
@@ -133,7 +145,7 @@ const ShareCardSet = forwardRef((props, ref) => {
             <span className="Bold">{_l('上传自定义图标')}</span>
           </UploadBtn>
         </QiniuUpload>
-        {isCustomImg && (
+        {isCustomImg && typeof iconUrl === 'string' && (
           <div className="customImgWrap mTop8 flexRow alignItemsCenter justifyContentCenter">
             <img className="fileImage" src={iconUrl} />
             <div className="mask">
@@ -148,18 +160,37 @@ const ShareCardSet = forwardRef((props, ref) => {
   };
 
   if (loading) return <LoadDiv />;
+  if (loadError)
+    return (
+      <div role="alert">
+        <span>{_l('加载失败')}</span>
+        <Button
+          type="link"
+          className="mLeft10"
+          onClick={() => {
+            setLoadError(false);
+            setLoading(true);
+            getShareCardSet();
+          }}
+        >
+          {_l('重试')}
+        </Button>
+      </div>
+    );
 
-  const renderTxt = value => {
+  const renderTxt = (value) => {
     if (!value || !(value || '').startsWith('[')) {
       return value;
     }
 
-    return getDynamicValue(controls, {
-      type: 2,
-      advancedSetting: {
-        defsource: value,
-      },
-    });
+    return shareCardDynamicText(
+      getDynamicValue(controls, {
+        type: 2,
+        advancedSetting: {
+          defsource: value,
+        },
+      }),
+    );
   };
 
   return (
@@ -173,7 +204,7 @@ const ShareCardSet = forwardRef((props, ref) => {
           className="w100 fillInput"
           placeholder={props.titlePlaceholder || _l('请输入')}
           defaultValue={shareConfigValue?.title}
-          onChangeValue={value => {
+          onChangeValue={(value) => {
             handleUpdateData({ title: value });
             shareData.current.title = value;
           }}
@@ -193,7 +224,7 @@ const ShareCardSet = forwardRef((props, ref) => {
           className="w100 fillInput"
           placeholder={props.desPlaceholder || _l('请输入')}
           defaultValue={shareConfigValue?.desc}
-          onChangeValue={value => {
+          onChangeValue={(value) => {
             handleUpdateData({ desc: value });
             shareData.current.desc = value;
           }}
