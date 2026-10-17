@@ -175,7 +175,7 @@ export interface MobileFileLike {
  * 字段是把 src/pages/worksheet 下 worksheetInfo.xxx 的读取点统计出来补的，
  * 不是照接口文档抄的 —— 后端返回的远不止这些。碰到没列的往这里加一行，不要退回 any。
  */
-export interface WorksheetInfo {
+interface WorksheetInfoFields {
   worksheetId?: string;
   projectId?: string;
   appId?: string;
@@ -184,7 +184,7 @@ export interface WorksheetInfo {
   entityName?: string;
   allowAdd?: boolean;
   advancedSetting?: ControlAdvancedSetting;
-  template?: { controls?: FormControl[] };
+  template?: { controls?: FormControl[] | undefined };
   rules?: unknown[];
   views?: WorksheetView[];
   /** 0 表示当前用户在这张表上没有角色 */
@@ -201,6 +201,11 @@ export interface WorksheetInfo {
   /** 关联控件的 relationControls 还在请求中；请求期间部分 UI 要等 */
   isRequestingRelationControls?: boolean;
 }
+
+/** Wire responses and local spreads can carry own undefined values, independently of an absent key. */
+export type WorksheetInfo = {
+  [K in keyof WorksheetInfoFields]: WorksheetInfoFields[K] | undefined;
+};
 
 /** 当前应用里我的角色信息（redux 的 sheet.appPkgData / sheetList.appPkgData 切片） */
 export interface AppPkgData {

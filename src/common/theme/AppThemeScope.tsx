@@ -184,7 +184,7 @@ interface Props {
    * 当前应用的 id。seed 拿不到时用它去读 appCache-{appId} 兜底。
    * 顶层路由（如 /workflowedit/:flowId）没有 appPkg，只能走这条。
    */
-  appId?: string;
+  appId?: string | undefined;
 }
 
 /**

@@ -4,7 +4,10 @@ import type { WorksheetInfo } from 'src/pages/worksheet/types';
 export type GlobalAppInfo = Awaited<ReturnType<typeof homeAppApi.getApp>>;
 export interface CreateWorksheetCommand {
   action: 'createFromEmpty';
-  worksheetInfo: Required<Pick<WorksheetInfo, 'appId' | 'projectId' | 'worksheetId' | 'name'>> & {
+  // Commands require populated identities/names; explicit wire undefined support must not weaken this contract.
+  worksheetInfo: {
+    [K in 'appId' | 'projectId' | 'worksheetId' | 'name']: NonNullable<WorksheetInfo[K]>;
+  } & {
     desc?: string | undefined;
   };
 }
