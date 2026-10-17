@@ -88,7 +88,7 @@ export const durDays = (beginTime: moment.MomentInput, endTime: moment.MomentInp
 };
 
 // 将YYYY-MM-DD HH-MM-SS格式时间解析为YYYY-MM-DD格式
-export const parseTime = (time: string | undefined): string | undefined => time && time.split(' ')[0];
+export const parseTime = (time: string | null | undefined): string | null | undefined => time && time.split(' ')[0];
 
 // 将字符串时间转化为moment时间
-export const momentTime = (time: string | undefined): moment.Moment => moment(parseTime(time));
+export const momentTime = (time: string | null | undefined): moment.Moment => moment(parseTime(time));

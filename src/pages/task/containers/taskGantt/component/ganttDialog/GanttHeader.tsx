@@ -1,15 +1,40 @@
 import { Component, Fragment } from 'react';
 import cx from 'classnames';
 import Icon from 'ming-ui/components/Icon';
+import config from './config';
 
-const chooseDisplayType = [
+const { TYPE_TO_WIDTH } = config;
+
+/** 甘特图显示粒度，与 config.TYPE_TO_WIDTH 的键一致 */
+export type GanttType = keyof typeof TYPE_TO_WIDTH;
+
+/** 任务节点：只声明本目录组件实际读取的字段 */
+export interface GanttTaskNode {
+  taskID: string;
+  taskName: string;
+  child?: GanttTaskNode[] | null | undefined;
+  childrenVisible?: boolean;
+}
+
+export interface GanttHeaderProps {
+  type: GanttType;
+  data: GanttTaskNode[];
+  name: string;
+  switchDisplayType: (type: GanttType) => void;
+  refresh: () => void;
+  exportData: () => void;
+  closeLayer: () => void;
+  scrollToToday: () => void;
+}
+
+const chooseDisplayType: { type: GanttType; text: string }[] = [
   { type: 'day', text: _l('按天') },
   { type: 'week', text: _l('按周') },
   { type: 'month', text: _l('按月') },
 ];
 
-export default class GanttHeader extends Component<any, any> {
-  constructor(props) {
+export default class GanttHeader extends Component<GanttHeaderProps> {
+  constructor(props: GanttHeaderProps) {
     super(props);
   }
 
