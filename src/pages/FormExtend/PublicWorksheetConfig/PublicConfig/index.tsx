@@ -31,6 +31,7 @@ import FillSettings from './FillSettings';
 import ReceiptSettings from './ReceiptSettings';
 import SectionTitle from './SectionTitle';
 import WeChatEnhance from './WeChatEnhance';
+import { publicReceiptAction, publicSettingText } from './models';
 
 const NewDropdown = styled(Dropdown)`
   width: 250px;
@@ -350,16 +351,16 @@ class PublicConfig extends React.Component<any, any> {
     }
 
     // 微信分享卡片消息
-    const shareConfig = safeParse(_.get(extendDatas, 'shareConfig'));
+    const shareConfig: unknown = safeParse(_.get(extendDatas, 'shareConfig'));
 
-    if (!shareConfig.title) {
+    if (!publicSettingText(shareConfig, 'title')) {
       alert(_l('请填写分享标题'), 3);
       return false;
     }
 
-    const afterSubmit = safeParse(_.get(extendDatas, 'afterSubmit'));
+    const afterSubmit: unknown = safeParse(_.get(extendDatas, 'afterSubmit'));
 
-    if (afterSubmit.action === 2 && !afterSubmit.content) {
+    if (publicReceiptAction(afterSubmit) === 2 && !publicSettingText(afterSubmit, 'content')) {
       alert(_l('请填写跳转链接'), 3);
       return false;
     }
