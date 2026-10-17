@@ -107,10 +107,27 @@ export function refreshShareUrl() {
         worksheetInfo: { worksheetId },
       },
     } = getState();
-    publicWorksheetAjax.refreshPublicWorksheetUrl({ worksheetId }).then(data => {
-      alert(_l('刷新成功'));
-      dispatch({ type: 'PUBLICWORKSHEET_UPDATE_URL', url: data.url });
-    });
+    publicWorksheetAjax
+      .refreshPublicWorksheetUrl({ worksheetId })
+      .then(data => {
+        alert(_l('刷新成功'));
+        dispatch({ type: 'PUBLICWORKSHEET_UPDATE_URL', url: data.url });
+      })
+      /**
+       * 【独立行为修复】原实现只挂 `.then`、**没有 `.catch`**：接口失败时该 Promise
+       * 无人处理 → 产生**未处理拒绝**（可在子进程中稳定复现为进程非零退出），
+       * 且用户看不到任何失败反馈。
+       *
+       * 修复遵循既有风格与 lead 的要求：
+       * - **本地错误提示**：与同文件 `保存失败` / `添加文本字段失败` 一致，用
+       *   `alert(_l('刷新失败'), 3)`（type 3 = 错误级）；
+       * - **不派发成功 URL**、**不显示成功提示**（成功路径的 alert 与 dispatch 顺序、
+       *   参数与 thunk 原返回协议都保持不变）；
+       * - **不做全局兜底**：只在本调用处处理，未改动任何全局 `unhandledRejection`。
+       */
+      .catch(() => {
+        alert(_l('刷新失败'), 3);
+      });
   };
 }
 

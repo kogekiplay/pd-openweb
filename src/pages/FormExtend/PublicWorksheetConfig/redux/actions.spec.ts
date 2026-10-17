@@ -340,29 +340,19 @@ function check(name: string, fn: () => void | Promise<void>): Promise<void> {
 }
 
 /**
- * 【已预期的未处理拒绝】`refreshShareUrl`（原实现，基线一致）**没有 `.catch`**：
- * 接口失败时它的 Promise 没有任何处理器 → 必然产生未处理拒绝。
- * 这是**既有行为缺陷**，本规格不修它，但要能把它**测出来**而不至于让整个规格判失败。
- * 因此维护一份"预期拒绝"清单：命中即消费掉（并打印说明），未命中仍然判失败。
- * 这样防假绿守卫对**意外**拒绝依然严格。
+ * 【不再有任何"预期拒绝"白名单】`refreshShareUrl` 的失败路径已修好（见下方用例），
+ * 本规格内**不应再出现**未处理拒绝；因此这里保持最严格的处理：
+ * 任何未处理拒绝都直接判失败，**不全局吞掉**（lead 明确要求）。
+ * 旧实现的"未处理拒绝 → 进程非零退出"由 `refreshFailureFixture.ts` 在**独立子进程**里证明，
+ * 这样既不依赖白名单，也保住了旧基线证据。
  */
-const expectedUnhandledRejections: string[] = [];
-
 process.on('unhandledRejection', reason => {
-  const message = reason instanceof Error ? reason.message : String(reason);
-  const expectedIndex = expectedUnhandledRejections.indexOf(message);
-
-  if (expectedIndex >= 0) {
-    expectedUnhandledRejections.splice(expectedIndex, 1);
-    realConsole.error(`      （已预期的既有行为：未处理拒绝「${message}」—— refreshShareUrl 无 .catch）`);
-    return;
-  }
-
   realConsole.error(
     `未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`,
   );
   process.exitCode = 1;
 });
+
 process.on('uncaughtException', error => {
   realConsole.error(
     `未捕获异常，判为失败：${error instanceof Error ? error.stack || error.message : String(error)}`,
@@ -736,34 +726,81 @@ async function main(): Promise<void> {
     assert.equal(action.url, '', "thunk 不改变 url，归一交给 reducer 的 || 规则");
   });
 
-  await check('refreshShareUrl：失败时没有 catch → 该 Promise 未处理（如实记录，不额外兜底）', async () => {
-    // 【如实记录】原实现 `.then(...)` **没有 .catch**：接口失败会产生未处理的 Promise 拒绝。
-    // 这不是本规格能"修"的东西（属既有行为），这里只把它测出来并**阻止它污染进程**。
+  await check('refreshShareUrl（修复后）：失败时显示本地错误提示、不派发、不显示成功提示', async () => {
+    /**
+     * 【独立行为修复的验收】修复前该 thunk 只挂 `.then`、**没有 `.catch`**：
+     * 接口失败会产生未处理拒绝、且用户得不到任何反馈（旧行为的**基线证据**仍由
+     * `refreshFailureFixture.ts` 的子进程用例保留，见下方第 8 组）。
+     *
+     * 修复后本用例断言三件事：
+     *   1. 显示**本地错误提示**（与同文件其他失败分支同风格：`刷新失败`, type 3）；
+     *   2. **不派发** `PUBLICWORKSHEET_UPDATE_URL`；
+     *   3. **不显示成功提示**（不出现「刷新成功」）。
+     */
     const h = makeHarness('current', BASE_STATE);
     h.actions.refreshShareUrl()(h.dispatch, h.getState);
-
-    // 登记为"预期拒绝"：命中清单则消费掉，不判整体失败
-    expectedUnhandledRejections.push('refresh-boom');
 
     h.pending[0].def.reject(new Error('refresh-boom'));
     await h.pending[0].def.promise.catch(() => undefined);
     await flush();
-    await flush();
 
-    // 该拒绝应被消费掉（说明"未处理"确实发生了）
-    assert.equal(
-      expectedUnhandledRejections.includes('refresh-boom'),
-      false,
-      '应当真的观察到一次未处理拒绝（若没有，说明 .catch 被加上了 → 既有行为变了，需更新本用例）',
-    );
-
-    // 无论 Node 是否在此时机上报，dispatch 都不应发生（.then 未执行）
     assert.equal(
       h.dispatched.some((a: any) => a && a.type === 'PUBLICWORKSHEET_UPDATE_URL'),
       false,
       '失败时不应派发 UPDATE_URL',
     );
-    assert.equal(alerts.length, 0, '失败时不应 alert 成功');
+    assert.equal(
+      alerts.some(a => a.message === '刷新成功'),
+      false,
+      '失败时不应显示成功提示',
+    );
+    assert.equal(alerts.length, 1, '失败时应显示一次本地错误提示');
+    assert.equal(alerts[0].message, '刷新失败');
+    assert.equal(alerts[0].type, 3);
+  });
+
+  await check('refreshShareUrl（修复后）：成功路径的 alert/dispatch 顺序与参数不变', async () => {
+    // 修复只加 `.catch`，成功路径必须逐字未变
+    const h = makeHarness('current', BASE_STATE);
+    h.actions.refreshShareUrl()(h.dispatch, h.getState);
+
+    const returned = h.pending[0].def;
+    returned.resolve({ url: 'https://new.example.com/p/xyz' });
+    await returned.promise;
+    await flush();
+
+    const alertIndex = events.findIndex(e => e.startsWith('alert:刷新成功'));
+    const dispatchIndex = events.findIndex(e => e.startsWith('dispatch:PUBLICWORKSHEET_UPDATE_URL'));
+    assert.ok(alertIndex >= 0, '应 alert「刷新成功」');
+    assert.ok(dispatchIndex >= 0, '应派发 UPDATE_URL');
+    assert.ok(alertIndex < dispatchIndex, '成功路径顺序保持：先 alert 再 dispatch');
+    assert.equal(alerts.length, 1, '成功路径只应有一次提示');
+
+    const action = h.dispatched.find(
+      (a: any) => a && a.type === 'PUBLICWORKSHEET_UPDATE_URL',
+    ) as any;
+    assert.equal(action.url, 'https://new.example.com/p/xyz', 'url 仍原样落值');
+  });
+
+  /* ── 8a.【保留旧基线证据】子进程：旧路径未处理拒绝 → 非零退出；修复后 → 0 ── */
+
+  await check('子进程证据：基线路径因未处理拒绝非零退出，修复后为 0（不全局吞掉拒绝）', async () => {
+    /**
+     * 【为什么必须用独立子进程】主规格装了 `unhandledRejection` 守卫；
+     * 若在同一进程里观察旧行为，就无法区分"旧路径真的会炸"与"被守卫吃掉了"。
+     * 因此夹具 `refreshFailureFixture.ts` **不装任何全局处理器**，由退出码说话。
+     * 这也满足 lead 的"不要全局吞掉未处理拒绝"。
+     */
+    const { spawnSync } = require('node:child_process');
+    const fixture = path.join(DIR, 'refreshFailureFixture.ts');
+
+    const orig = spawnSync(process.execPath, [fixture, 'orig'], { encoding: 'utf8', cwd: ROOT });
+    assert.notEqual(orig.status, 0, `基线路径应因未处理拒绝非零退出，实际 status=${orig.status}`);
+
+    const current = spawnSync(process.execPath, [fixture, 'current'], { encoding: 'utf8', cwd: ROOT });
+    assert.equal(current.status, 0, `修复后不应出现未处理拒绝，实际 status=${current.status}；stderr=${current.stderr}`);
+    assert.match(current.stdout, /alerts=\["刷新失败"\]/, '修复后应输出本地错误提示');
+    assert.match(current.stdout, /dispatched=\[\]/, '修复后不应派发成功 URL');
   });
 
   /* ── 8. 失败路径：reset 失败 alert ── */
