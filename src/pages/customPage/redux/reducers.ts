@@ -54,11 +54,6 @@ function updateLayout(state: AppCustomPageState, payload: AppUpdateLayoutPayload
   const { layoutType, layouts, components, adjustScreen } = payload;
   if (!layouts) return state;
   if (_.includes(['web', 'mobile'], layoutType)) {
-    // 【类型只在局部收窄，表达式与原实现逐字一致】
-    // `layouts[index]` 在 `noUncheckedIndexedAccess` 下是 `T | undefined`；原实现会直接
-    // `data.h` / `_.pick(data, …)`，缺槽时**抛 TypeError**（lead 明确要求保留该行为，
-    // 不能静默跳过）。这里用非空断言会把未知数据当已知，故改用「局部别名 + 显式判别」：
-    // 判别为真才进入原表达式，为假时保留原实现的抛错路径。
     const slot = layoutType as 'web' | 'mobile';
     const spec: Spec<AppCustomPageState> = {
       components: {
@@ -70,11 +65,7 @@ function updateLayout(state: AppCustomPageState, payload: AppUpdateLayoutPayload
               const data = layouts[index];
               const maxH = 40;
 
-              // 【与原实现逐字等价】原代码是 `if (adjustScreen && data.h >= maxH) { data.h = maxH }`：
-              // - `adjustScreen` 为真且 `data` 缺失 → 读 `data.h` 抛 TypeError；
-              // - `adjustScreen` 为真且 `data.h` 为 undefined → `undefined >= 40` 为 false，不 clamp；
-              // - `adjustScreen` 为假 → 整段跳过，随后 `_.pick(undefined, …)` 返回 `{}`（**不抛**）。
-              // 因此把判空放进 `adjustScreen` 分支内，才能保持这三条路径完全一致。
+              // The height clamp intentionally also updates the supplied layout object.
               if (adjustScreen) {
                 if (!data) {
                   throw new TypeError("Cannot read properties of undefined (reading 'h')");
@@ -85,9 +76,6 @@ function updateLayout(state: AppCustomPageState, payload: AppUpdateLayoutPayload
                 }
               }
 
-              // 用字面量键的两个分支代替 `[slot]` 计算键：计算键会让 `Spec` 推断成
-              // `{ [x: string]: … }` 而不匹配；字面量键下 Spec 能推断出 `AppWidget` 的具体形状。
-              // 表达式与 `update(item, { [layoutType]: { layout: { $set: pick } } })` 完全等价。
               const picked = _.pick(data, ['x', 'y', 'w', 'h', 'minW', 'minH', 'maxH']);
 
               return slot === 'web'
@@ -116,16 +104,8 @@ function updateWidgetVisible(state: AppCustomPageState, payload: AppWidgetVisibl
   return update(state, { components: { [getIndex(state, widget)]: { [layoutType]: { $toggle: ['visible'] } } } });
 }
 
-// 获取单行中x最大的组件
-// 获取单行中x最大的组件。
-// 【y 形参是 `number | undefined`】布局可以省略 y（`{x, w}` 没有 y），此时
-// `v.y === undefined` 才是正确匹配；若把 y 先 `Number()` 成 NaN，则 `v.y === NaN`
-// **永不成立**，分组结果为空 → maxBy 返回 undefined → 原本次成功的历史路径会抛 TypeError。
-// 这个缺陷是 lead 用真实反例「COPY_WIDGET preserves a row whose y is omitted」抓出来的。
-function getMaxXComponentInSingleLine(
-  layouts: AppWidgetLayout[],
-  y: number | undefined,
-): AppWidgetLayout | undefined {
+// Keep undefined row coordinates distinct from NaN during grouping.
+function getMaxXComponentInSingleLine(layouts: AppWidgetLayout[], y: number | undefined): AppWidgetLayout | undefined {
   return maxBy(
     _.filter(layouts, v => v.y === y),
     item => item.x,
@@ -133,35 +113,27 @@ function getMaxXComponentInSingleLine(
 }
 
 /**
-* 组件复制
-* 布局自适应，优先放在当前行，位置不够则放在最后一行
-* @param {*} components
-* @param {*} layout
-*/
+ * 组件复制
+ * 布局自适应，优先放在当前行，位置不够则放在最后一行
+ * @param {*} components
+ * @param {*} layout
+ */
 function copyWebLayout(components: AppWidget[], layout: AppWidgetLayout | undefined): AppWidgetLayout {
-  // 【与原实现可观测等价】原代码 `const { y, w } = layout` 在 layout 为 undefined 时抛
-  // TypeError；规格以 error.name 对照，显式抛同类型错误即可保持等价。
+  // Preserve the historical failure when the copied widget has no layout.
   if (!layout) {
     throw new TypeError("Cannot destructure 'layout' as it is undefined.");
   }
 
   const { y, w } = layout;
-  // 原实现是 `_.get(item, ['web','layout'])` 后 `.filter(_ => _)`；可选链给出同样的
-  // 空值语义（缺失即 undefined）并能得到真实类型，不需要把整块 any 断言成布局。
-  const layouts = components
-    .map(item => item.web?.layout)
-    .filter((item): item is AppWidgetLayout => !!item);
+  const layouts = components.map(item => item.web?.layout).filter((item): item is AppWidgetLayout => !!item);
 
-  // 【保留原 y 传参，不能 Number(y)】分组/比较用原值，见函数注释。
   const first = getMaxXComponentInSingleLine(layouts, y);
 
   if (!first) {
-    // 原实现解构 undefined 会抛 TypeError，这里保持同一可观测行为。
     throw new TypeError("Cannot destructure 'undefined' as it is undefined.");
   }
 
-  // 只有在**数值加减**处才 Number()：Number(undefined) 仍是 NaN，与原
-  // `undefined + ...` 得到 NaN 一致；而 `?? 0` 会把 NaN 变成真实数字、改变几何结果。
+  // Number(undefined) retains the historical NaN result for missing dimensions.
   if (Number(first.x) + Number(first.w) + Number(w) > 12) {
     const lastLine = maxBy(layouts, (item: AppWidgetLayout) => item.y);
 
@@ -169,7 +141,6 @@ function copyWebLayout(components: AppWidget[], layout: AppWidgetLayout | undefi
       throw new TypeError("Cannot destructure 'undefined' as it is undefined.");
     }
 
-    // 【maxY 保留原值】用于与 y 的相等比较，同样不能 Number 化。
     const maxY = lastLine.y;
 
     // 如果最后一行就是当前行 则直接放到下一行
@@ -239,18 +210,18 @@ function copyWidget(state: AppCustomPageState, payload: AppCopyWidgetPayload): A
   });
 }
 
+// Enforce the handled union while keeping Redux initialization actions side-effect free.
+function assertHandledAction(_action: never): void {}
+
 export default function customPage(
   state: AppCustomPageState = initialState,
   action: AppCustomPageAction,
 ): AppCustomPageState {
-  // 【保持原样】原实现从 action 解构 `type`/`payload`；这里保留同一写法，
-  // 每个 case 靠 `type` 判别式收窄，`payload` 的静态类型是联合载荷。
   const { type, payload } = action;
 
   switch (type) {
     case UPDATE_PAGE_INFO:
-      // 保持原实现的 `{ ...item, ...payload }` 对象展开（lead 要求：不用 Object.assign，
-      // 否则 own `__proto__` 元数据会变成原型）。用 Spec 标注让 patch 的可选字段通过。
+      // Spread preserves own __proto__ metadata without changing the prototype.
       return update(state, {
         $apply: (item: AppCustomPageState): AppCustomPageState => ({ ...item, ...payload }),
       });
@@ -293,13 +264,6 @@ export default function customPage(
                 titleVisible: false,
                 visible: true,
                 layout: getDefaultLayout({
-                  // 【必填是范围外 util 的形参推断结果】`getDefaultLayout` 的形参是
-                  // `{ components = [], index = ..., layoutType = 'web', titleVisible, type }`，
-                  // 其中 `titleVisible`/`type` **没有默认值** → 被推断为必填。
-                  // 原实现在 ADD_WIDGET 里并没有传 `titleVisible`（web 分支用不到它），
-                  // 为了既保持运行行为、又满足范围外的形参类型，这里显式传 `undefined`：
-                  // 与"属性缺失"在 web 分支内行为完全一致（该分支不读 titleVisible）。
-                  titleVisible: undefined as boolean | undefined,
                   components: (() => {
                     if (payload.tabId) {
                       return state.components.filter(c => c.tabId === payload.tabId);
@@ -498,6 +462,7 @@ export default function customPage(
         linkageFiltersGroup: remainingGroups,
       };
     default:
+      assertHandledAction(action);
       return state;
   }
 }

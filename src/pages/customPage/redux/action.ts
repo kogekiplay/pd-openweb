@@ -118,68 +118,41 @@ export type AppCustomPageAction =
   | { type: typeof UPDATE_LINKAGE_FILTERS_GROUP; payload: AppFiltersGroupPayload }
   | { type: typeof DELETE_LINKAGE_FILTERS_GROUP; payload: AppDeleteLinkageGroupPayload };
 
-/**
- * 动作构造器。运行行为与原来完全一致：仍是 `{ type, payload }`，
- * 只是给 `payload` 补上了有限类型，让每个 case 都能收窄到自己的载荷。
- */
-/**
- * 动作构造器工厂。
- *
- * 【为什么写成「函数声明 + 返回函数」而不是泛型箭头 `<T>(…) => …`】
- * 泛型箭头在 `.ts`（非 `.tsx`）里会被 babel 的默认解析器当成 JSX 起始标记而报错
- * （`Unexpected token '>'`），导致本模块无法在行为规格里被正确编译加载。
- * 改成函数声明后类型能力完全等价，且可正常解析。
- */
-/**
- * 动作构造器工厂。
- *
- * 【两个类型参数】`T` 是**动作类型字面量**（由 `typeof CONST` 传入，不再是 `string`），
- * `P` 是载荷类型。这样每个 creator 的返回类型都是 `{ type: 'UPDATE_LOADING', payload: boolean }`
- * 这样的**可判别**形态，而不是 `{ type: string }` —— 否则联合收窄会失效。
- */
-function createAction<T extends string, P>(type: T): (payload: P) => { type: T; payload: P } {
-  return payload => ({ type, payload });
+/** Keep the literal type and derive its payload from the handled action union. */
+function createAction<T extends AppCustomPageAction['type']>(type: T) {
+  return (payload: Extract<AppCustomPageAction, { type: T }>['payload']) => ({ type, payload });
 }
 
-export const updatePageInfo = createAction<typeof UPDATE_PAGE_INFO, AppPageInfoPatch>(UPDATE_PAGE_INFO);
+export const updatePageInfo = createAction(UPDATE_PAGE_INFO);
 
-export const addWidget = createAction<typeof ADD_WIDGET, AppAddWidgetPayload>(ADD_WIDGET);
+export const addWidget = createAction(ADD_WIDGET);
 
-export const delWidget = createAction<typeof DEL_WIDGET, AppDelWidgetPayload>(DEL_WIDGET);
-export const delTabsWidget = createAction<typeof DEL_TABS_WIDGET, AppDelByContainerPayload>(DEL_TABS_WIDGET);
-export const delWidgetTab = createAction<typeof DEL_WIDGET_TAB, AppDelByContainerPayload>(DEL_WIDGET_TAB);
+export const delWidget = createAction(DEL_WIDGET);
+export const delTabsWidget = createAction(DEL_TABS_WIDGET);
+export const delWidgetTab = createAction(DEL_WIDGET_TAB);
 
-export const copyWidget = createAction<typeof COPY_WIDGET, AppCopyWidgetPayload>(COPY_WIDGET);
+export const copyWidget = createAction(COPY_WIDGET);
 
-export const updateWidgetVisible = createAction<typeof UPDATE_WIDGET_VISIBLE, AppWidgetVisiblePayload>(
-  UPDATE_WIDGET_VISIBLE,
-);
+export const updateWidgetVisible = createAction(UPDATE_WIDGET_VISIBLE);
 
-export const updateWidget = createAction<typeof UPDATE_WIDGET, AppUpdateWidgetPayload>(UPDATE_WIDGET);
+export const updateWidget = createAction(UPDATE_WIDGET);
 
-export const updateEditPageVisible = createAction<typeof UPDATE_EDIT_PAGE_VISIBLE, boolean>(UPDATE_EDIT_PAGE_VISIBLE);
+export const updateEditPageVisible = createAction(UPDATE_EDIT_PAGE_VISIBLE);
 
-export const updateLayout = createAction<typeof UPDATE_LAYOUT, AppUpdateLayoutPayload>(UPDATE_LAYOUT);
+export const updateLayout = createAction(UPDATE_LAYOUT);
 
-export const updateLoading = createAction<typeof UPDATE_LOADING, boolean>(UPDATE_LOADING);
+export const updateLoading = createAction(UPDATE_LOADING);
 
-export const updateSaveLoading = createAction<typeof UPDATE_SAVE_LOADING, boolean>(UPDATE_SAVE_LOADING);
+export const updateSaveLoading = createAction(UPDATE_SAVE_LOADING);
 
-export const insertTitle = createAction<typeof INSET_TITLE, AppInsertTitlePayload>(INSET_TITLE);
+export const insertTitle = createAction(INSET_TITLE);
 
-export const updateModified = createAction<typeof UPDATE_MODIFIED, boolean>(UPDATE_MODIFIED);
+export const updateModified = createAction(UPDATE_MODIFIED);
 
-export const updateComponents = createAction<typeof UPDATE_COMPONENTS, AppWidget[]>(UPDATE_COMPONENTS);
+export const updateComponents = createAction(UPDATE_COMPONENTS);
 
-export const updateFiltersGroup = createAction<typeof UPDATE_FILTERS_GROUP, AppFiltersGroupPayload>(
-  UPDATE_FILTERS_GROUP,
-);
+export const updateFiltersGroup = createAction(UPDATE_FILTERS_GROUP);
 
-export const updateLinkageFiltersGroup = createAction<typeof UPDATE_LINKAGE_FILTERS_GROUP, AppFiltersGroupPayload>(
-  UPDATE_LINKAGE_FILTERS_GROUP,
-);
+export const updateLinkageFiltersGroup = createAction(UPDATE_LINKAGE_FILTERS_GROUP);
 
-export const deleteLinkageFiltersGroup = createAction<
-  typeof DELETE_LINKAGE_FILTERS_GROUP,
-  AppDeleteLinkageGroupPayload
->(DELETE_LINKAGE_FILTERS_GROUP);
+export const deleteLinkageFiltersGroup = createAction(DELETE_LINKAGE_FILTERS_GROUP);

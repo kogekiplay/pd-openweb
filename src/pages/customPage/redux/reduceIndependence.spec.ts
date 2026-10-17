@@ -18,9 +18,10 @@
  */
 const assert: typeof import('node:assert/strict') = require('node:assert/strict');
 const path = require('node:path');
+const fs = require('node:fs');
 const crypto = require('node:crypto');
 const { execFileSync } = require('node:child_process');
-const { transformFileSync, transformSync, ROOT } = require('../../../../scripts/spec-harness.ts');
+const { parser, transformFileSync, transformSync, ROOT } = require('../../../../scripts/spec-harness.ts');
 
 const realConsole = { log: console.log.bind(console), error: console.error.bind(console) };
 (globalThis as Record<string, unknown>)['_l'] = (s: string) => String(s);
@@ -68,39 +69,40 @@ const realUpdate = require('immutability-helper').default || require('immutabili
 };
 (globalThis as Record<string, unknown>)['document'] = { querySelector: () => null };
 
-/** 与 reducers.spec.ts 相同的逐字复制替身（reducer 只用到这三个导出） */
-function makeUtilStub() {
-  const enumWidgetType = {
-    analysis: 1,
-    richText: 2,
-    embedUrl: 3,
-    button: 4,
-    view: 5,
-    filter: 6,
-    carousel: 7,
-    ai: 8,
-    tabs: 9,
-    card: 10,
-    image: 11,
-    subsection: 12,
-  };
-  const getIndexById = ({ component, components }: any) => {
-    const id = component.id || component.uuid;
-    return realLodash.findIndex(components, (item: any) => item.id === id || item.uuid === id);
-  };
-  const getDefaultLayout = ({ components = [], index = components.length, layoutType = 'web', titleVisible, type }: any) => {
-    if (layoutType === 'web') {
-      return { x: (components.length * 24) % 48, y: Infinity, w: 24, h: 12, minW: 2, minH: 4 };
-    }
-    if (layoutType === 'mobile') {
-      const last = realMaxBy(components, (item: any) => realLodash.get(item, ['mobile', 'layout', 'y'])) || {};
-      const y = (last as any).y ?? 0;
-      const h = (last as any).h ?? 6;
-      return { x: 0, y: y + h, w: 4, h: titleVisible ? 7 : 6, minW: 1, minH: 2 };
-    }
-    return undefined;
-  };
-  return { enumWidgetType, getIndexById, getDefaultLayout };
+/** Load the actual helper declarations verbatim, without importing unrelated UI/assets. */
+const helperCodeCache = new Map<string, string>();
+function loadUtil(variant: 'orig' | 'current') {
+  const filename = path.resolve(DIR, '../util.ts');
+  const source =
+    variant === 'orig'
+      ? execFileSync('git', ['show', `${BASE_REV}:src/pages/customPage/util.ts`], { cwd: ROOT, encoding: 'utf8' })
+      : fs.readFileSync(filename, 'utf8');
+  let code = helperCodeCache.get(source);
+  if (code === undefined) {
+    const tree = parser.parse(source, { sourceType: 'module', plugins: ['typescript', 'jsx'] });
+    const names = ['enumObj', 'enumWidgetType', 'getEnumType', 'getIndexById', 'getDefaultLayout'];
+    const declarations = names
+      .map(name => {
+        const statement = tree.program.body.find(item => {
+          const value = item.type === 'ExportNamedDeclaration' ? item.declaration : item;
+          return (
+            (value?.type === 'VariableDeclaration' && value.declarations.some(entry => entry.id.name === name)) ||
+            (value?.type === 'FunctionDeclaration' && value.id?.name === name && value.body)
+          );
+        });
+        if (!statement || statement.start == null || statement.end == null)
+          throw new Error('Missing real helper ' + name);
+        return source.slice(statement.start, statement.end).replace(/^export /, '');
+      })
+      .join('\n');
+    code = transformSync(declarations + '\nmodule.exports = { enumWidgetType, getIndexById, getDefaultLayout };', {
+      filename,
+    }).code;
+    helperCodeCache.set(source, code);
+  }
+  const target = { exports: {} as Record<string, unknown> };
+  new Function('module', '_', 'maxBy', 'get', code)(target, realLodash, realMaxBy, realLodash.get);
+  return target.exports;
 }
 
 function makeLoader(variant: 'orig' | 'current') {
@@ -126,7 +128,7 @@ function makeLoader(variant: 'orig' | 'current') {
       if (r === 'lodash') return realLodash;
       if (r === 'lodash/maxBy') return realMaxBy;
       if (r === 'uuid') return { v4: () => 'uuid-1' };
-      if (r === '../util') return makeUtilStub();
+      if (r === '../util') return loadUtil(variant);
       if (r === 'src/redux/types') return {};
       if (r.startsWith('./')) return load(`${r.slice(2)}.ts`);
       throw new Error(`spec 没给 ${r} 打桩（${variant}/${rel}）`);
@@ -198,7 +200,9 @@ function check(name: string, fn: () => void): void {
 }
 
 process.on('unhandledRejection', reason => {
-  realConsole.error(`未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`);
+  realConsole.error(
+    `未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`,
+  );
   process.exitCode = 1;
 });
 process.on('uncaughtException', error => {
@@ -275,9 +279,7 @@ function main(): void {
     process.exitCode = 1;
     return;
   }
-  realConsole.log(
-    `customPage 不可变性修复规格通过：${checks} 项（真实 configureStore + 默认不可变中间件）`,
-  );
+  realConsole.log(`customPage 不可变性修复规格通过：${checks} 项（真实 configureStore + 默认不可变中间件）`);
 }
 
 main();

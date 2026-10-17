@@ -14,11 +14,8 @@ export type AppLayoutType = 'web' | 'mobile';
  * - `components` 元素的字段来自 `reducers.ts` 的读写、`../util.ts` 的 `getDefaultLayout`
  *   返回值形状，以及消费方对 `web/mobile/button/config/layout` 的读取
  *
- * 【为什么 widget 允许索引签名】自定义页面的 widget 是**插件式**的：不同 `type` 携带
- * 各自私有的数据（如 `filter` 带 `filter`、`button` 带 `buttonList`、`tabs` 带 `config.objectId`），
- * 且 reducer 里有 `...payload` / `...rest` 的整体展开。这类"开放扩展元数据"用
- * `[key: string]: unknown` 承载是诚实的 —— 但**已知业务字段仍逐个显式声明**，
- * 不用索引签名替代它们（否则就是放弃类型）。
+ * 插件私有元数据留在各自的 config/button/filter 载荷中；共享状态和已经读取的
+ * 标识、布局、显示属性均显式声明，未读取的扩展元数据保留 unknown。
  */
 
 /** 一个 widget 在某一端（web / mobile）的布局槽位 */
@@ -41,12 +38,22 @@ export interface AppWidgetSlot {
   layout?: AppWidgetLayout | null | undefined;
 }
 
+/** Known identity fields are typed; each plugin retains its unconsumed metadata. */
+export interface AppWidgetConfig extends Record<string, unknown> {
+  objectId?: string | undefined;
+  name?: string | undefined;
+}
+
+export interface AppWidgetButtonConfig extends Record<string, unknown> {
+  isFilter?: boolean | undefined;
+}
+
 /** 按钮组件里的单个按钮（`COPY_WIDGET` 会重置 id/filterId 并改写 config.isFilter） */
 export interface AppWidgetButton {
   id?: string | null | undefined;
   btnId?: string | null | undefined;
   filterId?: string | null | undefined;
-  config?: Record<string, unknown> | undefined;
+  config?: AppWidgetButtonConfig | undefined;
   [key: string]: unknown;
 }
 
@@ -72,7 +79,7 @@ export interface AppWidget {
   value?: string | undefined;
   tabId?: string | undefined;
   sectionId?: string | undefined;
-  config?: Record<string, unknown> | undefined;
+  config?: AppWidgetConfig | undefined;
   web?: AppWidgetSlot | undefined;
   mobile?: AppWidgetSlot | null | undefined;
   button?: AppWidgetButtonGroup | undefined;

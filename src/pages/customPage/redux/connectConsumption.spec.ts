@@ -7,7 +7,7 @@
  *
  * 【做法】加载**真实的** `ViewDisplay.tsx`：
  *   - 只替身它的 UI 依赖（`ming-ui` 的 LoadDiv、`../editWidget/view/Preview` 的 View）；
- *   - **不替身 `connect`** —— 而是把真实模块调用的 `connect(selector)` 的 selector **捕获下来**；
+ *   - **用真实 `connect` 构造 HOC**，同时捕获传入的真实 selector（未挂载 HOC）；
  *   - state 由**真实 reducer** 通过真实 `configureStore` 派发动作产生（不是手写的假 state）。
  * 然后直接调用捕获到的 selector，断言它在 desktop / mobile 两种 `ownProps.layoutType` 下
  * 的输出与历史实现一致。
@@ -21,9 +21,10 @@
  */
 const assert: typeof import('node:assert/strict') = require('node:assert/strict');
 const path = require('node:path');
+const fs = require('node:fs');
 const crypto = require('node:crypto');
 const { execFileSync } = require('node:child_process');
-const { transformFileSync, transformSync, ROOT } = require('../../../../scripts/spec-harness.ts');
+const { parser, transformFileSync, transformSync, ROOT } = require('../../../../scripts/spec-harness.ts');
 
 const realConsole = { log: console.log.bind(console), error: console.error.bind(console) };
 (globalThis as Record<string, unknown>)['_l'] = (s: string) => String(s);
@@ -91,11 +92,7 @@ function assertBaselineIntact(): void {
       .createHash('sha256')
       .update(require('node:fs').readFileSync(path.join(ROOT, item.relPath)))
       .digest('hex');
-    assert.equal(
-      origSha,
-      currentSha,
-      `${item.file} 在基线与本工作区不一致 —— 本批不应修改它，A/B 基准失效`,
-    );
+    assert.equal(origSha, currentSha, `${item.file} 在基线与本工作区不一致 —— 本批不应修改它，A/B 基准失效`);
   }
 }
 
@@ -114,39 +111,62 @@ const realUpdate = require('immutability-helper').default || require('immutabili
 };
 (globalThis as Record<string, unknown>)['document'] = { querySelector: () => null };
 
-/** `../util` 的最小替身（reducer 只用这三个导出；逐字复制自 util.ts） */
-function makeUtilStub() {
-  const enumWidgetType = {
-    analysis: 1, richText: 2, embedUrl: 3, button: 4, view: 5, filter: 6,
-    carousel: 7, ai: 8, tabs: 9, card: 10, image: 11, subsection: 12,
-  };
-  const getIndexById = ({ component, components }: any) => {
-    const id = component.id || component.uuid;
-    return realLodash.findIndex(components, (item: any) => item.id === id || item.uuid === id);
-  };
-  const getDefaultLayout = ({ components = [], layoutType = 'web', titleVisible }: any) => {
-    if (layoutType === 'web') return { x: (components.length * 24) % 48, y: Infinity, w: 24, h: 12, minW: 2, minH: 4 };
-    const last = realMaxBy(components, (item: any) => realLodash.get(item, ['mobile', 'layout', 'y'])) || {};
-    const y = (last as any).y ?? 0;
-    const h = (last as any).h ?? 6;
-    return { x: 0, y: y + h, w: 4, h: titleVisible ? 7 : 6, minW: 1, minH: 2 };
-  };
-  return { enumWidgetType, getIndexById, getDefaultLayout };
+/** Load the actual helper declarations verbatim, without importing unrelated UI/assets. */
+const helperCodeCache = new Map<string, string>();
+function loadUtil(variant: 'orig' | 'current') {
+  const filename = path.resolve(DIR, '../util.ts');
+  const source =
+    variant === 'orig'
+      ? execFileSync('git', ['show', `${BASE_REV}:src/pages/customPage/util.ts`], { cwd: ROOT, encoding: 'utf8' })
+      : fs.readFileSync(filename, 'utf8');
+  let code = helperCodeCache.get(source);
+  if (code === undefined) {
+    const tree = parser.parse(source, { sourceType: 'module', plugins: ['typescript', 'jsx'] });
+    const names = ['enumObj', 'enumWidgetType', 'getEnumType', 'getIndexById', 'getDefaultLayout'];
+    const declarations = names
+      .map(name => {
+        const statement = tree.program.body.find(item => {
+          const value = item.type === 'ExportNamedDeclaration' ? item.declaration : item;
+          return (
+            (value?.type === 'VariableDeclaration' && value.declarations.some(entry => entry.id.name === name)) ||
+            (value?.type === 'FunctionDeclaration' && value.id?.name === name && value.body)
+          );
+        });
+        if (!statement || statement.start == null || statement.end == null)
+          throw new Error('Missing real helper ' + name);
+        return source.slice(statement.start, statement.end).replace(/^export /, '');
+      })
+      .join('\n');
+    code = transformSync(declarations + '\nmodule.exports = { enumWidgetType, getIndexById, getDefaultLayout };', {
+      filename,
+    }).code;
+    helperCodeCache.set(source, code);
+  }
+  const target = { exports: {} as Record<string, unknown> };
+  new Function('module', '_', 'maxBy', 'get', code)(target, realLodash, realMaxBy, realLodash.get);
+  return target.exports;
 }
 
-/** `filter/util` 的 formatFiltersGroup：逐字复制自
- *  `components/editWidget/filter/util.ts:5-…`（只用到 lodash 的 flatten/find/map/filter） */
-function makeFormatFiltersGroupStub() {
-  const formatFiltersGroup = (id: unknown, filtersGroup: Record<string, any[]>) => {
-    const targets = realLodash
-      .flatten(Object.keys(filtersGroup || {}).map(key => filtersGroup[key]))
-      .filter((c: any) => realLodash.find(c.objectControls, { objectId: id }));
-    return targets.map((f: any) => {
-      const hit = realLodash.find(f.objectControls, { objectId: id });
-      return { ...f, controlId: hit ? hit.controlId : undefined };
-    });
-  };
-  return { formatFiltersGroup };
+/** Load formatter declarations from their real source; this selector spec does not execute render effects. */
+function loadFormatter(variant: 'orig' | 'current', relative: string, name: string) {
+  const filename = path.resolve(DIR, relative);
+  const source = variant === 'orig' ? gitShow(path.relative(ROOT, filename)) : fs.readFileSync(filename, 'utf8');
+  const tree = parser.parse(source, { sourceType: 'module', plugins: ['typescript', 'jsx'] });
+  const statement = tree.program.body.find(
+    item =>
+      item.type === 'ExportNamedDeclaration' &&
+      item.declaration?.type === 'VariableDeclaration' &&
+      item.declaration.declarations.some(entry => entry.id.name === name),
+  );
+  if (!statement || statement.start == null || statement.end == null)
+    throw new Error('Missing actual formatter ' + name);
+  const code = transformSync(
+    source.slice(statement.start, statement.end).replace(/^export /, '') + '\nmodule.exports = { ' + name + ' };',
+    { filename },
+  ).code;
+  const target = { exports: {} };
+  new Function('module', '_', code)(target, realLodash);
+  return target.exports;
 }
 
 /** 捕获真实 `connect(selector)` 里的 selector */
@@ -169,9 +189,7 @@ function makeLoader(variant: 'orig' | 'current', sourceRoot: string) {
     const filename = isRepoRelative ? path.join(ROOT, relPath) : path.join(sourceRoot, relPath);
     // 记录本模块所在目录：它的相对 import 应相对**它自己**解析，而不是相对组件目录
     const moduleDir = path.dirname(filename);
-    const moduleRelDir = isRepoRelative
-      ? path.relative(ROOT, moduleDir).split(path.sep).join('/')
-      : null;
+    const moduleRelDir = isRepoRelative ? path.relative(ROOT, moduleDir).split(path.sep).join('/') : null;
     const babelOpts = {
       presets: [require.resolve('@babel/preset-react')],
       plugins: ['@babel/plugin-transform-modules-commonjs'],
@@ -186,7 +204,7 @@ function makeLoader(variant: 'orig' | 'current', sourceRoot: string) {
       if (r === 'lodash') return realLodash;
       if (r === 'lodash/maxBy') return realMaxBy;
       if (r === 'uuid') return { v4: () => 'uuid-1' };
-      if (r === '../util' || r === '../util.ts') return makeUtilStub();
+      if (r === '../util' || r === '../util.ts') return loadUtil(variant);
       if (r === 'src/redux/types') return {};
       if (r === 'react') return require('react');
       if (r === 'react/jsx-runtime') {
@@ -194,16 +212,17 @@ function makeLoader(variant: 'orig' | 'current', sourceRoot: string) {
         return require('react/jsx-runtime');
       }
       if (r === 'react-redux') {
-        // 【关键】不替身 connect 本身，而是捕获它收到的 selector
+        const realConnect = require('react-redux').connect;
         return {
-          connect: (selector: any) => (Component: any) => {
-            capturedSelectors.push(selector);
-            return Component;
+          connect: (...args: any[]) => {
+            capturedSelectors.push(args[0]);
+            return realConnect(...args);
           },
         };
       }
       if (r === 'ming-ui') return { LoadDiv: () => null };
-      if (r === 'src/pages/customPage/components/editWidget/filter/util') return makeFormatFiltersGroupStub();
+      if (r === 'src/pages/customPage/components/editWidget/filter/util')
+        return loadFormatter(variant, '../components/editWidget/filter/util.ts', 'formatFiltersGroup');
       if (r === '../editWidget/view/Preview') return { View: () => null };
       // ChartDisplay 的额外依赖
       if (r === 'statistics/Card') return { __esModule: true, default: () => null };
@@ -212,17 +231,7 @@ function makeLoader(variant: 'orig' | 'current', sourceRoot: string) {
         return load('src/pages/customPage/redux/action.ts');
       }
       if (r === 'src/pages/customPage/util') {
-        // 只用到 formatLinkageFiltersGroup —— 逐字复制其语义（按 objectId 过滤 linkage 组）
-        return {
-          formatLinkageFiltersGroup: (id: unknown, linkageFiltersGroup: Record<string, any[]>) => {
-            const targets = realLodash.flatten(
-              Object.keys(linkageFiltersGroup || {}).map(key => linkageFiltersGroup[key]),
-            );
-            return targets.filter((item: any) =>
-              realLodash.find(item?.objectControls || [], { objectId: id }),
-            );
-          },
-        };
+        return loadFormatter(variant, '../util.ts', 'formatLinkageFiltersGroup');
       }
       if (r.startsWith('./')) {
         // 同目录模块（reducers.ts / action.ts / actionType.ts）：
@@ -259,7 +268,9 @@ function check(name: string, fn: () => void): void {
 }
 
 process.on('unhandledRejection', reason => {
-  realConsole.error(`未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`);
+  realConsole.error(
+    `未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`,
+  );
   process.exitCode = 1;
 });
 process.on('uncaughtException', error => {
@@ -284,7 +295,8 @@ function build(variant: 'orig' | 'current', componentRel = VIEW_REL) {
   const load = makeLoader(variant, COMPONENT_DIR);
 
   // 1) 加载组件模块 → 捕获真实 selector
-  load(componentRel);
+  const connected = load(componentRel).default;
+  assert.ok(connected.WrappedComponent, 'The real react-redux HOC must wrap the actual component');
   assert.equal(capturedSelectors.length, 1, '应当捕获到 1 个 connect selector');
   const selector = capturedSelectors[0];
 
@@ -431,11 +443,7 @@ function main(): void {
 
   check('ChartDisplay：linkageFiltersGroup 经 selector 读到删除后的结果（只剩 g2）', () => {
     const result = runChart('current');
-    assert.deepEqual(
-      result.desktop.linkageFiltersGroupKeys,
-      ['g2'],
-      '被删除的 g1 不应出现在 selector 输出里',
-    );
+    assert.deepEqual(result.desktop.linkageFiltersGroupKeys, ['g2'], '被删除的 g1 不应出现在 selector 输出里');
   });
 
   check('ChartDisplay 与 ViewDisplay 的 filterComponents 过滤语义一致', () => {
@@ -451,9 +459,7 @@ function main(): void {
     process.exitCode = 1;
     return;
   }
-  realConsole.log(
-    `customPage connect 消费规格通过：${checks} 项（真实 ViewDisplay selector + 真实 reducer/store）`,
-  );
+  realConsole.log(`customPage connect 消费规格通过：${checks} 项（真实 ViewDisplay selector + 真实 reducer/store）`);
 }
 
 main();
