@@ -212,6 +212,14 @@ const settle = () => new Promise<void>(resolve => setImmediate(resolve));
     payload([{ taskID: 'id', taskName: 'Task', child: [{}] }]),
     payload([{ taskID: 'id', taskName: 'Task', startTime: {} }]),
     { status: true, data: { taskData: [], folderName: 12 } },
+    {
+      status: true,
+      data: { taskData: tasks, folderName: 'Project', minStartTime: null, maxCompleteTime: '2026-10-09' },
+    },
+    {
+      status: true,
+      data: { taskData: tasks, folderName: 'Project', minStartTime: '2026-02-30', maxCompleteTime: '2026-10-09' },
+    },
   ];
 
   for (const invalid of malformed) {

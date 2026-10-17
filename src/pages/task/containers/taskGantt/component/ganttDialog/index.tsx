@@ -100,10 +100,15 @@ export default class GanttDialog extends Component<GanttDialogProps, GanttDialog
         }
 
         const { taskData, maxCompleteTime, minStartTime, folderName } = res.data;
-        const data = this.dealWithData(taskData);
-        if (!data) throw new TypeError('Invalid gantt task list');
         const formatBeginTime = momentTime(minStartTime);
         const formatEndTime = momentTime(maxCompleteTime);
+
+        if (taskData.length && (!formatBeginTime.isValid() || !formatEndTime.isValid())) {
+          throw new TypeError('Invalid gantt time range');
+        }
+
+        const data = this.dealWithData(taskData);
+        if (!data) throw new TypeError('Invalid gantt task list');
         config.beginTime = formatBeginTime;
         config.endTime = formatEndTime;
         const { beginTime, endTime } = this.handleTime(formatBeginTime.clone(), formatEndTime.clone());

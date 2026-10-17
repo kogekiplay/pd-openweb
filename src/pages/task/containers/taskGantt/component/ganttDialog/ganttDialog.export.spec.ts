@@ -4,7 +4,7 @@
  * 覆盖 lead 点名"仍有价值"的直接证据：
  *   导出上传成功 / 上传失败 / 清理  三组路径，全部与类型批次前实现（A 侧）逐字段比对。
  *
- * A 侧来源：`git show 031b7ddb2`（即 `f80562ba5^`）的 `ganttDialog/index.tsx`，
+ * A 侧来源：`git show a3bd34da1`（main可达、源码与协作基线相同）的 `ganttDialog/index.tsx`，
  * 在规格开头按 sha256 冻结校验，因此对照不会随工作区改动而漂移。
  *
  * 【为什么要单开一份】`ganttDialog.spec.ts` 是同步探针集合，只覆盖到导出前段
@@ -16,10 +16,14 @@
  */
 const assert: typeof import('node:assert/strict') = require('node:assert/strict');
 const path = require('node:path');
-const fs = require('node:fs');
 const crypto = require('node:crypto');
 const { execFileSync } = require('node:child_process');
-const { jsxRuntimeFrom, transformFileSync, transformSync, ROOT } = require('../../../../../../../scripts/spec-harness.ts');
+const {
+  jsxRuntimeFrom,
+  transformFileSync,
+  transformSync,
+  ROOT,
+} = require('../../../../../../../scripts/spec-harness.ts');
 
 /* ────────────────────────── DOM / 浏览器全局替身 ────────────────────────── */
 
@@ -145,12 +149,13 @@ const config = configModule.default || configModule;
 
 const DIR = __dirname;
 const REL_DIR = 'src/pages/task/containers/taskGantt/component/ganttDialog';
-/** 类型批次之前的最后一个 revision（f80562ba5 的父提交） */
-const BASE_REV = '031b7ddb23d97dbd90d792be8afb2ed69b30176b';
+/** main可达的类型批次前 revision；冻结SHA与原协作基线相同 */
+const BASE_REV = 'a3bd34da1e6ca32c7fd452bc15bf49ded33cfd01';
 /** 原实现 index.tsx 的 sha256 冻结值 */
 const ORIG_SHA = 'aa9c33cac03f5eb65292fddcdbec74ed6540330442a6a49239e0fbcbe5925738';
 
 let cachedOrig: string | undefined;
+
 function origSource(): string {
   if (cachedOrig === undefined) {
     cachedOrig = execFileSync('git', ['show', `${BASE_REV}:${REL_DIR}/index.tsx`], {
@@ -159,6 +164,7 @@ function origSource(): string {
       maxBuffer: 16 * 1024 * 1024,
     });
   }
+
   return cachedOrig;
 }
 
@@ -208,6 +214,7 @@ function buildStubs(deps: Record<string, unknown>) {
     'ming-ui/components/Icon': esm((p: unknown) => createElement('Icon', p as never)),
     './config': config,
     './config.ts': config,
+    './dataBoundary': require('./dataBoundary.ts'),
     'prop-types': { string: {}, func: {} },
     'ming-ui/components/Dialog': esm(deps['Dialog'] as never),
     'ming-ui/components/Dialog/DialogBase': esm(deps['DialogBase'] as never),
@@ -284,11 +291,13 @@ const jqueryStub = (selector: string) => {
 function loadDialog(variant: 'orig' | 'current', deps: Record<string, unknown>) {
   const m: { exports: Record<string, any> } = { exports: {} };
   const stubs = buildStubs(deps);
+
   const req = (r: string) => {
     if (r in stubs) return stubs[r];
     if (r.endsWith('.less') || r.endsWith('.html')) return {};
     throw new Error(`spec 没给 ${r} 打桩（${variant}/index.tsx）`);
   };
+
   const filename = path.join(DIR, 'index.tsx');
   const babelOpts = {
     presets: [require.resolve('@babel/preset-react')],
@@ -316,11 +325,7 @@ const deps: Record<string, unknown> = {
 /* ────────────────────────── 探针 ────────────────────────── */
 
 /** 装好 canvas / 临时容器，然后跑 exportData 并等待上传链落定 */
-async function runExport(
-  variant: 'orig' | 'current',
-  options: { oversize?: boolean } = {},
-  waitMs = 30,
-) {
+async function runExport(variant: 'orig' | 'current', options: { oversize?: boolean } = {}) {
   const canvas = new FakeCanvas();
   canvas.dataUrl = options.oversize ? 'data:,' : 'data:image/png;base64,AAAA';
   const contentBox = element('div', 'ganttContentBox');
@@ -331,12 +336,15 @@ async function runExport(
   dialog.state = { ...dialog.state, name: '项目甲' };
 
   let syncThrew: string | null = null;
+
   try {
     dialog.exportData();
   } catch (error) {
     syncThrew = error instanceof Error ? error.message : String(error);
   }
-  await new Promise(resolve => setTimeout(resolve, waitMs));
+
+  await new Promise<void>(resolve => setImmediate(resolve));
+  await new Promise<void>(resolve => setImmediate(resolve));
 
   return {
     syncThrew,
@@ -359,50 +367,51 @@ async function runExport(
 
 /* ────────────────────────── 用例 ────────────────────────── */
 
-const cases: { name: string; setup: () => void; run: (variant: 'orig' | 'current') => Promise<unknown> }[] = [
-  {
-    name: '导出→上传成功：canvas 尺寸、绘制指令、上传 URL/载荷/鉴权、url 写回、临时容器被清理',
-    setup: () => {
-      stub.post = 'ok';
+const cases: { name: string; setup: () => void; run: (variant: 'orig' | 'current') => ReturnType<typeof runExport> }[] =
+  [
+    {
+      name: '导出→上传成功：canvas 尺寸、绘制指令、上传 URL/载荷/鉴权、url 写回、临时容器被清理',
+      setup: () => {
+        stub.post = 'ok';
+      },
+      run: variant => runExport(variant),
     },
-    run: variant => runExport(variant),
-  },
-  {
-    name: '图片过长（toDataURL 为空）：提示且不上传，临时容器仍被清理',
-    setup: () => {
-      stub.post = 'ok';
+    {
+      name: '图片过长（toDataURL 为空）：提示且不上传，临时容器仍被清理',
+      setup: () => {
+        stub.post = 'ok';
+      },
+      run: variant => runExport(variant, { oversize: true }),
     },
-    run: variant => runExport(variant, { oversize: true }),
-  },
-  {
-    name: 'getToken 返回非数组：提示 token 错误且不上传',
-    setup: () => {
-      stub.token = 'not-array';
+    {
+      name: 'getToken 返回非数组：提示 token 错误且不上传',
+      setup: () => {
+        stub.token = 'not-array';
+      },
+      run: variant => runExport(variant),
     },
-    run: variant => runExport(variant),
-  },
-  {
-    name: 'getToken 拒绝：走失败提示，不上传，临时容器已清理',
-    setup: () => {
-      stub.token = 'reject';
+    {
+      name: 'getToken 拒绝：走失败提示，不上传，临时容器已清理',
+      setup: () => {
+        stub.token = 'reject';
+      },
+      run: variant => runExport(variant),
     },
-    run: variant => runExport(variant),
-  },
-  {
-    name: 'axios 上传拒绝：走失败提示，buildImgSuccess 保持 false、无 url',
-    setup: () => {
-      stub.post = 'reject';
+    {
+      name: 'axios 上传拒绝：走失败提示，buildImgSuccess 保持 false、无 url',
+      setup: () => {
+        stub.post = 'reject';
+      },
+      run: variant => runExport(variant),
     },
-    run: variant => runExport(variant),
-  },
-  {
-    name: 'html2canvas 拒绝：不上传、不清理（原实现的清理只在 canvas 回调内）',
-    setup: () => {
-      stub.canvas = 'reject';
+    {
+      name: 'html2canvas 拒绝：修复旧版残留容器与未处理拒绝',
+      setup: () => {
+        stub.canvas = 'reject';
+      },
+      run: variant => runExport(variant),
     },
-    run: variant => runExport(variant),
-  },
-];
+  ];
 
 /* ────────────────────────── 执行 A/B ────────────────────────── */
 
@@ -433,7 +442,37 @@ function stable(value: unknown): string {
     item.setup();
     const currentValue = await item.run('current');
 
-    const same = stable(origValue) === stable(currentValue);
+    // A scoped clone and the old global selector own the same one temporary
+    // container. Compare cleanup counts, while checking each intentional
+    // failure-state change explicitly before comparing all other observations.
+    const comparable = (value: Awaited<ReturnType<typeof runExport>>) => ({
+      ...value,
+      removedSelectors: value.removedSelectors.map(() => 'owned-clone'),
+      productConsole: value.productConsole.map(line => line.replace(/^(log|error):/, 'failure:')),
+    });
+    const expected = comparable(origValue);
+    const actual = comparable(currentValue);
+
+    if (origState.canvas === 'reject') {
+      assert.deepEqual(origValue.unhandled, ['canvas-fail']);
+      assert.deepEqual(origValue.removedSelectors, []);
+      assert.deepEqual(currentValue.unhandled, []);
+      assert.equal(currentValue.removedSelectors.length, 1);
+      assert.deepEqual(currentValue.alerts, ['保存失败!']);
+      assert.equal(currentValue.state.showExportDialog, false);
+      assert.ok(currentValue.productConsole.includes('error:Error: canvas-fail'));
+      expected.unhandled = [];
+      expected.removedSelectors = ['owned-clone'];
+      expected.alerts = ['保存失败!'];
+      expected.productConsole = ['failure:Error: canvas-fail'];
+    } else if (origState.token !== 'ok' || origState.post === 'reject') {
+      assert.equal(origValue.state.showExportDialog, true);
+      assert.equal(currentValue.state.showExportDialog, false, 'failed upload closes its pending dialog for retry');
+      expected.state = { ...expected.state, showExportDialog: false };
+    }
+
+    const same = stable(expected) === stable(actual);
+
     if (same) {
       realConsole.log(`  ✓ ${item.name}`);
     } else {
@@ -449,7 +488,8 @@ function stable(value: unknown): string {
     process.exitCode = 1;
     return;
   }
+
   realConsole.log(
-    `ganttDialog 导出/上传规格通过：${cases.length} 项；全部与类型批次前实现逐字段一致（含上传成功/失败与临时容器清理）`,
+    `ganttDialog 导出/上传规格通过：${cases.length} 项；正常路径与历史一致；错误路径显式验证关闭待处理弹窗、清理容器及处理拒绝`,
   );
 })();

@@ -6,7 +6,7 @@
  * 点名允许为它建直接覆盖的 spec。日期换算是"日期分组"这条行为的核心：
  * day/week/month 三种粒度各自的加减与对齐错了，甘特图的时间轴就会整体偏移。
  *
- * A 侧来源：`git show 031b7ddb2`（即 `f80562ba5^`）的 `ganttDialog/index.tsx`，
+ * A 侧来源：`git show a3bd34da1`（main可达、源码与协作基线相同）的 `ganttDialog/index.tsx`，
  * 规格开头按 sha256 冻结校验，因此对照不会随工作区改动而漂移。
  *
  * 【本规格特别守住的一条契约】`handleTime` **原地修改**传入的 moment
@@ -28,12 +28,13 @@ const { transformFileSync, transformSync, ROOT } = require('../../../../../../..
 
 const DIR = __dirname;
 const REL_DIR = 'src/pages/task/containers/taskGantt/component/ganttDialog';
-/** 类型批次之前的最后一个 revision（f80562ba5 的父提交） */
-const BASE_REV = '031b7ddb23d97dbd90d792be8afb2ed69b30176b';
+/** main可达的类型批次前 revision；冻结SHA与原协作基线相同 */
+const BASE_REV = 'a3bd34da1e6ca32c7fd452bc15bf49ded33cfd01';
 /** 原实现 index.tsx 的 sha256 冻结值 */
 const ORIG_SHA = 'aa9c33cac03f5eb65292fddcdbec74ed6540330442a6a49239e0fbcbe5925738';
 
 let cachedOrig: string | undefined;
+
 function origSource(): string {
   if (cachedOrig === undefined) {
     cachedOrig = execFileSync('git', ['show', `${BASE_REV}:${REL_DIR}/index.tsx`], {
@@ -42,6 +43,7 @@ function origSource(): string {
       maxBuffer: 16 * 1024 * 1024,
     });
   }
+
   return cachedOrig;
 }
 
@@ -65,6 +67,7 @@ class FakeHTMLElement {
 Object.assign(globalThis, { HTMLElement: FakeHTMLElement, HTMLCanvasElement: FakeHTMLElement });
 (globalThis as Record<string, unknown>)['_l'] = (s: string) => s;
 (globalThis as Record<string, unknown>)['alert'] = () => {};
+
 (globalThis as Record<string, unknown>)['btoa'] = (s: string) => Buffer.from(s, 'binary').toString('base64');
 (globalThis as Record<string, unknown>)['window'] = { open: () => {} };
 (globalThis as Record<string, unknown>)['md'] = {
@@ -110,6 +113,7 @@ function loadDialog(variant: 'orig' | 'current') {
     'prop-types': { string: {}, func: {} },
     './config': config,
     './config.ts': config,
+    './dataBoundary': require('./dataBoundary.ts'),
     './time': require('./time.ts'),
     './time.ts': require('./time.ts'),
     './GanttContent': esm(() => null),
@@ -130,11 +134,13 @@ function loadDialog(variant: 'orig' | 'current') {
     html2canvas: () => Promise.resolve({}),
   };
   const moduleLike: { exports: Record<string, unknown> } = { exports: {} };
+
   const req = (r: string) => {
     if (r in stubs) return stubs[r];
     if (r.endsWith('.less') || r.endsWith('.html')) return {};
     throw new Error(`spec 没给 ${r} 打桩（${variant}/index.tsx）`);
   };
+
   const filename = path.join(DIR, 'index.tsx');
   const babelOpts = {
     presets: [require.resolve('@babel/preset-react')],
@@ -145,12 +151,16 @@ function loadDialog(variant: 'orig' | 'current') {
       ? (transformSync(origSource(), { ...babelOpts, filename }) as { code: string }).code
       : (transformFileSync(filename, babelOpts) as { code: string }).code;
   // 原实现的 exportData 用 $ —— 这里只是加载，给一个最小替身即可
-  new Function('module', 'exports', 'require', '$', code)(
-    moduleLike,
-    moduleLike.exports,
-    req,
-    () => ({ width: () => 0, height: () => 0, find: () => ({ width: () => 0, height: () => 0 }), clone: () => ({}), css: () => {}, append: () => {}, remove: () => {}, 0: null }),
-  );
+  new Function('module', 'exports', 'require', '$', code)(moduleLike, moduleLike.exports, req, () => ({
+    width: () => 0,
+    height: () => 0,
+    find: () => ({ width: () => 0, height: () => 0 }),
+    clone: () => ({}),
+    css: () => {},
+    append: () => {},
+    remove: () => {},
+    0: null,
+  }));
   return (moduleLike.exports as { default: new (props: Record<string, unknown>) => any }).default;
 }
 
@@ -197,8 +207,8 @@ function runCase(Dialog: any, item: Case) {
     // 原地修改契约：返回的必须是同两个引用
     returnsSameRefs: result.beginTime === beginInput && result.endTime === endInput,
     // 入参确实被改写（原值 → 新值）
-    inputWasMutated: beginInput.format('YYYY-MM-DD HH:mm:ss') !== beginBefore ||
-      endInput.format('YYYY-MM-DD HH:mm:ss') !== endBefore,
+    inputWasMutated:
+      beginInput.format('YYYY-MM-DD HH:mm:ss') !== beginBefore || endInput.format('YYYY-MM-DD HH:mm:ss') !== endBefore,
     // 输入是否带时间部分（用于确认"没被意外 startOf('day')"）
     beginKeptTimeOfDay: result.beginTime?.format?.('HH:mm:ss'),
     endKeptTimeOfDay: result.endTime?.format?.('HH:mm:ss'),
@@ -233,17 +243,24 @@ try {
 const OrigDialog = loadDialog('orig');
 const CurrentDialog = loadDialog('current');
 
-for (const item of CASES) {
-  check(`${item.name}（A/B 逐字段一致）`, () => {
-    const origValue = runCase(OrigDialog, item);
-    const currentValue = runCase(CurrentDialog, item);
-    assert.equal(
-      JSON.stringify(currentValue),
-      JSON.stringify(origValue),
-      `原实现 ${JSON.stringify(origValue)} / 当前 ${JSON.stringify(currentValue)}`,
-    );
-  });
+const initialLocale = moment.locale();
+require('moment/locale/zh-cn');
+const weekBoundaries: string[] = [];
+
+for (const locale of ['en', 'zh-cn']) {
+  assert.equal(moment.locale(locale), locale);
+  for (const item of CASES) {
+    check(`${locale} / ${item.name}（A/B 逐字段一致）`, () => {
+      const origValue = runCase(OrigDialog, item);
+      const currentValue = runCase(CurrentDialog, item);
+      if (item.name.includes('周日与周一')) weekBoundaries.push(currentValue.begin);
+      assert.deepEqual(currentValue, origValue);
+    });
+  }
 }
+
+moment.locale(initialLocale);
+check('英文与中文的不同周起算日均得到覆盖', () => assert.notEqual(weekBoundaries[0], weekBoundaries[1]));
 
 /* ────────────────────────── locale 无关的绝对断言 ────────────────────────── */
 /* 这些值不依赖 startOf('week') 的起算日，因此可以写死，作为"确实做了正确加减"的兜底。 */
@@ -313,6 +330,6 @@ if (failed) {
   process.exitCode = 1;
 } else {
   realConsole.log(
-    `ganttDialog handleTime 规格通过：${checks} 项（${CASES.length} 个 A/B 用例 + 5 条 locale 无关断言）`,
+    `ganttDialog handleTime 规格通过：${checks} 项（${CASES.length * 2} 个双 locale A/B 用例 + 7 条契约/locale断言）`,
   );
 }
