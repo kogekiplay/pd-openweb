@@ -34,7 +34,7 @@ export type TaskConfigAction =
   | { type: 'UPDATE_FOLDER_KEYWORDS'; searchKeyWords: string }
   | { type: 'UPDATE_COMPLETE_TIME'; completeTime: string }
   | { type: 'UPDATE_LIST_SORT'; listSort: number }
-  | { type: 'UPDATE_TASK_ASCRIPTION'; taskFilter: TaskConfig['taskFilter'] }
+  | { type: 'UPDATE_TASK_ASCRIPTION'; taskFilter: number }
   | { type: 'UPDATE_TASK_TAGS'; tags: TaskFilterSettings['tags'] }
   | { type: 'UPDATE_CUSTOM_FILTER'; customFilter: TaskFilterSettings['customFilter'] }
   | { type: 'UPDATE_CHARGE_IDS'; selectChargeIds: TaskFilterSettings['selectChargeIds'] };
