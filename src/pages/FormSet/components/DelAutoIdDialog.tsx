@@ -8,18 +8,18 @@ import processAjax from 'src/pages/workflow/api/process';
 const Wrap = styled.div``;
 
 export interface DeleteAutoIdProps {
-  show;
-  worksheetId?;
-  companyId?;
-  appId?;
-  onClose;
-  delCallback;
+  show: boolean;
+  worksheetId?: string | undefined;
+  companyId?: string | undefined;
+  appId?: string | undefined;
+  onClose: () => void;
+  delCallback: () => void;
 }
 export interface AutoIdUsage {
-  name?;
-  flowNodes?;
+  name?: string | null | undefined;
+  flowNodes?: Array<{ name?: string | null | undefined }> | null | undefined;
 }
-function usageEntry(value) {
+function usageEntry(value: unknown): value is AutoIdUsage {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
   if ('name' in value && value.name !== undefined && value.name !== null && typeof value.name !== 'string')
     return false;
@@ -27,7 +27,7 @@ function usageEntry(value) {
     if (
       !Array.isArray(value.flowNodes) ||
       !value.flowNodes.every(
-        (node) =>
+        (node: unknown) =>
           !!node &&
           typeof node === 'object' &&
           !Array.isArray(node) &&
@@ -40,23 +40,23 @@ function usageEntry(value) {
   return true;
 }
 
-export function autoIdUsages(value) {
+export function autoIdUsages(value: unknown): AutoIdUsage[] {
   if (!Array.isArray(value)) throw new TypeError('Invalid automatic ID usage list');
   for (const item of value) if (!usageEntry(item)) throw new TypeError('Invalid automatic ID usage fields');
   return value;
 }
 
 /** This endpoint's wrapper is opaque; the existing consumer only tests its data field's truthiness. */
-export function autoIdDeletionResult(value) {
+export function autoIdDeletionResult(value: unknown): unknown {
   if (value === null || value === undefined) return (value as never)['data'];
   return Reflect.get(Object(value), 'data', value);
 }
 
-export default function DelDialog(props) {
+export default function DelDialog(props: DeleteAutoIdProps) {
   const { show, onClose, worksheetId, companyId, delCallback } = props;
   const [loading, setLoading] = useState(false);
   const [hasCheck, setHasCheck] = useState(false);
-  const [list, setList] = useState([]);
+  const [list, setList] = useState<AutoIdUsage[]>([]);
 
   const checkAutoID = () => {
     if (loading) {
@@ -70,7 +70,7 @@ export default function DelDialog(props) {
         appId: worksheetId,
         companyId,
       })
-      .then((res) => {
+      .then((res: unknown) => {
         setList(autoIdUsages(res));
         setLoading(false);
         setHasCheck(true);
@@ -85,7 +85,7 @@ export default function DelDialog(props) {
   const delAutoID = () => {
     worksheetAjax
       .deleteWorksheetAutoID({ worksheetId })
-      .then((res = {}) => {
+      .then((res: unknown = {}) => {
         if (autoIdDeletionResult(res)) {
           alert(_l('删除成功'));
           delCallback();

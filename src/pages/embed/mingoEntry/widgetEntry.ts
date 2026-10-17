@@ -462,7 +462,8 @@ function setupRuntime(options: Record<string, any> = {}) {
     window.safeLocalStorageSetItem ||
     function (...args) {
       try {
-        window.localStorage.setItem(...args);
+        // WebIDL converts null to text; keep the same forwarded arguments and native coercion.
+        window.localStorage.setItem(...(args as [string, string]));
       } catch (err) {
         console.error(err);
       }

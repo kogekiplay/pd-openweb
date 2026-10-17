@@ -4,10 +4,10 @@ import _ from 'lodash';
 import { Button, Dialog, Icon, LoadDiv, ScrollView, Switch } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import sheetAjax from 'src/api/worksheet';
-
+import type { WorksheetInfo } from 'src/pages/worksheet/types';
 import DelDialog from '../../components/DelAutoIdDialog';
 import Range from '../../components/Range';
-
+import type { FunctionalRangeData, RangeSelectionChange } from '../../components/Range';
 import {
   allSwitch,
   batch,
@@ -24,10 +24,10 @@ import {
 import './style.less';
 
 const confirm = Dialog.confirm;
-const rangeExclusions = noRangeList;
+const rangeExclusions: ReadonlyArray<number | string> = noRangeList;
 
-function excludesViewRange(type) {
-  const excluded = [...statistics, 10, 11, 13, 14];
+function excludesViewRange(type: number | undefined): boolean {
+  const excluded: ReadonlyArray<number | string> = [...statistics, 10, 11, 13, 14];
   return excluded.includes(type || '');
 }
 
@@ -37,34 +37,34 @@ function excludesViewRange(type) {
 
 type WireSwitch = HapApi.MD.Web.Ajax.ResultModel.Worksheet.SwitchConfigDto;
 export interface FunctionalSwitchItem extends FunctionalRangeData {
-  type?;
-  state?;
-  roleType?;
-  view?;
+  type?: number | undefined;
+  state?: WireSwitch['state'] | undefined;
+  roleType?: number | undefined;
+  view?: WireSwitch['view'];
 }
 export interface FunctionalSwitchProps {
-  worksheetId?;
-  worksheetInfo;
+  worksheetId?: string | undefined;
+  worksheetInfo: WorksheetInfo;
 }
 export interface FunctionalSwitchState {
-  loading;
-  worksheetId;
-  showDialog;
-  showData;
-  showLocation;
-  key;
-  data?;
-  loadError?;
+  loading: boolean;
+  worksheetId: string | undefined;
+  showDialog: boolean;
+  showData: FunctionalSwitchItem;
+  showLocation: { left?: number | undefined; top?: number | undefined };
+  key: string;
+  data?: FunctionalSwitchItem[] | undefined;
+  loadError?: boolean | undefined;
 }
 
-function FunctionalSwitch(props) {
+function FunctionalSwitch(props: FunctionalSwitchProps) {
   const { worksheetId, worksheetInfo } = props;
   const { views = [], projectId, appId } = worksheetInfo;
   const [show, setShow] = useState(false);
   const [hideBatch, sethideBatch] = useState(false);
   const [hideStatistics, sethideStatistics] = useState(false);
   const [closeAutoID, setCloseAutoID] = useState(!!worksheetInfo.closeAutoID);
-  const [info, setInfo] = useState({
+  const [info, setInfo] = useState<FunctionalSwitchState>({
     loading: true,
     worksheetId,
     showDialog: false,
@@ -94,11 +94,11 @@ function FunctionalSwitch(props) {
       .then(res => {
         // 末尾拼一个前端自己的「统计」总开关：type 500 不在后端的 SwitchType 枚举里，所以用展开而不是 concat
         // （concat 要求元素类型和接口返回的完全一致；两种写法运行时等价）
-        let data = [
+        let data: FunctionalSwitchItem[] = [
           ...res,
           {
             view: [],
-            state: res.filter(o => statistics.includes(o.type) && o.state).length > 0,
+            state: res.filter(o => statistics.includes(o.type!) && o.state).length > 0,
             type: statisticsConst, //统计
             roleType: 0,
             viewIds: [],
@@ -114,38 +114,38 @@ function FunctionalSwitch(props) {
       .catch(() => setInfo({ ...info, loading: false, loadError: true }));
   };
 
-  const edit = (props) => {
+  const edit = (props: FunctionalSwitchItem) => {
     const { type, state } = props;
-    let switchList = [{ ...props }]; //非批量操作相关，直接操作
+    let switchList: FunctionalSwitchItem[] = [{ ...props }]; //非批量操作相关，直接操作
 
-    if ([...batch, 25].includes(type)) {
+    if ([...batch, 25].includes(type!)) {
       //批量操作相关数据处理
       if (type === 25) {
         //批量操作关闭，批量下的操作全部关闭
         switchList.push(
           ...info
-            .data.filter(o => batch.includes(o.type))
+            .data!.filter(o => batch.includes(o.type!))
             .map(o => {
               return { ..._.pick(o, ['roleType', 'type', 'state', 'viewIds']), state: state };
             }),
         );
       } else {
-        let batchOther = info.data.filter(o => batch.includes(o.type) && type !== o.type);
+        let batchOther = info.data!.filter(o => batch.includes(o.type!) && type !== o.type);
         switchList.push(...batchOther);
       }
     }
 
-    if ([statisticsConst, ...statistics].includes(type)) {
+    if ([statisticsConst, ...statistics].includes(type!)) {
       if (type === statisticsConst) {
         switchList.push(
           ...info
-            .data.filter(o => statistics.includes(o.type))
+            .data!.filter(o => statistics.includes(o.type!))
             .map(o => {
               return { ..._.pick(o, ['roleType', 'type', 'state', 'viewIds']), state: state };
             }),
         );
       } else {
-        let batchOther = info.data.filter(o => statistics.includes(o.type) && type !== o.type);
+        let batchOther = info.data!.filter(o => statistics.includes(o.type!) && type !== o.type);
         switchList.push(...batchOther);
         let batchNum = switchList.filter(item => item.state).length;
         let noBatch = batchNum <= 0;
@@ -154,7 +154,7 @@ function FunctionalSwitch(props) {
           //下面批量操作全部关闭，批量操作按钮也关闭
           switchList.push(
             ...info
-              .data.filter(o => o.type === statisticsConst)
+              .data!.filter(o => o.type === statisticsConst)
               .map(o => {
                 return { ..._.pick(o, ['roleType', 'type', 'state', 'viewIds']), state: false };
               }),
@@ -168,10 +168,10 @@ function FunctionalSwitch(props) {
         worksheetId: info.worksheetId,
         switchList: switchList.filter(o => o.type !== statisticsConst),
       })
-      .then((data) => {
+      .then((data: unknown) => {
         if (data) {
           let typeList = switchList.map(item => item.type);
-          let da = info.data.filter(o => !typeList.includes(o.type));
+          let da = info.data!.filter(o => !typeList.includes(o.type!));
           da.push(...switchList);
           setInfo({
             ...info,
@@ -185,7 +185,7 @@ function FunctionalSwitch(props) {
       .catch(() => alert(_l('修改失败，请稍后再试！'), 2));
   };
 
-  const strRight = (key, data) => {
+  const strRight = (key: string, data: FunctionalSwitchItem) => {
     const { viewIds = [] } = data;
     let len = viewIds.length;
     let Ids = views.map(o => o.viewId);
@@ -202,7 +202,7 @@ function FunctionalSwitch(props) {
     return undefined;
   };
 
-  const closeRangeDiaFn = (info) => {
+  const closeRangeDiaFn = (info: FunctionalSwitchState) => {
     const { viewIds = [], state } = info.showData;
 
     if (viewIds.length <= 0 && !diaRang && state) {
@@ -218,7 +218,7 @@ function FunctionalSwitch(props) {
     setRang(false);
   };
 
-  const renderSwitch = (o) => {
+  const renderSwitch = (o: FunctionalSwitchItem) => {
     return (
       <Switch
         checked={o.state}
@@ -228,9 +228,9 @@ function FunctionalSwitch(props) {
             return undefined;
           }
 
-          if ([20, 30].includes(o.type) && o.state) {
+          if ([20, 30].includes(o.type!) && o.state) {
             return confirm({
-              title: <span className="Red">{_l('关闭%0', listConfigStr[o.type])}</span>,
+              title: <span className="Red">{_l('关闭%0', listConfigStr[o.type!]!)}</span>,
               description: _l('关闭后，已经分享的链接将会失效无法访问'),
               onOk: () => {
                 edit({
@@ -281,12 +281,12 @@ function FunctionalSwitch(props) {
               <p>{_l('设置启用的系统功能和使用范围')}</p>
               {allSwitch.map((o, index) => {
                 const key = o.key;
-                let batchNum = info.data.filter(
-                  item => batch.includes(item.type) && info.data.find(a => a.type === item.type).state,
+                let batchNum = info.data!.filter(
+                  item => batch.includes(item.type!) && info.data!.find(a => a.type === item.type)!.state,
                 ).length;
                 let noBatch = batchNum <= 0;
-                let statisticsNum = info.data.filter(
-                  item => statistics.includes(item.type) && info.data.find(a => a.type === item.type).state,
+                let statisticsNum = info.data!.filter(
+                  item => statistics.includes(item.type!) && info.data!.find(a => a.type === item.type)!.state,
                 ).length;
                 let noStatistics = statisticsNum <= 0;
                 return (
@@ -296,11 +296,11 @@ function FunctionalSwitch(props) {
                       {o.list
                         .filter(it => !hideList.includes(it))
                         .map((oo, index) => {
-                          const o = info.data.find(a => a.type === oo) || {};
+                          const o = info.data!.find(a => a.type === oo) || {};
 
                           if (
                             oo === 31 ||
-                            (batch.includes(oo) && (!info.data.find(a => a.type === 25).state || hideBatch)) ||
+                            (batch.includes(oo) && (!info.data!.find(a => a.type === 25)!.state || hideBatch)) ||
                             (statistics.includes(oo) && (noStatistics || hideStatistics))
                           ) {
                             //排除复制,暂未上线
@@ -322,7 +322,7 @@ function FunctionalSwitch(props) {
                               {[...batch, ...statistics].includes(oo) && renderSwitch(o)}
                               <span
                                 className="con flexRow"
-                                onClick={(e) => {
+                                onClick={(e: React.MouseEvent<HTMLSpanElement>) => {
                                   const target = e.target;
 
                                   if (o.state) {
@@ -378,7 +378,7 @@ function FunctionalSwitch(props) {
                                     <Icon icon="visibility_off" className="" />
                                   </Tooltip>
                                 )}
-                                {((25 === oo && info.data.find(a => a.type === 25).state) ||
+                                {((25 === oo && info.data!.find(a => a.type === 25)!.state) ||
                                   (statisticsConst === oo && !noStatistics)) && (
                                   <span
                                     className="batchIsOpen Right Hand hoverColorPrimary"
@@ -438,14 +438,14 @@ function FunctionalSwitch(props) {
                   closeRangeDiaFn(info);
                 }}
                 roleType={info.showData.roleType}
-                change={(roleType) => {
+                change={(roleType: 0 | 100) => {
                   edit({
                     ...info.showData,
                     roleType: roleType,
                   });
                 }}
                 top={info.showLocation.top}
-                changeViewRange={(data) => {
+                changeViewRange={(data: RangeSelectionChange) => {
                   edit({
                     ...info.showData,
                     ..._.omit(data, 'diaRang'),
@@ -455,7 +455,7 @@ function FunctionalSwitch(props) {
                 views={views.filter(l => l.viewId !== l.worksheetId)}
                 data={info.showData}
                 otherSet={41 === info.showData.type}
-                changeOtherSet={(otherSet) => {
+                changeOtherSet={(otherSet: { displayFlowChart: 0 | 1 }) => {
                   edit({
                     ...info.showData,
                     ...otherSet,

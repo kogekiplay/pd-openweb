@@ -4,6 +4,31 @@ import styled from 'styled-components';
 import { Checkbox, Icon, Radio } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';
+import type { WorksheetView } from 'src/pages/worksheet/types';
+
+export interface FunctionalRangeData {
+  viewIds?: Array<WorksheetView['viewId']> | undefined;
+  displayFlowChart?: number | undefined;
+}
+export interface RangeSelectionChange {
+  viewIds: Array<WorksheetView['viewId']>;
+  diaRang: boolean;
+}
+export interface FunctionalRangeProps {
+  data?: FunctionalRangeData | undefined;
+  diaRang: boolean;
+  showDialog: boolean;
+  hasViewRange: boolean;
+  roleType?: number | undefined;
+  top?: number | undefined;
+  text: { allview: string; assignview: string };
+  views: WorksheetView[];
+  otherSet: boolean;
+  closeFn: () => void;
+  change: (roleType: 0 | 100) => void;
+  changeViewRange: (value: RangeSelectionChange) => void;
+  changeOtherSet: (value: { displayFlowChart: 0 | 1 }) => void;
+}
 
 const RangeBox = styled.div`
   z-index: 100;
@@ -70,17 +95,17 @@ const HeaderRange = styled.div`
     color: var(--color-primary) !important;
   }
 `;
-const UnwrappedRange = class Range extends React.Component<any, any> {
-  el = null;
-  containerRef = null;
+const UnwrappedRange = class Range extends React.Component<FunctionalRangeProps> {
+  el: HTMLDivElement | null = null;
+  containerRef: HTMLElement | null = null;
 
   override componentDidMount() {
     this.updatePosition();
-    this.containerRef = document.querySelector('.switchBoxCon');
+    this.containerRef = document.querySelector<HTMLElement>('.switchBoxCon');
     window.addEventListener('resize', this.handleResize);
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: FunctionalRangeProps) {
     if (prevProps.top !== this.props.top) {
       this.updatePosition();
     }
@@ -100,12 +125,12 @@ const UnwrappedRange = class Range extends React.Component<any, any> {
       const { offsetWidth: w, offsetHeight: h } = el;
       const ul = document.querySelector('.switchBoxCon ul')?.getBoundingClientRect();
       const chat = document.querySelector('#chat')?.getBoundingClientRect();
-      const conWidth = window.innerWidth - chat.width;
+      const conWidth = window.innerWidth - chat!.width;
       Object.assign(el.style, {
         transition: 'all 0.3s',
         left: ul && ul.width + w + ul.left <= conWidth ? `${Math.max(10, ul.width)}px` : 'initial',
         right: ul && ul.width + w + ul.left > conWidth ? '-40px' : 'initial',
-        top: `${this.props.top - (h + this.props.top > this.containerRef.offsetHeight ? h - 48 : 0)}px`,
+        top: `${this.props.top! - (h + this.props.top! > this.containerRef.offsetHeight ? h - 48 : 0)}px`,
       });
     }, 0);
   };
@@ -116,7 +141,7 @@ const UnwrappedRange = class Range extends React.Component<any, any> {
     return (
       <RangeBox
         className="rangeBox Absolute"
-        ref={el => {
+        ref={(el: HTMLDivElement | null) => {
           this.el = el;
         }}
       >

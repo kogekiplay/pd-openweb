@@ -350,7 +350,7 @@ declare var getCookie: (name: string) => string | null;
 declare var setCookie: (name: string, value: string, expire?: Date | string | number) => void;
 declare var delCookie: (name: string) => void;
 // localStorage.setItem 包一层 try/catch（隐私模式 / 配额满时不抛）
-declare var safeLocalStorageSetItem: (key: string, value: string) => void;
+declare var safeLocalStorageSetItem: (key: string, value: string | null) => void;
 
 // ---- 由构建期/宿主页注入，不是模块 ----
 declare var __api_server__: import('../src/common/globalClientTypes').ClientApiServers;

@@ -7,7 +7,8 @@ import moment from 'moment';
  */
 window.safeLocalStorageSetItem = (...args) => {
   try {
-    window.localStorage.setItem(...args);
+    // WebIDL converts null to the text "null"; retain native argument forwarding/coercion.
+    window.localStorage.setItem(...(args as [string, string]));
   } catch (err) {
     console.log(err);
   }

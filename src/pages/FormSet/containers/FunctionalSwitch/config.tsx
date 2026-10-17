@@ -1,4 +1,3 @@
-
 export const listConfigStr: Record<number, string> = {
   10: _l('显示创建按钮'),
   // 工作表维度 都是1开头
@@ -87,7 +86,7 @@ export const allSwitch = [
   { list: approveSwitch, txt: _l('审批'), key: '4' },
 ];
 
-export const tipStr = {
+export const tipStr: Partial<Record<number, React.ReactNode>> = {
   10: _l('在工作表右上方显示的创建记录按钮。关闭后，则无法直接在工作表中创建记录，只能通过关联记录等其他位置创建'),
   22: (
     <div>

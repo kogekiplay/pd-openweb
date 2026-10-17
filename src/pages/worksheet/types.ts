@@ -195,6 +195,8 @@ interface WorksheetInfoFields {
   isAllowImmediatePayment?: boolean;
   isWorksheetQuery?: boolean;
   workflowChildTableSwitch?: boolean;
+  /** Legacy system-number visibility from WorksheetModel. */
+  closeAutoID?: HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetModel['closeAutoID'];
   /** 记录日志的权限（原来写成 boolean；接口给的是对象，WorksheetRecordLog 读它的 allowExport 等） */
   worksheetOperationLogPermission?: HapApi.MD.Entity.Worksheet.WorksheetOperationLogPermissionModel;
   downLoadUrl?: string;
