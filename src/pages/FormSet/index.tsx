@@ -8,9 +8,9 @@ import { AppThemeScope } from 'src/common/theme';
 import ErrorState from 'src/components/errorPage/errorState';
 import Header from 'src/components/worksheetConfigHeader';
 import { navigateToApp } from 'src/pages/widgetConfig/util/data';
-import type { WorksheetInfo } from 'src/pages/worksheet/types';
+
 import { getTranslateInfo } from 'src/utils/app';
-import type { FormControl } from 'src/utils/controlTypes';
+
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import { MODULE_TYPE_TO_NAME } from './config';
 import AIAction from './containers/AIAction';
@@ -26,24 +26,34 @@ import Sidenav from './containers/Sidenav';
 import SubmitFormSetting from './containers/SubmitFormSetting/index';
 import './index.less';
 
+export interface FormSetProps {
+  match?;
+}
+export interface FormSetBackAction {
+  redirectfn?;
+  desp?;
+}
+
 export default function FormSet(props) {
   const { match = { params: {} } } = props;
   const { worksheetId, type = '' } = match.params;
 
-  const [worksheetName, setWorksheetName] = useState<string | undefined>('');
+  const [worksheetName, setWorksheetName] = useState('');
   const [loading, setLoading] = useState(true);
-  const [worksheetControls, setWorksheetControls] = useState<FormControl[]>([]);
-  const [worksheetRuleControls, setWorksheetRuleControls] = useState<FormControl[]>([]);
-  const [worksheetInfo, setWorksheetInfo] = useState<WorksheetInfo>({});
+  const [worksheetControls, setWorksheetControls] = useState([]);
+  const [worksheetRuleControls, setWorksheetRuleControls] = useState([]);
+  const [worksheetInfo, setWorksheetInfo] = useState({});
   const [noRight, setNoRight] = useState(false);
   const mountedRef = useRef(false);
   const requestIdRef = useRef(0);
+  const [loadError, setLoadError] = useState(false);
 
   const getWorksheetInfo = useCallback(() => {
     const requestId = requestIdRef.current + 1;
     requestIdRef.current = requestId;
     setLoading(true);
     setNoRight(false);
+    setLoadError(false);
 
     sheetAjax
       .getWorksheetInfo({
@@ -70,13 +80,18 @@ export default function FormSet(props) {
           setNoRight(true);
           setLoading(false);
         } else {
-          const controls: FormControl[] = _.sortBy(data.template.controls, o => o.row);
+          const controls = _.sortBy(data.template.controls, o => o.row);
           setWorksheetName(data.name);
           setLoading(false);
           setWorksheetControls(data.template.controls);
           setWorksheetRuleControls(controls);
           setWorksheetInfo(data);
         }
+      })
+      .catch(() => {
+        if (!mountedRef.current || requestId !== requestIdRef.current) return;
+        setLoadError(true);
+        setLoading(false);
       });
   }, [worksheetId]);
 
@@ -90,12 +105,12 @@ export default function FormSet(props) {
     };
   }, [getWorksheetInfo]);
 
-  const handleChange = useCallback(info => {
+  const handleChange = useCallback((info) => {
     setWorksheetInfo(info);
   }, []);
 
   // renderCon 在渲染期直接调用，不需要 useCallback
-  const renderCon = renderType => {
+  const renderCon = (renderType) => {
     const param = {
       ...props,
       worksheetId,
@@ -158,7 +173,9 @@ export default function FormSet(props) {
         }}
         onClose={() => navigateToApp(worksheetId)}
       />
-      {noRight ? (
+      {loadError ? (
+        <ErrorState text={_l('加载失败，请重试')} showBtn btnText={_l('重试')} callback={getWorksheetInfo} />
+      ) : noRight ? (
         <div className="w100 bgPrimary Absolute" style={{ top: 0, bottom: 0, zIndex: 2 }}>
           <ErrorState
             text={_l('权限不足，无法编辑')}
@@ -174,7 +191,7 @@ export default function FormSet(props) {
           <DocumentTitle
             title={_l(
               '表单设置 - %0 - %1',
-              MODULE_TYPE_TO_NAME[type || 'submitForm'] || MODULE_TYPE_TO_NAME['submitForm'],
+              (MODULE_TYPE_TO_NAME[type || 'submitForm'] || MODULE_TYPE_TO_NAME['submitForm']),
               worksheetName || '',
             )}
           />
