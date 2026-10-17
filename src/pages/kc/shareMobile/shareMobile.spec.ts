@@ -12,6 +12,8 @@ const root = path.resolve(__dirname, '../../../..');
 const target = 'src/pages/kc/shareMobile/shareMobile.ts';
 const saverTarget = 'src/components/kc/saveToKnowledge/saveToKnowledge.ts';
 const beforeRev = process.env['MOBILE_SHARE_BEFORE_REV'];
+const sourceCache = new Map<string, string>();
+const compiledSources = new Map<string, string>();
 
 function record(value: unknown): value is Record<string, unknown> {
   return value !== null && (typeof value === 'object' || typeof value === 'function');
@@ -29,9 +31,15 @@ function invoke(value: unknown, key: string, args: unknown[] = []): unknown {
 }
 
 function readSource(relative: string, before = false) {
-  return before && beforeRev
-    ? cp.execFileSync('git', ['show', beforeRev + ':' + relative], { cwd: root, encoding: 'utf8' })
-    : fs.readFileSync(path.join(root, relative), 'utf8');
+  const key = (before && beforeRev ? beforeRev : 'working-tree') + ':' + relative;
+  const cached = sourceCache.get(key);
+  if (cached !== undefined) return cached;
+  const source =
+    before && beforeRev
+      ? cp.execFileSync('git', ['show', beforeRev + ':' + relative], { cwd: root, encoding: 'utf8' })
+      : fs.readFileSync(path.join(root, relative), 'utf8');
+  sourceCache.set(key, source);
+  return source;
 }
 
 const globalSource = readSource('src/common/global.ts');
@@ -45,10 +53,16 @@ new Function('window', harness.transformSync(globalSource.slice(begin, end + 3),
 function load(text: string, imports: Record<string, unknown> = {}, env: Record<string, unknown> = {}) {
   const module: { exports: Record<string, unknown> } = { exports: {} };
   const globals = { _l: windowGlobals['_l'], ...env };
-  const code = harness.transformSync(text, {
-    filename: target,
-    plugins: ['@babel/plugin-transform-modules-commonjs'],
-  }).code;
+  let code = compiledSources.get(text);
+
+  if (code === undefined) {
+    code = harness.transformSync(text, {
+      filename: target,
+      plugins: ['@babel/plugin-transform-modules-commonjs'],
+    }).code;
+    compiledSources.set(text, code);
+  }
+
   new Function('module', 'exports', 'require', ...Object.keys(globals), code)(
     module,
     module.exports,
@@ -62,6 +76,15 @@ function load(text: string, imports: Record<string, unknown> = {}, env: Record<s
   );
   return module.exports;
 }
+
+// Cache compilation only; every scenario still gets its own module and globals.
+const firstModule = load('export const state = { value: 0 };');
+const secondModule = load('export const state = { value: 0 };');
+assert.notEqual(firstModule['state'], secondModule['state']);
+assert.equal(load('export const value = marker;', {}, { marker: 'first' })['value'], 'first');
+assert.equal(load('export const value = marker;', {}, { marker: 'second' })['value'], 'second');
+assert.equal(load('export const value = 1;')['value'], 1);
+assert.equal(load('export const value = 2;')['value'], 2);
 
 function declarations(relative: string, names: string[]) {
   const source = readSource(relative);
