@@ -211,7 +211,9 @@ function copyWidget(state: AppCustomPageState, payload: AppCopyWidgetPayload): A
 }
 
 // Enforce the handled union while keeping Redux initialization actions side-effect free.
-function assertHandledAction(_action: never): void {}
+function assertHandledAction(action: never): void {
+  void action;
+}
 
 export default function customPage(
   state: AppCustomPageState = initialState,
@@ -370,9 +372,7 @@ export default function customPage(
       };
     case UPDATE_WIDGET:
       const { widget, layoutType, ...rest } = payload;
-      // 原实现从 `{}` 起步、随后整体赋成 update(...) 的结果；
-      // 这里如实声明为「可能是部分 state」，而不是 `Record<string, any>`。
-      let result: AppCustomPageState = state;
+      let result: AppCustomPageState;
 
       // 更新对应布局里的标题或者统一的value
       if (layoutType) {

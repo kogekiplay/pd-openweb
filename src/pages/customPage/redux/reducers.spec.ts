@@ -37,6 +37,7 @@ const ORIG_SHA: Record<string, string> = {
 };
 
 const origCache: Record<string, string> = {};
+
 function origSource(file: string): string {
   if (origCache[file] === undefined) {
     origCache[file] = execFileSync('git', ['show', `${BASE_REV}:${REL_DIR}/${file}`], {
@@ -45,6 +46,7 @@ function origSource(file: string): string {
       maxBuffer: 16 * 1024 * 1024,
     });
   }
+
   return origCache[file];
 }
 
@@ -60,6 +62,7 @@ function assertBaselineIntact(): void {
 
 /** 确定化的 uuid：每次调用产生 `uuid-1`、`uuid-2`…，两侧各重置一次即可对齐 */
 let uuidSeq = 0;
+
 function makeUuidStub() {
   uuidSeq = 0;
   return { v4: () => `uuid-${++uuidSeq}` };
@@ -67,6 +70,7 @@ function makeUuidStub() {
 
 /** Load the actual helper declarations verbatim, without importing unrelated UI/assets. */
 const helperCodeCache = new Map<string, string>();
+
 function loadUtil(variant: 'orig' | 'current') {
   const filename = path.resolve(DIR, '../util.ts');
   const source =
@@ -74,6 +78,7 @@ function loadUtil(variant: 'orig' | 'current') {
       ? execFileSync('git', ['show', `${BASE_REV}:src/pages/customPage/util.ts`], { cwd: ROOT, encoding: 'utf8' })
       : fs.readFileSync(filename, 'utf8');
   let code = helperCodeCache.get(source);
+
   if (code === undefined) {
     const tree = parser.parse(source, { sourceType: 'module', plugins: ['typescript', 'jsx'] });
     const names = ['enumObj', 'enumWidgetType', 'getEnumType', 'getIndexById', 'getDefaultLayout'];
@@ -96,6 +101,7 @@ function loadUtil(variant: 'orig' | 'current') {
     }).code;
     helperCodeCache.set(source, code);
   }
+
   const target = { exports: {} as Record<string, unknown> };
   new Function('module', '_', 'maxBy', 'get', code)(target, realLodash, realMaxBy, realLodash.get);
   return target.exports;
@@ -152,11 +158,13 @@ const fakeChat = {
 
 function makeLoader(variant: 'orig' | 'current') {
   const cache = new Map<string, Record<string, any>>();
+
   const load = (rel: string): Record<string, any> => {
     if (cache.has(rel)) {
       const hit = cache.get(rel) as any;
       return hit.exports ? (hit.exports as Record<string, any>) : hit;
     }
+
     const moduleLike: { exports: Record<string, unknown> } = { exports: {} };
     // 【必须在执行前把 moduleLike.exports 放进缓存】循环引用时先拿到同一个对象；
     // 但**不能**缓存 `moduleLike.exports` 的当前值（那是个会被整体替换的空对象快照），
@@ -171,6 +179,7 @@ function makeLoader(variant: 'orig' | 'current') {
       variant === 'orig'
         ? (transformSync(origSource(rel), { ...babelOpts, filename }) as { code: string }).code
         : (transformFileSync(filename, babelOpts) as { code: string }).code;
+
     const req = (r: string) => {
       if (r === 'immutability-helper') return realUpdate;
       if (r === 'lodash') return realLodash;
@@ -182,9 +191,11 @@ function makeLoader(variant: 'orig' | 'current') {
       if (r.endsWith('.less') || r.endsWith('.html')) return {};
       throw new Error(`spec 没给 ${r} 打桩（${variant}/${rel}）`);
     };
+
     new Function('module', 'exports', 'require', code)(moduleLike, moduleLike.exports, req);
     return moduleLike.exports as Record<string, any>;
   };
+
   return load;
 }
 
@@ -195,6 +206,7 @@ let checks = 0;
 let failed = 0;
 /** 绝对断言里复用当前实现的 loader */
 let currentLoader: ((rel: string) => Record<string, any>) | undefined;
+
 function check(name: string, fn: () => void): void {
   checks += 1;
   try {
@@ -217,8 +229,10 @@ function firstDiff(a: unknown, b: unknown, at = '$'): string {
       const d = firstDiff(a[i], b[i], `${at}[${i}]`);
       if (d) return d;
     }
+
     return '';
   }
+
   if (a && b && typeof a === 'object') {
     const ka = Object.keys(a as object).sort();
     const kb = Object.keys(b as object).sort();
@@ -227,8 +241,10 @@ function firstDiff(a: unknown, b: unknown, at = '$'): string {
       const d = firstDiff((a as any)[k], (b as any)[k], `${at}.${k}`);
       if (d) return d;
     }
+
     return '';
   }
+
   return `${at}: ${String(a)} vs ${String(b)}`;
 }
 
@@ -259,7 +275,7 @@ interface Scenario {
 const SCENARIOS: Scenario[] = [
   {
     name: '初始状态：14 个字段的默认值',
-    run: (R, A) => R(undefined, { type: '@@INIT' }),
+    run: R => R(undefined, { type: '@@INIT' }),
   },
   {
     name: 'UPDATE_PAGE_INFO：部分更新（pageName）',
@@ -511,7 +527,7 @@ const SCENARIOS: Scenario[] = [
   },
   {
     name: '未知 action：原样返回同一引用',
-    run: (R, A) => {
+    run: R => {
       const s0 = R(undefined, { type: '@@INIT' });
       const same = R(s0, { type: 'UNRELATED' });
       return { sameRef: same === s0 };
@@ -831,11 +847,7 @@ function main(): void {
     const next = R(s, A.copyWidget(item));
     const copied = next.components[next.components.length - 1];
 
-    assert.deepEqual(
-      copied.web.layout,
-      { x: 2, w: 2 },
-      '省略 y 时仍应匹配到该行，并把副本放在同行末尾（x=2）',
-    );
+    assert.deepEqual(copied.web.layout, { x: 2, w: 2 }, '省略 y 时仍应匹配到该行，并把副本放在同行末尾（x=2）');
   });
 
   check('COPY_WIDGET 的 Infinity 位置（当前行放不下且末行即当前行 → y=Infinity）', () => {
@@ -954,6 +966,7 @@ function main(): void {
     process.exitCode = 1;
     return;
   }
+
   realConsole.log(
     `customPage/redux 行为规格通过：${checks} 项（${SCENARIOS.length} 个历史 A/B 场景 + ${checks - SCENARIOS.length} 条绝对断言）`,
   );

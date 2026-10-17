@@ -269,7 +269,7 @@ export const genUrl = (url, para, info?) => {
     if (!data) return p;
     const searchPara = p ? `&${encodeURIComponent(key)}=${data}` : `${encodeURIComponent(key)}=${data}`;
     if (url.includes(searchPara)) return p;
-    return (p += searchPara);
+    return p + searchPara;
   }, '');
   if (!paraStr) return url;
   return url.includes('?') ? `${url}&${paraStr}` : `${url}?${paraStr}`;

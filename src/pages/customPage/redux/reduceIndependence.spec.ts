@@ -26,6 +26,9 @@ const { parser, transformFileSync, transformSync, ROOT } = require('../../../../
 const realConsole = { log: console.log.bind(console), error: console.error.bind(console) };
 (globalThis as Record<string, unknown>)['_l'] = (s: string) => String(s);
 
+// The counterexample needs RTK's development middleware even when release runs the specs.
+const previousNodeEnv = process.env['NODE_ENV'];
+process.env['NODE_ENV'] = 'test';
 const { configureStore, combineReducers } = require('@reduxjs/toolkit');
 
 /* ────────────────────────── A 侧基线 ────────────────────────── */
@@ -38,6 +41,7 @@ const BASE_REV = 'fc6676e67';
 const BASE_SHA = '51e8f494a24e546e06addd5d225c46a8d8a11ec300f917e6a92664d220104d1a';
 
 const origCache: Record<string, string> = {};
+
 function origSource(file: string): string {
   if (origCache[file] === undefined) {
     origCache[file] = execFileSync('git', ['show', `${BASE_REV}:${REL_DIR}/${file}`], {
@@ -46,6 +50,7 @@ function origSource(file: string): string {
       maxBuffer: 16 * 1024 * 1024,
     });
   }
+
   return origCache[file];
 }
 
@@ -71,6 +76,7 @@ const realUpdate = require('immutability-helper').default || require('immutabili
 
 /** Load the actual helper declarations verbatim, without importing unrelated UI/assets. */
 const helperCodeCache = new Map<string, string>();
+
 function loadUtil(variant: 'orig' | 'current') {
   const filename = path.resolve(DIR, '../util.ts');
   const source =
@@ -78,6 +84,7 @@ function loadUtil(variant: 'orig' | 'current') {
       ? execFileSync('git', ['show', `${BASE_REV}:src/pages/customPage/util.ts`], { cwd: ROOT, encoding: 'utf8' })
       : fs.readFileSync(filename, 'utf8');
   let code = helperCodeCache.get(source);
+
   if (code === undefined) {
     const tree = parser.parse(source, { sourceType: 'module', plugins: ['typescript', 'jsx'] });
     const names = ['enumObj', 'enumWidgetType', 'getEnumType', 'getIndexById', 'getDefaultLayout'];
@@ -100,6 +107,7 @@ function loadUtil(variant: 'orig' | 'current') {
     }).code;
     helperCodeCache.set(source, code);
   }
+
   const target = { exports: {} as Record<string, unknown> };
   new Function('module', '_', 'maxBy', 'get', code)(target, realLodash, realMaxBy, realLodash.get);
   return target.exports;
@@ -107,11 +115,13 @@ function loadUtil(variant: 'orig' | 'current') {
 
 function makeLoader(variant: 'orig' | 'current') {
   const cache = new Map<string, any>();
+
   const load = (rel: string): any => {
     if (cache.has(rel)) {
       const hit = cache.get(rel);
       return hit.exports ?? hit;
     }
+
     const moduleLike: any = { exports: {} };
     cache.set(rel, moduleLike);
     const filename = path.join(DIR, rel);
@@ -123,6 +133,7 @@ function makeLoader(variant: 'orig' | 'current') {
       variant === 'orig'
         ? (transformSync(origSource(rel), { ...babelOpts, filename }) as { code: string }).code
         : transformFileSync(filename, babelOpts).code;
+
     const req = (r: string) => {
       if (r === 'immutability-helper') return realUpdate;
       if (r === 'lodash') return realLodash;
@@ -133,9 +144,11 @@ function makeLoader(variant: 'orig' | 'current') {
       if (r.startsWith('./')) return load(`${r.slice(2)}.ts`);
       throw new Error(`spec 没给 ${r} 打桩（${variant}/${rel}）`);
     };
+
     new Function('module', 'exports', 'require', code)(moduleLike, moduleLike.exports, req);
     return moduleLike.exports;
   };
+
   return load;
 }
 
@@ -145,7 +158,7 @@ function makeLoader(variant: 'orig' | 'current') {
  * 用**真实 `configureStore`**（默认中间件，含不可变检查）跑一次删除。
  * 返回可断言的结果：是否抛错、旧 state 是否被改、新 state 的键。
  */
-function runDelete(variant: 'orig' | 'current', valueToDelete: string) {
+function runDelete(variant: 'orig' | 'current', valueToDelete: string, seedTarget = true) {
   const load = makeLoader(variant);
   const reducer = load('reducers.ts').default;
   const actions = load('action.ts');
@@ -153,7 +166,9 @@ function runDelete(variant: 'orig' | 'current', valueToDelete: string) {
   const store = configureStore({ reducer: combineReducers({ customPage: reducer }) });
 
   store.dispatch(actions.updateLinkageFiltersGroup({ value: 'keep', filters: [{ id: 'a' }] }));
-  store.dispatch(actions.updateLinkageFiltersGroup({ value: valueToDelete, filters: [{ id: 'b' }] }));
+  if (seedTarget) {
+    store.dispatch(actions.updateLinkageFiltersGroup({ value: valueToDelete, filters: [{ id: 'b' }] }));
+  }
 
   // 抓取派发前的「旧 state」——注意：要拿住引用，才能观察到它是否被就地改写
   const oldState = store.getState().customPage;
@@ -161,6 +176,7 @@ function runDelete(variant: 'orig' | 'current', valueToDelete: string) {
   const oldGroupKeysBefore = Object.keys(oldGroup).sort();
 
   let threw: string | null = null;
+
   try {
     store.dispatch(actions.deleteLinkageFiltersGroup({ value: valueToDelete }));
   } catch (error) {
@@ -187,6 +203,7 @@ function runDelete(variant: 'orig' | 'current', valueToDelete: string) {
 let summarized = false;
 let checks = 0;
 let failed = 0;
+
 function check(name: string, fn: () => void): void {
   checks += 1;
   try {
@@ -259,10 +276,10 @@ function main(): void {
   });
 
   check('修复后：被删的键不存在时是安全的（幂等，不抛错、不动其它键）', () => {
-    // 注意：夹具会先写入 'not-there' 这个键再删它，所以删除后应只剩 'keep'。
-    // （我最初把期望写成 ['keep','not-there'] 是错的 —— 那个键正是被删除的目标。）
-    const result = runDelete('current', 'not-there');
+    const result = runDelete('current', 'not-there', false);
     assert.equal(result.threw, null);
+    assert.equal(result.oldGroupStillHasKey, false, 'The target really was absent before dispatch');
+    assert.deepEqual(result.oldGroupKeysBefore, ['keep']);
     assert.deepEqual(result.newGroupKeys, ['keep'], '删除目标键后应只剩 keep');
   });
 
@@ -279,7 +296,13 @@ function main(): void {
     process.exitCode = 1;
     return;
   }
+
   realConsole.log(`customPage 不可变性修复规格通过：${checks} 项（真实 configureStore + 默认不可变中间件）`);
 }
 
-main();
+try {
+  main();
+} finally {
+  if (previousNodeEnv === undefined) delete process.env['NODE_ENV'];
+  else process.env['NODE_ENV'] = previousNodeEnv;
+}

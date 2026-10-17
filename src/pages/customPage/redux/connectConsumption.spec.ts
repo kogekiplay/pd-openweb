@@ -72,6 +72,7 @@ function gitShow(relPath: string): string {
 }
 
 const origCache: Record<string, string> = {};
+
 function orig(relPath: string): string {
   if (origCache[relPath] === undefined) origCache[relPath] = gitShow(relPath);
   return origCache[relPath];
@@ -85,6 +86,7 @@ function assertBaselineIntact(): void {
     const actual = crypto.createHash('sha256').update(orig(item.relPath)).digest('hex');
     assert.equal(actual, item.sha, `A 侧 ${item.file} 在 ${BASE_REV} 的 sha256 与冻结值不符`);
   }
+
   // 消费方组件：A 侧与当前工作区必须逐字节一致（本批不改它们），否则对照基准被动过
   for (const item of FROZEN.filter(entry => entry.sha === 'FETCH_AT_RUNTIME')) {
     const origSha = crypto.createHash('sha256').update(orig(item.relPath)).digest('hex');
@@ -113,6 +115,7 @@ const realUpdate = require('immutability-helper').default || require('immutabili
 
 /** Load the actual helper declarations verbatim, without importing unrelated UI/assets. */
 const helperCodeCache = new Map<string, string>();
+
 function loadUtil(variant: 'orig' | 'current') {
   const filename = path.resolve(DIR, '../util.ts');
   const source =
@@ -120,6 +123,7 @@ function loadUtil(variant: 'orig' | 'current') {
       ? execFileSync('git', ['show', `${BASE_REV}:src/pages/customPage/util.ts`], { cwd: ROOT, encoding: 'utf8' })
       : fs.readFileSync(filename, 'utf8');
   let code = helperCodeCache.get(source);
+
   if (code === undefined) {
     const tree = parser.parse(source, { sourceType: 'module', plugins: ['typescript', 'jsx'] });
     const names = ['enumObj', 'enumWidgetType', 'getEnumType', 'getIndexById', 'getDefaultLayout'];
@@ -142,6 +146,7 @@ function loadUtil(variant: 'orig' | 'current') {
     }).code;
     helperCodeCache.set(source, code);
   }
+
   const target = { exports: {} as Record<string, unknown> };
   new Function('module', '_', 'maxBy', 'get', code)(target, realLodash, realMaxBy, realLodash.get);
   return target.exports;
@@ -174,11 +179,13 @@ const capturedSelectors: ((state: any, ownProps: any) => any)[] = [];
 
 function makeLoader(variant: 'orig' | 'current', sourceRoot: string) {
   const cache = new Map<string, any>();
+
   const load = (relPath: string): any => {
     if (cache.has(relPath)) {
       const hit = cache.get(relPath);
       return hit.exports ?? hit;
     }
+
     const moduleLike: any = { exports: {} };
     cache.set(relPath, moduleLike);
 
@@ -211,6 +218,7 @@ function makeLoader(variant: 'orig' | 'current', sourceRoot: string) {
         // 组件用自动 JSX runtime 编译；用真实 runtime 即可（不需要替身）
         return require('react/jsx-runtime');
       }
+
       if (r === 'react-redux') {
         const realConnect = require('react-redux').connect;
         return {
@@ -220,6 +228,7 @@ function makeLoader(variant: 'orig' | 'current', sourceRoot: string) {
           },
         };
       }
+
       if (r === 'ming-ui') return { LoadDiv: () => null };
       if (r === 'src/pages/customPage/components/editWidget/filter/util')
         return loadFormatter(variant, '../components/editWidget/filter/util.ts', 'formatFiltersGroup');
@@ -230,9 +239,11 @@ function makeLoader(variant: 'orig' | 'current', sourceRoot: string) {
       if (r === 'src/pages/customPage/redux/action.js' || r === 'src/pages/customPage/redux/action') {
         return load('src/pages/customPage/redux/action.ts');
       }
+
       if (r === 'src/pages/customPage/util') {
         return loadFormatter(variant, '../util.ts', 'formatLinkageFiltersGroup');
       }
+
       if (r.startsWith('./')) {
         // 同目录模块（reducers.ts / action.ts / actionType.ts）：
         // 若当前模块在仓库内，用「它自己的仓库相对目录 + 文件名」；
@@ -240,6 +251,7 @@ function makeLoader(variant: 'orig' | 'current', sourceRoot: string) {
         const file = `${r.slice(2)}.ts`;
         return load(moduleRelDir ? `${moduleRelDir}/${file}` : file);
       }
+
       if (r.endsWith('.less') || r.endsWith('.html')) return {};
       throw new Error(`spec 没给 ${r} 打桩（${variant}/${relPath}）`);
     };
@@ -247,6 +259,7 @@ function makeLoader(variant: 'orig' | 'current', sourceRoot: string) {
     new Function('module', 'exports', 'require', code)(moduleLike, moduleLike.exports, req);
     return moduleLike.exports;
   };
+
   return load;
 }
 
@@ -255,6 +268,7 @@ function makeLoader(variant: 'orig' | 'current', sourceRoot: string) {
 let summarized = false;
 let checks = 0;
 let failed = 0;
+
 function check(name: string, fn: () => void): void {
   checks += 1;
   try {
@@ -459,6 +473,7 @@ function main(): void {
     process.exitCode = 1;
     return;
   }
+
   realConsole.log(`customPage connect 消费规格通过：${checks} 项（真实 ViewDisplay selector + 真实 reducer/store）`);
 }
 
