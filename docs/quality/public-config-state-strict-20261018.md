@@ -21,3 +21,18 @@ WeChatEnhance、Redux 类型和 TIME_TYPE 常量的 Babel 全文逐字节相同�
 冻结整合构建 **ae026c501c453a0ea8fc6af30f8314c76ad201c5**，同时包含上一批尚未部署的页眉修复。入口 SHA256 **111b415762ce6022f7f6aaf3d9bf54612a17b4c675615ce1cca233c86a638960**，包 SHA256 **a7ebdb6014db0d27804b22a01b7c761fa0846e144f14c36055096962140c7272**；17,098 文件/三元数据逐条读取校验通过，包261,558,249bytes。冻结材料 `/private/tmp/hap-publicconfig-ae026c501c-artifact-20261018/`，原始证据 `/private/tmp/hap-publicconfig-20261017/`。冻结本身不表示已部署，最终发布结果以独立生产记录为准。
 
 当前生产在本轮发布前仍为 97f1fabad3，六入口/34资源复核通过。当前完整快速回滚、厂商资源、doc 四外部卷及历史恢复材料保留。新版本发布必须在旧不活动 e494 回滚的完整归档、实际恢复/逐文件和元数据验证结束，并通过实时完整预算后才继续；不降低 4GiB 预留，不并行执行 release 与 pre-push。全仓强类型/正式 strict 目标继续 active。
+
+
+## 整合生产发布结果
+
+上海时间 **2026-10-18T00:30:54.627397+08:00** 完成生产切换，revision **ae026c501c453a0ea8fc6af30f8314c76ad201c5**，包含原先尚未单独部署的9ee页眉批次。相对原97f生产 strict **51,054→51,003**（减少51）；相对上一main减少41，两个口径不混算。公网六入口/34资源、现网和完整快速回滚各17,098文件全部匹配。五服务ID/镜像/端口/完整Mounts及nginx全配置SHA与切换前一致；后端7.5.1、doc2.1.0四external卷及厂商资源保留。PM两资源仍200/0bytes/SHA e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855。官方upstream8360adec0实际无更新，无后端升级。
+
+当前release **/data/mingdao/frontend-ae026c501c-20261018/**；完整快速回滚 **/usr/local/MDPrivateDeployment/www-prev-20261018-ae026c501c** 包含原97f，入口SHA **206afdc245eeb18a7db299778c27935a633e9d998260786a9072b0d82c52cceb**，rollback.sh语法通过。原97f标签回滚仍含da且摘要未变；a4c95/非completed旧批及其他恢复链保留。
+
+旧不活动www-prev-20261017-e494d9c4d0已用既有工具全程持有生产锁，完整流式归档到 **/Users/kogeki/dev/HAP-release-archives/20261017/**，81,549条目/81,342文件；独立成员SHA、回传tar compare、实际完整恢复、每个文件SHA及元数据全部通过后才释放验证过的重复树。receipt.phase=offloaded、restorationVerified=true。包SHA **5e3fc551a1769c1c66886d038fcd931c80704ac6196ab80660461242d108ce09**，成员清单SHA **7ea5f9260d81aaa9233a1c83e1db2483a705271a76d76f2e7216ecf9fb76318c**，逐文件清单SHA **3e5fda89b2abd2b74c2ce97a9c82123797f1219c3a61da5c3af06f26aa8c4b55**。包/收据/清单/固定工具/恢复脚本和README持久保存，服务器索引/data/mingdao/hap-offloaded-rollbacks/。原23358/63d/c1归档及失败证据仍保留；原tree raw守卫、恢复投影只排除目录allocation大小的规则及文件模式/mtime/大小等校验未放宽。
+
+上传前26880290816bytes大于完整预算18574576857；解包后25935237120大于部署预算17675619960，均保留4GiB；发布后/data余 **13446221824bytes**。当前生产与当前快回滚始终在服务器；下一版重新按实时预算执行，不放宽保护。全部归档/恢复/上传/部署已终态，无活作业，未因观察超时重复启动；release/pre-push顺序执行。
+
+1280×720已登录只读验收保存真正切换前基线和新版本截图：MOM数值卡/库位2,036、ERP工作台四常用导航正常，两页DOM为ae版本、console warn/error均0，无viewport override，临时页已关闭。没有保存业务记录/配置、刷新公开链接、上传、执行业务导航按钮或发送消息；真实公开设置/填报/微信服务未验收。既有“盘具构成·新旧”后端缺维度仍不计通过项。
+
+证据 **/private/tmp/hap-production-publicconfig-ae026c501c-20261018/** 含新冻结版http-verify-frozen.py、前后截图/DOM结果、上传预算/包验证、完整部署终态记录和SHA校验。冻结artifact.json的productionDeployed:false保持原样，实际部署以新verification/phase/job/线上revision与SHA为准。全仓目标仍active；下一批处理真实ShareCardSet/index.tsx与Input.tsx的props/state/ref和未知API响应，收尾WeChatEnhance余1条。

@@ -18,6 +18,6 @@ PublicWorksheetConfigForm 原 props 为 any，两处 visibleHeaders JSON 随后�
 
 ## 发布状态与下一步
 
-**本批尚未部署。** 当前生产仍为已发布的 **97f1fabad3a27cd55fea022c663528a99fb46130**；六入口/34资源、五服务完整Mounts/nginx、现网与快速回滚入口摘要复核通过。当前快回滚仍 `/usr/local/MDPrivateDeployment/www-prev-20261017-97f1fabad3`（原da815）。所有既有回滚/持久归档/厂商资源和文档外部卷保留，本轮无远端写操作。
+本批已于 **2026-10-18T00:30:54.627397+08:00** 随整合版本 **ae026c501c453a0ea8fc6af30f8314c76ad201c5** 发布生产；9eecec1df冻结包本身未单独部署，原包与证据保留。最终六入口/34资源、完整文件/回滚与登录只读验证见 [PublicConfig整合发布记录](public-config-state-strict-20261018.md)。当前完整快回滚为 **/usr/local/MDPrivateDeployment/www-prev-20261018-ae026c501c**，包含原97f；原quick与旧恢复链保留。
 
-本批先同步main和冻结候选，再与下一验证批次整合发布。服务器空间实测及完整复制/两份候选余量/包/4GiB预留预算见 package-budget.json；当前空间不足该完整预算，不降低保护。下一次发布前按既有可恢复流程处理并重新预算。下一批处理 PublicConfig/index.tsx 的 finite props/state、动态设置键和值关联、时间范围、分享卡片 ref 和真实保存/校验副作用；全仓强类型/正式 strict 目标仍 active。
+本批在17日冻结时实测空间不足完整发布预算，因此先同步main和冻结候选。18日旧不活动e494副本经过完整归档/实际恢复/逐文件及元数据验证后释放重复树，再按足够预算整合发布；全程未降低4GiB保护或放宽门禁。PublicConfig父组件本轮也已完成，下一批真实分享卡片叶/API响应边界，全仓强类型/正式strict目标继续active。
