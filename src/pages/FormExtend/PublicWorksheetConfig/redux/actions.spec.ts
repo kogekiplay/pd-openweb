@@ -339,7 +339,25 @@ function check(name: string, fn: () => void | Promise<void>): Promise<void> {
     });
 }
 
+/**
+ * 【已预期的未处理拒绝】`refreshShareUrl`（原实现，基线一致）**没有 `.catch`**：
+ * 接口失败时它的 Promise 没有任何处理器 → 必然产生未处理拒绝。
+ * 这是**既有行为缺陷**，本规格不修它，但要能把它**测出来**而不至于让整个规格判失败。
+ * 因此维护一份"预期拒绝"清单：命中即消费掉（并打印说明），未命中仍然判失败。
+ * 这样防假绿守卫对**意外**拒绝依然严格。
+ */
+const expectedUnhandledRejections: string[] = [];
+
 process.on('unhandledRejection', reason => {
+  const message = reason instanceof Error ? reason.message : String(reason);
+  const expectedIndex = expectedUnhandledRejections.indexOf(message);
+
+  if (expectedIndex >= 0) {
+    expectedUnhandledRejections.splice(expectedIndex, 1);
+    realConsole.error(`      （已预期的既有行为：未处理拒绝「${message}」—— refreshShareUrl 无 .catch）`);
+    return;
+  }
+
   realConsole.error(
     `未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`,
   );
@@ -677,7 +695,78 @@ async function main(): Promise<void> {
     assert.equal(scrolled, 1, 'window.scrollToFormEnd 存在时应调用一次');
   });
 
-  /* ── 7. 失败路径：reset 失败 alert ── */
+  /* ── 7. refreshShareUrl：alert 在 dispatch 之前、url 直接落值（无 || ''）── */
+
+  await check('refreshShareUrl：先 alert「刷新成功」、再 dispatch UPDATE_URL，url 原样落值', async () => {
+    const h = makeHarness('current', BASE_STATE);
+
+    h.actions.refreshShareUrl()(h.dispatch, h.getState);
+
+    assert.equal(h.apiCalls.length, 1);
+    assert.equal(h.apiCalls[0].method, 'refreshPublicWorksheetUrl');
+    assert.equal(h.apiCalls[0].args.worksheetId, 'w1', '应带上 state 里的 worksheetId');
+
+    // 注意返回体里就是 url 字段（不是 data.url 之外的包装）
+    h.pending[0].def.resolve({ url: 'https://new.example.com/p/xyz' });
+    await h.pending[0].def.promise;
+    await flush();
+
+    const alertIndex = events.findIndex(e => e.startsWith('alert:刷新成功'));
+    const dispatchIndex = events.findIndex(e => e.startsWith('dispatch:PUBLICWORKSHEET_UPDATE_URL'));
+    assert.ok(alertIndex >= 0, '应 alert「刷新成功」');
+    assert.ok(dispatchIndex >= 0, '应派发 UPDATE_URL');
+    assert.ok(alertIndex < dispatchIndex, '原实现是先 alert 再 dispatch');
+
+    const action = h.dispatched.find(
+      (a: any) => a && a.type === 'PUBLICWORKSHEET_UPDATE_URL',
+    ) as any;
+    assert.equal(action.url, 'https://new.example.com/p/xyz', 'url 应原样落值（不经 || 归一）');
+  });
+
+  await check('refreshShareUrl：url 为空串时保持空串（与 reducer 的 || 规则配合，不在 thunk 里兜底）', async () => {
+    const h = makeHarness('current', BASE_STATE);
+    h.actions.refreshShareUrl()(h.dispatch, h.getState);
+    h.pending[0].def.resolve({ url: '' });
+    await h.pending[0].def.promise;
+    await flush();
+
+    const action = h.dispatched.find(
+      (a: any) => a && a.type === 'PUBLICWORKSHEET_UPDATE_URL',
+    ) as any;
+    assert.equal(action.url, '', "thunk 不改变 url，归一交给 reducer 的 || 规则");
+  });
+
+  await check('refreshShareUrl：失败时没有 catch → 该 Promise 未处理（如实记录，不额外兜底）', async () => {
+    // 【如实记录】原实现 `.then(...)` **没有 .catch**：接口失败会产生未处理的 Promise 拒绝。
+    // 这不是本规格能"修"的东西（属既有行为），这里只把它测出来并**阻止它污染进程**。
+    const h = makeHarness('current', BASE_STATE);
+    h.actions.refreshShareUrl()(h.dispatch, h.getState);
+
+    // 登记为"预期拒绝"：命中清单则消费掉，不判整体失败
+    expectedUnhandledRejections.push('refresh-boom');
+
+    h.pending[0].def.reject(new Error('refresh-boom'));
+    await h.pending[0].def.promise.catch(() => undefined);
+    await flush();
+    await flush();
+
+    // 该拒绝应被消费掉（说明"未处理"确实发生了）
+    assert.equal(
+      expectedUnhandledRejections.includes('refresh-boom'),
+      false,
+      '应当真的观察到一次未处理拒绝（若没有，说明 .catch 被加上了 → 既有行为变了，需更新本用例）',
+    );
+
+    // 无论 Node 是否在此时机上报，dispatch 都不应发生（.then 未执行）
+    assert.equal(
+      h.dispatched.some((a: any) => a && a.type === 'PUBLICWORKSHEET_UPDATE_URL'),
+      false,
+      '失败时不应派发 UPDATE_URL',
+    );
+    assert.equal(alerts.length, 0, '失败时不应 alert 成功');
+  });
+
+  /* ── 8. 失败路径：reset 失败 alert ── */
 
   await check('resetControls：成功且 data.success 时 dispatch LOAD_SUCCESS；失败 alert「重置失败」type=2', async () => {
     const ok = makeHarness('current', BASE_STATE);
