@@ -43,6 +43,7 @@ export function getAppIdFromLocation(): string | undefined {
   if (direct) return direct;
 
   const fromUrl = params.get('fromURL');
+
   if (fromUrl) {
     const inFrom = APP_ID_IN_PATH.exec(fromUrl);
     if (inFrom) return inFrom[1];
