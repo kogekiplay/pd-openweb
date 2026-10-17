@@ -8,8 +8,12 @@ import type {
   FieldStoreMasterData,
 } from 'src/utils/subListStoreTypes';
 
+export type ChildTableRefresh = (options?: { needResetControls?: boolean; isRefresh?: boolean }) => unknown;
 export interface ChildTableControl extends FieldStoreControl {
   setLoadingInfo?: ((key: string, loading: boolean) => void) | undefined;
+  /** The dialog carries both the child data source and its owning worksheet. */
+  worksheetId?: string | undefined;
+  addRefreshEvents?: ((name: string | undefined, refresh: ChildTableRefresh | undefined) => void) | undefined;
 }
 /** registerCell receives the rendered table, while a React ref receives the outer wrapper. */
 export interface ChildTableCellRef {
@@ -21,12 +25,7 @@ export interface ChildTableProps {
   control: ChildTableControl;
   onChange: (value: ChildTableChange) => void;
   registerCell?: ((ref: ChildTableCellRef) => void) | undefined;
-  addRefreshEvents?:
-    | ((
-        name: string,
-        refresh: ((options?: { needResetControls?: boolean; isRefresh?: boolean }) => unknown) | undefined,
-      ) => void)
-    | undefined;
+  addRefreshEvents?: ((name: string, refresh: ChildTableRefresh | undefined) => void) | undefined;
   masterData?: (FieldStoreMasterData & { controlId?: string | undefined }) | undefined;
   worksheetId?: string | undefined;
   appId?: string | undefined;
@@ -78,6 +77,7 @@ export function retryChildTableStore(
   if (!worksheetId || !controlId) return Promise.reject(new TypeError('Missing child row request identifiers'));
   return store.initAndLoadRows({ worksheetId, recordId, controlId });
 }
+
 type InjectedTableProps = Pick<ChildTableState, 'baseLoading' | 'base' | 'rows' | 'lastAction'> & {
   store: ChildTableStore;
   registerCell: (ref: ChildTableCellRef) => void;

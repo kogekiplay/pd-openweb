@@ -11,8 +11,8 @@ import worksheetAjax from 'src/api/worksheet';
 import ChildTable from 'worksheet/components/ChildTable';
 import type {
   ChildTableCellRef,
-  ChildTableChange,
   ChildTableControl,
+  ChildTableRefresh,
 } from 'worksheet/components/ChildTable/publicTypes';
 import { ROW_HEIGHT } from 'worksheet/constants/enum';
 import { onValidator } from 'src/components/Form/core/formUtils';
@@ -136,16 +136,39 @@ function hasNoRelationRelateControl(controls: FormControl[]) {
 
 interface ChildTableActionLike {
   type?: string;
-  rowid?: string;
-  rowIds?: string[];
+  rowid?: string | undefined;
+  rowIds?: Array<string | undefined>;
   rows?: RecordRow[];
-  deleted?: string[];
+  deleted?: Array<string | undefined> | undefined;
 }
 interface DialogValue {
-  deleted: string[];
-  updated: string[];
+  deleted?: Array<string | undefined> | undefined;
+  updated?: Array<string | undefined>;
   rows?: RecordRow[];
 }
+
+function isRow(value: unknown): value is RecordRow {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    (!('rowid' in value) || value.rowid === undefined || typeof value.rowid === 'string')
+  );
+}
+
+function isDialogAction(value: unknown): value is ChildTableActionLike {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
+  const rowIds = (items: unknown): items is Array<string | undefined> =>
+    Array.isArray(items) && items.every(item => item === undefined || typeof item === 'string');
+  return (
+    (!('type' in value) || value.type === undefined || typeof value.type === 'string') &&
+    (!('rowid' in value) || value.rowid === undefined || typeof value.rowid === 'string') &&
+    (!('rowIds' in value) || value.rowIds === undefined || rowIds(value.rowIds)) &&
+    (!('deleted' in value) || value.deleted === undefined || rowIds(value.deleted)) &&
+    (!('rows' in value) || value.rows === undefined || (Array.isArray(value.rows) && value.rows.every(isRow)))
+  );
+}
+
 export interface ChildTableDialogProps {
   allowEdit?: boolean | undefined;
   openFrom?: string | undefined;
@@ -194,7 +217,7 @@ export default function ChildTableDialog(props: ChildTableDialogProps) {
   const cache = useRef<{
     comp?: ChildTableCellRef | undefined;
     isSaving?: boolean | undefined;
-    reload?: unknown;
+    reload?: ChildTableRefresh | undefined;
     [key: string]: unknown;
   }>({});
   const callFromDialog = openFrom !== 'cell';
@@ -205,7 +228,7 @@ export default function ChildTableDialog(props: ChildTableDialogProps) {
   const [changed, setChanged] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(openFrom !== 'cell');
   const [refreshFlag, setRefreshFlag] = useState(Math.random());
-  const [value, setValue] = useState<DialogValue>({ deleted: [], updated: [] });
+  const [value, setValue] = useState<DialogValue>({});
   const [isSaving, setIsSaving] = useState(false);
   const conHeight = window.innerHeight - 32 - 50 - (callFromDialog ? FULL_SCREEN_TOP_OFFSET : 0);
   const maxHeight = conHeight - 31 - 36 - 10;
@@ -262,10 +285,10 @@ export default function ChildTableDialog(props: ChildTableDialogProps) {
               onClose();
             }
 
-            setValue({ deleted: [], updated: [] });
+            setValue({});
             setRefreshFlag(Math.random());
             emitter.emit('RELOAD_RECORD_INFO', {
-              dataSource: control.dataSource || worksheetId,
+              worksheetId,
               recordId,
             });
           }
@@ -398,23 +421,18 @@ export default function ChildTableDialog(props: ChildTableDialogProps) {
             worksheetId={worksheetId}
             viewId={viewId}
             from={from}
-            control={
-              {
-                ...(allowEdit
-                  ? control
-                  : {
-                      ...control,
-                      fieldPermission: '100',
-                    }),
-                dataSource: control.dataSource || worksheetId,
-                addRefreshEvents: (
-                  _name: string,
-                  value: { needResetControls?: boolean; isRefresh?: boolean } | undefined,
-                ) => {
-                  cache.current.reload = value;
-                },
-              } as ChildTableControl & { addRefreshEvents: ChildTableDialogProps['control']['addRefreshEvents'] }
-            }
+            control={{
+              ...(allowEdit
+                ? control
+                : {
+                    ...control,
+                    fieldPermission: '100',
+                  }),
+              worksheetId,
+              addRefreshEvents: (_name, refresh) => {
+                cache.current.reload = refresh;
+              },
+            }}
             controls={controls}
             recordId={recordId}
             searchConfig={searchConfig}
@@ -423,8 +441,10 @@ export default function ChildTableDialog(props: ChildTableDialogProps) {
             projectId={projectId}
             onChange={changedValues => {
               if (openFrom === 'cell') {
-                const { rows } = changedValues as ChildTableChange;
-                const lastAction = changedValues.lastAction as ChildTableActionLike;
+                const { rows } = changedValues;
+                const lastAction: ChildTableActionLike = isDialogAction(changedValues.lastAction)
+                  ? changedValues.lastAction
+                  : {};
 
                 if (
                   !_.includes(
@@ -443,39 +463,33 @@ export default function ChildTableDialog(props: ChildTableDialogProps) {
                   return;
                 }
 
-                if (lastAction.type === 'ADD_ROWS' && _.find(lastAction.rows, row => row['isAddByTree'] === true)) {
+                if (lastAction.type === 'ADD_ROWS' && _.find(lastAction.rows, row => row['isAddByTree'])) {
                   return;
                 }
 
                 setValue(oldValue => {
-                  let { deleted = [], updated = [] } = oldValue;
+                  let deleted: DialogValue['deleted'] = oldValue.deleted === undefined ? [] : oldValue.deleted;
+                  let { updated = [] } = oldValue;
 
                   if (lastAction.type === 'DELETE_ROW') {
-                    if (lastAction.rowid) {
-                      deleted = Array.from(new Set(deleted.concat(lastAction.rowid))).filter(
-                        id => !/^(temp|default)/.test(id),
-                      );
-                    }
+                    deleted = Array.from(new Set(deleted.concat(lastAction.rowid))).filter(
+                      id => !/^(temp|default)/.test(String(id)),
+                    );
                   } else if (lastAction.type === 'DELETE_ROWS') {
-                    deleted = Array.from(new Set(deleted.concat(lastAction.rowIds || []))).filter(
-                      id => !/^(temp|default)/.test(id),
+                    deleted = Array.from(new Set(deleted.concat(lastAction.rowIds))).filter(
+                      id => !/^(temp|default)/.test(String(id)),
                     );
                   } else if (lastAction.type === 'CLEAR_AND_SET_ROWS') {
-                    deleted = lastAction.deleted || [];
+                    deleted = lastAction.deleted;
                   }
 
                   if (lastAction.type === 'ADD_ROW' || lastAction.type === 'UPDATE_ROW') {
-                    if (lastAction.rowid) updated = Array.from(new Set(updated.concat(lastAction.rowid)));
+                    updated = Array.from(new Set(updated.concat(lastAction.rowid)));
                   } else if (lastAction.type === 'UPDATE_ROWS') {
-                    updated = Array.from(new Set(updated.concat(lastAction.rowIds || [])));
+                    updated = Array.from(new Set(updated.concat(lastAction.rowIds)));
                   } else if (lastAction.type === 'ADD_ROWS' || lastAction.type === 'CLEAR_AND_SET_ROWS') {
-                    updated = Array.from(
-                      new Set(
-                        updated.concat(
-                          (lastAction.rows || []).map((r: RecordRow) => r.rowid).filter(Boolean) as string[],
-                        ),
-                      ),
-                    );
+                    if (!lastAction.rows) throw new TypeError('Missing rows for child table edit');
+                    updated = Array.from(new Set(updated.concat(lastAction.rows.map(row => row.rowid))));
                   }
 
                   return { ...oldValue, updated, deleted, rows };

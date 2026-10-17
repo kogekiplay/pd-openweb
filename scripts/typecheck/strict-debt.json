@@ -2833,7 +2833,6 @@
     "src/pages/worksheet/components/CellControls/index.tsx",
     "src/pages/worksheet/components/ChangeSheetLayout.tsx",
     "src/pages/worksheet/components/ChildTable/ChildTable.tsx",
-    "src/pages/worksheet/components/ChildTableDialog.tsx",
     "src/pages/worksheet/components/ControlSelect.tsx",
     "src/pages/worksheet/components/ControlsDataTable/index.tsx",
     "src/pages/worksheet/components/CreateAIDialog.tsx",

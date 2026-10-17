@@ -3,16 +3,16 @@
   "key": "code",
   "tsVersion": "7.0.2",
   "tsconfig": "tsconfig.gate.json",
-  "generatedAt": "2026-10-16T07:52:41.307Z",
-  "rawCount": 8541,
+  "generatedAt": "2026-10-17T00:57:59.932Z",
+  "rawCount": 8540,
   "droppedNoise": {
     "library": 0,
     "probe": 0,
     "commentTS1xxx": 0,
     "commentOther": 0
   },
-  "keptCount": 8541,
-  "uniqueKeys": 2295,
+  "keptCount": 8540,
+  "uniqueKeys": 2294,
   "entries": {
     "src/components/Agent/ChatPanel.tsx|TS2322": 1,
     "src/components/Agent/ChatPanel.tsx|TS2739": 1,
@@ -2041,7 +2041,6 @@
     "src/pages/worksheet/components/ChildTable/ChildTable.tsx|TS2542": 1,
     "src/pages/worksheet/components/ChildTable/ChildTable.tsx|TS2554": 3,
     "src/pages/worksheet/components/ChildTable/ChildTable.tsx|TS2722": 1,
-    "src/pages/worksheet/components/ChildTableDialog.tsx|TS2339": 1,
     "src/pages/worksheet/components/DialogImportExcelCreate/DialogCreateApp/index.tsx|TS2322": 3,
     "src/pages/worksheet/components/DialogImportExcelCreate/DialogCreateApp/index.tsx|TS2554": 1,
     "src/pages/worksheet/components/DialogImportExcelCreate/DialogUpload/UploadFile.tsx|TS2339": 1,

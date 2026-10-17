@@ -1959,6 +1959,7 @@ class ChildTable extends React.Component<any, any> {
               onClick={() =>
                 openChildTable({
                   ...this.props,
+                  control,
                   valueChanged,
                   allowEdit: !disabled,
                   worksheetId: this.props.masterData.worksheetId,
@@ -1967,7 +1968,7 @@ class ChildTable extends React.Component<any, any> {
                     _.get(this, 'props.masterData.formData')
                       ? getTitleTextFromControls(_.get(this, 'props.masterData.formData'))
                       : '',
-                } as import('src/pages/worksheet/components/ChildTableDialog').ChildTableDialogProps)
+                })
               }
             >
               <IconBtn className="Hand hoverColorPrimary">
