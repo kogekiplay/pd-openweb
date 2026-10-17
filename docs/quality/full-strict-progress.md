@@ -2,7 +2,7 @@
 
 ## 2026-10-17 任务配置与甘特工具栏
 
-接收Toolbar真实props/state与两组行为/真connect规格，并修复任务配置reducer/action的any推导根因。RootState及其筛选字段/元素非any，5个非法载荷反例被拒绝；18组真实Redux store/action与类型擦除代码对照、Toolbar33项、253/253全仓规格、全部门禁和正式构建通过。strict51,269→51,230，无新增文件/错误码；欠债3,091→3,090，strict-clean1,675/4,765；fast8,511/2,291keys，baseline保持原字节。详见 `task-config-toolbar-strict-20261017.md`。尚未生产，现网仍23358d0949；整体目标继续。
+接收Toolbar真实props/state与两组行为/真connect规格，并修复任务配置reducer/action的any推导根因。RootState及其筛选字段/元素非any，6个非法载荷反例被拒绝；18组真实Redux store/action与类型擦除代码对照、Toolbar33项、253/253全仓规格、全部门禁和正式构建通过。strict51,269→51,230，无新增文件/错误码；欠债3,091→3,090，strict-clean1,675/4,765；fast8,511/2,291keys，baseline保持原字节。详见 `task-config-toolbar-strict-20261017.md`。尚未生产，现网仍23358d0949；整体目标继续。
 
 ## 2026-10-17 甘特弹窗与异常恢复
 
