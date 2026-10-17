@@ -84,6 +84,7 @@ let convertFailure: unknown;
 let fileRequests = 0;
 const dependencies: Record<string, unknown> = {
   ...boundary,
+  ganttExportKey: require('../pages/task/containers/taskGantt/component/ganttDialog/dataBoundary.ts').ganttExportKey,
   md: {
     global: {
       FileStoreConfig: { uploadHost: 'https://upload', pubHost: 'https://public', pictureHost: 'https://pictures' },
@@ -167,6 +168,7 @@ const dependencies: Record<string, unknown> = {
   onClose: (...args: unknown[]) => callbacks.push(args),
 };
 const tick = () => new Promise(resolve => setTimeout(resolve, 0));
+
 const reset = () => {
   alerts.length = uploads.length = callbacks.length = changes.length = 0;
   tokenFailure = uploadFailure = undefined;
@@ -180,6 +182,7 @@ const reset = () => {
   };
   const save = loadClosure('src/ming-ui/components/Signature.tsx', 'saveSignature', dependencies, signature);
   const callback = (...args: unknown[]) => callbacks.push(args);
+
   for (const failure of ['network', 'malformed', 'missing', 'upload']) {
     reset();
     tokenResponse = [{ key: 'key', uptoken: 'token', url: 'https://files/a.png' }];
@@ -195,6 +198,7 @@ const reset = () => {
     assert.equal(uploads.length, failure === 'upload' ? 1 : 0);
     assert.equal(alerts.length, 1);
   }
+
   reset();
   tokenResponse = [{ key: 'key', uptoken: 'token', url: 'https://files/a.png' }];
   save(callback);
@@ -227,8 +231,19 @@ const reset = () => {
     ],
     ['src/pages/kc/common/AttachmentsPreview/actions/action.ts', 'privatePdf', undefined, []],
   ];
+
   for (const [file, name, receiver, args] of background) {
+    if (name === 'putb64') {
+      assert.ok(receiver && typeof receiver === 'object');
+      Reflect.set(
+        receiver as object,
+        'handleExportError',
+        loadClosure(file, 'handleExportError', dependencies, receiver),
+      );
+    }
+
     const fn = loadClosure(file, name, dependencies, receiver);
+
     for (const failure of ['network', 'missing']) {
       reset();
       tokenFailure = failure === 'network' ? new Error('Token unavailable') : undefined;
@@ -237,10 +252,20 @@ const reset = () => {
       await tick();
       assert.equal(uploads.length, 0, `${name}: no upload after ${failure}`);
       assert.equal(callbacks.length, 0, `${name}: no successful callback`);
-      assert.equal(changes.length, 0, `${name}: retain current UI/data`);
+      if (name === 'putb64') {
+        assert.deepEqual(
+          changes,
+          [[{ showExportDialog: false, buildImgSuccess: false }]],
+          'failed Gantt export closes its pending dialog',
+        );
+      } else {
+        assert.equal(changes.length, 0, `${name}: retain current UI/data`);
+      }
+
       if (name !== 'privatePdf') assert.equal(alerts.length, 1, `${name}: failure alert`);
     }
   }
+
   assert.equal(fileRequests, 0);
 
   for (const [file, name, args] of [
@@ -248,6 +273,7 @@ const reset = () => {
     ['src/ming-ui/components/MdMarkdown/index.tsx', 'customUpload', [{ name: 'a.png' }]],
   ] as const) {
     const fn = loadClosure(file, name, dependencies);
+
     for (const value of [undefined, [{}]]) {
       reset();
       tokenFailure = value === undefined ? new Error('Token unavailable') : undefined;
@@ -257,6 +283,7 @@ const reset = () => {
       assert.equal(callbacks.length, 0);
     }
   }
+
   const rich = {
     options: {},
     tokenArgs: {},
@@ -265,6 +292,7 @@ const reset = () => {
     xhr: { send: (...args: unknown[]) => uploads.push(args), addEventListener() {} },
   };
   const send = loadClosure('src/ming-ui/components/RichText.tsx', '_sendRequest', dependencies, rich);
+
   for (const value of [undefined, [{}]]) {
     reset();
     tokenFailure = value === undefined ? new Error('Token unavailable') : undefined;
