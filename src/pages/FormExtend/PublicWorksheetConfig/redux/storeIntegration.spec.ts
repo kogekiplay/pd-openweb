@@ -158,7 +158,10 @@ function makeApiSpy(methods: string[]): ApiSpy {
  * 构造 `{ reducers, actions }` 模块对。
  * `variant === 'orig'` 时 reducers/actions 都取基线源码（A 侧）。
  */
-function loadModules(variant: 'orig' | 'current', api: { form: any; publicWorksheet: any }) {
+/** 每个文件各自选版本，用于交叉组合（reducer 取 A、actions 取 B 等） */
+type VariantSet = { reducers: 'orig' | 'current'; actions: 'orig' | 'current' };
+
+function loadModules(variants: VariantSet, api: { form: any; publicWorksheet: any }) {
   const realLodash = require('lodash');
   const realUtils = loadRealUtils();
 
@@ -176,6 +179,7 @@ function loadModules(variant: 'orig' | 'current', api: { form: any; publicWorksh
       presets: [require.resolve('@babel/preset-react')],
       plugins: ['@babel/plugin-transform-modules-commonjs'],
     };
+    const variant = rel === 'reducers.ts' ? variants.reducers : variants.actions;
     const code =
       variant === 'orig'
         ? (transformSync(gitShow(`${REL_DIR}/${rel}`), { ...babelOpts, filename }) as { code: string }).code
@@ -239,7 +243,9 @@ process.on('beforeExit', () => {
 
 /* ────────────────────────── 造一个真实 store ────────────────────────── */
 
-function makeStore(variant: 'orig' | 'current') {
+function makeStore(variants: VariantSet | 'orig' | 'current') {
+  const set: VariantSet =
+    typeof variants === 'string' ? { reducers: variants, actions: variants } : variants;
   installGlobals();
   alerts.length = 0;
 
@@ -252,7 +258,7 @@ function makeStore(variant: 'orig' | 'current') {
     'getPublicWorksheetInfo',
   ]);
 
-  const { reducers, actions } = loadModules(variant, { form: formApi, publicWorksheet: pwApi });
+  const { reducers, actions } = loadModules(set, { form: formApi, publicWorksheet: pwApi });
 
   // 与仓内一致：RTK configureStore 默认中间件（含 thunk），不替换不关闭
   const store = configureStore({
@@ -463,9 +469,9 @@ async function main(): Promise<void> {
 
   /* ── 7. A/B：同一序列下基线与工作区版本的最终 state 一致 ── */
 
-  await check('A/B：同一 thunk 序列下基线与工作区版本的真实 store 最终 state 一致', async () => {
-    async function run(variant: 'orig' | 'current') {
-      const { store, actions, pwApi } = makeStore(variant);
+  await check('A/B（交叉组合）：reducer 与 actions 各自取基线/工作区，4 种组合最终 state 相同', async () => {
+    async function run(variants: VariantSet) {
+      const { store, actions, pwApi } = makeStore(variants);
 
       store.dispatch(actions.loadPublicWorksheet({ worksheetId: 'w1' }) as any);
       pwApi.pending[0].def.resolve(makeDto());
@@ -494,9 +500,32 @@ async function main(): Promise<void> {
       };
     }
 
-    const origResult = await run('orig');
-    const currentResult = await run('current');
-    assert.deepEqual(currentResult, origResult);
+    /**
+     * 【为什么要交叉】只比 (A,A) 与 (B,B) 的话，"我的 actions 恰好只在配我的 reducer 时正确"
+     * 这类隐藏耦合看不出来。四种组合全比一遍，才能说明两边的改动**互不依赖**：
+     *   (A,A) 基线 → (A,B) 基线 reducer + 当前 actions
+     *   (B,A) 当前 reducer + 基线 actions → (B,B) 当前
+     */
+    const combos: VariantSet[] = [
+      { reducers: 'orig', actions: 'orig' },
+      { reducers: 'orig', actions: 'current' },
+      { reducers: 'current', actions: 'orig' },
+      { reducers: 'current', actions: 'current' },
+    ];
+
+    const results: Array<{ combo: string; value: unknown }> = [];
+    for (const combo of combos) {
+      results.push({ combo: `${combo.reducers}/${combo.actions}`, value: await run(combo) });
+    }
+
+    const baseline = results[0];
+    for (const result of results.slice(1)) {
+      assert.deepEqual(
+        result.value,
+        baseline.value,
+        `组合 ${result.combo} 的最终 state 与 ${baseline.combo} 不一致`,
+      );
+    }
   });
 
   summarized = true;
