@@ -947,7 +947,6 @@
     "src/pages/FormSet/containers/Print/BindKuaiMaiDialog.tsx",
     "src/pages/FormSet/containers/Print/PrintSortableItem.tsx",
     "src/pages/FormSet/containers/Print/index.tsx",
-    "src/pages/FormSet/containers/Share/index.tsx",
     "src/pages/FormSet/containers/SubmitFormSetting/DoubleConfirmDialog.tsx",
     "src/pages/FormSet/containers/SubmitFormSetting/OtherSettings.tsx",
     "src/pages/FormSet/containers/SubmitFormSetting/SubmitButtonSettings.tsx",
