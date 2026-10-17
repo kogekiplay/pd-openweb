@@ -150,7 +150,9 @@ export default class GanttDialog extends Component<GanttDialogProps, GanttDialog
    */
   switchDisplayType = (type: GanttType) => {
     this.setState({ type }, () => {
-      const { beginTime, endTime } = this.handleTime(config.beginTime.clone(), config.endTime.clone());
+      const { beginTime: cachedBegin, endTime: cachedEnd } = config;
+      if (cachedBegin === '' || cachedEnd === '') throw new TypeError('Gantt time range is not loaded');
+      const { beginTime, endTime } = this.handleTime(cachedBegin.clone(), cachedEnd.clone());
       this.setState({
         beginTime,
         endTime,
