@@ -49,8 +49,13 @@ const ORIG_SHA = crypto.createHash('sha256').update(origSource()).digest('hex');
 /* ────────────────────────── 环境与依赖替身 ────────────────────────── */
 
 const realConsole = { log: console.log.bind(console), error: console.error.bind(console) };
+/**
+ * `_l` 替身。真实的 `_l(key, ...args)` 只在**传了参数**时才做占位替换；
+ * `'周%05034'` / `'月%06010'` 里的 `%NNNNN` 是**翻译消息 ID**（见 locale/<lang>/mdTranslation.po），
+ * 不是占位符，无参数时必须原样保留，否则会把消息 ID 替换成 undefined。
+ */
 (globalThis as Record<string, unknown>)['_l'] = (s: string, ...args: unknown[]) =>
-  String(s).replace(/%0?(\d+)/g, (_m, i) => String(args[Number(i) - 1] ?? args[Number(i)]));
+  args.length === 0 ? String(s) : String(s).replace(/%(\d+)/g, (_m, i) => String(args[Number(i)] ?? ''));
 
 class FakeComponent {
   props: Record<string, any>;
@@ -95,14 +100,21 @@ const cxStub = require('classnames');
 /** 记录 dispatch 的 action 序列：这是本批最关键的行为证据 */
 let dispatched: unknown[] = [];
 
-/** config 替身：与真实 config 的常量形状一致（folderId 由用例设置） */
-const configStub: Record<string, any> = {
-  folderId: 'folder-1',
-  projectId: 'project-1',
-  TASKSTATUS: { NO_COMPLETED: 0, COMPLETED: 1, ALL: -1 },
-  VIEWTYPE: { DAY: 1, WEEK: 2, MONTH: 3 },
-  SUBTASKLEVEL: { ALL: 0, ONE: 1, TWO: 2, THREE: 3, FOUR: 4, FIVE: 5 },
-};
+/**
+ * 用**真实 config 模块**而不是手写替身。
+ *
+ * 理由：本规格的"取值契约"断言（状态 [0,1,-1] / 视图 [1,2,3] / 周末 [true,false] /
+ * 层级 [0,1,2,3,4,5]）要钉住的是**与 reducer 之间的真实协议**。如果 config 用替身，
+ * 那些断言只是"组件把我替身里的值传出去了"，钉不住真实常量。
+ * 真实 config.ts 只有一个 `import type`，没有运行时依赖，可以直接载入。
+ * 载入后 A/B 两侧用的是同一份真实 config，比对依然中立。
+ */
+const configStub: Record<string, any> = (() => {
+  const real = require('../../config/config.ts');
+  return real.default || real;
+})();
+// 真实 config 是共享可变对象（taskGantt.tsx 会写 folderId）；规格里需要可控值以断言透传
+configStub.folderId = 'folder-1';
 
 /** redux action creators 替身：真实实现只返回普通对象（thunk 除外），这里如实复现 */
 const actionsStub = {
@@ -600,13 +612,86 @@ async function main(): Promise<void> {
     configStub.folderId = 'folder-1';
   });
 
+  /* ── 选项取值 ↔ 标签契约：这是与 reducer 之间的协议，A/B 比对看不到（config 是替身） ── */
+
+  /** 点完一组 li，收集派发出去的取值与渲染文本 */
+  function clickGroup(
+    Toolbar: any,
+    openState: Record<string, unknown>,
+    containerClass: string,
+    actionType: string,
+  ): { values: unknown[]; texts: string[] } {
+    const instance = makeInstance(Toolbar, {});
+    instance.state = { ...instance.state, ...openState };
+    const tree = instance.render();
+    const container = byClass(tree, containerClass)[0];
+    assert.ok(container, `找不到容器 .${containerClass}`);
+    const items = findAll(container, n => n.type === 'li');
+    // jsx-runtime 把 children 放在 props.children；只有多个子节点时才在第三个参数里
+    const kidsOf = (n: any) => (n.props?.children !== undefined ? n.props.children : n.children);
+    const texts = items.map((n: any) => {
+      const kids = kidsOf(n);
+      const flat = Array.isArray(kids) ? kids : [kids];
+      return flat.filter((c: unknown) => typeof c === 'string' || typeof c === 'number').join('');
+    });
+    const values: unknown[] = [];
+    for (const item of items) {
+      dispatched = [];
+      item.props.onClick();
+      // 每次点击会派发 1~3 个 action，只取该组对应的那一个
+      const action = dispatched.find((a: any) => a?.type === actionType) as any;
+      assert.ok(action, `点击后没有派发 ${actionType}`);
+      values.push(action['status'] ?? action['viewType'] ?? action['filter'] ?? action['level'] ?? null);
+    }
+    return { values, texts };
+  }
+
+  check('状态列表取值必须是 [0,1,-1]，且文本与 getTaskStatusName 对齐', () => {
+    const { values, texts } = clickGroup(CurrentToolbar, { showOperator: true }, 'taskStatusList', 'CHANGE_TASK_STATUS');
+    assert.deepEqual(values, [0, 1, -1], '状态取值协议变了');
+    // 三个文本必须非空，且与 getTaskStatusName 在该状态下的输出一致
+    const names = [0, 1, -1].map(status => {
+      const instance = makeInstance(CurrentToolbar, { stateConfig: makeStateConfig({ currentStatus: status }) });
+      return instance.getTaskStatusName();
+    });
+    assert.deepEqual(names, ['进行中', '已完成', '全部']);
+    texts.forEach((t, i) => assert.ok(t.includes(names[i] as string), `第 ${i} 项文本「${t}」与状态名「${names[i]}」不一致`));
+  });
+
+  check('视图列表取值必须是 [1,2,3]', () => {
+    const { values } = clickGroup(CurrentToolbar, {}, 'folderGanttBtn', 'CHANGE_VIEW');
+    assert.deepEqual(values, [1, 2, 3], '视图取值协议变了');
+  });
+
+  check('周末列表取值必须是 [true,false]（true=仅工作日）', () => {
+    const { values } = clickGroup(CurrentToolbar, {}, 'folderGanttWeekBtn', 'CHANGE_FILTER_WEEKEND');
+    assert.deepEqual(values, [true, false], '周末开关取值协议变了');
+  });
+
+  check('层级列表取值必须是 [0,1,2,3,4,5]', () => {
+    const { values } = clickGroup(CurrentToolbar, { showLevel: true }, 'taskLevel', 'CHANGE_SUB_TASK_LEVEL');
+    assert.deepEqual(values, [0, 1, 2, 3, 4, 5], '层级取值协议变了');
+  });
+
+  check('视图标签必须保留 i18n 消息 ID（周%05034 / 月%06010），否则语言表查不到', () => {
+    const { texts } = clickGroup(CurrentToolbar, {}, 'folderGanttBtn', 'CHANGE_VIEW');
+    assert.ok(texts[1].includes('周%05034'), `周视图标签丢了消息 ID：${texts[1]}`);
+    assert.ok(texts[2].includes('月%06010'), `月视图标签丢了消息 ID：${texts[2]}`);
+  });
+
+  check('层级标签文案带占位参数，渲染后应已替换（不应出现 %0）', () => {
+    const { texts } = clickGroup(CurrentToolbar, { showLevel: true }, 'taskLevel', 'CHANGE_SUB_TASK_LEVEL');
+    assert.ok(!texts[1].includes('%0'), `层级标签占位符未替换：${texts[1]}`);
+    assert.ok(texts[1].includes('1'), `层级标签应含层数：${texts[1]}`);
+  });
+
   if (failed) {
     realConsole.error(`folderToolbar 行为规格失败 ${failed}/${checks} 项`);
     process.exitCode = 1;
     return;
   }
   realConsole.log(
-    `folderToolbar 行为规格通过：${checks} 项（${SCENARIOS.length} 个历史 A/B 场景 + 6 条绝对断言）`,
+    `folderToolbar 行为规格通过：${checks} 项（${SCENARIOS.length} 个历史 A/B 场景 + ${checks - SCENARIOS.length} 条绝对断言）`,
   );
 }
 
