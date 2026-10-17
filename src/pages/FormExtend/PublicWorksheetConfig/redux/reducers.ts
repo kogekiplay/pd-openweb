@@ -158,9 +158,10 @@ export function hidedControlIds(
       // lodash 类型要求显式 iteratee，传恒等函数 `x => x` 语义完全相同（也无需断言）。
       return _.uniqBy(state.concat(action.controlId), (controlId: HidedControlId) => controlId);
     case 'WORKSHEET_SHOW_CONTROL':
-      // 【逐字保留原表达式】原实现 `action.controlIds.includes(...)`；
-      // `controlIds` 由 `showControl` 的真实派发点始终提供，故动作类型上为必填。
-      return state.filter(controlId => action.controlIds.includes(controlId));
+      // 【逐字保留原表达式】原实现是 `!action.controlIds.includes(controlId)` ——
+      // 语义为"从隐藏列表里**移除**本次要显示的 id"。我先前漏掉了 `!`，
+      // 被本文件的 A/B 规格第一轮就抓到（B 侧得到 ['c2']、A 侧得到 []）。
+      return state.filter(controlId => !action.controlIds.includes(controlId));
     case 'PUBLICWORKSHEET_CLEAR':
       return [];
     default:
