@@ -54,6 +54,20 @@ export default function appDetailState(
       // 保留原实现的浅拷贝语义（不是直接返回 defaultState 引用）
       return { ...defaultState };
     default:
+      // 【为什么 default 不能只写 return state】
+      // redux 初始化会派发 `@@redux/INIT` 这类非本 reducer 的 action，所以 default
+      // 分支必须存在、且必须原样返回 state（运行行为不变）。
+      // 但纯 `return state` 会让「给 AppPkgAction 加了新变体却忘了处理」编译通过 ——
+      // 实证过：注入一个 HYPOTHETICAL_NEW_ACTION 变体后，tsc 不报任何错。
+      // 所以在这里加一道**仅类型层面**的守卫：把 action 收窄到 `never`。
+      // 若将来有未处理的变体，`action` 就不是 never，赋值会编译失败，从而逼出处理分支。
+      // 这个守卫不产生任何运行时代码（只做类型赋值），也不改变未知 action 的行为。
+      assertNever(action);
       return state;
   }
+}
+
+/** 编译期穷尽性守卫：所有变体都被处理时参数才是 `never`。仅用于类型检查，无运行时代码。 */
+function assertNever(_action: never): void {
+  return undefined;
 }
