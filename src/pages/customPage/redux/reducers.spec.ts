@@ -101,19 +101,38 @@ const realUpdate = require('immutability-helper').default || require('immutabili
 /** 文档 / sessionStorage 替身（UPDATE_EDIT_PAGE_VISIBLE 会碰它们） */
 const sessionStore: Record<string, string> = {};
 const classList: string[] = [];
-(globalThis as Record<string, unknown>)['sessionStorage'] = {
+/**
+ * `sessionStorage` 替身。
+ *
+ * 【关键：必须让 `_.keys(sessionStorage)` 能枚举出存储的键】
+ * 原实现是 `_.keys(sessionStorage).filter(_.includes('customPageEditVisible-'))`。
+ * 真实浏览器里 sessionStorage 的键会被当作可枚举属性暴露（WebIDL 具名属性），
+ * lodash 的 `_.keys` 走 `Object.keys` 路径就能拿到。
+ * 只写 `length`/`key`/`getItem` 的普通对象**枚举不到键**，会把这条清理分支测成"什么都没发生"。
+ * 因此这里在替身上把存储键**同时映射为可枚举属性**，与真实行为对齐。
+ */
+const sessionStorageStub: Record<string, any> = {
   get length() {
     return Object.keys(sessionStore).length;
   },
-  key: (i: number) => Object.keys(sessionStore)[i],
+  key: (i: number) => Object.keys(sessionStore)[i] ?? null,
   getItem: (k: string) => sessionStore[k] ?? null,
   setItem: (k: string, v: string) => {
     sessionStore[k] = String(v);
+    // 镜像成可枚举属性，供 `_.keys` 枚举
+    Object.defineProperty(sessionStorageStub, k, {
+      value: String(v),
+      writable: true,
+      configurable: true,
+      enumerable: true,
+    });
   },
   removeItem: (k: string) => {
     delete sessionStore[k];
+    delete sessionStorageStub[k];
   },
 };
+(globalThis as Record<string, unknown>)['sessionStorage'] = sessionStorageStub;
 const fakeChat = {
   classList: {
     add: (c: string) => classList.push(`+${c}`),
@@ -701,6 +720,85 @@ function main(): void {
       40,
       '历史契约：调用方的 layouts 会被就地 clamp（副作用；本次类型批次不修）',
     );
+  });
+
+  check('UPDATE_LAYOUT：layouts 与 components 长度不齐时，缺布局的组件原样保留', () => {
+    const load = makeLoader('current');
+    const R = load('reducers.ts').default;
+    const A = load('action.ts');
+    const w1 = widget({ id: 'w1', uuid: 'u1' });
+    const w2 = widget({ id: 'w2', uuid: 'u2' });
+    let s = R(undefined, { type: '@@INIT' });
+    s = R(s, A.updateComponents([w1, w2]));
+    // 只给 1 个 layout，第二个组件没有对应布局 → 走 `if (!data) return item`
+    const before2 = s.components[1];
+    const next = R(
+      s,
+      A.updateLayout({
+        layoutType: 'web',
+        layouts: [{ x: 0, y: 0, w: 24, h: 12, minW: 2, minH: 4 }],
+        components: [w1, w2],
+        adjustScreen: true,
+      }),
+    );
+    assert.equal(next.components[1], before2, '没有对应布局的组件应在返回中保持原引用');
+    assert.deepEqual(next.components[1].web, w2.web);
+  });
+
+  check('UPDATE_LAYOUT：data.h 缺省时不参与 40 clamp（不会算出 NaN）', () => {
+    const load = makeLoader('current');
+    const R = load('reducers.ts').default;
+    const A = load('action.ts');
+    const w = widget();
+    let s = R(undefined, { type: '@@INIT' });
+    s = R(s, A.updateComponents([w]));
+    const next = R(
+      s,
+      A.updateLayout({
+        layoutType: 'web',
+        layouts: [{ x: 0, y: 0, w: 24, minW: 2, minH: 4 }],
+        components: [w],
+        adjustScreen: true,
+      }),
+    );
+    // h 缺省 → 不触发 clamp，布局里 h 仍为 undefined（而不是 NaN 或被写成 40）
+    assert.equal(next.components[0].web.layout.h, undefined);
+  });
+
+  check('ADD_WIDGET：带 sectionId 时只用同 section 的组件算默认布局', () => {
+    const load = makeLoader('current');
+    const R = load('reducers.ts').default;
+    const A = load('action.ts');
+    let s = R(undefined, { type: '@@INIT' });
+    s = R(
+      s,
+      A.updateComponents([
+        widget({ id: 'a1', uuid: 'a1', sectionId: 'sec1' }),
+        widget({ id: 'a2', uuid: 'a2', sectionId: 'sec1' }),
+        widget({ id: 'b1', uuid: 'b1', sectionId: 'sec2' }),
+      ]),
+    );
+    uuidSeq = 0;
+    const next = R(s, A.addWidget({ type: 1, config: {}, sectionId: 'sec1' }));
+    const added = next.components[next.components.length - 1];
+    // 同 section 有 2 个 → web 布局 x = (2*24)%48 = 0
+    assert.equal(added.web.layout.x, 0);
+    assert.equal(added.web.layout.y, Infinity);
+  });
+
+  check('UPDATE_EDIT_PAGE_VISIBLE：state.pageId 为空时清 sessionStorage 中同前缀键（不写新键）', () => {
+    const load = makeLoader('current');
+    const R = load('reducers.ts').default;
+    const A = load('action.ts');
+    // 预置一个同前缀键
+    (globalThis as any).sessionStorage.setItem('customPageEditVisible-p0', 'true');
+    (globalThis as any).sessionStorage.setItem('unrelated-key', 'x');
+    const s0 = R(undefined, { type: '@@INIT' });   // pageId 初始为 ''
+    const next = R(s0, A.updateEditPageVisible(true));
+    assert.equal(next.visible, true);
+    // pageId 为空 → 应清理同前缀键，但不碰无关键
+    assert.equal((globalThis as any).sessionStorage.getItem('customPageEditVisible-p0'), null);
+    assert.equal((globalThis as any).sessionStorage.getItem('unrelated-key'), 'x');
   });
 
   check('COPY_WIDGET 的 Infinity 位置（当前行放不下且末行即当前行 → y=Infinity）', () => {

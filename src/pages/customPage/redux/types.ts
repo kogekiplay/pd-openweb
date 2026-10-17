@@ -102,7 +102,7 @@ export interface AppFilterComponent {
   mobileVisible?: boolean | undefined;
 }
 
-/** 应用信息（`apk`）：消费方读 appId / appName / iconColor / projectId */
+/** Known application identity and appearance fields, including the shared-header icon URL. */
 export interface AppCustomPageApk extends Pick<AppDetail, 'iconColor' | 'iconUrl' | 'projectId'> {
   appId?: string | undefined;
   appName?: string | undefined;
