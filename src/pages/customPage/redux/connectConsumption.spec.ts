@@ -54,6 +54,12 @@ const FROZEN: { file: string; relPath: string; sha: string }[] = [
     relPath: 'src/pages/customPage/components/WidgetContent/ViewDisplay.tsx',
     sha: 'FETCH_AT_RUNTIME',
   },
+  {
+    // ChartDisplay 读 linkageFiltersGroup（与本批不可变性 fix 直接相关）
+    file: 'ChartDisplay.tsx',
+    relPath: 'src/pages/customPage/components/WidgetContent/ChartDisplay.tsx',
+    sha: 'FETCH_AT_RUNTIME',
+  },
 ];
 
 function gitShow(relPath: string): string {
@@ -78,17 +84,19 @@ function assertBaselineIntact(): void {
     const actual = crypto.createHash('sha256').update(orig(item.relPath)).digest('hex');
     assert.equal(actual, item.sha, `A 侧 ${item.file} 在 ${BASE_REV} 的 sha256 与冻结值不符`);
   }
-  // ViewDisplay：A 侧与当前工作区必须一致（本批没改它），否则说明对照基准被动过
-  const origSha = crypto.createHash('sha256').update(orig(FROZEN[2].relPath)).digest('hex');
-  const currentSha = crypto
-    .createHash('sha256')
-    .update(require('node:fs').readFileSync(path.join(COMPONENT_DIR, 'ViewDisplay.tsx')))
-    .digest('hex');
-  assert.equal(
-    origSha,
-    currentSha,
-    'ViewDisplay.tsx 在基线与本工作区不一致 —— 本批不应修改它，A/B 基准失效',
-  );
+  // 消费方组件：A 侧与当前工作区必须逐字节一致（本批不改它们），否则对照基准被动过
+  for (const item of FROZEN.filter(entry => entry.sha === 'FETCH_AT_RUNTIME')) {
+    const origSha = crypto.createHash('sha256').update(orig(item.relPath)).digest('hex');
+    const currentSha = crypto
+      .createHash('sha256')
+      .update(require('node:fs').readFileSync(path.join(ROOT, item.relPath)))
+      .digest('hex');
+    assert.equal(
+      origSha,
+      currentSha,
+      `${item.file} 在基线与本工作区不一致 —— 本批不应修改它，A/B 基准失效`,
+    );
+  }
 }
 
 /* ────────────────────────── 环境替身 ────────────────────────── */
@@ -197,6 +205,25 @@ function makeLoader(variant: 'orig' | 'current', sourceRoot: string) {
       if (r === 'ming-ui') return { LoadDiv: () => null };
       if (r === 'src/pages/customPage/components/editWidget/filter/util') return makeFormatFiltersGroupStub();
       if (r === '../editWidget/view/Preview') return { View: () => null };
+      // ChartDisplay 的额外依赖
+      if (r === 'statistics/Card') return { __esModule: true, default: () => null };
+      if (r === 'redux') return require('redux');
+      if (r === 'src/pages/customPage/redux/action.js' || r === 'src/pages/customPage/redux/action') {
+        return load('src/pages/customPage/redux/action.ts');
+      }
+      if (r === 'src/pages/customPage/util') {
+        // 只用到 formatLinkageFiltersGroup —— 逐字复制其语义（按 objectId 过滤 linkage 组）
+        return {
+          formatLinkageFiltersGroup: (id: unknown, linkageFiltersGroup: Record<string, any[]>) => {
+            const targets = realLodash.flatten(
+              Object.keys(linkageFiltersGroup || {}).map(key => linkageFiltersGroup[key]),
+            );
+            return targets.filter((item: any) =>
+              realLodash.find(item?.objectControls || [], { objectId: id }),
+            );
+          },
+        };
+      }
       if (r.startsWith('./')) {
         // 同目录模块（reducers.ts / action.ts / actionType.ts）：
         // 若当前模块在仓库内，用「它自己的仓库相对目录 + 文件名」；
@@ -249,14 +276,15 @@ process.on('beforeExit', () => {
 /* ────────────────────────── 构造真实 state ────────────────────────── */
 
 const VIEW_REL = 'src/pages/customPage/components/WidgetContent/ViewDisplay.tsx';
+const CHART_REL = 'src/pages/customPage/components/WidgetContent/ChartDisplay.tsx';
 
 /** 用真实 reducer + 真实 configureStore 造出 state，并取出 ViewDisplay 的 selector */
-function build(variant: 'orig' | 'current') {
+function build(variant: 'orig' | 'current', componentRel = VIEW_REL) {
   capturedSelectors.length = 0;
   const load = makeLoader(variant, COMPONENT_DIR);
 
   // 1) 加载组件模块 → 捕获真实 selector
-  load(VIEW_REL);
+  load(componentRel);
   assert.equal(capturedSelectors.length, 1, '应当捕获到 1 个 connect selector');
   const selector = capturedSelectors[0];
 
@@ -272,8 +300,8 @@ const MOBILE_VISIBLE_FALSE = { value: 'f1', advancedSetting: {}, filters: [], mo
 const MOBILE_VISIBLE_TRUE = { value: 'f2', advancedSetting: {}, filters: [], mobileVisible: true };
 const NO_MOBILE_FLAG = { value: 'f3', advancedSetting: {}, filters: [] };
 
-function run(variant: 'orig' | 'current') {
-  const { selector, reducer, actions } = build(variant);
+function run(variant: 'orig' | 'current', componentRel = VIEW_REL) {
+  const { selector, reducer, actions } = build(variant, componentRel);
   const store = configureStore({ reducer: combineReducers({ customPage: reducer }) });
 
   store.dispatch(
@@ -337,6 +365,84 @@ function main(): void {
   check('selector 透传 filtersGroup 与 loadFilterComponentCount', () => {
     assert.deepEqual(currentResult.desktop.filtersGroupKeys, ['v1']);
     assert.equal(currentResult.desktop.loadFilterComponentCount, 3);
+  });
+
+  /* ── ChartDisplay：读 linkageFiltersGroup（与本批不可变性 fix 直接相关）── */
+
+  /**
+   * 跑 ChartDisplay 的 selector：额外预置 linkageFiltersGroup 并删除一个键。
+   *
+   * 【为什么 A 侧不用 `configureStore`】A 侧（`fc6676e67`）的
+   * `DELETE_LINKAGE_FILTERS_GROUP` 会就地修改旧 state，而 `configureStore` 默认带的
+   * immutable-state-invariant 中间件会在派发时**直接抛错**（这正是本批 `c9cfc6a7a`
+   * 修掉的缺陷，反例见 `reduceIndependence.spec.ts`）。
+   * 本规格要对照的是「**selector 读到什么**」，因此 A 侧改用不含该中间件的
+   * `createStore`（redux 原生），让历史实现能跑完；B 侧仍用 `configureStore`
+   * 以证明修复后在真实默认中间件下也正常。
+   */
+  function makePlainStore(reducer: any, withImmutableCheck: boolean) {
+    const reducers = combineReducers({ customPage: reducer }) as any;
+    if (withImmutableCheck) return configureStore({ reducer: reducers });
+    const { createStore } = require('redux');
+    return createStore(reducers);
+  }
+
+  function runChart(variant: 'orig' | 'current') {
+    const { selector, reducer, actions } = build(variant, CHART_REL);
+    // A 侧（历史实现）用裸 createStore；当前实现用带默认中间件的 configureStore
+    const store = makePlainStore(reducer, variant === 'current');
+
+    store.dispatch(
+      actions.updatePageInfo({
+        filtersGroup: { v1: [{ objectControls: [{ objectId: 'o1', controlId: 'c1' }] }] },
+        filterComponents: [MOBILE_VISIBLE_FALSE, MOBILE_VISIBLE_TRUE, NO_MOBILE_FLAG],
+        loadFilterComponentCount: 3,
+      }),
+    );
+    store.dispatch(actions.updateLinkageFiltersGroup({ value: 'g1', filters: [{ id: 'l1' }] }));
+    store.dispatch(actions.updateLinkageFiltersGroup({ value: 'g2', filters: [{ id: 'l2' }] }));
+    // 删除一个键：既验证 fix 后的不可变删除，也验证 selector 读到的是删除后的结果
+    store.dispatch(actions.deleteLinkageFiltersGroup({ value: 'g1' }));
+
+    const state = store.getState();
+    const desktop = selector(state, { layoutType: 'desktop' });
+    const mobile = selector(state, { layoutType: 'mobile' });
+
+    return {
+      desktop: {
+        filtersGroupKeys: Object.keys(desktop.filtersGroup || {}),
+        linkageFiltersGroupKeys: Object.keys(desktop.linkageFiltersGroup || {}),
+        filterComponentValues: desktop.filterComponents.map((n: any) => n.value),
+        loadFilterComponentCount: desktop.loadFilterComponentCount,
+      },
+      mobile: { filterComponentValues: mobile.filterComponents.map((n: any) => n.value) },
+    };
+  }
+
+  check('ChartDisplay：selector 输出（含 linkageFiltersGroup 删除后）与历史实现逐字段一致', () => {
+    const origChart = runChart('orig');
+    const currentChart = runChart('current');
+    assert.equal(
+      JSON.stringify(currentChart),
+      JSON.stringify(origChart),
+      `A/B 不一致：\n      A: ${JSON.stringify(origChart)}\n      B: ${JSON.stringify(currentChart)}`,
+    );
+  });
+
+  check('ChartDisplay：linkageFiltersGroup 经 selector 读到删除后的结果（只剩 g2）', () => {
+    const result = runChart('current');
+    assert.deepEqual(
+      result.desktop.linkageFiltersGroupKeys,
+      ['g2'],
+      '被删除的 g1 不应出现在 selector 输出里',
+    );
+  });
+
+  check('ChartDisplay 与 ViewDisplay 的 filterComponents 过滤语义一致', () => {
+    const chart = runChart('current');
+    const view = run('current');
+    assert.deepEqual(chart.mobile.filterComponentValues, view.mobile.filterComponentValues);
+    assert.deepEqual(chart.desktop.filterComponentValues, view.desktop.filterComponentValues);
   });
 
   summarized = true;
