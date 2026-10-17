@@ -21,8 +21,28 @@ import './folderToolbar.less';
 
 const ClickAwayable = ClickAway;
 
-/** connect 注入的状态片段：直接取自 RootState，避免另写一份会漂移的形状 */
-type FolderToolbarStateProps = Pick<RootState['task'], 'stateConfig' | 'taskConfig'>;
+/**
+ * connect 注入的状态片段。
+ *
+ * `stateConfig` 直接取自 RootState —— 它有真实形状（来自 `config/stateConfig.ts`
+ * 的默认值），不需要另写一份会漂移的副本。
+ *
+ * `taskConfig` **不能**这样取：`RootState['task']['taskConfig']` 实测是 `any`。
+ * 原因是 `src/pages/task/redux/reducers.ts` 的 taskConfig reducer 没有显式返回类型，
+ * 而它的分支里写了 `Object.assign({}, state, action.taskConfig)`；`ReduxAction` 的
+ * 默认载荷是 `{ [key: string]: any }`，`action.taskConfig` 因此是 `any`，
+ * `Object.assign` 的返回类型被污染成 `any`，整个推导结果就是 `any`。
+ * 用 `Pick` 取出一个 `any` 字段等于**没有类型**，那是假类型化，所以这里如实写成 `unknown`。
+ *
+ * 组件本身只把它交给 `_.isEqual` 做整体比较（不读任何字段），`unknown` 完全够用，
+ * 且它是 `any` 的反面 —— 谁将来想读 `taskConfig.folderId` 都必须先做收窄，
+ * 不会像 `any` 那样静默放过。要真正拿到形状，需要由 lead 修范围外的 taskConfig reducer
+ * （给它标注返回类型或给 ReduxAction 传真实载荷），我不越界修改。
+ */
+interface FolderToolbarStateProps {
+  stateConfig: RootState['task']['stateConfig'];
+  taskConfig: unknown;
+}
 
 /** 组件自身需要的 props（由父组件 taskGantt.tsx 传入） */
 interface FolderToolbarOwnProps {
