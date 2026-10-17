@@ -49,11 +49,11 @@ export interface AppDetail {
   appGroups?: AppSection[] | undefined;
 
   // ── 真实存在但形状未建模：留 unknown，不放进索引签名 ──
-  /** 授权/购买信息（消费方只用 `_.get(appPkg.license, 'status')` 这类弱访问） */
-  license?: unknown;
-  /** 管理员列表（消费方只判空/取长度） */
+  /** 授权/购买信息：字段取自真实读取点，见下方 AppLicense */
+  license?: AppLicense | undefined;
+  /** 管理员列表（消费方只判空/取长度，不读元素字段） */
   managers?: unknown[] | undefined;
-  /** 分组/区块数据（消费方只做整体传递） */
+  /** 分组/区块数据：消费方只在未类型化的 props 里使用，形状未建模 */
   sections?: unknown;
   /** 固定态文案与账号（见 components/FixedContent） */
   fixRemark?: string | undefined;
@@ -63,6 +63,24 @@ export interface AppDetail {
   goodsId?: string | undefined;
   /** 调试角色；代码里用 `(appPkg.debugRole || {}).canDebug` 访问 */
   debugRole?: { canDebug?: boolean | undefined } | undefined;
+}
+
+/**
+ * 授权 / 购买信息。
+ *
+ * 【形状来自真实读取点，不是照抄接口文档】
+ * - `_.get(appPkg.license, 'status') === 2` → `status: number`
+ *   （`components/UnusualContent/index.tsx:130`、`:158`）
+ * - `appPkg.license.planType`、`appPkg.license.id` 被直接拼进市场链接
+ *   （`components/UnusualContent/index.tsx:167`）
+ *
+ * 三个字段都标可选：切片是局部详情浅合并出来的，未同步到授权信息时
+ * `license` 整体为 `undefined`（外层的 `license?` 已表达这一点）。
+ */
+export interface AppLicense {
+  status?: number | undefined;
+  id?: string | undefined;
+  planType?: number | undefined;
 }
 
 /**
