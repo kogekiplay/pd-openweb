@@ -26,7 +26,14 @@ const realConsole = { log: console.log.bind(console), error: console.error.bind(
 
 const DIR = __dirname;
 const REL_FILE = 'src/pages/task/containers/taskGantt/containers/folderToolbar/folderToolbar.tsx';
-const BASE_REV = '8b67c779b519afeb86273ef7c5bcce24bd4f1a34';
+/**
+ * A 侧基线：`b84c1c28a`（lead 指定，**在 origin/main 上可达**）。
+ *
+ * 早先这里用的是协作分支上的 `8b67c779b`（未推送），会让规格依赖只存在于协作分支的
+ * 历史。lead 已核验 `folderToolbar.tsx` 在 `b84c1c28a` 与 `8b67c779b` 两处内容完全相同
+ * （sha256 `2d14765c…`），切换基线不改变 A 侧，下面的冻结 SHA 保持不变。
+ */
+const BASE_REV = 'b84c1c28a763e2ab56b2a6d9b39f2f4294717be6';
 
 let cachedOrig: string | undefined;
 function origSource(): string {
@@ -211,6 +218,32 @@ const SCENARIOS: Scenario[] = [
 
 /* ────────────────────────── 执行 ────────────────────────── */
 
+/* ────────────────────────── 防假绿：必须跑到汇总行才算通过 ────────────────────────── */
+
+/**
+ * 【为什么需要这三行】任何"异常被吞掉、进程却以 0 退出"的情形都会被门禁读成通过。
+ * 我在旧甘特导出规格里就踩过这个坑（异步 IIFE 里的异常只被记进 unhandledRejection，
+ * 结果一个用例没跑也 exit 0）。这里做三层兜底：
+ *   1. `unhandledRejection` / `uncaughtException` 一律打印并置非 0；
+ *   2. `beforeExit` 检查是否真的打印过汇总行 —— 没跑到就是失败；
+ *   3. 汇总行由 `summarized = true` 标记（见 main 末尾）。
+ */
+let summarized = false;
+process.on('unhandledRejection', reason => {
+  realConsole.error(`未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`);
+  process.exitCode = 1;
+});
+process.on('uncaughtException', error => {
+  realConsole.error(`未捕获异常，判为失败：${error instanceof Error ? error.stack || error.message : String(error)}`);
+  process.exitCode = 1;
+});
+process.on('beforeExit', () => {
+  if (!summarized) {
+    realConsole.error('规格没有跑到汇总行（可能有异常被吞掉），判为失败');
+    process.exitCode = 1;
+  }
+});
+
 let checks = 0;
 let failed = 0;
 function check(name: string, fn: () => void): void {
@@ -315,6 +348,7 @@ function main(): void {
     process.exitCode = 1;
     return;
   }
+  summarized = true;
   realConsole.log(
     `folderToolbar 真模块集成规格通过：${checks} 项（${SCENARIOS.length} 个真 connect 渲染 A/B + 5 条接线断言）`,
   );

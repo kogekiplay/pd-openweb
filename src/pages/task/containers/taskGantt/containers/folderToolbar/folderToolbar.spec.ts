@@ -28,8 +28,15 @@ const { transformFileSync, transformSync, ROOT } = require('../../../../../../..
 
 const DIR = __dirname;
 const REL_FILE = 'src/pages/task/containers/taskGantt/containers/folderToolbar/folderToolbar.tsx';
-/** 类型改造前的最后一个提交（我第六轮提交，之后本文件未被改动） */
-const BASE_REV = '8b67c779b519afeb86273ef7c5bcce24bd4f1a34';
+/**
+ * A 侧基线：`b84c1c28a`（lead 指定，**在 origin/main 上可达**）。
+ *
+ * 早先这里用的是我协作分支上的 `8b67c779b`，那是尚未推送的提交，会让规格依赖
+ * 一条只存在于协作分支的历史。lead 已核验 `folderToolbar.tsx` 在 `b84c1c28a` 与
+ * `8b67c779b` 两处**内容完全相同**（sha256 `2d14765c…`），所以切换基线不改变 A 侧，
+ * 下面的冻结 SHA 也保持不变。
+ */
+const BASE_REV = 'b84c1c28a763e2ab56b2a6d9b39f2f4294717be6';
 
 let cachedOrig: string | undefined;
 function origSource(): string {
@@ -97,6 +104,13 @@ const ClickAwayStub = (props: unknown) => createElement('ClickAway', props as ne
 const lodashStub = require('lodash');
 const cxStub = require('classnames');
 
+/**
+ * 真实 `react-redux` 的 `shallowEqual`。`componentDidUpdate` 用它做早退判断，
+ * 语义细节（Object.is 逐 key 比较、key 数量一致、引用相同直接 true）会直接影响
+ * 后续 `_.isEqual(taskConfig)` 分支是否被执行，因此不能用近似替身。
+ */
+const realShallowEqual: (a: unknown, b: unknown) => boolean = require('react-redux').shallowEqual;
+
 /** 记录 dispatch 的 action 序列：这是本批最关键的行为证据 */
 let dispatched: unknown[] = [];
 
@@ -151,7 +165,10 @@ function buildStubs() {
     },
     'react-redux': {
       connect: () => (Target: unknown) => Target, // 规格直接实例化内部类，不走 connect 包装
-      shallowEqual: (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b),
+      // 【必须用真实实现】`componentDidUpdate` 的早退条件取决于 `shallowEqual` 的精确语义
+      // （逐 key 用 Object.is 比较，且 key 数量相同）。用 JSON.stringify 近似会改变
+      // "引用相同即相等"、"NaN/undefined 相等"、"函数引用相同"等判定，测出来的是替身行为。
+      shallowEqual: realShallowEqual,
     },
     classnames: cxStub,
     lodash: lodashStub,
@@ -261,6 +278,32 @@ function fingerprint(node: unknown, depth = 0): unknown {
   const kids = n.props?.children !== undefined ? n.props.children : n.children;
   return { tag, props, children: kids === undefined ? [] : fingerprint(kids, depth + 1) };
 }
+
+/* ────────────────────────── 防假绿：必须跑到汇总行才算通过 ────────────────────────── */
+
+/**
+ * 【为什么需要这三行】任何"异常被吞掉、进程却以 0 退出"的情形都会被门禁读成通过。
+ * 我在旧甘特导出规格里就踩过这个坑（异步 IIFE 里的异常只被记进 unhandledRejection，
+ * 结果一个用例没跑也 exit 0）。这里做三层兜底：
+ *   1. `unhandledRejection` / `uncaughtException` 一律打印并置非 0；
+ *   2. `beforeExit` 检查是否真的打印过汇总行 —— 没跑到就是失败；
+ *   3. 汇总行由 `summarized = true` 标记（见 main 末尾）。
+ */
+let summarized = false;
+process.on('unhandledRejection', reason => {
+  realConsole.error(`未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`);
+  process.exitCode = 1;
+});
+process.on('uncaughtException', error => {
+  realConsole.error(`未捕获异常，判为失败：${error instanceof Error ? error.stack || error.message : String(error)}`);
+  process.exitCode = 1;
+});
+process.on('beforeExit', () => {
+  if (!summarized) {
+    realConsole.error('规格没有跑到汇总行（可能有异常被吞掉），判为失败');
+    process.exitCode = 1;
+  }
+});
 
 /* ────────────────────────── 断言脚手架 ────────────────────────── */
 
@@ -690,6 +733,7 @@ async function main(): Promise<void> {
     process.exitCode = 1;
     return;
   }
+  summarized = true;
   realConsole.log(
     `folderToolbar 行为规格通过：${checks} 项（${SCENARIOS.length} 个历史 A/B 场景 + ${checks - SCENARIOS.length} 条绝对断言）`,
   );
