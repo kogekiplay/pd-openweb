@@ -21,6 +21,7 @@ import {
   TIME_TYPE,
   WECHAT_FIELD_KEY,
 } from '../../enum';
+import { appendPageConfig } from '../../pageConfigWrite';
 import * as actions from '../../PublicWorksheetConfig/redux/actions';
 import AddControlDialog from '../components/AddControlDialog';
 import SourceKeys from '../components/SourceKeys';
@@ -440,8 +441,8 @@ class PublicConfig extends React.Component<any, any> {
     });
   };
 
-  handleChange = (key, value, cb = () => {}) => {
-    const changed = {};
+  handleChange = (key: string, value: unknown, cb: () => void = () => {}) => {
+    const changed: Record<string, unknown> = {};
     changed[key] = value;
     this.setState(changed, () => {
       cb();
@@ -455,18 +456,18 @@ class PublicConfig extends React.Component<any, any> {
 
   handleGenUrl = () => {
     const { sourceKeys, extendDatas } = this.state;
-    const value = this.keyinput.value;
+    const value = this.keyinput!.value;
 
     if (value.trim() === '') {
       alert(_l('参数不能为空'), 3);
       return;
     }
 
-    const configs = safeParse(extendDatas?.pageConfigs);
+    const configs: unknown = safeParse(extendDatas?.pageConfigs);
     this.handleChange('sourceKeys', update(sourceKeys, { $push: [value] }), () => {
-      this.keyinput.value = '';
+      this.keyinput!.value = '';
     });
-    this.handleUpdateExpandDatas({ pageConfigs: JSON.stringify(configs.concat({ ...configs[0], key: value })) }, true);
+    this.handleUpdateExpandDatas(appendPageConfig(configs, value), true);
   };
 
   handleRemoveUrl = (index: number) => {
@@ -491,7 +492,7 @@ class PublicConfig extends React.Component<any, any> {
     });
   };
 
-  handleUpdateExpandDatas = (value, immediately = false) => {
+  handleUpdateExpandDatas = (value: Record<string, string | undefined>, immediately = false) => {
     const { extendDatas } = this.state;
     const newValue = { ...extendDatas, ...value };
 
@@ -750,7 +751,9 @@ class PublicConfig extends React.Component<any, any> {
                 url={shareUrl}
                 pageConfigs={_.get(extendDatas, 'pageConfigs')}
                 onDelete={this.handleRemoveUrl}
-                handleUpdateExpandDatas={value => this.handleUpdateExpandDatas(value, true)}
+                handleUpdateExpandDatas={(value: Record<string, string | undefined>) =>
+                  this.handleUpdateExpandDatas(value, true)
+                }
               />
               <Hr />
               <H1>{_l('设备信息')}</H1>

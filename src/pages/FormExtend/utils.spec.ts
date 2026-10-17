@@ -96,6 +96,21 @@ new Function(
   throw Error(`Uncontrolled page config dependency: ${name}`);
 });
 
+const writeModule: { exports: Record<string, any> } = { exports: {} };
+new Function(
+  'module',
+  'exports',
+  'require',
+  compile(
+    fs.readFileSync(path.join(ROOT, 'src/pages/FormExtend/pageConfigWrite.ts'), 'utf8'),
+    path.join(ROOT, 'src/pages/FormExtend/pageConfigWrite.ts'),
+  ),
+)(writeModule, writeModule.exports, (name: string) => {
+  if (name === 'lodash') return realLodash;
+  if (name === './pageConfig') return pageConfigModule.exports;
+  throw Error(`Uncontrolled writer dependency: ${name}`);
+});
+
 function load(source: string): Record<string, any> {
   const mod = { exports: {} };
   new Function('module', 'exports', 'require', '_l', 'safeParse', compile(source))(
@@ -452,19 +467,41 @@ function memberSource(source: string, name: string): string {
   assert.ok(range, name);
   return source.slice(range!.start, range!.end);
 }
+const WRITER_BASE = '8c38a48b70b612ee5aaf37a18c5d348f0762fee4';
+const WRITER_SHA: Record<string, string> = {
+  'src/pages/FormExtend/PublicWorksheetConfig/AppearanceConfig.tsx':
+    '9ee724a2740f5d07c55ca4523999ef34df2c463a334902b7640fe175c984e2a6',
+  'src/pages/FormExtend/PublicWorksheetConfig/components/SourceKeys.tsx':
+    'fabbcf9432405e0684b0fdf37bf823310e172d0300443cc0f1133b8f4e71fb9d',
+  'src/pages/FormExtend/PublicWorksheetConfig/PublicConfig/index.tsx':
+    '00f1d3e8b318a28e9795992d685fc874d77063c67e9e962bb5eda4df759d78f2',
+  'src/pages/FormExtend/PublicWorksheetConfig/PublicWorksheetConfigForm.tsx':
+    'f6aae932f3234033cc874f89d7e491e40be59fecd816d2698f92e24282b2f937',
+};
 const consumerFactories = new Map<string, Function>();
-function consumer(rel: string, name: string, variant: 'old' | 'current', pageConfigs: string): (...args: any[]) => any {
-  const cacheKey = `${variant}:${rel}:${name}`;
+function consumer(
+  rel: string,
+  name: string,
+  variant: 'old' | 'current',
+  pageConfigs: unknown,
+  context: Record<string, any> = {},
+  base = '2e66bd4fab699ec43452f6a4d881ff588df1cfe3',
+): (...args: any[]) => any {
+  const cacheKey = `${base}:${variant}:${rel}:${name}`;
   let makeModule = consumerFactories.get(cacheKey);
   if (!makeModule) {
     const source =
       variant === 'old'
-        ? execFileSync('git', ['show', `2e66bd4fab699ec43452f6a4d881ff588df1cfe3:${rel}`], {
+        ? execFileSync('git', ['show', `${base}:${rel}`], {
             cwd: ROOT,
             encoding: 'utf8',
           })
         : fs.readFileSync(path.join(ROOT, rel), 'utf8');
-    if (variant === 'old') assert.equal(crypto.createHash('sha256').update(source).digest('hex'), CONSUMERS[rel]);
+    if (variant === 'old')
+      assert.equal(
+        crypto.createHash('sha256').update(source).digest('hex'),
+        base === WRITER_BASE ? WRITER_SHA[rel] : CONSUMERS[rel],
+      );
     makeModule = new Function(
       'module',
       'getPageConfig',
@@ -481,6 +518,20 @@ function consumer(rel: string, name: string, variant: 'old' | 'current', pageCon
       'coverurls',
       'require',
       '_',
+      'readPageProperty',
+      'safeParse',
+      'changePageConfig',
+      'removePageConfig',
+      'appendPageConfig',
+      'update',
+      'handleUpdateExpandDatas',
+      'onDelete',
+      'dialogSelectColor',
+      'localStorage',
+      'ThemeColorWrapper',
+      'Tooltip',
+      'TinyColor',
+      'React',
       compile(`module.exports = function() { return (${memberSource(source, name)}); };`, path.join(ROOT, rel)),
     );
     consumerFactories.set(cacheKey, makeModule);
@@ -502,6 +553,20 @@ function consumer(rel: string, name: string, variant: 'old' | 'current', pageCon
     enumModule.exports.coverurls,
     require,
     realLodash,
+    pageConfigModule.exports.readPageProperty,
+    context.safeParse || host.safeParse,
+    writeModule.exports.changePageConfig,
+    writeModule.exports.removePageConfig,
+    writeModule.exports.appendPageConfig,
+    require('immutability-helper'),
+    context.handleUpdateExpandDatas,
+    context.onDelete,
+    context.dialogSelectColor,
+    context.localStorage,
+    CountDownLeaf,
+    CountDownLeaf,
+    require('@ctrl/tinycolor').TinyColor,
+    realReact,
   );
   const factory = mod.exports as () => (...args: any[]) => any;
   return function (this: unknown, ...args: any[]) {
@@ -565,6 +630,402 @@ check('the palette library retains its native undefined fallback for inherited p
   const generate = require('@ant-design/colors').generate;
   assert.deepEqual(generate(theme), generate(undefined));
   assert.equal(generate(theme).length, 10);
+});
+
+const APPEARANCE = 'src/pages/FormExtend/PublicWorksheetConfig/AppearanceConfig.tsx';
+const SOURCES = 'src/pages/FormExtend/PublicWorksheetConfig/components/SourceKeys.tsx';
+const PUBLIC_CONFIG = 'src/pages/FormExtend/PublicWorksheetConfig/PublicConfig/index.tsx';
+function writer(
+  rel: string,
+  method: string,
+  variant: 'old' | 'current',
+  data: unknown,
+  context: Record<string, any> = {},
+) {
+  return consumer(rel, method, variant, data, context, WRITER_BASE);
+}
+function caught(fn: () => void): string[] | undefined {
+  try {
+    fn();
+    return undefined;
+  } catch (e) {
+    const error = e as Error;
+    return [error.name, error.message];
+  }
+}
+
+check(
+  'actual appearance edit preserves opaque fields, first-entry fallback, forced key and native spread order',
+  () => {
+    for (const key of ['', 'a', 'new', '__proto__']) {
+      const run = (variant: 'old' | 'current') => {
+        const trace: unknown[] = [];
+        let assigned: any;
+        const entry = JSON.parse('{"key":"a","layout":2,"extension":{"keep":true},"__proto__":{"owned":true}}');
+        Object.defineProperty(entry, 'cover', {
+          enumerable: true,
+          get() {
+            trace.push('old-cover');
+            return 'old';
+          },
+        });
+        const raw: any[] = [entry];
+        const collection = new Proxy(raw, {
+          get(target, name, receiver) {
+            if (name === 'length' || name === '0') trace.push('get:' + String(name));
+            return Reflect.get(target, name, receiver);
+          },
+          set(target, name, value, receiver) {
+            trace.push('set:' + String(name));
+            assigned = value;
+            return Reflect.set(target, name, value, receiver);
+          },
+        });
+        const patch = {
+          get cover() {
+            trace.push('patch-cover');
+            return 'new';
+          },
+          get key() {
+            trace.push('patch-key');
+            return 'ignored';
+          },
+        };
+        const context = {
+          safeParse(value: unknown) {
+            trace.push('parse');
+            return host.safeParse!(value);
+          },
+        };
+        const edit = writer(APPEARANCE, 'handleChangePageConfig', variant, collection, context);
+        const h = {
+          props: {
+            pageConfigs: collection,
+            pageConfigKey: key,
+            saveExtendDatas: function (this: unknown, update: unknown) {
+              'use strict';
+              assert.equal(this, undefined);
+              trace.push(['save', update]);
+            },
+          },
+        };
+        const error = caught(() => edit.call(h, patch));
+        const payload = trace.find(x => Array.isArray(x) && x[0] === 'save') as any;
+        return {
+          trace,
+          error,
+          plain: assigned ? Object.getPrototypeOf(assigned) === Object.prototype : undefined,
+          payload: payload?.[1],
+        };
+      };
+      const old = run('old'),
+        next = run('current');
+      assert.deepEqual(next, old);
+      const parsed = JSON.parse(next.payload.pageConfigs);
+      const changed = parsed.find((x: any) => x.key === key);
+      assert.ok(changed.extension.keep);
+      assert.ok(Object.hasOwn(changed, '__proto__'));
+    }
+  },
+);
+
+check('actual edits preserve custom array serialization and native frozen/cyclic/empty-slot failures', () => {
+  for (const scenario of ['serializer', 'frozen', 'cycle', 'null-entry', 'hole']) {
+    const run = (variant: 'old' | 'current') => {
+      const trace: unknown[] = [];
+      const raw: any[] = [{ key: 'a', extension: 'keep' }];
+      if (scenario === 'serializer')
+        Object.defineProperty(raw, 'toJSON', {
+          value: function () {
+            trace.push('toJSON');
+            return [this[0]];
+          },
+        });
+      if (scenario === 'frozen') Object.freeze(raw);
+      if (scenario === 'cycle') raw[0].cycle = raw[0];
+      if (scenario === 'null-entry') raw[0] = null;
+      if (scenario === 'hole') delete raw[0];
+      const edit = writer(APPEARANCE, 'handleChangePageConfig', variant, raw);
+      const h = {
+        props: {
+          pageConfigs: raw,
+          pageConfigKey: 'a',
+          saveExtendDatas: (value: unknown) => trace.push(['save', value]),
+        },
+      };
+      const error = caught(() => edit.call(h, { showQrcode: true }));
+      return { trace, error };
+    };
+    assert.deepEqual(run('current'), run('old'), scenario);
+  }
+});
+
+check('actual delete filters in order, preserves the source array and saves before the index callback', () => {
+  for (const key of ['a', 'missing', '']) {
+    const run = (variant: 'old' | 'current') => {
+      const raw: any[] = [
+        { key: 'a', extension: 1 },
+        { key: 'b', extension: 2 },
+        { key: 'a', extension: 3 },
+      ];
+      const trace: unknown[] = [];
+      const context = {
+        handleUpdateExpandDatas: (value: unknown) => trace.push(['save', value]),
+        onDelete: (index: number) => trace.push(['delete', index]),
+      };
+      writer(SOURCES, 'handleDelete', variant, raw, context)(key, 7);
+      return { trace, raw };
+    };
+    const next = run('current');
+    assert.deepEqual(next, run('old'));
+    assert.equal((next.trace[0] as any)[0], 'save');
+    assert.deepEqual(next.trace[1], ['delete', 7]);
+  }
+  for (const key of ['a', 'missing']) {
+    const context = {
+      handleUpdateExpandDatas() {
+        throw Error('save-error');
+      },
+      onDelete() {
+        throw Error('callback should not run');
+      },
+    };
+    assert.deepEqual(
+      caught(() => writer(SOURCES, 'handleDelete', 'current', '[]', context)(key, 0)),
+      caught(() => writer(SOURCES, 'handleDelete', 'old', '[]', context)(key, 0)),
+    );
+  }
+});
+
+check('actual source-key creation retains synchronous and batched state/save/input-reset order', () => {
+  for (const batched of [false, true])
+    for (const value of ['source', '  ', '__proto__']) {
+      const run = (variant: 'old' | 'current') => {
+        const trace: unknown[] = [];
+        const pending: Array<{ value: object; cb?: () => void }> = [];
+        const context = {
+          safeParse(value: unknown) {
+            trace.push('parse');
+            return host.safeParse!(value);
+          },
+        };
+        const json = JSON.stringify([{ key: '', layout: 2, extension: { keep: true }, showQrcode: 'false' }]);
+        let input = value;
+        const h: any = {
+          state: { sourceKeys: ['existing'], extendDatas: { pageConfigs: json, opaque: 'untouched' } },
+          keyinput: {
+            get value() {
+              trace.push('input:get');
+              return input;
+            },
+            set value(v: string) {
+              trace.push(['input:set', v]);
+              input = v;
+            },
+          },
+          setState(update: object, cb?: () => void) {
+            trace.push(['setState', update]);
+            if (batched) pending.push({ value: update, cb });
+            else {
+              Object.assign(this.state, update);
+              cb?.();
+            }
+          },
+          saveSetting() {
+            trace.push(['save', this.state.sourceKeys.slice(), this.state.extendDatas.pageConfigs]);
+          },
+        };
+        h.handleChange = writer(PUBLIC_CONFIG, 'handleChange', variant, json, context).bind(h);
+        h.handleUpdateExpandDatas = writer(PUBLIC_CONFIG, 'handleUpdateExpandDatas', variant, json, context).bind(h);
+        // alert is a controlled host callback; no API or DOM is involved.
+        const saved = Reflect.get(globalThis, 'alert');
+        Reflect.set(globalThis, 'alert', (text: string, type: number) => trace.push(['alert', text, type]));
+        try {
+          writer(PUBLIC_CONFIG, 'handleGenUrl', variant, json, context).call(h);
+        } finally {
+          if (saved === undefined) Reflect.deleteProperty(globalThis, 'alert');
+          else Reflect.set(globalThis, 'alert', saved);
+        }
+        if (batched) {
+          for (const task of pending) Object.assign(h.state, task.value);
+          for (const task of pending) task.cb?.();
+        }
+        return { trace, state: h.state, input };
+      };
+      assert.deepEqual(run('current'), run('old'));
+    }
+});
+
+check('actual upload callback retains state, URL getter, save and disable order', () => {
+  const run = (variant: 'old' | 'current') => {
+    const trace: unknown[] = [];
+    const raw = [{ key: '', extension: { keep: true } }];
+    const context = {
+      safeParse(value: unknown) {
+        trace.push('parse');
+        return host.safeParse!(value);
+      },
+    };
+    const h: any = {
+      props: { pageConfigs: raw, pageConfigKey: '', saveExtendDatas: (data: unknown) => trace.push(['save', data]) },
+      setState(value: unknown) {
+        trace.push(['state', value]);
+      },
+    };
+    h.handleChangePageConfig = writer(APPEARANCE, 'handleChangePageConfig', variant, raw, context).bind(h);
+    const file = {
+      get url() {
+        trace.push('url');
+        return 'https://example.com/cover.png';
+      },
+    };
+    const up = {
+      disableBrowse(value: boolean) {
+        assert.equal(this, up);
+        trace.push(['disable', value]);
+      },
+    };
+    writer(APPEARANCE, 'handleUploaded', variant, raw, context).call(h, up, file);
+    return trace;
+  };
+  const next = run('current');
+  assert.deepEqual(next, run('old'));
+  assert.deepEqual((next[0] as any)[0], 'state');
+  assert.deepEqual(next[next.length - 1], ['disable', false]);
+});
+
+check('actual color-picker save keeps sparse colors, DOMString storage and persistence order', () => {
+  const run = (variant: 'old' | 'current') => {
+    const trace: unknown[] = [];
+    let saveColor: ((value: string) => void) | undefined;
+    const context = {
+      dialogSelectColor(options: { onSave: (color: string) => void }) {
+        saveColor = options.onSave;
+      },
+      localStorage: {
+        setItem(key: unknown, value: unknown) {
+          trace.push(['storage', String(key), String(value)]);
+        },
+      },
+    };
+    const custom: string[] = ['#111111', '#222222'];
+    delete custom[0];
+    const h: any = {
+      props: {
+        pageConfigs: '[{"key":"source","extension":1}]',
+        pageConfigKey: 'source',
+        saveExtendDatas: (value: unknown) => trace.push(['save', value]),
+      },
+      state: { customColors: custom, isUploading: false },
+      setState(value: object) {
+        trace.push(['state', value]);
+        Object.assign(this.state, value);
+      },
+    };
+    h.handleChangePageConfig = writer(APPEARANCE, 'handleChangePageConfig', variant, h.props.pageConfigs, context).bind(
+      h,
+    );
+    const tree = writer(APPEARANCE, 'renderCustomColor', variant, h.props.pageConfigs, context).call(h, '#222222');
+    let click: (() => void) | undefined;
+    const walk = (value: any) => {
+      if (Array.isArray(value)) value.forEach(walk);
+      else if (realReact.isValidElement(value)) {
+        if (value.props.icon === 'task-add-member-circle') click = value.props.onClick;
+        walk(value.props.children);
+      }
+    };
+    walk(tree);
+    assert.ok(click);
+    click!();
+    assert.ok(saveColor);
+    saveColor!('#abcdef');
+    return { trace, colors: h.state.customColors };
+  };
+  const next = run('current');
+  assert.deepEqual(next, run('old'));
+  assert.deepEqual(
+    (next.trace as any[]).map(x => x[0]),
+    ['state', 'storage', 'save'],
+  );
+});
+
+check('source-key state/update prefix still occurs before invalid-list rejection', () => {
+  const run = (variant: 'old' | 'current') => {
+    const trace: unknown[] = [];
+    const h: any = {
+      state: { sourceKeys: [], extendDatas: { pageConfigs: '{}' } },
+      keyinput: { value: 'new' },
+      handleChange(...args: unknown[]) {
+        trace.push(['change', args[0], args[1]]);
+      },
+      handleUpdateExpandDatas(value: unknown) {
+        trace.push(['update', value]);
+      },
+    };
+    const error = caught(() => writer(PUBLIC_CONFIG, 'handleGenUrl', variant, '{}').call(h));
+    return { trace, error };
+  };
+  const old = run('old'),
+    next = run('current');
+  assert.deepEqual(next.trace, old.trace);
+  assert.equal(next.error?.[0], 'TypeError');
+  assert.equal(old.error?.[0], 'TypeError');
+  assert.deepEqual(next.trace, [['change', 'sourceKeys', ['new']]]);
+});
+
+check('malformed lists, invalid patches and scalar root serializers are rejected before save', () => {
+  for (const raw of [{}, null, 'primitive']) {
+    assert.throws(
+      () => writeModule.exports.changePageConfig(raw, 'a', { cover: 'ok' }),
+      /Invalid public page configuration list/,
+    );
+    assert.throws(() => writeModule.exports.removePageConfig(raw, 'a'), /Invalid public page configuration list/);
+    assert.throws(() => writeModule.exports.appendPageConfig(raw, 'a'), /Invalid public page configuration list/);
+  }
+  for (const patch of [{ cover: 5 }, { themeBgColor: {} }, { showQrcode: 'false' }, { layout: '2' }]) {
+    const raw = [{ key: 'a', extension: 'keep' }];
+    assert.throws(
+      () => writeModule.exports.changePageConfig(raw, 'a', patch),
+      /Invalid public page configuration write field/,
+    );
+    assert.deepEqual(raw, [{ key: 'a', extension: 'keep' }]);
+  }
+  for (const result of [undefined, {}, 'scalar']) {
+    const raw = [{ key: 'a' }];
+    Object.defineProperty(raw, 'toJSON', { value: () => result });
+    assert.throws(
+      () => writeModule.exports.changePageConfig(raw, 'a', {}),
+      /Invalid public page configuration serialization/,
+    );
+  }
+  const trace: unknown[] = [];
+  const h: any = {
+    props: {
+      pageConfigs: '[]',
+      pageConfigKey: '',
+      saveExtendDatas() {
+        trace.push('save');
+      },
+    },
+    setState() {
+      trace.push('state');
+    },
+  };
+  h.handleChangePageConfig = writer(APPEARANCE, 'handleChangePageConfig', 'current', '[]').bind(h);
+  assert.throws(
+    () =>
+      writer(APPEARANCE, 'handleUploaded', 'current', '[]').call(
+        h,
+        {
+          disableBrowse() {
+            trace.push('disable');
+          },
+        },
+        { url: 7 },
+      ),
+    TypeError,
+  );
+  assert.deepEqual(trace, ['state']);
 });
 
 assert.ok(realReact.Fragment);

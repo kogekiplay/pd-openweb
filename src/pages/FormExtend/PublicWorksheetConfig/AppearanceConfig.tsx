@@ -12,9 +12,12 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { dialogSelectColor } from 'ming-ui/functions';
 import { Absolute, CustomButton, H1, H3, Hr } from 'worksheet/components/Basics';
 import type { RootState } from 'src/redux/configureStore';
+import type { AppDispatch } from 'src/redux/types';
 import { getThemeColors } from 'src/utils/project';
 import { coverurls, LAYOUT_OPTIONS } from '../enum';
-import { readPageConfig } from '../pageConfig';
+import { readPageConfig, readPageProperty } from '../pageConfig';
+import { changePageConfig } from '../pageConfigWrite';
+import type { PublicPageConfigPatch, PublicPageConfigUpdate } from '../pageConfigWrite';
 import * as actions from '../PublicWorksheetConfig/redux/actions';
 import { getPageConfig } from '../utils';
 import PictureSelect from './components/PictureSelect';
@@ -157,6 +160,23 @@ const LayoutSettingWrap = styled.div`
   }
 `;
 
+export interface AppearanceConfigProps {
+  worksheetInfo: RootState['publicWorksheet']['worksheetInfo'];
+  theme: string | undefined;
+  open?: boolean | undefined;
+  onClose: () => void;
+  pageConfigs?: string | undefined;
+  pageConfigKey?: string | undefined;
+  saveExtendDatas: (value: PublicPageConfigUpdate) => void;
+}
+export interface AppearanceConfigState {
+  isUploading: boolean;
+  customColors: Array<string | undefined>;
+}
+interface CoverUploader {
+  disableBrowse(disabled?: boolean): void;
+}
+
 class AppearanceConfig extends React.Component<any, any> {
   static override propTypes = {
     open: PropTypes.bool,
@@ -172,13 +192,13 @@ class AppearanceConfig extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const { projectId } = props.worksheetInfo;
-    const COLORS = getThemeColors(projectId);
+    const COLORS = getThemeColors(projectId!);
     const customColors = (localStorage.getItem('customColors') || '').split(',').filter(_ => _);
     this.state = {
       isUploading: false,
       customColors: (_.find(
         COLORS.concat(customColors),
-        color => color.toLocaleUpperCase() === this.props.theme.toLocaleUpperCase(),
+        color => color.toLocaleUpperCase() === this.props.theme!.toLocaleUpperCase(),
       )
         ? []
         : [this.props.theme]
@@ -186,24 +206,22 @@ class AppearanceConfig extends React.Component<any, any> {
     };
   }
 
-  handleChangePageConfig = value => {
+  handleChangePageConfig = (value: PublicPageConfigPatch) => {
     const { pageConfigs = '[]', pageConfigKey = '', saveExtendDatas } = this.props;
-    const configs = safeParse(pageConfigs);
-    const index = _.findIndex(configs, l => l.key === pageConfigKey);
-    configs[index < 0 ? configs.length : index] = { ...configs[index < 0 ? 0 : index], ...value, key: pageConfigKey };
-
-    saveExtendDatas({ pageConfigs: JSON.stringify(configs) });
+    const configs: unknown = safeParse(pageConfigs);
+    const update: PublicPageConfigUpdate = changePageConfig(configs, pageConfigKey, value);
+    saveExtendDatas(update);
   };
 
-  handleUploaded = (up, file) => {
+  handleUploaded = (up: CoverUploader, file: unknown) => {
     this.setState({
       isUploading: false,
     });
-    this.handleChangePageConfig({ cover: file.url });
+    this.handleChangePageConfig({ cover: readPageConfig({ cover: readPageProperty(file, 'url') }).cover });
     up.disableBrowse(false);
   };
 
-  renderCustomColor = iconColor => {
+  renderCustomColor = (iconColor: string | undefined) => {
     const { customColors } = this.state;
 
     return (
@@ -216,10 +234,11 @@ class AppearanceConfig extends React.Component<any, any> {
               className="textDisabled Font30 pointer"
               onClick={() => {
                 dialogSelectColor({
-                  onSave: color => {
-                    const colors = [color].concat(customColors).slice(0, 5);
+                  onSave: (color: string) => {
+                    const selected: Array<string | undefined> = [color];
+                    const colors = selected.concat(customColors).slice(0, 5);
                     this.setState({ customColors: colors });
-                    localStorage.setItem('customColors', colors);
+                    localStorage.setItem('customColors', String(colors));
                     this.handleChangePageConfig({ themeBgColor: color });
                   },
                 });
@@ -230,13 +249,13 @@ class AppearanceConfig extends React.Component<any, any> {
             <Tooltip key={index} title={item} placement="bottom">
               <li
                 className={cx({
-                  isCurrentColor: item.toLocaleUpperCase() === iconColor.toLocaleUpperCase(),
+                  isCurrentColor: item!.toLocaleUpperCase() === iconColor!.toLocaleUpperCase(),
                   isLight: new TinyColor(item).isLight(),
                 })}
                 style={{ backgroundColor: item }}
                 onClick={() => this.handleChangePageConfig({ themeBgColor: item })}
               >
-                {item.toLocaleUpperCase() === iconColor.toLocaleUpperCase() && <Icon icon="hr_ok" />}
+                {item!.toLocaleUpperCase() === iconColor!.toLocaleUpperCase() && <Icon icon="hr_ok" />}
               </li>
             </Tooltip>
           ))}
@@ -306,11 +325,11 @@ class AppearanceConfig extends React.Component<any, any> {
           }}
           bucket={4}
           onUploaded={this.handleUploaded}
-          onAdd={up => {
+          onAdd={(up: CoverUploader) => {
             this.setState({ isUploading: true });
             up.disableBrowse();
           }}
-          onError={(_up, err) => {
+          onError={(_up: CoverUploader, err: { code?: number | string | undefined }) => {
             if (err.code === -600) alert(_l('上传失败，只允许上传5M以内的文件'), 2);
           }}
         >
@@ -348,12 +367,12 @@ class AppearanceConfig extends React.Component<any, any> {
   override render() {
     const { open, worksheetInfo, onClose, theme, pageConfigs = '[]', pageConfigKey = '' } = this.props;
     const { projectId } = worksheetInfo;
-    const COLORS = getThemeColors(projectId);
+    const COLORS = getThemeColors(projectId!);
     const config = readPageConfig(getPageConfig(pageConfigs, pageConfigKey));
 
     return (
       <Drawer
-        open={open}
+        open={open!}
         styles={{ wrapper: { width: 640 }, body: { padding: 0 }, header: { display: 'none' } }}
         onClose={onClose}
       >
@@ -370,11 +389,11 @@ class AppearanceConfig extends React.Component<any, any> {
               {COLORS.map(item => (
                 <Tooltip key={item} placement="bottom">
                   <li
-                    className={cx({ isCurrentColor: item.toLocaleUpperCase() === theme.toLocaleUpperCase() })}
+                    className={cx({ isCurrentColor: item!.toLocaleUpperCase() === theme!.toLocaleUpperCase() })}
                     style={{ backgroundColor: item }}
                     onClick={() => this.handleChangePageConfig({ themeBgColor: item })}
                   >
-                    {item.toLocaleUpperCase() === theme.toLocaleUpperCase() && <Icon icon="hr_ok" />}
+                    {item!.toLocaleUpperCase() === theme!.toLocaleUpperCase() && <Icon icon="hr_ok" />}
                   </li>
                 </Tooltip>
               ))}
@@ -394,7 +413,7 @@ class AppearanceConfig extends React.Component<any, any> {
             <PictureSelect
               coverUrl={config.cover}
               images={coverurls}
-              onChange={url => this.handleChangePageConfig({ cover: url })}
+              onChange={(url: string) => this.handleChangePageConfig({ cover: url })}
             />
             {this.renderUpload()}
             <Hr />
@@ -421,6 +440,6 @@ class AppearanceConfig extends React.Component<any, any> {
 // 'IntrinsicAttributes & …'。改成显式取值，返回类型即为具体对象，Omit 恢复正常。
 const mapStateToProps = (state: RootState) => ({ worksheetInfo: state.publicWorksheet.worksheetInfo });
 
-const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+const mapDispatchToProps = (dispatch: AppDispatch) => bindActionCreators(actions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppearanceConfig);

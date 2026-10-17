@@ -105,7 +105,7 @@ class PublicWorksheetConfigForm extends React.Component<any, PublicWorksheetConf
     return getPageThemeColor({ themeBgColor, themeColor });
   };
 
-  saveExtendDatas = value => {
+  saveExtendDatas = (value: Record<string, string | undefined>) => {
     const { worksheetSettings } = this.props;
 
     this.props.updateSettings({ ...worksheetSettings, extendDatas: { ...worksheetSettings.extendDatas, ...value } });

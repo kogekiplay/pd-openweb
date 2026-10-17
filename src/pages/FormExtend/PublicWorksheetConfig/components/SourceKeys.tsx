@@ -4,6 +4,8 @@ import { Icon } from 'ming-ui';
 import { TextBlock } from 'worksheet/components/Basics';
 import ShareUrl from 'worksheet/components/ShareUrl';
 import { getPageThemeColor, readPageConfig } from '../../pageConfig';
+import { removePageConfig } from '../../pageConfigWrite';
+import type { PublicPageConfigUpdate } from '../../pageConfigWrite';
 import { getPageConfig } from '../../utils';
 import AppearanceConfig from '../AppearanceConfig';
 
@@ -40,6 +42,13 @@ const ThemeBox = styled.div`
   margin-left: 6px;
 `;
 
+export interface SourceKeysProps {
+  url: string;
+  sourceKeys: string[];
+  pageConfigs?: string | undefined;
+  onDelete?: ((index: number) => void) | undefined;
+  handleUpdateExpandDatas?: ((value: PublicPageConfigUpdate) => void) | undefined;
+}
 export default function ({
   url,
   sourceKeys,
@@ -56,11 +65,10 @@ export default function ({
     return getPageThemeColor({ themeBgColor, themeColor });
   };
 
-  const handleDelete = (key, index: number) => {
-    const configs = safeParse(pageConfigs);
-    const newConfigs = configs.filter(l => l.key !== key);
-
-    handleUpdateExpandDatas({ pageConfigs: JSON.stringify(newConfigs) });
+  const handleDelete = (key: string, index: number) => {
+    const configs: unknown = safeParse(pageConfigs);
+    const update: PublicPageConfigUpdate = removePageConfig(configs, key);
+    handleUpdateExpandDatas(update);
     onDelete(index);
   };
 
