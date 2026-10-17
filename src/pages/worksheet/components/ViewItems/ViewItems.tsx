@@ -12,6 +12,7 @@ import { getDefaultViewSet } from 'worksheet/constants/common';
 import { VIEW_DISPLAY_TYPE, VIEW_TYPE_ICON } from 'worksheet/constants/enum';
 import { getShowViews } from 'src/pages/worksheet/views/util';
 import { navigateTo } from 'src/router/navigateTo';
+import type { FormControl } from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import withRouter from '../../../../router/withRouter';
@@ -20,7 +21,6 @@ import HideItem from './HideItem';
 import Item from './Item';
 import 'rc-trigger/assets/index.css';
 import './ViewItems.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
 const EmptyData = styled.div`
   font-size: var(--font-xs);
@@ -227,7 +227,7 @@ let ViewItems = class ViewItems extends Component<any, any> {
     const { viewList, appId, worksheetId } = this.props;
     const showVies = getShowViews(viewList);
 
-    if (showVies.filter(o => ![21].includes(o.viewType)).length === 1 && ![21].includes(view.viewType)) {
+    if (showVies.filter(o => ![21].includes(o.viewType!)).length === 1 && ![21].includes(view.viewType)) {
       alert(_l('必须保留一个默认视图'), 3);
       return;
     }

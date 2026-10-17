@@ -268,7 +268,13 @@ function BtnSetting(props) {
   const [sheetLoading, setSheetLoading] = useState(true);
   const projectId = appPkg.projectId || appPkg.id;
 
-  const [dataSource, setDataSource] = useSetState({ worksheets: [], views: [], pages: [], controls: [], inputs: [] });
+  const [dataSource, setDataSource] = useSetState({
+    worksheets: [],
+    views: [] as Array<{ text: string | undefined; value: string | undefined; type: number | undefined }>,
+    pages: [],
+    controls: [],
+    inputs: [],
+  });
 
   const { views, controls } = dataSource;
   const { action, viewId, searchId, filterId, openMode, btnId, value, config } = btnSetting;
@@ -316,13 +322,11 @@ function BtnSetting(props) {
         const { views = [], template = {} } = res;
         const controls = replaceControlsTranslateInfo(appId, value, template.controls);
         setDataSource({
-          views: getShowViews(views).map(
-            ({ viewId, name, viewType }: { viewId?: string; name?: string; [key: string]: any }) => ({
-              text: getTranslateInfo(appId, null, viewId).name || name,
-              value: viewId,
-              type: viewType,
-            }),
-          ),
+          views: getShowViews(views).map(({ viewId, name, viewType }) => ({
+            text: getTranslateInfo(appId, null, viewId).name || name,
+            value: viewId,
+            type: viewType,
+          })),
           controls,
         });
         if (action === 1) {

@@ -31,7 +31,7 @@ export default class SaveDia extends React.Component<any, any> {
       .then(res => {
         const viewIds = printData.views.filter(l => l !== worksheetId);
         this.setState({
-          views: getShowViews(res.views),
+          views: getShowViews(res.views!),
           printData: {
             ...this.state.printData,
             views:

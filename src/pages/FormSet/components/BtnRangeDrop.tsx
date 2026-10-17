@@ -2,15 +2,23 @@ import { useMemo } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Checkbox, Icon, Radio } from 'ming-ui';
-
+import type { WorksheetView } from 'src/pages/worksheet/types';
 import { getShowViews } from 'src/pages/worksheet/views/util';
-
+import type { ControlAdvancedSetting } from 'src/utils/controlTypes';
 import { serializeViewRange, viewRangeList } from './rangeValues';
 
-
-
-
-
+type WireButton = HapApi.MD.Entity.Worksheet.WorksheetBtnEntity;
+type ScopeFields = Pick<WireButton, 'btnId' | 'name' | 'isAllView' | 'writeObject' | 'writeType' | 'clickType'>;
+export type ButtonRangeData = { [K in keyof ScopeFields]?: ScopeFields[K] | undefined } & {
+  advancedSetting?: ControlAdvancedSetting | null | undefined;
+};
+export interface ButtonRangeProps {
+  onClose: () => void;
+  data: ButtonRangeData;
+  onChange: (value: ButtonRangeData) => void;
+  views: WorksheetView[];
+  noBatch?: boolean | undefined;
+}
 
 const Wrap = styled.div`
   width: 320px;
@@ -47,10 +55,10 @@ const HeaderRange = styled.div`
 `;
 
 // 切换数组中某个 id 的选中状态
-const toggleId = (ids, id) =>
+const toggleId = (ids: unknown[], id: WorksheetView['viewId']) =>
   ids.includes(id) ? ids.filter(o => o !== id) : [...ids, id];
 
-export default function BtnRangeDrop(props) {
+export default function BtnRangeDrop(props: ButtonRangeProps) {
   const { onClose, data, onChange, views } = props;
   const advancedSetting = _.get(data, 'advancedSetting') || {};
   const noBatch = ((data.writeObject === 2 || data.writeType === 2) && data.clickType === 3) || props.noBatch;
@@ -66,8 +74,8 @@ export default function BtnRangeDrop(props) {
     [viewList],
   );
 
-  const decodedDetailViews = safeParse(advancedSetting['detailviews'], 'array');
-  const decodedListViews = safeParse(advancedSetting['listviews'], 'array');
+  const decodedDetailViews: unknown = safeParse(advancedSetting['detailviews'], 'array');
+  const decodedListViews: unknown = safeParse(advancedSetting['listviews'], 'array');
   const detailviews = viewRangeList(decodedDetailViews);
   const listviews = viewRangeList(decodedListViews);
 
@@ -76,7 +84,7 @@ export default function BtnRangeDrop(props) {
   const isAllList = viewSheetIds.length > 0 && viewSheetIds.every(o => listviews.includes(o));
   const hsList = viewSheetIds.some(o => listviews.includes(o));
 
-  const updateAdvancedSetting = (patch) => {
+  const updateAdvancedSetting = (patch: { detailviews: string } | { listviews: string }) => {
     onChange({
       ...data,
       advancedSetting: { ...advancedSetting, ...patch },

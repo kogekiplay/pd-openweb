@@ -350,7 +350,7 @@ declare var getCookie: (name: string) => string | null;
 declare var setCookie: (name: string, value: string, expire?: Date | string | number) => void;
 declare var delCookie: (name: string) => void;
 // localStorage.setItem 包一层 try/catch（隐私模式 / 配额满时不抛）
-declare var safeLocalStorageSetItem: (key: string, value: string | null) => void;
+declare var safeLocalStorageSetItem: (key: string, value: string | number | null | undefined) => void;
 
 // ---- 由构建期/宿主页注入，不是模块 ----
 declare var __api_server__: import('../src/common/globalClientTypes').ClientApiServers;
@@ -601,7 +601,9 @@ interface Window {
   draftTotalNumInfo?: { [worksheetId: string]: number };
   /** 表单设计器 / 函数编辑器挂出来的全局事件总线（就是 src/utils/common 的 emitter） */
   emitter?: import('events').EventEmitter;
-  functionEditor?: import('../src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/editorTypes').FormulaEditorApi | undefined;
+  functionEditor?:
+    | import('../src/pages/widgetConfig/widgetSetting/components/FunctionEditorDialog/Func/editorTypes').FormulaEditorApi
+    | undefined;
   /** 知识库上传助手的弹出窗口（window.open 的返回值） */
   uploadAssistantWindow?: Window | null;
   /** 自定义页面的重排函数：页面组件挂上去，页头切换全屏 / 收起时调它 */

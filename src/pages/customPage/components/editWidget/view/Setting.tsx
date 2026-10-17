@@ -11,6 +11,14 @@ import SelectWorksheet from 'src/pages/worksheet/components/SelectWorksheet/Sele
 import { getShowViews } from 'src/pages/worksheet/views/util';
 import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
+import type { ControlAdvancedSetting } from 'src/utils/controlTypes';
+
+interface ViewOption {
+  text: string | undefined;
+  value: string | undefined;
+  viewType: string;
+  advancedSetting: ControlAdvancedSetting | undefined;
+}
 
 const Wrap = styled.div`
   box-sizing: border-box;
@@ -50,7 +58,7 @@ function Setting(props) {
   } = setting;
   const { name, maxCount, isAddRecord, searchRecord, openView, allowFilter, allowDraft, allowImport } = config;
 
-  const [dataSource, setDataSource] = useState({ views: [] });
+  const [dataSource, setDataSource] = useState<{ views: ViewOption[] }>({ views: [] });
   const [currentViewId] = useState(viewId);
   const { views } = dataSource;
   const viewIds = components.map(c => c.viewId).filter(id => id !== currentViewId);
@@ -76,23 +84,12 @@ function Setting(props) {
         .then(res => {
           const { views = [] } = res;
           setDataSource({
-            views: getShowViews(views).map(
-              ({
-                viewId,
-                name,
-                viewType,
-                advancedSetting,
-              }: {
-                viewId?: string;
-                name?: string;
-                [key: string]: any;
-              }) => ({
-                text: getTranslateInfo(appId, null, viewId).name || name,
-                value: viewId,
-                viewType: String(viewType),
-                advancedSetting,
-              }),
-            ),
+            views: getShowViews(views).map(({ viewId, name, viewType, advancedSetting }) => ({
+              text: getTranslateInfo(appId, null, viewId).name || name,
+              value: viewId,
+              viewType: String(viewType),
+              advancedSetting,
+            })),
           });
         });
     }

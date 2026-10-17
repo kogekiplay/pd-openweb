@@ -193,10 +193,9 @@ let RecordList = class RecordList extends Component<any, any> {
         : getShowViews(worksheetInfo.views).filter(
             v => _.get(v, 'advancedSetting.showhide') !== 'hide' && _.get(v, 'advancedSetting.showhide') !== 'spc&happ',
           );
-    const view =
-      _.find(views, {
-        viewId,
-      }) || views[0];
+    const view = (_.find(views, {
+      viewId,
+    }) || views[0])!;
     const { params } = match;
     const { hash } = history.location;
     const isHideTabBar = hash.includes('hideTabBar') || !!sessionStorage.getItem('hideTabBar');
@@ -245,7 +244,7 @@ let RecordList = class RecordList extends Component<any, any> {
     let hasGroupFilter =
       view.viewId === base.viewId &&
       !_.isEmpty(view.navGroup) &&
-      view.navGroup.length > 0 &&
+      view.navGroup!.length > 0 &&
       !location.search.includes('chartId') &&
       _.includes(['0'], String(view.viewType)) &&
       navData &&
@@ -272,7 +271,7 @@ let RecordList = class RecordList extends Component<any, any> {
                 onChange={viewId => {
                   const view = _.find(views, {
                     viewId,
-                  });
+                  })!;
 
                   this.setCache({
                     viewId: view.viewId,

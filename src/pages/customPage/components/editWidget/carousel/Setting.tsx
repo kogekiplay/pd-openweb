@@ -9,6 +9,7 @@ import sheetApi from 'src/api/worksheet';
 import SelectCount from 'src/pages/customPage/components/editWidget/button/SelectCount';
 import { getIconByType } from 'src/pages/widgetConfig/util';
 import SelectWorksheet from 'src/pages/worksheet/components/SelectWorksheet/SelectWorksheet';
+import type { WorksheetView } from 'src/pages/worksheet/types';
 import { getShowViews } from 'src/pages/worksheet/views/util';
 import type { RootState } from 'src/redux/types';
 import { getTranslateInfo } from 'src/utils/app';
@@ -141,7 +142,7 @@ function Setting(props) {
   const projectId = appPkg.projectId || appPkg.id;
 
   const { worksheetId, viewId, image, count, title, subTitle, action, url, openMode } = componentConfig;
-  const [dataSource, setDataSource] = useState({ views: [], controls: [] });
+  const [dataSource, setDataSource] = useState({ views: [] as WorksheetView[], controls: [] });
   const { views, controls } = dataSource;
   const [loading, setLoading] = useState(true);
 
@@ -212,10 +213,10 @@ function Setting(props) {
       </div>
       <div className="mBottom16">
         <div className="mBottom12">{_l('视图')}</div>
-        <Select
+        <Select<WorksheetView['viewId'], { value: WorksheetView['viewId'] }>
           showSearch={{
             filterOption: (searchValue, option) => {
-              const { value } = option;
+              const { value } = option!;
               const { name } = _.find(views, { viewId: value }) || {};
               return searchValue && name ? name.toLowerCase().includes(searchValue.toLowerCase()) : true;
             },

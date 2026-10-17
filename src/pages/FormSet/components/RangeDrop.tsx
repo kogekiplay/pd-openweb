@@ -2,6 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 import { Checkbox, Icon, Radio } from 'ming-ui';
 import ClickAway from 'ming-ui/components/ClickAway';
+import type { WorksheetView } from 'src/pages/worksheet/types';
+
+export type PrintRangeData = Pick<HapApi.MD.Entity.Worksheet.PrintListModel, 'id' | 'name' | 'range'> & {
+  views?: WorksheetView[] | undefined;
+};
+export interface PrintRangeProps {
+  className?: string | undefined;
+  printData: PrintRangeData;
+  views: WorksheetView[];
+  setData: (value: { printData: PrintRangeData }) => void;
+  onClose: () => void;
+}
 
 const HeaderRange = styled.div`
   display: block;
@@ -65,12 +77,12 @@ const RangeBox = styled.div`
     overflow: auto;
   }
 `;
-const UnwrappedRangeDrop = class RangeDrop extends React.Component<any, any> {
-  constructor(props) {
+const UnwrappedRangeDrop = class RangeDrop extends React.Component<PrintRangeProps> {
+  constructor(props: PrintRangeProps) {
     super(props);
   }
 
-  getViews(list) {
+  getViews(list: WorksheetView[]) {
     return list.filter(l => l.viewId !== l.worksheetId);
   }
 
@@ -118,14 +130,14 @@ const UnwrappedRangeDrop = class RangeDrop extends React.Component<any, any> {
                       key={index}
                       className="mTop15 mLeft25"
                       text={it.name}
-                      checked={printData.views.map(o => o.viewId).includes(it.viewId)}
+                      checked={printData.views!.map(o => o.viewId).includes(it.viewId)}
                       onClick={(checked: boolean) => {
                         setData({
                           printData: {
                             ...printData,
                             views: checked
-                              ? printData.views.filter(o => it.viewId !== o.viewId)
-                              : printData.views.concat(it),
+                              ? printData.views!.filter(o => it.viewId !== o.viewId)
+                              : printData.views!.concat(it),
                           },
                         });
                       }}

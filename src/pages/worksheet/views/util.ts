@@ -2,12 +2,13 @@ import { find, get } from 'lodash';
 import _ from 'lodash';
 import { permitList } from 'src/pages/FormSet/config';
 import { isOpenPermit } from 'src/pages/FormSet/util';
+import type { WorksheetView } from 'src/pages/worksheet/types';
 import { getAdvanceSetting } from 'src/utils/control';
 import { isTimeStyle, renderText as renderCellText } from 'src/utils/control';
 import { FIELD_REG_EXP } from 'src/utils/controlCommon';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import RegExpValidator from 'src/utils/expression';
 import { dateConvertToServerZone } from 'src/utils/project';
-import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 
 export const RENDER_RECORD_NECESSARY_ATTR = [
   'controlId',
@@ -61,7 +62,11 @@ const filterAllCanSelectInBoardControls = item =>
   (item.type === 30 &&
     SELECTABLE_FIELDS_TYPE_IN_BOARD.includes(item.sourceControlType) &&
     (item.strDefault || '').split('')[0] !== '1');
-const defaultFormatter = ({ controlName, controlId }: { controlId?: string; [key: string]: any }) => ({ value: controlId, text: controlName });
+const defaultFormatter = ({ controlName, controlId }: { controlId?: string; [key: string]: any }) => ({
+  value: controlId,
+  text: controlName,
+});
+
 /**
  * 按 filter 挑出控件，再用 formatter 转成下拉项。返回值的类型跟着 formatter 走 ——
  * 原来参数类型是从默认值推出来的，返回值永远是 defaultFormatter 的形状，
@@ -303,6 +308,6 @@ export const getCardTitleFieldForView = (row = {}, worksheetControls: FormContro
   };
 };
 
-export const getShowViews = views => {
+export const getShowViews = <T extends WorksheetView>(views: readonly T[]): T[] => {
   return views.filter(l => l.viewId !== l.worksheetId);
 };

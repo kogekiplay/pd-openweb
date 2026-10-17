@@ -51,7 +51,11 @@ const initialConfig = [
 ];
 
 export default function SelectViewFromSheet({ projectId, currentAppId, appId, sheetId, viewId, onOk, onCancel }) {
-  const [data, setData] = useSetState({ apps: [], sheets: [], views: [] });
+  const [data, setData] = useSetState({
+    apps: [],
+    sheets: [],
+    views: [] as Array<{ text: string | undefined; value: string | undefined; type: number }>,
+  });
   const [ids, setIds] = useSetState({ appId, sheetId, viewId });
 
   // 加载应用列表
