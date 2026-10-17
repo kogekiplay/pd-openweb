@@ -2,7 +2,15 @@ import { useMemo } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Checkbox, Icon, Radio } from 'ming-ui';
+
 import { getShowViews } from 'src/pages/worksheet/views/util';
+
+import { serializeViewRange, viewRangeList } from './rangeValues';
+
+
+
+
+
 
 const Wrap = styled.div`
   width: 320px;
@@ -39,7 +47,8 @@ const HeaderRange = styled.div`
 `;
 
 // 切换数组中某个 id 的选中状态
-const toggleId = (ids, id) => (ids.includes(id) ? ids.filter(o => o !== id) : [...ids, id]);
+const toggleId = (ids, id) =>
+  ids.includes(id) ? ids.filter(o => o !== id) : [...ids, id];
 
 export default function BtnRangeDrop(props) {
   const { onClose, data, onChange, views } = props;
@@ -57,15 +66,17 @@ export default function BtnRangeDrop(props) {
     [viewList],
   );
 
-  const detailviews = safeParse(advancedSetting.detailviews, 'array');
-  const listviews = safeParse(advancedSetting.listviews, 'array');
+  const decodedDetailViews = safeParse(advancedSetting['detailviews'], 'array');
+  const decodedListViews = safeParse(advancedSetting['listviews'], 'array');
+  const detailviews = viewRangeList(decodedDetailViews);
+  const listviews = viewRangeList(decodedListViews);
 
   const isAllDt = viewIds.length > 0 && viewIds.every(o => detailviews.includes(o));
   const hsDt = viewIds.some(o => detailviews.includes(o));
   const isAllList = viewSheetIds.length > 0 && viewSheetIds.every(o => listviews.includes(o));
   const hsList = viewSheetIds.some(o => listviews.includes(o));
 
-  const updateAdvancedSetting = (patch: { detailviews: string } | { listviews: string }) => {
+  const updateAdvancedSetting = (patch) => {
     onChange({
       ...data,
       advancedSetting: { ...advancedSetting, ...patch },
@@ -109,7 +120,7 @@ export default function BtnRangeDrop(props) {
                 <span
                   className="flex Hand flexShrink0"
                   title={_l('记录详情')}
-                  onClick={() => updateAdvancedSetting({ detailviews: JSON.stringify(isAllDt ? [] : viewIds) })}
+                  onClick={() => updateAdvancedSetting({ detailviews: serializeViewRange(isAllDt ? [] : viewIds) })}
                 >
                   <Checkbox
                     className="viewInput TxtMiddle"
@@ -123,7 +134,9 @@ export default function BtnRangeDrop(props) {
                   <span
                     className="flex Hand flexShrink0"
                     title={_l('批量操作')}
-                    onClick={() => updateAdvancedSetting({ listviews: JSON.stringify(isAllList ? [] : viewSheetIds) })}
+                    onClick={() =>
+                      updateAdvancedSetting({ listviews: serializeViewRange(isAllList ? [] : viewSheetIds) })
+                    }
                   >
                     <Checkbox
                       className="viewInput TxtMiddle"
@@ -149,7 +162,7 @@ export default function BtnRangeDrop(props) {
                     <span
                       className="flex Hand"
                       onClick={() =>
-                        updateAdvancedSetting({ detailviews: JSON.stringify(toggleId(detailviews, it.viewId)) })
+                        updateAdvancedSetting({ detailviews: serializeViewRange(toggleId(detailviews, it.viewId)) })
                       }
                     >
                       <Checkbox className="viewInput TxtMiddle" size="small" checked={isDt} text={null} />
@@ -158,7 +171,7 @@ export default function BtnRangeDrop(props) {
                       <span
                         className="flex Hand"
                         onClick={() =>
-                          updateAdvancedSetting({ listviews: JSON.stringify(toggleId(listviews, it.viewId)) })
+                          updateAdvancedSetting({ listviews: serializeViewRange(toggleId(listviews, it.viewId)) })
                         }
                       >
                         <Checkbox className="viewInput TxtMiddle" size="small" checked={isList} text={null} />
