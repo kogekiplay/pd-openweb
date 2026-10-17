@@ -117,7 +117,15 @@ function updateWidgetVisible(state: AppCustomPageState, payload: AppWidgetVisibl
 }
 
 // 获取单行中x最大的组件
-function getMaxXComponentInSingleLine(layouts: AppWidgetLayout[], y: number) {
+// 获取单行中x最大的组件。
+// 【y 形参是 `number | undefined`】布局可以省略 y（`{x, w}` 没有 y），此时
+// `v.y === undefined` 才是正确匹配；若把 y 先 `Number()` 成 NaN，则 `v.y === NaN`
+// **永不成立**，分组结果为空 → maxBy 返回 undefined → 原本次成功的历史路径会抛 TypeError。
+// 这个缺陷是 lead 用真实反例「COPY_WIDGET preserves a row whose y is omitted」抓出来的。
+function getMaxXComponentInSingleLine(
+  layouts: AppWidgetLayout[],
+  y: number | undefined,
+): AppWidgetLayout | undefined {
   return maxBy(
     _.filter(layouts, v => v.y === y),
     item => item.x,
@@ -125,11 +133,11 @@ function getMaxXComponentInSingleLine(layouts: AppWidgetLayout[], y: number) {
 }
 
 /**
- * 组件复制
- * 布局自适应，优先放在当前行，位置不够则放在最后一行
- * @param {*} components
- * @param {*} layout
- */
+* 组件复制
+* 布局自适应，优先放在当前行，位置不够则放在最后一行
+* @param {*} components
+* @param {*} layout
+*/
 function copyWebLayout(components: AppWidget[], layout: AppWidgetLayout | undefined): AppWidgetLayout {
   // 【与原实现可观测等价】原代码 `const { y, w } = layout` 在 layout 为 undefined 时抛
   // TypeError；规格以 error.name 对照，显式抛同类型错误即可保持等价。
@@ -138,34 +146,34 @@ function copyWebLayout(components: AppWidget[], layout: AppWidgetLayout | undefi
   }
 
   const { y, w } = layout;
-  // 原 `.filter(_ => _)` 只保留 truthy 项；类型谓词形式运行行为相同。
+  // 原实现是 `_.get(item, ['web','layout'])` 后 `.filter(_ => _)`；可选链给出同样的
+  // 空值语义（缺失即 undefined）并能得到真实类型，不需要把整块 any 断言成布局。
   const layouts = components
-    .map(item => _.get(item, ['web', 'layout']) as AppWidgetLayout | null | undefined)
+    .map(item => item.web?.layout)
     .filter((item): item is AppWidgetLayout => !!item);
 
-  const first = getMaxXComponentInSingleLine(layouts, Number(y));
+  // 【保留原 y 传参，不能 Number(y)】分组/比较用原值，见函数注释。
+  const first = getMaxXComponentInSingleLine(layouts, y);
 
   if (!first) {
+    // 原实现解构 undefined 会抛 TypeError，这里保持同一可观测行为。
     throw new TypeError("Cannot destructure 'undefined' as it is undefined.");
   }
 
-  const maxX = Number(first.x);
-  const maxW = Number(first.w);
-
-  // 如果当前行放不下则从最后一行开始放
-  // 【用 Number() 而不是 `?? 0`】Number(undefined) 就是 NaN，与原
-  // `maxX + maxW + undefined` 得到 NaN 一致；`?? 0` 会把 NaN 变成真实数字、改变几何结果。
-  if (maxX + maxW + Number(w) > 12) {
+  // 只有在**数值加减**处才 Number()：Number(undefined) 仍是 NaN，与原
+  // `undefined + ...` 得到 NaN 一致；而 `?? 0` 会把 NaN 变成真实数字、改变几何结果。
+  if (Number(first.x) + Number(first.w) + Number(w) > 12) {
     const lastLine = maxBy(layouts, (item: AppWidgetLayout) => item.y);
 
     if (!lastLine) {
       throw new TypeError("Cannot destructure 'undefined' as it is undefined.");
     }
 
-    const maxY = Number(lastLine.y);
+    // 【maxY 保留原值】用于与 y 的相等比较，同样不能 Number 化。
+    const maxY = lastLine.y;
 
     // 如果最后一行就是当前行 则直接放到下一行
-    if (maxY === Number(y)) {
+    if (maxY === y) {
       return { ...layout, x: 0, y: Infinity };
     }
 
@@ -175,18 +183,15 @@ function copyWebLayout(components: AppWidget[], layout: AppWidgetLayout | undefi
       throw new TypeError("Cannot destructure 'undefined' as it is undefined.");
     }
 
-    const x = Number(last.x);
-    const lastLineComponentW = Number(last.w);
-
     // 如果最后一行放不下
-    if (x + lastLineComponentW + Number(w) > 12) {
+    if (Number(last.x) + Number(last.w) + Number(w) > 12) {
       return { ...layout, x: 0, y: Infinity };
     }
 
-    return { ...layout, x: x + lastLineComponentW, y: maxY };
+    return { ...layout, x: Number(last.x) + Number(last.w), y: maxY };
   }
 
-  return { ...layout, x: maxX + maxW };
+  return { ...layout, x: Number(first.x) + Number(first.w) };
 }
 
 function copyWidget(state: AppCustomPageState, payload: AppCopyWidgetPayload): AppCustomPageState {

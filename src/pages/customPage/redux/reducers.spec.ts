@@ -810,6 +810,34 @@ function main(): void {
     assert.equal((globalThis as any).sessionStorage.getItem('unrelated-key'), 'x');
   });
 
+  /**
+   * 【lead 的真实反例，用于锁死几何比较不能被 Number() 化】
+   * 组件 `web.layout = {x:0, w:2}`（**省略 y**），复制自身。
+   * 历史行为：`getMaxXComponentInSingleLine(layouts, undefined)` 靠 `v.y === undefined`
+   * 匹配到该行 → 成功，结果 `x = 2`。
+   * 若把 y 先 `Number()` 成 NaN，则 `v.y === NaN` **永不成立** → 分组为空 →
+   * `maxBy` 返回 undefined → 解构抛 TypeError。此用例正是抓这个回归的。
+   */
+  check('COPY_WIDGET：省略 y 的行仍能匹配（几何比较不得 Number 化 y）', () => {
+    const load = makeLoader('current');
+    const R = load('reducers.ts').default;
+    const A = load('action.ts');
+
+    const item = widget({ web: { layout: { x: 0, w: 2 } } });
+    let s = R(undefined, { type: '@@INIT' });
+    s = R(s, A.updateComponents([item]));
+
+    uuidSeq = 0;
+    const next = R(s, A.copyWidget(item));
+    const copied = next.components[next.components.length - 1];
+
+    assert.deepEqual(
+      copied.web.layout,
+      { x: 2, w: 2 },
+      '省略 y 时仍应匹配到该行，并把副本放在同行末尾（x=2）',
+    );
+  });
+
   check('COPY_WIDGET 的 Infinity 位置（当前行放不下且末行即当前行 → y=Infinity）', () => {
     const load = makeLoader('current');
     const R = load('reducers.ts').default;
