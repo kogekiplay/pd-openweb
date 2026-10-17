@@ -4,6 +4,7 @@ import moment from 'moment';
 import { RELATION_SEARCH_SHOW_TYPE } from 'worksheet/constants/enum';
 import type { FormControl } from 'src/utils/controlTypes';
 import { TIME_PERIOD_TYPE, TIME_TYPE, WEEKS } from './enum';
+import { readPageProperty } from './pageConfig';
 import CountDown from './PublicWorksheetConfig/CountDown';
 
 // These shapes are derived from the wire DTOs; omitted settings stay omitted.
@@ -237,14 +238,17 @@ export function renderLimitInfo(worksheetSettings: LimitInfoSettings) {
   );
 }
 
-// Remaining boundary debt: safeParse's global any still reaches this return value.
-// Validate it with its consumers in a separate batch; strict-clean is not proof of a typed JSON boundary.
-export const getPageConfig = (pageConfigs = '[]', pageConfigKey?: string) => {
-  const configs = safeParse(pageConfigs);
+export const getPageConfig = (pageConfigs = '[]', pageConfigKey?: string): unknown => {
+  const configs: unknown = safeParse(pageConfigs);
 
-  if (!pageConfigKey) return configs[0] || {};
+  if (!pageConfigKey) return readPageProperty(configs, 0) || {};
 
-  return _.find(configs, l => l.key === pageConfigKey) || configs[0] || {};
+  // Lodash also handles primitives/null at runtime; keep that boundary unknown rather than claiming a schema.
+  const found: unknown = Reflect.apply(_.find, _, [
+    configs,
+    (value: unknown) => readPageProperty(value, 'key') === pageConfigKey,
+  ]);
+  return found || readPageProperty(configs, 0) || {};
 };
 
 export const checkIsDeleted = (value: FormControl['controlId'], data: Pick<FormControl, 'controlId'>[] = []) =>

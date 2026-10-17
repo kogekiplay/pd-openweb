@@ -82,6 +82,20 @@ const relation = new Function(
   compile(declaration(relationSource, 'RELATION_SEARCH_SHOW_TYPE')) + ';return RELATION_SEARCH_SHOW_TYPE;',
 )();
 
+const pageConfigModule = { exports: {} };
+new Function(
+  'module',
+  'exports',
+  'require',
+  compile(
+    fs.readFileSync(path.join(ROOT, 'src/pages/FormExtend/pageConfig.ts'), 'utf8'),
+    path.join(ROOT, 'src/pages/FormExtend/pageConfig.ts'),
+  ),
+)(pageConfigModule, pageConfigModule.exports, (name: string) => {
+  if (name === './enum') return enumModule.exports;
+  throw Error(`Uncontrolled page config dependency: ${name}`);
+});
+
 function load(source: string): Record<string, any> {
   const mod = { exports: {} };
   new Function('module', 'exports', 'require', '_l', 'safeParse', compile(source))(
@@ -92,6 +106,7 @@ function load(source: string): Record<string, any> {
       if (name === 'lodash') return realLodash;
       if (name === 'moment') return realMoment;
       if (name === './enum') return enumModule.exports;
+      if (name === './pageConfig') return pageConfigModule.exports;
       if (name === 'worksheet/constants/enum') return { RELATION_SEARCH_SHOW_TYPE: relation };
       if (name === './PublicWorksheetConfig/CountDown') return CountDownLeaf;
       throw Error(`Uncontrolled dependency: ${name}`);
@@ -119,14 +134,13 @@ function outcome(fn: () => unknown) {
   }
 }
 
-check('seven helpers erase identically; time formatting only spells out two undefined returns', () => {
+check('six helpers erase identically; time formatting only spells out two undefined returns', () => {
   for (const name of [
     'getNewControlColRow',
     'getNotSupportControlIds',
     'getDisabledControls',
     'isDisplayPromptText',
     'renderLimitInfo',
-    'getPageConfig',
     'checkIsDeleted',
   ]) {
     assert.equal(compile(declaration(current, name)), compile(declaration(baseline, name)), name);
