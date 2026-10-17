@@ -32,7 +32,7 @@ const safeNode = parse(globals).program.body.find(
   n => n.expression?.left?.object?.name === 'window' && n.expression.left.property?.name === 'safeParse',
 );
 assert.ok(safeNode);
-const host = {};
+const host: { safeParse?: (value: unknown) => unknown } = {};
 new Function('window', 'console', compile(globals.slice(safeNode.start, safeNode.end), 'src/common/global.ts'))(host, {
   error() {},
 });
@@ -87,11 +87,14 @@ function leaf(name) {
 }
 function load(source, safeParse = realSafeParse) {
   const events = [];
-  const win = { open: url => events.push(['open', url]) };
+  const win: { open: (url: string) => number; scrollToFormEnd?: () => void } = {
+    open: url => events.push(['open', url]),
+  };
   let styleIndex = 0;
   // Styled leaves preserve the returned JSX tree; style callbacks are checked separately for erasure.
   const styled = { div: () => leaf(`styled-${styleIndex++}`) };
-  const mod = { exports: {} };
+  // The class is compiled dynamically from the actual source; this is a harness binding, not a product DTO.
+  const mod: { exports: Record<string, any> } = { exports: {} };
   const fixedMath = Object.create(Math);
   fixedMath.random = () => 0.4;
   const factory = source.replace(
@@ -140,7 +143,12 @@ function load(source, safeParse = realSafeParse) {
   );
   return { Component: mod.exports.PublicWorksheetConfigForm, win, events };
 }
-function setup(source, metadata = {}, info = {}, options = {}) {
+function setup(
+  source,
+  metadata = {},
+  info = {},
+  options: { safeParse?: (value: unknown) => unknown; props?: Record<string, unknown> } = {},
+) {
   const loaded = load(source, options.safeParse);
   const events = loaded.events;
   const settings = { marker: 'keep-settings', extendDatas: metadata };
