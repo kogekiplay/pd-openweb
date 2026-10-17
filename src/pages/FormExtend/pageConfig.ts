@@ -2,8 +2,8 @@ import { themes } from './enum';
 
 /** Read-only access at the legacy JavaScript boundary, including primitive boxing and native null errors. */
 export function readPageProperty(value: unknown, key: PropertyKey): unknown {
-  if (value === null) return null![key];
-  if (value === undefined) return undefined![key];
+  // This access never returns normally. Keep the native error in both compiler modes.
+  if (value === null || value === undefined) return (value as never)[key];
   return Reflect.get(Object(value), key, value);
 }
 
@@ -24,20 +24,17 @@ function invalidField(key: PropertyKey): never {
 
 function readText(value: unknown, key: PropertyKey): string | null | undefined {
   const field = readPageProperty(value, key);
-  if (field === null || field === undefined || typeof field === 'string') return field;
+  if (field === null) return null;
+  if (field === undefined) return undefined;
+  if (typeof field === 'string') return field;
   return invalidField(key);
 }
 
 function readIndex(value: unknown, key: PropertyKey): PageConfigIndex {
   const field = readPageProperty(value, key);
-  if (
-    field === null ||
-    field === undefined ||
-    typeof field === 'string' ||
-    typeof field === 'number' ||
-    typeof field === 'boolean'
-  )
-    return field;
+  if (field === null) return null;
+  if (field === undefined) return undefined;
+  if (typeof field === 'string' || typeof field === 'number' || typeof field === 'boolean') return field;
   return invalidField(key);
 }
 
@@ -65,7 +62,9 @@ export function readPageConfig(value: unknown): PublicPageConfig {
     },
     get showQrcode() {
       const field = readPageProperty(value, 'showQrcode');
-      if (field === null || field === undefined || typeof field === 'boolean') return field;
+      if (field === null) return null;
+      if (field === undefined) return undefined;
+      if (typeof field === 'boolean') return field;
       return invalidField('showQrcode');
     },
   };
@@ -80,6 +79,7 @@ export function getPageThemeColor({
   // Keep both reads, including inherited array keys such as "constructor" and "toString".
   if (!readPageProperty(themes, key)) return '#1677ff';
   const main = readPageProperty(readPageProperty(themes, key) || {}, 'main');
-  if (main === undefined || typeof main === 'string') return main;
+  if (main === undefined) return undefined;
+  if (typeof main === 'string') return main;
   return invalidField('theme.main');
 }

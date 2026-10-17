@@ -12,7 +12,8 @@ import PublicAppLangDropdown from 'src/components/PublicAppLangDropdown';
 import RestrictAccessStatus from 'src/components/restrictAccessStatus';
 import ShareCardConfig from 'src/components/ShareCardConfig';
 import { SHARECARDTYPS } from 'src/components/ShareCardConfig/config';
-import { themes } from 'src/pages/FormExtend/enum';
+import { getPageThemeColor, readPageConfig } from 'src/pages/FormExtend/pageConfig';
+import type { PublicPageConfig } from 'src/pages/FormExtend/pageConfig';
 import BgContainer from 'src/pages/FormExtend/PublicWorksheetConfig/components/BgContainer';
 import Qr from 'src/pages/FormExtend/PublicWorksheetConfig/components/Qr';
 import { getPageConfig } from 'src/pages/FormExtend/utils';
@@ -182,12 +183,8 @@ export default class PublicWorksheet extends React.Component<any, any> {
     }
   };
 
-  getThemeBgColor = ({ themeBgColor, themeColor }) => {
-    if (!themeBgColor) {
-      return !themes[themeColor] ? '#1677ff' : (themes[themeColor] || {}).main;
-    } else {
-      return themeBgColor;
-    }
+  getThemeBgColor = ({ themeBgColor, themeColor }: Pick<PublicPageConfig, 'themeBgColor' | 'themeColor'>) => {
+    return getPageThemeColor({ themeBgColor, themeColor });
   };
 
   renderPreFillDesc() {
@@ -235,7 +232,7 @@ export default class PublicWorksheet extends React.Component<any, any> {
     const { bg, cover } = request;
     const hideBg = bg === 'no';
 
-    const config = getPageConfig(_.get(publicWorksheetInfo, 'extendDatas.pageConfigs'), pageConfigKey);
+    const config = readPageConfig(getPageConfig(_.get(publicWorksheetInfo, 'extendDatas.pageConfigs'), pageConfigKey));
     const { themeBgColor, layout, cover: coverPic, showQrcode, themeColor } = config;
     const bgShowTop = (layout === 2 || hideBg) && !loading;
     const theme = this.getThemeBgColor({ themeBgColor, themeColor });
@@ -362,7 +359,7 @@ export default class PublicWorksheet extends React.Component<any, any> {
       <div
         className={cx('publicWorksheet', { hideBg })}
         style={{
-          backgroundColor: loading ? 'var(--color-background-disabled)' : !hideBg ? generate(theme)[0] : '#fff',
+          backgroundColor: loading ? 'var(--color-background-disabled)' : !hideBg ? generate(theme!)[0] : '#fff',
         }}
       >
         {!loading && (

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import { TextBlock } from 'worksheet/components/Basics';
 import ShareUrl from 'worksheet/components/ShareUrl';
-import { themes } from '../../enum';
+import { getPageThemeColor, readPageConfig } from '../../pageConfig';
 import { getPageConfig } from '../../utils';
 import AppearanceConfig from '../AppearanceConfig';
 
@@ -50,14 +50,10 @@ export default function ({
   const [open, setOpen] = useState();
 
   const getThemeBgColor = (key = '') => {
-    const config = getPageConfig(pageConfigs, key);
+    const config = readPageConfig(getPageConfig(pageConfigs, key));
     const { themeBgColor, themeColor } = config;
 
-    if (!themeBgColor) {
-      return !themes[themeColor] ? '#1677ff' : (themes[themeColor] || {}).main;
-    } else {
-      return themeBgColor;
-    }
+    return getPageThemeColor({ themeBgColor, themeColor });
   };
 
   const handleDelete = (key, index: number) => {

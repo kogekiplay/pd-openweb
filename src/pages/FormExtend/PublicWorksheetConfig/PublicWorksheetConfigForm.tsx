@@ -12,7 +12,7 @@ import { Absolute, BlackBtn, FormTopImgCon, Hr } from 'worksheet/components/Basi
 import type { RootState } from 'src/redux/configureStore';
 import { pathCompletion } from 'src/utils/common';
 import { getRgbaByColor } from 'src/utils/controlCommon';
-import { themes } from '../enum';
+import { getPageThemeColor, readPageConfig } from '../pageConfig';
 import * as actions from '../PublicWorksheetConfig/redux/actions';
 import { getDisabledControls, getPageConfig, overridePos } from '../utils';
 import AppearanceConfig from './AppearanceConfig';
@@ -99,14 +99,10 @@ class PublicWorksheetConfigForm extends React.Component<any, PublicWorksheetConf
   }
 
   getThemeBgColor = () => {
-    const config = getPageConfig(_.get(this.props.worksheetSettings, 'extendDatas.pageConfigs'));
+    const config = readPageConfig(getPageConfig(_.get(this.props.worksheetSettings, 'extendDatas.pageConfigs')));
     const { themeBgColor, themeColor } = config;
 
-    if (!themeBgColor) {
-      return !themes[themeColor] ? '#1677ff' : (themes[themeColor] || {}).main;
-    } else {
-      return themeBgColor;
-    }
+    return getPageThemeColor({ themeBgColor, themeColor });
   };
 
   saveExtendDatas = value => {
@@ -181,7 +177,7 @@ class PublicWorksheetConfigForm extends React.Component<any, PublicWorksheetConf
     const needHidedControlIds = hidedControlIds.concat(disabledControlIds);
     const theme = this.getThemeBgColor();
     const extendDatas = worksheetSettings.extendDatas || {};
-    const config = getPageConfig(extendDatas.pageConfigs);
+    const config = readPageConfig(getPageConfig(extendDatas.pageConfigs));
     const visibleHeaders = _.isUndefined(extendDatas.visibleHeaders)
       ? ['logo', 'title', 'description']
       : safeParse(extendDatas.visibleHeaders);
@@ -331,7 +327,7 @@ class PublicWorksheetConfigForm extends React.Component<any, PublicWorksheetConf
         ref={con => {
           this.con = con;
         }}
-        style={{ backgroundColor: generate(theme)[0] }}
+        style={{ backgroundColor: generate(theme!)[0] }}
       >
         <AppearanceConfig
           pageConfigKey=""

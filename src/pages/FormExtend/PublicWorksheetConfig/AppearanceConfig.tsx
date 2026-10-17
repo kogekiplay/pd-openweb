@@ -14,6 +14,7 @@ import { Absolute, CustomButton, H1, H3, Hr } from 'worksheet/components/Basics'
 import type { RootState } from 'src/redux/configureStore';
 import { getThemeColors } from 'src/utils/project';
 import { coverurls, LAYOUT_OPTIONS } from '../enum';
+import { readPageConfig } from '../pageConfig';
 import * as actions from '../PublicWorksheetConfig/redux/actions';
 import { getPageConfig } from '../utils';
 import PictureSelect from './components/PictureSelect';
@@ -246,7 +247,7 @@ class AppearanceConfig extends React.Component<any, any> {
 
   renderLayoutSetting = () => {
     const { pageConfigs = '[]', pageConfigKey = '' } = this.props;
-    const config = getPageConfig(pageConfigs, pageConfigKey);
+    const config = readPageConfig(getPageConfig(pageConfigs, pageConfigKey));
 
     return (
       <LayoutSettingWrap>
@@ -282,7 +283,7 @@ class AppearanceConfig extends React.Component<any, any> {
 
   renderUpload = () => {
     const { pageConfigs = '[]', pageConfigKey = '' } = this.props;
-    const config = getPageConfig(pageConfigs, pageConfigKey);
+    const config = readPageConfig(getPageConfig(pageConfigs, pageConfigKey));
     const cover = config.cover;
     const { isUploading } = this.state;
     const { pathname } = cover ? new URL(cover) : {};
@@ -348,10 +349,14 @@ class AppearanceConfig extends React.Component<any, any> {
     const { open, worksheetInfo, onClose, theme, pageConfigs = '[]', pageConfigKey = '' } = this.props;
     const { projectId } = worksheetInfo;
     const COLORS = getThemeColors(projectId);
-    const config = getPageConfig(pageConfigs, pageConfigKey);
+    const config = readPageConfig(getPageConfig(pageConfigs, pageConfigKey));
 
     return (
-      <Drawer open={open} styles={{ wrapper: { width: 640 }, body: { padding: 0 }, header: { display: 'none' } }} onClose={onClose}>
+      <Drawer
+        open={open}
+        styles={{ wrapper: { width: 640 }, body: { padding: 0 }, header: { display: 'none' } }}
+        onClose={onClose}
+      >
         <ScrollView>
           <Con>
             <Absolute right="24">
