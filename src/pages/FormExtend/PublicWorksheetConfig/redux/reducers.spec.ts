@@ -299,6 +299,39 @@ const SCENARIOS: Scenario[] = [
     },
   },
   {
+    /**
+     * 【类型诚实性对照】`reducers.ts` 的动作类型把 `LOAD_SUCCESS` 的这些键标成**必填**，
+     * 依据是唯一生产方 `getDispatchData()` 始终设置它们 —— 这是**生产方契约**，
+     * 不是"运行时一定有值"的保证。
+     * 本场景刻意传**部分载荷**，用来：
+     *   1) 记录真实行为（缺键时该字段会被写成 `undefined`，不是"保持默认值"）；
+     *   2) 证明 A/B 两侧行为一致（我的类型化没有改变运行时）。
+     */
+    name: 'LOAD_SUCCESS 部分载荷：缺键字段被写成 undefined（记录真实行为，非"保持默认"）',
+    steps: {
+      controls: [{ type: 'PUBLICWORKSHEET_LOAD_SUCCESS', url: 'https://a/b' }],
+      hidedControlIds: [{ type: 'PUBLICWORKSHEET_LOAD_SUCCESS', url: 'https://a/b' }],
+      originalControls: [{ type: 'PUBLICWORKSHEET_LOAD_SUCCESS', url: 'https://a/b' }],
+      worksheetInfo: [{ type: 'PUBLICWORKSHEET_LOAD_SUCCESS', url: 'https://a/b' }],
+      worksheetSettings: [{ type: 'PUBLICWORKSHEET_LOAD_SUCCESS', url: 'https://a/b' }],
+      shareUrl: [{ type: 'PUBLICWORKSHEET_LOAD_SUCCESS', url: 'https://a/b' }],
+    },
+  },
+  {
+    name: 'LOAD_SUCCESS 显式 undefined / null：原实现直接落值，不做兜底',
+    steps: {
+      controls: [{ type: 'PUBLICWORKSHEET_LOAD_SUCCESS', controls: undefined }],
+      hidedControlIds: [{ type: 'PUBLICWORKSHEET_LOAD_SUCCESS', hidedControlIds: undefined }],
+      worksheetInfo: [{ type: 'PUBLICWORKSHEET_LOAD_SUCCESS', worksheetInfo: null }],
+      worksheetSettings: [{ type: 'PUBLICWORKSHEET_LOAD_SUCCESS', worksheetSettings: null }],
+      shareUrl: [
+        { type: 'PUBLICWORKSHEET_LOAD_SUCCESS', url: null },
+        { type: 'PUBLICWORKSHEET_UPDATE_URL', url: undefined },
+      ],
+    },
+  },
+
+  {
     name: '未知 action 返回原引用',
     steps: {
       loading: [LOAD_ACTION, { type: 'SOMETHING_ELSE' }],
