@@ -59,15 +59,20 @@ class CompactionTests(unittest.TestCase):
             (current / name).write_text(json.dumps(value))
         return stage, current
 
-    def run_compact(self, root, stage, current, production_changed=False):
+    def run_compact(self, root, stage, current, production_changed=False, reviewed_sha=None,
+                    changed_after_recovery=False):
         def digest(name):
             return 'live' if name == COMPACT.DEPLOY.LIVE + '/index.html' else 'rollback'
-        state = ['unchanged', 'changed'] if production_changed else ['unchanged', 'unchanged']
+        calls = 0
+        def services():
+            nonlocal calls
+            calls += 1
+            return 'changed' if (production_changed and calls > 1) or (changed_after_recovery and calls > 2) else 'unchanged'
         with patch.object(COMPACT, 'STAGING_BASE', root), \
-                patch.object(COMPACT.DEPLOY, 'services', side_effect=state), \
+                patch.object(COMPACT.DEPLOY, 'services', side_effect=services), \
                 patch.object(COMPACT.DEPLOY, 'digest', side_effect=digest), \
                 contextlib.redirect_stdout(io.StringIO()):
-            COMPACT.compact(str(stage), str(current))
+            COMPACT.compact(str(stage), str(current), reviewed_sha)
 
     def test_success_and_real_recovery(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -134,6 +139,80 @@ class CompactionTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 self.run_compact(root, stage, current)
             self.assertTrue((stage / 'files/index.html').is_file())
+
+    def test_reviewed_metadata_keeps_both_versions_and_recovers_real_payload(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary).resolve()
+            stage, current = self.fixture(root)
+            archive_sha = COMPACT.file_digest(stage / 'frontend.tar.gz')
+            original_script = (stage / 'deploy.py').read_bytes()
+            corrected_script = b'# later correction used by the original release\n'
+            (stage / 'deploy.py').write_bytes(corrected_script)
+            with self.assertRaisesRegex(ValueError, 'Archive metadata mismatch'):
+                self.run_compact(root, stage, current)
+            failed_record = (stage / 'staging-compaction.json').read_bytes()
+            self.run_compact(root, stage, current, reviewed_sha=COMPACT.file_digest(stage / 'deploy.py'))
+            record = json.loads((stage / 'staging-compaction.json').read_text())
+            self.assertEqual(record['phase'], 'compacted')
+            self.assertEqual(record['metadataRecovery']['filesRecovered'], 2)
+            self.assertEqual((stage / record['previousVerification']).read_bytes(), failed_record)
+            self.assertEqual((stage / 'deploy.py').read_bytes(), corrected_script)
+            self.assertEqual((stage / 'recovery-metadata/deploy.py').read_bytes(), corrected_script)
+            with tarfile.open(stage / 'frontend.tar.gz') as package:
+                self.assertEqual(package.extractfile('deploy.py').read(), original_script)
+            self.assertEqual(COMPACT.file_digest(stage / 'frontend.tar.gz'), archive_sha)
+            self.assertFalse((stage / 'files').exists())
+            subprocess.run(['sh', str(stage / 'restore-staging.sh')], check=True, stdout=subprocess.PIPE)
+            self.assertEqual((stage / 'files/index.html').read_text(), 'revision=' + 'a' * 40)
+            self.assertEqual((stage / 'dist/chunk.js').read_text(), 'candidate javascript')
+            self.assertEqual((stage / 'deploy.py').read_bytes(), corrected_script)
+
+    def test_reviewed_metadata_hash_must_match(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary).resolve()
+            stage, current = self.fixture(root)
+            with self.assertRaisesRegex(ValueError, 'reviewed SHA256'):
+                self.run_compact(root, stage, current, reviewed_sha='0' * 64)
+            self.assertTrue((stage / 'files/index.html').is_file())
+            self.assertFalse((stage / 'restore-staging.sh').exists())
+
+    def test_reviewed_script_never_allows_other_archive_or_candidate_drift(self):
+        for fault in ['changed', 'extra', 'duplicate', 'traversal', 'tar-link', 'metadata']:
+            with self.subTest(fault=fault), tempfile.TemporaryDirectory() as temporary:
+                root = pathlib.Path(temporary).resolve()
+                stage, current = self.fixture(root, fault)
+                if fault == 'metadata':
+                    artifact = json.loads((stage / 'artifact.json').read_text())
+                    artifact['unreviewed'] = True
+                    (stage / 'artifact.json').write_text(json.dumps(artifact))
+                (stage / 'deploy.py').write_text('# reviewed correction\n')
+                with self.assertRaises((ValueError, RuntimeError)):
+                    self.run_compact(root, stage, current, reviewed_sha=COMPACT.file_digest(stage / 'deploy.py'))
+                self.assertTrue((stage / 'files/index.html').is_file())
+                self.assertTrue((stage / 'dist/chunk.js').is_file())
+
+    def test_production_change_after_real_recovery_preserves_original_trees(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary).resolve()
+            stage, current = self.fixture(root)
+            (stage / 'deploy.py').write_text('# reviewed correction\n')
+            with self.assertRaisesRegex(RuntimeError, 'Production changed'):
+                self.run_compact(root, stage, current, reviewed_sha=COMPACT.file_digest(stage / 'deploy.py'),
+                                 changed_after_recovery=True)
+            self.assertTrue((stage / 'files/index.html').is_file())
+            self.assertTrue((stage / 'dist/chunk.js').is_file())
+
+    def test_recovery_never_overwrites_metadata_changed_after_compaction(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary).resolve()
+            stage, current = self.fixture(root)
+            (stage / 'deploy.py').write_text('# reviewed correction\n')
+            self.run_compact(root, stage, current, reviewed_sha=COMPACT.file_digest(stage / 'deploy.py'))
+            (stage / 'deploy.py').write_text('# later operator edit\n')
+            result = subprocess.run(['sh', str(stage / 'restore-staging.sh')], stdout=subprocess.PIPE)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertFalse((stage / 'files').exists())
+            self.assertEqual((stage / 'deploy.py').read_text(), '# later operator edit\n')
 
 
 if __name__ == '__main__':
