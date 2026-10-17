@@ -39,6 +39,7 @@ export function getAppIdFromLocation(): string | undefined {
   const params = new URLSearchParams(location.search);
 
   const direct = params.get('appId');
+
   if (direct) return direct;
 
   const fromUrl = params.get('fromURL');
@@ -117,7 +118,7 @@ const APP_SCOPE_KEY = 'themeAppScope';
 function rememberAppScope(appId: string): void {
   try {
     sessionStorage.setItem(APP_SCOPE_KEY, appId);
-  } catch (err) {
+  } catch {
     /* 隐私模式下 sessionStorage 可能不可写，退化成「没有记忆」即可 */
   }
 }
@@ -125,7 +126,7 @@ function rememberAppScope(appId: string): void {
 function readAppScope(): string | undefined {
   try {
     return sessionStorage.getItem(APP_SCOPE_KEY) || undefined;
-  } catch (err) {
+  } catch {
     return undefined;
   }
 }
@@ -133,7 +134,7 @@ function readAppScope(): string | undefined {
 function forgetAppScope(): void {
   try {
     sessionStorage.removeItem(APP_SCOPE_KEY);
-  } catch (err) {
+  } catch {
     /* 同上 */
   }
 }
