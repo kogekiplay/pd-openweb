@@ -903,7 +903,6 @@
     "src/pages/FormExtend/PublicWorksheetConfig/PublicConfig/WeChatEnhance.tsx",
     "src/pages/FormExtend/PublicWorksheetConfig/PublicConfig/WeChatSettings.tsx",
     "src/pages/FormExtend/PublicWorksheetConfig/PublicConfig/index.tsx",
-    "src/pages/FormExtend/PublicWorksheetConfig/PublicWorksheetConfigForm.tsx",
     "src/pages/FormExtend/PublicWorksheetConfig/components/AddControlDialog.tsx",
     "src/pages/FormExtend/PublicWorksheetConfig/components/BgContainer.tsx",
     "src/pages/FormExtend/PublicWorksheetConfig/components/ControlList.tsx",
