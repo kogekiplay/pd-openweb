@@ -2001,7 +2001,6 @@
     "src/pages/task/containers/taskGantt/component/taskTimeBar/taskTimeBar.tsx",
     "src/pages/task/containers/taskGantt/component/timeBarFences/timeBarFences.tsx",
     "src/pages/task/containers/taskGantt/component/timeBars/timeBars.tsx",
-    "src/pages/task/containers/taskGantt/containers/folderToolbar/folderToolbar.tsx",
     "src/pages/task/containers/taskGantt/containers/members/members.tsx",
     "src/pages/task/containers/taskGantt/containers/subordinateMembers/subordinateMembers.tsx",
     "src/pages/task/containers/taskGantt/containers/taskGantt/taskGantt.tsx",

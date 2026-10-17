@@ -36,6 +36,7 @@ const REL_FILE = 'src/pages/task/containers/taskGantt/containers/folderToolbar/f
 const BASE_REV = 'b84c1c28a763e2ab56b2a6d9b39f2f4294717be6';
 
 let cachedOrig: string | undefined;
+
 function origSource(): string {
   if (cachedOrig === undefined) {
     cachedOrig = execFileSync('git', ['show', `${BASE_REV}:${REL_FILE}`], {
@@ -44,9 +45,11 @@ function origSource(): string {
       maxBuffer: 16 * 1024 * 1024,
     });
   }
+
   return cachedOrig;
 }
-const ORIG_SHA = crypto.createHash('sha256').update(origSource()).digest('hex');
+
+const ORIG_SHA = '2d14765c47ec960d1a5757a482bec1fb27b8320c3d22711710a5b6a194ee6db4';
 
 /* ────────────────────────── 全局替身（只补浏览器缺的） ────────────────────────── */
 
@@ -108,11 +111,13 @@ function buildStubs() {
 function loadConnected(variant: 'orig' | 'current') {
   const stubs = buildStubs();
   const moduleLike: { exports: Record<string, unknown> } = { exports: {} };
+
   const req = (r: string) => {
     if (r in stubs) return stubs[r];
     if (r.endsWith('.less') || r.endsWith('.html')) return {};
     throw new Error(`spec 没给 ${r} 打桩（${variant}）`);
   };
+
   const filename = path.join(DIR, 'folderToolbar.tsx');
   const babelOpts = {
     presets: [require.resolve('@babel/preset-react')],
@@ -155,13 +160,13 @@ function makeStore(stateConfig: Record<string, unknown>) {
 }
 
 /** 渲染连接后的组件；返回 HTML */
-function renderConnected(Connected: React.ComponentType<Record<string, unknown>>, stateConfig: Record<string, unknown>, ownProps: Record<string, unknown> = {}) {
+function renderConnected(
+  Connected: React.ComponentType<Record<string, unknown>>,
+  stateConfig: Record<string, unknown>,
+  ownProps: Record<string, unknown> = {},
+) {
   const store = makeStore(stateConfig);
-  const element = React.createElement(
-    Provider,
-    { store },
-    React.createElement(Connected, { ...ownProps }),
-  );
+  const element = React.createElement(Provider, { store }, React.createElement(Connected, { ...ownProps }));
   return renderToStaticMarkup(element);
 }
 
@@ -169,6 +174,7 @@ function renderConnected(Connected: React.ComponentType<Record<string, unknown>>
 function summarize(html: string) {
   const activeItems = (html.match(/<li class="active"/g) || []).length;
   const activeLabels = Array.from(html.matchAll(/<li class="active">([^<]*)<\/li>/g)).map(m => m[1]);
+
   /** 取某个 <ul> 容器内的 active 标签：视图组与周末组的 class 前缀相同，必须分开取 */
   const activeIn = (ulClass: string) => {
     const escaped = ulClass.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -176,6 +182,7 @@ function summarize(html: string) {
     if (!block) return [];
     return Array.from(block[1].matchAll(/<li class="active">([^<]*)<\/li>/g)).map(m => m[1]);
   };
+
   const statusLabel = (html.match(/<span class="taskStatus pointer"[^>]*><span>([^<]*)<\/span>/)?.[1] ?? '').trim();
   return {
     activeItems,
@@ -212,7 +219,11 @@ const SCENARIOS: Scenario[] = [
     stateConfig: makeStateConfig({ currentStatus: 1, currentView: 3, filterWeekend: true }),
     ownProps: { showStaticGantt: true },
   },
-  { name: 'showStaticGantt=false 时不渲染甘特入口', stateConfig: makeStateConfig(), ownProps: { showStaticGantt: false } },
+  {
+    name: 'showStaticGantt=false 时不渲染甘特入口',
+    stateConfig: makeStateConfig(),
+    ownProps: { showStaticGantt: false },
+  },
   { name: 'showStaticGantt 省略（undefined）', stateConfig: makeStateConfig(), ownProps: {} },
 ];
 
@@ -230,7 +241,9 @@ const SCENARIOS: Scenario[] = [
  */
 let summarized = false;
 process.on('unhandledRejection', reason => {
-  realConsole.error(`未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`);
+  realConsole.error(
+    `未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`,
+  );
   process.exitCode = 1;
 });
 process.on('uncaughtException', error => {
@@ -246,6 +259,7 @@ process.on('beforeExit', () => {
 
 let checks = 0;
 let failed = 0;
+
 function check(name: string, fn: () => void): void {
   checks += 1;
   try {
@@ -267,8 +281,10 @@ function firstDiff(a: unknown, b: unknown, at = '$'): string {
       const d = firstDiff(a[i], b[i], `${at}[${i}]`);
       if (d) return d;
     }
+
     return '';
   }
+
   if (a && b && typeof a === 'object') {
     const ka = Object.keys(a as object).sort();
     const kb = Object.keys(b as object).sort();
@@ -277,12 +293,19 @@ function firstDiff(a: unknown, b: unknown, at = '$'): string {
       const d = firstDiff((a as any)[k], (b as any)[k], `${at}.${k}`);
       if (d) return d;
     }
+
     return '';
   }
+
   return `${at}: ${JSON.stringify(a)} vs ${JSON.stringify(b)}`;
 }
 
 function main(): void {
+  assert.equal(
+    crypto.createHash('sha256').update(origSource()).digest('hex'),
+    ORIG_SHA,
+    'frozen original toolbar source',
+  );
   realConsole.log(`  · A 侧基线 ${BASE_REV.slice(0, 9)} / folderToolbar.tsx sha256=${ORIG_SHA.slice(0, 16)}…`);
 
   const OrigConnected = loadConnected('orig');
@@ -324,9 +347,18 @@ function main(): void {
   });
 
   check('connect 接线：收起态状态名跟随 store 的 currentStatus', () => {
-    assert.equal(summarize(renderConnected(CurrentConnected, makeStateConfig({ currentStatus: 0 }))).statusLabel, '进行中');
-    assert.equal(summarize(renderConnected(CurrentConnected, makeStateConfig({ currentStatus: 1 }))).statusLabel, '已完成');
-    assert.equal(summarize(renderConnected(CurrentConnected, makeStateConfig({ currentStatus: -1 }))).statusLabel, '全部');
+    assert.equal(
+      summarize(renderConnected(CurrentConnected, makeStateConfig({ currentStatus: 0 }))).statusLabel,
+      '进行中',
+    );
+    assert.equal(
+      summarize(renderConnected(CurrentConnected, makeStateConfig({ currentStatus: 1 }))).statusLabel,
+      '已完成',
+    );
+    assert.equal(
+      summarize(renderConnected(CurrentConnected, makeStateConfig({ currentStatus: -1 }))).statusLabel,
+      '全部',
+    );
   });
 
   check('ownProps 透传：showStaticGantt=false 时没有甘特入口', () => {
@@ -348,6 +380,7 @@ function main(): void {
     process.exitCode = 1;
     return;
   }
+
   summarized = true;
   realConsole.log(
     `folderToolbar 真模块集成规格通过：${checks} 项（${SCENARIOS.length} 个真 connect 渲染 A/B + 5 条接线断言）`,

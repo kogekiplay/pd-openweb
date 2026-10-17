@@ -1,9 +1,10 @@
 ﻿import { combineReducers } from 'redux';
+import type { ReduxAction } from 'src/redux/types';
 import config from '../config/config';
 import * as taskGanttReducers from '../containers/taskGantt/redux/reducers';
-import type { ReduxAction } from 'src/redux/types';
+import type { TaskConfig, TaskConfigAction } from './taskConfigTypes';
 
-const taskConfig = (state = config.defaultState, action: ReduxAction) => {
+const taskConfig = (state: TaskConfig = config.defaultState, action: TaskConfigAction): TaskConfig => {
   switch (action.type) {
     case 'UPDATE_STATE_CONFIG':
       return Object.assign({}, state, action.taskConfig);

@@ -19,7 +19,6 @@
  */
 const assert: typeof import('node:assert/strict') = require('node:assert/strict');
 const path = require('node:path');
-const fs = require('node:fs');
 const crypto = require('node:crypto');
 const { execFileSync } = require('node:child_process');
 const { transformFileSync, transformSync, ROOT } = require('../../../../../../../scripts/spec-harness.ts');
@@ -39,6 +38,7 @@ const REL_FILE = 'src/pages/task/containers/taskGantt/containers/folderToolbar/f
 const BASE_REV = 'b84c1c28a763e2ab56b2a6d9b39f2f4294717be6';
 
 let cachedOrig: string | undefined;
+
 function origSource(): string {
   if (cachedOrig === undefined) {
     cachedOrig = execFileSync('git', ['show', `${BASE_REV}:${REL_FILE}`], {
@@ -47,11 +47,12 @@ function origSource(): string {
       maxBuffer: 16 * 1024 * 1024,
     });
   }
+
   return cachedOrig;
 }
 
 /** 原实现（类型改造前）源码指纹：确认 A 侧确实取到了那一版 */
-const ORIG_SHA = crypto.createHash('sha256').update(origSource()).digest('hex');
+const ORIG_SHA = '2d14765c47ec960d1a5757a482bec1fb27b8320c3d22711710a5b6a194ee6db4';
 
 /* ────────────────────────── 环境与依赖替身 ────────────────────────── */
 
@@ -72,7 +73,10 @@ class FakeComponent {
     this.props = { ...defaults, ...(props || {}) };
     this.state = { ...(this.state || {}) };
   }
-  setState(update: Record<string, unknown> | ((prev: Record<string, unknown>) => Record<string, unknown>), cb?: () => void) {
+  setState(
+    update: Record<string, unknown> | ((prev: Record<string, unknown>) => Record<string, unknown>),
+    cb?: () => void,
+  ) {
     const patch = typeof update === 'function' ? update(this.state) : update;
     this.state = { ...this.state, ...patch };
     if (cb) cb();
@@ -80,6 +84,7 @@ class FakeComponent {
 }
 
 const created: { type: unknown; props: Record<string, any>; children: unknown[] }[] = [];
+
 const createElement = (type: unknown, props: Record<string, any> | null, ...children: unknown[]) => {
   const node = { type, props: props || {}, children };
   created.push(node);
@@ -191,11 +196,13 @@ function buildStubs() {
 function loadToolbar(variant: 'orig' | 'current') {
   const stubs = buildStubs();
   const moduleLike: { exports: Record<string, unknown> } = { exports: {} };
+
   const req = (r: string) => {
     if (r in stubs) return stubs[r];
     if (r.endsWith('.less') || r.endsWith('.html')) return {};
     throw new Error(`spec 没给 ${r} 打桩（${variant}）`);
   };
+
   const filename = path.join(DIR, 'folderToolbar.tsx');
   const babelOpts = {
     presets: [require.resolve('@babel/preset-react')],
@@ -233,6 +240,7 @@ function walk(node: unknown, visit: (n: any) => void): void {
     node.forEach(child => walk(child, visit));
     return;
   }
+
   if (typeof node !== 'object') return;
   const n = node as any;
   visit(n);
@@ -264,17 +272,21 @@ function fingerprint(node: unknown, depth = 0): unknown {
   const n = node as any;
   const tag = typeof n.type === 'string' ? n.type : `[fn:${n.type?.name || 'anon'}]`;
   const props: Record<string, unknown> = {};
+
   for (const key of Object.keys(n.props || {}).sort()) {
     if (key === 'children') continue;
     const value = n.props[key];
+
     if (key === 'onCancel' || key === 'folderID' || key === 'closeLayer') {
       // 弹窗回调与 folderID 由 config 驱动，单独在场景里断言，不放进结构指纹
       if (key === 'folderID') props[key] = value;
       continue;
     }
+
     if (typeof value === 'function') props[key] = '[fn]';
     else if (key === 'className' || key === 'style' || key === 'component' || key === 'title') props[key] = value;
   }
+
   const kids = n.props?.children !== undefined ? n.props.children : n.children;
   return { tag, props, children: kids === undefined ? [] : fingerprint(kids, depth + 1) };
 }
@@ -291,7 +303,9 @@ function fingerprint(node: unknown, depth = 0): unknown {
  */
 let summarized = false;
 process.on('unhandledRejection', reason => {
-  realConsole.error(`未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`);
+  realConsole.error(
+    `未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`,
+  );
   process.exitCode = 1;
 });
 process.on('uncaughtException', error => {
@@ -309,6 +323,7 @@ process.on('beforeExit', () => {
 
 let checks = 0;
 let failed = 0;
+
 function check(name: string, fn: () => void): void {
   checks += 1;
   try {
@@ -331,8 +346,10 @@ function firstDiff(a: unknown, b: unknown, at = '$'): string {
       const d = firstDiff(a[i], b[i], `${at}[${i}]`);
       if (d) return d;
     }
+
     return '';
   }
+
   if (a && b && typeof a === 'object') {
     const ka = Object.keys(a as object).sort();
     const kb = Object.keys(b as object).sort();
@@ -341,8 +358,10 @@ function firstDiff(a: unknown, b: unknown, at = '$'): string {
       const d = firstDiff((a as any)[k], (b as any)[k], `${at}.${k}`);
       if (d) return d;
     }
+
     return '';
   }
+
   return `${at}: ${JSON.stringify(a)} vs ${JSON.stringify(b)}`;
 }
 
@@ -392,7 +411,10 @@ const SCENARIOS: Scenario[] = [
       const instance = makeInstance(Toolbar, {});
       instance.state = { ...instance.state, showOperator: true };
       instance.switchStatus(-1);
-      return { sequence: dispatched.map((a: any) => a?.type ?? a?.__thunk ?? null), showOperator: instance.state.showOperator };
+      return {
+        sequence: dispatched.map((a: any) => a?.type ?? a?.__thunk ?? null),
+        showOperator: instance.state.showOperator,
+      };
     },
   },
   {
@@ -420,7 +442,10 @@ const SCENARIOS: Scenario[] = [
       const instance = makeInstance(Toolbar, {});
       instance.state = { ...instance.state, showLevel: true };
       instance.switchLevel(3);
-      return { sequence: dispatched.map((a: any) => a?.type ?? a?.__thunk ?? null), showLevel: instance.state.showLevel };
+      return {
+        sequence: dispatched.map((a: any) => a?.type ?? a?.__thunk ?? null),
+        showLevel: instance.state.showLevel,
+      };
     },
   },
   {
@@ -429,9 +454,15 @@ const SCENARIOS: Scenario[] = [
       const instance = makeInstance(Toolbar, {});
       const before = { ...instance.state };
       instance.showTaskLevel({ currentTarget: { offsetLeft: 137 } });
-      const afterOpen = { showLevel: instance.state.showLevel, taskLevelOffsetLeft: instance.state.taskLevelOffsetLeft };
+      const afterOpen = {
+        showLevel: instance.state.showLevel,
+        taskLevelOffsetLeft: instance.state.taskLevelOffsetLeft,
+      };
       instance.showTaskLevel({ currentTarget: { offsetLeft: 200 } });
-      const afterClose = { showLevel: instance.state.showLevel, taskLevelOffsetLeft: instance.state.taskLevelOffsetLeft };
+      const afterClose = {
+        showLevel: instance.state.showLevel,
+        taskLevelOffsetLeft: instance.state.taskLevelOffsetLeft,
+      };
       // 浮层打开时的 style.left 必须等于记录的 offsetLeft
       instance.state = { ...instance.state, showLevel: true, taskLevelOffsetLeft: 137 };
       const tree = instance.render();
@@ -558,6 +589,11 @@ function stable(value: unknown): string {
 
 async function main(): Promise<void> {
   // 原实现指纹（记录用途：确认 A 侧取到的是类型改造前那一版）
+  assert.equal(
+    crypto.createHash('sha256').update(origSource()).digest('hex'),
+    ORIG_SHA,
+    'frozen original toolbar source',
+  );
   realConsole.log(`  · A 侧基线 ${BASE_REV.slice(0, 9)} / folderToolbar.tsx sha256=${ORIG_SHA.slice(0, 16)}…`);
 
   const OrigToolbar = loadToolbar('orig');
@@ -569,6 +605,7 @@ async function main(): Promise<void> {
       const origValue = scenario.run(OrigToolbar);
       dispatched = [];
       const currentValue = scenario.run(CurrentToolbar);
+
       if (stable(origValue) === stable(currentValue)) {
         checks += 1;
         realConsole.log(`  ✓ ${scenario.name}`);
@@ -678,6 +715,7 @@ async function main(): Promise<void> {
       return flat.filter((c: unknown) => typeof c === 'string' || typeof c === 'number').join('');
     });
     const values: unknown[] = [];
+
     for (const item of items) {
       dispatched = [];
       item.props.onClick();
@@ -686,11 +724,17 @@ async function main(): Promise<void> {
       assert.ok(action, `点击后没有派发 ${actionType}`);
       values.push(action['status'] ?? action['viewType'] ?? action['filter'] ?? action['level'] ?? null);
     }
+
     return { values, texts };
   }
 
   check('状态列表取值必须是 [0,1,-1]，且文本与 getTaskStatusName 对齐', () => {
-    const { values, texts } = clickGroup(CurrentToolbar, { showOperator: true }, 'taskStatusList', 'CHANGE_TASK_STATUS');
+    const { values, texts } = clickGroup(
+      CurrentToolbar,
+      { showOperator: true },
+      'taskStatusList',
+      'CHANGE_TASK_STATUS',
+    );
     assert.deepEqual(values, [0, 1, -1], '状态取值协议变了');
     // 三个文本必须非空，且与 getTaskStatusName 在该状态下的输出一致
     const names = [0, 1, -1].map(status => {
@@ -698,7 +742,9 @@ async function main(): Promise<void> {
       return instance.getTaskStatusName();
     });
     assert.deepEqual(names, ['进行中', '已完成', '全部']);
-    texts.forEach((t, i) => assert.ok(t.includes(names[i] as string), `第 ${i} 项文本「${t}」与状态名「${names[i]}」不一致`));
+    texts.forEach((t, i) =>
+      assert.ok(t.includes(names[i] as string), `第 ${i} 项文本「${t}」与状态名「${names[i]}」不一致`),
+    );
   });
 
   check('视图列表取值必须是 [1,2,3]', () => {
@@ -733,6 +779,7 @@ async function main(): Promise<void> {
     process.exitCode = 1;
     return;
   }
+
   summarized = true;
   realConsole.log(
     `folderToolbar 行为规格通过：${checks} 项（${SCENARIOS.length} 个历史 A/B 场景 + ${checks - SCENARIOS.length} 条绝对断言）`,

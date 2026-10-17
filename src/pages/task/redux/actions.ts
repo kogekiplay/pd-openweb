@@ -1,7 +1,9 @@
 import _ from 'lodash';
 import tagController from 'src/api/tag';
 import ajaxRequest from 'src/api/taskCenter';
+import type { AppDispatch, GetState } from 'src/redux/types';
 import { emitter } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
 import {
   updateTaskErrorDialog,
   updateTimeError,
@@ -10,8 +12,7 @@ import {
 import config from '../config/config';
 import updateStageViewControlsSource from '../utils/updateStage';
 import { errorMessage } from '../utils/utils';
-import type { AppDispatch, GetState } from 'src/redux/types';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { TaskConfig, TaskConfigAction, TaskFilterSettings } from './taskConfigTypes';
 
 /**
  * 任务中心接口的通用返回。
@@ -79,7 +80,7 @@ export const addTask = data => (dispatch: AppDispatch, getState: GetState) => {
   }
 };
 
-export const updateStateConfig = taskConfig => {
+export const updateStateConfig = (taskConfig: Partial<TaskConfig>): TaskConfigAction => {
   return {
     type: 'UPDATE_STATE_CONFIG',
     taskConfig,
@@ -87,7 +88,7 @@ export const updateStateConfig = taskConfig => {
 };
 
 // 切换网络
-export const updateNetwork = (lastMyProjectId: string) => {
+export const updateNetwork = (lastMyProjectId: string): TaskConfigAction => {
   return {
     type: 'UPDATE_NETWORK',
     lastMyProjectId,
@@ -107,7 +108,7 @@ export const updateTaskStatus = (listStatus: number, listSort: number) => (dispa
 };
 
 // 切换项目下的搜索范围
-export const updateFolderRange = (folderSearchRange: number) => {
+export const updateFolderRange = (folderSearchRange: number): TaskConfigAction => {
   return {
     type: 'UPDATE_FOLDER_RANGE',
     folderSearchRange,
@@ -115,7 +116,7 @@ export const updateFolderRange = (folderSearchRange: number) => {
 };
 
 // 更新项目的筛选内容
-export const updateKeyWords = (searchKeyWords: string) => {
+export const updateKeyWords = (searchKeyWords: string): TaskConfigAction => {
   return {
     type: 'UPDATE_FOLDER_KEYWORDS',
     searchKeyWords,
@@ -123,7 +124,7 @@ export const updateKeyWords = (searchKeyWords: string) => {
 };
 
 // 更新完成时间
-export const updateCompleteTime = (completeTime: string) => {
+export const updateCompleteTime = (completeTime: string): TaskConfigAction => {
   return {
     type: 'UPDATE_COMPLETE_TIME',
     completeTime,
@@ -131,7 +132,7 @@ export const updateCompleteTime = (completeTime: string) => {
 };
 
 // 更新排序
-export const updateListSort = (listSort: number) => {
+export const updateListSort = (listSort: number): TaskConfigAction => {
   return {
     type: 'UPDATE_LIST_SORT',
     listSort,
@@ -139,7 +140,7 @@ export const updateListSort = (listSort: number) => {
 };
 
 // 更新任务归属
-export const updateTaskAscription = (taskFilter: number) => {
+export const updateTaskAscription = (taskFilter: number): TaskConfigAction => {
   return {
     type: 'UPDATE_TASK_ASCRIPTION',
     taskFilter,
@@ -147,7 +148,7 @@ export const updateTaskAscription = (taskFilter: number) => {
 };
 
 // 更新标签
-export const updateTaskTags = tags => {
+export const updateTaskTags = (tags: TaskFilterSettings['tags']): TaskConfigAction => {
   return {
     type: 'UPDATE_TASK_TAGS',
     tags,
@@ -155,7 +156,7 @@ export const updateTaskTags = tags => {
 };
 
 // 更新自定义字段
-export const updateCustomFilter = customFilter => {
+export const updateCustomFilter = (customFilter: TaskFilterSettings['customFilter']): TaskConfigAction => {
   return {
     type: 'UPDATE_CUSTOM_FILTER',
     customFilter,
@@ -163,7 +164,7 @@ export const updateCustomFilter = customFilter => {
 };
 
 // 更新负责人
-export const updateChargeIds = (selectChargeIds: string[]) => {
+export const updateChargeIds = (selectChargeIds: string[]): TaskConfigAction => {
   return {
     type: 'UPDATE_CHARGE_IDS',
     selectChargeIds,
@@ -176,7 +177,7 @@ export const taskFirstSetStorage = () => {
   };
 };
 
-export const attachmentSwitch = (attachmentViewType: number) => {
+export const attachmentSwitch = (attachmentViewType: number): TaskConfigAction => {
   return {
     type: 'ATTACHMENT_SWITCH',
     attachmentViewType,
@@ -363,49 +364,51 @@ export const editTaskStatus =
   (taskId: string, status: number, isSubTask: boolean, subTaskId: string, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const updateTaskStatus = (code = 0) => {
-      ajaxRequest.updateTaskStatus({ taskID: subTaskId || taskId, status, isSubTask, code }).then((result: TaskApiResult) => {
-        if (result.status) {
-          callback(result.data, isSubTask);
+      ajaxRequest
+        .updateTaskStatus({ taskID: subTaskId || taskId, status, isSubTask, code })
+        .then((result: TaskApiResult) => {
+          if (result.status) {
+            callback(result.data, isSubTask);
 
-          const taskDetail = _.cloneDeep(getState().task.taskDetails[taskId]);
+            const taskDetail = _.cloneDeep(getState().task.taskDetails[taskId]);
 
-          if (!taskDetail) {
-            return;
-          }
+            if (!taskDetail) {
+              return;
+            }
 
-          taskDetail.data.subTask.forEach((item: TaskLike) => {
-            result.data.tasks.forEach((task: TaskLike) => {
-              if (item.taskID === task.taskId) {
-                item.startTime = task.startTime;
-                item.deadline = task.deadline;
-                item.actualStartTime = task.actualStartTime;
-                item.completeTime = task.completedTime;
-                item.status = task.status;
-              }
+            taskDetail.data.subTask.forEach((item: TaskLike) => {
+              result.data.tasks.forEach((task: TaskLike) => {
+                if (item.taskID === task.taskId) {
+                  item.startTime = task.startTime;
+                  item.deadline = task.deadline;
+                  item.actualStartTime = task.actualStartTime;
+                  item.completeTime = task.completedTime;
+                  item.status = task.status;
+                }
+              });
             });
-          });
 
-          if (!subTaskId) {
-            const taskObj = _.find(result.data.tasks, item => item.taskId === taskId);
+            if (!subTaskId) {
+              const taskObj = _.find(result.data.tasks, item => item.taskId === taskId);
 
-            taskDetail.data.startTime = taskObj.startTime;
-            taskDetail.data.deadline = taskObj.deadline;
-            taskDetail.data.actualStartTime = taskObj.actualStartTime;
-            taskDetail.data.completeTime = taskObj.completedTime;
-            taskDetail.data.status = taskObj.status;
+              taskDetail.data.startTime = taskObj.startTime;
+              taskDetail.data.deadline = taskObj.deadline;
+              taskDetail.data.actualStartTime = taskObj.actualStartTime;
+              taskDetail.data.completeTime = taskObj.completedTime;
+              taskDetail.data.status = taskObj.status;
+            }
+
+            dispatch({
+              type: 'EDIT_TASK_STATUS',
+              taskId,
+              data: taskDetail,
+            });
+          } else if (result.error.code === 1000) {
+            updateTaskErrorDialog(() => updateTaskStatus(result.error.code));
+          } else {
+            errorMessage(result.error);
           }
-
-          dispatch({
-            type: 'EDIT_TASK_STATUS',
-            taskId,
-            data: taskDetail,
-          });
-        } else if (result.error.code === 1000) {
-          updateTaskErrorDialog(() => updateTaskStatus(result.error.code));
-        } else {
-          errorMessage(result.error);
-        }
-      });
+        });
     };
 
     updateTaskStatus();
@@ -616,57 +619,59 @@ export const updateTaskMemberStar =
 export const updateTaskCharge =
   (taskId: string, user, subTaskId: string, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
-    ajaxRequest.updateTaskCharge({ taskID: subTaskId || taskId, charge: user.accountId }).then((result: TaskApiResult) => {
-      if (result.status) {
-        alert(_l('修改成功'));
-        callback();
+    ajaxRequest
+      .updateTaskCharge({ taskID: subTaskId || taskId, charge: user.accountId })
+      .then((result: TaskApiResult) => {
+        if (result.status) {
+          alert(_l('修改成功'));
+          callback();
 
-        const taskDetail = _.cloneDeep(getState().task.taskDetails[taskId]);
+          const taskDetail = _.cloneDeep(getState().task.taskDetails[taskId]);
 
-        if (!taskDetail) {
-          return;
-        }
-
-        // 子任务
-        if (subTaskId) {
-          taskDetail.data.subTask.forEach((item: TaskLike) => {
-            if (item.taskID === subTaskId) {
-              item.charge.accountID = user.accountId;
-              item.charge.avatar = user.avatar;
-              item.charge.fullName = user.fullname;
-            }
-          });
-        } else {
-          const oldCharge = _.cloneDeep(taskDetail.data.charge);
-
-          // 新负责人
-          taskDetail.data.charge.accountID = user.accountId;
-          taskDetail.data.charge.avatar = user.avatar;
-          taskDetail.data.charge.fullName = user.fullname;
-
-          // 老负责人加入到成员中
-          if (oldCharge.accountID && oldCharge.accountID !== 'user-undefined') {
-            taskDetail.data.member = taskDetail.data.member.concat([{ type: 0, status: 0, account: oldCharge }]);
+          if (!taskDetail) {
+            return;
           }
 
-          // 成员中删除新负责人
-          _.remove(taskDetail.data.member, item => item.account.accountID === user.accountId);
-        }
+          // 子任务
+          if (subTaskId) {
+            taskDetail.data.subTask.forEach((item: TaskLike) => {
+              if (item.taskID === subTaskId) {
+                item.charge.accountID = user.accountId;
+                item.charge.avatar = user.avatar;
+                item.charge.fullName = user.fullname;
+              }
+            });
+          } else {
+            const oldCharge = _.cloneDeep(taskDetail.data.charge);
 
-        dispatch({
-          type: 'UPDATE_TASK_CHARGE',
-          taskId,
-          data: taskDetail,
-        });
-        emitter.emit('UPDATE_TASK_CHARGE', {
-          type: 'UPDATE_TASK_CHARGE',
-          taskId,
-          data: taskDetail,
-        });
-      } else {
-        errorMessage(result.error);
-      }
-    });
+            // 新负责人
+            taskDetail.data.charge.accountID = user.accountId;
+            taskDetail.data.charge.avatar = user.avatar;
+            taskDetail.data.charge.fullName = user.fullname;
+
+            // 老负责人加入到成员中
+            if (oldCharge.accountID && oldCharge.accountID !== 'user-undefined') {
+              taskDetail.data.member = taskDetail.data.member.concat([{ type: 0, status: 0, account: oldCharge }]);
+            }
+
+            // 成员中删除新负责人
+            _.remove(taskDetail.data.member, item => item.account.accountID === user.accountId);
+          }
+
+          dispatch({
+            type: 'UPDATE_TASK_CHARGE',
+            taskId,
+            data: taskDetail,
+          });
+          emitter.emit('UPDATE_TASK_CHARGE', {
+            type: 'UPDATE_TASK_CHARGE',
+            taskId,
+            data: taskDetail,
+          });
+        } else {
+          errorMessage(result.error);
+        }
+      });
   };
 
 // 更新任务描述
@@ -736,27 +741,28 @@ export const addTaskMember =
   };
 
 // 任务同意加入
-export const agreeApplyJoinTask = (taskId: string, accountId: string) => (dispatch: AppDispatch, getState: GetState) => {
-  ajaxRequest.agreeApplyJoinTask({ taskID: taskId, accountID: accountId }).then((result: TaskApiResult) => {
-    if (result.status) {
-      const taskDetail = _.cloneDeep(getState().task.taskDetails[taskId]);
+export const agreeApplyJoinTask =
+  (taskId: string, accountId: string) => (dispatch: AppDispatch, getState: GetState) => {
+    ajaxRequest.agreeApplyJoinTask({ taskID: taskId, accountID: accountId }).then((result: TaskApiResult) => {
+      if (result.status) {
+        const taskDetail = _.cloneDeep(getState().task.taskDetails[taskId]);
 
-      taskDetail.data.member.forEach(item => {
-        if (item.account.accountID === accountId) {
-          item.status = 0;
-        }
-      });
+        taskDetail.data.member.forEach(item => {
+          if (item.account.accountID === accountId) {
+            item.status = 0;
+          }
+        });
 
-      dispatch({
-        type: 'AGREE_APPLY_JOIN_TASK',
-        taskId,
-        data: taskDetail,
-      });
-    } else {
-      errorMessage(result.error);
-    }
-  });
-};
+        dispatch({
+          type: 'AGREE_APPLY_JOIN_TASK',
+          taskId,
+          data: taskDetail,
+        });
+      } else {
+        errorMessage(result.error);
+      }
+    });
+  };
 
 // 任务拒绝加入
 export const refuseJoinTask = (taskId: string, accountId: string) => (dispatch: AppDispatch, getState: GetState) => {
@@ -781,26 +787,28 @@ export const refuseJoinTask = (taskId: string, accountId: string) => (dispatch: 
 export const addSubTask =
   (taskId: string, taskName: string, accountId: string, projectId: string, callback = () => {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
-    ajaxRequest.addTask({ taskName, chargeAccountID: accountId, parentID: taskId, projectId }).then((result: TaskApiResult) => {
-      if (result.status) {
-        ajaxRequest.getTaskDetail({ taskID: result.data.taskID }).then(source => {
-          if (source.status && source.data.taskID) {
-            const taskDetail = _.cloneDeep(getState().task.taskDetails[taskId]);
-            taskDetail.data.subTask = taskDetail.data.subTask.concat([source.data]);
+    ajaxRequest
+      .addTask({ taskName, chargeAccountID: accountId, parentID: taskId, projectId })
+      .then((result: TaskApiResult) => {
+        if (result.status) {
+          ajaxRequest.getTaskDetail({ taskID: result.data.taskID }).then(source => {
+            if (source.status && source.data.taskID) {
+              const taskDetail = _.cloneDeep(getState().task.taskDetails[taskId]);
+              taskDetail.data.subTask = taskDetail.data.subTask.concat([source.data]);
 
-            dispatch({
-              type: 'ADD_SUB_TASK',
-              taskId,
-              data: taskDetail,
-            });
-          }
-        });
+              dispatch({
+                type: 'ADD_SUB_TASK',
+                taskId,
+                data: taskDetail,
+              });
+            }
+          });
 
-        callback(result.data);
-      } else {
-        errorMessage(result.error);
-      }
-    });
+          callback(result.data);
+        } else {
+          errorMessage(result.error);
+        }
+      });
   };
 
 // 获取检查清单
@@ -843,7 +851,8 @@ export const addCheckList = (taskId: string, value: string) => (dispatch: AppDis
 
 // 修改清单顺序
 export const updateCheckListIndex =
-  (taskId: string, currentCheckListId, previousCheckListId: string, insertIndex) => (dispatch: AppDispatch, getState: GetState) => {
+  (taskId: string, currentCheckListId, previousCheckListId: string, insertIndex) =>
+  (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest.updateCheckListIndex({ currentCheckListId, previousCheckListId }).then((result: TaskApiResult) => {
       if (result.status) {
         const checklist = _.cloneDeep(getState().task.taskChecklists[taskId]);
@@ -864,28 +873,29 @@ export const updateCheckListIndex =
   };
 
 // 修改清单名称
-export const updateCheckListName = (taskId: string, checkListId: string, name: string) => (dispatch: AppDispatch, getState: GetState) => {
-  ajaxRequest.updateCheckListName({ checkListId, name }).then((result: TaskApiResult) => {
-    if (result.status) {
-      const checklist = _.cloneDeep(getState().task.taskChecklists[taskId]);
-      checklist.map(item => {
-        if (item.checkListId === checkListId) {
-          item.name = name;
-        }
+export const updateCheckListName =
+  (taskId: string, checkListId: string, name: string) => (dispatch: AppDispatch, getState: GetState) => {
+    ajaxRequest.updateCheckListName({ checkListId, name }).then((result: TaskApiResult) => {
+      if (result.status) {
+        const checklist = _.cloneDeep(getState().task.taskChecklists[taskId]);
+        checklist.map(item => {
+          if (item.checkListId === checkListId) {
+            item.name = name;
+          }
 
-        return item;
-      });
+          return item;
+        });
 
-      dispatch({
-        type: 'UPDATE_CHECKLIST_NAME',
-        taskId,
-        data: checklist,
-      });
-    } else {
-      errorMessage(result.error);
-    }
-  });
-};
+        dispatch({
+          type: 'UPDATE_CHECKLIST_NAME',
+          taskId,
+          data: checklist,
+        });
+      } else {
+        errorMessage(result.error);
+      }
+    });
+  };
 
 // 删除清单
 export const removeCheckList = (taskId: string, checkListId: string) => (dispatch: AppDispatch, getState: GetState) => {
@@ -907,7 +917,8 @@ export const removeCheckList = (taskId: string, checkListId: string) => (dispatc
 
 // 修改检查项顺序
 export const updateItemIndex =
-  (taskId: string, currentItemId, previousItemId: string, targetCheckListId, insertIndex) => (dispatch: AppDispatch, getState: GetState) => {
+  (taskId: string, currentItemId, previousItemId: string, targetCheckListId, insertIndex) =>
+  (dispatch: AppDispatch, getState: GetState) => {
     ajaxRequest.updateItemIndex({ currentItemId, previousItemId, targetCheckListId }).then((result: TaskApiResult) => {
       if (result.status) {
         const checklist = _.cloneDeep(getState().task.taskChecklists[taskId]);
@@ -974,28 +985,29 @@ export const addItems = (taskId: string, checkListId: string, names) => (dispatc
 };
 
 // 修改检查项名称
-export const updateItemName = (taskId: string, itemId: string, name: string) => (dispatch: AppDispatch, getState: GetState) => {
-  ajaxRequest.updateItemName({ itemId, name }).then((result: TaskApiResult) => {
-    if (result.status) {
-      const checklist = _.cloneDeep(getState().task.taskChecklists[taskId]);
-      checklist.forEach(list => {
-        list.items.forEach(item => {
-          if (item.itemId === itemId) {
-            item.name = name;
-          }
+export const updateItemName =
+  (taskId: string, itemId: string, name: string) => (dispatch: AppDispatch, getState: GetState) => {
+    ajaxRequest.updateItemName({ itemId, name }).then((result: TaskApiResult) => {
+      if (result.status) {
+        const checklist = _.cloneDeep(getState().task.taskChecklists[taskId]);
+        checklist.forEach(list => {
+          list.items.forEach(item => {
+            if (item.itemId === itemId) {
+              item.name = name;
+            }
+          });
         });
-      });
 
-      dispatch({
-        type: 'UPDATE_ITEM_NAME',
-        taskId,
-        data: checklist,
-      });
-    } else {
-      errorMessage(result.error);
-    }
-  });
-};
+        dispatch({
+          type: 'UPDATE_ITEM_NAME',
+          taskId,
+          data: checklist,
+        });
+      } else {
+        errorMessage(result.error);
+      }
+    });
+  };
 
 // 删除检查项
 export const removeItem = (taskId: string, itemId: string) => (dispatch: AppDispatch, getState: GetState) => {
@@ -1036,29 +1048,30 @@ export const createTaskRemoveItem = (taskId: string, itemId: string) => (dispatc
 };
 
 // 修改检查项状态
-export const updateItemStatus = (taskId: string, itemId: string, status) => (dispatch: AppDispatch, getState: GetState) => {
-  ajaxRequest.updateItemStatus({ itemId, status }).then((result: TaskApiResult) => {
-    if (result.status) {
-      const checklist = _.cloneDeep(getState().task.taskChecklists[taskId]);
+export const updateItemStatus =
+  (taskId: string, itemId: string, status) => (dispatch: AppDispatch, getState: GetState) => {
+    ajaxRequest.updateItemStatus({ itemId, status }).then((result: TaskApiResult) => {
+      if (result.status) {
+        const checklist = _.cloneDeep(getState().task.taskChecklists[taskId]);
 
-      checklist.forEach(list =>
-        list.items.forEach(item => {
-          if (item.itemId === itemId) {
-            item.status = status;
-          }
-        }),
-      );
+        checklist.forEach(list =>
+          list.items.forEach(item => {
+            if (item.itemId === itemId) {
+              item.status = status;
+            }
+          }),
+        );
 
-      dispatch({
-        type: 'UPDATE_ITEM_STATUS',
-        taskId,
-        data: checklist,
-      });
-    } else {
-      errorMessage(result.error);
-    }
-  });
-};
+        dispatch({
+          type: 'UPDATE_ITEM_STATUS',
+          taskId,
+          data: checklist,
+        });
+      } else {
+        errorMessage(result.error);
+      }
+    });
+  };
 
 // 自定义字段
 export const getTaskControls =
@@ -1080,66 +1093,71 @@ export const getTaskControls =
   };
 
 // 自定义字段值更新
-export const updateControlValue = (taskId: string, controlId: string, value, opts: string, isAttachment: boolean) => (dispatch: AppDispatch, getState: GetState) => {
-  ajaxRequest.updateControlValue({ taskId, controlId, value, knowledgeAtt: isAttachment ? opts : '' }).then((result: TaskApiResult) => {
-    if (result.status) {
-      const controls: FormControl[] = _.cloneDeep(getState().task.taskControls[taskId]);
+export const updateControlValue =
+  (taskId: string, controlId: string, value, opts: string, isAttachment: boolean) =>
+  (dispatch: AppDispatch, getState: GetState) => {
+    ajaxRequest
+      .updateControlValue({ taskId, controlId, value, knowledgeAtt: isAttachment ? opts : '' })
+      .then((result: TaskApiResult) => {
+        if (result.status) {
+          const controls: FormControl[] = _.cloneDeep(getState().task.taskControls[taskId]);
 
-      controls.forEach(item => {
-        if (item.controlId === controlId) {
-          // 附件
-          if (item.type === 14) {
-            item.value = JSON.stringify(result.data.attachments);
-          } else if (item.type === 21) {
-            // 关联控件
-            item.value = JSON.parse(item.value);
-            // 删除
-            if (JSON.parse(value).isd) {
-              item.value.splice(opts, 1);
-            } else {
-              // 添加
-              item.value = item.value.concat(JSON.parse(result.data.relation));
+          controls.forEach(item => {
+            if (item.controlId === controlId) {
+              // 附件
+              if (item.type === 14) {
+                item.value = JSON.stringify(result.data.attachments);
+              } else if (item.type === 21) {
+                // 关联控件
+                item.value = JSON.parse(item.value);
+                // 删除
+                if (JSON.parse(value).isd) {
+                  item.value.splice(opts, 1);
+                } else {
+                  // 添加
+                  item.value = item.value.concat(JSON.parse(result.data.relation));
+                }
+
+                item.value = JSON.stringify(item.value);
+              } else if (item.type === 19 || item.type === 23 || item.type === 24) {
+                // 地区
+                item.value = opts;
+              } else {
+                item.value = value;
+              }
             }
+          });
 
-            item.value = JSON.stringify(item.value);
-          } else if (item.type === 19 || item.type === 23 || item.type === 24) {
-            // 地区
-            item.value = opts;
-          } else {
-            item.value = value;
-          }
+          dispatch({
+            type: 'UPDATE_TASK_CONTROLS_VALUE',
+            taskId,
+            data: controls,
+          });
+
+          updateStageViewControlsSource(taskId, result.data.controls);
+        } else {
+          errorMessage(result.error);
         }
       });
-
-      dispatch({
-        type: 'UPDATE_TASK_CONTROLS_VALUE',
-        taskId,
-        data: controls,
-      });
-
-      updateStageViewControlsSource(taskId, result.data.controls);
-    } else {
-      errorMessage(result.error);
-    }
-  });
-};
+  };
 
 // 更新自定义字段附件删除之后的值
-export const updateTaskControlFiles = (taskId: string, controlId: string, value) => (dispatch: AppDispatch, getState: GetState) => {
-  const controls: FormControl[] = _.cloneDeep(getState().task.taskControls[taskId]);
+export const updateTaskControlFiles =
+  (taskId: string, controlId: string, value) => (dispatch: AppDispatch, getState: GetState) => {
+    const controls: FormControl[] = _.cloneDeep(getState().task.taskControls[taskId]);
 
-  controls.forEach(item => {
-    if (item.controlId === controlId) {
-      item.value = JSON.stringify(value);
-    }
-  });
+    controls.forEach(item => {
+      if (item.controlId === controlId) {
+        item.value = JSON.stringify(value);
+      }
+    });
 
-  dispatch({
-    type: 'UPDATE_TASK_CONTROLS_VALUE',
-    taskId,
-    data: controls,
-  });
-};
+    dispatch({
+      type: 'UPDATE_TASK_CONTROLS_VALUE',
+      taskId,
+      data: controls,
+    });
+  };
 
 // 任务详情折叠项
 export const taskFoldStatus =
@@ -1172,18 +1190,19 @@ export const updateCommentList = (taskId: string, data) => {
 };
 
 // 删除任务讨论
-export const removeTaskDiscussions = (taskId: string, discussionId: string) => (dispatch: AppDispatch, getState: GetState) => {
-  const { taskDiscussions } = getState().task;
-  const discussions = taskDiscussions[taskId];
+export const removeTaskDiscussions =
+  (taskId: string, discussionId: string) => (dispatch: AppDispatch, getState: GetState) => {
+    const { taskDiscussions } = getState().task;
+    const discussions = taskDiscussions[taskId];
 
-  _.remove(discussions, item => item.discussionId === discussionId);
+    _.remove(discussions, item => item.discussionId === discussionId);
 
-  dispatch({
-    type: 'UPDATE_TASK_DISCUSSIONS',
-    taskId,
-    data: discussions,
-  });
-};
+    dispatch({
+      type: 'UPDATE_TASK_DISCUSSIONS',
+      taskId,
+      data: discussions,
+    });
+  };
 
 // 添加任务讨论
 export const addTaskDiscussions = (taskId: string, data) => {
