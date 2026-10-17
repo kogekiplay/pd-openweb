@@ -9,3 +9,5 @@
 拖拽回归另经主树 `DRAG_BEFORE_REV=2f18350a9 node src/pages/widgetConfig/util/drag.spec.ts` 通过 781 组历史对照；同步树旧版 `resetDisplay` 保持未提交，未覆盖。官方 upstream HEAD `5788d7d5d8d696dd0b969ce851570105934118b5` 无新变化。
 
 本批尚未发布生产；现网仍为 `c1c74ba4d66e51972267c3fdda7c16917c417cdd`，今日已有两版生产更新。同步树三项未提交改动、当前生产回滚材料和已归档旧回滚均保留。
+
+2026-10-17复核补充：本记录此前“保留原有行为”的结论没有直接子表交互对照支持。新增真实模块对照发现弹窗主表ID/刷新事件、延迟masterData provider和复合值text投影三类不等价，现已在生产发布前修正；详见 `childtable-contract-audit-20261017.md`。当前现网为独立正则热修复23358d0949，子表批次仍未生产；其余交互审查继续。
