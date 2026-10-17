@@ -4,6 +4,7 @@ import homeAppApi from 'src/api/homeApp';
 import { updateAppItemInfo, updateSheetListAppItem } from 'worksheet/redux/actions/sheetList';
 import { getAppSectionRef } from 'src/pages/PageHeader/AppPkgHeader/LeftAppGroup';
 import store from 'src/redux/configureStore';
+import { isLeftAppNavigation } from 'src/utils/appNavigation';
 
 export default props => {
   const { iconColor } = store.getState().appPkg;
@@ -53,7 +54,7 @@ export default props => {
     const { currentPcNaviStyle } = store.getState().appPkg;
     isActive && store.dispatch(updateAppItemInfo(workSheetId, appItem.type, name));
 
-    if ([1, 3].includes(currentPcNaviStyle)) {
+    if (isLeftAppNavigation(currentPcNaviStyle)) {
       const singleRef = getAppSectionRef(groupId);
       singleRef.dispatch(updateSheetListAppItem(workSheetId, { workSheetName: newName }));
     } else {
@@ -65,7 +66,7 @@ export default props => {
     const { workSheetId, groupId } = props;
     const { currentPcNaviStyle } = store.getState().appPkg;
 
-    if ([1, 3].includes(currentPcNaviStyle)) {
+    if (isLeftAppNavigation(currentPcNaviStyle)) {
       const singleRef = getAppSectionRef(groupId);
       singleRef.dispatch(updateSheetListAppItem(workSheetId, args));
     } else {

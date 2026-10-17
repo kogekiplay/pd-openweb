@@ -1224,7 +1224,6 @@
     "src/pages/PageHeader/components/PortalUserSet/PortalUserInfoDrawer.tsx",
     "src/pages/PageHeader/components/PortalUserSet/index.tsx",
     "src/pages/PageHeader/components/SwitchProject/index.tsx",
-    "src/pages/PageHeader/redux/action.ts",
     "src/pages/PageHeader/util.ts",
     "src/pages/Personal/AuthorizedApp/index.tsx",
     "src/pages/Personal/SecuritySetting/index.tsx",

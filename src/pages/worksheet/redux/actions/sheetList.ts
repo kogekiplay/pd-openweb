@@ -13,11 +13,12 @@ import { getCustomWidgetUri } from 'src/pages/worksheet/constants/common';
 import { updateWorksheetInfo } from 'src/pages/worksheet/redux/actions/index';
 import { canEditApp } from 'src/pages/worksheet/redux/actions/util';
 import store from 'src/redux/configureStore';
+import type { AppDispatch, GetState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
+import { isLeftAppNavigation } from 'src/utils/appNavigation';
 import { emitter } from 'src/utils/common';
 import { moveSheetCache } from 'src/utils/worksheet';
 import { getSheetListFirstId } from 'src/utils/worksheet';
-import type { AppDispatch, GetState } from 'src/redux/types';
 
 export const formatLeftSectionDetail = data => {
   return data.workSheetInfo.map(s => {
@@ -78,7 +79,7 @@ export function getSheetList(args) {
 
       const { currentPcNaviStyle } = store.getState().appPkg;
 
-      if ([1, 3].includes(currentPcNaviStyle)) {
+      if (isLeftAppNavigation(currentPcNaviStyle)) {
         const { appSectionDetail } = store.getState().sheetList;
         const { appSectionId } = data;
         const res = appSectionDetail.map(data => {
@@ -368,7 +369,7 @@ export function moveSheet(ages) {
           }
         }
 
-        if (!ResultAppSectionId || [1, 3].includes(appPkg.currentPcNaviStyle)) {
+        if (!ResultAppSectionId || isLeftAppNavigation(appPkg.currentPcNaviStyle)) {
           window.updateAppGroups();
         }
 
@@ -381,7 +382,20 @@ export function moveSheet(ages) {
   };
 }
 
-export function deleteSheet({ appId, groupId, worksheetId, projectId, type, parentGroupId }: { appId?: string; groupId?: string; worksheetId?: string; projectId?: string; [key: string]: any }) {
+export function deleteSheet({
+  appId,
+  groupId,
+  worksheetId,
+  projectId,
+  type,
+  parentGroupId,
+}: {
+  appId?: string;
+  groupId?: string;
+  worksheetId?: string;
+  projectId?: string;
+  [key: string]: any;
+}) {
   return function (dispatch: AppDispatch, getState: GetState) {
     const { data: sheetList } = getState().sheetList;
 

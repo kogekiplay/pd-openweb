@@ -27,29 +27,21 @@ const defaultState: AppPkgState = {
  * 复合性说明：`action` 收窄成 `AppPkgAction` 之后，`switch` 的每个分支都能拿到
  * 该动作的真实载荷类型，不再从 `ReduxAction` 的默认索引签名里取 `any`。
  */
-export default function appDetailState(
-  state: AppPkgState = defaultState,
-  action: AppPkgAction,
-): AppPkgState {
+export default function appDetailState(state: AppPkgState = defaultState, action: AppPkgAction): AppPkgState {
   switch (action.type) {
     case SYNC_APP_DETAIL:
-      // 与原实现等价的浅合并。用 Object.assign 而不是对象展开，是为了让类型如实表达
-      // 「部分详情覆盖到完整状态上」：交集 `AppPkgState & Partial<AppDetail>` 能保住
-      // 默认字段的必选性；而 `{ ...state, ...detail }` 会把每个被展开的可选字段
-      // 推成 `T | undefined`，那会与 `AppPkgState` 冲突。
-      // 两者对普通对象都是浅拷贝，运行行为相同。
-      return Object.assign({}, state, action.detail);
+      return { ...state, ...action.detail };
     case CHANGE_APP_COLOR:
       return { ...state, iconColor: action.iconColor };
     case CHANGE_NAV_COLOR:
       return { ...state, navColor: action.navColor };
     case UPDATE_APP_GROUP:
       // 原实现在解构处写 `appGroups = []`：载荷缺失时回落成空数组。
-      // 类型上该载荷是必填的，但运行时的回落行为要原样保留，所以这里显式 `?? []`。
-      return { ...state, appGroups: action.appGroups ?? [] };
+      // 默认值只处理undefined，不能把原来保留的null替换掉。
+      return { ...state, appGroups: action.appGroups === undefined ? [] : action.appGroups };
     case SET_APP_STATUS:
       // 同上，原实现是 `status = 0`
-      return { ...state, appStatus: action.status ?? 0 };
+      return { ...state, appStatus: action.status === undefined ? 0 : action.status };
     case CLEAR_APP_DETAIL:
       // 保留原实现的浅拷贝语义（不是直接返回 defaultState 引用）
       return { ...defaultState };
@@ -59,15 +51,14 @@ export default function appDetailState(
       // 分支必须存在、且必须原样返回 state（运行行为不变）。
       // 但纯 `return state` 会让「给 AppPkgAction 加了新变体却忘了处理」编译通过 ——
       // 实证过：注入一个 HYPOTHETICAL_NEW_ACTION 变体后，tsc 不报任何错。
-      // 所以在这里加一道**仅类型层面**的守卫：把 action 收窄到 `never`。
-      // 若将来有未处理的变体，`action` 就不是 never，赋值会编译失败，从而逼出处理分支。
-      // 这个守卫不产生任何运行时代码（只做类型赋值），也不改变未知 action 的行为。
+      // never参数检查遗漏的变体；运行时为空函数调用，未知action仍返回原引用。
       assertNever(action);
       return state;
   }
 }
 
-/** 编译期穷尽性守卫：所有变体都被处理时参数才是 `never`。仅用于类型检查，无运行时代码。 */
+/** 所有变体都被处理时参数才是never；运行时不抛错，以兼容Redux初始化action。 */
 function assertNever(_action: never): void {
+  void _action;
   return undefined;
 }

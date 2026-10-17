@@ -36,9 +36,11 @@ export type { SheetSwitchPermitItem } from './worksheetTypes';
 function isObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
+
 function isOptionalString(value: unknown): value is string | undefined {
   return value === undefined || typeof value === 'string';
 }
+
 function isSavedColumnStyle(value: unknown): value is SheetColumnStyle & { cid: string } {
   return (
     isObject(value) &&
@@ -48,6 +50,7 @@ function isSavedColumnStyle(value: unknown): value is SheetColumnStyle & { cid: 
     )
   );
 }
+
 function isListStyle(value: unknown): value is WorksheetListStyle {
   return (
     isObject(value) &&
@@ -55,6 +58,7 @@ function isListStyle(value: unknown): value is WorksheetListStyle {
     (value['styles'] === undefined || (Array.isArray(value['styles']) && value['styles'].every(isSavedColumnStyle)))
   );
 }
+
 function decodeListStyle(serialized?: string): WorksheetListStyle {
   const value: unknown = safeParse(serialized);
   if (isListStyle(value)) return value;
@@ -65,9 +69,11 @@ function decodeListStyle(serialized?: string): WorksheetListStyle {
   if (Array.isArray(styles)) result.styles = styles.filter(isSavedColumnStyle);
   return result;
 }
+
 function isCachedNavigation(value: unknown): value is WorksheetCachedNavigation {
   return isObject(value) && ['groupId', 'worksheetId', 'viewId'].every(key => isOptionalString(value[key]));
 }
+
 function decodeAppCache(serialized: string): WorksheetAppCache {
   const value: unknown = safeParse(serialized);
   if (!isObject(value)) return {};
@@ -77,9 +83,11 @@ function decodeAppCache(serialized: string): WorksheetAppCache {
   if (typeof lastWorksheetId === 'string') result.lastWorksheetId = lastWorksheetId;
   return result;
 }
+
 function isNavigationSelection(value: unknown): value is Record<string, string> {
   return isObject(value) && Object.values(value).every(item => typeof item === 'string');
 }
+
 function decodeExtensionNavigation(serialized: string): WorksheetExtensionNavigation {
   const value: unknown = safeParse(serialized);
   if (!isObject(value)) return {};
@@ -89,6 +97,7 @@ function decodeExtensionNavigation(serialized: string): WorksheetExtensionNaviga
   });
   return result;
 }
+
 function isActionColumn(value: unknown): value is WorksheetActionColumn {
   if (!isObject(value)) return false;
   switch (value['type']) {
@@ -106,10 +115,12 @@ function isActionColumn(value: unknown): value is WorksheetActionColumn {
       return false;
   }
 }
+
 function decodeActionColumn(serialized?: string): WorksheetActionColumn[] {
   const value: unknown = safeParse(serialized, 'array');
   return Array.isArray(value) ? value.filter(isActionColumn) : [];
 }
+
 function isButtonGroup(value: unknown): value is WorksheetButtonGroup {
   return (
     isObject(value) &&
@@ -119,6 +130,7 @@ function isButtonGroup(value: unknown): value is WorksheetButtonGroup {
     (value['btns'] === undefined || (Array.isArray(value['btns']) && value['btns'].every(id => typeof id === 'string')))
   );
 }
+
 function decodeButtonGroups(serialized?: string): WorksheetButtonGroup[] {
   const value: unknown = safeParse(serialized, 'array');
   return Array.isArray(value) ? value.filter(isButtonGroup) : [];
@@ -130,6 +142,7 @@ function decodeButtonStyleValue(value: unknown, fallback: number): OperateButton
   if (typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean') return value;
   return NaN;
 }
+
 function decodeButtonStyle(serialized?: string): StoredOperateButtonStyle {
   const value: unknown = safeParse(serialized);
   const config = isObject(value) ? value : {};
@@ -191,7 +204,7 @@ export function getSheetListFirstId<Node extends WorksheetMenuNode<Node> = Works
   return result;
 }
 
-export const moveSheetCache = (appId: string, groupId: string) => {
+export const moveSheetCache = (appId: string | undefined, groupId: string) => {
   const storageKey = `mdAppCache_${md.global.Account.accountId}_${appId}`;
   const storage = decodeAppCache(localStorage.getItem(storageKey) || '{}');
   const worksheets = (storage.worksheets || []).map(data => {
@@ -223,6 +236,7 @@ export const saveSelectExtensionNavType = (worksheetId: string, navType: string,
   const sheetIds = Object.keys(sheetConfigNavInfo);
 
   const firstSheetId = sheetIds[0];
+
   if (sheetIds.length > 10 && firstSheetId !== undefined) {
     delete sheetConfigNavInfo[firstSheetId];
   }
@@ -546,12 +560,14 @@ function getDisplayedSheetStylesOfView(
   });
   return { updateTime, columnStyles, sheetColumnWidths };
 }
+
 function isColumnStyleView(view?: WorksheetView): boolean {
   return (
     Number(view?.viewType) === 0 ||
     (String(view?.viewType) === '2' && view?.advancedSetting?.['hierarchyViewType'] === '3')
   );
 }
+
 export function getSheetStylesOfRelateRecordTable({
   control,
   viewId,
@@ -566,8 +582,10 @@ export function getSheetStylesOfRelateRecordTable({
   if (control?.advancedSetting?.['usecolumnstyle'] !== '1') {
     let sheetColumnWidths: SheetTableStyles['sheetColumnWidths'] = {};
     const serializedWidths = control?.advancedSetting?.widths;
+
     if (serializedWidths) {
       const widths: unknown = safeParse(serializedWidths, 'array');
+
       if (Array.isArray(widths)) {
         widths.forEach((width: unknown, index) => {
           const controlId = control?.showControls?.[index];
@@ -580,8 +598,10 @@ export function getSheetStylesOfRelateRecordTable({
         });
       }
     }
+
     return { columnStyles: {}, sheetColumnWidths };
   }
+
   const manageViewStyles = getDisplayedSheetStylesOfView(manageView, worksheetInfo);
   if (!viewId) return manageViewStyles;
   const views = worksheetInfo?.views || [];

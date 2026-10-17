@@ -242,7 +242,8 @@ export default props => {
   const { onClose, updatePageInfo, updateModified = _.noop } = props;
   const { appPkg } = store.getState();
   const { iconColor } = appPkg;
-  const lightColor = generate(iconColor)[0];
+  // FastColor treats undefined and '' as the same uninitialized color.
+  const lightColor = generate(iconColor === undefined ? '' : iconColor)[0];
   const config = props.config || defaultConfig;
 
   const handleChangeConfig = data => {

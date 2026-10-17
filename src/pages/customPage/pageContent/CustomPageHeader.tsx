@@ -25,6 +25,7 @@ import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum';
 import store from 'src/redux/configureStore';
 import { navigateTo } from 'src/router/navigateTo';
 import { getTranslateInfo } from 'src/utils/app';
+import { isLeftAppNavigation } from 'src/utils/appNavigation';
 import { htmlEncodeReg } from 'src/utils/common';
 import { getCurrentProject } from 'src/utils/project';
 import OperateMenu from './OperateMenu';
@@ -146,7 +147,7 @@ export default function CustomPageHeader(props) {
         ...data,
       })
       .then(() => {
-        if ([1, 3].includes(currentPcNaviStyle)) {
+        if (isLeftAppNavigation(currentPcNaviStyle)) {
           const singleRef = getAppSectionRef(groupId);
           singleRef.dispatch(updateSheetListAppItem(pageId, data));
         } else {
@@ -223,7 +224,7 @@ export default function CustomPageHeader(props) {
               parentGroupId: currentSheet.parentGroupId,
             };
 
-            if ([1, 3].includes(currentPcNaviStyle)) {
+            if (isLeftAppNavigation(currentPcNaviStyle)) {
               const singleRef = getAppSectionRef(groupId);
               singleRef.dispatch(deleteSheet(data));
             } else {

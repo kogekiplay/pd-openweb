@@ -26,11 +26,12 @@ const DIR = __dirname;
 const REL_DIR = 'src/pages/PageHeader/redux';
 const BASE_REV = '62dfebaea8ee591203664db80096240946efe21f';
 const ORIG_SHA: Record<string, string> = {
-  'reducers.ts': '598e8b0f36a80df4',
-  'action.ts': 'c39c39861e07a0f9',
+  'reducers.ts': '598e8b0f36a80df4baaf3cd333a3bf92b82227ee1e7b1436c33267ab633583ec',
+  'action.ts': 'c39c39861e07a0f98f3e842940cc7d7305dcf123d8498f07412a1955c5588fc6',
 };
 
 const origCache: Record<string, string> = {};
+
 function origSource(file: string): string {
   if (origCache[file] === undefined) {
     origCache[file] = execFileSync('git', ['show', `${BASE_REV}:${REL_DIR}/${file}`], {
@@ -39,13 +40,14 @@ function origSource(file: string): string {
       maxBuffer: 16 * 1024 * 1024,
     });
   }
+
   return origCache[file];
 }
 
 function assertOriginalIntact(): void {
   for (const [file, prefix] of Object.entries(ORIG_SHA)) {
     const full = crypto.createHash('sha256').update(origSource(file)).digest('hex');
-    assert.equal(full.slice(0, 16), prefix, `A 侧 ${file} 的 sha256 与冻结值不符，A/B 对照失效`);
+    assert.equal(full, prefix, `A 侧 ${file} 的 sha256 与冻结值不符，A/B 对照失效`);
   }
 }
 
@@ -53,6 +55,7 @@ function assertOriginalIntact(): void {
 
 function makeLoader(variant: 'orig' | 'current') {
   const cache = new Map<string, Record<string, any>>();
+
   const load = (rel: string): Record<string, any> => {
     if (cache.has(rel)) return cache.get(rel) as Record<string, any>;
     const moduleLike: { exports: Record<string, unknown> } = { exports: {} };
@@ -66,6 +69,7 @@ function makeLoader(variant: 'orig' | 'current') {
       variant === 'orig'
         ? (transformSync(origSource(rel), { ...babelOpts, filename }) as { code: string }).code
         : (transformFileSync(filename, babelOpts) as { code: string }).code;
+
     const req = (r: string) => {
       if (r === './types') return {}; // 纯类型导入
       if (r.startsWith('./')) return load(`${r.slice(2)}.ts`);
@@ -73,9 +77,11 @@ function makeLoader(variant: 'orig' | 'current') {
       if (r.endsWith('.less') || r.endsWith('.html')) return {};
       throw new Error(`spec 没给 ${r} 打桩（${variant}/${rel}）`);
     };
+
     new Function('module', 'exports', 'require', code)(moduleLike, moduleLike.exports, req);
     return moduleLike.exports as Record<string, any>;
   };
+
   return load;
 }
 
@@ -103,7 +109,9 @@ const ProbeView = (props: { appPkg: Record<string, any> }) => {
 
 let summarized = false;
 process.on('unhandledRejection', reason => {
-  realConsole.error(`未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`);
+  realConsole.error(
+    `未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`,
+  );
   process.exitCode = 1;
 });
 process.on('uncaughtException', error => {
@@ -119,6 +127,7 @@ process.on('beforeExit', () => {
 
 let checks = 0;
 let failed = 0;
+
 function check(name: string, fn: () => void): void {
   checks += 1;
   try {
@@ -142,9 +151,7 @@ function renderWith(
   const store = createStore(combineReducers({ appPkg: reducer as never }) as never);
   const Connected = connect((state: any) => ({ appPkg: state.appPkg }))(ProbeView as never) as never;
   steps(store.dispatch as never, actions);
-  return renderToStaticMarkup(
-    React.createElement(Provider, { store }, React.createElement(Connected, {})) as never,
-  );
+  return renderToStaticMarkup(React.createElement(Provider, { store }, React.createElement(Connected, {})) as never);
 }
 
 const GROUPS = [{ appSectionId: 's1', item: [{ workSheetId: 'w1' }] }, { appSectionId: 's2' }];
@@ -210,22 +217,27 @@ function main(): void {
   });
 
   check('connect 接线：dispatch 后新值到达组件', () => {
-    const html = renderWith(CurrentReducer, (d, a) => {
-      d(a.syncAppDetail({ iconColor: '#abcabc', currentPcNaviStyle: 2, projectId: 'proj-9' }));
-      d(a.updateAppGroup(GROUPS));
-      d(a.setAppStatus(7));
-    }, CurrentActions);
-    assert.ok(
-      html.includes('应用|#abcabc|proj-9|2|7|2'),
-      `dispatch 后应反映新值，实际 ${html}`,
+    const html = renderWith(
+      CurrentReducer,
+      (d, a) => {
+        d(a.syncAppDetail({ iconColor: '#abcabc', currentPcNaviStyle: 2, projectId: 'proj-9' }));
+        d(a.updateAppGroup(GROUPS));
+        d(a.setAppStatus(7));
+      },
+      CurrentActions,
     );
+    assert.ok(html.includes('应用|#abcabc|proj-9|2|7|2'), `dispatch 后应反映新值，实际 ${html}`);
   });
 
   check('connect 接线：清空后回到默认值', () => {
-    const html = renderWith(CurrentReducer, (d, a) => {
-      d(a.syncAppDetail({ iconColor: '#ff0000', projectId: 'p9', currentPcNaviStyle: 1 }));
-      d(a.clearAppDetail());
-    }, CurrentActions);
+    const html = renderWith(
+      CurrentReducer,
+      (d, a) => {
+        d(a.syncAppDetail({ iconColor: '#ff0000', projectId: 'p9', currentPcNaviStyle: 1 }));
+        d(a.clearAppDetail());
+      },
+      CurrentActions,
+    );
     assert.ok(html.includes('应用|#1677ff||unset|0|0'), `清空后应回默认，实际 ${html}`);
   });
 
@@ -243,6 +255,7 @@ function main(): void {
     process.exitCode = 1;
     return;
   }
+
   realConsole.log(
     `PageHeader/redux 真实 connect 消费规格通过：${checks} 项（${STEPS.length} 个真 store+connect 渲染 A/B + 3 条接线断言 + 1 条字段断言）`,
   );

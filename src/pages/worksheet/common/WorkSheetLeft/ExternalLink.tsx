@@ -12,6 +12,7 @@ import { updatePageInfo } from 'src/pages/customPage/redux/action';
 import { getAppSectionRef } from 'src/pages/PageHeader/AppPkgHeader/LeftAppGroup';
 import { DropdownContent } from 'src/pages/widgetConfig/styled';
 import store from 'src/redux/configureStore';
+import { isLeftAppNavigation } from 'src/utils/appNavigation';
 
 const ControlTag = styled.div`
   line-height: 24px;
@@ -80,7 +81,7 @@ export const EditExternalLink = props => {
         ...data,
       })
       .then(() => {
-        if ([1, 3].includes(currentPcNaviStyle)) {
+        if (isLeftAppNavigation(currentPcNaviStyle)) {
           const singleRef = getAppSectionRef(groupId);
           singleRef.dispatch(updateSheetListAppItem(appItem.workSheetId, data));
           store.dispatch(updatePageInfo({ flag: Date.now() }));

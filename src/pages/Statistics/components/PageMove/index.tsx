@@ -8,7 +8,7 @@ import store from 'src/redux/configureStore';
 
 const formatApps = function (
   validProject: HapApi.MD.Entity.HomeApp.ProjectForApp[] | undefined,
-  projectId: string,
+  projectId: string | undefined,
   appId: string,
 ) {
   const appList: { text: string | undefined; value: string | undefined }[] = [];

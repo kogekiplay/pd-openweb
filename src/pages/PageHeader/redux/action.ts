@@ -1,5 +1,4 @@
-import type { AppDetail } from './types';
-import type { AppSection } from 'src/utils/appTypes';
+import type { AppDetail, AppSectionView } from './types';
 
 export const CHANGE_NAV_COLOR = 'CHANGE_NAV_COLOR';
 export const CHANGE_APP_COLOR = 'CHANGE_APP_COLOR';
@@ -19,7 +18,7 @@ export type AppPkgAction =
   | { type: typeof SYNC_APP_DETAIL; detail: Partial<AppDetail> }
   | { type: typeof CHANGE_APP_COLOR; iconColor: string }
   | { type: typeof CHANGE_NAV_COLOR; navColor: string }
-  | { type: typeof UPDATE_APP_GROUP; appGroups: AppSection[] }
+  | { type: typeof UPDATE_APP_GROUP; appGroups: AppSectionView[] }
   | { type: typeof SET_APP_STATUS; status: number }
   | { type: typeof CLEAR_APP_DETAIL };
 
@@ -38,7 +37,7 @@ export const changeNavColor = (navColor: string): AppPkgAction => ({
   navColor,
 });
 
-export const updateAppGroup = (appGroups: AppSection[]): AppPkgAction => ({
+export const updateAppGroup = (appGroups: AppSectionView[]): AppPkgAction => ({
   type: UPDATE_APP_GROUP,
   appGroups,
 });

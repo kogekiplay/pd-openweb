@@ -15,9 +15,9 @@ import type { WorksheetMenuNode } from 'src/utils/worksheetTypes';
  * 与 `AppSectionItem` 合成条目类型。
  */
 export interface AppSectionEntry extends AppSectionItem {
-  status?: number | undefined;
+  status?: WorksheetMenuNode['status'];
   /** 该条目在当前角色下是否隐藏导航 */
-  navigateHide?: boolean | undefined;
+  navigateHide?: WorksheetMenuNode['navigateHide'];
 }
 
 /** 覆盖 `AppSection` 里会被读取到条目级字段的那几个数组 */
@@ -26,19 +26,6 @@ export interface AppSectionView extends Omit<AppSection, 'item' | 'workSheetInfo
   workSheetInfo?: AppSectionEntry[] | undefined;
   childSections?: AppSectionView[] | undefined;
 }
-
-/** 与 `WorksheetMenuNode` 的字段保持同源的编译期守卫（任一侧改名会在这里报错） */
-type _SectionEntryStatusMatchesMenuNode = AppSectionEntry['status'] extends WorksheetMenuNode['status']
-  ? true
-  : never;
-type _SectionEntryNavigateHideMatchesMenuNode = AppSectionEntry['navigateHide'] extends WorksheetMenuNode['navigateHide']
-  ? true
-  : never;
-export type SectionEntryMenuNodeParity = [
-  _SectionEntryStatusMatchesMenuNode,
-  _SectionEntryNavigateHideMatchesMenuNode,
-];
-
 
 /**
  * 应用详情（`PageHeader` 顶部栏共享的那份应用信息）。
@@ -51,7 +38,7 @@ export type SectionEntryMenuNodeParity = [
  *
  * 【为什么不写索引签名】把业务字段塞进 `[key: string]: unknown` 等于放弃类型：
  * 那样每个字段都会退化成需要下标访问的 unknown。这里的做法是**把真实业务字段逐个列出**，
- * 只有形状确实未建模的少数几个（license / managers / sections / fixAccount）用 `unknown`。
+ * 复合字段也按消费方协议单独建模。
  */
 export interface AppDetail {
   // ── 身份 ──
@@ -88,7 +75,7 @@ export interface AppDetail {
   // ── 分组（复用仓内已应用/分组类型，条目级补上被读取的 status/navigateHide）──
   appGroups?: AppSectionView[] | undefined;
 
-  // ── 真实存在但形状未建模：留 unknown，不放进索引签名 ──
+  // ── 复合业务字段 ──
   /** 授权/购买信息：字段取自真实读取点，见下方 AppLicense */
   license?: AppLicense | undefined;
   /** 管理员列表：消费方会渲染元素（读 accountId / avatar），见下方 AppManager */
@@ -157,12 +144,12 @@ export interface AppLicense {
  * store 里 `appPkg` 切片（`RootState['appPkg']`）。
  *
  * 与 `AppDetail` 的区别只有一条：`defaultState` 里给出默认值的 5 个字段
- * **在切片里始终存在**，因此它们在状态类型上是必选的；其余仍为可选。
+ * 在切片里有自有键，但局部同步可以显式用undefined覆盖它们。
  */
 export interface AppPkgState extends AppDetail {
-  iconColor: string;
-  projectId: string;
-  appGroups: AppSectionView[];
-  appStatus: number;
-  name: string;
+  iconColor: string | undefined;
+  projectId: string | undefined;
+  appGroups: AppSectionView[] | undefined;
+  appStatus: number | undefined;
+  name: string | undefined;
 }

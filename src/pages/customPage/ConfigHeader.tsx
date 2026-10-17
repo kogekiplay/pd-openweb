@@ -8,6 +8,7 @@ import appManagementAjax from 'src/api/appManagement';
 import { updateSheetListAppItem } from 'worksheet/redux/actions/sheetList';
 import { getAppSectionRef } from 'src/pages/PageHeader/AppPkgHeader/LeftAppGroup';
 import store from 'src/redux/configureStore';
+import { isLeftAppNavigation } from 'src/utils/appNavigation';
 import { FlexCenter } from './util';
 
 const ConfigSideWrap = lazy(() => import('src/pages/customPage/components/ConfigSideWrap'));
@@ -145,7 +146,7 @@ export default props => {
             updatePageInfo({ pageName: newName });
             const { currentPcNaviStyle } = store.getState().appPkg;
 
-            if ([1, 3].includes(currentPcNaviStyle)) {
+            if (isLeftAppNavigation(currentPcNaviStyle)) {
               const singleRef = getAppSectionRef(groupId);
               singleRef.dispatch(
                 updateSheetListAppItem(pageId, {

@@ -34,11 +34,12 @@ const REL_DIR = 'src/pages/PageHeader/redux';
 const BASE_REV = '62dfebaea8ee591203664db80096240946efe21f';
 
 const ORIG_SHA: Record<string, string> = {
-  'reducers.ts': '598e8b0f36a80df4',
-  'action.ts': 'c39c39861e07a0f9',
+  'reducers.ts': '598e8b0f36a80df4baaf3cd333a3bf92b82227ee1e7b1436c33267ab633583ec',
+  'action.ts': 'c39c39861e07a0f98f3e842940cc7d7305dcf123d8498f07412a1955c5588fc6',
 };
 
 const origCache: Record<string, string> = {};
+
 function origSource(file: string): string {
   if (origCache[file] === undefined) {
     origCache[file] = execFileSync('git', ['show', `${BASE_REV}:${REL_DIR}/${file}`], {
@@ -47,13 +48,14 @@ function origSource(file: string): string {
       maxBuffer: 16 * 1024 * 1024,
     });
   }
+
   return origCache[file];
 }
 
 function assertOriginalIntact(): void {
   for (const [file, prefix] of Object.entries(ORIG_SHA)) {
     const full = crypto.createHash('sha256').update(origSource(file)).digest('hex');
-    assert.equal(full.slice(0, 16), prefix, `A 侧 ${file} 的 sha256 与冻结值不符，A/B 对照失效`);
+    assert.equal(full, prefix, `A 侧 ${file} 的 sha256 与冻结值不符，A/B 对照失效`);
   }
 }
 
@@ -94,16 +96,19 @@ function makeLoader(variant: 'orig' | 'current') {
       variant === 'orig'
         ? (transformSync(origSource(rel), { ...babelOpts, filename }) as { code: string }).code
         : (transformFileSync(filename, babelOpts) as { code: string }).code;
+
     const req = (r: string) => {
       if (r.startsWith('./')) {
         // 同目录的运行时模块（action.ts）按同 variant 加载；types.ts 是纯类型，替身即可
         if (r === './types') return {};
         return load(`${r.slice(2)}.ts`);
       }
+
       if (r in stubs) return stubs[r];
       if (r.endsWith('.less') || r.endsWith('.html')) return {};
       throw new Error(`spec 没给 ${r} 打桩（${variant}/${rel}）`);
     };
+
     new Function('module', 'exports', 'require', code)(moduleLike, moduleLike.exports, req);
     return moduleLike.exports as Record<string, any>;
   };
@@ -115,7 +120,9 @@ function makeLoader(variant: 'orig' | 'current') {
 
 let summarized = false;
 process.on('unhandledRejection', reason => {
-  realConsole.error(`未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`);
+  realConsole.error(
+    `未处理的 Promise 拒绝，判为失败：${reason instanceof Error ? reason.stack || reason.message : String(reason)}`,
+  );
   process.exitCode = 1;
 });
 process.on('uncaughtException', error => {
@@ -131,6 +138,7 @@ process.on('beforeExit', () => {
 
 let checks = 0;
 let failed = 0;
+
 function check(name: string, fn: () => void): void {
   checks += 1;
   try {
@@ -153,8 +161,10 @@ function firstDiff(a: unknown, b: unknown, at = '$'): string {
       const d = firstDiff(a[i], b[i], `${at}[${i}]`);
       if (d) return d;
     }
+
     return '';
   }
+
   if (a && b && typeof a === 'object') {
     const ka = Object.keys(a as object).sort();
     const kb = Object.keys(b as object).sort();
@@ -163,8 +173,10 @@ function firstDiff(a: unknown, b: unknown, at = '$'): string {
       const d = firstDiff((a as any)[k], (b as any)[k], `${at}.${k}`);
       if (d) return d;
     }
+
     return '';
   }
+
   return `${at}: ${JSON.stringify(a)} vs ${JSON.stringify(b)}`;
 }
 
@@ -207,7 +219,7 @@ const GROUPS = [
 const SCENARIOS: Scenario[] = [
   {
     name: '初始状态（未派发任何 action）：默认值形状',
-    run: (R, A) => {
+    run: R => {
       const s = R.default(undefined, { type: '@@INIT' });
       return { keys: Object.keys(s).sort(), value: s };
     },
@@ -241,7 +253,10 @@ const SCENARIOS: Scenario[] = [
       const s0 = R.default(undefined, { type: '@@INIT' });
       const payload = {
         license: { status: 2, id: 'lic-1', planType: 3 },
-        managers: [{ accountId: 'u1', avatar: 'https://a/1.png' }, { accountId: 'u2', avatar: 'https://a/2.png' }],
+        managers: [
+          { accountId: 'u1', avatar: 'https://a/1.png' },
+          { accountId: 'u2', avatar: 'https://a/2.png' },
+        ],
         fixAccount: { accountId: 'u9', fullName: '张三' },
         fixRemark: '维护中',
         fixed: true,
@@ -260,11 +275,17 @@ const SCENARIOS: Scenario[] = [
         pcDisplay: s1.pcDisplay,
         goodsId: s1.goodsId,
         debugRole: s1.debugRole,
-        deepEqual: JSON.stringify({
-          license: s1.license, managers: s1.managers, fixAccount: s1.fixAccount,
-          fixRemark: s1.fixRemark, fixed: s1.fixed, pcDisplay: s1.pcDisplay,
-          goodsId: s1.goodsId, debugRole: s1.debugRole,
-        }) === JSON.stringify(payload),
+        deepEqual:
+          JSON.stringify({
+            license: s1.license,
+            managers: s1.managers,
+            fixAccount: s1.fixAccount,
+            fixRemark: s1.fixRemark,
+            fixed: s1.fixed,
+            pcDisplay: s1.pcDisplay,
+            goodsId: s1.goodsId,
+            debugRole: s1.debugRole,
+          }) === JSON.stringify(payload),
         // 默认字段不被误伤
         iconColor: s1.iconColor,
         name: s1.name,
@@ -342,7 +363,10 @@ const SCENARIOS: Scenario[] = [
   {
     name: 'CLEAR_APP_DETAIL：回到默认值，且是**浅拷贝**而非默认对象本身',
     run: (R, A) => {
-      const dirty = R.default(R.default(undefined, { type: '@@INIT' }), A.syncAppDetail({ iconColor: '#123456', projectId: 'p9' }));
+      const dirty = R.default(
+        R.default(undefined, { type: '@@INIT' }),
+        A.syncAppDetail({ iconColor: '#123456', projectId: 'p9' }),
+      );
       const cleared = R.default(dirty, A.clearAppDetail());
       const def = R.default(undefined, { type: '@@INIT' });
       return {
@@ -367,7 +391,7 @@ const SCENARIOS: Scenario[] = [
   },
   {
     name: '未知 action：原样返回同一引用，且不新增字段',
-    run: (R, A) => {
+    run: R => {
       const s0 = R.default(undefined, { type: '@@INIT' });
       const same = R.default(s0, { type: 'SOME_UNRELATED_ACTION' });
       return { sameRef: same === s0, keys: Object.keys(same).sort(), value: same };
@@ -383,6 +407,36 @@ const SCENARIOS: Scenario[] = [
       s = R.default(s, A.setAppStatus(300016));
       s = R.default(s, A.syncAppDetail({ id: 'app-1', currentPcNaviStyle: 3, themeType: 'dark' }));
       return s;
+    },
+  },
+  {
+    name: '原解构默认值只处理undefined，null载荷保持null',
+    run: (R, A) => {
+      const state = R.default(undefined, { type: '@@INIT' });
+      return {
+        nullGroups: R.default(state, { type: A.UPDATE_APP_GROUP, appGroups: null }).appGroups,
+        nullStatus: R.default(state, { type: A.SET_APP_STATUS, status: null }).appStatus,
+      };
+    },
+  },
+  {
+    name: '局部同步显式undefined可覆盖全部五个默认字段',
+    run: (R, A) => {
+      const fields = ['iconColor', 'projectId', 'appGroups', 'appStatus', 'name'];
+      const state = R.default(undefined, { type: '@@INIT' });
+      const next = R.default(state, A.syncAppDetail(Object.fromEntries(fields.map(key => [key, undefined]))));
+      return fields.map(key => ({ key, own: Object.hasOwn(next, key), isUndefined: next[key] === undefined }));
+    },
+  },
+  {
+    name: '对象展开保留原型键为自有数据，不改变state原型',
+    run: (R, A) => {
+      const detail = JSON.parse('{"__proto__":{"notAStateField":true},"name":"App"}');
+      const state = R.default(undefined, A.syncAppDetail(detail));
+      return {
+        own: Object.hasOwn(state, '__proto__'),
+        plainPrototype: Object.getPrototypeOf(state) === Object.prototype,
+      };
     },
   },
   {
@@ -487,7 +541,10 @@ async function main(): Promise<void> {
     const s1 = CurrentReducer.default(
       s0,
       CurrentAction.syncAppDetail({
-        managers: [{ accountId: 'u1', avatar: 'a1' }, { accountId: 'u2', avatar: 'a2' }],
+        managers: [
+          { accountId: 'u1', avatar: 'a1' },
+          { accountId: 'u2', avatar: 'a2' },
+        ],
         fixAccount: { accountId: 'u9', fullName: '张三' },
       }),
     );
@@ -522,8 +579,9 @@ async function main(): Promise<void> {
     process.exitCode = 1;
     return;
   }
+
   realConsole.log(
-    `PageHeader/redux 行为规格通过：${checks} 项（${SCENARIOS.length} 个历史 A/B 场景 + 5 条绝对断言）`,
+    `PageHeader/redux 行为规格通过：${checks} 项（${SCENARIOS.length} 个历史 A/B 场景 + ${checks - SCENARIOS.length} 条绝对断言）`,
   );
 }
 

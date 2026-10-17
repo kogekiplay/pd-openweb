@@ -6,14 +6,15 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Button, Checkbox, Dialog, Icon, LoadDiv, Menu, MenuItem, Support } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { AppSectionEntry, AppSectionView } from 'src/pages/PageHeader/redux/types';
 import { DEFAULT_CONFIG } from 'src/pages/widgetConfig/config/widget.js';
 import { canSetAsTitle } from 'src/pages/widgetConfig/util';
 import type { RootState } from 'src/redux/types';
+import type { RecordRow } from 'src/utils/controlTypes';
 import { FILEDS_TYPE_INFO } from '../util';
 import ExcelControlSetting from './ExcelControlSetting';
 import WorksheetItem from './WorksheetItem';
 import './index.less';
-import type { RecordRow } from 'src/utils/controlTypes';
 
 const ImportLoadingWrap = styled.div`
   position: absolute;
@@ -25,12 +26,12 @@ const ImportLoadingWrap = styled.div`
   background: rgba(255, 255, 255, 0.5);
 `;
 
-const getWorksheetList = (list = []) => {
-  const filterFn = ({ workSheetInfo = [] } = {}) => workSheetInfo.filter(i => i.type === 0);
+const getWorksheetList = (list: AppSectionView[] = []) => {
+  const filterFn = ({ workSheetInfo = [] }: AppSectionView = {}) => workSheetInfo.filter(i => i.type === 0);
 
   return _.reduce(
     list,
-    (total, item) => {
+    (total: AppSectionEntry[], item) => {
       total.push(...filterFn(item));
 
       if (item.childSections && item.childSections.length > 0) {
@@ -490,11 +491,15 @@ let SetImportExcelCreateWorksheetOrApp = class SetImportExcelCreateWorksheetOrAp
                       }}
                     >
                       {rows.length
-                        ? rows
-                            .slice(0, 11)
-                            .map((v, index) =>
-                              v.rowNumber === 0 ? '' : <Option key={index} value={v.rowNumber}>{_l('第%0行', v.rowNumber)}</Option>,
-                            )
+                        ? rows.slice(0, 11).map((v, index) =>
+                            v.rowNumber === 0 ? (
+                              ''
+                            ) : (
+                              <Option key={index} value={v.rowNumber}>
+                                {_l('第%0行', v.rowNumber)}
+                              </Option>
+                            ),
+                          )
                         : ''}
                     </Select>
                     <Tooltip

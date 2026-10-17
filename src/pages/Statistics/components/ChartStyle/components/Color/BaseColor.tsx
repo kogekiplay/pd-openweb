@@ -82,8 +82,10 @@ export default class BaseColor extends Component<any, any> {
         }
       } else {
         const themeColor = _.get(store.getState(), 'appPkg.iconColor');
-        const adaptThemeColors = this.chartColors.filter(item =>
-          (item.themeColors || []).map(n => n.toLocaleUpperCase()).includes(themeColor.toLocaleUpperCase()),
+        const adaptThemeColors = this.chartColors.filter(
+          item =>
+            themeColor !== undefined &&
+            (item.themeColors || []).map(n => n.toLocaleUpperCase()).includes(themeColor.toLocaleUpperCase()),
         );
         const { colors } =
           _.find(this.chartColors.concat({ ...adaptThemeColors[0], id: 'adaptThemeColor' }), { id: colorGroupId }) ||
@@ -220,8 +222,10 @@ export default class BaseColor extends Component<any, any> {
     const { type, customColors, controlColors } = this.state;
     const isOptionColor = !_.isEmpty(controlColors);
     const themeColor = _.get(store.getState(), 'appPkg.iconColor');
-    const adaptThemeColors = this.chartColors.filter(item =>
-      (item.themeColors || []).map(n => n.toLocaleUpperCase()).includes(themeColor.toLocaleUpperCase()),
+    const adaptThemeColors = this.chartColors.filter(
+      item =>
+        themeColor !== undefined &&
+        (item.themeColors || []).map(n => n.toLocaleUpperCase()).includes(themeColor.toLocaleUpperCase()),
     );
     const adaptThemeId = adaptThemeColors.map(item => item.id);
     return (
