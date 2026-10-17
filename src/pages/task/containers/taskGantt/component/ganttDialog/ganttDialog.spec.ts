@@ -95,7 +95,11 @@ class FakeComponent {
   props: Record<string, any>;
   state: Record<string, any> = {};
   constructor(props: Record<string, any>) {
-    this.props = props || {};
+    // 真实 React 会在构造前把 defaultProps 合并进来（defaults 在下、传入值在上）。
+    // 替身必须照做：否则"未传可选 prop"的场景会得到与生产不同的 props，
+    // 把"类型上必须写 ?."误测成"行为变化"。
+    const defaults = (this.constructor as unknown as { defaultProps?: Record<string, unknown> }).defaultProps || {};
+    this.props = { ...defaults, ...(props || {}) };
   }
   setState(update: Record<string, any>, cb?: () => void) {
     this.state = { ...this.state, ...update };
@@ -339,6 +343,22 @@ interface Deps {
   LoadDiv: unknown;
   TaskDetail: unknown;
 }
+
+/**
+ * 把 API 替身做成"同步 thenable"：产品代码用 `.then(...)` 取结果，
+ * 同步 thenable 让这条异步路径在规格里可确定性驱动（不依赖真实事件循环）。
+ */
+const syncApi = (payload: unknown) => ({
+  __esModule: true,
+  default: {
+    getTaskStaticGanttChart: () => ({
+      then: (onFulfilled: (value: unknown) => unknown) => {
+        onFulfilled(payload);
+        return { catch: () => {} };
+      },
+    }),
+  },
+});
 
 /** jQuery 替身：链式返回自身，附带可控的 width/height/find/clone/css */
 const jqueryStub = (_selector: string) => {
@@ -709,6 +729,111 @@ function probes(): Probe[] {
     },
 
     {
+      name: '⑧b getData 错误分支（status:false → loading/refreshLoading 关闭并记录 errorMsg）',
+      overrides: {
+        'src/api/taskCenter': syncApi({ status: false, error: { msg: '拉取失败' } }),
+      },
+      run: m => {
+        const dialog = new m.GanttDialog({ folderID: 'f1' });
+        dialog.getData();
+        return {
+          loading: dialog.state.loading,
+          refreshLoading: dialog.state.refreshLoading,
+          errorMsg: dialog.state.errorMsg,
+          data: dialog.state.data,
+          rendered: (() => {
+            try {
+              return fingerprint(dialog.render()) === null ? 'null' : 'ok';
+            } catch {
+              return '抛错';
+            }
+          })(),
+        };
+      },
+    },
+
+    {
+      name: '⑧c getData 正常分支（数组任务 → childrenVisible 置位、时间范围外扩、名称写入）',
+      overrides: {
+        'src/api/taskCenter': syncApi({
+          status: true,
+          data: {
+            taskData: [
+              { taskID: 'a', taskName: 'A', child: [{ taskID: 'a1', taskName: 'A1' }] },
+              { taskID: 'b', taskName: 'B' },
+            ],
+            minStartTime: '2026-10-10 00:00:00',
+            maxCompleteTime: '2026-10-20 00:00:00',
+            folderName: '项目甲',
+          },
+        }),
+      },
+      run: m => {
+        const dialog = new m.GanttDialog({ folderID: 'f1' });
+        dialog.getData();
+        return {
+          loading: dialog.state.loading,
+          name: dialog.state.name,
+          dataShape: (dialog.state.data || []).map((t: any) => ({
+            taskID: t.taskID,
+            childrenVisible: t.childrenVisible ?? null,
+            childCount: (t.child || []).length,
+            childVisible: t.child && t.child[0] ? (t.child[0].childrenVisible ?? null) : null,
+          })),
+          beginTime: String(dialog.state.beginTime?.format?.('YYYY-MM-DD') ?? dialog.state.beginTime),
+          endTime: String(dialog.state.endTime?.format?.('YYYY-MM-DD') ?? dialog.state.endTime),
+        };
+      },
+    },
+
+    {
+      name: '⑧d 弹窗级任务展开/收起（toggleTask 深拷贝后写回 state）',
+      run: m => {
+        const dialog = new m.GanttDialog({ folderID: 'f1' });
+        const original = [{ taskID: 'a', taskName: 'A', childrenVisible: true, child: [{ taskID: 'a1', taskName: 'A1', childrenVisible: false }] }];
+        dialog.state = { ...dialog.state, data: original };
+        dialog.toggleTask([0]);
+        const afterTop = { state: dialog.state.data[0].childrenVisible, original: original[0].childrenVisible };
+        dialog.toggleTask([0, 0]);
+        const afterChild = {
+          state: dialog.state.data[0].child[0].childrenVisible,
+          original: original[0].child[0].childrenVisible,
+        };
+        return { afterTop, afterChild, stateIsSameObjectAsOriginal: dialog.state.data === original };
+      },
+    },
+
+    {
+      name: '⑧e 切换粒度（switchDisplayType 重算时间范围）',
+      run: m => {
+        const dialog = new m.GanttDialog({ folderID: 'f1' });
+        // switchDisplayType 从共享 config 读取未调整的起止时间，先按原实现的方式写入
+        config.beginTime = moment('2026-10-10 00:00:00');
+        config.endTime = moment('2026-10-20 00:00:00');
+        const out: Record<string, unknown> = {};
+        for (const type of ['day', 'week', 'month']) {
+          dialog.switchDisplayType(type as never);
+          out[type] = {
+            stateType: dialog.state.type,
+            begin: String(dialog.state.beginTime?.format?.('YYYY-MM-DD') ?? dialog.state.beginTime),
+            end: String(dialog.state.endTime?.format?.('YYYY-MM-DD') ?? dialog.state.endTime),
+          };
+        }
+        return out;
+      },
+    },
+
+    {
+      name: '⑧f 显示详情（showDetail 写入 taskID 并打开详情）',
+      run: m => {
+        const dialog = new m.GanttDialog({ folderID: 'f1' });
+        const before = { taskID: dialog.state.taskID, visible: dialog.state.taskDetailVisible };
+        dialog.showDetail('task-42');
+        return { before, after: { taskID: dialog.state.taskID, visible: dialog.state.taskDetailVisible } };
+      },
+    },
+
+    {
       name: '⑨ 关闭弹窗（closeLayer 收到 false）',
       run: m => {
         const calls: boolean[] = [];
@@ -743,10 +868,11 @@ const abResults: { name: string; same: boolean; orig: unknown; current: unknown 
 for (const probe of probes()) {
   check(probe.name, () => {
     // globals（config.scrollingEle 等）在两侧各重置一次，保证起点一致
+    const overrides = probe.overrides || {};
     config.scrollingEle = '';
-    const origValue = probe.run(loadAll('orig', deps), deps);
+    const origValue = probe.run(loadAll('orig', deps, overrides), deps);
     config.scrollingEle = '';
-    const currentValue = probe.run(loadAll('current', deps), deps);
+    const currentValue = probe.run(loadAll('current', deps, overrides), deps);
 
     const same = JSON.stringify(origValue) === JSON.stringify(currentValue);
     abResults.push({ name: probe.name, same, orig: origValue, current: currentValue });
@@ -811,8 +937,15 @@ const BEHAVIOUR_CHANGES: { name: string; run: (m: any) => unknown; loadOverrides
       return { dataIsUndefined, renderThrew, dataKind: Array.isArray(dialog.state.data) ? 'array' : typeof dialog.state.data };
     },
   },
+];
+
+/**
+ * 已恢复原行为、因此**不再**属于行为变化的项：显式断言两版一致，
+ * 防止后续改动又把 onCancel 接上（那是独立的行为修复，应单独提交）。
+ */
+const RESTORED_BEHAVIOUR: { name: string; run: (m: any) => unknown }[] = [
   {
-    name: 'closeLayer 缺失时 closeLayer() 是否抛错',
+    name: 'closeLayer 缺失时不抛错（defaultProps 会补上，两版一致）',
     run: m => {
       const bare = new m.GanttDialog({ folderID: 'f1' });
       let threw = false;
@@ -824,19 +957,18 @@ const BEHAVIOUR_CHANGES: { name: string; run: (m: any) => unknown; loadOverrides
       return { threw };
     },
   },
-];
-
-/**
- * 已恢复原行为、因此**不再**属于行为变化的项：显式断言两版一致，
- * 防止后续改动又把 onCancel 接上（那是独立的行为修复，应单独提交）。
- */
-const RESTORED_BEHAVIOUR: { name: string; run: (m: any) => unknown }[] = [
   {
-    name: 'DialogBase 不传 onCancel（原实现该 prop 值就是 undefined）',
+    name: 'DialogBase 的 onCancel 对 DialogBase 可观测值一致（原实现传的是显式 undefined）',
+    // 原实现写 onCancel={this.handleClose}，而 handleClose 不存在 → 传给 createElement 的
+    // 是 { onCancel: undefined }（键在、值为 undefined）。当前实现改为完全不传该 prop。
+    // 两者对 DialogBase 的可观测结果相同：读 this.props.onCancel 都是 undefined，
+    // 因此不会因此改变关闭行为。这里比对"可观测值"而不是"键是否存在"。
     run: m => {
-      const dialog = new m.GanttDialog({ folderID: 'f1' });
+      const calls: boolean[] = [];
+      const dialog = new m.GanttDialog({ folderID: 'f1', closeLayer: (v: boolean) => calls.push(v) });
       const base = byType(dialog.render(), deps.DialogBase)[0];
-      return { hasOnCancelProp: base ? Object.prototype.hasOwnProperty.call(base.props, 'onCancel') : null };
+      const cancel = base?.props?.onCancel;
+      return { typeofOnCancel: typeof cancel, isUndefined: cancel === undefined, calls };
     },
   },
 ];
@@ -860,6 +992,24 @@ for (const item of BEHAVIOUR_CHANGES) {
   });
 }
 
+/* ────────────────────────── 已确认等价（曾被误判为行为变化） ────────────────────────── */
+
+const restored: { name: string; orig: unknown; current: unknown }[] = [];
+for (const item of RESTORED_BEHAVIOUR) {
+  check(`已确认等价：${item.name}`, () => {
+    config.scrollingEle = '';
+    const origValue = item.run(loadAll('orig', deps));
+    config.scrollingEle = '';
+    const currentValue = item.run(loadAll('current', deps));
+    restored.push({ name: item.name, orig: origValue, current: currentValue });
+    assert.equal(
+      JSON.stringify(origValue),
+      JSON.stringify(currentValue),
+      `两版应一致（原 ${JSON.stringify(origValue)} / 当前 ${JSON.stringify(currentValue)}）`,
+    );
+  });
+}
+
 /* ────────────────────────── 汇总 ────────────────────────── */
 
 if (process.env['GANTT_AB_REPORT']) {
@@ -870,6 +1020,7 @@ if (process.env['GANTT_AB_REPORT']) {
         baseRevision: BASE_REV,
         ab: abResults.map(r => ({ name: r.name, same: r.same })),
         changes: changes.map(c => ({ name: c.name, differs: c.differs, orig: c.orig, current: c.current })),
+        restoredEquivalent: restored.map(r => ({ name: r.name, orig: r.orig, current: r.current })),
       },
       null,
       2,
@@ -884,7 +1035,8 @@ if (failures.length) {
 
 console.log(
   `ganttDialog 行为规格通过：${checks} 项；历史 A/B 对照 ${abResults.filter(r => r.same).length}/${abResults.length} 个场景与类型批次前实现完全一致；` +
-    `另标记行为变化 ${changes.filter(c => c.differs).length}/${changes.length} 项（与类型等价性分离）`,
+    `另标记行为变化 ${changes.filter(c => c.differs).length}/${changes.length} 项（与类型等价性分离）；` +
+    `已确认等价（曾误判为变化）${restored.length} 项`,
 );
 for (const c of changes) {
   console.log(`  · 行为变化：${c.name} → 原实现 ${JSON.stringify(c.orig)} / 当前 ${JSON.stringify(c.current)}`);
