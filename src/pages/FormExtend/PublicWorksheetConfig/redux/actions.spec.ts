@@ -707,7 +707,21 @@ async function main(): Promise<void> {
     async function run(variant: 'orig' | 'current') {
       const h = makeHarness(variant, BASE_STATE);
       h.actions.loadPublicWorksheet({ worksheetId: 'w1' })(h.dispatch, h.getState);
+
+      // 【刻意覆盖参数级路径】`isSave=false` 不调 API，抓不到"上报字段被改错"这类差异；
+      // 因此序列里加入 isSave=true、updateWorksheetInfo（走 changeKeyToServer）与
+      // updateSettings（走 saveSetting 参数拼装）。
       h.actions.changeControls([{ controlId: 'c1', col: 1, row: 2 }], false)(h.dispatch, h.getState);
+      h.actions.changeControls(
+        [{ controlId: 'c1', col: 1, row: 2, size: 2, advancedSetting: { x: 1 } }],
+        true,
+      )(h.dispatch, h.getState);
+      h.actions.updateWorksheetInfo({
+        coverUrl: 'https://cdn/cover.png?q=1',
+        themeIndex: 7,
+        visibleType: 2,
+      })(h.dispatch, h.getState);
+      h.actions.updateSettings({ needCaptcha: true, receipt: 'r1' })(h.dispatch, h.getState);
       h.actions.hideControl('c2')(h.dispatch, h.getState);
 
       // 结算第一个（load）与第二个（saveWorksheet）受控 Promise
@@ -716,8 +730,18 @@ async function main(): Promise<void> {
       await flush();
 
       return {
-        apiCalls: h.apiCalls.map(c => ({ api: c.api, method: c.method })),
+        /**
+         * 【连参数一起深比较】先前只比 `{api, method}`，于是"参数被改错"这类差异看不见。
+         * `args` 是普通对象（不含 Promise/函数），可以安全参与 `deepEqual`；
+         * lodash 的 `deepEqual` 会保留 `undefined` 键，正是本模块 `|| ''` / `_.assign`
+         * 语义所在的位置。
+         */
+        apiCalls: h.apiCalls.map(c => ({ api: c.api, method: c.method, args: c.args })),
         dispatchTypes: h.dispatched.map((a: any) => (a && a.type) || 'thunk'),
+        /** dispatch 的动作载荷也一起比较（例如 controls 数组内容） */
+        dispatchedPayloads: h.dispatched.map((a: any) =>
+          a && a.type ? { type: a.type, payload: { ...a, type: undefined } } : null,
+        ),
         alerts: alerts.map(a => ({ message: a.message, type: a.type })),
       };
     }
