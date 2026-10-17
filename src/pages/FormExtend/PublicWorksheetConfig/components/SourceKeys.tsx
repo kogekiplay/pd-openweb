@@ -55,8 +55,8 @@ export default function ({
   pageConfigs = '[]',
   onDelete = () => {},
   handleUpdateExpandDatas = () => {},
-}) {
-  const [open, setOpen] = useState();
+}: SourceKeysProps) {
+  const [open, setOpen] = useState<string>();
 
   const getThemeBgColor = (key = '') => {
     const config = readPageConfig(getPageConfig(pageConfigs, key));

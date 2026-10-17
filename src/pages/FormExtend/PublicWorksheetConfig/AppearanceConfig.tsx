@@ -177,7 +177,7 @@ interface CoverUploader {
   disableBrowse(disabled?: boolean): void;
 }
 
-class AppearanceConfig extends React.Component<any, any> {
+class AppearanceConfig extends React.Component<AppearanceConfigProps, AppearanceConfigState> {
   static override propTypes = {
     open: PropTypes.bool,
     worksheetInfo: PropTypes.shape({}),
@@ -189,7 +189,7 @@ class AppearanceConfig extends React.Component<any, any> {
     saveExtendDatas: PropTypes.func,
   };
 
-  constructor(props) {
+  constructor(props: AppearanceConfigProps) {
     super(props);
     const { projectId } = props.worksheetInfo;
     const COLORS = getThemeColors(projectId!);
