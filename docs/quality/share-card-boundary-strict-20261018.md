@@ -17,7 +17,7 @@ ShareCardSet 原 forwardRef 未声明 props/ref，状态从空对象推断，网
 - 加载/保存网络拒绝均有旧源码非零退出与新源码零退出的独立进程反例；移除响应扩展复制的内存变异被断言拒绝，产品源码未变。旧 PublicConfig 合同检查改为冻结历史 Git 源 SHA 后同时执行新旧真实方法，未随意更新 hash；既有 14 组父组件、24 组公开配置对照继续通过。
 - 完整真实根程序的私有探针证明实际组件 props、ref、输入回调、控件 ID、已知状态字段非 any，响应入参和未知扩展为 unknown，父 ref 引用叶合同；14 个非法值/键/ref/输入/元数据用法真实编译拒绝，fixture 零诊断。测试和装载器不增加产品 strict-clean 分母。
 - strict **51,003→50,967**，逐文件/错误码无新增。移除 ShareCardSet 的 TS2339×25/TS7006×8、Input 的 TS7006×1、WeChatEnhance 与 Share 父各 TS2322×1。fast **8,470→8,443**、keys **2,276→2,273**；debt **3,080→3,077**，仅移出两个真实分享卡片组件与 WeChatEnhance，clean **1,698/4,775**。新增产品文件仅 value.ts。baseline SHA256 **579b48089978a47c822ccfde1c4eb9ebec65b9a453f2a06bfcea74b0a91cd3b5**，strict-debt SHA256 **cf3ce941e73181a316a2c56b94383e58a3ea4c0b2afe98d38ff3b3bdfedeab8f**，集合与逐项计数只收紧。
-- 正式 release **269/269**、全部前置门禁与四项编译通过，耗时 1m；颜色/圆角/排版/JSX key/四产品文件 ESLint 零错误、runtime **1,095 JS/387 CSS chunks** 和 publish 通过。原有仅依赖 type 的 useEffect 警告在新旧代码各一条，未改请求触发条件或新增禁用规则。原 subPathNavigation 隔离 known-failure 保留，release 与 pre-push 顺序执行。首轮夹具路径、未覆盖 helper 分支和图标测试输入问题已纠正，后续才计入通过，失败日志保留。
+- 正式 release **269/269**、全部前置门禁与四项编译通过，耗时 1m；颜色/圆角/排版/JSX key/四产品文件 ESLint 零错误、runtime **1,095 JS/387 CSS chunks** 和 publish 通过。原有仅依赖 type 的 useEffect 警告在新旧代码各一条，未改请求触发条件或新增禁用规则。原 subPathNavigation 隔离 known-failure 保留，release 与 pre-push 顺序执行。首轮夹具路径、未覆盖 helper 分支和图标测试输入问题已纠正，后续才计入通过；私有编译探针初次未用类型导入的诊断已修正，原编译日志保留。
 
 ## 候选与生产状态
 
