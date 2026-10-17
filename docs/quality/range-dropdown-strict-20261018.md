@@ -14,7 +14,7 @@ safeLocalStorageSetItem 的声明补齐实际调用方传入的 number/undefined
 
 strict **50,856→50,808**，逐文件/错误码无新增。两个下拉分别12/8条清零，其余28条来自实际类型传播；fast **8,416/2,269 keys** 不变。baseline 字节保持，SHA256 **b4e4bc266026934be8cc2df4301d2bfd42b6490236cd90e87f97e961b5bff978**。debt **3,072→3,070**，仅移出两个下拉；新增真实产品 rangeValues.ts，clean **1,707/4,777**。strict-debt SHA256 **7d3bf46c2ff5360aa9bee7659cd924df994091b2459cf04957311abf13e8789f**。
 
-正式 release **273/273**、工具/后缀/语法/fast/strict 门禁及四项编译通过；颜色、圆角、排版、JSX key 通过，runtime **1,095 JS/387 CSS chunks**、publish 成功。核心三个下拉产品文件 ESLint 零错误；直接消费方七条原有 hook 警告保留。ViewItems 原五条导入排版错误减为三条，保留原运行时 import 顺序以保证逐字节输出相同，没有新增禁用或把历史格式错误计为零。原 subPathNavigation 隔离 known-failure 保留；release 与 pre-push 顺序执行。
+正式 release **273/273**、工具/后缀/语法/fast/strict 门禁及四项编译通过；颜色、圆角、排版、JSX key 通过，runtime **1,095 JS/387 CSS chunks**、publish 成功。核心三个下拉产品文件 ESLint 零错误；直接消费方七条原有 hook 警告保留。ViewItems 原五条导入排版错误减为三条，保留原运行时 import 顺序以保证逐字节输出相同，没有新增禁用或把历史格式错误计为零。原 subPathNavigation 隔离 known-failure 保留；release 与 pre-push 顺序执行；普通 main 推送的 pre-push 已以273/273规格、工具/后缀/语法/非增量fast通过，未跳过检查。
 
 冻结候选 **9cd5c15d0885a92ba610a45b5fe6e1dfe7b135fc**，**尚未生产部署**。入口 SHA256 **2df463929221e34a498b5d9dff0a96ad9e059f1bc73cc81ceedbda0b98d22285**，包 SHA256 **7dcfd9963e7fec9e12e33d8f7921955870bab98043c199abfce9c6e4862ffbba**，17,098文件/3元数据逐一回读校验，包261,561,084 bytes。冻结目录 `/private/tmp/hap-range-dropdown-9cd5c15d08-artifact-20261018/`，编译、类型、行为、原始失败及修正证据 `/private/tmp/hap-range-dropdown-20261018/`。本机构建 publish 只整理产物，不表示生产发布。
 
