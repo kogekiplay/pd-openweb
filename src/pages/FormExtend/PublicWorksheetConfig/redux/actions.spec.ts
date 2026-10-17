@@ -818,6 +818,43 @@ async function main(): Promise<void> {
     assert.equal(currentSig, origSig, `当前签名必须与基线一致（防再次丢失默认值）\n  基线：${origSig}\n  当前：${currentSig}`);
   });
 
+  await check('API 替身的方法名与真实 src/api 一致（防替身凭空发明方法）', async () => {
+    /**
+     * 【为什么要这一条】替身是手写的；若方法名与真实 `src/api/*` 不一致，
+     * 规格测的就是一个不存在的接口，属于**假验证**。
+     * 这里直接从真实 API 模块抽取方法名做核对，而不是凭记忆断言。
+     */
+    const readApi = (rel: string): string[] => {
+      const src = fs.readFileSync(path.join(ROOT, rel), 'utf8');
+      return [...src.matchAll(/([a-zA-Z][\w]*)\s*:\s*function\s*\(/g)].map(m => m[1]);
+    };
+
+    const pwMethods = new Set(readApi('src/api/publicWorksheet.ts'));
+    const formMethods = new Set(readApi('src/api/form.ts'));
+
+    // 我在 makeHarness 里挂的替身方法
+    const stubbed = [
+      'saveSetting',
+      'saveWorksheet',
+      'refreshPublicWorksheetUrl',
+      'reset',
+      'getPublicWorksheetInfo',
+      'addTextControl',
+    ];
+    for (const name of stubbed) {
+      assert.ok(
+        pwMethods.has(name) || formMethods.has(name),
+        `替身方法 ${name} 在真实 src/api 中不存在（替身必须对应真实接口）`,
+      );
+    }
+
+    // 反向：actions.ts 真正调用的 API 方法必须都被替身覆盖
+    const actionSource = fs.readFileSync(path.join(DIR, 'actions.ts'), 'utf8');
+    const used = [...actionSource.matchAll(/(?:publicWorksheetAjax|formAjax)\.([a-zA-Z]\w*)\(/g)].map(m => m[1]);
+    const uncovered = [...new Set(used)].filter(name => !stubbed.includes(name));
+    assert.deepEqual(uncovered, [], `actions.ts 调用了未被打桩的 API 方法：${uncovered.join(',')}`);
+  });
+
   /* ── 8a.【保留旧基线证据】子进程：旧路径未处理拒绝 → 非零退出；修复后 → 0 ── */
 
   await check('子进程证据：基线路径因未处理拒绝非零退出，修复后为 0（不全局吞掉拒绝）', async () => {
