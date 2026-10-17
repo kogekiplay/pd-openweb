@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';
 import createTask from 'src/components/createTask/load';
-import type { RootState } from 'src/redux/types';
+import type { AppDispatch, RootState } from 'src/redux/types';
 import GanttDialog from '../../component/ganttDialog';
 import config from '../../config/config';
 import {
@@ -20,8 +20,32 @@ import {
 import './folderToolbar.less';
 
 const ClickAwayable = ClickAway;
-class FolderToolbar extends Component<any, any> {
-  constructor(props) {
+
+/** connect 注入的状态片段：直接取自 RootState，避免另写一份会漂移的形状 */
+type FolderToolbarStateProps = Pick<RootState['task'], 'stateConfig' | 'taskConfig'>;
+
+/** 组件自身需要的 props（由父组件 taskGantt.tsx 传入） */
+interface FolderToolbarOwnProps {
+  showStaticGantt?: boolean | undefined;
+}
+
+/** connect 默认注入 dispatch */
+interface FolderToolbarDispatchProps {
+  dispatch: AppDispatch;
+}
+
+type FolderToolbarProps = FolderToolbarStateProps & FolderToolbarOwnProps & FolderToolbarDispatchProps;
+
+interface FolderToolbarState {
+  ganttDialogVisible: boolean;
+  showOperator: boolean;
+  showLevel: boolean;
+  /** 层级浮层的 left 偏移；未打开过时为 undefined（浮层此时不渲染） */
+  taskLevelOffsetLeft?: number | undefined;
+}
+
+class FolderToolbar extends Component<FolderToolbarProps, FolderToolbarState> {
+  constructor(props: FolderToolbarProps) {
     super(props);
 
     this.state = {
@@ -35,7 +59,7 @@ class FolderToolbar extends Component<any, any> {
    * 返回当前状态所对应的名称
    */
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: FolderToolbarProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(this.props.taskConfig, prevProps.taskConfig)) {
         this.setState({
@@ -94,7 +118,7 @@ class FolderToolbar extends Component<any, any> {
    * 显示子任务层级
    * @param  {object} evt
    */
-  showTaskLevel(evt) {
+  showTaskLevel(evt: { currentTarget: HTMLElement }) {
     this.setState({
       showLevel: !this.state.showLevel,
       taskLevelOffsetLeft: evt.currentTarget.offsetLeft,
