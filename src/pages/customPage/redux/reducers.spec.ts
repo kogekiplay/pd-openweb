@@ -710,16 +710,16 @@ function main(): void {
   });
 
   /**
-   * 【历史契约记录 —— 已知缺陷，不在此修复】
-   * `DELETE_LINKAGE_FILTERS_GROUP` 分支里写的是 `delete state.linkageFiltersGroup[value]`，
-   * 即**直接就地修改旧 state**。这是 Redux 不可变更新缺陷（RTK 的不可变中间件会在派发时报
-   * "A state mutation was detected inside a dispatch"）。
+   * `DELETE_LINKAGE_FILTERS_GROUP` 的不可变性契约。
    *
-   * 按 lead 决定：类型批次**先与历史 A/B 保持一致**、把该副作用如实记录下来，
-   * 修复放到**独立 fix 提交**（见 `reduceIndependence.spec.ts` 里的真实 RTK 反例），
-   * 不在类型改造里顺手改行为。
+   * 【历史】修复前该 case 直接 `delete state.linkageFiltersGroup[value]`，会就地修改旧 state
+   * （Redux 不可变更新缺陷）。类型批次曾把它作为"历史契约"固定下来（提交 `150b65996`），
+   * 随后由**独立的 fix 提交**改为不可变删除（`{ [value]: _removed, ...rest }`）。
+   *
+   * 现在这条断言锁定**修复后**的契约：旧 state 完整保留、新 state 移除该键。
+   * 真实 RTK 不可变中间件下的失败/通过对照见 `reduceIndependence.spec.ts`。
    */
-  check('历史契约：DELETE_LINKAGE_FILTERS_GROUP 会就地修改旧 state（已知缺陷，待独立 fix）', () => {
+  check('不可变契约：DELETE_LINKAGE_FILTERS_GROUP 不修改旧 state，新 state 移除该键', () => {
     const load = makeLoader('current');
     const R = load('reducers.ts').default;
     const A = load('action.ts');
@@ -731,15 +731,16 @@ function main(): void {
     const oldGroupRef = s.linkageFiltersGroup;
     const next = R(s, A.deleteLinkageFiltersGroup({ value: 'gone' }));
 
-    // 缺陷本体：旧 state 上的键被删掉了（旧对象被就地修改）
+    // 旧 state 上的键必须还在（不再被就地删除）
     assert.equal(
       Object.prototype.hasOwnProperty.call(oldGroupRef, 'gone'),
-      false,
-      '旧 state 的 linkageFiltersGroup 被就地修改（本缺陷将随独立 fix 修复；此处锁定历史行为）',
+      true,
+      '旧 state 的 linkageFiltersGroup 不应被就地修改',
     );
-    // 新 state 的该键确实被移除，且仍保留其它键
+    assert.deepEqual(Object.keys(oldGroupRef).sort(), ['gone', 'keep'], '旧对象应保持两个键');
+    // 新 state 移除该键、保留其它键
     assert.deepEqual(Object.keys(next.linkageFiltersGroup).sort(), ['keep']);
-    // 新旧引用不同（因为它返回了 `{ ...state }` 新对象）
+    // 返回新对象
     assert.notEqual(next, s);
   });
 

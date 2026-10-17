@@ -463,12 +463,17 @@ export default function customPage(
         },
       };
     case DELETE_LINKAGE_FILTERS_GROUP:
-      delete state.linkageFiltersGroup[action.payload.value];
+      // 【行为修复：独立提交，不属于类型批次】
+      // 修复前是 `delete state.linkageFiltersGroup[value]` —— 直接就地改旧 state，
+      // 违反 Redux 不可变约定（RTK 的 immutable-state-invariant 中间件会在派发时抛
+      // "A state mutation was detected inside a dispatch"）。
+      // 这里改为用解构剔除该键、再构造新对象：旧 state 与旧对象都不再被改动。
+      // 语义保持：只移除 `payload.value` 对应的键，其余键原样保留。
+      const { [action.payload.value]: _removed, ...remainingGroups } = state.linkageFiltersGroup;
+
       return {
         ...state,
-        linkageFiltersGroup: {
-          ...state.linkageFiltersGroup,
-        },
+        linkageFiltersGroup: remainingGroups,
       };
     default:
       return state;
