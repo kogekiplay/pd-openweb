@@ -47,9 +47,6 @@ export type PublicWorksheetAction =
   | { type: 'WORKSHEET_HIDE_CONTROL'; controlId: HidedControlId }
   | { type: 'PUBLICWORKSHEET_CLEAR' };
 
-/** 所有动作的可取值，用于未知动作的兜底判断（保持原引用返回） */
-type ActionType = PublicWorksheetAction['type'];
-
 export function loading(state = true, action: PublicWorksheetAction): boolean {
   switch (action.type) {
     case 'PUBLICWORKSHEET_LOAD_SUCCESS':
@@ -190,6 +187,3 @@ export default combineReducers({
   controls,
   hidedControlIds,
 });
-
-/** 动作类型集合，供外部穷尽性检查使用 */
-export type PublicWorksheetActionType = ActionType;
