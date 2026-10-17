@@ -175,9 +175,33 @@ interface Scenario {
   run: (reducerMod: Record<string, any>, actionMod: Record<string, any>) => unknown;
 }
 
+/**
+ * 分组夹具刻意带上本轮新建模的字段：
+ * - 条目级 `status` / `navigateHide`（来自 `WorksheetMenuNode`，消费方真的会读）
+ * - 条目级 `workSheetId` / `type`
+ * - 嵌套 `childSections`（递归结构）
+ * 这样 `UPDATE_APP_GROUP` 的"原样保留"断言才覆盖到真实读取路径，而不是只测空壳。
+ */
 const GROUPS = [
-  { appSectionId: 's1', item: [{ workSheetId: 'w1', workSheetName: '表一' }], childSections: [] },
-  { appSectionId: 's2', workSheetInfo: [{ workSheetId: 'w2', name: '页二', type: 1 }] },
+  {
+    appSectionId: 's1',
+    item: [{ workSheetId: 'w1', workSheetName: '表一', status: 1, navigateHide: false, type: 1 }],
+    childSections: [
+      {
+        appSectionId: 's1-1',
+        workSheetInfo: [{ workSheetId: 'w1-1', name: '子页', status: 4, navigateHide: true }],
+      },
+    ],
+  },
+  {
+    appSectionId: 's2',
+    workSheetInfo: [
+      // status=1 会通过 [1,4].includes 且未隐藏 → 应被消费方保留
+      { workSheetId: 'w2', name: '页二', type: 1, status: 1, navigateHide: false },
+      // status=2 且 navigateHide=true → 应被消费方过滤掉
+      { workSheetId: 'w3', name: '页三', status: 2, navigateHide: true },
+    ],
+  },
 ];
 
 const SCENARIOS: Scenario[] = [
@@ -234,6 +258,30 @@ const SCENARIOS: Scenario[] = [
         sameArrayRef: s1.appGroups === GROUPS,
         firstSectionId: s1.appGroups[0]?.appSectionId ?? null,
         childHasWorkSheetInfo: Array.isArray(s1.appGroups[1]?.workSheetInfo),
+      };
+    },
+  },
+  {
+    name: 'UPDATE_APP_GROUP：条目级 status/navigateHide 与嵌套 childSections 原样保留',
+    run: (R, A) => {
+      const s0 = R.default(undefined, { type: '@@INIT' });
+      const s1 = R.default(s0, A.updateAppGroup(GROUPS));
+      const first = s1.appGroups[0];
+      const nested = first.childSections[0];
+      return {
+        // 条目级字段不得被抹平
+        itemStatus: first.item[0].status,
+        itemNavigateHide: first.item[0].navigateHide,
+        // 第二个分组的 workSheetInfo 两条都要在
+        wsCount: s1.appGroups[1].workSheetInfo.length,
+        wsStatuses: s1.appGroups[1].workSheetInfo.map(o => o.status),
+        wsNavigateHide: s1.appGroups[1].workSheetInfo.map(o => o.navigateHide),
+        // 嵌套 childSections 递归保留
+        childId: nested.appSectionId,
+        childWsStatus: nested.workSheetInfo[0].status,
+        childWsNavigateHide: nested.workSheetInfo[0].navigateHide,
+        // 深比较：整个数组结构与传入一致
+        deepEqual: JSON.stringify(s1.appGroups) === JSON.stringify(GROUPS),
       };
     },
   },
@@ -381,6 +429,21 @@ async function main(): Promise<void> {
     const merged = CurrentReducer.default(cleared, CurrentAction.syncAppDetail({ iconColor: '#abcdef' }));
     const again = CurrentReducer.default(merged, CurrentAction.clearAppDetail());
     assert.equal(again.iconColor, '#1677ff', '共享默认对象被污染了');
+  });
+
+  check('条目级字段可支撑消费方的过滤逻辑（模拟 AppGroup/index.tsx:106）', () => {
+    const s0 = CurrentReducer.default(undefined, { type: '@@INIT' });
+    const s1 = CurrentReducer.default(s0, CurrentAction.updateAppGroup(GROUPS));
+    // 消费方真实写法：[1,4].includes(o.status) && !o.navigateHide
+    const kept = s1.appGroups.map(section => ({
+      ...section,
+      workSheetInfo: (section.workSheetInfo || []).filter(o => [1, 4].includes(o.status) && !o.navigateHide),
+    }));
+    assert.deepEqual(
+      kept[1].workSheetInfo.map(o => o.workSheetId),
+      ['w2'],
+      'status=0 与 navigateHide=true 的两条都应被过滤掉，只剩 status=1 的 w2',
+    );
   });
 
   check('未知 action 必须原样返回同一引用', () => {
