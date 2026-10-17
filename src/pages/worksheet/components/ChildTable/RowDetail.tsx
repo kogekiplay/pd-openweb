@@ -163,6 +163,7 @@ export default class RowDetail extends React.Component<RowDetailProps, RowDetail
         onClose();
       }
     }
+
     return undefined;
   };
 
@@ -207,10 +208,13 @@ export default class RowDetail extends React.Component<RowDetailProps, RowDetail
           .map((c: FormControl) => ({
             ...c,
             value: (() => {
-              const value = c.controlId ? data[c.controlId] : undefined;
-              return _.includes([19, 23, 24], c.type) && value !== null && typeof value === 'object' && 'text' in value
-                ? value['text']
-                : value;
+              const value: unknown = c.controlId ? data[c.controlId] : undefined;
+
+              if (_.includes([19, 23, 24], c.type) && _.isObject(value)) {
+                return 'text' in value ? value['text'] : undefined;
+              }
+
+              return value;
             })(),
             count: c.controlId ? data[`rq${c.controlId}`] : undefined,
           }));

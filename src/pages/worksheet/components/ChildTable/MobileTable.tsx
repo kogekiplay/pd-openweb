@@ -159,7 +159,6 @@ export default function MobileTable(props: MobileTableProps) {
     submitChildTableCheckData = () => {},
     updateIsAddByLine = () => {},
   } = props;
-  const masterDataValue = typeof masterData === 'function' ? masterData() : masterData;
 
   const defaultMaxLength = 10;
   const [maxShowLength, setMaxShowLength] = useState(defaultMaxLength);
@@ -333,7 +332,7 @@ export default function MobileTable(props: MobileTableProps) {
                 sheetSwitchPermit={sheetSwitchPermit}
                 rules={rules}
                 projectId={projectId}
-                masterData={masterDataValue}
+                masterData={masterData}
                 onChange={(data: FormControl[], ids: string[]) => {
                   handleChangeFlattenRow(data, ids, item, customWidgetRefs.current[index]);
 
@@ -442,7 +441,7 @@ export default function MobileTable(props: MobileTableProps) {
                     rowHeight={30}
                     from={4}
                     mode="mobileSub"
-                    masterData={masterDataValue}
+                    masterData={masterData}
                     rowFormData={() =>
                       controls.map((c: FormControl) =>
                         Object.assign({}, c, { value: c.controlId ? row[c.controlId] : undefined }),
