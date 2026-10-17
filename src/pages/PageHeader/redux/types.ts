@@ -1,4 +1,44 @@
-import type { AppSection } from 'src/utils/appTypes';
+import type { AppSection, AppSectionItem } from 'src/utils/appTypes';
+import type { WorksheetMenuNode } from 'src/utils/worksheetTypes';
+
+/**
+ * 应用分组里单个工作表/页面条目。
+ *
+ * 【为什么要扩展 `AppSectionItem`】`appGroups` 的消费方会读条目上的
+ * `status` / `navigateHide`（`PageHeader/AppPkgHeader/AppGroup/index.tsx:106`：
+ * `[1, 4].includes(o.status) && !o.navigateHide`），而 `src/utils/appTypes.ts` 的
+ * `AppSectionItem` 没有声明这两个字段。
+ *
+ * 这里**不是凭用法猜形状**：`src/utils/worksheetTypes.ts` 的 `WorksheetMenuNode`
+ * 已经声明了 `status?: number`、`navigateHide?: boolean`、`workSheetId?: string`
+ * —— 正是缺的那几个，且它本身就是"导航菜单节点"的建模。所以直接复用它的字段，
+ * 与 `AppSectionItem` 合成条目类型。
+ */
+export interface AppSectionEntry extends AppSectionItem {
+  status?: number | undefined;
+  /** 该条目在当前角色下是否隐藏导航 */
+  navigateHide?: boolean | undefined;
+}
+
+/** 覆盖 `AppSection` 里会被读取到条目级字段的那几个数组 */
+export interface AppSectionView extends Omit<AppSection, 'item' | 'workSheetInfo' | 'childSections'> {
+  item?: AppSectionEntry[] | undefined;
+  workSheetInfo?: AppSectionEntry[] | undefined;
+  childSections?: AppSectionView[] | undefined;
+}
+
+/** 与 `WorksheetMenuNode` 的字段保持同源的编译期守卫（任一侧改名会在这里报错） */
+type _SectionEntryStatusMatchesMenuNode = AppSectionEntry['status'] extends WorksheetMenuNode['status']
+  ? true
+  : never;
+type _SectionEntryNavigateHideMatchesMenuNode = AppSectionEntry['navigateHide'] extends WorksheetMenuNode['navigateHide']
+  ? true
+  : never;
+export type SectionEntryMenuNodeParity = [
+  _SectionEntryStatusMatchesMenuNode,
+  _SectionEntryNavigateHideMatchesMenuNode,
+];
+
 
 /**
  * 应用详情（`PageHeader` 顶部栏共享的那份应用信息）。
@@ -45,16 +85,22 @@ export interface AppDetail {
   /** 工作流 Agent 特性开关，代码里以字符串 '1' 比较 */
   workflowAgentFeatureType?: string | undefined;
 
-  // ── 分组（复用仓内已应用/分组类型）──
-  appGroups?: AppSection[] | undefined;
+  // ── 分组（复用仓内已应用/分组类型，条目级补上被读取的 status/navigateHide）──
+  appGroups?: AppSectionView[] | undefined;
 
   // ── 真实存在但形状未建模：留 unknown，不放进索引签名 ──
   /** 授权/购买信息：字段取自真实读取点，见下方 AppLicense */
   license?: AppLicense | undefined;
   /** 管理员列表（消费方只判空/取长度，不读元素字段） */
   managers?: unknown[] | undefined;
-  /** 分组/区块数据：消费方只在未类型化的 props 里使用，形状未建模 */
-  sections?: unknown;
+  /**
+   * 分组/区块数据。
+   *
+   * 消费方确实按条目读字段：`AppGroup/index.tsx:93/101-109` 取 `sections` 后
+   * `.map(item => ({ ...item, workSheetInfo: item.workSheetInfo.filter(o => [1,4].includes(o.status) && !o.navigateHide) }))`。
+   * 因此这里不再是 `unknown`，而是与 `appGroups` 同构的 `AppSectionView[]`。
+   */
+  sections?: AppSectionView[] | undefined;
   /** 固定态文案与账号（见 components/FixedContent） */
   fixRemark?: string | undefined;
   fixAccount?: Record<string, unknown> | undefined;
@@ -92,7 +138,7 @@ export interface AppLicense {
 export interface AppPkgState extends AppDetail {
   iconColor: string;
   projectId: string;
-  appGroups: AppSection[];
+  appGroups: AppSectionView[];
   appStatus: number;
   name: string;
 }
