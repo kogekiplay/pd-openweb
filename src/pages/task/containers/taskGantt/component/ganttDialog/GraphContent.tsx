@@ -1,16 +1,17 @@
 import { Component, type MouseEvent } from 'react';
 import cx from 'classnames';
 import moment from 'moment';
-import ProcessBar from './ProcessBar';
-import { durDays, parseTime } from './time';
 import type { GanttTaskNode } from './GanttHeader';
+import ProcessBar from './ProcessBar';
+import type { ProcessState, ProcessStatus } from './ProcessBar';
+import { durDays, parseTime } from './time';
 
 /** 接口返回的任务节点时间字段：原始字符串，可能缺失 */
 interface GanttTaskTimeFields {
-  actualStartTime?: string | undefined;
-  completeTime?: string | undefined;
-  deadline?: string | undefined;
-  startTime?: string | undefined;
+  actualStartTime?: string | null | undefined;
+  completeTime?: string | null | undefined;
+  deadline?: string | null | undefined;
+  startTime?: string | null | undefined;
 }
 
 /** 绘制时间条所需的任务节点（时间字段先按原始字符串读取，再统一转成 moment） */
@@ -67,9 +68,9 @@ export default class GraphContent extends Component<GraphContentProps> {
     const { width, handleTaskItemHover, beginTime } = this.props;
 
     return data.map((item, index: number) => {
-      let expectState: string | undefined;
-      let actualState: string | undefined;
-      let status: string | undefined;
+      let expectState: ProcessState | undefined;
+      let actualState: ProcessState | undefined;
+      let status: ProcessStatus | undefined;
       const { actualStartTime: rawActualStartTime, completeTime: rawCompleteTime } = item;
       const { deadline: rawDeadline, startTime: rawStartTime } = item;
 
@@ -92,6 +93,7 @@ export default class GraphContent extends Component<GraphContentProps> {
       if ((rawActualStartTime && !rawCompleteTime) || (rawCompleteTime && moment(rawCompleteTime) > moment())) {
         status = 'normal';
       }
+
       /**
        * 解析时间
        */

@@ -1,6 +1,16 @@
 import cx from 'classnames';
 
-export default ({ width, left, state, className, status }: { className?: string; [key: string]: any }) => {
+export type ProcessState = 'noStart' | 'noEnd';
+export type ProcessStatus = 'inAdvance' | 'normal';
+interface ProcessBarProps {
+  width: number;
+  left: number;
+  state?: ProcessState | undefined;
+  className?: string | undefined;
+  status?: ProcessStatus | undefined;
+}
+
+export default ({ width, left, state, className, status }: ProcessBarProps) => {
   return (
     <div style={{ marginLeft: left }} className={cx('processBar flexRow', className, state)}>
       {state === 'noStart' && <div className={cx('before', status, state)} />}

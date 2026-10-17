@@ -12,7 +12,7 @@ export type GanttType = keyof typeof TYPE_TO_WIDTH;
 export interface GanttTaskNode {
   taskID: string;
   taskName: string;
-  child?: GanttTaskNode[];
+  child?: GanttTaskNode[] | null | undefined;
   childrenVisible?: boolean;
 }
 

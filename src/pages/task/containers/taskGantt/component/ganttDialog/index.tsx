@@ -13,11 +13,13 @@ import { downloadFile, getToken } from 'src/utils/common';
 import { requireBase64FileToken } from 'src/utils/commonRequestBoundary';
 import TaskDetail from '../../../taskDetail/taskDetail';
 import config from './config';
+import { ganttChartResult, ganttExportKey } from './dataBoundary';
+import type { GanttChartResult } from './dataBoundary';
 import GanttContent from './GanttContent';
 import GanttHeader, { type GanttType } from './GanttHeader';
 import GanttSideBar from './GanttSideBar';
-import { durDays, momentTime } from './time';
 import type { GanttProcessTaskNode } from './GraphContent';
+import { durDays, momentTime } from './time';
 import './index.less';
 
 export interface GanttDialogProps {
@@ -76,37 +78,52 @@ export default class GanttDialog extends Component<GanttDialogProps, GanttDialog
   getData() {
     const { folderID } = this.props;
 
-    taskReq.getTaskStaticGanttChart({ folderID }).then(res => {
-      const { status } = res;
+    return taskReq
+      .getTaskStaticGanttChart({ folderID })
+      .then((value: unknown) => {
+        let res: GanttChartResult;
 
-      if (!status) {
+        try {
+          res = ganttChartResult(value);
+        } catch (error: unknown) {
+          this.handleLoadError(error);
+          return;
+        }
+
+        if (res.status === false) {
+          this.setState({
+            loading: false,
+            refreshLoading: false,
+            errorMsg: res.message || _l('加载失败，请稍后重试'),
+          });
+          return;
+        }
+
+        const { taskData, maxCompleteTime, minStartTime, folderName } = res.data;
+        const data = this.dealWithData(taskData);
+        if (!data) throw new TypeError('Invalid gantt task list');
+        const formatBeginTime = momentTime(minStartTime);
+        const formatEndTime = momentTime(maxCompleteTime);
+        config.beginTime = formatBeginTime;
+        config.endTime = formatEndTime;
+        const { beginTime, endTime } = this.handleTime(formatBeginTime.clone(), formatEndTime.clone());
         this.setState({
           loading: false,
           refreshLoading: false,
-          errorMsg: res.error.msg,
+          data,
+          beginTime,
+          endTime,
+          name: folderName,
+          errorMsg: '',
         });
-        return;
-      }
-
-      const { taskData, maxCompleteTime, minStartTime, folderName } = res.data;
-      // 接口异常返回非数组时退化为空列表：原实现会把 undefined 写进 state，
-      // 渲染时 data.length 会抛错；这里改为展示“暂无任务”空状态。
-      const data = this.dealWithData(taskData) ?? [];
-      const formatBeginTime = momentTime(minStartTime);
-      const formatEndTime = momentTime(maxCompleteTime);
-      config.beginTime = formatBeginTime;
-      config.endTime = formatEndTime;
-      const { beginTime, endTime } = this.handleTime(formatBeginTime.clone(), formatEndTime.clone());
-      this.setState({
-        loading: false,
-        refreshLoading: false,
-        data,
-        beginTime,
-        endTime,
-        name: folderName,
-      });
-    });
+      })
+      .catch(this.handleLoadError);
   }
+
+  handleLoadError = (error: unknown) => {
+    console.error(error);
+    this.setState({ loading: false, refreshLoading: false, errorMsg: _l('加载失败，请稍后重试') });
+  };
 
   /**
    * 处理时间
@@ -136,13 +153,13 @@ export default class GanttDialog extends Component<GanttDialogProps, GanttDialog
    * 数据处理 为每个任务添加一个是否显示子项目的标识
    * @param {Array} data
    */
-  dealWithData(data: unknown): GanttProcessTaskNode[] | undefined {
+  dealWithData(data: GanttProcessTaskNode[] | null | undefined): GanttProcessTaskNode[] | undefined {
     if (!Array.isArray(data)) return undefined;
     data.forEach((item: GanttProcessTaskNode) => {
       item.child && (item.childrenVisible = true);
       this.dealWithData(item.child);
     });
-    return data as GanttProcessTaskNode[];
+    return data;
   }
 
   /**
@@ -178,6 +195,14 @@ export default class GanttDialog extends Component<GanttDialogProps, GanttDialog
     const width = $el.find('.graphWrap').width() ?? 0;
     const height = ($el.find('.graphContent').height() ?? 0) + 70;
     const $box = $el.clone(true);
+    let removed = false;
+
+    const cleanup = () => {
+      if (removed) return;
+      removed = true;
+      $box.remove();
+    };
+
     $box.css({
       minWidth: width,
       maxWidth: width,
@@ -189,44 +214,52 @@ export default class GanttDialog extends Component<GanttDialogProps, GanttDialog
     const target = $('body > .ganttContentBox')[0];
 
     if (!(target instanceof HTMLElement)) {
-      $('body > .ganttContentBox').remove();
+      cleanup();
+      this.handleExportError(new TypeError('Missing gantt export element'));
       return undefined;
     }
 
-    html2canvas(target).then(canvas => {
-      const newCanvas = document.getElementById('ganttCanvas');
+    html2canvas(target)
+      .then(canvas => {
+        try {
+          const newCanvas = document.getElementById('ganttCanvas');
 
-      if (!(newCanvas instanceof HTMLCanvasElement)) return;
+          if (!(newCanvas instanceof HTMLCanvasElement)) throw new TypeError('Missing gantt export canvas');
 
-      newCanvas.width = width;
-      newCanvas.height = height + 51;
+          newCanvas.width = width;
+          newCanvas.height = height + 51;
 
-      const ctx = newCanvas.getContext('2d');
+          const ctx = newCanvas.getContext('2d');
 
-      if (!ctx) return;
+          if (!ctx) throw new TypeError('Missing gantt export context');
 
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(0, 0, width, 50);
-      ctx.font = '20px Microsoft YaHei';
-      ctx.fillStyle = '#151515';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(name, width / 2, 25);
-      ctx.moveTo(0, 51);
-      ctx.lineTo(width, 51);
-      ctx.strokeStyle = '#e0e0e0';
-      ctx.stroke();
-      ctx.drawImage(canvas, 0, 51);
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(0, 0, width, 50);
+          ctx.font = '20px Microsoft YaHei';
+          ctx.fillStyle = '#151515';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(name, width / 2, 25);
+          ctx.moveTo(0, 51);
+          ctx.lineTo(width, 51);
+          ctx.strokeStyle = '#e0e0e0';
+          ctx.stroke();
+          ctx.drawImage(canvas, 0, 51);
 
-      if (newCanvas.toDataURL() === 'data:,') {
-        alert(_l('长度过长，请切换"周"或"月"视图后重试'), 2);
-      } else {
-        this.setState({ showExportDialog: true, buildImgSuccess: false });
-        this.putb64(newCanvas.toDataURL());
-      }
-
-      $('body > .ganttContentBox').remove();
-    });
+          if (newCanvas.toDataURL() === 'data:,') {
+            alert(_l('长度过长，请切换"周"或"月"视图后重试'), 2);
+          } else {
+            this.setState({ showExportDialog: true, buildImgSuccess: false });
+            this.putb64(newCanvas.toDataURL());
+          }
+        } finally {
+          cleanup();
+        }
+      })
+      .catch((error: unknown) => {
+        cleanup();
+        this.handleExportError(error);
+      });
 
     return undefined;
   };
@@ -235,22 +268,24 @@ export default class GanttDialog extends Component<GanttDialogProps, GanttDialog
    * 上传到七牛
    */
   putb64(base64: string) {
-    getToken([{ bucket: 2, ext: '.png' }])
+    return getToken([{ bucket: 2, ext: '.png' }])
       .then(res => {
         if (!Array.isArray(res)) {
+          this.setState({ showExportDialog: false, buildImgSuccess: false });
           alert(res.error);
+          return undefined;
         } else {
           const token = requireBase64FileToken(res);
           const url = `${md.global.FileStoreConfig.uploadHost}/putb64/-1/key/${btoa(token.key)}`;
-          axios
-            .post(url, base64.replace('data:image/png;base64,', ''), {
+          return axios
+            .post<unknown>(url, base64.replace('data:image/png;base64,', ''), {
               headers: {
                 'Content-Type': 'application/octet-stream',
                 Authorization: `UpToken ${token.uptoken}`,
               },
             })
             .then(({ data }) => {
-              const { key = '' } = data || {};
+              const key = ganttExportKey(data);
               this.setState({
                 buildImgSuccess: true,
                 url: `${md.global.FileStoreConfig.pubHost}/${key}?attname=${encodeURIComponent(
@@ -259,16 +294,20 @@ export default class GanttDialog extends Component<GanttDialogProps, GanttDialog
               });
             })
             .catch(error => {
-              console.log(error);
-              alert(_l('保存失败!'), 2);
+              this.handleExportError(error);
             });
         }
       })
       .catch((error: unknown) => {
-        console.error(error);
-        alert(_l('保存失败!'), 2);
+        this.handleExportError(error);
       });
   }
+
+  handleExportError = (error: unknown) => {
+    console.error(error);
+    this.setState({ showExportDialog: false, buildImgSuccess: false });
+    alert(_l('保存失败!'), 2);
+  };
 
   /**
    * 获取文件key
@@ -375,7 +414,7 @@ export default class GanttDialog extends Component<GanttDialogProps, GanttDialog
       return undefined;
     }
 
-    this.toggleData((current.child ?? []) as GanttProcessTaskNode[], args.slice(1));
+    this.toggleData(current.child ?? [], args.slice(1));
 
     return undefined;
   };
@@ -479,7 +518,7 @@ export default class GanttDialog extends Component<GanttDialogProps, GanttDialog
 
     return (
       // 原实现写的是 onCancel={this.handleClose}，而 handleClose 并不存在，
-      // 因此该 prop 的运行时值一直是 undefined（React 会把 undefined 的 prop 省略）。
+      // 因此 DialogBase 读取到的回调一直是 undefined。
       // 为保持与原行为一致，这里不再传 onCancel；关闭弹窗仍由 GanttHeader 的关闭入口
       // 走 closeLayer。若要开启遮罩/ESC 关闭，应作为独立行为修复单独提交。
       <DialogBase dialogClasses="flatFishGanttDialog" visible>

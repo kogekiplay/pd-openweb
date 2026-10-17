@@ -7,7 +7,7 @@
  *
  * 【本规格的证明方式】lead 要求"正常有效输入必须与原实现等价"。做法是把**同一份探针**
  * 分别喂给两个版本，再逐字段比对结果：
- *   A = 类型批次之前的原实现（git revision 031b7ddb2，即 f80562ba5 的父提交）
+ *   A = main可达的类型批次前实现 a3bd34da1（6文件与协作基线031b7ddb2相同）
  *   B = 当前工作区实现
  * 原实现从 git 读取并**校验 sha256**（与冻结值不符即失败），因此这条对照不会随工作区
  * 改动而漂移。只要 A 与 B 在所有探针上产出相同结果，就说明类型化没有改变行为。
@@ -23,7 +23,12 @@ const path = require('node:path');
 const fs = require('node:fs');
 const crypto = require('node:crypto');
 const { execFileSync } = require('node:child_process');
-const { jsxRuntimeFrom, transformFileSync, transformSync, ROOT } = require('../../../../../../../scripts/spec-harness.ts');
+const {
+  jsxRuntimeFrom,
+  transformFileSync,
+  transformSync,
+  ROOT,
+} = require('../../../../../../../scripts/spec-harness.ts');
 
 /* ────────────────────────── DOM 替身 ────────────────────────── */
 
@@ -126,8 +131,9 @@ const config = configModule.default || configModule;
 
 const DIR = __dirname;
 const REL_DIR = 'src/pages/task/containers/taskGantt/component/ganttDialog';
-/** 类型批次之前的最后一个 revision（f80562ba5 的父提交） */
-const BASE_REV = '031b7ddb23d97dbd90d792be8afb2ed69b30176b';
+/** Use a main ancestor so a fresh clone can reproduce the same frozen sources. */
+const BASE_REV = 'a3bd34da1e6ca32c7fd452bc15bf49ded33cfd01';
+const compiledSources = new Map<string, string>();
 
 /** 原实现 6 文件的 sha256 冻结值；任何一项不符即中止 A/B 对照 */
 const ORIG_SHA: Record<string, string> = {
@@ -141,6 +147,7 @@ const ORIG_SHA: Record<string, string> = {
 
 /** 从 git revision 取原实现源码，避免在工作区新增文件 */
 const origSourceCache: Record<string, string> = {};
+
 function origSource(file: string): string {
   if (origSourceCache[file] === undefined) {
     origSourceCache[file] = execFileSync('git', ['show', `${BASE_REV}:${REL_DIR}/${file}`], {
@@ -149,6 +156,7 @@ function origSource(file: string): string {
       maxBuffer: 16 * 1024 * 1024,
     });
   }
+
   return origSourceCache[file];
 }
 
@@ -170,21 +178,30 @@ function load(
   extra: Record<string, unknown> = {},
 ) {
   const m: { exports: Record<string, any> } = { exports: {} };
+
   const req = (r: string) => {
     if (r in stubs) return stubs[r];
     if (r.endsWith('.less') || r.endsWith('.html')) return {};
     throw new Error(`spec 没给 ${r} 打桩（${variant}/${file}）`);
   };
+
   const filename = path.join(DIR, file);
   const babelOpts = {
     presets: [require.resolve('@babel/preset-react')],
     plugins: ['@babel/plugin-transform-modules-commonjs'],
   };
   // 原实现来自 git 内容 → 用 transformSync 并显式给 filename（决定 TS/TSX 解析）
-  const code =
-    variant === 'orig'
-      ? transformSync(origSource(file), { ...babelOpts, filename }).code
-      : transformFileSync(filename, babelOpts).code;
+  const cacheKey = variant + ':' + file;
+  let code = compiledSources.get(cacheKey);
+
+  if (code === undefined) {
+    code =
+      variant === 'orig'
+        ? transformSync(origSource(file), { ...babelOpts, filename }).code
+        : transformFileSync(filename, babelOpts).code;
+    compiledSources.set(cacheKey, code);
+  }
+
   const names = ['module', 'exports', 'require', ...Object.keys(extra)];
   // 原实现的 index.tsx 直接用 $，作为额外形参注入（两版一致）
   new Function(...names, code)(m, m.exports, req, ...Object.values(extra));
@@ -207,12 +224,14 @@ function fingerprint(node: unknown, depth = 0): unknown {
   const n = node as any;
   const tag = typeof n.type === 'string' ? n.type : `[fn:${n.type?.name || 'anon'}]`;
   const props: Record<string, unknown> = {};
+
   for (const key of Object.keys(n.props || {}).sort()) {
     if (key === 'children') continue;
     // onCancel 属于已记录的行为变化（见文件末尾"行为变化"分组），
     // 从这里剔除，否则它会掩盖其余结构是否等价。
     if (key === 'onCancel') continue;
     const value = n.props[key];
+
     if (key === 'style' && value && typeof value === 'object') {
       props['style'] = Object.fromEntries(Object.entries(value).sort());
     } else if (typeof value === 'function') {
@@ -231,6 +250,7 @@ function fingerprint(node: unknown, depth = 0): unknown {
       props[key] = value;
     }
   }
+
   const kids = n.props?.children !== undefined ? n.props.children : n.children;
   return { tag, props, children: kids === undefined ? [] : fingerprint(kids, depth + 1) };
 }
@@ -252,6 +272,7 @@ const findAll = (root: unknown, predicate: (n: any) => boolean) => {
   });
   return out;
 };
+
 const byClass = (root: unknown, token: string) =>
   findAll(
     root,
@@ -273,22 +294,22 @@ function firstDiff(a: unknown, b: unknown, at = '$'): string {
       const d = firstDiff(a[i], b[i], `${at}[${i}]`);
       if (d) return d;
     }
+
     return '';
   }
+
   if (a && b && typeof a === 'object') {
     const ka = Object.keys(a as Record<string, unknown>).sort();
     const kb = Object.keys(b as Record<string, unknown>).sort();
     if (ka.join(',') !== kb.join(',')) return `${at}: 字段集合不同 [${ka.join(',')}] vs [${kb.join(',')}]`;
     for (const k of ka) {
-      const d = firstDiff(
-        (a as Record<string, unknown>)[k],
-        (b as Record<string, unknown>)[k],
-        `${at}.${k}`,
-      );
+      const d = firstDiff((a as Record<string, unknown>)[k], (b as Record<string, unknown>)[k], `${at}.${k}`);
       if (d) return d;
     }
+
     return '';
   }
+
   return `${at}: ${JSON.stringify(a)} vs ${JSON.stringify(b)}`;
 }
 
@@ -296,6 +317,7 @@ function firstDiff(a: unknown, b: unknown, at = '$'): string {
 
 const failures: string[] = [];
 let checks = 0;
+
 function check(name: string, fn: () => void) {
   checks += 1;
   try {
@@ -361,7 +383,7 @@ const syncApi = (payload: unknown) => ({
 });
 
 /** jQuery 替身：链式返回自身，附带可控的 width/height/find/clone/css */
-const jqueryStub = (_selector: string) => {
+const jqueryStub = () => {
   const chain: any = {
     width: () => 800,
     height: () => 600,
@@ -385,6 +407,7 @@ function buildStubs(deps: Deps) {
     'ming-ui/components/Icon': esm((props: unknown) => createElement('Icon', props as never)),
     './config': config,
     './config.ts': config,
+    './dataBoundary': require('./dataBoundary.ts'),
     './ProcessBar': esm(deps.ProcessBar),
     './ProcessBar.tsx': esm(deps.ProcessBar),
     './TimeHeader': esm(deps.TimeHeader),
@@ -626,11 +649,13 @@ function probes(): Probe[] {
 
         const widths: Record<string, unknown> = {};
         const todayStyles: Record<string, unknown> = {};
+
         for (const type of ['day', 'week', 'month'] as const) {
           const tree = new m.GraphBg({ time: TIME_ENTRIES, type, durFromBeginToToday: 3 }).render();
           widths[type] = byClass(tree, 'subBg').map(n => n.props.style.width);
           todayStyles[type] = byClass(tree, 'isToday').map(n => n.props.style);
         }
+
         return {
           bgHeight: graphBg.style.height ?? null,
           taskListHeight: taskListWrap.style.height ?? null,
@@ -715,7 +740,7 @@ function probes(): Probe[] {
     },
 
     {
-      name: '⑧ 导出与清理（canvas 尺寸、绘制指令）',
+      name: '⑧ 导出同步启动（异步绘制/清理由 dataLifecycle.spec 验证）',
       run: m => {
         const canvas = new FakeCanvas();
         const box = element('div', 'ganttContentBox');
@@ -790,7 +815,14 @@ function probes(): Probe[] {
       name: '⑧d 弹窗级任务展开/收起（toggleTask 深拷贝后写回 state）',
       run: m => {
         const dialog = new m.GanttDialog({ folderID: 'f1' });
-        const original = [{ taskID: 'a', taskName: 'A', childrenVisible: true, child: [{ taskID: 'a1', taskName: 'A1', childrenVisible: false }] }];
+        const original = [
+          {
+            taskID: 'a',
+            taskName: 'A',
+            childrenVisible: true,
+            child: [{ taskID: 'a1', taskName: 'A1', childrenVisible: false }],
+          },
+        ];
         dialog.state = { ...dialog.state, data: original };
         dialog.toggleTask([0]);
         const afterTop = { state: dialog.state.data[0].childrenVisible, original: original[0].childrenVisible };
@@ -811,6 +843,7 @@ function probes(): Probe[] {
         config.beginTime = moment('2026-10-10 00:00:00');
         config.endTime = moment('2026-10-20 00:00:00');
         const out: Record<string, unknown> = {};
+
         for (const type of ['day', 'week', 'month']) {
           dialog.switchDisplayType(type as never);
           out[type] = {
@@ -819,6 +852,7 @@ function probes(): Probe[] {
             end: String(dialog.state.endTime?.format?.('YYYY-MM-DD') ?? dialog.state.endTime),
           };
         }
+
         return out;
       },
     },
@@ -901,7 +935,7 @@ const BEHAVIOUR_CHANGES: { name: string; run: (m: any) => unknown; loadOverrides
     },
   },
   {
-    name: 'getData 对非数组 taskData 的兜底（调用点 ?? []）',
+    name: 'getData 对非数组 taskData 显示错误状态',
     // 用同步 thenable 驱动 getData 的赋值路径，使异步调用点在规格里可控
     loadOverrides: {
       'src/api/taskCenter': {
@@ -929,12 +963,19 @@ const BEHAVIOUR_CHANGES: { name: string; run: (m: any) => unknown; loadOverrides
       dialog.getData();
       const dataIsUndefined = dialog.state.data === undefined;
       let renderThrew = false;
+
       try {
         dialog.render();
       } catch {
         renderThrew = true;
       }
-      return { dataIsUndefined, renderThrew, dataKind: Array.isArray(dialog.state.data) ? 'array' : typeof dialog.state.data };
+
+      return {
+        dataIsUndefined,
+        renderThrew,
+        dataKind: Array.isArray(dialog.state.data) ? 'array' : typeof dialog.state.data,
+        hasError: Boolean(dialog.state.errorMsg),
+      };
     },
   },
 ];
@@ -949,11 +990,13 @@ const RESTORED_BEHAVIOUR: { name: string; run: (m: any) => unknown }[] = [
     run: m => {
       const bare = new m.GanttDialog({ folderID: 'f1' });
       let threw = false;
+
       try {
         bare.closeLayer();
       } catch {
         threw = true;
       }
+
       return { threw };
     },
   },
@@ -974,6 +1017,7 @@ const RESTORED_BEHAVIOUR: { name: string; run: (m: any) => unknown }[] = [
 ];
 
 const changes: { name: string; orig: unknown; current: unknown; differs: boolean }[] = [];
+
 for (const item of BEHAVIOUR_CHANGES) {
   check(`行为变化识别：${item.name}`, () => {
     const overrides = item.loadOverrides || {};
@@ -984,17 +1028,14 @@ for (const item of BEHAVIOUR_CHANGES) {
     const differs = JSON.stringify(origValue) !== JSON.stringify(currentValue);
     changes.push({ name: item.name, orig: origValue, current: currentValue, differs });
     // 必须确实不同；若相同说明该"变化"已不存在，报告需要更新
-    assert.equal(
-      differs,
-      true,
-      `该行为变化已不存在（两侧相同：${JSON.stringify(currentValue)}），报告需更正`,
-    );
+    assert.equal(differs, true, `该行为变化已不存在（两侧相同：${JSON.stringify(currentValue)}），报告需更正`);
   });
 }
 
 /* ────────────────────────── 已确认等价（曾被误判为行为变化） ────────────────────────── */
 
 const restored: { name: string; orig: unknown; current: unknown }[] = [];
+
 for (const item of RESTORED_BEHAVIOUR) {
   check(`已确认等价：${item.name}`, () => {
     config.scrollingEle = '';
