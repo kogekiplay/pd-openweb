@@ -7,15 +7,15 @@ export function readPageProperty(value: unknown, key: PropertyKey): unknown {
   return Reflect.get(Object(value), key, value);
 }
 
-/** Numeric and older scalar theme/layout keys retain their native array-key/strict-equality semantics. */
-export type PageConfigIndex = string | number | boolean | null | undefined;
+/** Legacy scalar indices and flags retain native lookup, strict-equality and truthiness semantics. */
+export type PageConfigScalar = string | number | boolean | null | undefined;
 export interface PublicPageConfig {
   readonly key: string | null | undefined;
-  readonly layout: PageConfigIndex;
-  readonly themeColor: PageConfigIndex;
+  readonly layout: PageConfigScalar;
+  readonly themeColor: PageConfigScalar;
   readonly themeBgColor: string | null | undefined;
   readonly cover: string | null | undefined;
-  readonly showQrcode: boolean | null | undefined;
+  readonly showQrcode: PageConfigScalar;
 }
 
 function invalidField(key: PropertyKey): never {
@@ -30,7 +30,7 @@ function readText(value: unknown, key: PropertyKey): string | null | undefined {
   return invalidField(key);
 }
 
-function readIndex(value: unknown, key: PropertyKey): PageConfigIndex {
+function readIndex(value: unknown, key: PropertyKey): PageConfigScalar {
   const field = readPageProperty(value, key);
   if (field === null) return null;
   if (field === undefined) return undefined;
@@ -61,11 +61,7 @@ export function readPageConfig(value: unknown): PublicPageConfig {
       return readText(value, 'cover');
     },
     get showQrcode() {
-      const field = readPageProperty(value, 'showQrcode');
-      if (field === null) return null;
-      if (field === undefined) return undefined;
-      if (typeof field === 'boolean') return field;
-      return invalidField('showQrcode');
+      return readIndex(value, 'showQrcode');
     },
   };
 }

@@ -325,7 +325,7 @@ check('appearance fields are validated lazily without caching or changing getter
 check('valid scalar keys, nullable URLs and QR flags retain their actual values', () => {
   for (const index of [undefined, null, false, true, 0, 2, NaN, Infinity, '2', 'constructor', '__proto__'])
     for (const cover of [undefined, null, '', 'https://example.com/a'])
-      for (const qr of [undefined, null, false, true]) {
+      for (const qr of [undefined, null, false, true, 0, 1, '', '0', 'false']) {
         const raw = { key: 'source', layout: index, themeColor: index, themeBgColor: null, cover, showQrcode: qr };
         const view = viewOf(raw);
         for (const key of Object.keys(raw)) assert.equal(view[key], raw[key]);
@@ -342,7 +342,7 @@ check('malformed known fields fail only when read; raw selection and unknown met
     ['cover', 1],
     ['cover', {}],
     ['themeBgColor', false],
-    ['showQrcode', 'true'],
+    ['showQrcode', { enabled: true }],
     ['layout', []],
     ['themeColor', {}],
     ['key', 1],
