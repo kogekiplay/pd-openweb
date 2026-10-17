@@ -914,6 +914,151 @@ async function main(): Promise<void> {
     assert.deepEqual(uncovered, [], `actions.ts 调用了未被打桩的 API 方法：${uncovered.join(',')}`);
   });
 
+  /* ── 7b. 分支补齐（审计发现的 9 个未覆盖分支）── */
+
+  await check('updateSettings：成功但 data 为假时，不回调、不 dispatch', async () => {
+    const h = makeHarness('current', BASE_STATE);
+    let called: boolean | undefined;
+    h.actions.updateSettings({ needCaptcha: true }, (ok: boolean) => { called = ok; })(h.dispatch, h.getState);
+
+    h.pending[0].def.resolve(false);   // 接口成功但返回假值 → 走不进 if (data)
+    await h.pending[0].def.promise;
+    await flush();
+
+    assert.equal(called, undefined, 'data 为假时不应回调');
+    assert.equal(
+      h.dispatched.some((a: any) => a && a.type === 'PUBLICWORKSHEET_UPDATE_SETTINGS'),
+      false,
+      'data 为假时不应 dispatch',
+    );
+  });
+
+  await check('updateBaseConfig：不传回调时不报错、仍发起保存', async () => {
+    const h = makeHarness('current', BASE_STATE);
+    // updateWorksheetInfo 内部调用 updateBaseConfig 时不带 cb
+    h.actions.updateWorksheetInfo({ worksheetName: 'x' })(h.dispatch, h.getState);
+    assert.equal(h.apiCalls.length, 1);
+    assert.equal(h.apiCalls[0].method, 'saveWorksheet');
+
+    h.pending[0].def.resolve(true);
+    await h.pending[0].def.promise;
+    await flush();
+    // 不传回调 → _.isFunction(cb) 为假 → 直接跳过，不应异常
+    assert.equal(alerts.length, 0, '成功且无回调时不应 alert');
+  });
+
+  await check('addWorksheetControl：接口失败时 alert「添加文本字段失败」且不 dispatch', async () => {
+    const h = makeHarness('current', BASE_STATE);
+    h.actions.addWorksheetControl('新字段')(h.dispatch, h.getState);
+
+    h.pending[0].def.reject(new Error('boom'));
+    await h.pending[0].def.promise.catch(() => undefined);
+    await flush();
+
+    assert.equal(alerts.length, 1);
+    assert.equal(alerts[0].message, '添加文本字段失败');
+    assert.equal(alerts[0].type, 3);
+    assert.equal(
+      h.dispatched.some((a: any) => a && a.type === 'PUBLICWORKSHEET_ADD_CONTROL'),
+      false,
+      '失败时不应 dispatch ADD_CONTROL',
+    );
+  });
+
+  await check('getDispatchData：showtype 为 "6" 时同样改写为 "5"（我只测过 "2"）', async () => {
+    const h = makeHarness('current', BASE_STATE);
+    const dto = makeDto() as any;
+    dto.originalControls = [{ controlId: 'c9', type: 29, advancedSetting: { showtype: '6' } }];
+
+    h.actions.loadPublicWorksheet({ worksheetId: 'w1' })(h.dispatch, h.getState);
+    h.pending[0].def.resolve(dto);
+    await h.pending[0].def.promise;
+    await flush();
+
+    const act = h.dispatched.find((a: any) => a && a.type === 'PUBLICWORKSHEET_LOAD_SUCCESS') as any;
+    assert.equal(act.originalControls[0].advancedSetting.showtype, '5', 'showtype "6" 也应改写为 "5"');
+  });
+
+  await check('getDispatchData：type!==29 的控件不改写 advancedSetting', async () => {
+    const h = makeHarness('current', BASE_STATE);
+    const dto = makeDto() as any;
+    dto.originalControls = [{ controlId: 'c8', type: 1, advancedSetting: { showtype: '2' } }];
+
+    h.actions.loadPublicWorksheet({ worksheetId: 'w1' })(h.dispatch, h.getState);
+    h.pending[0].def.resolve(dto);
+    await h.pending[0].def.promise;
+    await flush();
+
+    const act = h.dispatched.find((a: any) => a && a.type === 'PUBLICWORKSHEET_LOAD_SUCCESS') as any;
+    assert.equal(act.originalControls[0].advancedSetting.showtype, '2', 'type!==29 不应改写');
+  });
+
+  await check('updateWorksheetVisibleType：value===1 时 dispatch UPDATE_INFO', async () => {
+    const h = makeHarness('current', BASE_STATE);
+    let cbCalled = 0;
+    h.actions.updateWorksheetVisibleType(1, () => { cbCalled += 1; })(h.dispatch, h.getState);
+
+    h.pending[0].def.resolve(true);
+    await h.pending[0].def.promise;
+    await flush();
+
+    assert.equal(cbCalled, 1);
+    const act = h.dispatched.find((a: any) => a && a.type === 'PUBLICWORKSHEET_UPDATE_INFO') as any;
+    assert.ok(act, 'value===1 应 dispatch UPDATE_INFO');
+    assert.equal(act.value.visibleType, 1);
+  });
+
+  await check('updateWorksheetVisibleType：value!==1 时改为 dispatch loadPublicWorksheet（重新拉取）', async () => {
+    const h = makeHarness('current', BASE_STATE);
+    h.actions.updateWorksheetVisibleType(2, () => {})(h.dispatch, h.getState);
+
+    h.pending[0].def.resolve(true);       // saveWorksheet 成功
+    await h.pending[0].def.promise;
+    await flush();
+
+    // else 分支会 dispatch(loadPublicWorksheet({worksheetId})) → 触发一次 getPublicWorksheetInfo
+    assert.equal(
+      h.pending.length,
+      2,
+      'value!==1 应触发一次重新拉取（getPublicWorksheetInfo）',
+    );
+    assert.equal(h.pending[1].method, 'getPublicWorksheetInfo');
+    assert.equal(
+      h.dispatched.some((a: any) => a && a.type === 'PUBLICWORKSHEET_UPDATE_INFO'),
+      false,
+      'value!==1 不应 dispatch UPDATE_INFO',
+    );
+  });
+
+  await check('showControl：window.scrollToFormEnd 不存在时不报错、仍 dispatch', async () => {
+    const h = makeHarness('current', BASE_STATE);
+    (globalThis as any)['window'].scrollToFormEnd = undefined;   // 显式不存在
+
+    h.actions.showControl([{ controlId: 'c9', type: 1, half: false }])(h.dispatch, h.getState);
+
+    assert.equal(
+      h.dispatched.some((a: any) => a && a.type === 'WORKSHEET_SHOW_CONTROL'),
+      true,
+      '即使没有 scrollToFormEnd 也应 dispatch',
+    );
+  });
+
+  await check('resetControls：data.success 为假时既不 dispatch 也不 alert', async () => {
+    const h = makeHarness('current', BASE_STATE);
+    h.actions.resetControls()(h.dispatch, h.getState);
+
+    h.pending[0].def.resolve({ success: false });
+    await h.pending[0].def.promise;
+    await flush();
+
+    assert.equal(
+      h.dispatched.some((a: any) => a && a.type === 'PUBLICWORKSHEET_LOAD_SUCCESS'),
+      false,
+      'success 为假不应 dispatch LOAD_SUCCESS',
+    );
+    assert.equal(alerts.length, 0, 'success 为假不是失败路径，不应 alert');
+  });
+
   /* ── 8a.【保留旧基线证据】子进程：旧路径未处理拒绝 → 非零退出；修复后 → 0 ── */
 
   await check('子进程证据：基线路径因未处理拒绝非零退出，修复后为 0（不全局吞掉拒绝）', async () => {
