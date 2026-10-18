@@ -426,3 +426,5 @@ OnlySync、RecordInfo/DragCore、BaseColumnHead 及列头发布器的有限合�
 # 2026-10-18 打印/动作范围下拉
 
 RangeDrop/BtnRangeDrop及真实getShowViews视图消费边界：strict50,856→50,808（逐文件/错误码无新增），fast8416/2269keys原基线不变，debt3072→3070，clean1707/4777。12组真实组件/helper/打印父回调对照、11非法编译及未知扩展过滤变异通过；273/273正式release、全部门禁/四项编译/runtime/publish通过。容器/序列化错误为独立fix，未知数组条目与引用保留，类型层擦除证据通过。候选9cd5c15d08已冻结、尚未部署，现网fbaa复核正常；详见[范围下拉质量记录](range-dropdown-strict-20261018.md)。全仓目标仍active。
+
+2026-10-18 2026-10-18T17:14:48.354922+08:00：范围下拉9cd5c15d08已可回滚发布生产，六入口/34资源、现网及完整quick各17,098文件、五服务完整Mounts/nginx、登录MOM/ERP前后只读验收通过。97f旧回滚完整归档/实际恢复后释放重复树，七份持久恢复材料保留。详见[范围下拉发布结果](range-dropdown-strict-20261018.md)。全仓strict仍50,808，目标active。

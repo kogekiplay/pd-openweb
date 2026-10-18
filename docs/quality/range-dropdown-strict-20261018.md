@@ -21,3 +21,17 @@ strict **50,856→50,808**，逐文件/错误码无新增。两个下拉分别12
 现网仍 **fbaa6cbfb059a5986cda13e64755266641d823d3**，六入口/34资源与该冻结版清单一致，五服务运行、ID/镜像/端口/完整 Mounts、nginx 全配置和当前/旧回滚入口摘要正常。此前 filterregex 合法 filters:null/空串兼容修复和管理用户关闭按钮修正已包含在现网，本轮没有新故障证据或生产写操作；未重复已登录浏览器验收。实测 /data 余 **11,667,177,472 bytes**，低于本候选完整复制/两候选/包/4GiB及256MiB余量预算 **18,586,177,096 bytes**，没有上传或触发部署。下一版整合发布前依既有可恢复归档流程准备空间并重新预算，保留完整快速回滚、全部持久恢复材料、厂商和文档外卷，不降低空间保护。
 
 下一批处理父层 BtnTd（当前17条strict）及必要真实按钮 DTO 边界，保留 templateId 的后增自有键、重命名焦点/重名、复制/启停/删除、旧 detail/list 文本、父 onChange 保存顺序和扩展引用。所有写接口及 storage/DOM 使用隔离宿主，失败处理必须独立提交。DSH Chat 范围不变，整体全仓目标继续 active。
+
+## 日程生产发布结果
+
+上海时间 **2026-10-18T17:14:48.354922+08:00** 完成日程生产切换，revision **9cd5c15d0885a92ba610a45b5fe6e1dfe7b135fc**，本批48条严格诊断改善已上线；main后续仅质量文档。原“候选尚未部署”为冻结时状态，实际生产以本节和独立verification为准，冻结artifact.json不改写。六入口/34资源含厂商PM两项通过，入口SHA **2df463929221e34a498b5d9dff0a96ad9e059f1bc73cc81ceedbda0b98d22285**，包SHA **7dcfd9963e7fec9e12e33d8f7921955870bab98043c199abfce9c6e4862ffbba**；候选/实际覆盖/当前生产及完整快速回滚各17,098文件逐一匹配。
+
+release **/data/mingdao/frontend-9cd5c15d08-20261018/**，完整快速回滚 **/usr/local/MDPrivateDeployment/www-prev-20261018-9cd5c15d08** 含原fbaa，入口SHA **15bed1f20441f16dae77833db0b0c6343dd110de9d90c313010abe53722f9ff4**；原fbaa标签回滚仍含6a且摘要未变。rollback.sh语法通过，五服务ID/镜像/端口/完整Mounts、nginx全配置SHA与切换前一致；后端7.5.1、doc2.1.0四external卷、command node26/python314、flink1.20/sc3.2.1与厂商资源保留。官方upstream8360adec0无变化，无后端升级。
+
+本次为准备完整空间，确切不活动 **www-prev-20261017-97f1fabad3** 全程生产锁归档至 **/Users/kogeki/dev/HAP-release-archives/20261017/**。共81,629条目/81,422文件，成员清单/每文件SHA、原目录tar compare、实际完整恢复及全文件/元数据验证通过后才释放已验证重复树。receipt.phase=offloaded/restorationVerified=true，包SHA **f1628289ffb6b2a930b9f39e5c330d0b605598c42a822a4748ddf39e8959acd2**、成员清单SHA **fb21406f8c91a16ac8c16639f9631a71ac6295614b4ef3eeab88b61f1251f4dc**、逐文件清单SHA **55d7fea286e11b09f0d552c3285f04cc4754882eb8a9b9681bb65e4e2be5b671**。与旧六份共七份完整包/收据/清单/恢复脚本/固定工具/日志保留；当前生产及完整quick始终在服务器，a4c95、非completed旧批与其他恢复链不动。文件大小/权限/mtime/名称/类型/UID/GID/link/tar守卫不放宽，恢复投影只排除目录物理allocation。
+
+上传前余 **23780528128bytes** 大于完整预算 **18586177096bytes**；解包后 **22835113984bytes** 大于部署预算 **17687212454bytes**，4GiB和256MiB余量保护不降。发布后/data余 **10439811072bytes**，下一版重新实测。归档/恢复/上传/部署全部终态，无活作业，观察超时未重复启动原进程；release/pre-push顺序执行。
+
+1280×720已登录浏览器保存真正切换前后截图：MOM主数据总览数值卡/库位2,036，ERP工作台四常用导航正常，两页DOM含9cd5完整revision、console warn/error均0；没有viewport override，临时页最终关闭。未保存业务数据/配置/权限、打印、执行业务按钮、上传、删除系统编号或发消息，实际范围写接口仍由隔离规格覆盖，未冒称生产写入验收。Mac锁屏的原生控制不可用，但内置浏览器正常复用已登录状态；没有解锁/重新登录或更改权限。
+
+生产证据 **/private/tmp/hap-production-range-9cd5c15d08-20261018/** 保存固定该冻结版http-verify-frozen.py、完整远端终态记录、预算/上传清单、前后截图和DOM结果；后续现网只用该版清单，不拿原fbaa或本机新构建比较。全仓目标仍active，下一批BtnTd及真实父保存边界，DSH Chat范围不变。
