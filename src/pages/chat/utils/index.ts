@@ -42,13 +42,19 @@ export const formatMsgDate = (dateStr, isHourMinute = true) => {
   return `${_l('%0年%1月%2日', year, simpleMonth, simpleDay)}` + (isHourMinute ? ` ${hourMinute}` : '');
 };
 
-const sortTop = (list, value) => {
-  const res = [];
+/**
+ * 置顶优先排序（`sortSession` 的内部辅助）。
+ * 【有限声明依据】唯一调用方是 `sortSession`（本文件 99/117 行），
+ * 传入的 `top` 来自 `sessions.forEach(item => top.push(item))`，元素即 `ChatSession`；
+ * `value` 是当前会话 id（`string`）。返回同一批元素的重排数组。
+ */
+const sortTop = (list: ChatSession[], value?: string): ChatSession[] => {
+  const res: ChatSession[] = [];
   const countList = list.filter(item => item.count);
   const otherList = list.filter(item => !item.count);
   list = countList.concat(otherList);
   if (value) {
-    const top = [];
+    const top: ChatSession[] = [];
     list.forEach(item => {
       if (item.value == value) {
         top.push(item);
