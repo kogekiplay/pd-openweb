@@ -131,10 +131,19 @@ export interface ChatSession {
   wdAdminid?: string | undefined;
   /** 是否已撤回：决定文案分支 */
   iswd?: boolean | undefined;
-  /** 原始时间（`item._time = item.time` 备份，`time` 随后被格式化成文案） */
-  _time?: unknown;
-  /** @ 成员列表备份（`item.messageAtlist = item.atlist`） */
-  messageAtlist?: unknown;
+  /**
+   * 原始时间备份：`utils/index.ts:216` `item._time = item.time`。
+   * 【为什么复用 `time` 的合同而不是 unknown】它有**已知生产方**（同一对象的 `time` 字段，
+   * 该行赋值发生在 `time` 被 `formatMsgDate` 改写成文案**之前**），
+   * 因此可达形态就是 `ChatSession['time']` 的形态（`number | string`）。
+   * 用 `unknown` 会把已知来源的类型信息丢掉，属"类型不准确"，不是保守。
+   */
+  _time?: number | string | undefined;
+  /**
+   * @ 成员列表备份：`utils/index.ts:217` `item.messageAtlist = item.atlist`。
+   * 同 `_time`：来源是同一对象的 `atlist`，可达形态即 `ChatSession['atlist']`（`string[]`）。
+   */
+  messageAtlist?: string[] | undefined;
   /* ── 以下为 `actions.ts` 对**会话对象**直接写入的字段（逐行取证） ── */
   /** 未读计数：`actions.ts:79/88` `item.messageCount = result.clearCount / 0` */
   messageCount?: number | undefined;
