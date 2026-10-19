@@ -912,3 +912,23 @@ export interface ChatState {
   /** socket 状态（0 正常 / 1 正在重连 / 2 重连失败；原已是 number） */
   socketState: number;
 }
+
+/**
+ * `newUserMessage` 的入参：**单聊新消息** socket 事件。
+ *
+ * 【为何单独建】它与 `ChatRawMessageWire` 的区别不在于字段多少，而在于
+ * **该事件里 `from` 已经是字符串**（用户消息的发送者 id），而会话 wire 的
+ * `from` 仍是"对象或字符串"的过渡联合。沿用会话 wire 会让这个联合漏进
+ * `receiveMessage(id, ...)` 的 `id: string`。
+ */
+export interface ChatNewUserMessageEvent extends ChatRawMessageWire {
+  from: string;
+  /** 单聊消息正文：该事件里 msg **已是对象**（会话 wire 的联合不适用） */
+  msg: { con?: string | undefined; files?: unknown; oldCon?: unknown; [key: string]: unknown };
+  /** 发送者昵称（拼 `"昵称: 正文"` 用） */
+  uname?: string | undefined;
+  /** 未读数（本 handler 会写它） */
+  count?: number | undefined;
+  /** 是否群会话（本 handler 会写它） */
+  isGroup?: boolean | undefined;
+}

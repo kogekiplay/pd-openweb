@@ -3,6 +3,7 @@ import type { AppDispatch, GetState } from 'src/redux/types';
 import type {
   ChatMessage,
   ChatMessageReceiptWire,
+  ChatNewUserMessageEvent,
   ChatOutboundDraft,
   ChatPendingMessage,
   ChatRawMessageWire,
@@ -1505,7 +1506,7 @@ export const newNotifyMessage = (message: any) => (dispatch: AppDispatch, getSta
  * 个人信息
  * @param {*} message
  */
-export const newUserMessage = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const newUserMessage = (message: ChatNewUserMessageEvent) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSession, sessionList, isWindow } = getState().chat;
   const id = md.global.Account.accountId === message.from ? message.to : message.from;
   const isSelf = md.global.Account.accountId === message.from;
@@ -1519,7 +1520,7 @@ export const newUserMessage = (message: any) => (dispatch: AppDispatch, getState
   if (result.length) {
     const name = isSelf ? _l('我') : message.uname;
     const count = isWindowSession ? 0 : currentSession.value === id || isSelf ? 0 : 1;
-    dispatch(receiveMessage(id, message));
+    dispatch(receiveMessage(id!, message));
     dispatch(
       updateSessionList({
         id,
@@ -1540,7 +1541,7 @@ export const newUserMessage = (message: any) => (dispatch: AppDispatch, getState
     if (isSelf) {
       dispatch(
         addUserSession(
-          id,
+          id!,
           {
             sysType: 0,
             msg: message.msg,
@@ -1554,7 +1555,7 @@ export const newUserMessage = (message: any) => (dispatch: AppDispatch, getState
     } else {
       message.count = isWindowSession ? 0 : 1;
       message.isGroup = false;
-      dispatch(addSession(message, id));
+      dispatch(addSession(message, id!));
       if (message.count) {
         utils.flashTitle();
         utils.playSessionNewMsgAudio();
