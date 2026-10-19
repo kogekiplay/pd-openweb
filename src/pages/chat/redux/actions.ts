@@ -1224,8 +1224,8 @@ export const updateMessage = (message: ChatMessageReceiptWire) => (dispatch: App
   const { to, waitingid, socket } = message;
   const currentMessage = messages[to] || [];
   const newCurrentMessage = currentMessage
-    .filter((item: any) => item)
-    .map((item: any) => {
+    .filter(item => item)
+    .map(item => {
       if (item.waitingId === waitingid) {
         // item 是 chat.messages 里的对象（store 里的）：先拷一份再改，嵌套的 msg 也一样，
         // 否则 dev 下发消息收到回执时会被 RTK 的不可变检查拦下（生产得到的结果值与原先相同）
@@ -1264,7 +1264,7 @@ export const updateMessage = (message: ChatMessageReceiptWire) => (dispatch: App
 
         // 图片消息，替换 url
         if (socket && socket!.msg!.files) {
-          item.msg.files = socket!.msg!.files;
+          item.msg!.files = socket!.msg!.files;
         }
       }
 
@@ -1292,7 +1292,7 @@ export const updateFileMessage = (newMessage: ChatMessage, to: string) => (dispa
   // 【擦除标记】`messages[to]` 类型上可缺失；非空断言擦除（零运行时），
   // 原 `.map` 调用不变，缺项时仍由**原生**报错。
   const currentMessage = messages[to]!;
-  const newCurrentMessage = currentMessage.map((item: any) => {
+  const newCurrentMessage = currentMessage.map(item => {
     if (item.id === id) {
       return newMessage;
     }

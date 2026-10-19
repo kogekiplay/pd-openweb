@@ -304,8 +304,16 @@ export interface ChatMessageReceiptWire {
   socket?:
     | {
         time?: number | string | undefined;
-        refer?: { msgdetail?: unknown; [key: string]: unknown } | undefined;
-        msg?: { files?: unknown; [key: string]: unknown } | undefined;
+        /** 直接写入 `ChatMessage.refer.msgdetail`，故同型 */
+        refer?: {
+          msgdetail?: NonNullable<ChatMessage['refer']>['msgdetail'];
+          [key: string]: unknown;
+        } | undefined;
+        /** 直接写入 `ChatMessage.msg.files`，故同型 */
+        msg?: {
+          files?: NonNullable<ChatMessage['msg']>['files'];
+          [key: string]: unknown;
+        } | undefined;
         [key: string]: unknown;
       }
     | undefined;
@@ -658,6 +666,13 @@ export interface ChatMessage {
     name?: string | undefined;
   } | undefined;
   iswd?: boolean | undefined;
+  /**
+   * 是否通讯录/系统联系人消息。
+   * 【证据】两处写入：`actions.ts:165 item.isContact = result.isContact`、
+   * `actions.ts:1262 item.isContact = false`；一处读取：`SystemMessage/index.tsx:61`
+   * 的 `'isContact' in message`。
+   */
+  isContact?: boolean | undefined;
   /** 完整出站草稿对象（`actions.ts:1090` `sendMsg: newMessage`，便于重发） */
   sendMsg?: ChatOutboundDraft | undefined;
   isMineMessage?: boolean | undefined;
@@ -760,7 +775,12 @@ export interface ChatMessage {
    *   （`{ id, name, url, size }` 预览附件）。
    */
   refer?: {
-    msgid?: string | undefined;
+    /**
+     * 被引用消息 id。
+     * 【为何允许 number】`updateMessage` 里 `msgid: referMessage.id`，
+     * 而 `referMessage.id` 是 `string | number`；两处消费方都只做 `== messageId` 比较。
+     */
+    msgid?: string | number | undefined;
     iswd?: boolean | undefined;
     card?: unknown;
     /**
@@ -806,7 +826,7 @@ export interface ChatMessage {
  * 【键值为何含 `undefined`】字典取值本身可缺失（未加载过的会话）。
  */
 export interface ChatMessagesState {
-  [sessionId: string]: (ChatMessage | undefined)[] | undefined;
+  [sessionId: string]: ChatMessage[] | undefined;
 }
 
 /** `referMessage` 切片：会话 id → 被引用的消息 */
