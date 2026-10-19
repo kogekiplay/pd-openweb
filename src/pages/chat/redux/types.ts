@@ -136,12 +136,19 @@ export interface ChatGotoMessageState {
 /**
  * `bottomUnreadMessage` 切片。
  *
- * 【生产方不一致，如实建模】`SET_BOTTOM_UNREAD_MESSAGE` 写入的是 `[action.message]`（**数组**），
- * 而 `UPDATE_BOTTOM_UNREAD_MESSAGE` 写入的是 `action.message`（**单值**）。
- * 因此值类型是 `ChatMessage[] | ChatMessage`，不能强行统一成一种。
+ * 【真实契约是数组】三条读改路径都按数组操作：
+ * - `SET_BOTTOM_UNREAD_MESSAGE` 写 `[action.message]`（数组）
+ * - `ADD_BOTTOM_UNREAD_MESSAGE` 在已有值上 `.concat([action.message])`
+ * - `REMOVE_BOTTOM_UNREAD_MESSAGE` 删除键
+ *
+ * 【既有不一致，如实记录但不放宽类型】`UPDATE_BOTTOM_UNREAD_MESSAGE` 写的是
+ * `action.message`（**单值**），与上面的数组契约不一致 —— 这是生产方既有的越界写入。
+ * 若把类型写成 `ChatMessage[] | ChatMessage`，会让所有数组路径都需要额外收窄，
+ * 反而掩盖"该字典按数组使用"的真实契约；因此这里**按数组建模**，
+ * 单值写入处用擦除标记表达（reducers 内已注明），不修改运行时行为。
  */
 export interface ChatBottomUnreadMessageState {
-  [sessionId: string]: ChatMessage[] | ChatMessage | undefined;
+  [sessionId: string]: ChatMessage[] | undefined;
 }
 
 /**

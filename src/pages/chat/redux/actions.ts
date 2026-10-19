@@ -488,15 +488,11 @@ export const setTop = (message: any) => (dispatch: AppDispatch, getState: GetSta
     );
 
     if (message.value === currentSession.value) {
-      let _current = sessionList.find((l: any) => l.value === message.value);
-
-      if (!_current) {
-        // 原实现在 `_current` 为 undefined 时，`{..._current}` 本身**不抛**
-        // （对象展开 undefined 得到 {}），真正抛的是紧随其后的 `_current.top_info`。
-        // 实测原文：TypeError: Cannot read properties of undefined (reading 'top_info')
-        // 这里逐字复现该失败，不引入 `?? {}` 之类会改变行为的兜底。
-        throw new TypeError("Cannot read properties of undefined (reading 'top_info')");
-      }
+      // 【擦除标记】`find` 的返回在类型上是 `ChatSession | undefined`，而原实现在此处
+      // 直接 spread 并读 `.top_info`（缺项时由**原生**抛 reading 'top_info'）。
+      // 用非空断言把"类型上的可空"擦掉：非空断言**零运行时**，原表达式逐字不变，
+      // 也不手写 TypeError 模拟原生异常。
+      let _current = sessionList.find((l: any) => l.value === message.value)!;
 
       dispatch(
         setNewCurrentSession({
@@ -680,21 +676,9 @@ export const addCurrentSession = (result: any) => (dispatch: AppDispatch, getSta
   result.isGroup = !!result.groupId;
   result.id = result.isGroup ? result.groupId : result.accountId;
   if (currentSessionList.length >= 2) {
-    // 【判空是必要的】`currentSessionList[0]` 在 `noUncheckedIndexedAccess` 下是
-    // `ChatSession | undefined`（实测去掉判空会报 TS2339）。
-    // 原实现在此处解构 undefined 会抛 TypeError，下面逐字复现该失败。
-    const firstCurrentSession = currentSessionList[0];
-
-    if (!firstCurrentSession) {
-      // 实测原文：Cannot destructure property 'id' of 'undefined' as it is undefined.
-      throw new TypeError("Cannot destructure property 'id' of 'undefined' as it is undefined.");
-    }
-
-    // `formatSession` 不保证会话一定有 `id`（如实建模为可选）。
-    // 【保持原调用，不提前 return】原实现会把 undefined 传给 removeCurrentSession，
-    // reducer 侧 `item.id !== action.id` 会删掉 `id` 为 undefined 的会话 —— 既有行为，
-    // 不能靠"缺 id 就跳过"改变它。故把 action creator 形参放宽为 `string | undefined`。
-    const { id } = firstCurrentSession;
+    // 【擦除标记】`[0]` 在 `noUncheckedIndexedAccess` 下是 `ChatSession | undefined`。
+    // 用非空断言擦除（零运行时），原解构语句不变；缺项时仍由**原生**抛错。
+    const { id } = currentSessionList[0]!;
     dispatch(removeCurrentSession(id));
     dispatch(removeMessages(id));
   }
@@ -720,15 +704,8 @@ export const addCurrentInbox = (result: any) => (dispatch: AppDispatch, getState
   const { currentInboxList = [] } = getState().chat;
 
   if (currentInboxList.length >= 3) {
-    const firstInboxSession = currentInboxList[0];
-
-    if (!firstInboxSession) {
-      // 实测原文：Cannot destructure property 'id' of 'undefined' as it is undefined.
-      throw new TypeError("Cannot destructure property 'id' of 'undefined' as it is undefined.");
-    }
-
-    // 同 currentSessionList：保持原调用（见 removeCurrentInbox 的形参放宽）。
-    const { id } = firstInboxSession;
+    // 同 currentSessionList：非空断言擦除，原解构不变。
+    const { id } = currentInboxList[0]!;
     dispatch(removeCurrentInbox(id));
   }
 
@@ -1258,13 +1235,9 @@ export const updateMessage = (message: any) => (dispatch: AppDispatch, getState:
 export const updateFileMessage = (newMessage: any, to: string) => (dispatch: AppDispatch, getState: GetState) => {
   const { messages } = getState().chat;
   const { id } = newMessage;
-  const currentMessage = messages[to];
-
-  if (!currentMessage) {
-    // 原代码 `currentMessage.map(...)` 会抛 TypeError；显式写出同一失败路径。
-    throw new TypeError("Cannot read properties of undefined (reading 'map')");
-  }
-
+  // 【擦除标记】`messages[to]` 类型上可缺失；非空断言擦除（零运行时），
+  // 原 `.map` 调用不变，缺项时仍由**原生**报错。
+  const currentMessage = messages[to]!;
   const newCurrentMessage = currentMessage.map((item: any) => {
     if (item.id === id) {
       return newMessage;
@@ -1658,12 +1631,9 @@ export const groupShake = (message: any) => (dispatch: AppDispatch, getState: Ge
   if (currentSession.value === message.gid) {
     utils.shake(message.gid);
   } else {
-    if (!session) {
-      // 原代码 `session.atlist` 会抛 TypeError；显式写出同一失败路径。
-      throw new TypeError("Cannot read properties of undefined (reading 'atlist')");
-    }
-
-    const atlist = session.atlist ? session.atlist.filter((atId: string) => atId !== message.id) : [];
+    // 【擦除标记】`session` 来自 `filter(...)[0]`，类型上可为 undefined。
+    // 非空断言擦除（零运行时），原 `session.atlist` 读取不变，缺项由**原生**报错。
+    const atlist = session!.atlist ? session!.atlist.filter((atId: string) => atId !== message.id) : [];
     const listMsg = {
       id: message.gid,
       atlist: isWindowSession ? [] : atlist.concat(msg.msgid),

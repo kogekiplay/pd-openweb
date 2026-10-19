@@ -192,17 +192,14 @@ const messages = (state: ChatMessagesState = {}, action: ChatAction): ChatMessag
       return Object.assign({}, state, {
         [action.id]: (state[action.id] || []).concat([action.result]),
       });
-    case 'ADD_PAGE_MESSAGE': {
-      // 原实现 `result.concat(state[id])`。缺键时 `concat(undefined)` 会在末尾**追加一个
-      // undefined 元素**（实测 `[1,2].concat(undefined)` → `[1,2,undefined]`）——原有边界行为，不兜底。
-      // `Array.prototype.concat(undefined)` 在类型上不合法，故用**显式分支**表达同一语义；
-      // 行为等价已由 reducers.spec.ts 的 A/B 用例证明。
-      const existing = state[action.id];
-
-      return Object.assign({}, state, {
-        [action.id]: existing === undefined ? [...action.result, undefined] : action.result.concat(existing),
-      });
-    }
+    case 'ADD_PAGE_MESSAGE':
+      // 【恢复原 concat 执行】原实现是 `action.result.concat(state[action.id])`。
+      // 重写成三元/展开并**不普遍等价**（稀疏槽、数组额外属性、Symbol.isConcatSpreadable、
+      // 覆写 concat/迭代器、getter/原型都会不同），故原表达式逐字保留。
+      // 缺键时 `concat(undefined)` 会在末尾追加一个 undefined 元素 —— 既有边界行为，不兜底。
+      // 【窄化依据】该字典的**真实契约是数组**（SET 写 `[msg]`、ADD 在数组上 concat、
+      // REMOVE 删除键），故用非空断言擦除"可能缺键"，保持原 concat 的 receiver 与调用。
+      return Object.assign({}, state, { [action.id]: action.result.concat(state[action.id]!) });
     case 'PUSH_PAGE_MESSAGE':
       return Object.assign({}, state, { [action.id]: (state[action.id] || []).concat(action.result) });
     case 'REMOVE_MESSAGE':
@@ -295,13 +292,13 @@ const bottomUnreadMessage = (
       //   ② null           → "Cannot read properties of null (reading 'concat')"
       //   ③ 非数组（`UPDATE_BOTTOM_UNREAD_MESSAGE` 写入的单条消息，SET→UPDATE→ADD 可达）
       //                    → "state[action.id].concat is not a function"
-      // 【为什么需要类型标注】该键的声明类型是 `ChatMessage[] | ChatMessage`
-      // （生产方确实两种都写），所以 `.concat` 在类型上不总存在 —— 这正是真实失败点。
-      // 这里把读取结果标注为 `any` 是**局部**的、只为让原表达式原样通过编译，
-      // 不改变任何运行时行为，也不扩大对外类型（对外仍是 `ChatBottomUnreadMessageState`）。
-      const bottomList: any = state[action.id];
-
-      return Object.assign({}, state, { [action.id]: bottomList.concat([action.message]) });
+      // 【不使用 any】原实现是 `state[action.id].concat([action.message])`，逐字保留。
+      // 【窄化依据】该字典真实契约是数组（见 `ChatBottomUnreadMessageState` 与 SET/ADD/REMOVE）；
+      // 非空断言只擦除"可能缺键"这层类型上的可空，**零运行时**，
+      // 缺键时仍由原生以 "Cannot read properties of undefined (reading 'concat')" 失败。
+      return Object.assign({}, state, {
+        [action.id]: state[action.id]!.concat([action.message]),
+      });
     case 'REMOVE_BOTTOM_UNREAD_MESSAGE':
       // 【现有副作用，保留】先 delete 原 state 再复制。
       delete state[action.id];
