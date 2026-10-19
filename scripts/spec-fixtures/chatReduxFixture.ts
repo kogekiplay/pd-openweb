@@ -73,13 +73,25 @@ function makeLocalStorage(initial: Record<string, string> = {}) {
 }
 
 /** 安装宿主替身（每个用例前调用可重置） */
-function installHost(overrides: { localStorage?: ReturnType<typeof makeLocalStorage>; messageListShowType?: number } = {}) {
+/**
+ * 【accountId 为何可配】`formatSession` 里有 `isSelf`（`from.id === accountId`）与
+ * `isAdmin`（`wdAdminid === accountId`）两个分支。此前夹具恒不设 `accountId`，
+ * 于是这两条分支**从未被执行**；加上这个覆盖才能测到。
+ */
+function installHost(
+  overrides: {
+    localStorage?: ReturnType<typeof makeLocalStorage>;
+    messageListShowType?: number;
+    accountId?: string;
+  } = {},
+) {
   const ls = overrides.localStorage || makeLocalStorage();
   (globalThis as any)['localStorage'] = ls;
   (globalThis as any)['md'] = {
     global: {
       Account: {
         messageListShowType: overrides.messageListShowType === undefined ? undefined : overrides.messageListShowType,
+        accountId: overrides.accountId,
       },
     },
   };

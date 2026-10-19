@@ -654,6 +654,41 @@ function main(): void {
     assert.equal(out, input, 'formatSession 就地修改并返回同一对象');
   });
 
+  check('真实 formatSession 的 isSelf / isAdmin 分支（宿主 accountId 参与判断）', () => {
+    /**
+     * 【这条为什么必须有 —— 覆盖缺口】
+     * `formatSession` 里有两个依赖宿主账号的分支：
+     *   `isSelf = item.from.id === md.global.Account.accountId`
+     *   `isAdmin = item.wdAdminid === md.global.Account.accountId`
+     * 它们各自产出**不同**的 `con` 文案。此前夹具恒不设 `accountId`（undefined），
+     * 于是这两条分支**从未执行** —— 6 条 con 构造路径里有 3~4 条没有用例。
+     * 本用例把 accountId 设为 'me' 来覆盖。
+     * 注意：夹具的 `_l` 是恒等替身（不做 %0 替换），故涉及占位的文案断言的是替身输出。
+     */
+    F.installHost({ localStorage: F.makeLocalStorage({}), accountId: 'me' });
+    const utils = F.loadRealUtils();
+
+    // ① isSelf 非撤回：前缀「我」
+    const self1: Record<string, any> = { id: 's1', type: 1, msg: { con: 'hi' }, from: { id: 'me', name: 'Me' } };
+    utils.formatSession(self1);
+    assert.ok(String(self1.msg.con).startsWith('我'), 'isSelf 非撤回：前缀是「我」，实际=' + self1.msg.con);
+
+    // ② isSelf + 撤回（非管理员撤回）：前缀「你」
+    const self2: Record<string, any> = { id: 's2', type: 1, msg: { con: 'x' }, from: { id: 'me', name: 'Me' }, iswd: true };
+    utils.formatSession(self2);
+    assert.ok(String(self2.msg.con).startsWith('你'), 'isSelf + iswd：前缀是「你」，实际=' + self2.msg.con);
+
+    // ③ isSelf + 撤回 + wdAdminid 是自己：管理员文案
+    const self3: Record<string, any> = { id: 's3', type: 1, msg: { con: 'y' }, from: { id: 'me', name: 'Me' }, iswd: true, wdAdminid: 'me' };
+    utils.formatSession(self3);
+    assert.ok(String(self3.msg.con).includes('管理员'), 'isSelf + iswd + wdAdminid===accountId：走管理员文案，实际=' + self3.msg.con);
+
+    // ④ 非自己 + 撤回 + 自己是管理员：另一种文案（含成员名）
+    const other: Record<string, any> = { id: 's4', type: 1, msg: { con: 'z' }, from: { id: 'other', name: '对方' }, iswd: true, wdAdminid: 'me' };
+    utils.formatSession(other);
+    assert.ok(String(other.msg.con).includes('你撤回了成员'), '非自己 + iswd + 自己是管理员：走成员撤回文案，实际=' + other.msg.con);
+  });
+
   check('真实 sortSession 的 messageListShowType===1 分支（count 优先组）', () => {
     /**
      * 【这条为什么必须有 —— 由变异测试发现】
