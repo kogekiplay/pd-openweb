@@ -385,8 +385,12 @@ export const formatNewSession = (message: ChatRawMessageWire): ChatSession => {
     };
   }
 
-  // 【归一化点】两个分支都已完成 `msg` / `from` 的原地改型；
-  // 按 lead 13:23 方案，此处允许**归一化之后的局部窄化断言**。
+  // 【归一化点 —— 逐分支如实说明（原来那句"两个分支都已把 msg/from 改成对象"是**假的**，lead 15:29 指出）】
+  //   · 系统消息分支（`'dtype' in message`）：只把 `msg` 由 string 改成 `{ con }`，
+  //     另外写 `time` 与 `value`；**从不写 `from`**，也不改 `id`。
+  //   · 非系统分支：把 `msg` 保持为 socket 的对象形态，并把 `from` 由 id 字符串**原地改型**为发送者对象。
+  // 因此这里收窄到的 `ChatSessionWireNormalized` 是**两分支联合**（系统分支允许无 `from`），
+  // 而不是"from 必有对象"的单一声称 —— 这也正是本批修正的核心。
   return formatSession(message as ChatSessionWireNormalized as ChatSession);
 };
 

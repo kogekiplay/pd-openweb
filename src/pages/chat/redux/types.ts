@@ -468,7 +468,10 @@ export interface ChatMessage {
    *   随后 push 进 `res` 交给 `formatMessages`；
    * - `MessageView:147/155` 代码**自己**用 `typeof id === 'number'` 判断文件/卡片消息。
    * 因此这里是 `string | number`，不是仅 string。
-   * 注意与 `ChatSession.id`（会话 id，恒为 string）区分，不做全仓 `string | number` 泛化。
+   * 注意与 `ChatSession.id` 区分：后者在**类型上**收紧为 `string`（数值会话 id 在 wire 边界被拒，
+   * 见 `ChatRawMessageWire.id` 的说明）；但运行期 `formatNewSession` 的系统分支**不会**改写 `id`，
+   * 若服务端真发数值 id，运行时会原样带出 —— lead 15:29 已用 `formatter-shapes.cjs` 实测到该形态。
+   * 因此"恒为 string"只成立于类型层，不是运行期保证。不做全仓 `string | number` 泛化。
    */
   id?: string | number | undefined;
   /** 预发送消息的临时 id；`REMOVE_MESSAGE` 按 `waitingId` 过滤 */
