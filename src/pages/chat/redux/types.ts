@@ -106,10 +106,15 @@ export interface ChatSession {
   /* ── 以下为 `ChatPanelHeader` / 部门树等消费的扩展字段 ── */
   /** 用户全名（`ChatPanelHeader` 读） */
   fullname?: string | undefined;
-  /** 部门名（`ChatPanelHeader` 读） */
-  mapDepartmentName?: unknown;
-  /** 状态选项（`ChatPanelHeader` 真值判断后渲染） */
-  onStatusOption?: unknown;
+  /** 部门名：`ChatPanelHeader:280/283` 先真值判断再**直接作为文本渲染**，故是字符串 */
+  mapDepartmentName?: string | undefined;
+  /**
+   * 个人状态选项。
+   * 【复用生成 DTO，不手写形状】`MyStatus/index.tsx:95` 已有同名字段的真实声明：
+   * `HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption | null | undefined`；
+   * `MyStatus:261` 读 `.endTime`、`:271` 回填 `null`。故此处直接复用该 DTO 并允许 `null`。
+   */
+  onStatusOption?: HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption | null | undefined;
   /** 弱关联计数（部门/外部联系人扩展） */
   weak_count?: number | undefined;
   /* ── 以下为 `utils.formatSession` **读写**的字段（逐行取证） ── */
@@ -307,8 +312,20 @@ export interface ChatMessage {
   /* ── 以下为消费方**实际读取/写入**的字段 ── */
   /** `utils/index.ts:281` 处 `message.value = message.id` 赋值（会话化消息时） */
   value?: string | undefined;
-  /** 图片消息的 kcFile 标记（`ImageMessage:27` 读） */
-  kcFile?: unknown;
+  /**
+   * kcFile 附件对象（**非布尔标记**）。
+   * 【真实消费】
+   * - `MessageToolbar:194` `message.kcFile.downloadUrl`（下载 URL 优先来源）；
+   * - `ImageMessage:73` / `FileMessage:98` 把**整个对象**作为 `attachments: [message.kcFile]`
+   *   传给预览组件；
+   * - `viewUrl` / `size` 同处取用（`viewUrl : ''`、`size : 0` 兜底）。
+   */
+  kcFile?: {
+    downloadUrl?: string | undefined;
+    viewUrl?: string | undefined;
+    size?: number | undefined;
+    [key: string]: unknown;
+  } | undefined;
   /** 未读数（会话化消息时读 `.count`） */
   count?: number | undefined;
   /** 账号 id（会话化消息时读） */
