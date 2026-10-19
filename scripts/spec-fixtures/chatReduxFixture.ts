@@ -180,7 +180,7 @@ function loadRealUtils(): Record<string, any> {
     /**
      * `src/utils/common` 的 `htmlDecodeReg` **逐字忠实替身**（该模块依赖 JSEncrypt 等，
      * 在本隔离环境无法 require）。实现与真实源码一一对应，不做简化：
-     * 只替换源码里列出的那 11 个实体，其余原样返回；非真值返回 `''`。
+     * 只替换源码里列出的那 **10** 个实体（`&#38;`/`&amp;`/`&#60;`/`&#62;`/`&#34;`/`&#39;`/`&#47;`/`&lt;`/`&gt;`/`&quot;`），其余原样返回；非真值返回 `''`。
      */
     htmlDecodeReg: (str: unknown): string => {
       const rules: Record<string, string> = {
