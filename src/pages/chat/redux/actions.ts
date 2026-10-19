@@ -684,16 +684,12 @@ export const addCurrentSession = (result: any) => (dispatch: AppDispatch, getSta
       throw new TypeError("Cannot destructure 'undefined' as it is undefined.");
     }
 
-    const { id } = firstCurrentSession;
-
     // `formatSession` 不保证会话一定有 `id`（如实建模为可选）。
-    // 原代码把 undefined 传给 `removeCurrentSession(id: string)` 时，
-    // reducer 侧 `item.id !== action.id` 不会误删任何项（undefined 不等于任何真实 id），
-    // 因此这里保持**同样的调用**，仅在缺 id 时跳过（与原实现的净效果一致：
-    // 都不会删掉任何会话）。
-    if (!id) {
-      return;
-    }
+    // 【保持原调用，不提前 return】原实现会把 undefined 传给
+    // `removeCurrentSession`，reducer 侧 `item.id !== action.id` 于是**会删掉
+    // `id` 为 undefined 的会话** —— 这是既有行为，不能靠"缺 id 就跳过"改变它。
+    // 因此把 action creator 的形参放宽为 `string | undefined`（见其定义处）。
+    const { id } = firstCurrentSession;
     dispatch(removeCurrentSession(id));
     dispatch(removeMessages(id));
   }
@@ -725,12 +721,8 @@ export const addCurrentInbox = (result: any) => (dispatch: AppDispatch, getState
       throw new TypeError("Cannot destructure 'undefined' as it is undefined.");
     }
 
+    // 同 currentSessionList：保持原调用（见 removeCurrentInbox 的形参放宽）。
     const { id } = firstInboxSession;
-
-    // 同 currentSessionList：`id` 可缺失，缺时跳过（净效果与原实现一致，不误删）。
-    if (!id) {
-      return;
-    }
     dispatch(removeCurrentInbox(id));
   }
 
@@ -767,7 +759,11 @@ export const updateInoxRequestNow = (id: string) => {
  * 删除聊过的会话信息
  * @param {*} result
  */
-export const removeCurrentSession = (id: string) => {
+// 【形参放宽为 string | undefined】调用方 `removeCurrentSessionList` 从
+// `currentSessionList[0]` 取 id，而 `formatSession` 不保证会话一定有 id。
+// 放宽形参**不改变任何运行时行为**（原实现同样接收并透传 undefined），
+// 只是让类型如实表达既有调用。
+export const removeCurrentSession = (id: string | undefined) => {
   return {
     type: 'REMOVE_CURRENT_SESSION',
     id,
@@ -778,7 +774,8 @@ export const removeCurrentSession = (id: string) => {
  * 删除打开过的 inbox 信息
  * @param {*} result
  */
-export const removeCurrentInbox = (id: string) => {
+// 同 removeCurrentSession：调用方从 currentInboxList[0] 取 id，可能缺失。
+export const removeCurrentInbox = (id: string | undefined) => {
   return {
     type: 'REMOVE_INBOX_SESSION',
     id,
@@ -1178,7 +1175,8 @@ export const removeMessage = (id: string, messageId: string) => {
  * 删除消息列表
  * @param {*} id
  */
-export const removeMessages = (id: string) => {
+// 同 removeCurrentSession：调用方透传会话 id，可能缺失。
+export const removeMessages = (id: string | undefined) => {
   return {
     type: 'REMOVE_MESSAGES',
     id,
