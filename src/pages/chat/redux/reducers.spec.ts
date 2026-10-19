@@ -452,6 +452,28 @@ function main(): void {
       JSON.stringify({ '只有派发': dispatched.filter((x: any) => !handled.includes(x)), '只有 case': handled.filter((x: any) => !dispatched.includes(x)) }));
   });
 
+  check('真实 formatMsgDate：跨年分支与 isHourMinute 两态、以及未来时间分支（**确定性**）', () => {
+    /**
+     * 【为什么这些断言是确定性的】
+     * 用**固定日期字符串**（不是 `Date.now()`）作输入：
+     *   · `moment('2023-11-14 10:00:00.000')` 按本地时区解析，再按本地时区 format
+     *     → 年月日时分在任何时区都是同一组数字（只影响"时刻"若给的是 UTC 字符串）。
+     *   · 2023 年**永远早于当前年**，故稳定走「跨年」分支，不会随时间变成"同年"。
+     *   · `'2099-01-01 00:00:00.000'` 永远在未来，稳定走 `diff < 0` 分支。
+     * 【覆盖】此前 `formatMsgDate` 只被 `formatSession`/`formatMessage` 间接调用，
+     * 跨年与 `isHourMinute=false` 两态**没有直接断言**。
+     */
+    const utils = F.loadRealUtils();
+
+    // ① 跨年 + isHourMinute=true（默认）→ `YYYY年M月D日 HH:mm`
+    assert.equal(utils.formatMsgDate('2023-11-14 10:00:00.000'), '2023年11月14日 10:00', '跨年分支带时分');
+    // ② 跨年 + isHourMinute=false → 没有时分后缀
+    assert.equal(utils.formatMsgDate('2023-11-14 10:00:00.000', false), '2023年11月14日', '跨年分支不带时分');
+
+    // ③ 未来时间 → 直接返回 HH:mm（不进任何日期分支）
+    assert.equal(utils.formatMsgDate('2099-01-01 00:00:00.000'), '00:00', '未来时间只返回 HH:mm');
+  });
+
   check('REMOVE_MESSAGES 的**先 delete 原 state 再浅复制**副作用（如实保留）', () => {
     const { root, init } = boot('current');
     const s1 = root(init(), { type: 'SET_MESSAGE', id: 'k1', result: [MSG_1] });
