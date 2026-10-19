@@ -91,7 +91,7 @@ function installHost(overrides: { localStorage?: ReturnType<typeof makeLocalStor
 
 /**
  * 需要抽取的真实声明。
- * `sortTop` 是 `sortSession` 依赖的**模块级函数**（utils.ts:39），
+ * `sortTop` 是 `sortSession` 依赖的**模块级函数**（`utils/index.ts` 内 `export` 前的 `const sortTop`），
  * 不抽它 `sortSession` 会 `ReferenceError` —— 抽不到会明确失败，不静默降级。
  */
 const HELPER_NAMES = [

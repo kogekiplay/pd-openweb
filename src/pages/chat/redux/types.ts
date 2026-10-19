@@ -589,9 +589,9 @@ export interface ChatMessage {
   /**
    * 消息 id。
    * 【真实证据：可为 number】
-   * - `MessageView:65` 本地构造提醒消息时 `remind.id = Date.now()`（**数值**），
+   * - `MessageView`（`componentDidMount`）本地构造提醒消息时 `remind.id = Date.now()`（**数值**），
    *   随后 push 进 `res` 交给 `formatMessages`；
-   * - `MessageView:147/155` 代码**自己**用 `typeof id === 'number'` 判断文件/卡片消息。
+   * - `MessageView` 里两处代码**自己**用 `typeof id === 'number'` 判断文件/卡片消息。
    * 因此这里是 `string | number`，不是仅 string。
    * 注意与 `ChatSession.id` 区分：后者在**类型上**收紧为 `string`（数值会话 id 在 wire 边界被拒，
    * 见 `ChatRawMessageWire.id` 的说明）；但运行期 `formatNewSession` 的系统分支**不会**改写 `id`，
@@ -691,7 +691,7 @@ export interface ChatMessage {
   /**
    * 卡片消息体。
    * 【已消费字段（逐处取证）】
-   * - `md`（11 处，如 `MessageView:154` `card.md === 'worksheet'` / `'kcfile'`）——卡片类型标识；
+   * - `md`（11 处，如 `MessageView` 里 `card.md === 'worksheet'` / `'kcfile'`）——卡片类型标识；
    * - `title`（`ChatPanelSession` 模板拼接）；
    * - `entityid` / `url`（拼 `'_' + moment(sidext)` 后缀）；
    * - `projectId`、`extra`（`|| {}` 兜底后使用）。
