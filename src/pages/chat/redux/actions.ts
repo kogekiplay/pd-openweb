@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import type { AppDispatch, GetState } from 'src/redux/types';
 import type { ChatMessage } from './types';
+import type { ChatAction } from './reducers';
 import { dateConvertToUserZone } from 'src/utils/project';
 import * as utils from '../utils';
 import * as ajax from '../utils/ajax';
@@ -186,7 +187,7 @@ export const removeSession = (id: string) => {
   return {
     type: 'REMOVE_SESSION',
     id,
-  };
+  } satisfies ChatAction;
 };
 
 /**
@@ -736,7 +737,7 @@ export const updateInoxRequestNow = (id: string) => {
     data: {
       requestNow: Date.now(),
     },
-  };
+  } satisfies ChatAction;
 };
 
 /**
@@ -751,7 +752,7 @@ export const removeCurrentSession = (id: string | undefined) => {
   return {
     type: 'REMOVE_CURRENT_SESSION',
     id,
-  };
+  } satisfies ChatAction;
 };
 
 /**
@@ -763,7 +764,7 @@ export const removeCurrentInbox = (id: string | undefined) => {
   return {
     type: 'REMOVE_INBOX_SESSION',
     id,
-  };
+  } satisfies ChatAction;
 };
 
 /**
@@ -1021,7 +1022,7 @@ export const resetMessage = (id: string, result: ChatMessage[]) => {
     type: 'SET_MESSAGE',
     id,
     result,
-  };
+  } satisfies ChatAction;
 };
 
 /**
@@ -1038,7 +1039,7 @@ export const addPageMessage = (id: string, result: ChatMessage[]) => {
     type: 'ADD_PAGE_MESSAGE',
     id,
     result,
-  };
+  } satisfies ChatAction;
 };
 
 /**
@@ -1055,7 +1056,7 @@ export const pushPageMessage = (id: string, result: ChatMessage[]) => {
     type: 'PUSH_PAGE_MESSAGE',
     id,
     result,
-  };
+  } satisfies ChatAction;
 };
 
 /**
@@ -1164,7 +1165,7 @@ export const removeMessage = (id: string, messageId: string) => {
     type: 'REMOVE_MESSAGE',
     id,
     messageId,
-  };
+  } satisfies ChatAction;
 };
 
 /**
@@ -1176,7 +1177,7 @@ export const removeMessages = (id: string | undefined) => {
   return {
     type: 'REMOVE_MESSAGES',
     id,
-  };
+  } satisfies ChatAction;
 };
 
 /**
@@ -1717,7 +1718,7 @@ export const setReferMessage = (id: string, message: any) => {
     type: 'SET_REFER_MESSAGE',
     id,
     message,
-  };
+  } satisfies ChatAction;
 };
 
 /**
@@ -1748,7 +1749,7 @@ export const removeBottomUnreadMessage = (id: string) => {
   return {
     type: 'REMOVE_BOTTOM_UNREAD_MESSAGE',
     id,
-  };
+  } satisfies ChatAction;
 };
 
 /**
@@ -1759,7 +1760,7 @@ export const removeReferMessage = (id: string) => {
   return {
     type: 'REMOVE_REFER_MESSAGE',
     id,
-  };
+  } satisfies ChatAction;
 };
 
 /**
@@ -1772,7 +1773,7 @@ export const setGotoMessage = (id: string, messageId: string) => {
     type: 'SET_GOTO_MESSAGE',
     id,
     messageId,
-  };
+  } satisfies ChatAction;
 };
 
 /**
@@ -1783,7 +1784,7 @@ export const removeGotoMessage = (id: string) => {
   return {
     type: 'REMOVE_GOTO_MESSAGE',
     id,
-  };
+  } satisfies ChatAction;
 };
 
 /**
@@ -1794,7 +1795,7 @@ export const setIsWindow = (isWindow: boolean) => {
   return {
     type: 'UPDATE_IS_WINDOW',
     result: isWindow,
-  };
+  } satisfies ChatAction;
 };
 
 /**
@@ -1934,7 +1935,7 @@ export const setSocketState = (state: number) => {
   return {
     type: 'UPDATE_SOCKET_STATE',
     result: state,
-  };
+  } satisfies ChatAction;
 };
 
 /**
@@ -1945,5 +1946,5 @@ export const setToolbarConfig = (config: any) => {
   return {
     type: 'SET_TOOLBAR_CONFIG',
     result: config,
-  };
+  } satisfies ChatAction;
 };
