@@ -7,24 +7,50 @@ import { Icon, Input, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import sheetAjax from 'src/api/worksheet';
 import BtnRangeDrop from 'src/pages/FormSet/components/BtnRangeDrop';
-
+import type { ButtonRangeData } from 'src/pages/FormSet/components/BtnRangeDrop';
 import { WORKSHEET_BTN_OPTION_TYPE } from 'src/pages/worksheet/common/ViewConfig/components/customBtn/config';
-
+import type { WorksheetView } from 'src/pages/worksheet/types';
 import CustomBtnMoreOption from './CustomBtnMoreOption';
 import { viewRangeList } from './rangeValues';
 
+type WireButton = HapApi.MD.Entity.Worksheet.WorksheetBtnEntity;
+type OtherButtonFields = Omit<WireButton, keyof ButtonRangeData>;
+export type CustomButtonData = ButtonRangeData & { [K in keyof OtherButtonFields]?: OtherButtonFields[K] | undefined };
+export interface BtnTdState {
+  showDropOption: boolean;
+  showMoreOption: boolean;
+  isRename: boolean;
+  it: CustomButtonData;
+  templateId?: CustomButtonData['btnId'];
+}
+export type ButtonSavePatch = CustomButtonData & {
+  EditAttrs?: string[] | undefined;
+  editAttrs?: string[] | undefined;
+};
+export interface BtnTdProps {
+  it: CustomButtonData;
+  btnList: CustomButtonData[];
+  views?: WorksheetView[] | undefined;
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+  getSheetBtns: () => void;
+  onChange: (
+    value:
+      { btnList: CustomButtonData[] } | { isEdit: true; showCreateCustomBtn: true; btnId: CustomButtonData['btnId'] },
+  ) => void;
+}
+interface ButtonOption {
+  appId?: string | undefined;
+  viewId?: string | undefined;
+  optionType: number;
+  successText?: string | undefined;
+  failText?: string | undefined;
+}
 
-
-
-
-
-
-
-
-export default function BtnTd(props) {
-  const input = useRef(null);
+export default function BtnTd(props: BtnTdProps) {
+  const input = useRef<HTMLInputElement | null>(null);
   const { onChange, getSheetBtns, views = [], appId, btnList, worksheetId } = props;
-  const [{ showDropOption, showMoreOption, isRename, it }, setState] = useSetState({
+  const [{ showDropOption, showMoreOption, isRename, it }, setState] = useSetState<BtnTdState>({
     showDropOption: false,
     showMoreOption: false,
     isRename: false,
@@ -37,10 +63,10 @@ export default function BtnTd(props) {
   }, [props]);
   useEffect(() => {
     if (isRename) {
-      input.current.focus();
+      input.current!.focus();
     }
   }, [isRename]);
-  const editBtn = (obj, cb?) => {
+  const editBtn = (obj: ButtonSavePatch, cb?: (() => void) | undefined) => {
     sheetAjax
       .saveWorksheetBtn({
         btnId: it.btnId,
@@ -66,7 +92,7 @@ export default function BtnTd(props) {
         worksheetId,
       })
       .then(
-        (data) => {
+        (data: unknown) => {
           if (data) {
             getSheetBtns();
             alert(_l('复制成功'));
@@ -86,7 +112,7 @@ export default function BtnTd(props) {
     optionType,
     successText = _l('删除成功'),
     failText = _l('删除失败'),
-  }) => {
+  }: ButtonOption) => {
     sheetAjax
       .optionWorksheetBtn({
         appId,
@@ -96,7 +122,7 @@ export default function BtnTd(props) {
         optionType: optionType, // * @param { integer } args.optionType 操作类型 9：删除按钮 12：停用按钮 13：启用按钮
       })
       .then(
-        (data) => {
+        (data: unknown) => {
           if (data) {
             if (successText) {
               alert(successText);
@@ -113,7 +139,7 @@ export default function BtnTd(props) {
       );
   };
 
-  const handleToggleEnable = (targetDisabled) => {
+  const handleToggleEnable = (targetDisabled: boolean) => {
     optionWorksheetBtn({
       appId,
       viewId: '',
@@ -124,12 +150,12 @@ export default function BtnTd(props) {
   };
 
   const renderTxt = () => {
-    const canBatchViewIds = views
+    const canBatchViewIds: unknown[] = views
       .filter(o => o.viewType === 0 || (o.viewType === 2 && _.get(o, 'advancedSetting.hierarchyViewType') === '3'))
       .map(o => o.viewId);
     const noBatch = (it.writeObject === 2 || it.writeType === 2) && it.clickType === 3; //填写且配置了关联=>不能设置成批量按钮
-    const detailViews = safeParse(_.get(it, 'advancedSetting.detailviews'), 'array');
-    const parsedListViews = safeParse(_.get(it, 'advancedSetting.listviews'), 'array');
+    const detailViews: unknown = safeParse(_.get(it, 'advancedSetting.detailviews'), 'array');
+    const parsedListViews: unknown = safeParse(_.get(it, 'advancedSetting.listviews'), 'array');
     const listViews = viewRangeList(parsedListViews).filter(o => canBatchViewIds.includes(o));
     const viewIds = _.uniq(noBatch ? viewRangeList(detailViews) : viewRangeList(detailViews).concat(listViews));
 
@@ -152,7 +178,7 @@ export default function BtnTd(props) {
   const isDisabled = it.status === 0; //0停用
   const iconColor = isDisabled ? 'var(--color-text-disabled)' : color;
 
-  const handleMoreOptionVisibleChange = (showMoreOption) =>
+  const handleMoreOptionVisibleChange = (showMoreOption: boolean) =>
     setState({ showMoreOption, templateId: showMoreOption ? it.btnId : '' });
 
   const handleDelete = () => optionWorksheetBtn({ appId, viewId: '', optionType: 9 });
@@ -160,7 +186,7 @@ export default function BtnTd(props) {
   return (
     <div className={cx('printTemplatesList-tr printBtnsList-tr', { disabledCustomBtn: isDisabled })}>
       <div className="name flex mRight20 valignWrapper overflowHidden">
-        {!!it.iconUrl && it.icon.endsWith('_svg') ? (
+        {!!it.iconUrl && it.icon!.endsWith('_svg') ? (
           <SvgIcon
             className="InlineBlock TxtTop mRight13 Icon iconTitle"
             addClassName="TxtMiddle"
@@ -190,13 +216,13 @@ export default function BtnTd(props) {
               });
               if (!newName) {
                 alert(_l('请输入按钮名称'), 3);
-                input.current.focus();
+                input.current!.focus();
                 return;
               }
 
               if (btnList.find(l => l.name === newName && l.btnId !== it.btnId)) {
                 alert(_l('按钮名称重名，请重新修改'), 3);
-                input.current.focus();
+                input.current!.focus();
                 return;
               }
 

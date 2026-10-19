@@ -5,6 +5,21 @@ import './MoreOption.less';
 
 const confirm = Dialog.confirm;
 
+export interface CustomButtonMenuPatch {
+  isRename?: boolean;
+  showMoreOption?: boolean;
+}
+export interface CustomBtnMoreOptionProps {
+  item: { name?: string | undefined };
+  isDisabled: boolean;
+  visible: boolean;
+  setFn: (patch: CustomButtonMenuPatch) => void;
+  onCopy: () => void;
+  onDelete: () => void;
+  onToggleEnable: (disabled: boolean) => void;
+  onVisibleChange: (visible: boolean) => void;
+}
+
 export default function CustomBtnMoreOption({
   item,
   isDisabled,
@@ -14,10 +29,10 @@ export default function CustomBtnMoreOption({
   onDelete,
   onToggleEnable,
   onVisibleChange,
-}) {
+}: CustomBtnMoreOptionProps) {
   const handleCopy = () => {
     return confirm({
-      title: <span className="WordBreak Block">{_l('复制自定义动作“%0”', item.name)}</span>,
+      title: <span className="WordBreak Block">{_l('复制自定义动作“%0”', item.name!)}</span>,
       onOk: onCopy,
     });
   };
