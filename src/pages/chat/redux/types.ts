@@ -272,6 +272,18 @@ export interface ChatMessage {
       size?: number | undefined;
       /** 是否表情 */
       isEmotion?: boolean | undefined;
+      /**
+       * 文件大小（备用字段）：`FileMessage:131` `formatFileSize(files.fsize || files.size)`
+       * —— 与 `size` 互为兜底，故同为 number。
+       */
+      fsize?: number | undefined;
+      /**
+       * 音频时长：`AudioMessage:67` `parseInt(files.len) || 0`。
+       * 注意被 `parseInt` 处理，故**可能是字符串形态**，如实写 `string | number`。
+       */
+      len?: string | number | undefined;
+      /** 附件 id 标记：`FileMessage:34` `!files.id || files.aid` 真值判断 */
+      aid?: unknown;
       /** 缩略图集（`thumbs.web_1` 等） */
       thumbs?: { [key: string]: unknown } | undefined;
       /** 其余按消息种类扩展的附件字段 */
@@ -391,6 +403,8 @@ export interface ChatMessage {
     msgid?: string | undefined;
     iswd?: boolean | undefined;
     card?: unknown;
+    /** 引用消息的发送者：`SessionItem:37` `item.refer.user.account_id === accountId` 真值链比较 */
+    user?: { account_id?: string | undefined; [key: string]: unknown } | undefined;
     msgdetail?: {
       files?: { id?: unknown; name?: string | undefined; url?: string | undefined; size?: unknown; [key: string]: unknown } | undefined;
       [key: string]: unknown;
