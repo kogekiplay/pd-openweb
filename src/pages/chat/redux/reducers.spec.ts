@@ -660,6 +660,14 @@ function main(): void {
     // 再经 `formatMsgDate(..., false)` 化为一小时内的 `HH:mm`；夹具把 now 固定为 12:00，
     // 故可精确断言（此前该兜底路径没有断言）。
     assert.equal(outS.time, '12:00', '系统分支 time = getCurrentTime() → 固定 now 的 HH:mm');
+    // 【新增】`formatNewSession` 末尾**委托** `formatSession(...)`（源码第 404 行），
+    // 故会留下 `_time = 原始时间`。这里 `_time` 恰好是 `getCurrentTime()` 的**完整字符串**，
+    // 精确锁住"先把 time 设为 now，再交给 formatSession 归一化"这一组合行为。
+    assert.equal(
+      outS._time,
+      '2026-10-19 12:00:00.000',
+      '系统分支 _time 保留了 getCurrentTime() 的完整字符串（证明委托给 formatSession）',
+    );
 
     // 事实 3：缺 id 的 from 也能成功返回
     const s3 = { id: 's3', type: 1, msg: { con: 'text' }, from: { name: 'User' } };
@@ -849,6 +857,7 @@ function main(): void {
     assert.equal(own.value, 'sess-1', 'accountId === from（本人）→ value 取 to');
     // 普通分支的 time 兜底（第 390 行）同样走 `getCurrentTime()`，固定 now 下为 '12:00'
     assert.equal(own.time, '12:00', '普通分支缺 time → getCurrentTime() 兜底，固定 now 下为 HH:mm');
+    assert.equal(own._time, '2026-10-19 12:00:00.000', '普通分支 _time 同样保留 getCurrentTime() 的完整字符串');
     // 对照：非本人时 value 取 from
     const notOwn: Record<string, any> = { id: 'o2', from: 'other', to: 'sess-2', msg: { con: 'hi' }, type: 1 };
     utils.formatNewSession(notOwn);
