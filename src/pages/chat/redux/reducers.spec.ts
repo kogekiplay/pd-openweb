@@ -888,6 +888,41 @@ function main(): void {
       1,
       '长度必须是 1 —— 若变成 2 说明实现被改成了 concat',
     );
+
+    // 【引用语义 —— 由变异测试发现】
+    // 把 `[action.id]: action.result` 改成 `action.result.slice()`（浅拷贝）时，
+    // 上面这些**值**断言全绿 —— 因为拷贝后值相同。但 reducer 的真实语义是
+    // **原样存入同一个数组引用**（lead 要求"保留原引用、不缓存不改写"）。
+    // 下游 `updateMessage`/`updateWithdrawMessage` 会就地改该数组里的元素对象，
+    // 若这里是副本，state 与调用方持有的数组就会分叉。
+    const arr = [MSG_1];
+    const withRef = root(init(), { type: 'SET_MESSAGE', id: 'kref', result: arr });
+    assert.ok(withRef.messages.kref === arr, 'SET_MESSAGE 存入的是**同一个数组引用**（不是拷贝）');
+
+    // ADD_MESSAGE 走 `(state[id] || []).concat([msg])` → 产生**新数组**，
+    // 且**不得就地改动**旧数组。
+    const base = [MSG_1];
+    const before = base.length;
+    const appended = root({ ...init(), messages: { kadd: base } } as never, {
+      type: 'ADD_MESSAGE',
+      id: 'kadd',
+      result: MSG_2,
+    });
+    assert.ok(appended.messages.kadd !== base, 'ADD_MESSAGE 产生新数组（不是原地 push）');
+    assert.equal(base.length, before, 'ADD_MESSAGE 不就地改动旧数组（长度不变）');
+
+    // ADD_PAGE_MESSAGE 走 `action.result.concat(state[id])` → 同样新数组，
+    // 且**不得就地改动**传入的 action.result。
+    const page = [MSG_1];
+    const pageBefore = page.length;
+    const prepended = root({ ...init(), messages: { kpage: [MSG_2] } } as never, {
+      type: 'ADD_PAGE_MESSAGE',
+      id: 'kpage',
+      result: page,
+    });
+    assert.ok(prepended.messages.kpage !== page, 'ADD_PAGE_MESSAGE 产生新数组');
+    assert.equal(page.length, pageBefore, 'ADD_PAGE_MESSAGE 不就地改动 action.result');
+
   });
 
   check('【刻意构造的异常输入】UPDATE_BOTTOM_UNREAD 收到**单项**时原样存入，不做数组包装', () => {
