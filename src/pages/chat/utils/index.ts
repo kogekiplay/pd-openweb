@@ -5,7 +5,12 @@ import { INBOXTYPES } from 'src/pages/chat/components/Inbox/constants';
 import { htmlDecodeReg, pathCompletion } from 'src/utils/common';
 import { dateConvertToUserZone } from 'src/utils/project';
 import Constant from './constant';
-import type { ChatMessage, ChatSession } from '../redux/types';
+import type {
+  ChatMessage,
+  ChatRawMessageWire,
+  ChatSession,
+  ChatSessionWireNormalized,
+} from '../redux/types';
 
 export const formatMsgDate = (dateStr, isHourMinute = true) => {
   const dateTime = moment(dateStr);
@@ -312,14 +317,19 @@ export const formatMessage = (message: ChatMessage, prevMessage?: ChatMessage): 
  * 随后参与 `messages` 字典；返回 `ChatMessage`。
  * 入参是**原始 socket 载荷**（未经过 `formatMessage`），故保持未标注并在下方"未覆盖"中列出。
  */
-export const formatNewMessage = (message: ChatMessage, prevMessage?: ChatMessage): ChatMessage => {
+export const formatNewMessage = (
+  message: ChatRawMessageWire,
+  prevMessage?: ChatMessage,
+): ChatMessage => {
   message.iswd = false;
   message.fromAccount = {
-    id: message.from,
+    id: message.from as string | undefined,
     name: message.uname,
     logo: message.logo,
   };
-  return formatMessage(message, prevMessage);
+  // 【归一化点】以上逐属性写入完成后，对象已是 ChatMessage 形态；
+  // 按 lead 13:23 方案，此处允许**归一化之后的局部窄化断言**（不是从 any/unknown 整体 as）。
+  return formatMessage(message as ChatMessage, prevMessage);
 };
 
 /**
@@ -332,7 +342,7 @@ export const formatNewMessage = (message: ChatMessage, prevMessage?: ChatMessage
  * 直接进入会话列表流程；返回 `ChatSession`。
  * 入参是**原始 socket 载荷**（`msg` 在该分支里是字符串而非对象），故保持未标注。
  */
-export const formatNewSession = (message): ChatSession => {
+export const formatNewSession = (message: ChatRawMessageWire): ChatSession => {
   if ('dtype' in message) {
     // 系统消息
     message.msg = {
@@ -345,22 +355,27 @@ export const formatNewSession = (message): ChatSession => {
     message.iswd = false;
     message.name = message.isGroup ? message.groupname : message.uname;
     message.msgid = message.id;
+    // 【局部窄化断言（lead 13:23 允许）】`else` 分支内 `from` 尚未被下面的赋值改型，
+    // 仍是 wire 阶段的 **id 字符串**；过渡联合在此收窄为 string。
+    // 【不缓存】按 lead 要求"不缓存迁就类型"：每个读取点就地收窄，读取次数与基线一致。
     message.value = message.isGroup
       ? message.to
-      : md.global.Account.accountId === message.from
+      : md.global.Account.accountId === (message.from as string | undefined)
         ? message.to
-        : message.from;
+        : (message.from as string | undefined);
     message.logo = message.isGroup ? message.avatar : message.logo;
     message.type = message.isGroup ? Constant.SESSIONTYPE_GROUP : Constant.SESSIONTYPE_USER;
     message.time = message.time ? message.time : getCurrentTime();
     message.from = {
-      id: message.from,
+      id: message.from as string | undefined,
       name: message.uname,
       avatar: message.logo,
     };
   }
 
-  return formatSession(message);
+  // 【归一化点】两个分支都已完成 `msg` / `from` 的原地改型；
+  // 按 lead 13:23 方案，此处允许**归一化之后的局部窄化断言**。
+  return formatSession(message as ChatSessionWireNormalized as ChatSession);
 };
 
 /**

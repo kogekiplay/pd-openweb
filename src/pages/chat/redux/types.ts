@@ -209,6 +209,72 @@ export interface ChatOutboundDraft {
 }
 
 /**
+ * **原始 wire 形态**：socket 收到、尚未经 `formatNewMessage` / `formatNewSession` 归一化的载荷。
+ *
+ * 【为什么单独建这一层（lead 13:23 方案）】这两个 formatter 会**逐属性原地写入**把 wire
+ * 变成最终形态：`msg` 由 `string` 改成 `{ con }`、`from` 由 id 字符串改成发送者对象。
+ * 因此输入既不能标 `any`（丢信息），也不能直接标最终 `ChatMessage`/`ChatSession`（撒谎）。
+ * 三层分别是：本接口（wire）→ 归一化写入后的过渡形态 → 最终输出形态。
+ *
+ * 【字段依据】`formatNewMessage` / `formatNewSession` 与它们转交的 `formatMessage` /
+ * `formatSession` 实际读写的字段，逐行取证；其余按键保留 `unknown` 索引。
+ */
+export interface ChatRawMessageWire {
+  id?: string | number | undefined;
+  /**
+   * 发送者：wire 阶段是 **id 字符串**；`formatNewSession` 会把它**原地改型**成发送者对象。
+   * 因此这里如实写成**过渡联合**（lead 方案要求"msg/from 原地改型如实建过渡联合"）。
+   */
+  from?:
+    | string
+    | { id?: string | undefined; name?: string | undefined; avatar?: string | undefined; [key: string]: unknown }
+    | undefined;
+  uname?: string | undefined;
+  name?: string | undefined;
+  logo?: string | undefined;
+  avatar?: string | undefined;
+  /** 原始正文：系统消息分支里是 **string**，其余是对象（原地改型的来源） */
+  msg?:
+    | string
+    | { con?: unknown; files?: unknown; oldCon?: unknown; [key: string]: unknown }
+    | undefined;
+  time?: number | string | undefined;
+  type?: number | undefined;
+  iswd?: boolean | undefined;
+  isMine?: boolean | undefined;
+  isDuplicated?: boolean | undefined;
+  timestamp?: string | null | undefined;
+  unreadLine?: boolean | undefined;
+  isGroup?: boolean | undefined;
+  groupname?: string | undefined;
+  to?: string | undefined;
+  value?: string | number | undefined;
+  msgid?: string | number | undefined;
+  /** 系统消息判别键（`'dtype' in message`） */
+  dtype?: unknown;
+  /** 归一化过程中写入的发送者对象 */
+  fromAccount?:
+    | { id?: string | undefined; name?: string | undefined; logo?: string | undefined; [key: string]: unknown }
+    | undefined;
+  [key: string]: unknown;
+}
+
+/**
+ * **归一化写入后的过渡形态**：`formatNewSession` 完成逐属性写入、但还没交给 `formatSession` 时。
+ * 此时 `msg` 与 `from` 已被**原地改型**为对象（见该函数内两处赋值）。
+ * 这是 lead 方案里"原地转换过渡"那一层，如实反映"同一对象、字段类型已变"。
+ */
+export interface ChatSessionWireNormalized extends ChatRawMessageWire {
+  msg: { con?: unknown; files?: unknown; [key: string]: unknown };
+  from: {
+    id?: string | undefined;
+    name?: string | undefined;
+    avatar?: string | undefined;
+    [key: string]: unknown;
+  };
+}
+
+/**
  * 一条聊天消息。
  *
  * 【形状来源】`actions.ts:1045-1060` 的 `addMessage` 里**已写出**的消息字面量类型
