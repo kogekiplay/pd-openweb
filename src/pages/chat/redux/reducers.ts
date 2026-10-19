@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux';
+import type { Reducer } from 'redux';
+import type { ChatState } from './types';
 import * as utils from '../utils/';
 import type {
   ChatBottomUnreadMessageState,
@@ -396,4 +398,4 @@ export default combineReducers({
   showAddressBook,
   bottomUnreadMessage,
   socketState,
-});
+}) as Reducer<ChatState, ChatAction>;
