@@ -166,7 +166,7 @@ class Print extends React.Component<any, any> {
     this.checkedCloudPrint();
   }
 
-  loadPrint = ({ worksheetId }: { worksheetId?: string; [key: string]: any }) => {
+  loadPrint = ({ worksheetId }: { worksheetId?: string | undefined }) => {
     this.setState({ loading: true });
     sheetAjax
       .getPrintList({
@@ -322,7 +322,7 @@ class Print extends React.Component<any, any> {
     });
   };
 
-  updateTemplatePrintLimit = async (templateId: string, count: number | null, previousCount?: number) => {
+  updateTemplatePrintLimit = async (templateId: string | undefined, count: number | null, previousCount?: number) => {
     const { worksheetInfo = {}, worksheetId } = this.props;
     const enabled = count !== null;
     const result: unknown = await sheetAjax.editPrintCountConfig({
@@ -362,7 +362,7 @@ class Print extends React.Component<any, any> {
             onPrintCountUpgrade={() =>
               buriedUpgradeVersionDialog(worksheetInfo.projectId, VersionProductType.printCountLimit)
             }
-            DragHandle={DragHandle}
+            DragHandle={DragHandle!}
             worksheetInfo={worksheetInfo}
             worksheetControls={worksheetControls}
             updatePrint={this.updatePrint}

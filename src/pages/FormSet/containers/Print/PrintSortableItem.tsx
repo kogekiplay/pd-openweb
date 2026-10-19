@@ -3,6 +3,7 @@ import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { SortableDragHandle } from 'ming-ui/components/SortableList';
 import sheetAjax from 'src/api/worksheet';
 import { printQrBarCode } from 'worksheet/common/PrintQrBarCode';
 import { formatValuesOfCondition, redefineComplexControl } from 'worksheet/common/WorkSheetFilter/util';
@@ -11,13 +12,63 @@ import { filterData } from 'src/pages/FormSet/components/columnRules/config.js';
 import { PRINT_TYPE, PRINT_TYPE_STYLE } from 'src/pages/Print/core/config';
 import ShowBtnFilterDialog from 'src/pages/worksheet/common/CreateCustomBtn/components/ShowBtnFilterDialog.jsx';
 import { getPrintCardInfoOfTemplate } from 'src/pages/worksheet/common/PrintQrBarCode/enum';
+import type { FilterWireItem } from 'src/pages/worksheet/common/WorkSheetFilter/filterModelTypes';
+import type { WorksheetInfo, WorksheetView } from 'src/pages/worksheet/types';
 import type { FormControl } from 'src/utils/controlTypes';
 import { sendCloudPrint } from 'src/utils/record';
 import MoreOption from '../../components/MoreOption';
+import type { MoreOptionPatch } from '../../components/MoreOption';
 import RangeDrop from '../../components/RangeDrop';
+import type { PrintRangeData } from '../../components/RangeDrop';
 import { PrintCountLimitModal } from './components/PrintCountSetting';
 
-export default function PrintSortableItem(props) {
+export interface PrintCloudParameter {
+  fieldKey?: string | undefined;
+  value?: unknown;
+}
+type WirePrint = HapApi.MD.Entity.Worksheet.PrintListModel;
+export type PrintItemData = Omit<Partial<WirePrint>, 'views' | 'filters' | 'cloudExtraParams'> &
+  Omit<PrintRangeData, 'views'> & {
+    type: number;
+    views?: Array<WorksheetView & { viewName?: string | undefined }> | undefined;
+    filters?: FilterWireItem[] | null | undefined;
+    cloudExtraParams?: PrintCloudParameter[] | undefined;
+  };
+export interface PrintDialogPatch {
+  templateId?: string | undefined;
+  type?: 'edit' | 'preview';
+  showEditPrint?: boolean;
+  showCloudPrint?: boolean;
+  showPrintTemDialog?: boolean;
+  showCreatePrintTemp?: boolean;
+  name?: string | undefined;
+  fileTypeNum?: number;
+  isDefault?: boolean;
+  fileType?: 'Excel' | 'Word';
+  previewRowId?: string | undefined;
+}
+export interface PrintSortableItemProps {
+  item: PrintItemData;
+  printLimit?: number | null | undefined;
+  printLimitCount?: number | undefined;
+  onPrintLimitChange?:
+    ((id: PrintItemData['id'], value: number | null, previousCount?: number) => Promise<unknown> | void) | undefined;
+  onPrintCountUpgrade?: (() => void) | undefined;
+  printCountFeatureDisabled?: boolean | undefined;
+  worksheetInfo?: WorksheetInfo | undefined;
+  worksheetControls?: FormControl[] | undefined;
+  updatePrint: (id: PrintItemData['id'], patch: Partial<PrintItemData>) => void;
+  changeState: (patch: PrintDialogPatch) => void;
+  loadPrint: (query: Pick<WorksheetInfo, 'worksheetId'>) => void;
+  DragHandle: SortableDragHandle;
+}
+interface PrintFilterChange {
+  filters?: FilterWireItem[] | null | undefined;
+  isShowBtnFilterDialog: boolean;
+  isOk?: boolean;
+}
+
+export default function PrintSortableItem(props: PrintSortableItemProps) {
   const {
     item,
     printLimit,
@@ -31,7 +82,7 @@ export default function PrintSortableItem(props) {
     changeState,
     loadPrint,
     DragHandle,
-  }: { worksheetControls: FormControl[]; [key: string]: any } = props;
+  } = props;
   const { views = [], worksheetId } = worksheetInfo;
   const printInfo = getPrintCardInfoOfTemplate(item);
   const isCustom = [PRINT_TYPE.WORD_PRINT, PRINT_TYPE.EXCEL_PRINT].includes(item.type);
@@ -39,7 +90,7 @@ export default function PrintSortableItem(props) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [inputName, setInputName] = useState(item.name);
-  const [isRename, setIsRename] = useState(false);
+  const [isRename, setIsRename] = useState<boolean | undefined>(false);
   const [showMoreOption, setShowMoreOption] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showDropOption, setShowDropOption] = useState(false);
@@ -50,7 +101,7 @@ export default function PrintSortableItem(props) {
     isRename && inputRef.current && inputRef.current.focus();
   }, [isRename]);
 
-  const onPreview = (isEdit = false, options?) => {
+  const onPreview = (isEdit = false, options?: Pick<PrintDialogPatch, 'previewRowId'>) => {
     if ($('.printTemplatesList-tr .name input')[0] && isEdit) return;
 
     !isEdit && setIsRename(false);
@@ -80,7 +131,7 @@ export default function PrintSortableItem(props) {
         },
       });
     } else {
-      let params = {};
+      let params: PrintDialogPatch = {};
 
       if (isCloudPrint && !isEdit) {
         // 处理测试云打印
@@ -89,7 +140,7 @@ export default function PrintSortableItem(props) {
           projectId: worksheetInfo.projectId,
           appId: worksheetInfo.appId,
           worksheetId,
-          rowIds: [options.previewRowId],
+          rowIds: [options!.previewRowId],
         });
         return;
       } else if (!isEdit) {
@@ -117,10 +168,10 @@ export default function PrintSortableItem(props) {
 
     if (item.range === 1) {
       viewText = _l('所有记录');
-    } else if (item.views.length <= 0) {
+    } else if (item.views!.length <= 0) {
       viewText = _l('未指定视图');
-    } else if (item.range === 3 && item.views.length > 0) {
-      viewText = item.views.map(item => item.name || item.viewName).join('、');
+    } else if (item.range === 3 && item.views!.length > 0) {
+      viewText = item.views!.map(item => item.name || item.viewName).join('、');
     }
 
     return viewText;
@@ -147,7 +198,7 @@ export default function PrintSortableItem(props) {
 
     if (!_.trim(inputName)) {
       alert(_l('请输入模板名称'), 3);
-      inputRef.current.focus();
+      inputRef.current!.focus();
       return;
     }
 
@@ -158,12 +209,12 @@ export default function PrintSortableItem(props) {
       })
       .then(res => {
         if (res) {
-          let cloudExtraParams = [];
+          let cloudExtraParams: PrintCloudParameter[] | undefined = [];
 
           if (item.type === PRINT_TYPE.CLOUD_PRINT) {
             cloudExtraParams = _.cloneDeep(item.cloudExtraParams);
-            const index = cloudExtraParams.findIndex(item => item.fieldKey === 'name');
-            cloudExtraParams[index].value = inputName;
+            const index = cloudExtraParams!.findIndex(item => item.fieldKey === 'name');
+            cloudExtraParams![index]!.value = inputName;
           }
 
           setIsRename(false);
@@ -177,7 +228,7 @@ export default function PrintSortableItem(props) {
       });
   };
 
-  const editPrintFilters = ({ filters, isShowBtnFilterDialog, isOk }) => {
+  const editPrintFilters = ({ filters, isShowBtnFilterDialog, isOk }: PrintFilterChange) => {
     setShowFilters(isShowBtnFilterDialog);
 
     if (isOk) {
@@ -214,7 +265,7 @@ export default function PrintSortableItem(props) {
         .editPrintRange({
           id: item.id,
           range: item.range,
-          viewsIds: item.views.map(o => o.viewId),
+          viewsIds: item.views!.map(o => o.viewId),
           worksheetId,
         })
         .then(res => {
@@ -226,7 +277,7 @@ export default function PrintSortableItem(props) {
     }
   };
 
-  const onRename = ({ isRename, showMoreOption }) => {
+  const onRename = ({ isRename, showMoreOption }: MoreOptionPatch) => {
     if (isRename) {
       setInputName(item.name);
       $(inputRef).focus();
@@ -246,7 +297,7 @@ export default function PrintSortableItem(props) {
       allowNewRecord: true,
       allowAdd: true,
       worksheetId,
-      onOk: selectedRecords => {
+      onOk: (selectedRecords: Array<{ rowid?: string | undefined }>) => {
         const rowId = _.get(selectedRecords, '[0].rowid');
         onPreview(false, { previewRowId: rowId });
       },
@@ -254,7 +305,7 @@ export default function PrintSortableItem(props) {
   };
 
   //复制打印模板
-  const onCopy = id => {
+  const onCopy = (id: PrintItemData['id']) => {
     sheetAjax.copyPrint({ id }).then(res => {
       if (res) {
         alert({
@@ -387,7 +438,7 @@ export default function PrintSortableItem(props) {
         </DragHandle>
         <div className="name flex mRight20 valignWrapper overflowHidden">
           <Icon
-            icon={PRINT_TYPE_STYLE[item.type] ? PRINT_TYPE_STYLE[item.type].icon : printInfo.icon}
+            icon={PRINT_TYPE_STYLE[item.type] ? PRINT_TYPE_STYLE[item.type]!.icon : printInfo.icon}
             className={`iconTitle mRight8 ${
               [PRINT_TYPE.WORD_PRINT, PRINT_TYPE.EXCEL_PRINT].includes(item.type) || printInfo.icon !== 'doc'
                 ? 'Font24'
@@ -430,6 +481,7 @@ export default function PrintSortableItem(props) {
                 onPrintCountUpgrade?.();
                 return;
               }
+
               setShowPrintCountLimitModal(true);
             }}
           >

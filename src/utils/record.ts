@@ -954,11 +954,11 @@ export function sendCloudPrint({
   finishCallback = () => {},
 }: {
   /** 打印模板 id */
-  id?: string;
-  projectId?: string;
-  appId?: string;
-  worksheetId?: string;
-  rowIds: string[];
+  id?: string | undefined;
+  projectId?: string | undefined;
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+  rowIds: Array<string | undefined>;
   mobileUpgradeCallback?: () => void;
   finishCallback?: () => void;
 }) {

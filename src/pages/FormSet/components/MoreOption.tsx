@@ -4,14 +4,43 @@ import ClickAway from 'ming-ui/components/ClickAway';
 
 const confirm = Dialog.confirm;
 
-export const handleCopyOptionClick = ({ event, setFn, onCopy }) => {
+export interface MoreOptionPatch {
+  isRename?: boolean;
+  showMoreOption: boolean;
+}
+export interface MoreOptionProps {
+  setFn: (patch: MoreOptionPatch) => void;
+  deleteFn: () => void;
+  isRename?: boolean | undefined;
+  templateId?: string | undefined;
+  showMoreOption?: boolean | undefined;
+  delTxt?: string | undefined;
+  description?: React.ReactNode | undefined;
+  disabledRename?: boolean | undefined;
+  showDisabledRename?: boolean | undefined;
+  showCopy?: boolean | undefined;
+  onCopy?: (() => void) | undefined;
+  showEnableSwitch?: boolean | undefined;
+  disabled?: boolean | undefined;
+  onToggleEnable?: ((disabled: boolean) => void) | undefined;
+}
+
+export const handleCopyOptionClick = ({
+  event,
+  setFn,
+  onCopy,
+}: {
+  event: Pick<React.MouseEvent, 'stopPropagation'>;
+  setFn: MoreOptionProps['setFn'];
+  onCopy: MoreOptionProps['onCopy'];
+}) => {
   event.stopPropagation();
   setFn({ showMoreOption: false });
-  onCopy();
+  onCopy!();
 };
 
-const UnwrappedMoreOption = class MoreOption extends React.Component<any, any> {
-  constructor(props) {
+const UnwrappedMoreOption = class MoreOption extends React.Component<MoreOptionProps> {
+  constructor(props: MoreOptionProps) {
     super(props);
   }
 
@@ -80,7 +109,7 @@ const UnwrappedMoreOption = class MoreOption extends React.Component<any, any> {
                 setFn({
                   showMoreOption: false,
                 });
-                onToggleEnable(!disabled);
+                onToggleEnable!(!disabled);
               }}
             >
               <Icon
