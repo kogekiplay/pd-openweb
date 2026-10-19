@@ -1010,7 +1010,13 @@ export const updateMember = (groupId: string, count: number) => (dispatch: AppDi
  * 获取聊天的消息列表
  * @param {*} result
  */
-export const setMessage = (id: string, result: any) => (dispatch: AppDispatch, getState: GetState) => {
+/**
+ * 整体设置某会话的消息列表。
+ * 【有限声明依据】与 `resetMessage`/`addPageMessage`/`pushPageMessage` 同型：
+ * 调用点传的都是 `utils.formatMessages(...)` 的结果（`ChatMessage[]`），
+ * 对应 `SET_MESSAGE.result` 的数组契约。
+ */
+export const setMessage = (id: string, result: ChatMessage[]) => (dispatch: AppDispatch, getState: GetState) => {
   const { messages } = getState().chat;
   dispatch({
     type: messages[id] ? 'ADD_PAGE_MESSAGE' : 'SET_MESSAGE',
