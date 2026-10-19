@@ -474,6 +474,30 @@ function main(): void {
     assert.equal(utils.formatMsgDate('2099-01-01 00:00:00.000'), '00:00', '未来时间只返回 HH:mm');
   });
 
+  check('真实 formatMsgDate：**五个时间分桶**在固定"当前时间"下的文案', () => {
+    /**
+     * 【为什么现在可以确定性测】
+     * 夹具把 `moment()`（无参调用 = 取"当前时间"）固定为 **2026-10-19 12:00:00**，
+     * 其余调用仍走真实 moment。于是「一小时内 / 今天 / 昨天 / 同年 / 跨年」五个分桶
+     * 都能用**固定输入**断言，且不依赖运行时刻。
+     * 这也是"用宿主替身把不可测变成可测"的正例 —— 与 localStorage/md 的做法一致。
+     */
+    const utils = F.loadRealUtils();
+
+    // ① 一小时内（minutes < 60）→ 直接返回 HH:mm
+    assert.equal(utils.formatMsgDate('2026-10-19 11:30:00.000'), '11:30', '一小时内只返回 HH:mm');
+    // ② 今天（已超过 60 分钟）→ 「今天 HH:mm」
+    assert.equal(utils.formatMsgDate('2026-10-19 08:00:00.000'), '今天 08:00', '当天返回「今天 HH:mm」');
+    // ③ 昨天 → 「昨天 HH:mm」（isHourMinute=false 时无时分）
+    assert.equal(utils.formatMsgDate('2026-10-18 09:15:00.000'), '昨天 09:15', '昨天带时分');
+    assert.equal(utils.formatMsgDate('2026-10-18 09:15:00.000', false), '昨天', '昨天不带时分');
+    // ④ 同年更早 → 「M月D日 HH:mm」
+    assert.equal(utils.formatMsgDate('2026-03-05 14:20:00.000'), '3月5日 14:20', '同年返回「M月D日 HH:mm」');
+    assert.equal(utils.formatMsgDate('2026-03-05 14:20:00.000', false), '3月5日', '同年不带时分');
+    // ⑤ 跨年（已在上一条用例覆盖，这里做对照）
+    assert.equal(utils.formatMsgDate('2025-03-05 14:20:00.000'), '2025年3月5日 14:20', '跨年返回「Y年M月D日 ...」');
+  });
+
   check('REMOVE_MESSAGES 的**先 delete 原 state 再浅复制**副作用（如实保留）', () => {
     const { root, init } = boot('current');
     const s1 = root(init(), { type: 'SET_MESSAGE', id: 'k1', result: [MSG_1] });

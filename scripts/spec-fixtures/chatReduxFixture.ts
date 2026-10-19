@@ -175,7 +175,14 @@ function loadRealUtils(): Record<string, any> {
     _: realLodash,
     // sortSession 只用到 _.orderBy / 数组操作；moment 等其余依赖在此不可达
     // `sortSession` 只用数组操作；`formatMsgDate`/`getCurrentTime` 需要真实 moment
-    moment: realMoment,
+    /**
+     * 【真实 moment，但把"当前时间"固定】`formatMsgDate` 的分支按"与 now 比较"选择，
+     * 若 `now` 随真实时间走，「今天/昨天/同年/一小时内」这些分支无法确定性断言。
+     * 这里只在**无参调用**（`moment()` → 取当前时间）时返回固定时刻，
+     * 其余调用（解析入参 / 链式 `.subtract`）全部走真实 moment —— 语义不变、可复现。
+     */
+    moment: (input?: unknown) =>
+      input === undefined ? realMoment('2026-10-19T12:00:00.000') : realMoment(input as never),
     Emotion: {},
     /**
      * `src/utils/common` 的 `htmlDecodeReg` **逐字忠实替身**（该模块依赖 JSEncrypt 等，
