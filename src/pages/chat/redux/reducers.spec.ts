@@ -17,7 +17,7 @@
  * 本模块恰好涉及 `Object.assign([], ...)`（保留数组额外属性）、`delete` 副作用
  * 与 `undefined` 值，用 JSON 比较会把差异**看不见**。
  *
- * 【覆盖】共 **23 个 A/B 场景 + 20 个 check 用例**，对应 lead 点名的行为面：
+ * 【覆盖】共 **23 个 A/B 场景 + 38 个 check 用例**（合计 61 项），对应 lead 点名的行为面：
  *
  * A/B（逐步快照 + 每步「是否返回原引用」）：
  * - 初始值（12 个切片）；`SET/ADD/UPDATE_SESSION_LIST`、`REMOVE_SESSION`、`ADD_SESSION`
@@ -39,6 +39,21 @@
  * - **`ADD_PAGE_MESSAGE` 的 getter 求值顺序**（lead 反例回归）：`id → result → id`，
  *   且 getter 产出的消息 id 与基线一致（曾因提前缓存 `action.result` 变成 `'0'`）；
  * - `REMOVE_MESSAGES` 的 undefined id **会删除字面键 `"undefined"`**（不是无操作）。
+ * - **引用语义**：`SET_MESSAGE` 存入的**就是传入的那个数组引用**；`ADD_MESSAGE` /
+ *   `ADD_PAGE_MESSAGE` 产生**新数组**且**不就地改动**旧数组（防"浅拷贝也全绿"）。
+ * - `REMOVE_MESSAGE` 的 `item &&` 保护：`messages` 里可有 **undefined 元素**（`ADD_PAGE`
+ *   缺键产生），过滤时不会抛错、且该元素被丢弃；`PUSH_PAGE_MESSAGE` 缺键走 `|| []` 兜底
+ *   （与 `ADD_PAGE_MESSAGE` 缺键**会抛**相反）。
+ * - **宿主账号分支**：`formatSession` 的 `isSelf`/`isAdmin`（`accountId` 参与判断）各产
+ *   不同的**精确文案**；`formatMessage.isMine` 真/假对照；`formatNewSession` 的本人分支
+ *   `value` 取 `to`。
+ * - **时间文案**：`formatMsgDate` 的六个分桶（一小时内 / 今天 / 昨天 / 同年 / 跨年 / 未来）
+ *   与 `isHourMinute` 两态，均在**固定 now** 下精确断言；`getCurrentTime` 断言精确值；
+ *   `formatMessage.timestamp` / `formatSession.time` 用**固定日期字符串**做时区无关的精确断言。
+ * - `formatNewSession` 末尾**委托** `formatSession`（`_time` 保留 `getCurrentTime()` 原串、
+ *   `time` 才是展示文案）。
+ * - **结构不变量**：`actions.ts` 派发的 action type 集合与 `reducers.ts` 的 `case` 集合
+ *   **双向相等**（防拼写漂移导致静默无操作）。
  *
  * 真实 RTK（`configureStore` 默认中间件，显式 test 环境并恢复）：
  * - 就地 `delete` 会抛 `state mutation`，且**两侧表现完全一致**（未偷改成纯函数）。
