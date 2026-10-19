@@ -1844,7 +1844,10 @@ export const refresh = () => (dispatch: AppDispatch, getState: GetState) => {
           .getMessage({
             id,
             type: isGroup ? Constant.SESSIONTYPE_GROUP : Constant.SESSIONTYPE_USER,
-          })
+          })!
+          // `getMessage` 在未匹配的 `conf.type` 下返回 undefined（既有行为），
+          // 原实现在该情形下 `.then` 会**抛 TypeError**。为**不改变运行行为**，
+          // 这里用非空断言擦除类型可空（零运行时），保持原 `.then` 调用与失败路径。
           .then((res: any[]) => {
             res = _.isArray(res) ? res.reverse() : [];
             const newMessages = {

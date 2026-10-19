@@ -64,7 +64,14 @@ export type ChatAction =
   // 因此动作收紧为 `ChatMessage[]`，与 state 的数组形状一致。
   | { type: 'SET_MESSAGE'; id: string; result: ChatMessage[] }
   | { type: 'ADD_MESSAGE'; id: string; result: ChatMessage }
-  | { type: 'ADD_PAGE_MESSAGE'; id: string; result: ChatMessage[] }
+  // 【为什么是 `(ChatMessage | undefined)[]` 而不是 `ChatMessage[]`】
+  // 该动作的 `result` 在 reducer 里**作为 concat 的接收者**使用：
+  // `action.result.concat(state[action.id])`，而 `state[action.id]` 的类型是
+  // `(ChatMessage | undefined)[] | undefined`（缺键/含 undefined 元素均可达）。
+  // TypeScript 的 `concat` 签名要求接收者元素类型覆盖被追加值，故这里按
+  // **可达元素合同**声明含 `undefined`。这不是把载荷放宽成 any，
+  // 也不改变任何运行时行为（真实生产方仍传 `formatMessages(...)`）。
+  | { type: 'ADD_PAGE_MESSAGE'; id: string; result: (ChatMessage | undefined)[] }
   | { type: 'PUSH_PAGE_MESSAGE'; id: string; result: ChatMessage[] }
   | { type: 'REMOVE_MESSAGE'; id: string; messageId: string }
   // 同 REMOVE_CURRENT_SESSION：`removeMessages(id: string | undefined)`。
@@ -204,23 +211,17 @@ const messages = (state: ChatMessagesState = {}, action: ChatAction): ChatMessag
       return Object.assign({}, state, {
         [action.id]: (state[action.id] || []).concat([action.result]),
       });
-    case 'ADD_PAGE_MESSAGE': {
-      // 【保留原 concat 调用】原实现 `action.result.concat(state[action.id])`；
-      // 重写成三元/展开**不普遍等价**（稀疏槽、数组额外属性、Symbol.isConcatSpreadable、
-      // 覆写 concat/迭代器、getter/原型都会不同），故调用形状不变。
-      //
-      // 【为什么用局部标注而不是 `!`】缺键时 `concat(undefined)` 会在末尾追加一个**真实的
-      // undefined 元素**（实测 `[{id:'a'}].concat(undefined)` → 长度 2）。这是可达状态，
-      // 已如实写进 `ChatMessagesState` 的元素类型 `(ChatMessage | undefined)[]`，
-      // **不用非空断言把它从对外类型抹掉**。
-      // 这里把 receiver 标注成 `(ChatMessage | undefined)[]`：`concat` 的签名是
-      // `(T | ConcatArray<T>)[]`，当 `T` 含 `undefined` 时才能同时接受「数组」与「undefined」
-      // 两种实参 —— 这正是原代码运行时会遇到的两种输入。
-      // 该标注**零运行时**（只是类型），运行时仍是同一个数组引用。
-      const pageResult: (ChatMessage | undefined)[] = action.result;
-
-      return Object.assign({}, state, { [action.id]: pageResult.concat(state[action.id]) });
-    }
+    case 'ADD_PAGE_MESSAGE':
+      // 【必须逐字保留原表达式，不得提前缓存 action.result】
+      // lead 已用 getter 反例证明：`action.id` 与 `action.result` 若为 getter，
+      // 原表达式的求值顺序是 **id → result → id**（对象字面量的计算键先求值，
+      // 再求值 value，value 里又读一次 `state[action.id]`）。
+      // 我上一版写成 `const pageResult = action.result;` 把它变成 **result → id → id**，
+      // 使依赖 id 读取次数的 getter 返回不同数据（首消息 id 从 '1' 变成 '0'）——
+      // **这是真实运行时差异，不只是类型标注**。
+      // 现恢复原表达式：接收者仍是 `action.result` 本身，求值顺序与基线一致。
+      // 缺键时 `concat(undefined)` 追加一个真实 undefined 元素（可达状态，见 ChatMessagesState）。
+      return Object.assign({}, state, { [action.id]: action.result.concat(state[action.id]) });
     case 'PUSH_PAGE_MESSAGE':
       return Object.assign({}, state, { [action.id]: (state[action.id] || []).concat(action.result) });
     case 'REMOVE_MESSAGE':

@@ -161,8 +161,16 @@ export interface ChatOutboundDraft {
  * 加上消费方读取的字段（`id`/`isMine`/`isGroup`/`isDuplicated`/`logo`/`uname`/`msgid`…）。
  */
 export interface ChatMessage {
-  /** 消息 id；`MessageView` 用 `item.id || item.waitingId` 作 key */
-  id?: string | undefined;
+  /**
+   * 消息 id。
+   * 【真实证据：可为 number】
+   * - `MessageView:65` 本地构造提醒消息时 `remind.id = Date.now()`（**数值**），
+   *   随后 push 进 `res` 交给 `formatMessages`；
+   * - `MessageView:147/155` 代码**自己**用 `typeof id === 'number'` 判断文件/卡片消息。
+   * 因此这里是 `string | number`，不是仅 string。
+   * 注意与 `ChatSession.id`（会话 id，恒为 string）区分，不做全仓 `string | number` 泛化。
+   */
+  id?: string | number | undefined;
   /** 预发送消息的临时 id；`REMOVE_MESSAGE` 按 `waitingId` 过滤 */
   waitingId?: string | undefined;
   from?: string | undefined;
@@ -180,8 +188,33 @@ export interface ChatMessage {
   msg?: {
     /** 正文（`htmlDecodeReg(con)` 返回 string；模板插值 `${msg.con}` 使用） */
     con?: string | undefined;
-    /** 附件（`files.id/name/url/size`、`thumbs.web_1` 被读取） */
-    files?: unknown;
+    /**
+     * 附件对象（**非数组**，见 `Message/attachment.ts` `hasAttachmentData`：
+     * `typeof files === 'object' && !Array.isArray(files)`）。
+     * 【真实消费字段】
+     * - `MessageToolbar:198` 解构 `{ key, name }` 拼下载 URL；
+     * - `ImageMessage` 读 `files.url`、`_.get(files, 'thumbs.web_1')`；
+     * - `FileMessage` 等读 `size`/`name`/`id`；
+     * - 表情消息读 `isEmotion`，另有 `len`/`fsize`/`aid` 等按消息种类扩展。
+     */
+    files?: {
+      /** 文件存储 key（下载 URL 参数） */
+      key?: string | undefined;
+      /** 文件名 */
+      name?: string | undefined;
+      /** 访问 URL */
+      url?: string | undefined;
+      /** 文件 id */
+      id?: string | number | undefined;
+      /** 字节大小 */
+      size?: number | undefined;
+      /** 是否表情 */
+      isEmotion?: boolean | undefined;
+      /** 缩略图集（`thumbs.web_1` 等） */
+      thumbs?: { [key: string]: unknown } | undefined;
+      /** 其余按消息种类扩展的附件字段 */
+      [key: string]: unknown;
+    } | undefined;
     /** 撤回前的原文：`actions.ts:1287` `item.msg.oldCon = item.msg.con`，故同 `con` 类型 */
     oldCon?: string | undefined;
     [key: string]: unknown;
@@ -247,8 +280,8 @@ export interface ChatMessage {
   groupname?: string | undefined;
   /** 用户名称（`utils` 读） */
   uname?: string | undefined;
-  /** 消息 id 别名（`utils: message.msgid = message.id` 赋值） */
-  msgid?: string | undefined;
+  /** 消息 id 别名（`utils: message.msgid = message.id` 赋值，故与 `id` 同类型） */
+  msgid?: string | number | undefined;
   /**
    * 格式化的时间文案。
    * 【真实赋值三处】`utils/index.ts:228` 赋 `formatMsgDate(...)`（**string**）；

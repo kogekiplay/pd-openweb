@@ -1,3 +1,4 @@
+import type { ChatMessage } from '../redux/types';
 import _ from 'lodash';
 import CommonAjax from 'src/api/addressBook';
 import ChatController from 'src/api/chat';
@@ -63,7 +64,25 @@ export const chatSessionItem = param => {
  * 获取消息
  * @param {*} conf
  */
-export const getMessage = conf => {
+/**
+ * 拉取一页消息。
+ * 【有限返回声明依据】`MessageView` 的 3 处（71/261/340）把它 `.then(res => ...)`
+ * 之后直接交给 `utils.formatMessages(res)`，再作为 `setMessage`/`addPageMessage`/
+ * `resetMessage` 的载荷。因此返回 `ApiResultOf<ChatMessage[]>`（仓库既有的带类型
+ * 信封返回类型），只声明这一个方法的返回，不改请求/错误处理/其他接口。
+ */
+export const getMessage = (conf: {
+  type?: number;
+  id?: string;
+  sincetime?: unknown;
+  page?: number;
+  num?: number;
+  keyword?: string;
+  /** 真实调用点既传字符串方向（'up'/'down'）也传数字（`MessageView:288 direction: 1`） */
+  direction?: string | number;
+}): ApiResultOf<ChatMessage[]> | undefined => {
+  // 【返回值含 undefined 的依据】只有 `SESSIONTYPE_GROUP` / `SESSIONTYPE_USER` 两个分支
+  // 会 return；其他 `conf.type` 会**落到函数末尾返回 undefined**。如实声明，不假保证。
   const param: Record<string, any> = {};
   param.sincetime = conf.sincetime || '';
   param.page = conf.page || 1;
@@ -94,6 +113,10 @@ export const getMessage = conf => {
       },
     });
   }
+
+  // 【显式返回 undefined】与原先"落到函数末尾隐式返回 undefined"**运行行为完全相同**，
+  // 只是让声明了 `| undefined` 的返回类型不触发 TS7030（并非新增分支/默认值）。
+  return undefined;
 };
 
 /**

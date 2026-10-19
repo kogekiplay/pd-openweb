@@ -551,6 +551,41 @@ function main(): void {
     assert.notDeepEqual(nativeConcat.length, spreaded.length + 1, 'concat 与展开的长度不同');
   });
 
+  check('ADD_PAGE_MESSAGE 的 getter 求值顺序与基线一致（lead 反例回归锁定）', () => {
+    /**
+     * 【lead 提供的真实反例】`action.id` / `action.result` 若为 **getter**，
+     * 原表达式 `{ [action.id]: action.result.concat(state[action.id]) }` 的求值顺序是
+     * **id → result → id**（对象字面量先求计算键，再求 value，value 内又读一次 `state[action.id]`）。
+     *
+     * 我曾写成 `const pageResult = action.result;`，顺序变成 **result → id → id**，
+     * 使「按 id 读取次数返回不同数据」的 getter 产出不同消息（首消息 id 由 '1' 变 '0'）。
+     * **这是真实运行时差异，普通缺键合同绿灯证明不了** —— 故用 getter 输入锁死。
+     */
+    const getterSteps = () => {
+      const log: string[] = [];
+      let idReads = 0;
+      const action = {
+        type: 'ADD_PAGE_MESSAGE',
+        get id() {
+          log.push('id');
+          idReads += 1;
+          return 'k';
+        },
+        get result() {
+          log.push('result');
+          return [{ id: String(idReads) }];
+        },
+      };
+      const { root, init } = boot('current');
+      const next = root(init(), action as never);
+      return { log, messageId: next.messages.k![0]!.id };
+    };
+
+    const { log, messageId } = getterSteps();
+    assert.deepEqual(log, ['id', 'result', 'id'], 'getter 求值顺序必须是 id → result → id');
+    assert.equal(messageId, '1', 'getter 产出的首消息 id 必须与基线一致（不是 \'0\'）');
+  });
+
   mainRtk();
 }
 

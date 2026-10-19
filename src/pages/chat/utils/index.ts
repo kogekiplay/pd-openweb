@@ -5,7 +5,7 @@ import { INBOXTYPES } from 'src/pages/chat/components/Inbox/constants';
 import { htmlDecodeReg, pathCompletion } from 'src/utils/common';
 import { dateConvertToUserZone } from 'src/utils/project';
 import Constant from './constant';
-import type { ChatSession } from '../redux/types';
+import type { ChatMessage, ChatSession } from '../redux/types';
 
 export const formatMsgDate = (dateStr, isHourMinute = true) => {
   const dateTime = moment(dateStr);
@@ -244,7 +244,12 @@ export const filterSessionList = (list: ChatSession[]): ChatSession[] => {
  * 这 3 处会新增 `TS2345` —— 属**范围外**文件，按 lead 规则不在本批编辑、
  * 由 lead 处理实现侧。因此这里保持原有未标注形态，`any` 残留在下方"未覆盖"中如实列出。
  */
-export const formatMessages = messages => {
+/**
+ * 批量格式化消息（接口原始返回 → 可渲染消息）。
+ * 【有限声明依据】4 个直接生产方（`resetMessage`/`setMessage`/`addPageMessage`/
+ * `pushPageMessage`）的载荷都来自这里，返回 `ChatMessage[]`。
+ */
+export const formatMessages = (messages: ChatMessage[]): ChatMessage[] => {
   return messages.map((item, index: number) => {
     return formatMessage(item, messages[index - 1]);
   });
@@ -254,7 +259,11 @@ export const formatMessages = messages => {
  * 单条消息格式化（原地补充 `timestamp`/`isMine`/`isDuplicated` 等派生字段后返回同一对象）。
  * 同 `formatMessages`：入参来自接口原始消息，标注会在范围外调用点新增诊断，故保持未标注。
  */
-export const formatMessage = (message, prevMessage) => {
+/**
+ * 单条消息格式化（原地补 `timestamp`/`isMine` 等派生字段后返回同一对象）。
+ * 【有限声明依据】返回值直接进入 `messages` 字典，故是 `ChatMessage`。
+ */
+export const formatMessage = (message: ChatMessage, prevMessage?: ChatMessage): ChatMessage => {
   message.timestamp = formatMsgDate(dateConvertToUserZone(message.time));
   message.isMine = message.from === md.global.Account.accountId;
   // 连续消息

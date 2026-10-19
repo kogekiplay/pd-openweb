@@ -1,3 +1,4 @@
+import type { ChatMessage } from '../../redux/types';
 import { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
@@ -167,15 +168,26 @@ class MessageView extends Component<any, any> {
     const { session } = this.props;
     utils.scrollEnd(session.id, true);
   }
-  getMessage(param, direction: string) {
+  /**
+   * 拉取一页消息。
+   * 【为什么在这里补类型】本方法体是 `new Promise(resolve => { ajax.getMessage(param).then(...) })`，
+   * 未给 `Promise` 类型参数时推出 `Promise<unknown>`，于是调用处 `.then(res => ...)` 的
+   * `res` 是 `unknown`，再交给 `utils.formatMessages(res)` 就会报 TS2345（71/261/340）。
+   * 按 lead 授权，仅补**该同函数**的有限消息类型，不改组件其他部分。
+   * `ajax.getMessage` 会落空返回 undefined，故这里对空值做与原先一致的容忍（resolve 空数组）。
+   */
+  getMessage(param, direction: string): Promise<ChatMessage[]> {
     this.setState({
       loading: true,
       errorParam: false,
       direction,
     });
-    return new Promise(resolve => {
+    return new Promise<ChatMessage[]>(resolve => {
       ajax
-        .getMessage(param)
+        .getMessage(param)!
+        // 非空断言： 在未匹配 type 时返回 undefined，
+        // 原实现在该情形下  会抛 TypeError；用非空断言**零运行时**地保持原失败路径，
+        // 不用  把抛错改成静默跳过。
         .then(res => {
           this.setState({
             loading: false,
