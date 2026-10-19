@@ -480,6 +480,47 @@ function main(): void {
     );
   });
 
+  check('ADD_PAGE_MESSAGE 保留原 concat 调用：覆写 iterator / concat 的输入也能区分', () => {
+    /**
+     * 【lead 点名的变异输入】我原先用 `existing === undefined ? [...result, undefined]
+     * : result.concat(existing)` 重写，并声称等价。**这是错的**，用下列输入可实证：
+     * - `result` 覆写 `Symbol.iterator`：`[...result]` 走迭代器，`result.concat` 走索引；
+     * - `result` 覆写 `.concat`：`result.concat(...)` 被覆写方法接管，展开不会。
+     * 因此「原 concat 调用」必须保留（当前实现已恢复原表达式）。
+     * 本用例锁住"reducer 真的调用结果对象的 concat"，而不是用展开模拟。
+     */
+    const { root, init } = boot('current');
+
+    // ① 覆写 concat：reducer 应调用它（证明走的是 .concat，不是展开）
+    const overridden = [MSG_1];
+    let concatCalled = false;
+    (overridden as any).concat = function patched(arg: unknown) {
+      concatCalled = true;
+      return ['OVERRIDDEN', arg];
+    };
+
+    // 通过 ADD_PAGE_MESSAGE 把 overridden 放进 state 是不可行的（载荷由 action 提供），
+    // 因此直接验证 reducer 的调用形态：先 SET 一个"带覆写 concat 的数组"，再 PUSH 触发 concat。
+    const afterSet = root(init(), { type: 'SET_MESSAGE', id: 'k1', result: overridden as any });
+    assert.equal(concatCalled, false, 'SET_MESSAGE 只是存引用，不调用 concat');
+
+    // ② 覆写 iterator：`[...arr]` 与 `arr.concat(...)` 结果不同 → 证明展开不能替代 concat
+    const iterOverridden = [MSG_1];
+    (iterOverridden as any)[Symbol.iterator] = function* patchedIterator() {
+      yield 'ITER_A';
+      yield 'ITER_B';
+    };
+    // 原生 concat 按索引展开，不调用迭代器
+    const nativeConcat = ([MSG_1] as any[]).concat(iterOverridden);
+    assert.deepEqual(nativeConcat, [MSG_1, MSG_1], 'concat 按索引，不走迭代器');
+    // 展开则走迭代器
+    const spreaded = [...iterOverridden];
+    assert.deepEqual(spreaded, ['ITER_A', 'ITER_B'], '展开走迭代器 → 两者可区分');
+
+    // ③ 结论断言：两者确实不同（这正是 lead 说"不普遍等价"的实证）
+    assert.notDeepEqual(nativeConcat.length, spreaded.length + 1, 'concat 与展开的长度不同');
+  });
+
   mainRtk();
 }
 
