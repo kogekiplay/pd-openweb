@@ -190,8 +190,13 @@ export interface ChatMessage {
   uname?: string | undefined;
   /** 消息 id 别名（`utils: message.msgid = message.id` 赋值） */
   msgid?: string | undefined;
-  /** 时间戳（`utils: message.timestamp = formatMsgDate(...)` 赋值） */
-  timestamp?: unknown;
+  /**
+   * 格式化的时间文案。
+   * 【真实赋值三处】`utils/index.ts:228` 赋 `formatMsgDate(...)`（**string**）；
+   * `:237` 与 `:244` 在「同一发送者 3 分钟内」或「重复文本」时赋 **`null`**。
+   * 因此类型是 `string | null`，不是 `unknown`。
+   */
+  timestamp?: string | null;
   /** 未读分隔线标记（`utils` 读） */
   unreadLine?: boolean | undefined;
   /** 引用消息体（`Message:205-206` 渲染 `MessageRefer` 时传入） */
