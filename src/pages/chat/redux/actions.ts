@@ -211,7 +211,7 @@ export const addSession = (result: ChatRawMessageWire, id?: string) => (dispatch
 
   // 兼容连续消息
   if (id) {
-    const session = sessionList.filter((item: any) => item.value === id)[0];
+    const session = sessionList.filter(item => item.value === id)[0];
     const isSelf = md.global.Account.accountId === result.from;
     const name = isSelf ? _l('我') : result.uname;
     const msg = {
@@ -252,7 +252,7 @@ export const addGroupSession =
     // if (utils.chatWindow.is(groupId)) {
     //   return;
     // }
-    const session = sessionList.filter((item: any) => item.value == groupId)[0];
+    const session = sessionList.filter(item => item.value == groupId)[0];
 
     if (session) {
       isOpen && dispatch(setCurrentSessionId(groupId));
@@ -320,11 +320,11 @@ export const addUserSession =
     // if (utils.chatWindow.is(id)) {
     //   return;
     // }
-    const session = sessionList.filter((item: any) => item.value === id)[0];
+    const session = sessionList.filter(item => item.value === id)[0];
 
     if (session) {
       if (!_.get(session, 'top_info.isTop')) {
-        const list = sessionList.filter((item: any) => item.value !== id);
+        const list = sessionList.filter(item => item.value !== id);
         const topIndex = _.findLastIndex(list, item => _.get(item, 'top_info.isTop') === true) + 1;
 
         list.splice(topIndex, 0, session);
@@ -402,7 +402,7 @@ export const addSysSession =
   (id: string, msg: Record<string, any> = {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
-    const session = sessionList.filter((item: any) => item.value == id)[0];
+    const session = sessionList.filter(item => item.value == id)[0];
 
     if (session) {
       dispatch(setCurrentSessionId(id));
@@ -419,7 +419,7 @@ export const addSysSession =
 export const operate = (status: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
   const { contact, isclose, isopen } = status;
-  const session = sessionList.filter((item: any) => item.value === contact.id)[0];
+  const session = sessionList.filter(item => item.value === contact.id)[0];
   const contactType = Number(contact.type);
 
   if (session && 'showBadge' in contact) {
@@ -459,7 +459,7 @@ export const sendSetTop = (message: any) => (_dispatch: AppDispatch, getState: G
   const { sessionList } = getState().chat;
   const { isTop } = message;
 
-  const count = sessionList.reduce((count: number, item: any) => {
+  const count = sessionList.reduce((count: number, item) => {
     const { top_info } = item;
     const n = top_info ? (top_info.isTop ? 1 : 0) : 0;
     return count + n;
@@ -478,12 +478,12 @@ export const sendSetTop = (message: any) => (_dispatch: AppDispatch, getState: G
  */
 export const setTop = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList, sessionList, currentSession } = getState().chat;
-  const session = sessionList.filter((item: any) => item.value === message.value)[0];
+  const session = sessionList.filter(item => item.value === message.value)[0];
   const isTop = message.top_info ? message.top_info.isTop : false;
   const time = message.top_info ? message.top_info.time : '';
 
   if (session) {
-    const newCurrentSessionList = currentSessionList.map((item: any) => {
+    const newCurrentSessionList = currentSessionList.map(item => {
       if (item.id === message.value) {
         item.isTop = isTop;
         delete item.isSession;
@@ -508,7 +508,7 @@ export const setTop = (message: any) => (dispatch: AppDispatch, getState: GetSta
       // 直接 spread 并读 `.top_info`（缺项时由**原生**抛 reading 'top_info'）。
       // 用非空断言把"类型上的可空"擦掉：非空断言**零运行时**，原表达式逐字不变，
       // 也不手写 TypeError 模拟原生异常。
-      let _current = sessionList.find((l: any) => l.value === message.value)!;
+      let _current = sessionList.find(l => l.value === message.value)!;
 
       dispatch(
         setNewCurrentSession({
@@ -559,7 +559,7 @@ export const clearUnread = (message: any) => (dispatch: AppDispatch) => {
  */
 export const clearAllUnread = () => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
-  const newSessionList = _.cloneDeep(sessionList).map((item: any) => {
+  const newSessionList = _.cloneDeep(sessionList).map(item => {
     if (item.count) {
       item.count = 0;
     }
@@ -669,7 +669,7 @@ export const setCurrentSessionId =
   (id: string, message: Record<string, any> = {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
-    const found = sessionList.filter((item: any) => item.value === id)[0];
+    const found = sessionList.filter(item => item.value === id)[0];
     // 同上：session 取自 sessionList（store 里的对象），不能原地 assign；id = value 原先是 setCurrentChat 顺手写上的
     const session = found && found.value ? { ...found, id: found.value } : found;
     socket.Contact.setCurrentChat(session);
@@ -788,14 +788,14 @@ export const removeCurrentInbox = (id: string | undefined) => {
  */
 export const resetGroupName = (groupId: string, name: string) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList, sessionList } = getState().chat;
-  const newCurrentSessionList = currentSessionList.map((item: any) => {
+  const newCurrentSessionList = currentSessionList.map(item => {
     if (item.id === groupId) {
       item.name = name;
     }
 
     return item;
   });
-  const newSessionList = sessionList.map((item: any) => {
+  const newSessionList = sessionList.map(item => {
     if (item.value === groupId) {
       item.name = name;
     }
@@ -819,7 +819,7 @@ export const resetGroupName = (groupId: string, name: string) => (dispatch: AppD
  */
 export const resetGroupIsPost = (groupId: string, projectId: string) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList, sessionList } = getState().chat;
-  const newCurrentSessionList = currentSessionList.map((item: any) => {
+  const newCurrentSessionList = currentSessionList.map(item => {
     if (item.id === groupId) {
       item.isPost = true;
       item.project = projectId ? _.find(md.global.Account.projects, { projectId }) : undefined;
@@ -827,7 +827,7 @@ export const resetGroupIsPost = (groupId: string, projectId: string) => (dispatc
 
     return item;
   });
-  const newSessionList = sessionList.map((item: any) => {
+  const newSessionList = sessionList.map(item => {
     if (item.value === groupId) {
       item.isPost = true;
       item.project = projectId ? _.find(md.global.Account.projects, { projectId }) : undefined;
@@ -852,7 +852,7 @@ export const resetGroupIsPost = (groupId: string, projectId: string) => (dispatc
  */
 export const updateGroupAvatar = (groupId: string, avatar: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
-  const newSessionList = sessionList.map((item: any) => {
+  const newSessionList = sessionList.map(item => {
     if (item.value === groupId) {
       item.logo = avatar;
     }
@@ -872,7 +872,7 @@ export const updateGroupAvatar = (groupId: string, avatar: any) => (dispatch: Ap
  */
 export const updateGroupAbout = (groupId: string, about: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList } = getState().chat;
-  const newCurrentSessionList = currentSessionList.map((item: any) => {
+  const newCurrentSessionList = currentSessionList.map(item => {
     if (item.id === groupId) {
       item.about = about;
     }
@@ -893,14 +893,14 @@ export const updateGroupAbout = (groupId: string, about: any) => (dispatch: AppD
 export const updateGroupPushNotice =
   (groupId: string, isPushNotice: boolean) => (dispatch: AppDispatch, getState: GetState) => {
     const { currentSessionList, sessionList } = getState().chat;
-    const newCurrentSessionList = currentSessionList.map((item: any) => {
+    const newCurrentSessionList = currentSessionList.map(item => {
       if (item.id === groupId) {
         item.isPushNotice = isPushNotice;
       }
 
       return item;
     });
-    const newSessionList = sessionList.map((item: any) => {
+    const newSessionList = sessionList.map(item => {
       if (item.value === groupId) {
         item.isPush = isPushNotice;
       }
@@ -926,7 +926,7 @@ export const updateGroupPushNotice =
 export const updateForbIdInvite =
   (groupId: string, isForbidInvite: boolean) => (dispatch: AppDispatch, getState: GetState) => {
     const { currentSessionList } = getState().chat;
-    const newCurrentSessionList = currentSessionList.map((item: any) => {
+    const newCurrentSessionList = currentSessionList.map(item => {
       if (item.id === groupId) {
         item.isForbidInvite = isForbidInvite;
       }
@@ -946,7 +946,7 @@ export const updateForbIdInvite =
  */
 export const updateVerify = (groupId: string, isVerified: boolean) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList } = getState().chat;
-  const newCurrentSessionList = currentSessionList.map((item: any) => {
+  const newCurrentSessionList = currentSessionList.map(item => {
     if (item.id === groupId) {
       item.isVerified = isVerified;
     }
@@ -966,7 +966,7 @@ export const updateVerify = (groupId: string, isVerified: boolean) => (dispatch:
  */
 export const updateAdmin = (groupId: string, isAdmin: boolean) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList } = getState().chat;
-  const newCurrentSessionList = currentSessionList.map((item: any) => {
+  const newCurrentSessionList = currentSessionList.map(item => {
     if (item.id === groupId) {
       item.isAdmin = isAdmin;
     }
@@ -987,9 +987,9 @@ export const updateAdmin = (groupId: string, isAdmin: boolean) => (dispatch: App
 export const updateMember = (groupId: string, count: number) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList, currentSession } = getState().chat;
   const { iconType } = currentSession;
-  const newCurrentSessionList = currentSessionList.map((item: any) => {
+  const newCurrentSessionList = currentSessionList.map(item => {
     if (item.id === groupId) {
-      item.groupMemberCount = item.groupMemberCount + count;
+      item.groupMemberCount! = item.groupMemberCount! + count;
     }
 
     return item;
@@ -1440,7 +1440,7 @@ export const newNotifyMessage = (message: any) => (dispatch: AppDispatch, getSta
     message.msg = `${message.name}: ${message.msg}`;
   }
 
-  const result = sessionList.filter((item: any) => item.value === message.id);
+  const result = sessionList.filter(item => item.value === message.id);
 
   if (result.length) {
     dispatch(
@@ -1476,7 +1476,7 @@ export const newUserMessage = (message: any) => (dispatch: AppDispatch, getState
   const { currentSession, sessionList, isWindow } = getState().chat;
   const id = md.global.Account.accountId === message.from ? message.to : message.from;
   const isSelf = md.global.Account.accountId === message.from;
-  const result = sessionList.filter((item: any) => item.value === id);
+  const result = sessionList.filter(item => item.value === id);
   const isWindowSession = utils.chatWindow.is(id);
 
   if (isWindow && !result.length) {
@@ -1562,7 +1562,7 @@ export const userShake = (message: any) => (dispatch: AppDispatch, getState: Get
   dispatch(
     addUserSession(message.aid, {}, true, () => {
       const { currentSessionList } = getState().chat;
-      const session = currentSessionList.filter((item: any) => item.id == message.aid)[0];
+      const session = currentSessionList.filter(item => item.id == message.aid)[0];
 
       if (session) {
         addShakeMessage();
@@ -1606,7 +1606,7 @@ export const newGroup = (message: any) => (dispatch: AppDispatch) => {
  */
 export const newGroupMessage = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSession, sessionList, isWindow } = getState().chat;
-  const result = sessionList.filter((item: any) => item.value === message.to);
+  const result = sessionList.filter(item => item.value === message.to);
   const isWindowSession = utils.chatWindow.is(message.to);
 
   // 全局聊天下，不是当前的聊天消息过来过滤掉
@@ -1654,7 +1654,7 @@ export const newGroupMessage = (message: any) => (dispatch: AppDispatch, getStat
  */
 export const groupShake = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSession, sessionList } = getState().chat;
-  const session = sessionList.filter((item: any) => item.value === message.gid)[0];
+  const session = sessionList.filter(item => item.value === message.gid)[0];
   const isWindowSession = utils.chatWindow.is(message.gid);
   const { msg } = message;
 
@@ -1683,7 +1683,7 @@ export const groupShake = (message: any) => (dispatch: AppDispatch, getState: Ge
  */
 export const newWithdrawGroupMessage = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
-  const session = sessionList.filter((item: any) => item.value === message.gid)[0];
+  const session = sessionList.filter(item => item.value === message.gid)[0];
   dispatch(updateWithdrawMessage(message.gid, message));
   dispatch(
     updateSessionList({
@@ -1854,7 +1854,7 @@ export const refresh = () => (dispatch: AppDispatch, getState: GetState) => {
             dispatch(removeCurrentInbox(inbox.id));
           }
         });
-        const newCurrentSessionList = currentSessionList.filter((item: any) => item.id === id)[0];
+        const newCurrentSessionList = currentSessionList.filter(item => item.id === id)[0];
 
         if (!newCurrentSessionList) {
           return;
@@ -1921,7 +1921,7 @@ export const setSlience = (message: any) => (dispatch: AppDispatch, getState: Ge
   const isSilent = message.isSilent ? message.isSilent : false;
   const showBadge = message.showBadge ? message.showBadge : 0;
 
-  const newCurrentSessionList = currentSessionList.map((item: any) => {
+  const newCurrentSessionList = currentSessionList.map(item => {
     if (item.value === message.value) {
       item.isSilent = isSilent;
       item.showBadge = showBadge;
@@ -1929,7 +1929,7 @@ export const setSlience = (message: any) => (dispatch: AppDispatch, getState: Ge
 
     return item;
   });
-  const newSessionList = sessionList.map((item: any) => {
+  const newSessionList = sessionList.map(item => {
     if (item.value === message.value) {
       item.isSilent = isSilent;
       item.showBadge = showBadge;
