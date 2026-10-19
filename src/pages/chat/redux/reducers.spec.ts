@@ -397,6 +397,24 @@ function main(): void {
     assert.deepEqual((filtered.messages.hole as unknown[])[0], MSG_1, '留下的是 MSG_1');
   });
 
+  check('PUSH_PAGE_MESSAGE 对**缺失键**用 `(state[id] || [])` 兜底（与 ADD_PAGE_MESSAGE 不同）', () => {
+    /**
+     * 【这条为什么必须有 —— 两兄弟行为相反，且只有一边被锁】
+     * - `ADD_PAGE_MESSAGE`：`action.result.concat(state[id])` —— **没有** `|| []`，
+     *   缺键时 `concat(undefined)` 会把 undefined 当元素追加（另有专门用例）。
+     * - `PUSH_PAGE_MESSAGE`：`(state[action.id] || []).concat(action.result)` —— **有** `|| []`，
+     *   缺键时**不抛错**，直接当作空数组后接。
+     * 此前 PUSH 的唯一场景是「先 SET 再 PUSH」，缺键兜底从未执行。
+     */
+    const { root, init } = boot('current');
+
+    let pushed: any;
+    assert.doesNotThrow(() => {
+      pushed = root(init(), { type: 'PUSH_PAGE_MESSAGE', id: 'pnew', result: [MSG_2] });
+    }, '缺键时 `|| []` 兜底，不应抛 TypeError');
+    assert.deepEqual(pushed.messages.pnew, [MSG_2], '缺键时从空数组后接，结果是 [MSG_2]');
+  });
+
   check('REMOVE_MESSAGES 的**先 delete 原 state 再浅复制**副作用（如实保留）', () => {
     const { root, init } = boot('current');
     const s1 = root(init(), { type: 'SET_MESSAGE', id: 'k1', result: [MSG_1] });
