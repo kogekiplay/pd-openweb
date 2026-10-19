@@ -20,8 +20,8 @@
  *
  * 【为什么用 `deepEqual`/`Object.is` 而不是 `JSON.stringify`】
  * `JSON.stringify` 会吞掉 `undefined` 自有键、`NaN`/`Infinity`、数组额外属性；
- * 本模块恰好涉及 `Object.assign([], ...)`（保留数组额外属性）、`delete` 副作用
- * 与 `undefined` 值，用 JSON 比较会把差异**看不见**。
+ * 本模块涉及 `Object.assign([], ...)`、`delete` 副作用与 `undefined` 值；
+ * 若用 JSON 比较，`undefined` 自有键会**直接消失**，稀疏元素也会被抹平。
  *
  * 【覆盖】共 **24 个 A/B 场景 + 38 个 check 用例**（合计 62 项），对应 lead 点名的行为面：
  *
@@ -33,7 +33,9 @@
  * - `SET/UPDATE/REMOVE_BOTTOM_UNREAD_MESSAGE` 使用**合法载荷**（SET 单条、UPDATE 数组）。
  *
  * 绝对断言（钉住真实语义，防两侧一起错）：
- * - `Object.assign([], ...)` 产生**新数组**且保留额外键语义；`filterSessionList` 去重保序；
+ * - `Object.assign([], ...)` 产生**新数组**（有用例）；"额外数组属性"在 `Object.assign` 里会被保留、
+ *   但 `filter`/`map` 会丢弃 —— 本批真实载荷都不带额外属性，故**不单独断言**该细节，
+ *   只在"为何不用 JSON.stringify 比较"的说明里提及。`filterSessionList` 去重保序；
  *   `sortSession` 排序次序；`ADD_MESSAGE` 缺键走 `(state[id] || [])`；
  *   `REMOVE_MESSAGE` 缺键**返回原引用**；未知 action 三个开关返回原引用；
  * - `REMOVE_MESSAGES`/`REMOVE_REFER_MESSAGE`/`REMOVE_GOTO_MESSAGE`/`REMOVE_BOTTOM_UNREAD_MESSAGE`
