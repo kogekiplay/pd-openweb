@@ -99,7 +99,13 @@ type MessageQueryByIdParams = {
 export const getMessage = (conf: {
   type?: number;
   id?: string;
-  sincetime?: unknown;
+  /**
+   * 【为何是 `number | string` 而不是 `unknown`】真实调用点只有 `MessageView` 的
+   * 两处，传的是 `const { time } = messageList[...] || {}` —— 即 `ChatMessage['time']`
+   * 的 `number | string | undefined`。用 `unknown` 会让"传个对象进去"也编译通过，
+   * 收紧后能挡住这类误用；`MessageQueryParams.sincetime` 仍是 wire 侧的 `unknown`。
+   */
+  sincetime?: number | string;
   page?: number;
   num?: number;
   keyword?: string;
