@@ -30,7 +30,7 @@ export const isOpenPermit = (
   return false;
 };
 
-export const refreshBtnData = (data, btns, isAdd) => {
+export const refreshBtnData = <T extends { btnId?: string | undefined }>(data: T[], btns: T, isAdd: boolean): T[] => {
   let btnData = data;
 
   if (isAdd) {

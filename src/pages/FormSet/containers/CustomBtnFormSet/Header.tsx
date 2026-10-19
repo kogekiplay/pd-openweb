@@ -1,8 +1,18 @@
 import { Icon, UpgradeIcon } from 'ming-ui';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
+import type { WorksheetInfo } from 'src/pages/worksheet/types';
 import { VersionProductType } from 'src/utils/enum';
+import type { getFeatureStatus } from 'src/utils/project';
 
-export default function Header({ featureType, isFree, worksheetInfo, onOpenTrash, onAdd }) {
+export interface CustomButtonHeaderProps {
+  featureType: ReturnType<typeof getFeatureStatus>;
+  isFree: boolean;
+  worksheetInfo: Pick<WorksheetInfo, 'projectId'>;
+  onOpenTrash: () => void;
+  onAdd: () => void;
+}
+
+export default function Header({ featureType, isFree, worksheetInfo, onOpenTrash, onAdd }: CustomButtonHeaderProps) {
   return (
     <div className="topBoxText flexRow alignItemsCenter">
       <div className="textCon flex">

@@ -4,8 +4,11 @@ import _ from 'lodash';
 import sheetAjax from 'src/api/worksheet';
 import CreateCustomBtn from 'worksheet/common/CreateCustomBtn';
 import { redefineComplexControl } from 'worksheet/common/WorkSheetFilter/util';
+import type { CustomButtonData } from 'src/pages/FormSet/components/BtnTd';
 import 'src/pages/FormSet/containers/Print/style.less';
 import { refreshBtnData } from 'src/pages/FormSet/util';
+import type { WorksheetInfo } from 'src/pages/worksheet/types';
+import type { FormControl } from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import TrashDialog from '../../components/Trash';
@@ -13,12 +16,28 @@ import Header from './Header';
 import List from './List';
 import SearchBox from './SearchBox';
 import { Con } from './style';
-import type { FormControl } from 'src/utils/controlTypes';
 
-function CustomBtnFormSet(props) {
-  const { worksheetId, worksheetControls, worksheetInfo }: { worksheetControls: FormControl[]; [key: string]: any } = props;
+export type CustomButtonListData = CustomButtonData & { description?: string | undefined };
+export type ButtonSortDirection = '' | 'ASC' | 'DESC';
+export interface CustomButtonListState {
+  showCreateCustomBtn: boolean;
+  btnId: string | undefined;
+  showTrash: boolean;
+  isEdit: boolean;
+  btnList: CustomButtonListData[];
+  sortDirection: ButtonSortDirection;
+  searchKeywords: string;
+}
+export interface CustomBtnFormSetProps {
+  worksheetId?: string | undefined;
+  worksheetControls: FormControl[];
+  worksheetInfo: WorksheetInfo;
+}
+
+function CustomBtnFormSet(props: CustomBtnFormSetProps) {
+  const { worksheetId, worksheetControls, worksheetInfo } = props;
   const [{ showCreateCustomBtn, btnId, showTrash, isEdit, btnList, sortDirection, searchKeywords }, setState] =
-    useSetState({
+    useSetState<CustomButtonListState>({
       showCreateCustomBtn: false,
       btnId: '',
       showTrash: false,
@@ -55,7 +74,7 @@ function CustomBtnFormSet(props) {
   };
 
   // 创建/编辑弹层保存后先本地同步列表，避免等待重新拉取造成操作反馈延迟。
-  const updateCustomButtons = (btns, isAdd) => {
+  const updateCustomButtons = (btns: CustomButtonListData, isAdd: boolean) => {
     setState({ btnList: refreshBtnData(_.cloneDeep(btnList), btns, isAdd) });
   };
 

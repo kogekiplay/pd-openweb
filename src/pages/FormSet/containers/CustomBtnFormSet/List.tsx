@@ -1,7 +1,22 @@
 import cx from 'classnames';
 import { Icon } from 'ming-ui';
+import type { WorksheetInfo } from 'src/pages/worksheet/types';
 import BtnTd from '../../components/BtnTd';
+import type { BtnTdProps } from '../../components/BtnTd';
+import type { ButtonSortDirection, CustomButtonListData } from './index';
 import { ArrowDown, ArrowUp } from './style';
+
+export interface CustomButtonListProps {
+  btnList: CustomButtonListData[];
+  getSheetBtns: () => void;
+  list: CustomButtonListData[];
+  onChange: BtnTdProps['onChange'];
+  searchKeywords: string;
+  setSortDirection: (value: ButtonSortDirection) => void;
+  sortDirection: ButtonSortDirection;
+  worksheetId?: string | undefined;
+  worksheetInfo: Pick<WorksheetInfo, 'appId' | 'views'>;
+}
 
 export default function List({
   btnList,
@@ -13,7 +28,7 @@ export default function List({
   sortDirection,
   worksheetId,
   worksheetInfo,
-}) {
+}: CustomButtonListProps) {
   if (list.length <= 0) {
     // 搜索无结果和真实空列表复用空态样式，但文案需要区分用户当前操作。
     return (
@@ -32,17 +47,17 @@ export default function List({
   if (sortDirection !== '') {
     singleBtns = singleBtns.sort((a, b) => {
       return sortDirection === 'ASC'
-        ? a.name.charCodeAt(0) - b.name.charCodeAt(0)
-        : b.name.charCodeAt(0) - a.name.charCodeAt(0);
+        ? a.name!.charCodeAt(0) - b.name!.charCodeAt(0)
+        : b.name!.charCodeAt(0) - a.name!.charCodeAt(0);
     });
     batchBtns = batchBtns.sort((a, b) => {
       return sortDirection === 'ASC'
-        ? a.name.charCodeAt(0) - b.name.charCodeAt(0)
-        : b.name.charCodeAt(0) - a.name.charCodeAt(0);
+        ? a.name!.charCodeAt(0) - b.name!.charCodeAt(0)
+        : b.name!.charCodeAt(0) - a.name!.charCodeAt(0);
     });
   }
 
-  const renderBtn = it => (
+  const renderBtn = (it: CustomButtonListData) => (
     <BtnTd
       appId={worksheetInfo.appId}
       views={worksheetInfo.views}
