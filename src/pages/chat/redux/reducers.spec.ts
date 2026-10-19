@@ -415,6 +415,22 @@ function main(): void {
     assert.deepEqual(pushed.messages.pnew, [MSG_2], '缺键时从空数组后接，结果是 [MSG_2]');
   });
 
+  check('真实 getCurrentTime：返回 `YYYY-MM-DD HH:mm:ss.SSS` 格式（只断言格式，不断言值）', () => {
+    /**
+     * 【为什么可以测】该函数返回**当前时间**，断言具体值必然不稳定；
+     * 但它的**格式**是被依赖的 —— `formatSession`/`formatMessage` 在缺时间时
+     * 用它兜底，`formatMsgDate` 再对结果做 `moment()` 解析。
+     * 这里只校验格式，与时区/时刻无关。
+     */
+    const utils = F.loadRealUtils();
+    const v = utils.getCurrentTime();
+    assert.equal(typeof v, 'string', 'getCurrentTime 返回字符串');
+    assert.ok(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}$/.test(v),
+      '格式必须是 YYYY-MM-DD HH:mm:ss.SSS，实际=' + v,
+    );
+  });
+
   check('REMOVE_MESSAGES 的**先 delete 原 state 再浅复制**副作用（如实保留）', () => {
     const { root, init } = boot('current');
     const s1 = root(init(), { type: 'SET_MESSAGE', id: 'k1', result: [MSG_1] });
