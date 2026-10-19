@@ -911,6 +911,17 @@ export interface ChatToolbarConfig {
 }
 
 /** 整个 `chat` 切片 */
+/**
+ * `combineReducers` 的 12 个切片对应的状态形状（**文档性质**，当前未接线）。
+ *
+ * 【为什么暂不接到 `combineReducers` —— 实测过】
+ * 把 `export default combineReducers({...})` 改成 `const chatReducer: Reducer<ChatState> = ...` 后，
+ * `state.chat` 变成强类型，立刻暴露 `actions.ts` 里 **47 条**隐式 `any`（`item`/`n` 等回调参数），
+ * 且属于**新诊断 key** → `typecheck:fast` 会失败。本批授权范围不包含把这 47 处一并标注，
+ * 因此保持现状：接口仅作文档与后续批次的目标形状。
+ *
+ * 接线时的预期代价：`actions.ts` 约 47 处回调参数需要显式标注（多数可标注为 `ChatMessage`/`ChatSession`）。
+ */
 export interface ChatState {
   /** 会话列表 */
   sessionList: ChatSession[];
