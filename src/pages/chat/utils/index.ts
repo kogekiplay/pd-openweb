@@ -14,7 +14,16 @@ import type {
   ChatSessionWireNormalized,
 } from '../redux/types';
 
-export const formatMsgDate = (dateStr, isHourMinute = true) => {
+/**
+ * 格式化消息时间。
+ * 【有限声明依据】调用方传 `dateConvertToUserZone(...)`（字符串）与 `file.time`
+ * 等时间值；`moment` 接受 `string | number | undefined`，故按此声明；
+ * 返回值恒为经 `.format(...)` 得到的字符串。
+ */
+export const formatMsgDate = (
+  dateStr: string | number | undefined,
+  isHourMinute = true,
+): string => {
   const dateTime = moment(dateStr);
   const now = moment();
   const diff = now.diff(dateTime);
@@ -88,9 +97,10 @@ export const sortSession = (
   messageListShowType: number | undefined = md.global.Account.messageListShowType,
 ): ChatSession[] => {
   sessions = _.orderBy(sessions, ['sendMsg']);
-  const other = [];
-  const top = [];
-  const count = [];
+  // 三个分组桶只装会话对象（下面 push 的都是 sessions 的元素）
+  const other: ChatSession[] = [];
+  const top: ChatSession[] = [];
+  const count: ChatSession[] = [];
 
   if (messageListShowType === 1) {
     sessions.forEach(item => {
