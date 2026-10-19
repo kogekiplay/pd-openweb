@@ -455,7 +455,12 @@ export const operate = (status: any) => (dispatch: AppDispatch, getState: GetSta
  * 发送设置置顶的会话
  * @param {*} message
  */
-export const sendSetTop = (message: any) => (_dispatch: AppDispatch, getState: GetState) => {
+/**
+ * 发送置顶请求。
+ * 【有限声明依据】三个调用方（SessionList:449 / ChatPanelHeader:188 / inboxHeader:96）
+ * 传的都是同一形状：`{ type, value, isTop }`。
+ */
+export const sendSetTop = (message: { type: number; value: string; isTop: boolean }) => (_dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
   const { isTop } = message;
 
