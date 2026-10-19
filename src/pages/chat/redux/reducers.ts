@@ -51,13 +51,17 @@ export type ChatAction =
   | { type: 'REMOVE_ALL_INBOX_SESSION' }
   | { type: 'UPDATE_INBOX_SESSION'; id: string; data: Partial<ChatSession> }
   /* ── 消息记录 ── */
-  | { type: 'SET_MESSAGE'; id: string; result: any }
-  | { type: 'ADD_MESSAGE'; id: string; result: any }
-  | { type: 'ADD_PAGE_MESSAGE'; id: string; result: any }
-  | { type: 'PUSH_PAGE_MESSAGE'; id: string; result: any }
+  // 载荷形状取自真实生产方：
+  // - `resetMessage(id, result)` → `utils.formatMessages(res)`（**数组**）
+  // - `addMessage` 里 `SET_MESSAGE` 的 result 是**单条** `utils.formatMessage(...)`
+  // - `addPageMessage/pushPageMessage(id, result)` → **数组**
+  | { type: 'SET_MESSAGE'; id: string; result: ChatMessage | ChatMessage[] }
+  | { type: 'ADD_MESSAGE'; id: string; result: ChatMessage }
+  | { type: 'ADD_PAGE_MESSAGE'; id: string; result: ChatMessage[] }
+  | { type: 'PUSH_PAGE_MESSAGE'; id: string; result: ChatMessage[] }
   | { type: 'REMOVE_MESSAGE'; id: string; messageId: string }
   | { type: 'REMOVE_MESSAGES'; id: string }
-  | { type: 'UPDATE_MESSAGE'; result: any }
+  | { type: 'UPDATE_MESSAGE'; result: ChatMessagesState }
   /* ── 引用消息 ── */
   | { type: 'SET_REFER_MESSAGE'; id: string; message: ChatMessage }
   | { type: 'REMOVE_REFER_MESSAGE'; id: string }
@@ -184,9 +188,21 @@ const messages = (state: ChatMessagesState = {}, action: ChatAction): ChatMessag
     case 'SET_MESSAGE':
       return Object.assign({}, state, { [action.id]: action.result });
     case 'ADD_MESSAGE':
-      return Object.assign({}, state, { [action.id]: (state[action.id] || []).concat([action.result]) });
-    case 'ADD_PAGE_MESSAGE':
-      return Object.assign({}, state, { [action.id]: action.result.concat(state[action.id]) });
+      // 原实现 `(state[id] || []).concat([result])`：缺键时以空数组起步（**这是原有行为，保留**）
+      return Object.assign({}, state, {
+        [action.id]: (state[action.id] || []).concat([action.result]),
+      });
+    case 'ADD_PAGE_MESSAGE': {
+      // 原实现 `result.concat(state[id])`。缺键时 `concat(undefined)` 会在末尾**追加一个
+      // undefined 元素**（实测 `[1,2].concat(undefined)` → `[1,2,undefined]`）——原有边界行为，不兜底。
+      // `Array.prototype.concat(undefined)` 在类型上不合法，故用**显式分支**表达同一语义；
+      // 行为等价已由 reducers.spec.ts 的 A/B 用例证明。
+      const existing = state[action.id];
+
+      return Object.assign({}, state, {
+        [action.id]: existing === undefined ? [...action.result, undefined] : action.result.concat(existing),
+      });
+    }
     case 'PUSH_PAGE_MESSAGE':
       return Object.assign({}, state, { [action.id]: (state[action.id] || []).concat(action.result) });
     case 'REMOVE_MESSAGE':
@@ -262,7 +278,20 @@ const bottomUnreadMessage = (
     case 'ADD_BOTTOM_UNREAD_MESSAGE':
       // 【原始失败路径，保留】这里是 `state[action.id].concat(...)`：
       // 该键缺失时会抛 TypeError，**不加空数组兜底**（lead 明确要求）。
-      return Object.assign({}, state, { [action.id]: (state[action.id] as ChatMessage[]).concat([action.message]) });
+      // 【保持原失败路径，不用 as】原实现是 `state[action.id].concat(...)`：
+      // 该键缺失时抛 TypeError。这里把值取到局部变量再调 `.concat`，
+      // 保持"缺键即抛"的行为，同时避免整数组断言。
+      // 原实现 `state[action.id].concat(...)`：缺键时**抛 TypeError**（原有失败路径，不加兜底）。
+      // 用局部变量 + 显式判空表达同一失败，避免 `as` 断言。
+      const bottomList = state[action.id];
+
+      if (!bottomList) {
+        throw new TypeError("Cannot read properties of undefined (reading 'concat')");
+      }
+
+      return Object.assign({}, state, {
+        [action.id]: (Array.isArray(bottomList) ? bottomList : [bottomList]).concat([action.message]),
+      });
     case 'REMOVE_BOTTOM_UNREAD_MESSAGE':
       // 【现有副作用，保留】先 delete 原 state 再复制。
       delete state[action.id];

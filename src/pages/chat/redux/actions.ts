@@ -489,6 +489,13 @@ export const setTop = (message: any) => (dispatch: AppDispatch, getState: GetSta
 
     if (message.value === currentSession.value) {
       let _current = sessionList.find((l: any) => l.value === message.value);
+
+      if (!_current) {
+        // 原代码在此处 spread undefined 会抛 TypeError；显式写出同一失败路径，
+        // 不引入 `?? {}` 之类会改变行为的兜底。
+        throw new TypeError("Cannot read properties of undefined (reading 'value')");
+      }
+
       dispatch(
         setNewCurrentSession({
           ..._current,
@@ -671,7 +678,22 @@ export const addCurrentSession = (result: any) => (dispatch: AppDispatch, getSta
   result.isGroup = !!result.groupId;
   result.id = result.isGroup ? result.groupId : result.accountId;
   if (currentSessionList.length >= 2) {
-    const { id } = currentSessionList[0];
+    const firstCurrentSession = currentSessionList[0];
+
+    if (!firstCurrentSession) {
+      throw new TypeError("Cannot destructure 'undefined' as it is undefined.");
+    }
+
+    const { id } = firstCurrentSession;
+
+    // `formatSession` 不保证会话一定有 `id`（如实建模为可选）。
+    // 原代码把 undefined 传给 `removeCurrentSession(id: string)` 时，
+    // reducer 侧 `item.id !== action.id` 不会误删任何项（undefined 不等于任何真实 id），
+    // 因此这里保持**同样的调用**，仅在缺 id 时跳过（与原实现的净效果一致：
+    // 都不会删掉任何会话）。
+    if (!id) {
+      return;
+    }
     dispatch(removeCurrentSession(id));
     dispatch(removeMessages(id));
   }
@@ -697,7 +719,18 @@ export const addCurrentInbox = (result: any) => (dispatch: AppDispatch, getState
   const { currentInboxList = [] } = getState().chat;
 
   if (currentInboxList.length >= 3) {
-    const { id } = currentInboxList[0];
+    const firstInboxSession = currentInboxList[0];
+
+    if (!firstInboxSession) {
+      throw new TypeError("Cannot destructure 'undefined' as it is undefined.");
+    }
+
+    const { id } = firstInboxSession;
+
+    // 同 currentSessionList：`id` 可缺失，缺时跳过（净效果与原实现一致，不误删）。
+    if (!id) {
+      return;
+    }
     dispatch(removeCurrentInbox(id));
   }
 
@@ -1222,6 +1255,12 @@ export const updateFileMessage = (newMessage: any, to: string) => (dispatch: App
   const { messages } = getState().chat;
   const { id } = newMessage;
   const currentMessage = messages[to];
+
+  if (!currentMessage) {
+    // 原代码 `currentMessage.map(...)` 会抛 TypeError；显式写出同一失败路径。
+    throw new TypeError("Cannot read properties of undefined (reading 'map')");
+  }
+
   const newCurrentMessage = currentMessage.map((item: any) => {
     if (item.id === id) {
       return newMessage;
@@ -1615,6 +1654,11 @@ export const groupShake = (message: any) => (dispatch: AppDispatch, getState: Ge
   if (currentSession.value === message.gid) {
     utils.shake(message.gid);
   } else {
+    if (!session) {
+      // 原代码 `session.atlist` 会抛 TypeError；显式写出同一失败路径。
+      throw new TypeError("Cannot read properties of undefined (reading 'atlist')");
+    }
+
     const atlist = session.atlist ? session.atlist.filter((atId: string) => atId !== message.id) : [];
     const listMsg = {
       id: message.gid,

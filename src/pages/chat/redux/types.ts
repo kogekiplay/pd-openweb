@@ -36,17 +36,20 @@ export interface ChatSession {
   isSilent?: boolean | undefined;
   accountId?: string | undefined;
   groupId?: string | undefined;
-  project?: unknown;
+  /** `project.companyName` 被 ChatPanelHeader 读取 */
+  project?: { companyName?: string | undefined; [key: string]: unknown } | undefined;
   groupMemberCount?: number | undefined;
-  showBadge?: unknown;
+  /** SessionItem 里 `showBadge ? … : 0` 当作可计数/可布尔使用 */
+  showBadge?: number | boolean | undefined;
   /** 排序键：`sortSession` 用 `_.orderBy(sessions, ['sendMsg'])` */
-  sendMsg?: unknown;
+  sendMsg?: number | string | undefined;
   /** `atlist`：被 @ 的成员列表（`actions.ts:1618/1647/1648` 读取并 filter） */
   atlist?: string[] | undefined;
   /** `isSession`：是否会话（`actions.ts:683`） */
   isSession?: boolean | undefined;
   /** `commonGroup`/`top_info` 等会话扩展字段（`actions.ts:496` 读取 `top_info`） */
-  top_info?: unknown;
+  /** `actions.ts:494-496` 读写 `top_info.isTop` */
+  top_info?: { isTop?: boolean | undefined; [key: string]: unknown } | undefined;
   /**
    * 其余字段按会话类型扩展（群成员、部门、状态等）。
    * 保留 `unknown` 索引签名：这些是**真正随类型变化的扩展元数据**，
@@ -54,10 +57,12 @@ export interface ChatSession {
    */
   [key: string]: unknown;
   /** `count`：未读计数（`actions.ts:575` 读 `currentSession.count`） */
-  count?: unknown;
+  /** SessionList/ChatPanel 里当数字用（`count : 0`） */
+  count?: number | undefined;
   /** `isRender`：渲染标记（`actions.ts:970` 写 `currentSession.isRender`） */
   isRender?: boolean | undefined;
   /** `refer`/`reflist`：引用相关（`actions.ts:1658/1668` 读 `session.refer`/`session.reflist`） */
+  /** `actions.ts:1658` 只做真值判断 */
   refer?: unknown;
   reflist?: unknown[] | undefined;
 
@@ -77,9 +82,12 @@ export interface ChatMessage {
   /** 预发送消息的临时 id；`REMOVE_MESSAGE` 按 `waitingId` 过滤 */
   waitingId?: string | undefined;
   from?: string | undefined;
+  /** 接收方（`socketEvent` 里有 `to : message.from` 的比较） */
   to?: unknown;
-  type?: unknown;
-  time?: unknown;
+  /** 消息类型（数值枚举，消费方按数字比较） */
+  type?: number | undefined;
+  /** 消息时间（消费方直接展示/比较） */
+  time?: number | string | undefined;
   /** 消息正文容器：`{ con, files }` */
   msg?: { con?: unknown; files?: unknown } | undefined;
   fromAccount?: {
@@ -89,14 +97,16 @@ export interface ChatMessage {
     name?: string | undefined;
   } | undefined;
   iswd?: boolean | undefined;
-  sendMsg?: unknown;
+  sendMsg?: number | string | undefined;
   isMineMessage?: boolean | undefined;
   isMine?: boolean | undefined;
   isGroup?: boolean | undefined;
   isDuplicated?: boolean | undefined;
   /** 按消息种类**事后补上**的字段 */
-  sysType?: unknown;
-  card?: unknown;
+  /** 系统消息类型（按数值比较） */
+  sysType?: number | undefined;
+  /** 卡片消息体：`ChatPanelSession` 读 `card.title` */
+  card?: { title?: string | undefined; [key: string]: unknown } | undefined;
   isPrepare?: boolean | undefined;
   /** `atlist`：被 @ 的成员列表（`actions.ts` 读取并 filter） */
   atlist?: string[] | undefined;
