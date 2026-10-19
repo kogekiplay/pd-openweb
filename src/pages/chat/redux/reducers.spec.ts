@@ -497,6 +497,34 @@ function main(): void {
     assert.deepEqual(afterUpdate.bottomUnreadMessage.k1, [MSG_2], 'UPDATE 后该键是**数组**');
   });
 
+  check('【刻意构造的异常输入】UPDATE_BOTTOM_UNREAD 收到**单项**时原样存入，不做数组包装', () => {
+    /**
+     * 【这条为什么必须有 —— 由变异测试发现】
+     * 我把 reducer 临时改成 `Array.isArray(message) ? message : [message]`（加"兜底包装"），
+     * 当时 **44 项规格全绿** —— 说明缺少"非数组输入"的 UPDATE 用例，兜底改动抓不到。
+     * 原实现是 `[action.id]: action.message`（**原样存入**，不判断类型），
+     * 因此单项会被存成单项。该输入在类型上已不可表达（`message: ChatMessage[]`），
+     * 故用「先 SET 合法数组、再直接派发刻意单项」在运行期构造，**仅作为保留原行为**的证据。
+     */
+    const { root, init } = boot('current');
+    const afterSet = root(init(), { type: 'SET_BOTTOM_UNREAD_MESSAGE', id: 'k1', message: MSG_1 });
+    assert.deepEqual(afterSet.bottomUnreadMessage.k1, [MSG_1], 'SET 写入的是 [单条]');
+
+    const single = MSG_2 as unknown as typeof MSG_2[];
+    const afterUpdate = root(afterSet, {
+      type: 'UPDATE_BOTTOM_UNREAD_MESSAGE',
+      id: 'k1',
+      message: single,
+    });
+
+    assert.deepEqual(afterUpdate.bottomUnreadMessage.k1, MSG_2, '单项被原样存入（**未**包成数组）');
+    assert.equal(
+      Array.isArray(afterUpdate.bottomUnreadMessage.k1),
+      false,
+      '存的是单项而不是数组 —— 原实现不做 Array.isArray 兜底',
+    );
+  });
+
   check('【刻意构造的异常输入】该键被塞成非数组时，ADD 仍抛 concat is not a function', () => {
     /**
      * 【与上一条的区别，lead 明确要求区分】
