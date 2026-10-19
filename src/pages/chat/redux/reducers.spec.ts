@@ -445,6 +445,41 @@ function main(): void {
     assert.equal(message, native, '缺键时的错误信息必须与原生 V8 消息逐字一致');
   });
 
+  check('ADD_PAGE_MESSAGE 缺键时**追加 undefined 元素**（原边界行为，不兜底）', () => {
+    /**
+     * 原实现 `action.result.concat(state[id])`：`concat(undefined)` 会把 undefined
+     * 作为**一个元素**追加（实测 `[1,2].concat(undefined)` → `[1,2,undefined]`）。
+     * 这是既有边界行为，不能用 `|| []` 把它变成"什么都不加"。
+     */
+    const { root, init } = boot('current');
+    const next = root(init(), { type: 'ADD_PAGE_MESSAGE', id: 'nokey', result: [MSG_1] });
+    assert.equal(next.messages.nokey!.length, 2, '应为 [MSG_1, undefined] 两个元素');
+    assert.deepEqual(next.messages.nokey![0], MSG_1);
+    assert.equal(next.messages.nokey![1], undefined, '第二个元素必须是 undefined');
+    // 对照：原生 concat(undefined) 的行为
+    const native = [MSG_1].concat(undefined as any);
+    assert.equal(native.length, 2);
+  });
+
+  check('ADD_BOTTOM_UNREAD_MESSAGE 在**非数组**状态（UPDATE 写过单值）时抛 concat is not a function', () => {
+    /**
+     * 【可达性】`SET_BOTTOM_UNREAD_MESSAGE` 写数组、`UPDATE_BOTTOM_UNREAD_MESSAGE` 写**单值**，
+     * 因此 SET→UPDATE→ADD 序列会让该键变成单条消息。此时原实现 `state[id].concat(...)`
+     * 抛 "…concat is not a function"。
+     * 我上一版用 `Array.isArray(b) ? b : [b]` 把它**静默包装成成功**，改变了行为 —— 已改回。
+     */
+    const { root, init } = boot('current');
+    const afterSet = root(init(), { type: 'SET_BOTTOM_UNREAD_MESSAGE', id: 'k1', message: MSG_1 });
+    const afterUpdate = root(afterSet, { type: 'UPDATE_BOTTOM_UNREAD_MESSAGE', id: 'k1', message: MSG_2 });
+    assert.deepEqual(afterUpdate.bottomUnreadMessage.k1, MSG_2, 'UPDATE 后该键是**单值**而非数组');
+
+    assert.throws(
+      () => root(afterUpdate, { type: 'ADD_BOTTOM_UNREAD_MESSAGE', id: 'k1', message: MSG_1 }),
+      (error: unknown) => error instanceof TypeError && /is not a function/.test((error as Error).message),
+      '非数组状态应抛 concat is not a function（原行为，不静默包装）',
+    );
+  });
+
   mainRtk();
 }
 

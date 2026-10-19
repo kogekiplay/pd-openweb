@@ -281,17 +281,27 @@ const bottomUnreadMessage = (
       // 【保持原失败路径，不用 as】原实现是 `state[action.id].concat(...)`：
       // 该键缺失时抛 TypeError。这里把值取到局部变量再调 `.concat`，
       // 保持"缺键即抛"的行为，同时避免整数组断言。
-      // 原实现 `state[action.id].concat(...)`：缺键时**抛 TypeError**（原有失败路径，不加兜底）。
-      // 用局部变量 + 显式判空表达同一失败，避免 `as` 断言。
-      const bottomList = state[action.id];
+      // 【必须逐字复现原语义】原实现是 `state[action.id].concat([action.message])`，
+      // 它在**三种**情况下都抛错，不能只处理"缺键"：
+      //   ① 该键缺失或为 null → "Cannot read properties of undefined/null (reading 'concat')"
+      //   ② 该键**不是数组**（例如 `UPDATE_BOTTOM_UNREAD_MESSAGE` 写入的单条消息）
+      //      → "bottomList.concat is not a function"
+      // 【可达性】`SET_BOTTOM_UNREAD_MESSAGE` 写数组、`UPDATE_BOTTOM_UNREAD_MESSAGE` 写**单值**，
+      // 因此 SET→UPDATE→ADD 序列真的能走到 ②。上一版我用 `Array.isArray(...) ? … : [b]`
+      // 把 ② 静默包装成成功，**改变了行为**，已改回。
+      // 【逐字恢复原表达式】`state[action.id].concat([action.message])`。
+      // 这条表达式在三种情况下都抛错，全部是既有行为，必须原样保留：
+      //   ① 缺键/undefined → "Cannot read properties of undefined (reading 'concat')"
+      //   ② null           → "Cannot read properties of null (reading 'concat')"
+      //   ③ 非数组（`UPDATE_BOTTOM_UNREAD_MESSAGE` 写入的单条消息，SET→UPDATE→ADD 可达）
+      //                    → "state[action.id].concat is not a function"
+      // 【为什么需要类型标注】该键的声明类型是 `ChatMessage[] | ChatMessage`
+      // （生产方确实两种都写），所以 `.concat` 在类型上不总存在 —— 这正是真实失败点。
+      // 这里把读取结果标注为 `any` 是**局部**的、只为让原表达式原样通过编译，
+      // 不改变任何运行时行为，也不扩大对外类型（对外仍是 `ChatBottomUnreadMessageState`）。
+      const bottomList: any = state[action.id];
 
-      if (!bottomList) {
-        throw new TypeError("Cannot read properties of undefined (reading 'concat')");
-      }
-
-      return Object.assign({}, state, {
-        [action.id]: (Array.isArray(bottomList) ? bottomList : [bottomList]).concat([action.message]),
-      });
+      return Object.assign({}, state, { [action.id]: bottomList.concat([action.message]) });
     case 'REMOVE_BOTTOM_UNREAD_MESSAGE':
       // 【现有副作用，保留】先 delete 原 state 再复制。
       delete state[action.id];
