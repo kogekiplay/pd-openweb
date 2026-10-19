@@ -497,6 +497,46 @@ function main(): void {
     assert.deepEqual(afterUpdate.bottomUnreadMessage.k1, [MSG_2], 'UPDATE 后该键是**数组**');
   });
 
+  check('【lead 15:29 反例】两个 formatter 的真实输入/输出形态（锁进历史规格）', () => {
+    /**
+     * lead 用真实 formatter 跑出三个「被我的入参类型允许、且确实返回成功」的结果，
+     * 与我当时的输出声明矛盾。修正后这些**事实本身**必须被规格记住，
+     * 否则将来有人"顺手"把类型改回去也不会有东西响。
+     *
+     * 【事实 1】`formatNewMessage` **完全不动 `msg`** —— 它只写 `iswd`/`fromAccount`，
+     *   然后转交 `formatMessage`。所以传入什么 msg 形态，出来还是什么形态。
+     *   （这正是"不能用 `as ChatMessage` 声称 msg 已归一化"的原因。）
+     * 【事实 2】`formatNewSession` 的**系统分支从不写 `from`**，且不改 `id`/`value`。
+     * 【事实 3】`formatSession` 收到缺 `id` 的 `from` 时**成功返回**，`from.id` 仍为 undefined。
+     */
+    F.installHost({ localStorage: F.makeLocalStorage({}) });
+    const utils = F.loadRealUtils();
+
+    // 事实 1：msg 是对象时保持对象（函数不动它）
+    const m = { id: 'm1', from: 'u1', uname: 'User', msg: { con: 'hi' }, type: 1, time: 1700000000000 };
+    const outM: Record<string, unknown> = utils.formatNewMessage(m);
+    // 用 assert.ok 而不是 assert.equal：后者带 `asserts actual is T`，会把 outM 收窄成 m 的字面量类型
+    assert.ok(outM === m, 'formatNewMessage 返回**同一对象**（就地改型）');
+    assert.deepEqual(outM.msg, { con: 'hi' }, 'msg 保持入参形态（函数不归一化 msg）');
+    assert.deepEqual(outM.fromAccount, { id: 'u1', name: 'User', logo: undefined }, 'fromAccount 由 from/uname/logo 写出');
+    assert.equal(outM.iswd, false, 'iswd 被写成 false');
+
+    // 事实 2：系统分支不写 from、不改 id/value
+    const sys = { dtype: 'system', id: 's1', msg: 'system string', type: 3, value: 'v1' };
+    const outS: Record<string, unknown> = utils.formatNewSession(sys);
+    assert.ok(outS === sys, 'formatNewSession 同样就地改型');
+    assert.deepEqual(outS.msg, { con: 'system string' }, '系统分支把 string msg 包成 { con }');
+    assert.equal(Object.prototype.hasOwnProperty.call(outS, 'from'), false, '系统分支**不写 from**');
+    assert.equal(outS.id, 's1', '系统分支不改 id');
+    assert.equal(outS.value, 's1', '系统分支把 value 写成 id');
+
+    // 事实 3：缺 id 的 from 也能成功返回
+    const s3 = { id: 's3', type: 1, msg: { con: 'text' }, from: { name: 'User' } };
+    const out3 = utils.formatSession(s3);
+    assert.ok(out3 === s3, 'formatSession 就地改型并返回同一对象');
+    assert.equal(out3.from.id, undefined, 'from.id 可以仍是 undefined（不强制生产方补齐）');
+  });
+
   check('真实 formatMessage：isMine / 连续消息合并 / isDuplicated 三分支', () => {
     /**
      * 【这条补的是上轮如实列出的缺口】

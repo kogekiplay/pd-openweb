@@ -102,6 +102,8 @@ const HELPER_NAMES = [
   // 本批新增：格式化合同（`formatSession` 依赖 `formatMsgDate` / `getCurrentTime`）
   'formatMessage',
   'formatSession',
+  'formatNewMessage',
+  'formatNewSession',
   'formatMsgDate',
   'getCurrentTime',
 ];
@@ -142,7 +144,7 @@ function loadRealUtils(): Record<string, any> {
     plugins: ['@babel/plugin-transform-modules-commonjs'],
   };
   const code = transformSync(
-    `${declarations}\nmodule.exports = { filterSessionList, sortSession, getToolbarConfig, formatMessage, formatSession, formatMsgDate, getCurrentTime };`,
+    `${declarations}\nmodule.exports = { filterSessionList, sortSession, getToolbarConfig, formatMessage, formatSession, formatNewMessage, formatNewSession, formatMsgDate, getCurrentTime };`,
     { ...babelOpts, filename },
   ).code;
 
