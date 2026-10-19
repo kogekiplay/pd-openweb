@@ -253,10 +253,15 @@ const SCENARIOS: Scenario[] = [
     ],
   },
   {
-    name: 'SET/UPDATE/REMOVE_BOTTOM_UNREAD_MESSAGE',
+    /**
+     * 【合法载荷】`SET` 的 `message` 是单条（reducer 包成 `[message]`）；
+     * `UPDATE` 的 `message` 是**数组**（真实生产方 `updateWithdrawMessage` 传
+     * `bottomUnreadMessage[id] || []`，reducer 直接存该数组）。
+     */
+    name: 'SET/UPDATE/REMOVE_BOTTOM_UNREAD_MESSAGE（合法载荷：SET 单条、UPDATE 数组）',
     steps: [
       { type: 'SET_BOTTOM_UNREAD_MESSAGE', id: 'k1', message: MSG_1 },
-      { type: 'UPDATE_BOTTOM_UNREAD_MESSAGE', id: 'k1', message: MSG_2 },
+      { type: 'UPDATE_BOTTOM_UNREAD_MESSAGE', id: 'k1', message: [MSG_1, MSG_2] },
       { type: 'REMOVE_BOTTOM_UNREAD_MESSAGE', id: 'k1' },
     ],
   },
@@ -461,20 +466,45 @@ function main(): void {
     assert.equal(native.length, 2);
   });
 
-  check('ADD_BOTTOM_UNREAD_MESSAGE 在**非数组**状态（UPDATE 写过单值）时抛 concat is not a function', () => {
+  check('UPDATE_BOTTOM_UNREAD_MESSAGE 的**合法载荷是数组**，reducer 原样存入该键', () => {
     /**
-     * 【可达性】`SET_BOTTOM_UNREAD_MESSAGE` 写数组、`UPDATE_BOTTOM_UNREAD_MESSAGE` 写**单值**，
-     * 因此 SET→UPDATE→ADD 序列会让该键变成单条消息。此时原实现 `state[id].concat(...)`
-     * 抛 "…concat is not a function"。
-     * 我上一版用 `Array.isArray(b) ? b : [b]` 把它**静默包装成成功**，改变了行为 —— 已改回。
+     * 【真实生产方】`updateWithdrawMessage`（`actions.ts`）把
+     * `bottomUnread = bottomUnreadMessage[id] || []` 直接作为 `message` 派发。
+     * 因此**合法载荷是数组**，reducer 也是原样存进去 —— 这条锁住"不再把单项当合法载荷"。
      */
     const { root, init } = boot('current');
     const afterSet = root(init(), { type: 'SET_BOTTOM_UNREAD_MESSAGE', id: 'k1', message: MSG_1 });
-    const afterUpdate = root(afterSet, { type: 'UPDATE_BOTTOM_UNREAD_MESSAGE', id: 'k1', message: MSG_2 });
-    assert.deepEqual(afterUpdate.bottomUnreadMessage.k1, MSG_2, 'UPDATE 后该键是**单值**而非数组');
+    assert.deepEqual(afterSet.bottomUnreadMessage.k1, [MSG_1], 'SET 写入的是 [单条]');
+
+    const afterUpdate = root(afterSet, {
+      type: 'UPDATE_BOTTOM_UNREAD_MESSAGE',
+      id: 'k1',
+      message: [MSG_2],
+    });
+    assert.deepEqual(afterUpdate.bottomUnreadMessage.k1, [MSG_2], 'UPDATE 后该键是**数组**');
+  });
+
+  check('【刻意构造的异常输入】该键被塞成非数组时，ADD 仍抛 concat is not a function', () => {
+    /**
+     * 【与上一条的区别，lead 明确要求区分】
+     * - 上一条是**正常合法载荷**（UPDATE 传数组）。
+     * - 本例是**隔离规格刻意构造的异常输入**：直接用 `SET_MESSAGE` 之外的路径把该键写成
+     *   非数组在类型上已不可表达，所以这里通过「先 SET 数组、再手工替换该项」的方式
+     *   构造出非数组状态，仅用于**保留原运行行为**的证据。
+     * 原实现 `state[id].concat(...)` 在该形状下抛 "…concat is not a function"；
+     * 我上一版用 `Array.isArray(b) ? b : [b]` 静默包装成成功，改变了行为 —— 已改回。
+     */
+    const { root, init } = boot('current');
+    const afterSet = root(init(), { type: 'SET_BOTTOM_UNREAD_MESSAGE', id: 'k1', message: MSG_1 });
+    // 刻意构造：把一个非数组值放进该键（合法动作无法产生，仅隔离测试用）
+    const crafted = { ...afterSet, bottomUnreadMessage: { k1: MSG_2 } };
 
     assert.throws(
-      () => root(afterUpdate, { type: 'ADD_BOTTOM_UNREAD_MESSAGE', id: 'k1', message: MSG_1 }),
+      () => root(crafted as unknown as typeof afterSet, {
+        type: 'ADD_BOTTOM_UNREAD_MESSAGE',
+        id: 'k1',
+        message: MSG_1,
+      }),
       (error: unknown) => error instanceof TypeError && /is not a function/.test((error as Error).message),
       '非数组状态应抛 concat is not a function（原行为，不静默包装）',
     );
