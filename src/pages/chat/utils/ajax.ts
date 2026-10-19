@@ -65,6 +65,31 @@ export const chatSessionItem = param => {
  * @param {*} conf
  */
 /**
+ * `getMessage` 的查询参数。
+ * 【为何不用 `Record<string, any>`】`noPropertyAccessFromIndexSignature` 下
+ * 对索引签名类型只能 `obj['k']` 访问；而这里各字段是**逐个写出的**，
+ * 用类型别名（对象字面量类型有隐式索引签名）既可以点访问，也仍是逐字段建模。
+ */
+type MessageQueryParams = {
+  sincetime?: unknown;
+  page?: number;
+  num?: number;
+  keyword?: string;
+  direction?: string | number;
+  /** `getPssId()` 的返回是 `string | null`（见其签名），故允许 null */
+  pss_id?: string | null | undefined;
+  groupid?: string | undefined;
+  accountid?: string | undefined;
+};
+
+type MessageQueryByIdParams = {
+  groupid?: string | undefined;
+  accountId?: string | undefined;
+  msgid?: string | number | undefined;
+  size?: number | undefined;
+};
+
+/**
  * 拉取一页消息。
  * 【有限返回声明依据】`MessageView` 的 3 处（71/261/340）把它 `.then(res => ...)`
  * 之后直接交给 `utils.formatMessages(res)`，再作为 `setMessage`/`addPageMessage`/
@@ -83,7 +108,7 @@ export const getMessage = (conf: {
 }): ApiResultOf<ChatMessage[]> | undefined => {
   // 【返回值含 undefined 的依据】只有 `SESSIONTYPE_GROUP` / `SESSIONTYPE_USER` 两个分支
   // 会 return；其他 `conf.type` 会**落到函数末尾返回 undefined**。如实声明，不假保证。
-  const param: Record<string, any> = {};
+  const param: MessageQueryParams = {};
   param.sincetime = conf.sincetime || '';
   param.page = conf.page || 1;
   // param.num = (conf.num ? conf.num : ) || chatConfig.MSG_LENGTH_MORE;
@@ -123,8 +148,15 @@ export const getMessage = (conf: {
  * 获取某一个消息的上下文
  * @param {*} conf
  */
-export const getMessageById = conf => {
-  const param: Record<string, any> = {};
+export const getMessageById = (conf: {
+  type?: number;
+  id?: string;
+  msgid?: string | number;
+  size?: number;
+  /** 真实调用点传的是 `config.MSG_LENGTH_MORE`（`MessageView:232`） */
+  num?: number;
+}) => {
+  const param: MessageQueryByIdParams = {};
   let url = '';
 
   if (conf.type === Constant.SESSIONTYPE_GROUP) {
