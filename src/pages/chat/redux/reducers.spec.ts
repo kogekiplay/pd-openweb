@@ -497,6 +497,92 @@ function main(): void {
     assert.deepEqual(afterUpdate.bottomUnreadMessage.k1, [MSG_2], 'UPDATE 后该键是**数组**');
   });
 
+  check('真实 sortSession 的 messageListShowType===1 分支（count 优先组）', () => {
+    /**
+     * 【这条为什么必须有 —— 由变异测试发现】
+     * 把 `if (messageListShowType === 1)` 改成 `if (false)` → **49 项全绿**。
+     * 原因：唯一走 sortTop 的用例显式传了 `messageListShowType=0`，
+     * 而 reducer 调用 `sortSession(list)` 时用的是**默认参数**
+     * `md.global.Account.messageListShowType`，现有宿主默认值不是 1 →
+     * 该分支（含 `count.concat(sortList, other)` 的组合与 `isPush` 判断）**从未执行**。
+     */
+    const utils = F.loadRealUtils();
+    const sessions = [
+      { id: 'c1', value: 'vc1', sendMsg: 100, count: 5 },
+      { id: 'c2', value: 'vc2', sendMsg: 200, count: 3, isPush: false },
+      { id: 'c3', value: 'vc3', sendMsg: 300 },
+      { id: 't1', value: 'vt1', sendMsg: 50, top_info: { isTop: true } },
+    ];
+
+    // messageListShowType=1 → 三分组：top(=isTop) / count(有 count 且 isPush 不为 false) / other
+    const out = utils.sortSession(sessions, undefined, 1);
+    assert.deepEqual(
+      out.map((x: { id: string }) => x.id),
+      ['c1', 't1', 'c2', 'c3'],
+      'count 组（c1 有 count、isPush 缺省视为 true）在前；top 组（t1）居中；c2 因 isPush:false 落入 other',
+    );
+  });
+
+  check('真实 getToolbarConfig：6 个字段在**两种 openType 配置**下都正确', () => {
+    /**
+     * 【这条为什么必须有 —— 由变异测试发现】
+     * - 把 `mingoVisible` 的 `toolBarOpenType === 'mingo' &&` 去掉 → **49 项全绿**；
+     * - 把 `favoriteVisible` 直接改成 `true` → **同样全绿**。
+     * 原因：初始值用例只断言了 6 个字段中的 **2 个**（mingoVisible / mingoFixing），
+     * 且宿主 localStorage 固定为 `toolBarOpenType:'mingo'` —— 在这种配置下
+     * 「带不带 openType 判断」结果相同，`favoriteVisible`/`sessionListVisible` 更从未被检查。
+     * 这里换一种 openType 配置，把 6 个字段全部断言。
+     */
+    const utils = F.loadRealUtils();
+
+    // ① openType = 'mingo'，三个 fixing 全开 → 只有 mingoVisible 为 true
+    F.installHost({
+      localStorage: F.makeLocalStorage({
+        toolBarOpenType: 'mingo',
+        mingoFixing: 'true',
+        sessionListFixing: 'true',
+        favoriteFixing: 'true',
+      }),
+    });
+    assert.deepEqual(utils.getToolbarConfig(), {
+      mingoVisible: true,
+      mingoFixing: true,
+      sessionListVisible: false,
+      sessionListFixing: true,
+      favoriteVisible: false,
+      favoriteFixing: true,
+    });
+
+    // ② openType = 'favorite'，只有 favoriteFixing 开 → favoriteVisible 为 true，mingoVisible 为 false
+    F.installHost({
+      localStorage: F.makeLocalStorage({
+        toolBarOpenType: 'favorite',
+        mingoFixing: 'true',
+        sessionListFixing: 'false',
+        favoriteFixing: 'true',
+      }),
+    });
+    assert.deepEqual(utils.getToolbarConfig(), {
+      mingoVisible: false,
+      mingoFixing: true,
+      sessionListVisible: false,
+      sessionListFixing: false,
+      favoriteVisible: true,
+      favoriteFixing: true,
+    });
+
+    // ③ 无任何开关（边界）：全部 false
+    F.installHost({ localStorage: F.makeLocalStorage({}) });
+    assert.deepEqual(utils.getToolbarConfig(), {
+      mingoVisible: false,
+      mingoFixing: false,
+      sessionListVisible: false,
+      sessionListFixing: false,
+      favoriteVisible: false,
+      favoriteFixing: false,
+    });
+  });
+
   check('真实 sortTop：置顶组内 count 优先 + 当前会话提前（此前从未被触发）', () => {
     /**
      * 【这条为什么必须有 —— 由变异测试发现】
