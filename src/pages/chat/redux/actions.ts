@@ -1882,7 +1882,7 @@ export const refresh = () => (dispatch: AppDispatch, getState: GetState) => {
           }
         });
         dispatch(setSessionList(res));
-        currentInboxList.forEach((inbox: any) => {
+        currentInboxList.forEach(inbox => {
           if (inbox.id !== id) {
             dispatch(removeCurrentInbox(inbox.id));
           }
@@ -1902,7 +1902,7 @@ export const refresh = () => (dispatch: AppDispatch, getState: GetState) => {
           // `getMessage` 在未匹配的 `conf.type` 下返回 undefined（既有行为），
           // 原实现在该情形下 `.then` 会**抛 TypeError**。为**不改变运行行为**，
           // 这里用非空断言擦除类型可空（零运行时），保持原 `.then` 调用与失败路径。
-          .then((res: any[]) => {
+          .then(res => {
             res = _.isArray(res) ? res.reverse() : [];
             const newMessages = {
               [id]: utils.formatMessages(res),
@@ -1979,7 +1979,7 @@ export const setSlience = (message: any) => (dispatch: AppDispatch, getState: Ge
     result: newSessionList,
   });
   if (message.value === currentSession.value) {
-    let _current = newSessionList.find((l: any) => l.value === message.value);
+    let _current = newSessionList.find(l => l.value === message.value);
     dispatch(setNewCurrentSession(_current));
   }
 };
