@@ -719,6 +719,29 @@ function main(): void {
       '系统分支 _time 保留了 getCurrentTime() 的完整字符串（证明委托给 formatSession）',
     );
 
+    // ── 以下三条用 **lead 15:29 的原始输入**（逐字），锁住他实际跑出的形态 ──
+    // 事实 1（原样）：msg 是 **字符串** 时保持字符串（函数不归一化 msg）
+    const leadM = { id: 'm', from: 'u', uname: 'User', msg: 'wire string', type: 1, time: '2026-10-19T06:00:00Z' };
+    const leadOutM: Record<string, unknown> = utils.formatNewMessage(leadM);
+    assert.ok(leadOutM === leadM, '反例1：formatNewMessage 返回同一对象');
+    assert.equal(leadOutM.msg, 'wire string', '反例1：**string msg 保持 string**（不归一化为对象）');
+    assert.equal(typeof leadOutM.msg, 'string', '反例1：msg 类型未被改写');
+
+    // 事实 2（原样）：系统分支 **id 是 number 时仍为 number**，value 也来自 id（number），且无自有 from
+    const leadSys = { dtype: 'system', id: 123, msg: 'system string', type: 3 };
+    const leadOutS: Record<string, unknown> = utils.formatNewSession(leadSys);
+    assert.equal(leadOutS.id, 123, '反例2：系统分支 id 仍为 **number 123**（不转字符串）');
+    assert.equal(typeof leadOutS.id, 'number', '反例2：id 类型仍是 number');
+    assert.equal(leadOutS.value, 123, '反例2：value 取自 id，仍是 **number 123**');
+    assert.equal(typeof leadOutS.value, 'number', '反例2：value 类型仍是 number');
+    assert.equal(Object.prototype.hasOwnProperty.call(leadOutS, 'from'), false, '反例2：系统分支**无自有 from**');
+
+    // 事实 3（原样）：from 缺 id 时成功返回，from.id 仍 undefined
+    const leadS3 = { id: 's', type: 1, msg: { con: 'text' }, from: { name: 'User' } };
+    const leadOut3 = utils.formatSession(leadS3);
+    assert.ok(leadOut3 === leadS3, '反例3：formatSession 就地改型并返回同一对象');
+    assert.equal(leadOut3.from.id, undefined, '反例3：from.id 仍为 undefined（不强制补齐）');
+
     // 事实 3：缺 id 的 from 也能成功返回
     const s3 = { id: 's3', type: 1, msg: { con: 'text' }, from: { name: 'User' } };
     const out3 = utils.formatSession(s3);
