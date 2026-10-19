@@ -1290,7 +1290,7 @@ export const updateWithdrawMessage = (id: string, newMessage: any) => (dispatch:
   const { messages, referMessage, bottomUnreadMessage } = getState().chat;
   const { id: messageId, msg } = newMessage;
   const currentMessage = messages[id];
-  const bottomUnread = (bottomUnreadMessage as Record<string, any>)[id] || [];
+  const bottomUnread = bottomUnreadMessage[id] || [];
 
   if (!currentMessage) {
     return;
@@ -1300,11 +1300,11 @@ export const updateWithdrawMessage = (id: string, newMessage: any) => (dispatch:
     if (item.id == messageId) {
       const nextMessage = currentMessage[index + 1];
       item.iswd = true;
-      if (item.from === md.global.Account.accountId && !item.msg.oldCon) {
-        item.msg.oldCon = item.msg.con;
+      if (item.from === md.global.Account.accountId && !item.msg!.oldCon) {
+        item.msg!.oldCon = item.msg!.con;
       }
 
-      item.msg.con = msg.con;
+      item.msg!.con = msg.con;
       if (nextMessage) {
         nextMessage.isDuplicated = false;
       }
@@ -1316,11 +1316,11 @@ export const updateWithdrawMessage = (id: string, newMessage: any) => (dispatch:
     }
   });
 
-  bottomUnread.forEach((item: any, index: number) => {
+  bottomUnread.forEach((item, index) => {
     if (item.id == messageId) {
       const nextMessage = bottomUnread[index + 1];
       item.iswd = true;
-      item.msg.con = msg.con;
+      item.msg!.con = msg.con;
       if (nextMessage) {
         nextMessage.isDuplicated = false;
       }
@@ -1332,7 +1332,7 @@ export const updateWithdrawMessage = (id: string, newMessage: any) => (dispatch:
     }
   });
 
-  if ((referMessage as Record<string, any>)[id] && (referMessage as Record<string, any>)[id].id == messageId) {
+  if (referMessage[id] && referMessage[id].id == messageId) {
     dispatch(removeReferMessage(id));
   }
 
