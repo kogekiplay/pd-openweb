@@ -95,7 +95,16 @@ function installHost(
       },
     },
   };
-  (globalThis as any)['_l'] = (s: string) => String(s);
+  // 【保真替身】真实 `_l(key, ...args)` 会做 `%0`/`%1` 占位替换；
+  // 只做恒等会让涉及占位的文案断言只能写"前缀/关键词"。这里实现与真实一致的
+  // 顺序替换（不做语言切换 —— 规格环境为中文单语）。
+  (globalThis as any)['_l'] = (s: string, ...args: unknown[]) => {
+    let out = String(s);
+    args.forEach((v, i) => {
+      out = out.split(`%${i}`).join(String(v));
+    });
+    return out;
+  };
   return ls;
 }
 

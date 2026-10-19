@@ -758,17 +758,17 @@ function main(): void {
     // ① isSelf 非撤回：前缀「我」
     const self1: Record<string, any> = { id: 's1', type: 1, msg: { con: 'hi' }, from: { id: 'me', name: 'Me' } };
     utils.formatSession(self1);
-    assert.ok(String(self1.msg.con).startsWith('我'), 'isSelf 非撤回：前缀是「我」，实际=' + self1.msg.con);
+    assert.equal(self1.msg.con, '我: hi', 'isSelf 非撤回：精确文案「我: hi」');
 
     // ② isSelf + 撤回（非管理员撤回）：前缀「你」
     const self2: Record<string, any> = { id: 's2', type: 1, msg: { con: 'x' }, from: { id: 'me', name: 'Me' }, iswd: true };
     utils.formatSession(self2);
-    assert.ok(String(self2.msg.con).startsWith('你'), 'isSelf + iswd：前缀是「你」，实际=' + self2.msg.con);
+    assert.equal(self2.msg.con, '你x', 'isSelf + iswd：精确文案「你x」');
 
     // ③ isSelf + 撤回 + wdAdminid 是自己：管理员文案
     const self3: Record<string, any> = { id: 's3', type: 1, msg: { con: 'y' }, from: { id: 'me', name: 'Me' }, iswd: true, wdAdminid: 'me' };
     utils.formatSession(self3);
-    assert.ok(String(self3.msg.con).includes('管理员'), 'isSelf + iswd + wdAdminid===accountId：走管理员文案，实际=' + self3.msg.con);
+    assert.equal(self3.msg.con, '管理员撤回了一条你的消息', 'isSelf + iswd + wdAdminid===accountId：管理员文案');
 
     // ④ formatNewSession 的**本人分支**：`accountId === message.from` 时 value 取 to
     //    （此前 accountId 恒 undefined，这个分支从未执行）
@@ -783,7 +783,7 @@ function main(): void {
     // ⑤ 非自己 + 撤回 + 自己是管理员：另一种文案（含成员名）
     const other: Record<string, any> = { id: 's4', type: 1, msg: { con: 'z' }, from: { id: 'other', name: '对方' }, iswd: true, wdAdminid: 'me' };
     utils.formatSession(other);
-    assert.ok(String(other.msg.con).includes('你撤回了成员'), '非自己 + iswd + 自己是管理员：走成员撤回文案，实际=' + other.msg.con);
+    assert.equal(other.msg.con, '你撤回了成员“对方”的一条消息', '非自己 + iswd + 自己是管理员：成员撤回文案（%0 已替换为成员名）');
   });
 
   check('真实 sortSession 的 messageListShowType===1 分支（count 优先组）', () => {
