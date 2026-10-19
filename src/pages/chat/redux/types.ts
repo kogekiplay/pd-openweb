@@ -912,15 +912,23 @@ export interface ChatToolbarConfig {
 
 /** 整个 `chat` 切片 */
 /**
- * `combineReducers` 的 12 个切片对应的状态形状（**文档性质**，当前未接线）。
+ * `combineReducers` 的 12 个切片对应的状态形状（**已接线**）。
  *
- * 【为什么暂不接到 `combineReducers` —— 实测过】
- * 把 `export default combineReducers({...})` 改成 `const chatReducer: Reducer<ChatState> = ...` 后，
- * `state.chat` 变成强类型，立刻暴露 `actions.ts` 里 **47 条**隐式 `any`（`item`/`n` 等回调参数），
- * 且属于**新诊断 key** → `typecheck:fast` 会失败。本批授权范围不包含把这 47 处一并标注，
- * 因此保持现状：接口仅作文档与后续批次的目标形状。
+ * 【怎么接的】`reducers.ts` 的默认导出带了一个**擦除式**类型断言：
+ *   `export default combineReducers({...}) as Reducer<ChatState, ChatAction>`
+ * —— `as` 被编译器完全擦除，所以**运行代码与基线逐字节相同**（已实测 babel 输出 sha 一致）。
+ * 直接用 `const chatReducer: Reducer<ChatState> = combineReducers({...})` 不行：
+ * `combineReducers` 会把 action 推断成 `UnknownAction`，与本文件 reducer 形参的
+ * `ChatAction` 冲突（实测 1 条 TS2322）。
  *
- * 接线时的预期代价：`actions.ts` 约 47 处回调参数需要显式标注（多数可标注为 `ChatMessage`/`ChatSession`）。
+ * 【这条断言凭什么成立】不是猜的：
+ *   · `actions.ts` 派发的 **32 个** action type 在 `reducers.ts` 里**都有 case**
+ *     （规格里的「结构不变量」用例对两个集合做双向相等断言）；
+ *   · `default` 分支原样返回 state。
+ *   → 这个 reducer 确实接受 `ChatAction`，断言只是把事实写明。
+ *
+ * 【旧记录】曾试过直接接 `Reducer<ChatState>`：会暴露 `actions.ts` 大量回调参数的隐式 any，
+ * 且属新诊断 key。现在的擦除式接法**不引入任何诊断**（`chat/redux` 仍 0）。
  */
 export interface ChatState {
   /** 会话列表 */
