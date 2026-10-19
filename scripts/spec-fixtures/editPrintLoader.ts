@@ -28,7 +28,14 @@ for (const f of [MAIN, SETTINGS, LINK, ATTACH]) {
   current[f] = fs.readFileSync(path.join(ROOT, f), 'utf8');
   assert.equal(crypto.createHash('sha256').update(old[f]).digest('hex'), hashes[f]);
 }
-const compile = (source, rel) => transformSync(source, { filename: path.join(ROOT, rel), comments: false }).code;
+const codeCache = new Map<string, string>();
+const compile = (source, rel) => {
+  const key = rel + source;
+  if (!codeCache.has(key))
+    codeCache.set(key, transformSync(source, { filename: path.join(ROOT, rel), comments: false }).code);
+  return codeCache.get(key);
+};
+
 function take(source, name) {
   const node = parser.parse(source, { sourceType: 'module', plugins: ['typescript', 'jsx'] }).program.body.find(n => {
     const d = n.type === 'ExportNamedDeclaration' ? n.declaration : n;
