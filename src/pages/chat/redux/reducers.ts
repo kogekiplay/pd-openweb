@@ -17,18 +17,22 @@ import type {
  * 其 `{ [key: string]: any }` 索引签名把 `action.result` / `action.id` / `action.data` /
  * `action.message` / `action.messageId` 全部变成 `any`，于是切片字段整体推导为 `any`。
  *
- * 【载荷依据】全部取自 `actions.ts` 的**真实派发点**：
- * - `resetMessage(id: string, result: any)` / `addPageMessage(id: string, result: any)` →
- *   `{ type, id, result }`；
+ * 【载荷依据】全部取自 `actions.ts` 的**真实派发点**（并已按生产方收敛，不再是 `any`）：
+ * - `resetMessage` / `addPageMessage` / `pushPageMessage` 的 `result` 现声明为 `ChatMessage[]`
+ *   （4 个调用点全部传 `utils.formatMessages(...)`）→ `{ type, id, result }`；
+ * - `SET_MESSAGE` 的 `result` 是**数组**（`addMessage` 初始 SET 已包 `[...]`，
+ *   `resetMessage`/`setMessage` 传 `formatMessages`，`update*Message` 传 `map` 结果）；
+ * - `ADD_PAGE_MESSAGE` 的 `result` 声明为 `(ChatMessage | undefined)[]` —— 它作为 `concat`
+ *   接收者使用，需覆盖被追加值里的可达 `undefined`；
  * - `SET_SESSION_LIST` / `UPDATE_SESSION_LIST` 的 `result` 是**会话数组**；
- * - `REMOVE_SESSION` / `REMOVE_CURRENT_SESSION` 的 `id` 是**会话 id 字符串**；
+ * - `REMOVE_SESSION` / `REMOVE_CURRENT_SESSION` / `REMOVE_INBOX_SESSION` / `REMOVE_MESSAGES`
+ *   的 `id` 为 `string | undefined`（生产方 `removeX(id: string | undefined)` 会透传缺失 id）；
  * - `UPDATE_INBOX_SESSION` 的 `id` 与会话的 `value` 比较、`data` 是补丁；
  * - `UPDATE_IS_WINDOW` / `UPDATE_SHOW_ADD_RESSBOOK` / `UPDATE_SOCKET_STATE` 的 `result`
  *   分别是 boolean / boolean / number。
  *
- * 【`result` 用 `any` 的位置说明】`resetMessage` 等生产方签名里 `result` 本身就是 `any`
- * （见 `actions.ts:1001`），此处如实继承；但**消费它的表达式仍然逐字未改**，
- * 且切片的**对外类型**由 `ChatState` 精确约束，不会把 `any` 泄到 `RootState.chat`。
+ * 【不变量】本文件不出现 `any`；`reducers.ts` 与 `actions.ts` 的剥离类型产物与基线
+ * **字节完全相同**（`byteproof` 每次提交前核对）。
  */
 export type ChatAction =
   /* ── 会话列表 ── */

@@ -7,8 +7,8 @@
  * `getToolbarConfig`）的形参/返回也未标注。结果是读任何不存在的字段都能编译通过。
  *
  * 【建模依据】字段全部来自**真实生产方/消费方**：
- * - 生产方：`actions.ts` 里的派发点（`resetMessage(id: string, result: any)`、
- *   `addPageMessage(id: string, result: any)` 等）与 `addMessage` 里已写出的消息形状；
+ * - 生产方：`actions.ts` 里的派发点（`resetMessage`/`addPageMessage`/`pushPageMessage`
+ *   的 `result` 已按真实调用收敛为 `ChatMessage[]`）与 `addMessage` 里已写出的消息形状；
  * - 消费方：`src/pages/chat/**` 组件读取的字段（会话读 `id`/`isGroup`/`isPost`/
  *   `accountId`/`project`/`groupId`/`isPushNotice`/`isContact`/`groupMemberCount`/`value`
  *   /`showBadge`/`isSilent`；消息读 `msg`/`type`/`id`/`from`/`time`/`isMine`/
