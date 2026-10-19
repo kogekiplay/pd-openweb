@@ -656,6 +656,10 @@ function main(): void {
     assert.equal(Object.prototype.hasOwnProperty.call(outS, 'from'), false, '系统分支**不写 from**');
     assert.equal(outS.id, 's1', '系统分支不改 id');
     assert.equal(outS.value, 's1', '系统分支把 value 写成 id');
+    // 【新增】系统分支的 time 走 `getCurrentTime()` 兜底（第 373 行），
+    // 再经 `formatMsgDate(..., false)` 化为一小时内的 `HH:mm`；夹具把 now 固定为 12:00，
+    // 故可精确断言（此前该兜底路径没有断言）。
+    assert.equal(outS.time, '12:00', '系统分支 time = getCurrentTime() → 固定 now 的 HH:mm');
 
     // 事实 3：缺 id 的 from 也能成功返回
     const s3 = { id: 's3', type: 1, msg: { con: 'text' }, from: { name: 'User' } };
@@ -820,6 +824,8 @@ function main(): void {
     const own: Record<string, any> = { id: 'o1', from: 'me', to: 'sess-1', msg: { con: 'hi' }, type: 1 };
     utils.formatNewSession(own);
     assert.equal(own.value, 'sess-1', 'accountId === from（本人）→ value 取 to');
+    // 普通分支的 time 兜底（第 390 行）同样走 `getCurrentTime()`，固定 now 下为 '12:00'
+    assert.equal(own.time, '12:00', '普通分支缺 time → getCurrentTime() 兜底，固定 now 下为 HH:mm');
     // 对照：非本人时 value 取 from
     const notOwn: Record<string, any> = { id: 'o2', from: 'other', to: 'sess-2', msg: { con: 'hi' }, type: 1 };
     utils.formatNewSession(notOwn);
