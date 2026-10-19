@@ -476,7 +476,10 @@ export const sendSetTop = (message: any) => (_dispatch: AppDispatch, getState: G
  * 设置置顶
  * @param {*} message
  */
-export const setTop = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const setTop = (message: {
+  value: string;
+  top_info?: { isTop?: boolean | undefined; time?: number | string | undefined; [key: string]: unknown } | undefined;
+}) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList, sessionList, currentSession } = getState().chat;
   const session = sessionList.filter(item => item.value === message.value)[0];
   const isTop = message.top_info ? message.top_info.isTop : false;
@@ -527,7 +530,7 @@ export const setTop = (message: any) => (dispatch: AppDispatch, getState: GetSta
  * 同步删除会话
  * @param {*} message
  */
-export const sessionRemoved = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const sessionRemoved = (message: { id: string; type: number }) => (dispatch: AppDispatch, getState: GetState) => {
   const { id, type } = message;
   const { currentSession, sessionList } = getState().chat;
   const value = type > 2 ? utils.getInboxId(type) : id;
@@ -546,7 +549,7 @@ export const sessionRemoved = (message: any) => (dispatch: AppDispatch, getState
  * 清除会话未读消息计数
  * @param {*} message
  */
-export const clearUnread = (message: any) => (dispatch: AppDispatch) => {
+export const clearUnread = (message: { id: string }) => (dispatch: AppDispatch) => {
   const { id } = message;
   dispatch(updateSessionList({ id, atlist: [] }));
   dispatch(updateSessionList({ id, reflist: [] }));
@@ -589,7 +592,7 @@ export const clearAllUnread = () => (dispatch: AppDispatch, getState: GetState) 
  * 清除 inbox 的未读计数
  * @param {*} message
  */
-export const clearNotification = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const clearNotification = (message: { type: string }) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSession } = getState().chat;
   const { type } = message;
   dispatch(updateSessionList({ id: type, clearCount: 0 }));
@@ -608,7 +611,7 @@ export const clearNotification = (message: any) => (dispatch: AppDispatch, getSt
  * 删除群组
  * @param {*} data
  */
-export const removedFromGroup = (data: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const removedFromGroup = (data: { id: string }) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSession } = getState().chat;
   const { id } = data;
 
