@@ -3,6 +3,7 @@ import type { AppDispatch, GetState } from 'src/redux/types';
 import type {
   ChatMessage,
   ChatMessageReceiptWire,
+  ChatGroupMessageEvent,
   ChatNewUserMessageEvent,
   ChatOutboundDraft,
   ChatPendingMessage,
@@ -1650,7 +1651,7 @@ export const newGroup = (message: {
  * 收到群组信息
  * @param {*} message
  */
-export const newGroupMessage = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const newGroupMessage = (message: ChatGroupMessageEvent) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSession, sessionList, isWindow } = getState().chat;
   const result = sessionList.filter(item => item.value === message.to);
   const isWindowSession = utils.chatWindow.is(message.to);

@@ -932,3 +932,25 @@ export interface ChatNewUserMessageEvent extends ChatRawMessageWire {
   /** 是否群会话（本 handler 会写它） */
   isGroup?: boolean | undefined;
 }
+
+/**
+ * `newGroupMessage` 的入参：**群聊新消息** socket 事件。
+ *
+ * 与 `ChatNewUserMessageEvent` 同构：`from`/`msg` 在该事件里**已不是过渡联合**
+ * （`from` 是发送者 id 字符串、`msg` 是对象），且群消息总有 `to`。
+ */
+export interface ChatGroupMessageEvent extends ChatRawMessageWire {
+  from: string;
+  to: string;
+  msg: { con?: string | undefined; files?: unknown; [key: string]: unknown };
+  /** 发送者昵称（拼 `"昵称: 正文"` 用） */
+  uname?: string | undefined;
+  /** 未读数（本 handler 会写它） */
+  count?: number | undefined;
+  /** 是否群会话（本 handler 会写它） */
+  isGroup?: boolean | undefined;
+  /** 系统消息类型：`message.sysType ? ...` 与 `'sysType' in message` 判别 */
+  sysType?: number | undefined;
+  /** 引用信息，直接透传给 `updateSessionList` */
+  refer?: ChatSessionPatch['refer'];
+}
