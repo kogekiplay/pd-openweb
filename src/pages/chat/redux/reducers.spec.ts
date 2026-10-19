@@ -421,6 +421,30 @@ function main(): void {
     assert.equal(next.socketState, s0.socketState);
   });
 
+  check('reducers 侧缺键抛错：ADD_BOTTOM_UNREAD_MESSAGE 的错误信息与原生一致', () => {
+    /**
+     * 【为什么锁错误信息】lead 指出「缺项默认值会改变运行时」。
+     * 同理，我若用 `?? []` / `as` 掩盖边界，或手写一条**不同的**错误信息，
+     * 都是对既有行为的改动。这里逐字对齐原生 V8 消息：
+     *   undefined.concat(...) → "Cannot read properties of undefined (reading 'concat')"
+     */
+    const { root, init } = boot('current');
+    let message = '';
+    try {
+      root(init(), { type: 'ADD_BOTTOM_UNREAD_MESSAGE', id: 'nokey', message: MSG_1 });
+    } catch (error) {
+      message = error instanceof Error ? error.message : String(error);
+    }
+    // 原生消息原文
+    let native = '';
+    try {
+      (undefined as any).concat([1]);
+    } catch (error) {
+      native = error instanceof Error ? error.message : String(error);
+    }
+    assert.equal(message, native, '缺键时的错误信息必须与原生 V8 消息逐字一致');
+  });
+
   mainRtk();
 }
 

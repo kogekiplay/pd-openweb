@@ -491,9 +491,11 @@ export const setTop = (message: any) => (dispatch: AppDispatch, getState: GetSta
       let _current = sessionList.find((l: any) => l.value === message.value);
 
       if (!_current) {
-        // 原代码在此处 spread undefined 会抛 TypeError；显式写出同一失败路径，
-        // 不引入 `?? {}` 之类会改变行为的兜底。
-        throw new TypeError("Cannot read properties of undefined (reading 'value')");
+        // 原实现在 `_current` 为 undefined 时，`{..._current}` 本身**不抛**
+        // （对象展开 undefined 得到 {}），真正抛的是紧随其后的 `_current.top_info`。
+        // 实测原文：TypeError: Cannot read properties of undefined (reading 'top_info')
+        // 这里逐字复现该失败，不引入 `?? {}` 之类会改变行为的兜底。
+        throw new TypeError("Cannot read properties of undefined (reading 'top_info')");
       }
 
       dispatch(
@@ -681,7 +683,8 @@ export const addCurrentSession = (result: any) => (dispatch: AppDispatch, getSta
     const firstCurrentSession = currentSessionList[0];
 
     if (!firstCurrentSession) {
-      throw new TypeError("Cannot destructure 'undefined' as it is undefined.");
+      // 实测原文：Cannot destructure property 'id' of 'undefined' as it is undefined.
+      throw new TypeError("Cannot destructure property 'id' of 'undefined' as it is undefined.");
     }
 
     // `formatSession` 不保证会话一定有 `id`（如实建模为可选）。
@@ -718,7 +721,8 @@ export const addCurrentInbox = (result: any) => (dispatch: AppDispatch, getState
     const firstInboxSession = currentInboxList[0];
 
     if (!firstInboxSession) {
-      throw new TypeError("Cannot destructure 'undefined' as it is undefined.");
+      // 实测原文：Cannot destructure property 'id' of 'undefined' as it is undefined.
+      throw new TypeError("Cannot destructure property 'id' of 'undefined' as it is undefined.");
     }
 
     // 同 currentSessionList：保持原调用（见 removeCurrentInbox 的形参放宽）。
