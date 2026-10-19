@@ -9,6 +9,7 @@ import type {
   ChatOutboundDraft,
   ChatPendingMessage,
   ChatRawMessageWire,
+  ChatNewMessageWire,
   ChatSession,
   ChatRawSessionWire,
   ChatSessionPatch,
@@ -425,10 +426,28 @@ export const addSysSession =
  * 窗口同步
  * @param {*} status
  */
-export const operate = (status: any) => (dispatch: AppDispatch, getState: GetState) => {
+/**
+ * `operate` 的 socket 载荷（`socket.ts` 的 `recordAction(contact)` 发出）。
+ * `contact.id` 有两种真实形态：
+ *   ① 普通会话：字符串（`recordAction({ id: groupId/id/'', type: 1|2 })`）
+ *   ② 系统会话：`SessionList.addInbox` 传 `{ count, id, type, dtype }`，
+ *      **`dtype` 里才是真正的会话 id**（`else` 分支的 `id.dtype` 就取它）。
+ * 因此这里建联合，读取 `.dtype` 处用**擦除式断言**（零运行时、保留原表达式）。
+ */
+export const operate = (
+  status: {
+    contact: {
+      id: string | { count?: number; id?: string; type?: number; dtype?: string };
+      type: number;
+      showBadge?: boolean;
+    };
+    isclose: boolean;
+    isopen: boolean;
+  },
+) => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
   const { contact, isclose, isopen } = status;
-  const session = sessionList.filter(item => item.value === contact.id)[0];
+  const session = sessionList.filter(item => item.value === (contact.id as string))[0];
   const contactType = Number(contact.type);
 
   if (session && 'showBadge' in contact) {
@@ -445,16 +464,18 @@ export const operate = (status: any) => (dispatch: AppDispatch, getState: GetSta
     } else {
       if (contactType === Constant.SESSIONTYPE_USER) {
         dispatch(
-          addUserSession(contact.id, {
+          addUserSession(contact.id as string, {
             msg: { con: '' },
             sysType: 1,
           }),
         );
       } else if (contactType === Constant.SESSIONTYPE_GROUP) {
-        dispatch(addGroupSession(contact.id));
+        dispatch(addGroupSession(contact.id as string));
       } else {
         const { id } = contact;
-        dispatch(addSysSession(id.dtype, id));
+        // 系统会话路径：`id` 是 `{ count, id, type, dtype }`，`dtype` 才是会话 id。
+        // 用擦除式断言读取（零运行时）：普通会话的字符串不会走到这里（已按 contactType 分流）。
+        dispatch(addSysSession((id as { dtype?: string }).dtype as string, id as ChatRawMessageWire));
       }
     }
   }
@@ -1388,7 +1409,7 @@ export const updateWithdrawMessage = (
  * 收到新消息
  * @param {*} message
  */
-export const receiveMessage = (id: string, message: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const receiveMessage = (id: string, message: ChatNewMessageWire) => (dispatch: AppDispatch, getState: GetState) => {
   const { messages } = getState().chat;
   const currentMessage = messages[id];
   const unnecessary = _.findIndex(currentMessage, { id: message.id }) === -1 ? false : true;
@@ -1399,23 +1420,27 @@ export const receiveMessage = (id: string, message: any) => (dispatch: AppDispat
     if (
       prevMessage &&
       prevMessage.isMineMessage &&
-      prevMessage.from === message.from &&
+      prevMessage.from === (message as ChatMessage).from &&
       _.get(prevMessage, 'msg.con') === _.get(message, 'msg.con')
     ) {
       return;
     }
 
     const isGroup = 'groupname' in message;
-    const sessionId = isGroup ? message.to : message.isMine ? message.to : message.from;
+    const sessionId = isGroup
+      ? (message as ChatMessage).to
+      : (message as ChatMessage).isMine
+        ? (message as ChatMessage).to
+        : (message as ChatMessage).from;
     const bottom = $(`#ChatPanel-${sessionId}`).data('isBottom');
     const isBottom = bottom == undefined ? true : bottom;
 
-    if (!message.isMine && !isBottom) {
-      dispatch(addBottomUnreadMessage(sessionId, message));
+    if (!(message as ChatMessage).isMine && !isBottom) {
+      dispatch(addBottomUnreadMessage(sessionId as string, message as ChatMessage));
       return;
     } else {
       setTimeout(() => {
-        utils.scrollEnd(message.to, true);
+        utils.scrollEnd((message as ChatMessage).to as string, true);
       }, 100);
     }
 
