@@ -780,6 +780,20 @@ function main(): void {
     // ① 原始时间备份到 _time，time 被改写成**文案**（真实 moment 计算，只断言"变成字符串"）
     assert.equal(out._time, 1700000000000, '_time 保存原始时间');
     assert.equal(typeof out.time, 'string', 'time 被 formatMsgDate 改写成文案');
+    // 【新增 · 精确断言】上面用 epoch 时间只能验类型（跨时区会偏移）。
+    // 换成**固定日期字符串**后，`formatMsgDate(..., false)` 的跨年分支与时区无关：
+    //   time '2023-11-14 10:00:00.000' → `2023年11月14日`（无时分）
+    const tInput: Record<string, unknown> = {
+      id: 'st',
+      value: 'vt',
+      from: { id: 'other', name: '对方' },
+      msg: { con: 'x' },
+      time: '2023-11-14 10:00:00.000',
+      type: 2,
+    };
+    const tOut: Record<string, any> = utils.formatSession(tInput as never);
+    assert.equal(tOut._time, '2023-11-14 10:00:00.000', '_time 保存**原始字符串**时间');
+    assert.equal(tOut.time, '2023年11月14日', 'time 精确化为跨年分支文案（无时分）');
 
     // ② type 被 Number 归一化（入参是字符串 '2'）
     assert.equal(out.type, 2, 'type 经 Number() 归一化为数值');
