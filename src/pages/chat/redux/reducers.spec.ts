@@ -23,7 +23,7 @@
  * 本模块恰好涉及 `Object.assign([], ...)`（保留数组额外属性）、`delete` 副作用
  * 与 `undefined` 值，用 JSON 比较会把差异**看不见**。
  *
- * 【覆盖】共 **23 个 A/B 场景 + 38 个 check 用例**（合计 61 项），对应 lead 点名的行为面：
+ * 【覆盖】共 **24 个 A/B 场景 + 37 个 check 用例**（合计 61 项），对应 lead 点名的行为面：
  *
  * A/B（逐步快照 + 每步「是否返回原引用」）：
  * - 初始值（12 个切片）；`SET/ADD/UPDATE_SESSION_LIST`、`REMOVE_SESSION`、`ADD_SESSION`
