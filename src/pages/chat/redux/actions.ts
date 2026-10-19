@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import type { AppDispatch, GetState } from 'src/redux/types';
-import type { ChatMessage } from './types';
+import type { ChatMessage, ChatToolbarConfig } from './types';
 import type { ChatAction } from './reducers';
 import { dateConvertToUserZone } from 'src/utils/project';
 import * as utils from '../utils';
@@ -1713,7 +1713,12 @@ export const newWithdrawGroupMessage = (message: any) => (dispatch: AppDispatch,
  * @param {*} id
  * @param {*} message
  */
-export const setReferMessage = (id: string, message: any) => {
+/**
+ * 设置引用消息。
+ * 【有限声明依据】唯一调用点 `Message/index.tsx:84` 传的是组件 props 的 `message`，
+ * 即当前列表里的一条 `ChatMessage`；与 `ChatAction` 里 `SET_REFER_MESSAGE.message` 同型。
+ */
+export const setReferMessage = (id: string, message: ChatMessage) => {
   return {
     type: 'SET_REFER_MESSAGE',
     id,
@@ -1945,7 +1950,14 @@ export const setSocketState = (state: number) => {
  * 更新 toolbarConfig 配置
  * @param {*} config
  */
-export const setToolbarConfig = (config: any) => {
+/**
+ * 局部更新 toolbar 配置。
+ * 【有限声明依据】真实调用点传的都是**部分配置**：
+ * `Apps/index.tsx:117` `{ hideOpenCommonApp: ... }`、
+ * `SettingDrawer/index.tsx:95` 账号设置补丁（`{ ...values, ...param }` 形态）。
+ * 与 `ChatAction` 里 `SET_TOOLBAR_CONFIG.result` 的 `Partial<ChatToolbarConfig>` 同型。
+ */
+export const setToolbarConfig = (config: Partial<ChatToolbarConfig>) => {
   return {
     type: 'SET_TOOLBAR_CONFIG',
     result: config,
