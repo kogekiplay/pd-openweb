@@ -33,3 +33,5 @@ Chat未合入：lead实际formatter反例见 **/private/tmp/hap-chat-lead-audit-
 证据 **/private/tmp/hap-edit-print-20261019/**：before完整源/JSON、行为/旧错误子进程、真实类型正负与any控制、两变异/还原SHA、完整Babel字节、门禁/正式release/runtime/publish/freeze、预算与现网只读结果。全仓强类型/正式strict仍active。
 
 最终资源门禁纠正：首次pre-push里EditPrint规格30秒超时，随后release里旧BtnTd与该规格并发超时，均真实非零/未推送。先缓存夹具按源码+文件名编译结果，再将四类旧拒绝逐项归并到每个历史版本一个子进程，仍分别断言四个实际unhandledRejection、错误匹配及非零退出。定向4.8s，最终全仓280/280在73s完成、每规格原30s上限保持，正式release2m36s及runtime/publish重过；旧失败日志/旧993bf冻结保留，未绕门禁或只重推。新的普通推送终态见push-final.log。
+
+发布结果：最终4dcca88234已于2026-10-19上海17:04:53发布，生产/quick各17,098逐文件、六入口/34资源、五服务完整挂载/nginx、登录MOM/ERP只读通过，见production-edit-print-20261019.md。此前“尚未部署”为冻结时状态；旧993bf未部署。
