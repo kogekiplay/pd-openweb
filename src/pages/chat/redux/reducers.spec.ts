@@ -497,6 +497,28 @@ function main(): void {
     assert.deepEqual(afterUpdate.bottomUnreadMessage.k1, [MSG_2], 'UPDATE 后该键是**数组**');
   });
 
+  check('SET_MESSAGE 是**替换**而不是追加：同一 id 连设两次只保留第二次', () => {
+    /**
+     * 【这条为什么必须有 —— 由变异测试发现】
+     * 我把 reducer 改成 `(state[id] || []).concat(result)`（追加而非替换），
+     * 当时 **45 项规格全绿** —— 因为所有 SET 用例都在**全新 state** 上派发一次，
+     * 追加与替换在这种情形下不可区分。
+     * 真实语义是 `[action.id]: action.result`（**整体替换**），例如 `resetMessage`
+     * 拉第一页、`setMessage` 整体刷新时都会二次 SET。
+     */
+    const { root, init } = boot('current');
+    const first = root(init(), { type: 'SET_MESSAGE', id: 'k1', result: [MSG_1] });
+    assert.deepEqual(first.messages.k1, [MSG_1], '首次 SET 写入 [MSG_1]');
+
+    const second = root(first, { type: 'SET_MESSAGE', id: 'k1', result: [MSG_2] });
+    assert.deepEqual(second.messages.k1, [MSG_2], '第二次 SET **替换**掉第一次的内容（不是追加）');
+    assert.equal(
+      (second.messages.k1 as unknown as unknown[]).length,
+      1,
+      '长度必须是 1 —— 若变成 2 说明实现被改成了 concat',
+    );
+  });
+
   check('【刻意构造的异常输入】UPDATE_BOTTOM_UNREAD 收到**单项**时原样存入，不做数组包装', () => {
     /**
      * 【这条为什么必须有 —— 由变异测试发现】
