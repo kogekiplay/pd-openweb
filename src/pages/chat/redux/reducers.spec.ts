@@ -17,18 +17,31 @@
  * 本模块恰好涉及 `Object.assign([], ...)`（保留数组额外属性）、`delete` 副作用
  * 与 `undefined` 值，用 JSON 比较会把差异**看不见**。
  *
- * 【覆盖】（对应 lead 点名的行为面）
- * - 初始值（12 个切片）
- * - `SET/ADD/UPDATE_SESSION_LIST`、`REMOVE_SESSION`、`ADD_SESSION`（`sortSession` 参与）
- * - `Object.assign([], ...)` 的**数组/额外键语义**
- * - `concat` 接**单个值**与**数组**两种载荷
- * - 原过滤/排序**次序**
- * - 消息**分页前后拼接**（`ADD_PAGE_MESSAGE` / `PUSH_PAGE_MESSAGE`）
- * - **缺失会话键**（`REMOVE_MESSAGE` 对不存在的键返回原引用）
- * - **引用返回**（未知 action / 缺键时原引用）
- * - `REMOVE_MESSAGES` / `REMOVE_REFER_MESSAGE` / `REMOVE_GOTO_MESSAGE` /
- *   `REMOVE_BOTTOM_UNREAD_MESSAGE` 的 **先 delete 再浅复制副作用**（如实保留）
- * - `ADD_BOTTOM_UNREAD_MESSAGE` 对**缺键的原失败路径**（不加空数组兜底）
+ * 【覆盖】共 **23 个 A/B 场景 + 20 个 check 用例**，对应 lead 点名的行为面：
+ *
+ * A/B（逐步快照 + 每步「是否返回原引用」）：
+ * - 初始值（12 个切片）；`SET/ADD/UPDATE_SESSION_LIST`、`REMOVE_SESSION`、`ADD_SESSION`
+ *   （`sortSession` 参与）；`REMOVE_SESSION` 外层 filter 的**幂等性**；
+ * - toolbar / 当前会话 / 会话列表 / inbox 全动作；消息 `SET`/`ADD`/`ADD_PAGE`/`PUSH_PAGE`/
+ *   `REMOVE`/`REMOVE_MESSAGES`/`UPDATE`；引用 / 定位 / 底部未读全动作；三个开关；
+ * - `SET/UPDATE/REMOVE_BOTTOM_UNREAD_MESSAGE` 使用**合法载荷**（SET 单条、UPDATE 数组）。
+ *
+ * 绝对断言（钉住真实语义，防两侧一起错）：
+ * - `Object.assign([], ...)` 产生**新数组**且保留额外键语义；`filterSessionList` 去重保序；
+ *   `sortSession` 排序次序；`ADD_MESSAGE` 缺键走 `(state[id] || [])`；
+ *   `REMOVE_MESSAGE` 缺键**返回原引用**；未知 action 三个开关返回原引用；
+ * - `REMOVE_MESSAGES`/`REMOVE_REFER_MESSAGE`/`REMOVE_GOTO_MESSAGE`/`REMOVE_BOTTOM_UNREAD_MESSAGE`
+ *   的**先 delete 再浅复制副作用**（如实保留，原 state 被就地变异）；
+ * - `ADD_BOTTOM_UNREAD_MESSAGE` 缺键**抛原生 TypeError**（不加兜底），且错误信息与原生一致；
+ * - `ADD_PAGE_MESSAGE` 缺键时**追加一个自有 undefined 元素**（原边界行为）；
+ *   `UPDATE_BOTTOM_UNREAD_MESSAGE` 的**合法载荷是数组**，reducer 原样存入；
+ * - **刻意构造的异常输入**：该键被塞成非数组时，`ADD` 仍抛 `concat is not a function`；
+ * - **`ADD_PAGE_MESSAGE` 的 getter 求值顺序**（lead 反例回归）：`id → result → id`，
+ *   且 getter 产出的消息 id 与基线一致（曾因提前缓存 `action.result` 变成 `'0'`）；
+ * - `REMOVE_MESSAGES` 的 undefined id **会删除字面键 `"undefined"`**（不是无操作）。
+ *
+ * 真实 RTK（`configureStore` 默认中间件，显式 test 环境并恢复）：
+ * - 就地 `delete` 会抛 `state mutation`，且**两侧表现完全一致**（未偷改成纯函数）。
  */
 const assert: typeof import('node:assert/strict') = require('node:assert/strict');
 const path = require('node:path');
