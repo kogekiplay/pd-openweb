@@ -637,7 +637,7 @@ export const closeSessionPanel = () => (dispatch: AppDispatch, getState: GetStat
  * 设置一个新的会话信息
  * @param {*} result
  */
-export const setNewCurrentSession = (result: any) => (dispatch: AppDispatch) => {
+export const setNewCurrentSession = (result: ChatSession | undefined) => (dispatch: AppDispatch) => {
   /* 【点会话列表时 dev 下报 A state mutation was detected ... 'chat.sessionList.N.id'】
      result 常常直接是 chat.sessionList 里的对象（SessionList.handleOpenPanel 只在带 showBadge 时才拷一份），
      原先 setCurrentChat 在它身上写 id = value，RTK 的不可变检查在 dev 下抛错、会话面板打不开；生产没有这个检查，
@@ -652,7 +652,7 @@ export const setNewCurrentSession = (result: any) => (dispatch: AppDispatch) => 
     type: 'SET_CURRENT_SESSION',
     result,
   });
-  if (result.value !== 'workflow') {
+  if (result!.value !== 'workflow') {
     dispatch({
       type: 'REMOVE_INBOX_SESSION',
       id: 'workflow',
@@ -683,7 +683,7 @@ export const setCurrentSessionId =
  * 添加聊过的会话消息
  * @param {*} result
  */
-export const addCurrentSession = (result: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const addCurrentSession = (result: ChatSession) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList, sessionList } = getState().chat;
   // 【先拷一份再改】调用方经常直接把 sessionList 里的那个对象传进来，
   // 在它身上写 isGroup / id / isTop 就是在改 store，会被 immutableStateInvariant 抓到：
@@ -700,7 +700,7 @@ export const addCurrentSession = (result: any) => (dispatch: AppDispatch, getSta
   }
 
   const session = _.filter(sessionList, { value: result.id })[0] || {};
-  const isTop = _.get(session, 'top_info.isTop', false);
+  const isTop: boolean = _.get(session, 'top_info.isTop', false) as boolean;
   result.isTop = isTop;
   if ('isSession' in session) {
     result.isSession = session.isSession;
@@ -716,7 +716,7 @@ export const addCurrentSession = (result: any) => (dispatch: AppDispatch, getSta
  * 添加打开过 inbox 消息
  * @param {*} result
  */
-export const addCurrentInbox = (result: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const addCurrentInbox = (result: ChatSession) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentInboxList = [] } = getState().chat;
 
   if (currentInboxList.length >= 3) {
@@ -850,7 +850,7 @@ export const resetGroupIsPost = (groupId: string, projectId: string) => (dispatc
  * @param {*} groupId
  * @param {*} name
  */
-export const updateGroupAvatar = (groupId: string, avatar: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateGroupAvatar = (groupId: string, avatar: string) => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
   const newSessionList = sessionList.map(item => {
     if (item.value === groupId) {
@@ -870,7 +870,7 @@ export const updateGroupAvatar = (groupId: string, avatar: any) => (dispatch: Ap
  * @param {*} groupId
  * @param {*} about
  */
-export const updateGroupAbout = (groupId: string, about: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateGroupAbout = (groupId: string, about: string) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList } = getState().chat;
   const newCurrentSessionList = currentSessionList.map(item => {
     if (item.id === groupId) {
