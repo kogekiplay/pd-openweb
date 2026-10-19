@@ -281,6 +281,8 @@ function renderer(
     md,
     win,
     enumValues,
+    features,
+    upgrades,
     get state() {
       return states[0];
     },

@@ -7,6 +7,8 @@ import sheetAjax from 'src/api/worksheet';
 import { printQrBarCode } from 'worksheet/common/PrintQrBarCode';
 import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
 import { PRINT_TYPE } from 'src/pages/Print/core/config';
+import type { WorksheetInfo } from 'src/pages/worksheet/types';
+import type { FormControl } from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
 import { getFeatureStatus } from 'src/utils/project';
 import CloudPrint from '../../components/CloudPrint';
@@ -16,6 +18,7 @@ import KuaiMaiIcon from './assets/kuaimai.png';
 import openKuaiMaiDialog from './BindKuaiMaiDialog';
 import { PrintCountSettingCard } from './components/PrintCountSetting';
 import PrintSortableItem from './PrintSortableItem';
+import type { PrintItemData } from './PrintSortableItem';
 import './style.less';
 
 const MAX_PRINT_COUNT = 500;
@@ -27,19 +30,55 @@ const PRINT_TYPE_CLASSIFY: Record<string, number[]> = {
 };
 
 interface TemplatePrintSettings {
-  advanceSettings?: { key: string; value?: string | number }[] | undefined;
+  advanceSettings?: { key?: string | undefined; value?: string | number | undefined }[] | undefined;
 }
 const getTemplatePrintLimitCount = (item: TemplatePrintSettings): number => {
   const count = Number(item.advanceSettings?.find(setting => setting.key === 'print_limit_count')?.value);
   return count > 0 ? count : 1;
 };
+
 const getTemplatePrintLimit = (item: TemplatePrintSettings): number | undefined =>
   item.advanceSettings?.find(setting => setting.key === 'print_limit_enabled')?.value === '1'
     ? getTemplatePrintLimitCount(item)
     : undefined;
 
-class CreatePrintDrawer extends React.Component<any, any> {
-  constructor(props) {
+export interface CreatePrintDrawerProps {
+  worksheetProjectId?: string | undefined;
+  onCloseDrawer: () => void;
+  visible: boolean;
+  addNewRecordPrintTemp: () => void;
+  addWordPrintTemp: () => void;
+  addCodePrintTemp: (type: number) => void;
+  addExcelPrintTemp: () => void;
+  addKuaiMaiPrintTemp: () => void;
+}
+export interface PrintControllerProps {
+  worksheetId?: string | undefined;
+  worksheetInfo: WorksheetInfo;
+  worksheetControls?: FormControl[] | undefined;
+  onChange: (value: WorksheetInfo) => void;
+}
+export interface PrintControllerState {
+  showEditPrint: boolean;
+  templateId: string | undefined;
+  showPrintTemDialog: boolean;
+  type: '' | 'new' | 'edit' | 'preview';
+  isDefault: boolean;
+  showCreatePrintTemp: boolean;
+  fileType: 'Word' | 'Excel' | undefined;
+  fileTypeNum: number | null;
+  printData: PrintItemData[];
+  loading: boolean;
+  sortIds: string[];
+  exampleData: unknown;
+  bindKuaiMai: boolean;
+  showCloudPrint: boolean;
+  previewRowId?: string | undefined;
+  name?: string | undefined;
+}
+
+class CreatePrintDrawer extends React.Component<CreatePrintDrawerProps> {
+  constructor(props: CreatePrintDrawerProps) {
     super(props);
   }
 
@@ -140,8 +179,11 @@ class CreatePrintDrawer extends React.Component<any, any> {
     );
   }
 }
-class Print extends React.Component<any, any> {
-  constructor(props) {
+class Print extends React.Component<PrintControllerProps, PrintControllerState> {
+  declare setState: React.Component<PrintControllerProps, PrintControllerState>['setState'] &
+    ((patch: Partial<PrintControllerState>, callback?: () => void) => void);
+
+  constructor(props: PrintControllerProps) {
     super(props);
     this.state = {
       showEditPrint: false,
@@ -180,7 +222,7 @@ class Print extends React.Component<any, any> {
       });
   };
 
-  addDrawerPrintTemp = (fileType: string) => {
+  addDrawerPrintTemp = (fileType: 'Word' | 'Excel') => {
     if (this.checkedPrintTempCount()) return;
 
     const { worksheetInfo } = this.props;
@@ -199,7 +241,7 @@ class Print extends React.Component<any, any> {
     }
   };
 
-  updatePrint = (id, data) => {
+  updatePrint = (id: PrintItemData['id'], data: Partial<PrintItemData>) => {
     const { printData } = this.state;
 
     this.setState({
@@ -210,12 +252,12 @@ class Print extends React.Component<any, any> {
     });
   };
 
-  onSortEnd = (newItems = [], type: number) => {
+  onSortEnd = (newItems: PrintItemData[] = [], type: number) => {
     const { printData } = this.state;
     const { worksheetInfo = {}, worksheetId } = this.props;
-    const defaultTypes = _.reduce(
+    const defaultTypes = _.reduce<string, number[]>(
       Object.keys(PRINT_TYPE_CLASSIFY),
-      (res, item) => res.concat(Number(item) !== Number(type) ? PRINT_TYPE_CLASSIFY[item] : []),
+      (res, item) => res.concat(Number(item) !== Number(type) ? PRINT_TYPE_CLASSIFY[item]! : []),
       [],
     );
     const defaultItems = printData.filter(it => defaultTypes.includes(it.type));
@@ -233,7 +275,7 @@ class Print extends React.Component<any, any> {
       });
   };
 
-  changeState = value => {
+  changeState = (value: Partial<PrintControllerState>) => {
     this.setState({
       ...value,
     });
@@ -269,9 +311,11 @@ class Print extends React.Component<any, any> {
   checkedCloudPrint = () => {
     const { worksheetInfo = {} } = this.props;
 
-    systemIntegrationAjax.getSystemIntegrationList({ projectId: worksheetInfo.projectId, type: 1 }).then(res => {
-      this.setState({ bindKuaiMai: res.length >= 1 });
-    });
+    systemIntegrationAjax
+      .getSystemIntegrationList({ projectId: worksheetInfo.projectId, type: 1 })
+      .then((res: unknown[]) => {
+        this.setState({ bindKuaiMai: res.length >= 1 });
+      });
   };
 
   addKuaiMaiPrintTemp = () => {
@@ -303,7 +347,7 @@ class Print extends React.Component<any, any> {
     }
   };
 
-  addCodePrintTemp = type => {
+  addCodePrintTemp = (type: number) => {
     const { worksheetInfo = {} } = this.props;
 
     if (this.checkedPrintTempCount()) return;
@@ -336,7 +380,7 @@ class Print extends React.Component<any, any> {
     this.loadPrint({ worksheetId });
   };
 
-  renderPrintItem = (data, type: number) => {
+  renderPrintItem = (data: PrintItemData[], type: number) => {
     const { worksheetInfo = {}, worksheetControls } = this.props;
 
     return (
@@ -407,8 +451,8 @@ class Print extends React.Component<any, any> {
           controls={_.get(worksheetInfo, 'template.controls')}
           updatePrint={this.updatePrint}
           exampleData={exampleData}
-          updateExampleData={value => this.setState({ exampleData: value })}
-          refreshFn={(showEditPrint = false, id) => {
+          updateExampleData={(value: unknown) => this.setState({ exampleData: value })}
+          refreshFn={(showEditPrint = false, id?: string) => {
             this.setState({ showEditPrint, type: '', templateId: showEditPrint ? id || templateId : '' });
             this.loadPrint({ worksheetId: worksheetId }); // 获取当前模板
           }}
@@ -451,8 +495,8 @@ class Print extends React.Component<any, any> {
   renderCon = () => {
     const { printData = [] } = this.state;
     const { worksheetInfo = {} } = this.props;
-    const defaultTemData = printData.filter(it => PRINT_TYPE_CLASSIFY[0].includes(it.type)); //记录打印
-    const codeTemData = printData.filter(it => PRINT_TYPE_CLASSIFY[1].includes(it.type)); //条码打印
+    const defaultTemData = printData.filter(it => PRINT_TYPE_CLASSIFY[0]!.includes(it.type)); //记录打印
+    const codeTemData = printData.filter(it => PRINT_TYPE_CLASSIFY[1]!.includes(it.type)); //条码打印
     const cloudTemData = printData.filter(it => it.type === PRINT_TYPE.CLOUD_PRINT); //云打印
 
     return (

@@ -5,9 +5,9 @@ import { buriedUpgradeVersionDialog } from 'src/components/upgradeVersion';
 import { VersionProductType } from 'src/utils/domain/shared/productFeatures';
 
 export interface PrintCountWorksheetInfo {
-  worksheetId: string;
-  appId: string;
-  projectId: string;
+  worksheetId?: string | undefined;
+  appId?: string | undefined;
+  projectId?: string | undefined;
   advancedSetting?: Record<string, string | undefined> | undefined;
 }
 interface SettingCardProps {
@@ -28,6 +28,7 @@ export function PrintCountSettingCard({ worksheetInfo, disabled, onChange }: Set
     setSaving(true);
     setPrintCountEnabled(checked);
     const setting = { print_count_enabled: checked ? '1' : '0' };
+
     try {
       const result: unknown = await worksheetAjax.editWorksheetSetting({
         workSheetId: worksheetId,
@@ -46,6 +47,7 @@ export function PrintCountSettingCard({ worksheetInfo, disabled, onChange }: Set
       setSaving(false);
     }
   };
+
   return (
     <div className="flexRow alignItemsCenter mBottom20">
       <div className="flex">
@@ -70,6 +72,7 @@ export function PrintCountSettingCard({ worksheetInfo, disabled, onChange }: Set
     </div>
   );
 }
+
 interface LimitModalProps {
   value?: number | null | undefined;
   defaultValue?: number | undefined;
@@ -88,6 +91,7 @@ export function confirmDisableTemplatePrintLimit(onOk: () => Promise<unknown> | 
     onOk,
   });
 }
+
 export function PrintCountLimitModal({ value, defaultValue, onSave, onCancel }: LimitModalProps) {
   const initiallyEnabled = value !== undefined && value !== null;
   const initialCount = Number(defaultValue ?? value);
@@ -95,6 +99,7 @@ export function PrintCountLimitModal({ value, defaultValue, onSave, onCancel }: 
   const [count, setCount] = useState(initialCount > 0 ? initialCount : 1);
   const [saving, setSaving] = useState(false);
   const savingRef = useRef(false);
+
   const save = async (nextValue: number | null, previousCount?: number) => {
     if (savingRef.current) return;
     savingRef.current = true;
@@ -109,6 +114,7 @@ export function PrintCountLimitModal({ value, defaultValue, onSave, onCancel }: 
       setSaving(false);
     }
   };
+
   return (
     <Modal
       open
@@ -137,6 +143,7 @@ export function PrintCountLimitModal({ value, defaultValue, onSave, onCancel }: 
               confirmDisableTemplatePrintLimit(() => save(null, count));
               return;
             }
+
             setEnabled(checked);
           }}
         />

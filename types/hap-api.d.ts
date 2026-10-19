@@ -1037,7 +1037,7 @@ declare namespace HapApi.MD.Entity.Worksheet {
     opeartorInfo?: HapApi.MD.Entity.Account.EasyAccount | undefined;
     operatContent?: HapApi.MD.Entity.Worksheet.WorksheetLogEntityOperatContent | undefined;
   }
-  interface WorksheetFilterSort {
+  type WorksheetFilterSortFields = {
     controlId?: string | undefined;
     dataType: HapApi.MD.Enum.Form.ControlType;
     spliceType: number;
@@ -1049,12 +1049,12 @@ declare namespace HapApi.MD.Entity.Worksheet {
     minValue?: string | undefined;
     maxValue?: string | undefined;
     isAsc: boolean;
-    dynamicSource?: HapApi.MD.Entity.Form.DefaultSourceModel[] | undefined;
+    dynamicSource?: { [K in keyof HapApi.MD.Entity.Form.DefaultSourceModel]: HapApi.MD.Entity.Form.DefaultSourceModel[K] }[] | undefined;
     advancedSetting?: Record<string, string> | undefined;
-    isGroup: boolean;
     groupFilters?: HapApi.MD.Entity.Worksheet.WorksheetFilterSort[] | undefined;
     emptyRule?: number | undefined;
-  }
+  };
+  type WorksheetFilterSort = WorksheetFilterSortFields & ({ isGroup: false } | { isGroup: true });
   interface LayerControlEntity {
     worksheetId?: string | undefined;
     worksheetName?: string | undefined;
