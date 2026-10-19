@@ -7,16 +7,20 @@ let checks = 0,
   failed = 0,
   summarized = false;
 const scenario = process.argv[2];
+let activeScenario = scenario,
+  observedFailures = 0;
 process.on('unhandledRejection', error => {
   if (scenario) {
     console.log(
       JSON.stringify({
         unhandled: true,
+        scenario: activeScenario,
         name: error instanceof Error ? error.name : typeof error,
         message: error instanceof Error ? error.message : String(error),
       }),
     );
-    summarized = true;
+    observedFailures++;
+    if (scenario !== 'all-errors') summarized = true;
   } else console.error(error);
   process.exitCode = 1;
 });
@@ -494,41 +498,66 @@ async function run() {
       }),
   );
   await check('legacy actual async failures are nonzero in both versions, with matching native kinds/messages', () => {
-    for (const name of ['token-reject', 'save-reject', 'create-null', 'edit-reject']) {
-      const results = ['old', 'current'].map(version => {
-        const run = cp.spawnSync(process.execPath, [__filename, name, version], { encoding: 'utf8', timeout: 15000 });
-        assert.equal(run.status, 1, run.stdout + run.stderr);
-        const line = run.stdout.split('\n').find(x => x.startsWith('{"unhandled"'));
-        assert.ok(line, run.stdout + run.stderr);
-        return JSON.parse(line);
+    const expected = ['token-reject', 'save-reject', 'create-null', 'edit-reject'];
+    const results = ['old', 'current'].map(version => {
+      const run = cp.spawnSync(process.execPath, [__filename, 'all-errors', version], {
+        encoding: 'utf8',
+        timeout: 15000,
       });
-      assert.deepEqual(results[0], results[1]);
-    }
+      assert.equal(run.status, 1, run.stdout + run.stderr);
+      const failures = run.stdout
+        .split('\n')
+        .filter(x => x.startsWith('{"unhandled"'))
+        .map(x => JSON.parse(x));
+      assert.deepEqual(
+        failures.map(x => x.scenario),
+        expected,
+      );
+      assert.ok(run.stdout.includes('all four legacy failures observed'), run.stdout + run.stderr);
+      return failures;
+    });
+    assert.deepEqual(results[0], results[1]);
   });
   summarized = true;
   console.log(`EditPrint full historical flow: ${checks - failed}/${checks}`);
   if (failed) process.exitCode = 1;
 }
 async function legacy() {
-  const version = process.argv[3],
-    s = mounted(version);
-  if (scenario === 'token-reject') {
+  const version = process.argv[3];
+  if (scenario === 'all-errors') {
+    for (const name of ['token-reject', 'save-reject', 'create-null', 'edit-reject']) {
+      activeScenario = name;
+      const before = observedFailures;
+      await legacyCase(version, name);
+      await tick();
+      assert.equal(observedFailures, before + 1, name);
+    }
+    assert.equal(observedFailures, 4);
+    summarized = true;
+    console.log('all four legacy failures observed');
+    return;
+  }
+  await legacyCase(version, scenario);
+}
+async function legacyCase(version, kind) {
+  const s = mounted(version);
+  if (kind === 'token-reject') {
     s.instance.onOk();
     req(s, 'GetToken').reject(Error('token rejected'));
   }
-  if (scenario === 'save-reject') {
+  if (kind === 'save-reject') {
     s.instance.onOk();
     req(s, 'GetToken').resolve('token');
     await tick();
     s.requests.at(-1).reject(Error('save rejected'));
   }
-  if (scenario === 'create-null') {
+  if (kind === 'create-null') {
     s.instance.onCreateEdit({ label: 'blank', value: 1 });
     req(s, 'GetToken').resolve('token');
     await tick();
     s.requests.at(-1).resolve(null);
   }
-  if (scenario === 'edit-reject') {
+  if (kind === 'edit-reject') {
     s.instance.onEdit();
     req(s, 'GetAttachmentEditDetail').reject(Error('edit rejected'));
   }
