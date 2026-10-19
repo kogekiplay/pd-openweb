@@ -209,6 +209,52 @@ export interface ChatOutboundDraft {
 }
 
 /**
+ * **会话的原始 wire 形态**：`/chat_list` 返回、尚未经 `formatSession` 归一化的会话对象。
+ *
+ * 【与消息 wire 的关键区别（实测取证）】会话的 `from` **已经是对象**，不是 id 字符串：
+ * `utils.formatSession` 直接读 `item.from.id`（与本人 accountId 比较）与 `item.from.name`
+ * （撤回/预览文案模板），若 `from` 是字符串这两处会得到 `undefined`。
+ * 而 socket **消息**的 `from` 才是 id 字符串（由 `formatNewSession` 原地改型成对象）。
+ * 两者不能套用同一套 wire 假设。
+ *
+ * 【字段依据】`formatSession` 实际读写的字段：
+ * `from`/`msg`/`type`/`time`/`isGroup`/`sysType`/`wdAdminid`/`iswd`/`value`/`name`/`iconType`/
+ * `atlist`（以及它写入的 `_time`/`messageAtlist`/`sendMsg`）。其余按键保留 `unknown` 索引。
+ */
+export interface ChatRawSessionWire {
+  id?: string | number | undefined;
+  value?: string | undefined;
+  /** 原始时间：归一化后被 `formatMsgDate` 改写成文案，原值备份到 `_time` */
+  time?: number | string | undefined;
+  /** 原始类型：归一化时 `Number(item.type)` */
+  type?: number | string | undefined;
+  isGroup?: boolean | undefined;
+  sysType?: number | undefined;
+  wdAdminid?: string | undefined;
+  iswd?: boolean | undefined;
+  name?: string | undefined;
+  iconType?: string | undefined;
+  /**
+   * 发送者**对象**（见上：会话 wire 里已是对象）。
+   * `name` 声明为必填：`formatSession` 把它传给 `_l('...%0...', item.from.name)`，
+   * 而 `_l` 的形参是 `(string | number)[]` —— 即该位置**按字符串使用**。
+   */
+  from?: { id?: string | undefined; name: string; avatar?: string | undefined; [key: string]: unknown } | undefined;
+  /**
+   * 预览正文。`con` 声明为 `string | undefined`：wire 阶段是**未解码字符串**，
+   * `formatSession` 用 `htmlDecodeReg(con)`（形参 `unknown`、返回 `string`）解码后写回。
+   */
+  msg?: { con?: string | undefined; files?: unknown; [key: string]: unknown } | undefined;
+  atlist?: string[] | undefined;
+  /** `formatSession` 归一化时写入的备份字段 */
+  _time?: number | string | undefined;
+  messageAtlist?: string[] | undefined;
+  /** `formatSession` 归一化时从 localStorage 写入的草稿文本 */
+  sendMsg?: string | null | undefined;
+  [key: string]: unknown;
+}
+
+/**
  * **原始 wire 形态**：socket 收到、尚未经 `formatNewMessage` / `formatNewSession` 归一化的载荷。
  *
  * 【为什么单独建这一层（lead 13:23 方案）】这两个 formatter 会**逐属性原地写入**把 wire

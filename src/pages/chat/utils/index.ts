@@ -8,6 +8,7 @@ import Constant from './constant';
 import type {
   ChatMessage,
   ChatRawMessageWire,
+  ChatRawSessionWire,
   ChatSession,
   ChatSessionWireNormalized,
 } from '../redux/types';
@@ -133,7 +134,7 @@ export const sortSession = (
  * 【有限声明依据】调用点为 `actions.setSessionList`/`addSessionList`，结果经 `sortSession`
  * 存入 `sessionList`，故是 `ChatSession[]`。入参保留 `Array.isArray` 防御。
  */
-export const formatSessionList = (sessionList: ChatSession[]): ChatSession[] => {
+export const formatSessionList = (sessionList: ChatRawSessionWire[]): ChatSession[] => {
   sessionList = (Array.isArray(sessionList) ? sessionList : []).filter(item => item);
   return sessionList.map(item => {
     return formatSession(item);
@@ -145,7 +146,7 @@ export const formatSessionList = (sessionList: ChatSession[]): ChatSession[] => 
  * `sendMsg` 在此赋 `localStorage.getItem(...)`（`string | null`），是
  * `ChatSession.sendMsg` 类型的直接来源。
  */
-const formatSession = (item: ChatSession): ChatSession => {
+const formatSession = (item: ChatRawSessionWire): ChatSession => {
   item.type = Number(item.type);
   if (item.type === Constant.SESSIONTYPE_USER || item.type === Constant.SESSIONTYPE_GROUP) {
     item.isGroup = item.type === Constant.SESSIONTYPE_GROUP;
@@ -159,7 +160,8 @@ const formatSession = (item: ChatSession): ChatSession => {
     const wdAdminid = item.wdAdminid;
 
     if (isSelf) {
-      let con = '';
+      // 标注为 string | undefined：wire 的 msg.con 可缺（解码后为空串兜底由 htmlDecodeReg 处理）
+      let con: string | undefined = '';
 
       if (isFileTransfer) {
         con = item.msg!.con;
@@ -171,7 +173,8 @@ const formatSession = (item: ChatSession): ChatSession => {
 
       item.msg!.con = con;
     } else {
-      let con = '';
+      // 标注为 string | undefined：wire 的 msg.con 可缺（解码后为空串兜底由 htmlDecodeReg 处理）
+      let con: string | undefined = '';
 
       if (iswd) {
         if (wdAdminid) {
@@ -230,7 +233,9 @@ const formatSession = (item: ChatSession): ChatSession => {
   item.sendMsg = localStorage.getItem(`textareaValue${item.value}`);
   item.msg!.con = htmlDecodeReg(item.msg!.con);
 
-  return item;
+  // 【归一化点】以上逐属性写入完成后已是 ChatSession 形态；
+  // 按 lead 13:23 方案，此处允许归一化之后的局部窄化断言。
+  return item as ChatSession;
 };
 
 /**
