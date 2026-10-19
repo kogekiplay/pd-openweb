@@ -497,6 +497,27 @@ function main(): void {
     assert.deepEqual(afterUpdate.bottomUnreadMessage.k1, [MSG_2], 'UPDATE 后该键是**数组**');
   });
 
+  check('SET_REFER_MESSAGE / SET_GOTO_MESSAGE 的**值**被正确存入（此前只测了后续删除）', () => {
+    /**
+     * 【这条为什么必须有 —— 由变异测试发现】
+     * 我把 `SET_REFER_MESSAGE` 改成 `return Object.assign({}, action.result)`（存入 `{}`），
+     * **47 项规格全绿**。原因：唯一的 A/B 场景是「SET 后紧跟 REMOVE」，
+     * REMOVE 会把键删掉，**SET 写入的值从未被检查**；另一条 check 也只断言
+     * 「REMOVE 之后原 state 被就地修改」，同样绕过了 SET 的产出。
+     * `SET_GOTO_MESSAGE` 同病。
+     */
+    const { root, init } = boot('current');
+
+    const refer = root(init(), { type: 'SET_REFER_MESSAGE', id: 'k1', message: MSG_1 });
+    assert.deepEqual(refer.referMessage.k1, MSG_1, 'SET_REFER_MESSAGE 把 message 存到该键');
+
+    const goto = root(init(), { type: 'SET_GOTO_MESSAGE', id: 'k1', messageId: 'm1' });
+    assert.equal(goto.gotoMessage.k1, 'm1', 'SET_GOTO_MESSAGE 存的是 **messageId 字符串**，不是 action 对象');
+
+    const bottom = root(init(), { type: 'SET_BOTTOM_UNREAD_MESSAGE', id: 'k1', message: MSG_1 });
+    assert.deepEqual(bottom.bottomUnreadMessage.k1, [MSG_1], 'SET_BOTTOM_UNREAD 把单条**包成数组**');
+  });
+
   check('SET_CURRENT_SESSION 返回的是**载荷副本**，不与 action.result 同引用', () => {
     /**
      * 【这条为什么必须有 —— 由变异测试发现】
