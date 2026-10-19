@@ -335,7 +335,7 @@ export const formatMessage = (message: ChatMessage, prevMessage?: ChatMessage): 
  */
 /**
  * 把 socket 收到的新消息格式化后并入消息列表。
- * 【有限声明依据】`actions.ts:1346` 用它替换 `receiveMessage` 的 `message`，
+ * 【有限声明依据】`actions.ts` 的 `receiveMessage` 里用它替换 `message`，
  * 随后参与 `messages` 字典；返回 `ChatMessage`。
  * 入参是**原始 socket 载荷**（未经过 `formatMessage`），故保持未标注并在下方"未覆盖"中列出。
  */
@@ -360,7 +360,7 @@ export const formatNewMessage = (
  */
 /**
  * 把 socket 收到的新消息处理成**会话**对象。
- * 【有限声明依据】`actions.ts:218` `result = utils.formatNewSession(result)` 后
+ * 【有限声明依据】`actions.ts` 的 `addSession` 里 `result = utils.formatNewSession(result)` 后
  * 直接进入会话列表流程；返回 `ChatSession`。
  * 入参是**原始 socket 载荷**（`msg` 在该分支里是字符串而非对象），故保持未标注。
  */

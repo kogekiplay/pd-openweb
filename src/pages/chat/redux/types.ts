@@ -52,12 +52,12 @@ export interface ChatSession {
   showBadge?: number | boolean | undefined;
   /**
    * 会话列表里的草稿**文本**。
-   * 【真实生产方】`utils/index.ts:197` `item.sendMsg = localStorage.getItem(...)`，
+   * 【真实生产方】`utils/index` 的 `formatSession` 里 `item.sendMsg = localStorage.getItem(...)`，
    * 而 `localStorage.getItem` 返回 `string | null` —— 故这里是 `string | null`，
    * 与 `ChatMessage.sendMsg`（完整出站对象）是**两种不同业务**，不可混同。
    */
   sendMsg?: string | null;
-  /** `atlist`：被 @ 的成员列表（`actions.ts:1618/1647/1648` 读取并 filter） */
+  /** `atlist`：被 @ 的成员列表（`actions.ts` 的 `newGroupMessage`/`updateWithdrawMessage` 等读取并 filter） */
   /**
    * @ 列表补丁。
    * 【present/undefined 合同（lead 15:29 要求）】如实允许"键存在但值为 `undefined`"：
@@ -66,10 +66,10 @@ export interface ChatSession {
    * 而不是 `as string[]` 把非数组硬说成数组。
    */
   atlist?: string[] | undefined;
-  /** `isSession`：是否会话（`actions.ts:683`） */
+  /** `isSession`：是否会话（`actions.ts` 的 `addCurrentSession`/`updateSessionList` 读写） */
   isSession?: boolean | undefined;
-  /** `commonGroup`/`top_info` 等会话扩展字段（`actions.ts:496` 读取 `top_info`） */
-  /** `actions.ts:494-496` 读写 `top_info.isTop` */
+  /** `commonGroup`/`top_info` 等会话扩展字段（`actions.ts` 的 `updateSessionList` 读取 `top_info`） */
+  /** `actions.ts` 的 `updateSessionList` 读写 `top_info.isTop` */
   top_info?: { isTop?: boolean | undefined; [key: string]: unknown } | undefined;
   /* ── 以下为消费方**实际读取**的字段（按 `src/pages/chat/**` 用频取证）── */
   /** 会话/群/联系人显示名（`detail.tsx`、`ChatWindow` 读，25 处） */
@@ -161,7 +161,7 @@ export interface ChatSession {
   /** 是否已撤回：决定文案分支 */
   iswd?: boolean | undefined;
   /**
-   * 原始时间备份：`utils/index.ts:216` `item._time = item.time`。
+   * 原始时间备份：`utils/index` 的 `formatSession` 里 `item._time = item.time`。
    * 【为什么复用 `time` 的合同而不是 unknown】它有**已知生产方**（同一对象的 `time` 字段，
    * 该行赋值发生在 `time` 被 `formatMsgDate` 改写成文案**之前**），
    * 因此可达形态就是 `ChatSession['time']` 的形态（`number | string`）。
@@ -169,29 +169,29 @@ export interface ChatSession {
    */
   _time?: number | string | undefined;
   /**
-   * @ 成员列表备份：`utils/index.ts:217` `item.messageAtlist = item.atlist`。
+   * @ 成员列表备份：`utils/index` 的 `formatSession` 里 `item.messageAtlist = item.atlist`。
    * 同 `_time`：来源是同一对象的 `atlist`，可达形态即 `ChatSession['atlist']`（`string[]`）。
    */
   messageAtlist?: string[] | undefined;
   /* ── 以下为 `actions.ts` 对**会话对象**直接写入的字段（逐行取证） ── */
-  /** 未读计数：`actions.ts:79/88` `item.messageCount = result.clearCount / 0` */
+  /** 未读计数：`actions.ts` 的 `updateSessionList` 里 `item.messageCount = result.clearCount / 0` */
   messageCount?: number | undefined;
-  /** 群头像：`actions.ts:843` `item.logo = avatar`（`updateGroupAvatar`，`sessionList.map`） */
+  /** 群头像：`updateGroupAvatar` 里 `item.logo = avatar`（`sessionList.map`） */
   logo?: string | undefined;
-  /** 是否已验证：`actions.ts:937` `item.isVerified = isVerified`（`currentSessionList.map`） */
+  /** 是否已验证：`updateVerify` 里 `item.isVerified = isVerified`（`currentSessionList.map`） */
   isVerified?: boolean | undefined;
-  /** @ 消息体：`actions.ts:128` `item.at_msg = result.at_msg`（更新会话时透传） */
+  /** @ 消息体：`updateSessionList` 里 `item.at_msg = result.at_msg`（更新会话时透传） */
   at_msg?: {
     time?: unknown;
     message_id?: unknown;
     msgid?: unknown;
     [key: string]: unknown;
   } | undefined;
-  /** `count`：未读计数（`actions.ts:575` 读 `currentSession.count`；`SessionList` 里当数字用） */
+  /** `count`：未读计数（`clearNotification` 读 `currentSession.count`；`SessionList` 里当数字用） */
   count?: number | undefined;
-  /** `isRender`：渲染标记（`actions.ts:970` 写 `currentSession.isRender`） */
+  /** `isRender`：渲染标记（`updateMember` 写 `currentSession.isRender`） */
   isRender?: boolean | undefined;
-  /** `refer`/`reflist`：引用相关（`actions.ts:1658/1668` 只做真值判断） */
+  /** `refer`/`reflist`：引用相关（`actions.ts` 多处只做真值判断） */
   refer?: unknown;
   reflist?: unknown[] | undefined;
   /**
@@ -211,7 +211,7 @@ export interface ChatSession {
  * 【真实生产方】`ChatPanelSession` 构造的 `sendMsg` 字面量：
  * `waitingid`（`utils.getUUID()`）、`msg`、`sysType`、`touser`/`togroup`（按会话类型二选一）、
  * `atParam`、`referMessage`、`refer: { msgid }`，并整体 `...param` 展开（带 `type` 等）。
- * `actions.ts:1090` 明确注释「保留发给后端的消息数据，便于重发」，因此这里是**对象**，
+ * `addMessage` 处明确注释「保留发给后端的消息数据，便于重发」，因此这里是**对象**，
  * 不是 `number | string`（那是另一处业务：会话列表的 localStorage 草稿文本）。
  */
 export interface ChatOutboundDraft {
@@ -580,7 +580,7 @@ export type ChatSessionWireNormalized =
 /**
  * 一条聊天消息。
  *
- * 【形状来源】`actions.ts:1045-1060` 的 `addMessage` 里**已写出**的消息字面量类型
+ * 【形状来源】`addMessage` 里**已写出**的消息字面量类型
  * （`waitingId`/`from`/`fromAccount`/`msg`/`to`/`type`/`time`/`iswd`/`sendMsg`/
  * `isMineMessage` + 事后补的 `sysType`/`refer`/`card`/`isPrepare`），
  * 加上消费方读取的字段（`id`/`isMine`/`isGroup`/`isDuplicated`/`logo`/`uname`/`msgid`…）。
@@ -604,9 +604,9 @@ export interface ChatMessage {
   from?: string | undefined;
   /**
    * 接收方 id。
-   * 【真实用法】`socketEvent:123`、`actions.ts:1357/1461` 取
+   * 【真实用法】`socketEvent` 与 `actions.ts` 的 `updateWithdrawMessage` 等处取
    * `md.global.Account.accountId === message.from ? message.to : message.from` 作为**会话 id**；
-   * `actions.ts:1366` `utils.scrollEnd(message.to, true)`，而 `scrollEnd(id, isBottom)` 的 id 是滚动容器 id。
+   * `receiveMessage` 里 `utils.scrollEnd(message.to, true)`，而 `scrollEnd(id, isBottom)` 的 id 是滚动容器 id。
    * 故是字符串，不是 unknown。
    */
   to?: string | undefined;
@@ -617,7 +617,7 @@ export interface ChatMessage {
   /**
    * 消息正文容器。
    * 【真实消费/生产】`con`（正文）、`files`（附件）、`oldCon`（撤回时由
-   * `actions.ts:1274` `item.msg.oldCon = item.msg.con` 写入，用于展示原文）。
+   * `updateWithdrawMessage` 等处 `item.msg.oldCon = item.msg.con` 写入，用于展示原文）。
    */
   msg?: {
     /** 正文（`htmlDecodeReg(con)` 返回 string；模板插值 `${msg.con}` 使用） */
@@ -661,7 +661,7 @@ export interface ChatMessage {
       /** 其余按消息种类扩展的附件字段 */
       [key: string]: unknown;
     } | undefined;
-    /** 撤回前的原文：`actions.ts:1287` `item.msg.oldCon = item.msg.con`，故同 `con` 类型 */
+    /** 撤回前的原文：`updateWithdrawMessage` 里 `item.msg.oldCon = item.msg.con`，故同 `con` 类型 */
     oldCon?: string | undefined;
     [key: string]: unknown;
   } | undefined;
@@ -674,12 +674,12 @@ export interface ChatMessage {
   iswd?: boolean | undefined;
   /**
    * 是否通讯录/系统联系人消息。
-   * 【证据】两处写入：`actions.ts:165 item.isContact = result.isContact`、
-   * `actions.ts:1262 item.isContact = false`；一处读取：`SystemMessage/index.tsx:61`
+   * 【证据】两处写入：`updateSessionList` 里 `item.isContact = result.isContact`、
+   * `updateMessage` 里 `item.isContact = false`；一处读取：`SystemMessage` 的 `'isContact' in message`
    * 的 `'isContact' in message`。
    */
   isContact?: boolean | undefined;
-  /** 完整出站草稿对象（`actions.ts:1090` `sendMsg: newMessage`，便于重发） */
+  /** 完整出站草稿对象（`addMessage` 里 `sendMsg: newMessage`，便于重发） */
   sendMsg?: ChatOutboundDraft | undefined;
   isMineMessage?: boolean | undefined;
   isMine?: boolean | undefined;
@@ -710,7 +710,7 @@ export interface ChatMessage {
   /** `atlist`：被 @ 的成员列表（`actions.ts` 读取并 filter） */
   atlist?: string[] | undefined;
   /* ── 以下为消费方**实际读取/写入**的字段 ── */
-  /** `utils/index.ts:281` 处 `message.value = message.id` 赋值（会话化消息时） */
+  /** `utils/index` 的 `formatNewSession` 里 `message.value = message.id` 赋值（会话化消息时） */
   value?: string | undefined;
   /**
    * kcFile 附件对象（**非布尔标记**）。
@@ -765,7 +765,7 @@ export interface ChatMessage {
   msgid?: string | number | undefined;
   /**
    * 格式化的时间文案。
-   * 【真实赋值三处】`utils/index.ts:228` 赋 `formatMsgDate(...)`（**string**）；
+   * 【真实赋值三处】`utils/index` 的 `formatSession` 里赋 `formatMsgDate(...)`（**string**）；
    * `:237` 与 `:244` 在「同一发送者 3 分钟内」或「重复文本」时赋 **`null`**。
    * 因此类型是 `string | null`，不是 `unknown`。
    */
@@ -775,7 +775,7 @@ export interface ChatMessage {
   /**
    * 引用消息体。
    * 【真实消费方】
-   * - 撤回：`actions.ts:1284/1300` `item.refer.msgid == messageId`、`item.refer.iswd = true`；
+   * - 撤回：`updateWithdrawMessage` 里 `item.refer.msgid == messageId`、`item.refer.iswd = true`；
    * - 展示：`Message` 把 `message.refer` 传给 `MessageRefer`，后者读
    *   `iswd`（已撤回则不跳转）、`msgid`（跳转目标）、`card`、`msgdetail.files`
    *   （`{ id, name, url, size }` 预览附件）。
@@ -891,7 +891,7 @@ export interface ChatToolbarConfig {
   /**
    * 消息列表展示类型。**不是** `getToolbarConfig()` 的返回，而是：
    * - 生产方：`setToolbarConfig(config)` 可写入任意键；
-   * - 消费方：`actions.ts:17/29/170` 读它传给 `utils.sortSession(sessions, value, messageListShowType)`，
+   * - 消费方：`setSessionList`/`addSessionList`/`updateSessionList` 读它传给 `utils.sortSession(sessions, value, messageListShowType)`，
    *   `sortSession` 里 `if (messageListShowType === 1)` 分支。
    * 因为初始值里没有它，如实标为**可选**。
    */

@@ -61,7 +61,7 @@ export type ChatAction =
   // 【载荷形状逐点核对真实 dispatch】全部是**数组**，没有单条形态：
   // - `resetMessage(id, result)`           ← `MessageView:223` `utils.formatMessages(res)`
   // - `setMessage(id, result)`             ← `MessageView:71`  `utils.formatMessages(res)`
-  // - `addMessage` 初始 SET                ← `actions.ts:1139` `[utils.formatMessage(...)]`（**已包数组**）
+  // - `addMessage` 初始 SET                ← `addMessage` 里 `[utils.formatMessage(...)]`（**已包数组**）
   // - `updateFileMessage` / `updateMessage` ← `newCurrentMessage`（`map` 结果，数组）
   // - `updateWithdrawMessage` SET          ← `currentMessage`（数组）
   // 旧注释说"单条"是错的：真实代码在 SET 前已把它包成数组。
@@ -92,7 +92,7 @@ export type ChatAction =
   | { type: 'ADD_BOTTOM_UNREAD_MESSAGE'; id: string; message: ChatMessage }
   | { type: 'REMOVE_BOTTOM_UNREAD_MESSAGE'; id: string }
   // 【载荷是数组，不是单条】`updateWithdrawMessage` 的
-  // `bottomUnread = (bottomUnreadMessage)[id] || []` 直接作为 `message` 派发（`actions.ts:1312`），
+  // `bottomUnread = (bottomUnreadMessage)[id] || []` 直接作为 `message` 派发（`actions.ts` 的 `addPageMessage`），
   // reducer 也是把整个 `action.message` 存进该键 —— 故这里是 `ChatMessage[]`。
   // （与 SET/ADD 不同：那两者的 `message` 是单条，reducer 会包成 `[message]` / 追加。）
   | { type: 'UPDATE_BOTTOM_UNREAD_MESSAGE'; id: string; message: ChatMessage[] }
