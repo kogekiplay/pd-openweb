@@ -680,7 +680,12 @@ export const setNewCurrentSession = (result: ChatSession | undefined) => (dispat
  * @param {*} message
  */
 export const setCurrentSessionId =
-  (id: string, message: Record<string, any> = {}) =>
+  /**
+   * @param id 会话 id
+   * @param message 叠加到该会话上的**局部覆盖**（`{ ...session, ...message }` 后派发为
+   * `SET_CURRENT_SESSION.result`，其类型是 `ChatSession`）
+   */
+  (id: string, message: Partial<ChatSession> = {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
     const found = sessionList.filter(item => item.value === id)[0];
