@@ -365,18 +365,19 @@ async function main() {
     });
   });
   await check('legacy transport and invalid cloud-name failures remain explicit old/new child-process failures', () => {
-    for (const action of ['rename', 'filter', 'copy', 'delete', 'range', 'bad-cloud-name'])
-      for (const version of ['old', 'current']) {
-        const child = cp.spawnSync(process.execPath, [__filename, '--legacy-failure', action, version], {
-          cwd: h.ROOT,
-          encoding: 'utf8',
-        });
-        assert.notEqual(child.status, 0);
-        assert.match(
-          child.stderr,
-          action === 'bad-cloud-name' ? /Cannot set properties of undefined/ : /print-request-rejected/,
-        );
-      }
+    const outputs = [];
+    for (const version of ['old', 'current']) {
+      const child = cp.spawnSync(process.execPath, [__filename, '--legacy-batch', version], {
+        cwd: h.ROOT,
+        encoding: 'utf8',
+      });
+      assert.equal(child.status, 1);
+      assert.equal(child.stderr, '');
+      const result = JSON.parse(child.stdout);
+      assert.equal(result.length, 6);
+      outputs.push(result);
+    }
+    assert.deepEqual(outputs[0], outputs[1]);
   });
   console.log(`${checks} complete print item checks passed`);
 }
@@ -404,9 +405,34 @@ async function legacyFailure(action, version) {
   if (action === 'bad-cloud-name') s.requests[0].resolve(true);
   else s.requests[0].reject(Error('print-request-rejected'));
   await h.settle();
-  throw Error('Expected native failure did not escape');
 }
-const run = process.argv[2] === '--legacy-failure' ? legacyFailure(process.argv[3], process.argv[4]) : main();
+async function legacyBatch(version) {
+  const errors = [],
+    results = [];
+  const observe = error => {
+    errors.push(error);
+    process.exitCode = 1;
+  };
+  process.on('unhandledRejection', observe);
+  try {
+    for (const action of ['rename', 'filter', 'copy', 'delete', 'range', 'bad-cloud-name']) {
+      const before = errors.length;
+      await legacyFailure(action, version);
+      assert.equal(errors.length, before + 1, action + ' must emit one real unhandled rejection');
+      const error = errors[before];
+      assert.equal(error.name, action === 'bad-cloud-name' ? 'TypeError' : 'Error');
+      assert.match(
+        error.message,
+        action === 'bad-cloud-name' ? /Cannot set properties of undefined/ : /print-request-rejected/,
+      );
+      results.push([action, error.name, error.message]);
+    }
+    console.log(JSON.stringify(results));
+  } finally {
+    process.removeListener('unhandledRejection', observe);
+  }
+}
+const run = process.argv[2] === '--legacy-batch' ? legacyBatch(process.argv[3]) : main();
 run.catch(error => {
   console.error(error);
   process.exitCode = 1;
