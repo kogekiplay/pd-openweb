@@ -3,6 +3,7 @@ import type { AppDispatch, GetState } from 'src/redux/types';
 import type {
   ChatMessage,
   ChatOutboundDraft,
+  ChatPendingMessage,
   ChatRawMessageWire,
   ChatRawSessionWire,
   ChatSessionPatch,
@@ -1098,22 +1099,7 @@ export const addMessage = (newMessage: ChatOutboundDraft, prevMessage?: ChatMess
   // sysType / refer / card / isPrepare 是按消息种类【后面才补上】的
   //（系统消息 / 引用 / 卡片 / 预发送），所以要在这里写出形状。
   // 原先 md.global 是 any，这个字面量的推断类型跟着变宽，事后加属性不报错。
-  const message: {
-    waitingId: any;
-    from: string;
-    fromAccount: { email: string; id: string; logo: string; name: string };
-    msg: { con: any; files?: any };
-    to: any;
-    type: any;
-    time: any;
-    iswd: boolean;
-    sendMsg: any;
-    isMineMessage: boolean;
-    sysType?: any;
-    refer?: any;
-    card?: any;
-    isPrepare?: boolean;
-  } = {
+  const message: ChatPendingMessage = {
     waitingId: newMessage.waitingid,
     // id: newMessage.waitingid,
     from: account.accountId,

@@ -236,7 +236,7 @@ export interface ChatOutboundDraft {
       }
     | undefined;
   /** 卡片消息体：`message.card = newMessage.card` */
-  card?: unknown;
+  card?: ChatMessage['card'];
   /** 图片/文件附件：`newMessage.file.url` 会被赋值、`message.msg.files = newMessage.file` */
   file?: { key?: string | undefined; url?: string | undefined; [key: string]: unknown } | undefined;
   /** 预发送标记：`message.isPrepare = newMessage.isPrepare || false` */
@@ -258,6 +258,57 @@ export interface ChatOutboundDraft {
  * `from`/`msg`/`type`/`time`/`isGroup`/`sysType`/`wdAdminid`/`iswd`/`value`/`name`/`iconType`/
  * `atlist`（以及它写入的 `_time`/`messageAtlist`/`sendMsg`）。其余按键保留 `unknown` 索引。
  */
+/**
+ * `addMessage` 内部构造的**待发送消息**（`formatMessage` 的入参）。
+ *
+ * 【为什么单独建这一层】原实现用一段手写内联形状，含 9 个 `any` 字段。
+ * 它是"出站草稿 → 存储消息"之间的**过渡形态**：字段全部由 `addMessage` 里的
+ * 真实表达式写出（`waitingId: newMessage.waitingid`、`to: newMessage.togroup || newMessage.touser` 等）。
+ * 归一化由 `formatMessage` 完成，完成后即成为 `ChatMessage`。
+ *
+ * 【与 ChatMessage 的关系】`refer` 在这里是**出站摘要** `{ msg, type, user.full_name }`；
+ * `ChatMessage.refer` 已按证据把该形态并入联合，因此本类型可直接交给 `formatMessage`，
+ * **不需要 `as` 断言**。
+ */
+export interface ChatPendingMessage {
+  waitingId?: string | undefined;
+  from: string;
+  fromAccount: { email: string; id: string; logo: string; name: string };
+  msg: { con?: string | undefined; files?: ChatPendingAttachment | undefined };
+  to?: string | undefined;
+  type?: number | undefined;
+  time?: string | number | undefined;
+  iswd: boolean;
+  /** 原始出站草稿，便于重发 */
+  sendMsg?: ChatOutboundDraft | undefined;
+  isMineMessage: boolean;
+  sysType?: number | undefined;
+  /** 出站引用摘要（写入后随消息存储） */
+  refer?:
+    | {
+        msg?: string | undefined;
+        type?: number | undefined;
+        user?: { full_name?: string | undefined; [key: string]: unknown } | undefined;
+        [key: string]: unknown;
+      }
+    | undefined;
+  /** 卡片消息体：`message.card = newMessage.card`��原样透传 */
+  card?: ChatMessage['card'];
+  /** 预发送标记 */
+  isPrepare?: boolean | undefined;
+  /** 与 `ChatMessage` 一致的索引签名（其它按消息种类扩展的键） */
+  [key: string]: unknown;
+}
+
+/** 待发送消息的附件对象：`newMessage.file` 会被写 `url` 后赋给 `msg.files` */
+export interface ChatPendingAttachment {
+  key?: string | undefined;
+  url?: string | undefined;
+  name?: string | undefined;
+  size?: number | undefined;
+  [key: string]: unknown;
+}
+
 /**
  * `updateSessionList` 的**局部补丁**形状：`actions.ts` 内多处
  * `dispatch(updateSessionList({ ... }))` 只带要改的字段。
@@ -652,8 +703,18 @@ export interface ChatMessage {
     msgid?: string | undefined;
     iswd?: boolean | undefined;
     card?: unknown;
+    /**
+     * 出站摘要形态（**本地发出**且带引用时由 `addMessage` 写入，并随
+     * `SET_MESSAGE`/`ADD_MESSAGE` 存进 `messages`，故存储侧确实可达）。
+     * 证据：`addMessage` 里 `message.refer = { msg, type, user: { full_name } }`，
+     * 随后 `utils.formatMessage(message)` 的结果被 dispatch 进 messages。
+     */
+    msg?: string | undefined;
+    type?: number | undefined;
     /** 引用消息的发送者：`SessionItem:37` `item.refer.user.account_id === accountId` 真值链比较 */
-    user?: { account_id?: string | undefined; [key: string]: unknown } | undefined;
+    user?:
+      | { account_id?: string | undefined; full_name?: string | undefined; [key: string]: unknown }
+      | undefined;
     msgdetail?: {
       files?: { id?: unknown; name?: string | undefined; url?: string | undefined; size?: unknown; [key: string]: unknown } | undefined;
       [key: string]: unknown;
