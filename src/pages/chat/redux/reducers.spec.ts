@@ -497,6 +497,43 @@ function main(): void {
     assert.deepEqual(afterUpdate.bottomUnreadMessage.k1, [MSG_2], 'UPDATE 后该键是**数组**');
   });
 
+  check('真实 sortTop：置顶组内 count 优先 + 当前会话提前（此前从未被触发）', () => {
+    /**
+     * 【这条为什么必须有 —— 由变异测试发现】
+     * 我把 `sortTop` 的三个关键点分别变异，**48 项全绿**：
+     * - `list = countList.concat(otherList)` → 反序
+     * - `return top.concat(res)` → `res.concat(top)`（置顶变置底）
+     * - `item => item.count` → `item => !item.count`（过滤取反）
+     *
+     * 原因：reducer 调 `sortSession(list)` **不传 `value`**，且测试会话**没有 `count`/`top_info`**
+     * → `sortTop` 里 `if (value)` 与 count 分支都没被走到。
+     * 这里直接调真实 `sortSession`（fixture 从 AST 抽取后执行），并显式传 `messageListShowType=0`
+     * 走 else 分支（只区分 isTop），构造出「置顶组内有 count」+「当前会话在置顶组内」。
+     */
+    const realUtils = F.loadRealUtils();
+    const sessions = [
+      { id: 'o1', value: 'vo1', sendMsg: 50 },
+      { id: 't1', value: 'vt1', sendMsg: 100, top_info: { isTop: true } },
+      { id: 't2', value: 'vt2', sendMsg: 200, top_info: { isTop: true }, count: 2 },
+    ];
+
+    // ① 无 value：置顶组 [t1,t2] 经 sortTop 后 count 的 t2 提前；非置顶 o1 在最后
+    const noPin = realUtils.sortSession(sessions, undefined, 0);
+    assert.deepEqual(
+      noPin.map((x: { id: string }) => x.id),
+      ['t2', 't1', 'o1'],
+      '置顶组内 count 优先（t2 有 count）→ t2 先于 t1；o1 非置顶在最后',
+    );
+
+    // ② 传当前会话 vt1：`sortTop` 把匹配项提到「置顶组内最前」→ t1 反而超过 t2
+    const pinned = realUtils.sortSession(sessions, 'vt1', 0);
+    assert.deepEqual(
+      pinned.map((x: { id: string }) => x.id),
+      ['t1', 't2', 'o1'],
+      '当前会话 vt1 在置顶组内被提前到最前',
+    );
+  });
+
   check('SET_REFER_MESSAGE / SET_GOTO_MESSAGE 的**值**被正确存入（此前只测了后续删除）', () => {
     /**
      * 【这条为什么必须有 —— 由变异测试发现】
