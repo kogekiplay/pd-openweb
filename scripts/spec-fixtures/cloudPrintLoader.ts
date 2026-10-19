@@ -42,6 +42,7 @@ function leaf(name) {
 }
 function hooks() {
   const states = [],
+    callbacks = [],
     deps = [],
     memos = [],
     pending = [],
@@ -66,7 +67,9 @@ function hooks() {
       return memos[i];
     },
     useCallback(fn, next) {
-      return runtime.useMemo(() => fn, next);
+      const result = runtime.useMemo(() => fn, next);
+      callbacks.push(result);
+      return result;
     },
     useEffect(fn, next) {
       const i = cursor++;
@@ -79,6 +82,7 @@ function hooks() {
   return {
     runtime,
     states,
+    callbacks,
     render(C, props) {
       cursor = 0;
       return C(props);
@@ -229,19 +233,23 @@ function renderer(version = 'current', provided = {}) {
     setProps(patch) {
       props = { ...props, ...patch };
     },
-    dynamic() {
+    dynamic(provided = {}) {
       const h = hooks(),
         mod = load(DYNAMIC, h.runtime),
-        childProps = nodes(render(), 'DynamicRender')[0].props;
+        childProps = { ...nodes(render(), 'DynamicRender')[0].props, ...provided };
       return {
         render: () => h.render(mod.default, childProps),
         effects: () => h.effects(),
         flush: () => h.flush(),
         props: childProps,
+        callbacks: h.callbacks,
+        setProps(patch) {
+          Object.assign(childProps, patch);
+        },
       };
     },
-    footer() {
-      return load(FOOTER).default(nodes(render(), 'DrawerFooter')[0].props);
+    footer(provided = {}) {
+      return load(FOOTER).default({ ...nodes(render(), 'DrawerFooter')[0].props, ...provided });
     },
   };
 }

@@ -38,7 +38,17 @@ const FooterWrap = styled.div`
   }
 `;
 
-export default function DrawerFooter(props) {
+export interface DrawerFooterProps {
+  disabled?: boolean | undefined;
+  saveLoading?: boolean | undefined;
+  okText?: import('react').ReactNode;
+  showTooltips?: boolean | undefined;
+  tipsTxt?: import('react').ReactNode | (() => import('react').ReactNode);
+  handleSave?: ((event?: import('react').MouseEvent<HTMLSpanElement>) => unknown) | undefined;
+  onCancel?: ((event: import('react').MouseEvent<HTMLSpanElement>) => unknown) | undefined;
+}
+
+export default function DrawerFooter(props: DrawerFooterProps) {
   const {
     disabled,
     saveLoading,

@@ -12,7 +12,7 @@ import './index.less';
 export interface CloudControlOption {
   value?: string | undefined;
   label?: import('react').ReactNode;
-  disabled?: boolean | undefined;
+  disabled?: boolean;
 }
 export interface CloudMapping {
   fromKey?: string | number | undefined;
@@ -88,14 +88,24 @@ export type FindCloudField = <K extends CloudFieldKey>(
   data: CloudPrintField[] | undefined,
   matcher: { fieldKey: K },
 ) => Extract<CloudPrintField, { fieldKey: K }> | undefined;
-export interface DynamicRenderProps {
-  data?: CloudPrintField[] | undefined;
-  onChange?: ((data: CloudPrintField[]) => void) | undefined;
+export interface DynamicRenderProps<Field extends CloudPrintField = CloudPrintField> {
+  data?: Field[] | undefined;
+  onChange?: ((data: Field[]) => void) | undefined;
 }
 
-// Public protocol is finite; the existing implementation's internal strict debt remains tracked.
-export default function DynamicRender(props: DynamicRenderProps): import('react').ReactElement;
-export default function DynamicRender(props) {
+/** The control type and field key supplied by renderField select a fixed member of the wire union. */
+export type CloudScalarField = Extract<CloudPrintField, { type: 'text' | 'radio' }>;
+export type CloudMappingField = Extract<CloudPrintField, { type: 'mapping' }>;
+type FindMappingIndex = (values: CloudMapping[] | undefined, predicate: (value: CloudMapping) => unknown) => number;
+export interface CloudFieldChange {
+  (value: string, type: 'text', fieldKey: CloudTextKey): void;
+  (value: string, type: 'radio', fieldKey: 'cloudPrintType'): void;
+  (value: CloudControlOption, type: 'mapping', fieldKey: 'renderData', fieldIndex: number): void;
+}
+
+export default function DynamicRender<Field extends CloudPrintField = CloudPrintField>(
+  props: DynamicRenderProps<Field>,
+) {
   const { data = [], onChange } = props;
   const [formData, setFormData] = useState(data);
 
@@ -103,29 +113,34 @@ export default function DynamicRender(props) {
     setFormData(data);
   }, [data]);
 
-  const handleChange = useCallback(
-    (value, type, fieldKey, fieldIndex?) => {
+  const handleChange = useCallback<CloudFieldChange>(
+    (
+      value: string | CloudControlOption,
+      type: 'text' | 'radio' | 'mapping',
+      fieldKey: CloudTextKey | 'cloudPrintType' | 'renderData',
+      fieldIndex?: number,
+    ) => {
       setFormData(prevData => {
         const newData = [...prevData];
         const index = newData.findIndex(item => item.fieldKey === fieldKey);
 
         if (['text', 'radio'].includes(type)) {
-          newData[index] = { ...newData[index], value };
+          newData[index] = { ...newData[index]!, value };
         } else if (type === 'mapping') {
           // mapping 类型：更新对应字段的映射值
 
-          const currentValue = newData[index].value[fieldIndex];
-          currentValue.toControlId = value.value;
+          const currentValue = (newData[index]! as CloudMappingField).value![fieldIndex!]!;
+          currentValue.toControlId = (value as CloudControlOption).value;
 
-          if (!newData[index]?.systemField?.fields) {
-            newData[index].systemField.fields = [];
+          if (!(newData[index] as CloudMappingField | undefined)?.systemField?.fields) {
+            (newData[index]! as CloudMappingField).systemField!.fields! = [];
           }
 
-          const currentField = newData[index].systemField.fields[fieldIndex];
-          newData[index].systemField.fields[fieldIndex] = {
+          const currentField = (newData[index]! as CloudMappingField).systemField!.fields![fieldIndex!];
+          (newData[index]! as CloudMappingField).systemField!.fields![fieldIndex!] = {
             ...currentField,
-            controlId: value.value,
-            controlName: value.label,
+            controlId: (value as CloudControlOption).value,
+            controlName: (value as CloudControlOption).label,
           };
         }
 
@@ -136,7 +151,7 @@ export default function DynamicRender(props) {
     [onChange],
   );
 
-  const renderTitle = item => {
+  const renderTitle = (item: CloudFieldMetadata) => {
     if (!item.title) return null;
 
     return (
@@ -154,7 +169,7 @@ export default function DynamicRender(props) {
     );
   };
 
-  const renderField = item => {
+  const renderField = (item: CloudPrintField) => {
     const { type, value, fieldKey } = item;
 
     switch (type) {
@@ -166,7 +181,7 @@ export default function DynamicRender(props) {
               className="dynamicInput"
               placeholder={item.placeholder || ''}
               value={value || ''}
-              onChange={val => handleChange(val, type, fieldKey)}
+              onChange={(val: string) => handleChange(val, type, fieldKey)}
             />
           </div>
         );
@@ -220,7 +235,8 @@ export default function DynamicRender(props) {
       case 'mapping':
         if (!item.value || !item.value.length) return null;
         const lastMasterFieldIndex =
-          _.findIndex(item.value, v => v.isDetail) > -1 && _.findLastIndex(item.value, v => !v.isDetail);
+          (_.findIndex as FindMappingIndex)(item.value, v => v.isDetail) > -1 &&
+          (_.findLastIndex as FindMappingIndex)(item.value, v => !v.isDetail);
 
         return (
           <div key={fieldKey} className="dynamicField mappingField">
@@ -231,14 +247,16 @@ export default function DynamicRender(props) {
             </div>
             {_.isNumber(lastMasterFieldIndex) ? <div className="Font13 bold mBottom15">{item.masterDesc}</div> : null}
             {item.value.map((fromFieldItem, fieldIndex) => {
-              const fromFieldDesc = _.find(item.fromField?.fields, (_v, i) => i === fieldIndex)?.desc;
+              const fromFieldDesc = _.find(item.fromField?.fields, (_v, i) => i === fieldIndex)
+                ?.desc as import('react').ReactNode;
               const options = fromFieldItem.toControlOptions || [];
               const isDelete =
                 !!fromFieldItem.toControlId && !_.find(options, option => option.value === fromFieldItem.toControlId);
 
               return (
                 <Fragment key={fieldIndex}>
-                  {_.isNumber(lastMasterFieldIndex) && _.findIndex(item.value, v => v.isDetail) === fieldIndex ? (
+                  {_.isNumber(lastMasterFieldIndex) &&
+                  (_.findIndex as FindMappingIndex)(item.value, v => v.isDetail) === fieldIndex ? (
                     <div className="Font13 bold mBottom15 pTop10">{item.subDesc}</div>
                   ) : null}
                   <div key={fieldIndex} className="mappingItem flexRow">
@@ -247,7 +265,7 @@ export default function DynamicRender(props) {
                       {fromFieldDesc && <div className="mTop5 Font12 textSecondary ellipsis">{fromFieldDesc}</div>}
                     </div>
                     <Icon icon="arrow_forward" className="Font20 colorPrimary mLeft10 mRight10 LineHeight36" />
-                    <Select
+                    <Select<string, CloudControlOption>
                       className="Height36 flex minWidth0"
                       classNames={{ popup: { root: 'mappedFieldPopup' } }}
                       showSearch={{ optionFilterProp: 'label' }}
@@ -265,7 +283,7 @@ export default function DynamicRender(props) {
                             ]
                           : options
                       }
-                      onChange={(_value, data) => handleChange(data, type, fieldKey, fieldIndex)}
+                      onChange={(_value, data) => handleChange(data as CloudControlOption, type, fieldKey, fieldIndex)}
                     />
                   </div>
                 </Fragment>
