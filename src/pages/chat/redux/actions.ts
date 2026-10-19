@@ -2,6 +2,7 @@ import _ from 'lodash';
 import type { AppDispatch, GetState } from 'src/redux/types';
 import type {
   ChatMessage,
+  ChatMessageReceiptWire,
   ChatOutboundDraft,
   ChatPendingMessage,
   ChatRawMessageWire,
@@ -1208,7 +1209,7 @@ export const removeMessages = (id: string | undefined) => {
  * 更新某个消息
  * @param {*} message
  */
-export const updateMessage = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateMessage = (message: ChatMessageReceiptWire) => (dispatch: AppDispatch, getState: GetState) => {
   const { messages } = getState().chat;
   const { to, waitingid, socket } = message;
   const currentMessage = messages[to] || [];
@@ -1221,24 +1222,24 @@ export const updateMessage = (message: any) => (dispatch: AppDispatch, getState:
         item = { ...item, msg: item.msg && { ...item.msg } };
         item.id = message.id;
         // 替换成服务器的时间
-        if (socket && socket.time) {
-          item.timestamp = utils.formatMsgDate(dateConvertToUserZone(socket.time));
+        if (socket && socket!.time) {
+          item.timestamp = utils.formatMsgDate(dateConvertToUserZone(socket!.time));
         }
 
         // 引用消息
         if (item.refer) {
           const { referMessage } = message;
           item.refer = {
-            msgid: referMessage.id,
-            msg: referMessage.msg.con,
-            msgdetail: socket.refer.msgdetail,
-            type: referMessage.type,
-            time: referMessage.time,
-            iswd: referMessage.iswd,
+            msgid: referMessage!.id,
+            msg: referMessage!.msg!.con,
+            msgdetail: socket!.refer!.msgdetail,
+            type: referMessage!.type,
+            time: referMessage!.time,
+            iswd: referMessage!.iswd,
             user: {
-              account_id: referMessage.fromAccount.id,
-              full_name: referMessage.fromAccount.name,
-              avatar: referMessage.fromAccount.logo,
+              account_id: referMessage!.fromAccount!.id,
+              full_name: referMessage!.fromAccount!.name,
+              avatar: referMessage!.fromAccount!.logo,
             },
           };
           // item.refer = message.refer;
@@ -1252,8 +1253,8 @@ export const updateMessage = (message: any) => (dispatch: AppDispatch, getState:
         }
 
         // 图片消息，替换 url
-        if (socket && socket.msg.files) {
-          item.msg.files = socket.msg.files;
+        if (socket && socket!.msg!.files) {
+          item.msg.files = socket!.msg!.files;
         }
       }
 
@@ -1270,7 +1271,12 @@ export const updateMessage = (message: any) => (dispatch: AppDispatch, getState:
  * 将卡片类型的知识文件更新成附件类型
  * @param {*} message
  */
-export const updateFileMessage = (newMessage: any, to: string) => (dispatch: AppDispatch, getState: GetState) => {
+/**
+ * 用新消息替换列表里同 id 的那条（上传完成后回填）。
+ * 【有限声明依据】函数体里 `return newMessage;` 直接作为 `messages` 数组的元素，
+ * 因此它就是一条 `ChatMessage`（原实现靠 `any` 隐式满足该契约）。
+ */
+export const updateFileMessage = (newMessage: ChatMessage, to: string) => (dispatch: AppDispatch, getState: GetState) => {
   const { messages } = getState().chat;
   const { id } = newMessage;
   // 【擦除标记】`messages[to]` 类型上可缺失；非空断言擦除（零运行时），

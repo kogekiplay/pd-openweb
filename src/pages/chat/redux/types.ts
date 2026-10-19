@@ -265,6 +265,54 @@ export interface ChatOutboundDraft {
  * `atlist`（以及它写入的 `_time`/`messageAtlist`/`sendMsg`）。其余按键保留 `unknown` 索引。
  */
 /**
+ * `updateMessage` 的入参：服务器对**本机发出消息**的回执。
+ *
+ * 【字段依据】`updateMessage` 里实际读取的表达式：
+ * 解构 `{ to, waitingid, socket }`；读 `message.id`；
+ * `const { referMessage } = message` 后读其 `id`/`msg.con`/`type`/`time`/`iswd`/
+ * `fromAccount.{id,name,logo}`；`socket.{time, refer.msgdetail, msg.files}`；
+ * 以及 `'isContact' in message` 判别。
+ */
+export interface ChatMessageReceiptWire {
+  id?: string | number | undefined;
+  /** 会话 id（= messages 字典键） */
+  to: string;
+  /** 预发送临时 id，用来找到本地那条待确认消息 */
+  waitingid?: string | undefined;
+  /** 转系统消息判别（`'isContact' in message`） */
+  isContact?: boolean | undefined;
+  /** 被引用消息的原始对象（回执里回填 refer 用） */
+  referMessage?:
+    | {
+        id?: string | number | undefined;
+        msg?: { con?: string | undefined; [key: string]: unknown } | undefined;
+        type?: number | undefined;
+        time?: number | string | undefined;
+        iswd?: boolean | undefined;
+        fromAccount?:
+          | {
+              id?: string | undefined;
+              name?: string | undefined;
+              logo?: string | undefined;
+              [key: string]: unknown;
+            }
+          | undefined;
+        [key: string]: unknown;
+      }
+    | undefined;
+  /** 服务器侧附加信息 */
+  socket?:
+    | {
+        time?: number | string | undefined;
+        refer?: { msgdetail?: unknown; [key: string]: unknown } | undefined;
+        msg?: { files?: unknown; [key: string]: unknown } | undefined;
+        [key: string]: unknown;
+      }
+    | undefined;
+  [key: string]: unknown;
+}
+
+/**
  * `addMessage` 内部构造的**待发送消息**（`formatMessage` 的入参）。
  *
  * 【为什么单独建这一层】原实现用一段手写内联形状，含 9 个 `any` 字段。
@@ -723,9 +771,17 @@ export interface ChatMessage {
      */
     msg?: string | undefined;
     type?: number | undefined;
+    /** 引用时刻（`updateMessage` 回执里写入 `time: referMessage.time`） */
+    time?: number | string | undefined;
     /** 引用消息的发送者：`SessionItem:37` `item.refer.user.account_id === accountId` 真值链比较 */
     user?:
-      | { account_id?: string | undefined; full_name?: string | undefined; [key: string]: unknown }
+      | {
+          account_id?: string | undefined;
+          full_name?: string | undefined;
+          /** 引用者头像（`updateMessage` 回执里写入 `avatar: referMessage.fromAccount.logo`） */
+          avatar?: string | undefined;
+          [key: string]: unknown;
+        }
       | undefined;
     msgdetail?: {
       files?: { id?: unknown; name?: string | undefined; url?: string | undefined; size?: unknown; [key: string]: unknown } | undefined;
