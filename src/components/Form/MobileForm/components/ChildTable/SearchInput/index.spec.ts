@@ -1,5 +1,6 @@
 const assert = require('assert');
 const path = require('path');
+const { mock } = require('node:test');
 const { transformFileSync } = require('../../../../../../../scripts/spec-harness.ts');
 
 function requireEsm(file, stubs = {}) {
@@ -60,13 +61,10 @@ function createSearchInput(props) {
   return component;
 }
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 global._l = global._l || (text => text);
 
 (async function run() {
+  mock.timers.enable({ apis: ['setTimeout', 'Date'], now: 0 });
   const debouncedCalls = [];
   const debouncedInput = createSearchInput({
     debounceTime: 20,
@@ -77,10 +75,10 @@ global._l = global._l || (text => text);
   debouncedInputNode.props.onChange({ target: { value: 'a' } });
   debouncedInputNode.props.onChange({ target: { value: 'ab' } });
 
-  await sleep(10);
+  mock.timers.tick(19);
   assert.deepStrictEqual(debouncedCalls, [], '输入变化后不应立即搜索');
 
-  await sleep(30);
+  mock.timers.tick(1);
   assert.deepStrictEqual(debouncedCalls, ['ab'], '防抖后应只搜索最后一次输入');
   debouncedInput.componentWillUnmount();
 
@@ -94,7 +92,8 @@ global._l = global._l || (text => text);
   enterInputNode.props.onChange({ target: { value: 'abc' } });
   enterInputNode.props.onKeyUp({ keyCode: 13, target: { value: 'abc' } });
 
-  await sleep(30);
+  assert.deepStrictEqual(enterCalls, ['abc'], '回车应立即搜索');
+  mock.timers.tick(30);
   assert.deepStrictEqual(enterCalls, ['abc'], '回车应取消待执行防抖并立即搜索一次');
   enterInput.componentWillUnmount();
 
@@ -113,12 +112,21 @@ global._l = global._l || (text => text);
   };
   viewChangeInput.componentDidUpdate({ ...viewChangeInput.props, viewId: 'view-1' });
 
-  await sleep(30);
+  mock.timers.tick(30);
   assert.deepStrictEqual(viewChangeCalls, [], '视图切换清空搜索时应取消待执行防抖');
   viewChangeInput.componentWillUnmount();
 
+  const unmountCalls = [];
+  const unmountInput = createSearchInput({ debounceTime: 20, onOk: value => unmountCalls.push(value) });
+  findByType(unmountInput.render(), 'input').props.onChange({ target: { value: 'pending' } });
+  unmountInput.componentWillUnmount();
+  mock.timers.tick(30);
+  assert.deepStrictEqual(unmountCalls, [], '卸载应取消待执行防抖');
+
   console.log('mobile SearchInput tests passed');
-})().catch(error => {
-  console.error(error);
-  process.exit(1);
-});
+})()
+  .finally(() => mock.timers.reset())
+  .catch(error => {
+    console.error(error);
+    process.exit(1);
+  });
