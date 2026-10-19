@@ -392,6 +392,26 @@ function main(): void {
     );
   });
 
+  check('部分载荷（result=undefined/null）：真实行为记录 —— lodash 容错，不抛错', () => {
+    /**
+     * 【lead 要求「部分载荷是否实际可能覆盖 undefined」的取证】
+     *
+     * 实测结论：`SET_SESSION_LIST` 传 `result: undefined` / `null` **不抛错**，
+     * `sessionList` 变成 `[]` —— 因为 `utils.filterSessionList` 内部用 lodash chain，
+     * `_.chain(undefined).groupBy(...)` 容错返回空集。
+     *
+     * 【但类型上仍标为必填】依据是**真实生产方**：`setSessionList` 等全部经
+     * `utils.sortSession(...)` / `utils.formatSessionList(...)` 处理，返回值是数组，
+     * 不会传 `undefined`。因此「必填」是**生产方契约**，不是运行时保证 ——
+     * 与我在 PublicWorksheet 批次里学到的一致（"有键 ≠ 值有"要分开看）。
+     */
+    const { root, init } = boot('current');
+    const s1 = root(init(), { type: 'SET_SESSION_LIST', result: undefined });
+    assert.deepEqual(s1.sessionList, [], 'filterSessionList(undefined) → []');
+    const s2 = root(init(), { type: 'SET_SESSION_LIST', result: null });
+    assert.deepEqual(s2.sessionList, [], 'filterSessionList(null) → []');
+  });
+
   check('未知 action：三个开关切片返回原引用', () => {
     const { root, init } = boot('current');
     const s0 = init();

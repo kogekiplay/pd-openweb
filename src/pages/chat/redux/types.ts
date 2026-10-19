@@ -42,7 +42,7 @@ export interface ChatSession {
   /** 排序键：`sortSession` 用 `_.orderBy(sessions, ['sendMsg'])` */
   sendMsg?: unknown;
   /** `atlist`：被 @ 的成员列表（`actions.ts:1618/1647/1648` 读取并 filter） */
-  atlist?: unknown[] | undefined;
+  atlist?: string[] | undefined;
   /** `isSession`：是否会话（`actions.ts:683`） */
   isSession?: boolean | undefined;
   /** `commonGroup`/`top_info` 等会话扩展字段（`actions.ts:496` 读取 `top_info`） */
@@ -99,7 +99,7 @@ export interface ChatMessage {
   card?: unknown;
   isPrepare?: boolean | undefined;
   /** `atlist`：被 @ 的成员列表（`actions.ts` 读取并 filter） */
-  atlist?: unknown[] | undefined;
+  atlist?: string[] | undefined;
   /** `refer`/`reflist`：引用与引用列表（`actions.ts:1658/1668`） */
   /** 其余按消息种类扩展的元数据 */
   [key: string]: unknown;
