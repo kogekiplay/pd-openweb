@@ -690,6 +690,15 @@ function main(): void {
     const m1 = { id: 'm1', from: 'other', time: 1700000000000, type: 1 };
     const out1 = utils.formatMessage(m1);
     assert.equal(typeof out1.timestamp, 'string', 'timestamp 被 formatMsgDate 写成文案');
+    // 【新增 · 精确断言】`time` 类型允许字符串；传**固定日期字符串**时
+    // `formatMsgDate` 跨年分支的输出与时区无关，故可断言精确值。
+    // （用 epoch 数字则不行：本地时区会让时分/日期偏移，见本用例 ①。）
+    const fixed = { id: 'mf', from: 'u1', uname: 'U', msg: { con: 't' }, type: 1, time: '2023-11-14 10:00:00.000' };
+    assert.equal(
+      utils.formatMessage(fixed as never).timestamp,
+      '2023年11月14日 10:00',
+      'timestamp 精确等于跨年分支文案（固定日期字符串 → 时区无关）',
+    );
     assert.equal(out1.isMine, false, 'from 非本人 → isMine=false');
 
     const mine = { id: 'm9', from: accountId, time: 1700000000000, type: 1 };
