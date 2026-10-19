@@ -400,7 +400,12 @@ export const addUserSession =
  * @param {*} msg
  */
 export const addSysSession =
-  (id: string, msg: Record<string, any> = {}) =>
+  /**
+   * 新增系统会话。
+   * 【有限声明依据】函数体只做 `dispatch(addSession(msg))` —— `addSession` 的入参
+   * 已收敛为 `ChatRawMessageWire`，故这里同步用它；默认空对象仍保留（原行为）。
+   */
+  (id: string, msg: ChatRawMessageWire = {} as ChatRawMessageWire) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
     const session = sessionList.filter(item => item.value == id)[0];
@@ -1300,7 +1305,16 @@ export const updateFileMessage = (newMessage: ChatMessage, to: string) => (dispa
  * 将消息改为已经撤回的消息
  * @param {*} newMessage
  */
-export const updateWithdrawMessage = (id: string, newMessage: any) => (dispatch: AppDispatch, getState: GetState) => {
+/**
+ * 把消息改为"已撤回"。
+ * 【有限声明依据】函数体只解构 `{ id: messageId, msg }`，且仅使用 `msg.con`
+ * （两处 `item.msg!.con = msg.con`）。三处调用方传的都是 socket/API 的 any 载荷，
+ * 因此这里按**实际读取**建模，不臆造更多字段。
+ */
+export const updateWithdrawMessage = (
+  id: string,
+  newMessage: { id?: string | number | undefined; msg: { con?: string | undefined; [key: string]: unknown } },
+) => (dispatch: AppDispatch, getState: GetState) => {
   const { messages, referMessage, bottomUnreadMessage } = getState().chat;
   const { id: messageId, msg } = newMessage;
   const currentMessage = messages[id];
@@ -1763,7 +1777,7 @@ export const setReferMessage = (id: string, message: ChatMessage) => {
  */
 export const addBottomUnreadMessage = (id: string, message: any) => (dispatch: AppDispatch, getState: GetState) => {
   const { bottomUnreadMessage } = getState().chat;
-  const currentMessage = (bottomUnreadMessage as Record<string, any>)[id];
+  const currentMessage = bottomUnreadMessage[id];
 
   if (currentMessage) {
     dispatch({
