@@ -50,10 +50,36 @@ export interface ChatSession {
   /** `commonGroup`/`top_info` 等会话扩展字段（`actions.ts:496` 读取 `top_info`） */
   /** `actions.ts:494-496` 读写 `top_info.isTop` */
   top_info?: { isTop?: boolean | undefined; [key: string]: unknown } | undefined;
+  /* ── 以下为消费方**实际读取**的字段（按 `src/pages/chat/**` 用频取证）── */
+  /** 会话/群/联系人显示名（`detail.tsx`、`ChatWindow` 读，25 处） */
+  name?: string | undefined;
+  /** 会话类型（数值枚举，`SessionList`/`Apps` 读，18 处） */
+  type?: number | undefined;
+  /** 最近一条消息（`ChatPanelSession` 模板串、`Message` 读 `.msg.con`，13 处） */
+  msg?: { con?: unknown; files?: unknown; [key: string]: unknown } | undefined;
+  /** 图标类型（`ChatPanel` 读；`utils` 里赋 `'system'` 等字符串，11 处） */
+  iconType?: string | undefined;
+  /** 创建者账号 id（`createAccount.accountId` 比较，11 处） */
+  createAccount?: { accountId?: string | undefined; [key: string]: unknown } | undefined;
+  /** 个人状态 id（`MyStatus` 索引，10 处） */
+  statusId?: string | undefined;
+  /** 图标标识（`ChatPanel` 渲染，9 处） */
+  icon?: string | undefined;
+  /** 是否推送类会话（真值判断，8 处） */
+  isPush?: boolean | undefined;
+  /** 部门 id（8 处） */
+  departmentId?: string | undefined;
+  /** 时间（`Message`/`utils` 读，7 处） */
+  time?: number | string | undefined;
+  /** 项目 id（`Apps` 读，7 处） */
+  projectId?: string | undefined;
+  /** 头像（`ChatWindow` 读，7 处） */
+  avatar?: string | undefined;
   /**
    * 其余字段按会话类型扩展（群成员、部门、状态等）。
    * 保留 `unknown` 索引签名：这些是**真正随类型变化的扩展元数据**，
    * 已消费的字段都在上面显式声明，不是"整对象塞索引"的逃生口。
+   * 【实测依据】移除该索引签名会让 chat 范围炸出 **1305 条**新诊断、影响 **113 个文件**。
    */
   [key: string]: unknown;
   /** `count`：未读计数（`actions.ts:575` 读 `currentSession.count`） */
@@ -110,7 +136,22 @@ export interface ChatMessage {
   isPrepare?: boolean | undefined;
   /** `atlist`：被 @ 的成员列表（`actions.ts` 读取并 filter） */
   atlist?: string[] | undefined;
-  /** `refer`/`reflist`：引用与引用列表（`actions.ts:1658/1668`） */
+  /* ── 以下为消费方**实际读取/写入**的字段 ── */
+  /** `utils/index.ts:281` 处 `message.value = message.id` 赋值（会话化消息时） */
+  value?: string | undefined;
+  /** 图片消息的 kcFile 标记（`ImageMessage:27` 读） */
+  kcFile?: unknown;
+  /** 消息正文纯文本（部分分支读 `.content`） */
+  content?: unknown;
+  /** 未读数（会话化消息时读 `.count`） */
+  count?: number | undefined;
+  /** 账号 id（会话化消息时读） */
+  accountId?: string | undefined;
+  /** 头像 / 图标 / 名称 / 图标类型（会话化消息时读） */
+  avatar?: string | undefined;
+  icon?: string | undefined;
+  iconType?: string | undefined;
+  name?: string | undefined;
   /** 其余按消息种类扩展的元数据 */
   [key: string]: unknown;
 }
