@@ -497,6 +497,26 @@ function main(): void {
     assert.deepEqual(afterUpdate.bottomUnreadMessage.k1, [MSG_2], 'UPDATE 后该键是**数组**');
   });
 
+  check('SET_CURRENT_SESSION 返回的是**载荷副本**，不与 action.result 同引用', () => {
+    /**
+     * 【这条为什么必须有 —— 由变异测试发现】
+     * 我把 reducer 改成 `return action.result`（直接返回载荷），**46 项规格全绿** ——
+     * 因为 A/B 用 `deepEqual` 比较，副本与本体**深度相等**，测不出别名差异。
+     * 真实行为是 `Object.assign({}, action.result)`：返回**新对象**。
+     * 这一点有意义：若直接返回载荷，调用方对 state 的写入会污染 dispatch 的 action 对象。
+     */
+    const { root, init } = boot('current');
+    const payload: Record<string, unknown> = { id: 's-1', value: 'v-1' };
+    const after = root(init(), { type: 'SET_CURRENT_SESSION', result: payload } as never);
+
+    assert.deepEqual(after.currentSession, payload, '内容与载荷一致');
+    assert.notEqual(
+      after.currentSession as unknown,
+      payload,
+      '返回的必须是**副本**（`Object.assign({}, ...)`），不能是载荷本身 —— 否则产生别名',
+    );
+  });
+
   check('SET_MESSAGE 是**替换**而不是追加：同一 id 连设两次只保留第二次', () => {
     /**
      * 【这条为什么必须有 —— 由变异测试发现】
