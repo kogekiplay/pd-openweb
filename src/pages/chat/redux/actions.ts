@@ -1605,7 +1605,19 @@ export const userShake = (message: { aid: string }) => (dispatch: AppDispatch, g
  * 创建群组
  * @param {*} message
  */
-export const newGroup = (message: any) => (dispatch: AppDispatch) => {
+/**
+ * 新建群组事件。
+ * 【有限声明依据】读取 `message.{id,logo,name,isPost,isPush}`、解构 `{ admins }`，
+ * 并把这些字段组成 `addGroupSession` 的第二参（其类型为 `ChatRawMessageWire`）。
+ */
+export const newGroup = (message: {
+  id: string;
+  logo?: string | undefined;
+  name?: string | undefined;
+  isPost?: boolean | undefined;
+  isPush?: boolean | undefined;
+  admins?: Array<{ aid?: string | undefined; [key: string]: unknown }> | undefined;
+}) => (dispatch: AppDispatch) => {
   const { admins } = message;
   const index = _.findIndex(admins, { aid: md.global.Account.accountId });
   const isSelf = index === -1 ? false : true;
@@ -1680,7 +1692,17 @@ export const newGroupMessage = (message: any) => (dispatch: AppDispatch, getStat
  * 收到群组 @ 消息
  * @param {*} message
  */
-export const groupShake = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
+/**
+ * 群组抖动事件。
+ * 【有限声明依据】读取 `message.gid` 与 `msg.{msgid,time}`（`const { msg } = message`），
+ * 且 `atlist.concat(msg.msgid)` 要求 `msgid` 是字符串。
+ */
+export const groupShake = (message: {
+  gid: string;
+  /** 也被读取：`atId !== message.id` 过滤 atlist */
+  id?: string | undefined;
+  msg: { msgid: string; time?: number | string | undefined };
+}) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSession, sessionList } = getState().chat;
   const session = sessionList.filter(item => item.value === message.gid)[0];
   const isWindowSession = utils.chatWindow.is(message.gid);
