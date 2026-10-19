@@ -1229,10 +1229,10 @@ export const updateMessage = (message: ChatMessageReceiptWire) => (dispatch: App
   const newCurrentMessage = currentMessage
     .filter(item => item)
     .map(item => {
-      if (item.waitingId === waitingid) {
+      if (item!.waitingId === waitingid) {
         // item 是 chat.messages 里的对象（store 里的）：先拷一份再改，嵌套的 msg 也一样，
         // 否则 dev 下发消息收到回执时会被 RTK 的不可变检查拦下（生产得到的结果值与原先相同）
-        item = { ...item, msg: item.msg && { ...item.msg } };
+        item = { ...item, msg: item!.msg && { ...item!.msg } };
         item.id = message.id;
         // 替换成服务器的时间
         if (socket && socket!.time) {
@@ -1296,7 +1296,7 @@ export const updateFileMessage = (newMessage: ChatMessage, to: string) => (dispa
   // 原 `.map` 调用不变，缺项时仍由**原生**报错。
   const currentMessage = messages[to]!;
   const newCurrentMessage = currentMessage.map(item => {
-    if (item.id === id) {
+    if (item!.id === id) {
       return newMessage;
     }
 
@@ -1333,22 +1333,22 @@ export const updateWithdrawMessage = (
   }
 
   currentMessage.forEach((item, index) => {
-    if (item.id == messageId) {
+    if (item!.id == messageId) {
       const nextMessage = currentMessage[index + 1];
-      item.iswd = true;
-      if (item.from === md.global.Account.accountId && !item.msg!.oldCon) {
-        item.msg!.oldCon = item.msg!.con;
+      item!.iswd = true;
+      if (item!.from === md.global.Account.accountId && !item!.msg!.oldCon) {
+        item!.msg!.oldCon = item!.msg!.con;
       }
 
-      item.msg!.con = msg.con;
+      item!.msg!.con = msg.con;
       if (nextMessage) {
         nextMessage.isDuplicated = false;
       }
     }
 
     // 引用的消息被撤回了
-    if (item.refer && item.refer.msgid == messageId) {
-      item.refer.iswd = true;
+    if (item!.refer && item!.refer.msgid == messageId) {
+      item!.refer.iswd = true;
     }
   });
 

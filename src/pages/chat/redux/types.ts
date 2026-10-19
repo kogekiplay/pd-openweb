@@ -832,7 +832,15 @@ export interface ChatMessage {
  * 【键值为何含 `undefined`】字典取值本身可缺失（未加载过的会话）。
  */
 export interface ChatMessagesState {
-  [sessionId: string]: ChatMessage[] | undefined;
+  /**
+   * `messages` 字典。
+   * 【为何元素允许 undefined】`ADD_PAGE_MESSAGE` 的原实现是
+   * `action.result.concat(state[action.id])`；当该键缺失时 `concat(undefined)`
+   * 会把 **undefined 当作一个元素**追加（规格用例
+   * 「ADD_PAGE_MESSAGE 缺键时追加 undefined 元素」实测 `[MSG_1, undefined]`）。
+   * 这是既有边界行为，类型必须如实反映，不能用 `ChatMessage[]` 掩盖。
+   */
+  [sessionId: string]: (ChatMessage | undefined)[] | undefined;
 }
 
 /** `referMessage` 切片：会话 id → 被引用的消息 */
