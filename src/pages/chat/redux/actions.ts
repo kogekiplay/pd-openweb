@@ -247,7 +247,7 @@ export const addSession = (result: ChatRawMessageWire, id?: string) => (dispatch
  * @param {*} msg
  */
 export const addGroupSession =
-  (groupId: string, msg: Record<string, any> = {}, isOpen = true) =>
+  (groupId: string, msg: ChatRawMessageWire = {} as ChatRawMessageWire, isOpen = true) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
     // if (utils.chatWindow.is(groupId)) {
@@ -315,7 +315,7 @@ export const addGroupSession =
  * @param {*} cb
  */
 export const addUserSession =
-  (id: string, msg: Record<string, any> = {}, isOpen = true, cb?: (() => void) | undefined) =>
+  (id: string, msg: ChatRawMessageWire = {} as ChatRawMessageWire, isOpen = true, cb?: (() => void) | undefined) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
     // if (utils.chatWindow.is(id)) {
@@ -1775,7 +1775,12 @@ export const setReferMessage = (id: string, message: ChatMessage) => {
  * @param {*} id
  * @param {*} message
  */
-export const addBottomUnreadMessage = (id: string, message: any) => (dispatch: AppDispatch, getState: GetState) => {
+/**
+ * 追加一条"底部未读"消息。
+ * 【有限声明依据】`message` 被直接作为 `ADD_BOTTOM_UNREAD_MESSAGE.message` 与
+ * `SET_BOTTOM_UNREAD_MESSAGE.message` 的载荷派发，二者在 `ChatAction` 里都是 `ChatMessage`。
+ */
+export const addBottomUnreadMessage = (id: string, message: ChatMessage) => (dispatch: AppDispatch, getState: GetState) => {
   const { bottomUnreadMessage } = getState().chat;
   const currentMessage = bottomUnreadMessage[id];
 
