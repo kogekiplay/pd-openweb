@@ -1329,7 +1329,7 @@ export const updateWithdrawMessage = (
     return;
   }
 
-  currentMessage.forEach((item: any, index: number) => {
+  currentMessage.forEach((item, index) => {
     if (item.id == messageId) {
       const nextMessage = currentMessage[index + 1];
       item.iswd = true;
