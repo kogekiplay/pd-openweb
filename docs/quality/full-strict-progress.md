@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-19 CloudPrint 字段协议与控制器
+
+CloudPrint已按生产只读元数据与真实DynamicRender/保存路径建有限模型，56条终点诊断清零；全仓50,698→50,642、逐文件/错误码无新增，欠债3,062→3,061，clean1,716/4,777，fast8,413/2,268keys与baseline字节不变。19组完整历史交互、16非法编译、2项变异、278/278正式release/全部门禁与四项编译、runtime/publish通过。DynamicRender这里只收紧公开协议，其内部16条诊断仍未完成。候选a3dc44474f已完整冻结、尚未部署，生产仍9cd5；Chat协作未合入。详见 `cloud-print-strict-20261019.md`。全仓强类型/正式strict继续。
+
 ## 2026-10-17 AppPkg 状态与消费方
 
 消除RootState.appPkg整个slice的any推导，复核并修正undefined/null默认值和对象展开语义，消费方保留导航/筛选/缓存协议，缺主题配色不再抛错。24项reducer、13项真connect、162表达式对照、7个实际类型反例及两个现网只读样本通过；257/257规格、全部门禁与正式构建通过。strict51,230→51,219，无新增文件/错误码；欠债3,090→3,089、clean1,678/4,767；fast8,511/2,291keys，baseline原字节不变。详见 `apppkg-strict-20261017.md`；本批未生产，现网仍11:13发布的2e255b9686，整体目标继续。
