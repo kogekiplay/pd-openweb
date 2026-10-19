@@ -370,6 +370,33 @@ function main(): void {
     assert.equal(next, s0, '缺键时应返回原引用');
   });
 
+  check('REMOVE_MESSAGE 的 `item &&` 保护：messages 里的 **undefined 元素**不会让过滤抛错', () => {
+    /**
+     * 【这条为什么必须有】
+     * `REMOVE_MESSAGE` 的实现是
+     *   `targetState.filter(item => item && item.waitingId !== action.messageId)`
+     * 其中 `item &&` 不是多余的：`ADD_PAGE_MESSAGE` 在**该键缺失**时会因
+     * `action.result.concat(state[id])` 把 `undefined` 当成一个元素追加
+     * （规格另有专门用例证明 `[MSG_1, undefined]`），所以 `messages` 里**确实可能有洞**。
+     * 若去掉 `item &&`，过滤时会读 `undefined.waitingId` 而抛错。
+     * 此前该分支无用例 —— 现有 REMOVE_MESSAGE 用例的数据都是完整消息。
+     */
+    const { root, init } = boot('current');
+
+    // ① 造出带洞的数组：SET 后 ADD_PAGE_MESSAGE 到**不存在的键**
+    const withHole = root(init(), { type: 'ADD_PAGE_MESSAGE', id: 'hole', result: [MSG_1] });
+    assert.equal((withHole.messages.hole as unknown[]).length, 2, '应先造出 [MSG_1, undefined] 两个元素');
+    assert.equal((withHole.messages.hole as unknown[])[1], undefined, '第二个元素是 undefined');
+
+    // ② 过滤：不匹配的 waitingId → 保留 MSG_1，undefined 因 `item &&` 为假被丢弃
+    let filtered: any;
+    assert.doesNotThrow(() => {
+      filtered = root(withHole, { type: 'REMOVE_MESSAGE', id: 'hole', messageId: 'no-such' });
+    }, '`item &&` 保护让 undefined 元素不至于抛 TypeError');
+    assert.equal((filtered.messages.hole as unknown[]).length, 1, 'undefined 元素被丢弃，只剩 1 个');
+    assert.deepEqual((filtered.messages.hole as unknown[])[0], MSG_1, '留下的是 MSG_1');
+  });
+
   check('REMOVE_MESSAGES 的**先 delete 原 state 再浅复制**副作用（如实保留）', () => {
     const { root, init } = boot('current');
     const s1 = root(init(), { type: 'SET_MESSAGE', id: 'k1', result: [MSG_1] });
