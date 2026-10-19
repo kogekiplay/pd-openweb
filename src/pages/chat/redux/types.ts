@@ -14,8 +14,15 @@
  *   /`showBadge`/`isSilent`；消息读 `msg`/`type`/`id`/`from`/`time`/`isMine`/
  *   `isGroup`/`waitingId`/`isPrepare`/`card` 等）。
  *
+ * 【索引签名策略】`[key: string]: unknown` 共 54 处，**用途只有一个**：兜住
+ * "按消息/卡片/会话种类扩展、且前端从不读取"的 opaque 元数据。三条纪律：
+ * ① 只要前端读过该字段，就**显式声明**（不靠索引签名兜）；
+ * ② 索引签名值一律 `unknown`，不用 `any` —— 读取时必须先收窄，写错字段名仍报错；
+ * ③ 需要**区分变体**的地方用联合类型（如 `ChatRawMessageWire.msg` 的 string|object），
+ *    索引签名不参与判别。
+ *
  * 【不做什么】不把消息/会话整体换成 `Record<string, unknown>`；已消费的字段逐个声明，
- * 真正按消息种类扩展的元数据保留 `unknown` 索引签名（并注明理由）。
+ * 真正按消息种类扩展的元数据保留 `unknown` 索引签名（**策略见上**）。
  */
 
 /**
