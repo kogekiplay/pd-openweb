@@ -428,3 +428,5 @@ OnlySync、RecordInfo/DragCore、BaseColumnHead 及列头发布器的有限合�
 RangeDrop/BtnRangeDrop及真实getShowViews视图消费边界：strict50,856→50,808（逐文件/错误码无新增），fast8416/2269keys原基线不变，debt3072→3070，clean1707/4777。12组真实组件/helper/打印父回调对照、11非法编译及未知扩展过滤变异通过；273/273正式release、全部门禁/四项编译/runtime/publish通过。容器/序列化错误为独立fix，未知数组条目与引用保留，类型层擦除证据通过。候选9cd5c15d08已冻结、尚未部署，现网fbaa复核正常；详见[范围下拉质量记录](range-dropdown-strict-20261018.md)。全仓目标仍active。
 
 2026-10-18 2026-10-18T17:14:48.354922+08:00：范围下拉9cd5c15d08已可回滚发布生产，六入口/34资源、现网及完整quick各17,098文件、五服务完整Mounts/nginx、登录MOM/ERP前后只读验收通过。97f旧回滚完整归档/实际恢复后释放重复树，七份持久恢复材料保留。详见[范围下拉发布结果](range-dropdown-strict-20261018.md)。全仓strict仍50,808，目标active。
+
+2026-10-19：BtnTd/CustomBtnMoreOption强类型与独立请求失败处理完成，strict50,808→50,783，fast8416→8413/2268keys，debt3070→3068，clean1709/4777，逐文件/错误码无新增。16组真实行/菜单/List/helper/API及五类拒绝旧失败新通过、13非法编译和范围载荷变异通过；274/274正式release、全门禁/四项编译/runtime/publish通过。候选4dc5ec932b已冻结尚未部署，现网9cd5复核健康。详见[自定义动作父项质量记录](button-row-strict-20261019.md)，全仓目标仍active。
