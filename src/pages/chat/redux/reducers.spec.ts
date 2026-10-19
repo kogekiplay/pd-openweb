@@ -425,10 +425,9 @@ function main(): void {
     const utils = F.loadRealUtils();
     const v = utils.getCurrentTime();
     assert.equal(typeof v, 'string', 'getCurrentTime 返回字符串');
-    assert.ok(
-      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}$/.test(v),
-      '格式必须是 YYYY-MM-DD HH:mm:ss.SSS，实际=' + v,
-    );
+    // 夹具把 `moment()`（取"当前时间"）固定为 2026-10-19 12:00:00，
+    // 因此这里可以断言**精确值**，而不只是格式。
+    assert.equal(v, '2026-10-19 12:00:00.000', '固定 now 下 getCurrentTime 的精确值');
   });
 
   check('**结构不变量**：actions.ts 派发的每个 type 都有 reducer case（且反向也无孤儿）', () => {
