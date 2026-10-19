@@ -91,8 +91,8 @@ export interface ChatSession {
   /** 头像（`ChatWindow` 读，7 处） */
   avatar?: string | undefined;
   /* ── 以下为消费方**解构**读取的字段（`const { x } = session` 形式取证） ── */
-  /** 群公告/关于（`ChatPanelSessionInfo` 解构读） */
-  about?: unknown;
+  /** 群公告正文：`Announcement:23/25` `session.about !== value` 比较并回填，实为字符串 */
+  about?: string | undefined;
   /** 群成员列表（解构读） */
   groupUsers?: unknown[] | undefined;
   /** 是否管理员（`Message` 解构读，用于撤回权限） */
@@ -216,8 +216,14 @@ export interface ChatMessage {
   /** 预发送消息的临时 id；`REMOVE_MESSAGE` 按 `waitingId` 过滤 */
   waitingId?: string | undefined;
   from?: string | undefined;
-  /** 接收方（`socketEvent` 里有 `to : message.from` 的比较） */
-  to?: unknown;
+  /**
+   * 接收方 id。
+   * 【真实用法】`socketEvent:123`、`actions.ts:1357/1461` 取
+   * `md.global.Account.accountId === message.from ? message.to : message.from` 作为**会话 id**；
+   * `actions.ts:1366` `utils.scrollEnd(message.to, true)`，而 `scrollEnd(id, isBottom)` 的 id 是滚动容器 id。
+   * 故是字符串，不是 unknown。
+   */
+  to?: string | undefined;
   /** 消息类型（数值枚举，消费方按数字比较） */
   type?: number | undefined;
   /** 消息时间（消费方直接展示/比较） */
@@ -277,8 +283,24 @@ export interface ChatMessage {
   /** 按消息种类**事后补上**的字段 */
   /** 系统消息类型（按数值比较） */
   sysType?: number | undefined;
-  /** 卡片消息体：`ChatPanelSession` 读 `card.title` */
-  card?: { title?: string | undefined; [key: string]: unknown } | undefined;
+  /**
+   * 卡片消息体。
+   * 【已消费字段（逐处取证）】
+   * - `md`（11 处，如 `MessageView:154` `card.md === 'worksheet'` / `'kcfile'`）——卡片类型标识；
+   * - `title`（`ChatPanelSession` 模板拼接）；
+   * - `entityid` / `url`（拼 `'_' + moment(sidext)` 后缀）；
+   * - `projectId`、`extra`（`|| {}` 兜底后使用）。
+   * 其余按卡片种类扩展的字段留在索引签名里。
+   */
+  card?: {
+    md?: string | undefined;
+    title?: string | undefined;
+    entityid?: string | undefined;
+    url?: string | undefined;
+    projectId?: string | undefined;
+    extra?: unknown;
+    [key: string]: unknown;
+  } | undefined;
   isPrepare?: boolean | undefined;
   /** `atlist`：被 @ 的成员列表（`actions.ts` 读取并 filter） */
   atlist?: string[] | undefined;
@@ -287,8 +309,6 @@ export interface ChatMessage {
   value?: string | undefined;
   /** 图片消息的 kcFile 标记（`ImageMessage:27` 读） */
   kcFile?: unknown;
-  /** 消息正文纯文本（部分分支读 `.content`） */
-  content?: unknown;
   /** 未读数（会话化消息时读 `.count`） */
   count?: number | undefined;
   /** 账号 id（会话化消息时读） */
