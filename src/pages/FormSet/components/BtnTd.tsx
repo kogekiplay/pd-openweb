@@ -1,14 +1,25 @@
 import { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import { Icon, Input, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import sheetAjax from 'src/api/worksheet';
 import BtnRangeDrop from 'src/pages/FormSet/components/BtnRangeDrop';
+
 import { WORKSHEET_BTN_OPTION_TYPE } from 'src/pages/worksheet/common/ViewConfig/components/customBtn/config';
+
 import CustomBtnMoreOption from './CustomBtnMoreOption';
+import { viewRangeList } from './rangeValues';
+
+
+
+
+
+
+
+
 
 export default function BtnTd(props) {
   const input = useRef(null);
@@ -29,16 +40,21 @@ export default function BtnTd(props) {
       input.current.focus();
     }
   }, [isRename]);
-  const editBtn = (obj, cb?: (() => void) | undefined) => {
+  const editBtn = (obj, cb?) => {
     sheetAjax
       .saveWorksheetBtn({
         btnId: it.btnId,
         worksheetId,
         ...obj,
       })
-      .then(() => {
-        cb && cb();
-      });
+      .then(
+        () => {
+          cb && cb();
+        },
+        () => {
+          alert(_l('保存失败'), 2);
+        },
+      );
   };
 
   const handleCopy = () => {
@@ -49,14 +65,19 @@ export default function BtnTd(props) {
         btnId: it.btnId,
         worksheetId,
       })
-      .then(data => {
-        if (data) {
-          getSheetBtns();
-          alert(_l('复制成功'));
-        } else {
+      .then(
+        (data) => {
+          if (data) {
+            getSheetBtns();
+            alert(_l('复制成功'));
+          } else {
+            alert(_l('复制失败'), 2);
+          }
+        },
+        () => {
           alert(_l('复制失败'), 2);
-        }
-      });
+        },
+      );
   };
 
   const optionWorksheetBtn = ({
@@ -65,7 +86,7 @@ export default function BtnTd(props) {
     optionType,
     successText = _l('删除成功'),
     failText = _l('删除失败'),
-  }: { appId?: string; viewId?: string; [key: string]: any }) => {
+  }) => {
     sheetAjax
       .optionWorksheetBtn({
         appId,
@@ -74,20 +95,25 @@ export default function BtnTd(props) {
         worksheetId,
         optionType: optionType, // * @param { integer } args.optionType 操作类型 9：删除按钮 12：停用按钮 13：启用按钮
       })
-      .then(data => {
-        if (data) {
-          if (successText) {
-            alert(successText);
-          }
+      .then(
+        (data) => {
+          if (data) {
+            if (successText) {
+              alert(successText);
+            }
 
-          getSheetBtns();
-        } else {
+            getSheetBtns();
+          } else {
+            alert(failText, 2);
+          }
+        },
+        () => {
           alert(failText, 2);
-        }
-      });
+        },
+      );
   };
 
-  const handleToggleEnable = targetDisabled => {
+  const handleToggleEnable = (targetDisabled) => {
     optionWorksheetBtn({
       appId,
       viewId: '',
@@ -103,10 +129,10 @@ export default function BtnTd(props) {
       .map(o => o.viewId);
     const noBatch = (it.writeObject === 2 || it.writeType === 2) && it.clickType === 3; //填写且配置了关联=>不能设置成批量按钮
     const detailViews = safeParse(_.get(it, 'advancedSetting.detailviews'), 'array');
-    const listViews = safeParse(_.get(it, 'advancedSetting.listviews'), 'array').filter(o =>
-      canBatchViewIds.includes(o),
-    );
-    const viewIds = _.uniq(noBatch ? detailViews : detailViews.concat(listViews));
+    const parsedListViews = safeParse(_.get(it, 'advancedSetting.listviews'), 'array');
+    const listViews = viewRangeList(parsedListViews).filter(o => canBatchViewIds.includes(o));
+    const viewIds = _.uniq(noBatch ? viewRangeList(detailViews) : viewRangeList(detailViews).concat(listViews));
+
     if (viewIds.length > 0) {
       return viewIds
         .map(id => _.get(_.find(views, { viewId: id }), 'name'))
@@ -126,7 +152,7 @@ export default function BtnTd(props) {
   const isDisabled = it.status === 0; //0停用
   const iconColor = isDisabled ? 'var(--color-text-disabled)' : color;
 
-  const handleMoreOptionVisibleChange = showMoreOption =>
+  const handleMoreOptionVisibleChange = (showMoreOption) =>
     setState({ showMoreOption, templateId: showMoreOption ? it.btnId : '' });
 
   const handleDelete = () => optionWorksheetBtn({ appId, viewId: '', optionType: 9 });
