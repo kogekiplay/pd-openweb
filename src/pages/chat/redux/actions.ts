@@ -1563,7 +1563,7 @@ export const newUserMessage = (message: any) => (dispatch: AppDispatch, getState
  * 个人抖动消息
  * @param {*} message
  */
-export const userShake = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const userShake = (message: { aid: string }) => (dispatch: AppDispatch, getState: GetState) => {
   const addShakeMessage = () => {
     const { currentSession, messages } = getState().chat;
 
@@ -1709,7 +1709,7 @@ export const groupShake = (message: any) => (dispatch: AppDispatch, getState: Ge
  * 收到群组撤回消息
  * @param {*} message
  */
-export const newWithdrawGroupMessage = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const newWithdrawGroupMessage = (message: { gid: string; id?: string | number | undefined; msg: { con?: string | undefined } }) => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
   const session = sessionList.filter(item => item.value === message.gid)[0];
   dispatch(updateWithdrawMessage(message.gid, message));
@@ -1941,7 +1941,13 @@ export const refresh = () => (dispatch: AppDispatch, getState: GetState) => {
  * 发送设置免打扰
  * @param {*} message
  */
-export const sendSetSlience = (message: any) => () => {
+/**
+ * 发送免打扰设置请求。
+ * 【有限声明依据】两个调用点（`inboxHeader:112`、`SessionList:517`）传的都是
+ * `{ type, AccountID, isSilent }` —— **与 `setSlience`（入站事件）形状不同**，
+ * 不要合并成一个类型。
+ */
+export const sendSetSlience = (message: { type: number; AccountID: string; isSilent: boolean }) => () => {
   socket.Contact.setSlience(message);
 };
 
@@ -1949,7 +1955,7 @@ export const sendSetSlience = (message: any) => () => {
  * 设置免打扰
  * @param {*} message
  */
-export const setSlience = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const setSlience = (message: { value: string; isSilent?: boolean | undefined; showBadge?: number | boolean | undefined }) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList, sessionList, currentSession } = getState().chat;
   const isSilent = message.isSilent ? message.isSilent : false;
   const showBadge = message.showBadge ? message.showBadge : 0;
