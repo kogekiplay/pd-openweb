@@ -430,3 +430,5 @@ RangeDrop/BtnRangeDrop及真实getShowViews视图消费边界：strict50,856→5
 2026-10-18 2026-10-18T17:14:48.354922+08:00：范围下拉9cd5c15d08已可回滚发布生产，六入口/34资源、现网及完整quick各17,098文件、五服务完整Mounts/nginx、登录MOM/ERP前后只读验收通过。97f旧回滚完整归档/实际恢复后释放重复树，七份持久恢复材料保留。详见[范围下拉发布结果](range-dropdown-strict-20261018.md)。全仓strict仍50,808，目标active。
 
 2026-10-19：BtnTd/CustomBtnMoreOption强类型与独立请求失败处理完成，strict50,808→50,783，fast8416→8413/2268keys，debt3070→3068，clean1709/4777，逐文件/错误码无新增。16组真实行/菜单/List/helper/API及五类拒绝旧失败新通过、13非法编译和范围载荷变异通过；274/274正式release、全门禁/四项编译/runtime/publish通过。候选4dc5ec932b已冻结尚未部署，现网9cd5复核健康。详见[自定义动作父项质量记录](button-row-strict-20261019.md)，全仓目标仍active。
+
+2026-10-19 自定义动作列表父层：strict50,783→50,748，逐文件/错误码无新增，fast8413/2268keys和baseline原字节不变，debt3068→3065，clean1712/4777。四完整产品模块Babel全文同历史，15组真实父层/API/feature/升级/helper对照、14非法编译和原地push引用变异通过；275/275正式release及全部门禁/四项编译/runtime/publish通过。候选1d6912c889包含原BtnTd批次，尚未部署，现网9cd5复核健康。DSH8140初审未通过，已在目标文件写明动作any/整数组断言/9条新增诊断等修正范围。详见[列表父层质量记录](custom-button-list-strict-20261019.md)，全仓目标active。
