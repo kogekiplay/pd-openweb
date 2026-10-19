@@ -1904,9 +1904,9 @@ export const refresh = () => (dispatch: AppDispatch, getState: GetState) => {
       pageIndex: 1,
       pageSize: 30,
     })
-    .then((res: any[]) => {
+    .then((res: ChatRawSessionWire[]) => {
       if (id) {
-        res.forEach((item: any) => {
+        res.forEach(item => {
           if (item && item.value == id) {
             item.count = 0;
           }

@@ -437,6 +437,12 @@ export interface ChatRawSessionWire {
    * `formatSession` 用 `htmlDecodeReg(con)`（形参 `unknown`、返回 `string`）解码后写回。
    */
   msg?: { con?: string | undefined; files?: unknown; [key: string]: unknown } | undefined;
+  /**
+   * 未读数。
+   * 【证据】`refresh` 里 `res.forEach(item => { item.count = 0 })` 清零后
+   * 直接把 `res` 交给 `setSessionList`，故该字段经此路径**会被写入并存储**。
+   */
+  count?: number | undefined;
   atlist?: string[] | undefined;
   /** `formatSession` 归一化时写入的备份字段 */
   _time?: number | string | undefined;
