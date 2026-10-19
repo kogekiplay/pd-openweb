@@ -497,6 +497,55 @@ function main(): void {
     assert.deepEqual(afterUpdate.bottomUnreadMessage.k1, [MSG_2], 'UPDATE 后该键是**数组**');
   });
 
+  check('真实 formatSession：时间备份/类型归一/草稿/at 备份/正文解码', () => {
+    /**
+     * 【这条补的是上轮如实列出的缺口】
+     * `formatSession`/`formatMessage` 此前**不在 fixture 的抽取列表里**，
+     * 规格只通过 `filterSessionList`/`sortSession` 间接触达它们；
+     * 行为不变当时只靠「表达式 0 行差异」的字节证明保证，**没有行为用例**。
+     * 现在把它们纳入抽取（`HELPER_NAMES`），并在此直接断言各字段的归一化结果。
+     *
+     * 【依赖处置】`formatSession` 依赖 `formatMsgDate`/`getCurrentTime`（真实 moment 可用）
+     * 与 `htmlDecodeReg`（`src/utils/common` 依赖 JSEncrypt，无法 require）——
+     * 后者用**逐字忠实替身**，不是简化实现。
+     */
+    F.installHost({ localStorage: F.makeLocalStorage({ textareaValuev1: '未发送的草稿' }) });
+    const utils = F.loadRealUtils();
+
+    const input = {
+      id: 's1',
+      value: 'v1',
+      from: { id: 'other', name: '对方' },
+      msg: { con: 'a&amp;b' },
+      time: 1700000000000,
+      type: '2',
+      isGroup: false,
+      atlist: ['u1', 'u2'],
+    };
+    const out = utils.formatSession(input);
+
+    // ① 原始时间备份到 _time，time 被改写成**文案**（真实 moment 计算，只断言"变成字符串"）
+    assert.equal(out._time, 1700000000000, '_time 保存原始时间');
+    assert.equal(typeof out.time, 'string', 'time 被 formatMsgDate 改写成文案');
+
+    // ② type 被 Number 归一化（入参是字符串 '2'）
+    assert.equal(out.type, 2, 'type 经 Number() 归一化为数值');
+    assert.equal(typeof out.type, 'number');
+
+    // ③ 草稿从 localStorage 取（键名 textareaValue + value）
+    assert.equal(out.sendMsg, '未发送的草稿', 'sendMsg 来自 localStorage 草稿键');
+
+    // ④ atlist 备份到 messageAtlist
+    assert.deepEqual(out.messageAtlist, ['u1', 'u2'], 'messageAtlist 备份 atlist');
+
+    // ⑤ 正文经 htmlDecodeReg 解码，并加上发送者前缀
+    // 入参 from.id 是 'other'，与宿主 accountId 不同 → 走非自己分支，前缀是发送者名字
+    assert.equal(out.msg.con, '对方: a&b', '正文被解码并拼接**发送者名字**前缀（from.id 非本人）');
+
+    // ⑥ 原对象被**就地**归一化（返回值与入参同一引用）
+    assert.equal(out, input, 'formatSession 就地修改并返回同一对象');
+  });
+
   check('真实 sortSession 的 messageListShowType===1 分支（count 优先组）', () => {
     /**
      * 【这条为什么必须有 —— 由变异测试发现】

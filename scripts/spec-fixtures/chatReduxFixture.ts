@@ -32,6 +32,9 @@ const UTILS_REL = 'src/pages/chat/utils/index.ts';
 const REDUX_REL = 'src/pages/chat/redux';
 
 const realLodash = require('lodash');
+// `formatMsgDate`/`getCurrentTime` 用到 moment 的 diff/format/isSame/subtract，
+// 手写替身会变成"断言我自己的替身语义"，因此这里用**真实 moment**。
+const realMoment = require('moment');
 const crypto = require('node:crypto');
 
 function gitShow(relPath: string): string {
@@ -91,7 +94,17 @@ function installHost(overrides: { localStorage?: ReturnType<typeof makeLocalStor
  * `sortTop` 是 `sortSession` 依赖的**模块级函数**（utils.ts:39），
  * 不抽它 `sortSession` 会 `ReferenceError` —— 抽不到会明确失败，不静默降级。
  */
-const HELPER_NAMES = ['filterSessionList', 'sortSession', 'getToolbarConfig', 'sortTop'];
+const HELPER_NAMES = [
+  'filterSessionList',
+  'sortSession',
+  'getToolbarConfig',
+  'sortTop',
+  // 本批新增：格式化合同（`formatSession` 依赖 `formatMsgDate` / `getCurrentTime`）
+  'formatMessage',
+  'formatSession',
+  'formatMsgDate',
+  'getCurrentTime',
+];
 
 const utilsCache = new Map<string, Record<string, any>>();
 
@@ -129,7 +142,7 @@ function loadRealUtils(): Record<string, any> {
     plugins: ['@babel/plugin-transform-modules-commonjs'],
   };
   const code = transformSync(
-    `${declarations}\nmodule.exports = { filterSessionList, sortSession, getToolbarConfig };`,
+    `${declarations}\nmodule.exports = { filterSessionList, sortSession, getToolbarConfig, formatMessage, formatSession, formatMsgDate, getCurrentTime };`,
     { ...babelOpts, filename },
   ).code;
 
@@ -138,9 +151,30 @@ function loadRealUtils(): Record<string, any> {
   const stubs = {
     _: realLodash,
     // sortSession 只用到 _.orderBy / 数组操作；moment 等其余依赖在此不可达
-    moment: () => ({ format: () => '' }),
+    // `sortSession` 只用数组操作；`formatMsgDate`/`getCurrentTime` 需要真实 moment
+    moment: realMoment,
     Emotion: {},
-    htmlDecodeReg: /^$/,
+    /**
+     * `src/utils/common` 的 `htmlDecodeReg` **逐字忠实替身**（该模块依赖 JSEncrypt 等，
+     * 在本隔离环境无法 require）。实现与真实源码一一对应，不做简化：
+     * 只替换源码里列出的那 11 个实体，其余原样返回；非真值返回 `''`。
+     */
+    htmlDecodeReg: (str: unknown): string => {
+      const rules: Record<string, string> = {
+        '&#38;': '&',
+        '&amp;': '&',
+        '&#60;': '<',
+        '&#62;': '>',
+        '&#34;': '"',
+        '&#39;': "'",
+        '&#47;': '/',
+        '&lt;': '<',
+        '&gt;': '>',
+        '&quot;': '"',
+      };
+      const matchHTML = /&#(38|60|62|34|39|47);|&(amp|lt|gt|quot);/g;
+      return str ? String(str).replace(matchHTML, m => rules[m] || m) : '';
+    },
     pathCompletion: () => '',
     dateConvertToUserZone: (v: unknown) => v,
     Constant: {},
