@@ -170,10 +170,9 @@ function loadRealUtils(): Record<string, any> {
   ).code;
 
   const target: { exports: Record<string, any> } = { exports: {} };
-  // 这些是抽取出的真实 helper 用到的依赖；全部为**受控替身**
+  // 抽取出的真实 helper 用到的依赖：`_`/`moment` 是**真实库**，其余是**受控替身**（见各条注释）
   const stubs = {
     _: realLodash,
-    // sortSession 只用到 _.orderBy / 数组操作；moment 等其余依赖在此不可达
     // `sortSession` 只用数组操作；`formatMsgDate`/`getCurrentTime` 需要真实 moment
     /**
      * 【真实 moment，但把"当前时间"固定】`formatMsgDate` 的分支按"与 now 比较"选择，
