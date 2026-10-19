@@ -75,6 +75,19 @@ export interface ChatSession {
   projectId?: string | undefined;
   /** 头像（`ChatWindow` 读，7 处） */
   avatar?: string | undefined;
+  /* ── 以下为消费方**解构**读取的字段（`const { x } = session` 形式取证） ── */
+  /** 群公告/关于（`ChatPanelSessionInfo` 解构读） */
+  about?: unknown;
+  /** 群成员列表（解构读） */
+  groupUsers?: unknown[] | undefined;
+  /** 是否管理员（`Message` 解构读，用于撤回权限） */
+  isAdmin?: boolean | undefined;
+  /** 是否已认证（解构读） */
+  isCertificated?: boolean | undefined;
+  /** 是否禁止邀请（解构读） */
+  isForbidInvite?: boolean | undefined;
+  /** 是否置顶（`ChatPanelHeader` 解构读） */
+  isTop?: boolean | undefined;
   /**
    * 其余字段按会话类型扩展（群成员、部门、状态等）。
    * 保留 `unknown` 索引签名：这些是**真正随类型变化的扩展元数据**，
@@ -152,6 +165,15 @@ export interface ChatMessage {
   icon?: string | undefined;
   iconType?: string | undefined;
   name?: string | undefined;
+  /* ── 以下为消费方**解构**读取的字段（`const { x } = message` 形式取证） ── */
+  /** 群 id（解构读） */
+  gid?: string | undefined;
+  /** 是否推送类（解构读） */
+  isPush?: boolean | undefined;
+  /** 位置信息（`MapMessage` 解构读） */
+  location?: { [key: string]: unknown } | undefined;
+  /** 关联用户（解构读） */
+  user?: { [key: string]: unknown } | undefined;
   /** 其余按消息种类扩展的元数据 */
   [key: string]: unknown;
 }
