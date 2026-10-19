@@ -954,3 +954,26 @@ export interface ChatGroupMessageEvent extends ChatRawMessageWire {
   /** 引用信息，直接透传给 `updateSessionList` */
   refer?: ChatSessionPatch['refer'];
 }
+
+/**
+ * `newNotifyMessage` 的入参：**通知类** socket 事件。
+ *
+ * 【为何 msg 是字符串】该 handler 里 `msg` **从未按对象读取**（无 `.con`）：
+ * 只出现在 `\`${message.name}: ${message.msg}\`` 与透传 `msg: message.msg` 两处，
+ * 两处都要求字符串。这与 `ChatNewUserMessageEvent`（msg 是对象）**不同**。
+ */
+export interface ChatNotifyMessageEvent extends ChatRawMessageWire {
+  from: string;
+  /** 系统会话 id（本 handler 按 `dtype` 覆写成 'post'/'system'/'hr' 等字面量） */
+  id: string;
+  type: number;
+  /** 通知正文（字符串，非消息对象） */
+  msg: string;
+  /** 发起人名称（存在时前缀拼进正文） */
+  name?: string | undefined;
+  /** 判别用的事件子类型 */
+  dtype?: number | string | undefined;
+  count?: number | undefined;
+  isSilent?: boolean | undefined;
+  weak?: boolean | undefined;
+}

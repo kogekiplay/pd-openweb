@@ -5,6 +5,7 @@ import type {
   ChatMessageReceiptWire,
   ChatGroupMessageEvent,
   ChatNewUserMessageEvent,
+  ChatNotifyMessageEvent,
   ChatOutboundDraft,
   ChatPendingMessage,
   ChatRawMessageWire,
@@ -1430,7 +1431,7 @@ export const receiveMessage = (id: string, message: any) => (dispatch: AppDispat
  * 系统消息
  * @param {*} message
  */
-export const newNotifyMessage = (message: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const newNotifyMessage = (message: ChatNotifyMessageEvent) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSession, sessionList } = getState().chat;
   const showBadge = [0, 1].includes(message.type) ? message.type + 1 : 0;
 
