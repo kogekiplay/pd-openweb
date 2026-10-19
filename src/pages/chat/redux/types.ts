@@ -41,8 +41,13 @@ export interface ChatSession {
   groupMemberCount?: number | undefined;
   /** SessionItem 里 `showBadge ? … : 0` 当作可计数/可布尔使用 */
   showBadge?: number | boolean | undefined;
-  /** 排序键：`sortSession` 用 `_.orderBy(sessions, ['sendMsg'])` */
-  sendMsg?: number | string | undefined;
+  /**
+   * 会话列表里的草稿**文本**。
+   * 【真实生产方】`utils/index.ts:197` `item.sendMsg = localStorage.getItem(...)`，
+   * 而 `localStorage.getItem` 返回 `string | null` —— 故这里是 `string | null`，
+   * 与 `ChatMessage.sendMsg`（完整出站对象）是**两种不同业务**，不可混同。
+   */
+  sendMsg?: string | null;
   /** `atlist`：被 @ 的成员列表（`actions.ts:1618/1647/1648` 读取并 filter） */
   atlist?: string[] | undefined;
   /** `isSession`：是否会话（`actions.ts:683`） */
@@ -116,6 +121,38 @@ export interface ChatSession {
 }
 
 /**
+ * 出站草稿：`actions.addMessage` 里 `sendMsg: newMessage` 保留的**完整发送对象**。
+ *
+ * 【真实生产方】`ChatPanelSession` 构造的 `sendMsg` 字面量：
+ * `waitingid`（`utils.getUUID()`）、`msg`、`sysType`、`touser`/`togroup`（按会话类型二选一）、
+ * `atParam`、`referMessage`、`refer: { msgid }`，并整体 `...param` 展开（带 `type` 等）。
+ * `actions.ts:1090` 明确注释「保留发给后端的消息数据，便于重发」，因此这里是**对象**，
+ * 不是 `number | string`（那是另一处业务：会话列表的 localStorage 草稿文本）。
+ */
+export interface ChatOutboundDraft {
+  /** 预发送临时 id（`utils.getUUID()`），也是 `ChatMessage.waitingId` 的来源 */
+  waitingid?: string | undefined;
+  /** 文本内容 */
+  msg?: string | undefined;
+  /** 系统消息类型（`Constant.MSGTYPE_*`） */
+  sysType?: number | undefined;
+  /** 单聊接收方 */
+  touser?: string | undefined;
+  /** 群聊接收方 */
+  togroup?: string | undefined;
+  /** 消息类型（`Constant.SESSIONTYPE_*`） */
+  type?: number | undefined;
+  /** @ 参数（群聊） */
+  atParam?: unknown;
+  /** 引用消息（完整对象，便于重发） */
+  referMessage?: unknown;
+  /** 引用指向（`{ msgid }`） */
+  refer?: { msgid?: string | undefined; [key: string]: unknown } | undefined;
+  /** 其余按消息种类扩展的出站字段 */
+  [key: string]: unknown;
+}
+
+/**
  * 一条聊天消息。
  *
  * 【形状来源】`actions.ts:1045-1060` 的 `addMessage` 里**已写出**的消息字面量类型
@@ -135,8 +172,20 @@ export interface ChatMessage {
   type?: number | undefined;
   /** 消息时间（消费方直接展示/比较） */
   time?: number | string | undefined;
-  /** 消息正文容器：`{ con, files }` */
-  msg?: { con?: unknown; files?: unknown } | undefined;
+  /**
+   * 消息正文容器。
+   * 【真实消费/生产】`con`（正文）、`files`（附件）、`oldCon`（撤回时由
+   * `actions.ts:1274` `item.msg.oldCon = item.msg.con` 写入，用于展示原文）。
+   */
+  msg?: {
+    /** 正文（`htmlDecodeReg(con)` 返回 string；模板插值 `${msg.con}` 使用） */
+    con?: string | undefined;
+    /** 附件（`files.id/name/url/size`、`thumbs.web_1` 被读取） */
+    files?: unknown;
+    /** 撤回前的原文：`actions.ts:1287` `item.msg.oldCon = item.msg.con`，故同 `con` 类型 */
+    oldCon?: string | undefined;
+    [key: string]: unknown;
+  } | undefined;
   fromAccount?: {
     email?: string | undefined;
     id?: string | undefined;
@@ -144,7 +193,8 @@ export interface ChatMessage {
     name?: string | undefined;
   } | undefined;
   iswd?: boolean | undefined;
-  sendMsg?: number | string | undefined;
+  /** 完整出站草稿对象（`actions.ts:1090` `sendMsg: newMessage`，便于重发） */
+  sendMsg?: ChatOutboundDraft | undefined;
   isMineMessage?: boolean | undefined;
   isMine?: boolean | undefined;
   isGroup?: boolean | undefined;
@@ -178,8 +228,18 @@ export interface ChatMessage {
   gid?: string | undefined;
   /** 是否推送类（解构读） */
   isPush?: boolean | undefined;
-  /** 位置信息（`MapMessage` 解构读） */
-  location?: { [key: string]: unknown } | undefined;
+  /**
+   * 位置消息体。
+   * 【真实消费方】`MapMessage`：`center: [location.lng, location.lat]`、
+   * `location.title`（搜索/展示）、`location.address`（展示）。
+   */
+  location?: {
+    lng?: number | undefined;
+    lat?: number | undefined;
+    title?: string | undefined;
+    address?: string | undefined;
+    [key: string]: unknown;
+  } | undefined;
   /** 关联用户（解构读） */
   user?: { [key: string]: unknown } | undefined;
   /* ── 以下为 `utils/index.ts` 消息格式化时**读写**的字段 ── */
@@ -198,15 +258,42 @@ export interface ChatMessage {
   timestamp?: string | null;
   /** 未读分隔线标记（`utils` 读） */
   unreadLine?: boolean | undefined;
-  /** 引用消息体（`Message:205-206` 渲染 `MessageRefer` 时传入） */
-  refer?: unknown;
+  /**
+   * 引用消息体。
+   * 【真实消费方】
+   * - 撤回：`actions.ts:1284/1300` `item.refer.msgid == messageId`、`item.refer.iswd = true`；
+   * - 展示：`Message` 把 `message.refer` 传给 `MessageRefer`，后者读
+   *   `iswd`（已撤回则不跳转）、`msgid`（跳转目标）、`card`、`msgdetail.files`
+   *   （`{ id, name, url, size }` 预览附件）。
+   */
+  refer?: {
+    msgid?: string | undefined;
+    iswd?: boolean | undefined;
+    card?: unknown;
+    msgdetail?: {
+      files?: { id?: unknown; name?: string | undefined; url?: string | undefined; size?: unknown; [key: string]: unknown } | undefined;
+      [key: string]: unknown;
+    } | undefined;
+    [key: string]: unknown;
+  } | undefined;
   /** 其余按消息种类扩展的元数据 */
   [key: string]: unknown;
 }
 
-/** `messages` 切片：**以会话 id 为键**的字典（业务本身就是字典语义） */
+/**
+ * `messages` 切片：**以会话 id 为键**的字典（业务本身就是字典语义）。
+ *
+ * 【元素为何含 `undefined`】`ADD_PAGE_MESSAGE` 的原实现是
+ * `action.result.concat(state[action.id])`；当该键**缺失**时，
+ * `concat(undefined)` 会在末尾**追加一个真实的 `undefined` 元素**
+ * （实测 `[{id:'a'}].concat(undefined)` → 长度 2，第二个元素是 `undefined`）。
+ * 这是可达状态，故元素类型如实写成 `ChatMessage | undefined`，
+ * **不用非空断言把它从对外类型抹掉**（lead 明确要求）。
+ *
+ * 【键值为何含 `undefined`】字典取值本身可缺失（未加载过的会话）。
+ */
 export interface ChatMessagesState {
-  [sessionId: string]: ChatMessage[] | undefined;
+  [sessionId: string]: (ChatMessage | undefined)[] | undefined;
 }
 
 /** `referMessage` 切片：会话 id → 被引用的消息 */

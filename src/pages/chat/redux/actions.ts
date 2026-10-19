@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import type { AppDispatch, GetState } from 'src/redux/types';
+import type { ChatMessage } from './types';
 import { dateConvertToUserZone } from 'src/utils/project';
 import * as utils from '../utils';
 import * as ajax from '../utils/ajax';
@@ -1011,7 +1012,11 @@ export const setMessage = (id: string, result: any) => (dispatch: AppDispatch, g
  * @param {*} id
  * @param {*} result
  */
-export const resetMessage = (id: string, result: any) => {
+/**
+ * 重新填充聊天记录。
+ * 【有限声明依据】唯一调用点 `MessageView:223` 传的是 `utils.formatMessages(res)`（数组）。
+ */
+export const resetMessage = (id: string, result: ChatMessage[]) => {
   return {
     type: 'SET_MESSAGE',
     id,
@@ -1024,7 +1029,11 @@ export const resetMessage = (id: string, result: any) => {
  * @param {*} id
  * @param {*} result
  */
-export const addPageMessage = (id: string, result: any) => {
+/**
+ * 向上加载一页（前插）。
+ * 【有限声明依据】`MessageView:261/450` 都传 `utils.formatMessages(res)`（数组）。
+ */
+export const addPageMessage = (id: string, result: ChatMessage[]) => {
   return {
     type: 'ADD_PAGE_MESSAGE',
     id,
@@ -1037,7 +1046,11 @@ export const addPageMessage = (id: string, result: any) => {
  * @param {*} id
  * @param {*} result
  */
-export const pushPageMessage = (id: string, result: any) => {
+/**
+ * 向下补齐一页（后接）。
+ * 【有限声明依据】`MessageView:286` 传 `formatMessages(res)`、`:320` 传 `formatMessages(bottomUnread)`（均为数组）。
+ */
+export const pushPageMessage = (id: string, result: ChatMessage[]) => {
   return {
     type: 'PUSH_PAGE_MESSAGE',
     id,

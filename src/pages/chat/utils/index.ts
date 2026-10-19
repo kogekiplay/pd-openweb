@@ -5,6 +5,7 @@ import { INBOXTYPES } from 'src/pages/chat/components/Inbox/constants';
 import { htmlDecodeReg, pathCompletion } from 'src/utils/common';
 import { dateConvertToUserZone } from 'src/utils/project';
 import Constant from './constant';
+import type { ChatSession } from '../redux/types';
 
 export const formatMsgDate = (dateStr, isHourMinute = true) => {
   const dateTime = moment(dateStr);
@@ -61,7 +62,18 @@ const sortTop = (list, value) => {
  * @param  {Array} sessions 列表
  * @return {Array}          排序之后的结果
  */
-export const sortSession = (sessions, value?, messageListShowType = md.global.Account.messageListShowType) => {
+/**
+ * 会话排序（置顶/计数/其余三段）。
+ * 【有限声明依据】消费方与生产方都只用会话对象；返回的是 `sessions` 里的原元素
+ * （或 `sortTop` 重排后的原元素），因此元素类型是 `ChatSession`。
+ * 排序键 `sendMsg` 在 `ChatSession` 上已如实声明为 `string | null`
+ * （`formatSession` 从 localStorage 取的草稿文本）。
+ */
+export const sortSession = (
+  sessions: ChatSession[],
+  value?: string,
+  messageListShowType: number | undefined = md.global.Account.messageListShowType,
+): ChatSession[] => {
   sessions = _.orderBy(sessions, ['sendMsg']);
   const other = [];
   const top = [];
@@ -201,14 +213,19 @@ const formatSession = item => {
 };
 
 /**
- * 过滤重复的会话消息
- * @param {*} list
+ * 会话列表按 `value` 去重（`_.groupBy('value')` 取每组第一个）。
+ * 【有限声明依据】四条 reducer 写入路径都传会话数组；返回值直接存入 `sessionList`，
+ * 故元素类型是 `ChatSession`。
+ * 【为什么这里可以有非空断言】`value[0]` 在 `noUncheckedIndexedAccess` 下被推断为
+ * `ChatSession | undefined`，但 `_.groupBy` 的**分组永不为空**（每个元素必然落入某一组），
+ * 因此该 `undefined` 是**不可达**的 —— 与「可达 undefined 不得用 `!` 抹掉」不同。
+ * 不改成 `.filter(Boolean)`：那会为类型绿灯改变实现（lead 明确不允许）。
  */
-export const filterSessionList = list => {
+export const filterSessionList = (list: ChatSession[]): ChatSession[] => {
   list = _.chain(list)
     .groupBy('value')
     .map(value => {
-      return value[0];
+      return value[0]!;
     })
     .value();
   return list;
@@ -218,12 +235,25 @@ export const filterSessionList = list => {
  * 处理聊天消息的数据
  * @param {*} messages
  */
+/**
+ * 批量格式化消息（原始接口返回 → 可渲染消息）。
+ *
+ * 【为什么保持未标注】它的入参是**接口原始返回**，在 3 个范围外调用点
+ * （`MessageView:71/261/340`）里，`res` 的类型是 `unknown`（来自 `getMessage(...)` 的
+ * Promise 结果，经 `_.isArray` 判断后仍未收窄）。一旦把入参标注为 `ChatMessage[]`，
+ * 这 3 处会新增 `TS2345` —— 属**范围外**文件，按 lead 规则不在本批编辑、
+ * 由 lead 处理实现侧。因此这里保持原有未标注形态，`any` 残留在下方"未覆盖"中如实列出。
+ */
 export const formatMessages = messages => {
   return messages.map((item, index: number) => {
     return formatMessage(item, messages[index - 1]);
   });
 };
 
+/**
+ * 单条消息格式化（原地补充 `timestamp`/`isMine`/`isDuplicated` 等派生字段后返回同一对象）。
+ * 同 `formatMessages`：入参来自接口原始消息，标注会在范围外调用点新增诊断，故保持未标注。
+ */
 export const formatMessage = (message, prevMessage) => {
   message.timestamp = formatMsgDate(dateConvertToUserZone(message.time));
   message.isMine = message.from === md.global.Account.accountId;

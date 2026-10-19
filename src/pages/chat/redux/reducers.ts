@@ -54,11 +54,15 @@ export type ChatAction =
   | { type: 'REMOVE_ALL_INBOX_SESSION' }
   | { type: 'UPDATE_INBOX_SESSION'; id: string; data: Partial<ChatSession> }
   /* ── 消息记录 ── */
-  // 载荷形状取自真实生产方：
-  // - `resetMessage(id, result)` → `utils.formatMessages(res)`（**数组**）
-  // - `addMessage` 里 `SET_MESSAGE` 的 result 是**单条** `utils.formatMessage(...)`
-  // - `addPageMessage/pushPageMessage(id, result)` → **数组**
-  | { type: 'SET_MESSAGE'; id: string; result: ChatMessage | ChatMessage[] }
+  // 【载荷形状逐点核对真实 dispatch】全部是**数组**，没有单条形态：
+  // - `resetMessage(id, result)`           ← `MessageView:223` `utils.formatMessages(res)`
+  // - `setMessage(id, result)`             ← `MessageView:71`  `utils.formatMessages(res)`
+  // - `addMessage` 初始 SET                ← `actions.ts:1139` `[utils.formatMessage(...)]`（**已包数组**）
+  // - `updateFileMessage` / `updateMessage` ← `newCurrentMessage`（`map` 结果，数组）
+  // - `updateWithdrawMessage` SET          ← `currentMessage`（数组）
+  // 旧注释说"单条"是错的：真实代码在 SET 前已把它包成数组。
+  // 因此动作收紧为 `ChatMessage[]`，与 state 的数组形状一致。
+  | { type: 'SET_MESSAGE'; id: string; result: ChatMessage[] }
   | { type: 'ADD_MESSAGE'; id: string; result: ChatMessage }
   | { type: 'ADD_PAGE_MESSAGE'; id: string; result: ChatMessage[] }
   | { type: 'PUSH_PAGE_MESSAGE'; id: string; result: ChatMessage[] }
@@ -76,7 +80,11 @@ export type ChatAction =
   | { type: 'SET_BOTTOM_UNREAD_MESSAGE'; id: string; message: ChatMessage }
   | { type: 'ADD_BOTTOM_UNREAD_MESSAGE'; id: string; message: ChatMessage }
   | { type: 'REMOVE_BOTTOM_UNREAD_MESSAGE'; id: string }
-  | { type: 'UPDATE_BOTTOM_UNREAD_MESSAGE'; id: string; message: ChatMessage }
+  // 【载荷是数组，不是单条】`updateWithdrawMessage` 的
+  // `bottomUnread = (bottomUnreadMessage)[id] || []` 直接作为 `message` 派发（`actions.ts:1312`），
+  // reducer 也是把整个 `action.message` 存进该键 —— 故这里是 `ChatMessage[]`。
+  // （与 SET/ADD 不同：那两者的 `message` 是单条，reducer 会包成 `[message]` / 追加。）
+  | { type: 'UPDATE_BOTTOM_UNREAD_MESSAGE'; id: string; message: ChatMessage[] }
   /* ── 开关 / socket ── */
   | { type: 'UPDATE_IS_WINDOW'; result: boolean }
   | { type: 'UPDATE_SHOW_ADD_RESSBOOK'; result: boolean }
@@ -196,14 +204,23 @@ const messages = (state: ChatMessagesState = {}, action: ChatAction): ChatMessag
       return Object.assign({}, state, {
         [action.id]: (state[action.id] || []).concat([action.result]),
       });
-    case 'ADD_PAGE_MESSAGE':
-      // 【恢复原 concat 执行】原实现是 `action.result.concat(state[action.id])`。
-      // 重写成三元/展开并**不普遍等价**（稀疏槽、数组额外属性、Symbol.isConcatSpreadable、
-      // 覆写 concat/迭代器、getter/原型都会不同），故原表达式逐字保留。
-      // 缺键时 `concat(undefined)` 会在末尾追加一个 undefined 元素 —— 既有边界行为，不兜底。
-      // 【窄化依据】该字典的**真实契约是数组**（SET 写 `[msg]`、ADD 在数组上 concat、
-      // REMOVE 删除键），故用非空断言擦除"可能缺键"，保持原 concat 的 receiver 与调用。
-      return Object.assign({}, state, { [action.id]: action.result.concat(state[action.id]!) });
+    case 'ADD_PAGE_MESSAGE': {
+      // 【保留原 concat 调用】原实现 `action.result.concat(state[action.id])`；
+      // 重写成三元/展开**不普遍等价**（稀疏槽、数组额外属性、Symbol.isConcatSpreadable、
+      // 覆写 concat/迭代器、getter/原型都会不同），故调用形状不变。
+      //
+      // 【为什么用局部标注而不是 `!`】缺键时 `concat(undefined)` 会在末尾追加一个**真实的
+      // undefined 元素**（实测 `[{id:'a'}].concat(undefined)` → 长度 2）。这是可达状态，
+      // 已如实写进 `ChatMessagesState` 的元素类型 `(ChatMessage | undefined)[]`，
+      // **不用非空断言把它从对外类型抹掉**。
+      // 这里把 receiver 标注成 `(ChatMessage | undefined)[]`：`concat` 的签名是
+      // `(T | ConcatArray<T>)[]`，当 `T` 含 `undefined` 时才能同时接受「数组」与「undefined」
+      // 两种实参 —— 这正是原代码运行时会遇到的两种输入。
+      // 该标注**零运行时**（只是类型），运行时仍是同一个数组引用。
+      const pageResult: (ChatMessage | undefined)[] = action.result;
+
+      return Object.assign({}, state, { [action.id]: pageResult.concat(state[action.id]) });
+    }
     case 'PUSH_PAGE_MESSAGE':
       return Object.assign({}, state, { [action.id]: (state[action.id] || []).concat(action.result) });
     case 'REMOVE_MESSAGE':
