@@ -117,14 +117,24 @@ export const sortSession = (
  * 处理会话列表的数据
  * @param {*} sessionList
  */
-export const formatSessionList = sessionList => {
+/**
+ * 批量格式化会话（接口原始返回 → 会话对象）。
+ * 【有限声明依据】调用点为 `actions.setSessionList`/`addSessionList`，结果经 `sortSession`
+ * 存入 `sessionList`，故是 `ChatSession[]`。入参保留 `Array.isArray` 防御。
+ */
+export const formatSessionList = (sessionList: ChatSession[]): ChatSession[] => {
   sessionList = (Array.isArray(sessionList) ? sessionList : []).filter(item => item);
   return sessionList.map(item => {
     return formatSession(item);
   });
 };
 
-const formatSession = item => {
+/**
+ * 单条会话格式化（原地补 type/isGroup/sendMsg 等派生字段后返回同一对象）。
+ * `sendMsg` 在此赋 `localStorage.getItem(...)`（`string | null`），是
+ * `ChatSession.sendMsg` 类型的直接来源。
+ */
+const formatSession = (item: ChatSession): ChatSession => {
   item.type = Number(item.type);
   if (item.type === Constant.SESSIONTYPE_USER || item.type === Constant.SESSIONTYPE_GROUP) {
     item.isGroup = item.type === Constant.SESSIONTYPE_GROUP;
@@ -141,14 +151,14 @@ const formatSession = item => {
       let con = '';
 
       if (isFileTransfer) {
-        con = item.msg.con;
+        con = item.msg!.con;
       } else if (iswd) {
-        con = wdAdminid ? `${_l('管理员撤回了一条你的消息')}` : `${_l('你')}${item.msg.con}`;
+        con = wdAdminid ? `${_l('管理员撤回了一条你的消息')}` : `${_l('你')}${item.msg!.con}`;
       } else {
-        con = `${_l('我')}: ${item.msg.con}`;
+        con = `${_l('我')}: ${item.msg!.con}`;
       }
 
-      item.msg.con = con;
+      item.msg!.con = con;
     } else {
       let con = '';
 
@@ -156,13 +166,13 @@ const formatSession = item => {
         if (wdAdminid) {
           con = isAdmin ? `${_l('你撤回了成员“%0”的一条消息', item.from.name)}` : `${_l('管理员撤回了一条成员消息')}`;
         } else {
-          con = `"${item.from.name}"${item.msg.con}`;
+          con = `"${item.from.name}"${item.msg!.con}`;
         }
       } else {
-        con = `${item.from.name}: ${item.msg.con}`;
+        con = `${item.from.name}: ${item.msg!.con}`;
       }
 
-      item.msg.con = con;
+      item.msg!.con = con;
     }
   } else {
     switch (item.type) {
@@ -207,7 +217,7 @@ const formatSession = item => {
   item.time = formatMsgDate(dateConvertToUserZone(item.time), false);
   item.messageAtlist = item.atlist;
   item.sendMsg = localStorage.getItem(`textareaValue${item.value}`);
-  item.msg.con = htmlDecodeReg(item.msg.con);
+  item.msg!.con = htmlDecodeReg(item.msg!.con);
 
   return item;
 };

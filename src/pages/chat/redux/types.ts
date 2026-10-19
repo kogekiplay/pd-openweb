@@ -61,7 +61,17 @@ export interface ChatSession {
   /** 会话类型（数值枚举，`SessionList`/`Apps` 读，18 处） */
   type?: number | undefined;
   /** 最近一条消息（`ChatPanelSession` 模板串、`Message` 读 `.msg.con`，13 处） */
-  msg?: { con?: unknown; files?: unknown; [key: string]: unknown } | undefined;
+  /**
+   * 最近一条消息的预览。
+   * 【真实生产方】`utils/index.ts` `formatSession` 里
+   * `item.msg.con = con`（**字符串拼接结果**）、随后 `htmlDecodeReg(item.msg.con)`。
+   */
+  msg?: {
+    /** 预览正文：`formatSession` 末尾 `item.msg.con = htmlDecodeReg(item.msg.con)`，产出恒为 string */
+    con: string;
+    files?: unknown;
+    [key: string]: unknown;
+  } | undefined;
   /** 图标类型（`ChatPanel` 读；`utils` 里赋 `'system'` 等字符串，11 处） */
   iconType?: string | undefined;
   /** 创建者账号 id（`createAccount.accountId` 比较，11 处） */
@@ -102,6 +112,24 @@ export interface ChatSession {
   onStatusOption?: unknown;
   /** 弱关联计数（部门/外部联系人扩展） */
   weak_count?: number | undefined;
+  /* ── 以下为 `utils.formatSession` **读写**的字段（逐行取证） ── */
+  /**
+   * 发送者信息。
+   * 【为何 id/name 是必填】`utils.formatSession` 在 `if (item.from && !item.sysType)` 分支内
+   * **无条件**读取 `item.from.id`（与本人 accountId 比较）与 `item.from.name`（撤回/预览文案，
+   * 直接用于模板拼接与 `_l(..., name)`）。即"只要 from 存在，它就是完整的发送者对象"。
+   */
+  from?: { id: string; name: string; [key: string]: unknown } | undefined;
+  /** 系统消息类型：`!item.sysType` 判断是否系统消息 */
+  sysType?: number | undefined;
+  /** 撤回管理员 id：`item.wdAdminid === accountId` 判断是否管理员撤回 */
+  wdAdminid?: string | undefined;
+  /** 是否已撤回：决定文案分支 */
+  iswd?: boolean | undefined;
+  /** 原始时间（`item._time = item.time` 备份，`time` 随后被格式化成文案） */
+  _time?: unknown;
+  /** @ 成员列表备份（`item.messageAtlist = item.atlist`） */
+  messageAtlist?: unknown;
   /** `count`：未读计数（`actions.ts:575` 读 `currentSession.count`；`SessionList` 里当数字用） */
   count?: number | undefined;
   /** `isRender`：渲染标记（`actions.ts:970` 写 `currentSession.isRender`） */

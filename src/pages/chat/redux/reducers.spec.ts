@@ -586,6 +586,33 @@ function main(): void {
     assert.equal(messageId, '1', 'getter 产出的首消息 id 必须与基线一致（不是 \'0\'）');
   });
 
+  check('REMOVE_MESSAGES 的 undefined id 会删除**字面键 "undefined"**（不是无操作）', () => {
+    /**
+     * 【lead 更正 + 实测】`delete state[action.id]` 在 `action.id === undefined` 时，
+     * JS 把 undefined 转成字符串键 `"undefined"`；若该字面键存在，**真的会被删除**，
+     * 且**就地变异原 state**（既有副作用）。我曾在注释里写成"等于无操作"，那是错的。
+     */
+    const { root, init } = boot('current');
+    // 构造一个带字面键 'undefined' 的 messages 字典
+    const withLiteralKey = {
+      ...init(),
+      messages: { undefined: [MSG_1], k1: [MSG_2] },
+    };
+
+    const next = root(withLiteralKey, { type: 'REMOVE_MESSAGES', id: undefined });
+
+    assert.deepEqual(
+      Object.keys(next.messages).sort(),
+      ['k1'],
+      '字面键 "undefined" 必须被删除，k1 保留',
+    );
+    assert.deepEqual(
+      Object.keys(withLiteralKey.messages).sort(),
+      ['k1'],
+      '原 state 被就地变异（现有副作用，保留）',
+    );
+  });
+
   mainRtk();
 }
 

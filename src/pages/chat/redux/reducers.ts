@@ -234,9 +234,11 @@ const messages = (state: ChatMessagesState = {}, action: ChatAction): ChatMessag
     case 'REMOVE_MESSAGES':
       // 【现有副作用，保留】先 delete 原 state 的键、再浅复制 —— 不是纯函数。
       // 依 lead 要求：不默默克隆、不修成纯函数；老负例（RTK 开发中间件会报变异）如实保留。
-      // 【擦除标记】`action.id` 按真实生产方可为 undefined（见 ChatAction 注释）；
-      // 原实现在该情形下把 undefined 转成字符串键 `"undefined"` 去 delete（等于无操作）。
-      // 非空断言只擦除类型上的可空，产物与基线逐字一致（tsc/babel 两条管线均已验证）。
+      // 【擦除标记】`action.id` 按真实生产方可为 undefined（见 ChatAction 注释）。
+      // 【行为事实（lead 更正，我已实测）】`delete state[undefined]` **不是无操作**：
+      // JS 会把 undefined 转成字符串键 `"undefined"`，若该字面键存在则**真的删除它**，
+      // 并且**就地变异原 state**（现有副作用，保留）。
+      // 非空断言只擦除类型上的可空，产物与基线逐字一致（babel 字节证明 + tsc 擦除检查）。
       delete state[action.id!];
       return Object.assign({}, state);
     case 'UPDATE_MESSAGE':
