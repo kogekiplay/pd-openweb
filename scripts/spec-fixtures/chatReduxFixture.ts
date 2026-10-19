@@ -177,7 +177,37 @@ function loadRealUtils(): Record<string, any> {
     },
     pathCompletion: () => '',
     dateConvertToUserZone: (v: unknown) => v,
-    Constant: {},
+    /**
+     * `src/pages/chat/utils/constant.ts` 的**关键常量真实值**（不是空对象）。
+     * 空 `{}` 会让 `Constant.MSGTYPE_TEXT` 恒为 `undefined` →
+     * `formatMessage` 里 `message.type === Constant.MSGTYPE_TEXT` 恒 false，
+     * "连续文本消息合并"分支**永远不进**（替身失真，会掩盖真实行为）。
+     * 取值与真实 `constant.ts` 一致。
+     */
+    Constant: {
+      SESSIONTYPE_USER: 1,
+      SESSIONTYPE_GROUP: 2,
+      SESSIONTYPE_SYSTEM: 3,
+      SESSIONTYPE_POST: 4,
+      SESSIONTYPE_CALENDAR: 5,
+      SESSIONTYPE_TASK: 6,
+      SESSIONTYPE_KNOWLEDGE: 7,
+      SESSIONTYPE_HR: 8,
+      SESSIONTYPE_WORKSHEET: 9,
+      SESSIONTYPE_WORKFLOW: 10,
+      INPUT_MODE_ENTER: 1,
+      INPUT_MODE_CTRLENTER: 2,
+      MSGTYPE_TEXT: 1,
+      MSGTYPE_PIC: 2,
+      MSGTYPE_EMOTION: 2,
+      MSGTYPE_AUDIO: 3,
+      MSGTYPE_FILE: 4,
+      MSGTYPE_CARD: 5,
+      MSGTYPE_MAP: 6,
+      MSGTYPE_APP_VIDEO: 7,
+      MSGTYPE_SYSTEM_SUCCESS: 1,
+      MSGTYPE_SYSTEM_ERROR: 2,
+    },
     INBOXTYPES: {},
     md: (globalThis as any)['md'],
   };

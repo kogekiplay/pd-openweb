@@ -497,6 +497,74 @@ function main(): void {
     assert.deepEqual(afterUpdate.bottomUnreadMessage.k1, [MSG_2], 'UPDATE 后该键是**数组**');
   });
 
+  check('真实 formatMessage：isMine / 连续消息合并 / isDuplicated 三分支', () => {
+    /**
+     * 【这条补的是上轮如实列出的缺口】
+     * 上轮原文：「`formatMessage` 已纳入抽取但**尚未写独立用例**（它被 `formatSession`
+     * 间接调用，覆盖面弱于 `formatSession`）」。
+     *
+     * 【同时修掉一个替身失真】原 `Constant: {}` 让 `Constant.MSGTYPE_TEXT` 恒为 `undefined`，
+     * 于是 `message.type === Constant.MSGTYPE_TEXT` **恒 false** ——
+     * "连续文本消息合并"分支**永远不进**。已把替身换成真实常量值（`MSGTYPE_TEXT: 1`）。
+     */
+    F.installHost({ localStorage: F.makeLocalStorage({}) });
+    const utils = F.loadRealUtils();
+    const accountId = (globalThis as { md?: { global?: { Account?: { accountId?: string } } } }).md
+      ?.global?.Account?.accountId;
+
+    // ① 普通消息：timestamp 是文案字符串；isMine 由 from === accountId 决定
+    const m1 = { id: 'm1', from: 'other', time: 1700000000000, type: 1 };
+    const out1 = utils.formatMessage(m1);
+    assert.equal(typeof out1.timestamp, 'string', 'timestamp 被 formatMsgDate 写成文案');
+    assert.equal(out1.isMine, false, 'from 非本人 → isMine=false');
+
+    const mine = { id: 'm9', from: accountId, time: 1700000000000, type: 1 };
+    assert.equal(utils.formatMessage(mine).isMine, true, 'from 是本人 → isMine=true');
+
+    // ② 连续文本消息（同一发送者、间隔 < 3 分钟、type=1）→ timestamp 置 null、isDuplicated=true
+    const m2 = { id: 'm2', from: 'other', time: 1700000000000 + 1000, type: 1 };
+    const out2 = utils.formatMessage(m2, out1);
+    assert.equal(out2.timestamp, null, '连续文本消息的 timestamp 被置 null（合并）');
+    assert.equal(out2.isDuplicated, true, 'type=MSGTYPE_TEXT → isDuplicated=true');
+
+    // ③ 连续但**非文本**（type=2）→ timestamp 保留、isDuplicated=false
+    // 【读实现后修正】连续分支里 `message.timestamp = null` 是**无条件**执行的
+    // （在 isText 判断之前），所以非文本连续消息 timestamp **同样是 null**；
+    // 只有 isDuplicated 按 isText 区分。
+    const m3 = { id: 'm3', from: 'other', time: 1700000000000 + 1000, type: 2 };
+    const out3 = utils.formatMessage(m3, out1);
+    assert.equal(out3.timestamp, null, '连续消息（无论类型）timestamp 都被置 null');
+    assert.equal(out3.isDuplicated, false, '非文本 → isDuplicated=false');
+
+    // ③a 【阈值下界】间隔 2 分钟 → **仍然合并**（证明阈值 > 2 分钟，排除"30 秒"这类小阈值）
+    //     【这条同样由变异测试发现】只测 1 秒和 3 分钟+1 秒时，把阈值改成 30 秒**抓不到**。
+    const twoMin = { id: 'm6', from: 'other', time: 1700000000000 + 2 * 60 * 1000, type: 1 };
+    assert.equal(utils.formatMessage(twoMin, out1).timestamp, null, '间隔 2 分钟仍在阈值内 → 合并');
+
+    // ③b 【边界】间隔超过 3 分钟 → **不合并**（timestamp 保留）
+    //     【这条由变异测试发现】把阈值 `60 * 3000`（3 分钟）改成 `60 * 300000`（300 分钟）
+    //     原本**抓不到** —— 因为原用例间隔只有 1 秒，远小于任何阈值。
+    const farApart = { id: 'm5', from: 'other', time: 1700000000000 + 3 * 60 * 1000 + 1000, type: 1 };
+    const out5 = utils.formatMessage(farApart, out1);
+    assert.equal(typeof out5.timestamp, 'string', '间隔 > 3 分钟 → **不合并**，timestamp 保留文案');
+    assert.equal(out5.isDuplicated, undefined, '未进入连续分支 → isDuplicated 未被赋值');
+
+    // ③c 【发送者不同】间隔虽小但 from 不同 → **不合并**
+    //     【这条由变异测试发现】把 `message.from === prevMessage.from` 改成 `true`（忽略发送者）
+    //     原本抓不到 —— 因为此前所有用例的 from 都是同一个 'other'。
+    const otherSender = { id: 'm7', from: 'another', time: 1700000000000 + 1000, type: 1 };
+    assert.equal(
+      typeof utils.formatMessage(otherSender, out1).timestamp,
+      'string',
+      '发送者不同 → 不进入连续分支，timestamp 保留',
+    );
+
+    // ④ 上一条是撤回/系统消息 → isDuplicated=false（另一分支）
+    const prevWithdrawn = { id: 'p1', from: 'other', time: 1700000000000, type: 1, iswd: true };
+    const m4 = { id: 'm4', from: 'other', time: 1700000000000 + 1000, type: 1 };
+    assert.equal(utils.formatMessage(m4, prevWithdrawn).isDuplicated, false, '上一条已撤回 → isDuplicated=false');
+  });
+
   check('真实 formatSession：时间备份/类型归一/草稿/at 备份/正文解码', () => {
     /**
      * 【这条补的是上轮如实列出的缺口】
