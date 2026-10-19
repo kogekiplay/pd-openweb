@@ -1032,6 +1032,21 @@ function main(): void {
 
     const bottom = root(init(), { type: 'SET_BOTTOM_UNREAD_MESSAGE', id: 'k1', message: MSG_1 });
     assert.deepEqual(bottom.bottomUnreadMessage.k1, [MSG_1], 'SET_BOTTOM_UNREAD 把单条**包成数组**');
+
+    // 【引用语义 —— 由变异测试发现（与 messages 的 SET_MESSAGE 同类）】
+    // 把 `[action.id]: action.message` 改成 `action.message.slice()` / `{...action.message}`
+    // 时，上面的**值**断言全绿 —— 因为副本与本体深度相等。
+    // 但真实语义是**原样存引用**，下游就地改元素时 state 才能与调用方保持一致。
+    const referPayload = { msgid: 'm9', iswd: false };
+    const referRef = root(init(), { type: 'SET_REFER_MESSAGE', id: 'rref', message: referPayload });
+    assert.ok(referRef.referMessage.rref === referPayload, 'SET_REFER_MESSAGE 存入的是**同一对象引用**（不是副本）');
+
+    const buPayload = [MSG_1, MSG_2];
+    const buRef = root(init(), { type: 'UPDATE_BOTTOM_UNREAD_MESSAGE', id: 'bref', message: buPayload });
+    assert.ok(
+      (buRef.bottomUnreadMessage.bref as unknown) === buPayload,
+      'UPDATE_BOTTOM_UNREAD_MESSAGE 存入的是**同一数组引用**（不是副本）',
+    );
   });
 
   check('SET_CURRENT_SESSION 返回的是**载荷副本**，不与 action.result 同引用', () => {
