@@ -1,0 +1,109 @@
+[
+  {
+    "fieldKey": "serviceKey",
+    "type": "title",
+    "title": "快麦云打印",
+    "desc": "",
+    "required": false,
+    "hint": "",
+    "value": "0"
+  },
+  {
+    "fieldKey": "name",
+    "type": "text",
+    "title": "模板名称",
+    "desc": "",
+    "required": true,
+    "hint": "",
+    "value": "",
+    "placeholder": "请输入模板名称"
+  },
+  {
+    "fieldKey": "cloudPrintType",
+    "type": "radio",
+    "title": "模板类型",
+    "desc": "",
+    "required": true,
+    "hint": "",
+    "value": "2",
+    "options": [
+      {
+        "text": "标签",
+        "value": "2"
+      },
+      {
+        "text": "小票",
+        "value": "1"
+      }
+    ]
+  },
+  {
+    "fieldKey": "linkButton",
+    "type": "button",
+    "title": "快麦云配置",
+    "desc": "在快麦云开放平台中创建打印模板并配置字段，填写打印设备序列号和模板ID，用于建立打印通道。",
+    "required": false,
+    "hint": "",
+    "value": "",
+    "name": "查看教程",
+    "link": "https://help.mingdao.com/worksheet/kuaimai-printing"
+  },
+  {
+    "fieldKey": "sn",
+    "type": "text",
+    "title": "打印设备序列号",
+    "desc": "",
+    "required": true,
+    "hint": "",
+    "value": "",
+    "placeholder": "请输入打印设备序列号"
+  },
+  {
+    "fieldKey": "templateId",
+    "type": "text",
+    "title": "打印模板ID",
+    "desc": "",
+    "required": true,
+    "hint": "",
+    "value": "",
+    "placeholder": "请输入打印模板ID"
+  },
+  {
+    "fieldKey": "functionFields",
+    "type": "function",
+    "title": "动态字段绑定",
+    "desc": "解析快麦云打印接口返回的渲染数据，自动生成需要绑定的模板字段。",
+    "required": false,
+    "hint": "",
+    "name": "字段解析"
+  },
+  {
+    "fieldKey": "renderData",
+    "type": "mapping",
+    "title": "动态字段绑定",
+    "desc": "",
+    "required": false,
+    "hint": "",
+    "value": [],
+    "fromField": {
+      "title": "快麦字段",
+      "fields": [
+        {
+          "text": "",
+          "tableName": "",
+          "desc": ""
+        }
+      ]
+    },
+    "systemField": {
+      "title": "映射字段",
+      "fields": [
+        {
+          "controlId": "",
+          "tableName": "",
+          "controlName": ""
+        }
+      ]
+    }
+  }
+]

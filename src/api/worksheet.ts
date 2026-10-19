@@ -1,3 +1,15 @@
+import type { CloudPrintField } from 'src/components/DynamicRender';
+
+/** CloudPrint's actual save payload; IDs remain optional because the controller forwards absence unchanged. */
+export interface CloudPrintSaveArgs {
+  worksheetId?: string | undefined;
+  projectId?: string | undefined;
+  id?: string | undefined;
+  name: string;
+  extraParams: CloudPrintField[];
+  serviceType?: number | undefined;
+}
+
 export default {
   /**
    * 获取视图权限
@@ -2266,7 +2278,7 @@ export default {
    * @returns {Promise<Boolean, ErrorModel>}
    **/
 
-  createCloudPrint: function (args: ApiArgs, options: ApiOptions = {}) {
+  createCloudPrint: function (args: CloudPrintSaveArgs, options: ApiOptions = {}): ApiResultOf<unknown> {
     return mdyAPI('Worksheet', 'CreateCloudPrint', args, options);
   },
   /**
@@ -2277,7 +2289,7 @@ export default {
    * @returns {Promise<Boolean, ErrorModel>}
    **/
 
-  loadCloudPrintDatas: function (args: ApiArgs, options: ApiOptions = {}) {
+  loadCloudPrintDatas: function (args: { serviceType: number }, options: ApiOptions = {}): ApiResultOf<CloudPrintField[]> {
     return mdyAPI('Worksheet', 'LoadCloudPrintDatas', args, options);
   },
   /**
@@ -2293,7 +2305,7 @@ export default {
    * @returns {Promise<Boolean, ErrorModel>}
    **/
 
-  updateCloudPrint: function (args: ApiArgs, options: ApiOptions = {}) {
+  updateCloudPrint: function (args: CloudPrintSaveArgs, options: ApiOptions = {}): ApiResultOf<unknown> {
     return mdyAPI('Worksheet', 'UpdateCloudPrint', args, options);
   },
   /**

@@ -3,48 +3,73 @@ import _ from 'lodash';
 import { Dialog, Icon, LoadDiv, Radio, ScrollView } from 'ming-ui';
 import worksheetAjax from 'src/api/worksheet';
 import DynamicRender from 'src/components/DynamicRender';
+import type { CloudFieldKey, CloudPrintField, CloudSourceField, FindCloudField } from 'src/components/DynamicRender';
+import type { WorksheetInfo } from 'src/pages/worksheet/types';
+import type { FormControl } from 'src/utils/controlTypes';
+import type { PrintItemData } from '../../containers/Print/PrintSortableItem';
 import DrawerFooter from '../DrawerFooter';
 import './index.less';
-import type { FormControl } from 'src/utils/controlTypes';
+
+export interface CloudPrintProps {
+  worksheetInfo: WorksheetInfo;
+  templateData?: Pick<PrintItemData, 'id' | 'cloudExtraParams'> | undefined;
+  type: '' | 'new' | 'edit' | 'preview';
+  onClose: () => void;
+  getPrintData: () => unknown;
+}
+export interface CloudAnalysisSheet {
+  sheetName: string;
+  sheetIndex: number;
+  mappedFields: Array<CloudSourceField & { text: string | number; sheetName: string; sheetIndex: number }>;
+}
+// Lodash collections deliberately accept scalars/null as well as arrays/objects. Their values stay opaque.
+type AnalysisMap = (
+  collection: unknown,
+  iteratee: (value: unknown, key: string | number) => CloudAnalysisSheet['mappedFields'][number],
+) => CloudAnalysisSheet['mappedFields'];
+type AnalysisFlatMap = (
+  collection: unknown,
+  iteratee: (value: unknown) => CloudAnalysisSheet['mappedFields'],
+) => CloudAnalysisSheet['mappedFields'];
 
 const supportedControlTypes = [2, 3, 4, 5, 6, 7, 8, 15, 16, 17, 18, 25, 26, 27, 32, 33, 46, 48, 53];
 
-const getAnalysisResult = (renderData: string | undefined, templateType) => {
-  let data;
+const getAnalysisResult = (renderData: string | undefined, templateType: unknown): CloudAnalysisSheet[] | false => {
+  let data: unknown;
 
   try {
-    data = JSON.parse(renderData);
+    data = JSON.parse(renderData!);
   } catch (error) {
     console.error(error);
     return false;
   }
 
-  let container;
+  let container: Record<string, unknown> | undefined;
 
   // 根据类型确定数据类型
   if (templateType === '2') {
     // 标签
     // 必须是数组 & 非空 & 取第一个元素
-    if (!_.isArray(data) || _.isEmpty(data) || !_.isPlainObject(data[0])) {
+    if (!(_.isArray as (value: unknown) => value is unknown[])(data) || _.isEmpty(data) || !_.isPlainObject(data[0])) {
       return false;
     }
 
-    container = _.reduce(data, (res, item) => Object.assign(res, item), {});
+    container = _.reduce<unknown, Record<string, unknown>>(data, (res, item) => Object.assign(res, item), {});
   } else if (templateType === '1') {
     // 小票
     // 必须是普通对象
-    if (!_.isPlainObject(data)) {
+    if (!(_.isPlainObject as (value: unknown) => value is Record<string, unknown>)(data)) {
       return false;
     }
 
     container = data;
   }
 
-  const result = Object.keys(container).map((item, index) => ({
+  const result = Object.keys(container!).map((item, index) => ({
     sheetName: item,
     sheetIndex: index,
-    mappedFields: _.flatMap(container[item], obj =>
-      _.map(obj, (value, key) => ({
+    mappedFields: (_.flatMap as AnalysisFlatMap)(container![item], obj =>
+      (_.map as AnalysisMap)(obj, (value, key) => ({
         text: key,
         desc: value,
         sheetIndex: index,
@@ -57,22 +82,22 @@ const getAnalysisResult = (renderData: string | undefined, templateType) => {
 };
 
 const getControls = (controls: FormControl[], isMaster: boolean) => {
-  let result = [];
+  let result: FormControl[];
 
   if (isMaster) {
     result = _.filter(
       controls,
       item =>
-        supportedControlTypes.includes(item.type) ||
-        (item.type === 30 && supportedControlTypes.includes(item.sourceControl.type)),
+        supportedControlTypes.includes(item.type!) ||
+        (item.type === 30 && supportedControlTypes.includes(item.sourceControl!.type!)),
     );
   } else {
-    const relationControls: FormControl[] = _.filter(controls, item => [29, 34].includes(item.type));
+    const relationControls: FormControl[] = _.filter(controls, item => [29, 34].includes(item.type!));
 
-    result = _.reduce(
+    result = _.reduce<FormControl, FormControl[]>(
       relationControls,
       (res, item) => {
-        const relations = _.filter(item.relationControls, item => supportedControlTypes.includes(item.type));
+        const relations = _.filter(item.relationControls, item => supportedControlTypes.includes(item.type!));
         return res.concat(item).concat(relations);
       },
       [],
@@ -86,11 +111,11 @@ const getControls = (controls: FormControl[], isMaster: boolean) => {
   }));
 };
 
-const currentFieldValue = (data, fieldKey: string) => {
-  const value = _.find(data, { fieldKey })?.value;
-
+const currentFieldValue = (data: CloudPrintField[] | undefined, fieldKey: CloudFieldKey) => {
+  // Keep the original single lodash lookup and value read on each path. The key comparison is pure.
   if (fieldKey === 'renderData') {
-    return value.map(({ fromKey, isDetail, toControlId, fromTableName }) => ({
+    const value = (_.find as FindCloudField)(data, { fieldKey })?.value;
+    return value!.map(({ fromKey, isDetail, toControlId, fromTableName }) => ({
       fromKey,
       isDetail,
       toControlId,
@@ -98,25 +123,26 @@ const currentFieldValue = (data, fieldKey: string) => {
     }));
   }
 
+  const value = (_.find as FindCloudField)(data, { fieldKey })?.value;
   return value;
 };
 
-const CloudPrint = props => {
+const CloudPrint = (props: CloudPrintProps) => {
   const { worksheetInfo, onClose, templateData, type, getPrintData } = props;
   const { worksheetId, projectId } = worksheetInfo;
-  const { controls = [] }: { controls: FormControl[]; [key: string]: any } = worksheetInfo?.template || {};
+  const { controls = [] } = worksheetInfo?.template || {};
   const masterControls = getControls(controls, true); // 主表字段
   let relationControls = getControls(controls, false); // 关联表字段
 
   const isEdit = type === 'edit';
   const [loading, setLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
-  const [renderData, setRenderData] = useState([]);
-  const templateName = _.find(renderData, { fieldKey: 'name' })?.value;
-  const templateType = _.find(renderData, { fieldKey: 'cloudPrintType' })?.value;
+  const [renderData, setRenderData] = useState<CloudPrintField[]>([]);
+  const templateName = (_.find as FindCloudField)(renderData, { fieldKey: 'name' })?.value;
+  const templateType = (_.find as FindCloudField)(renderData, { fieldKey: 'cloudPrintType' })?.value;
   const [fieldsAnalysisVisible, setFieldsAnalysisVisible] = useState(false);
   const [originalData, setOriginalData] = useState<string | undefined>();
-  const [parsedFields, setParsedFields] = useState([]);
+  const [parsedFields, setParsedFields] = useState<CloudAnalysisSheet[]>([]);
   const [masterTableIndex, setMasterTableIndex] = useState(0); // 快麦云主表序号
   const [checkMainTableVisible, setCheckMainTableVisible] = useState(false); // 选择快麦云主表弹窗是否显示
 
@@ -127,14 +153,14 @@ const CloudPrint = props => {
           renderData.filter(item => _.includes(['name', 'cloudPrintType', 'sn', 'templateId'], item.fieldKey)),
           item => !item.value,
         ) ||
-        (currentFieldValue(templateData.cloudExtraParams, 'name') === currentFieldValue(renderData, 'name') &&
-          currentFieldValue(templateData.cloudExtraParams, 'cloudPrintType') ===
+        (currentFieldValue(templateData!.cloudExtraParams, 'name') === currentFieldValue(renderData, 'name') &&
+          currentFieldValue(templateData!.cloudExtraParams, 'cloudPrintType') ===
             currentFieldValue(renderData, 'cloudPrintType') &&
-          currentFieldValue(templateData.cloudExtraParams, 'sn') === currentFieldValue(renderData, 'sn') &&
-          currentFieldValue(templateData.cloudExtraParams, 'templateId') ===
+          currentFieldValue(templateData!.cloudExtraParams, 'sn') === currentFieldValue(renderData, 'sn') &&
+          currentFieldValue(templateData!.cloudExtraParams, 'templateId') ===
             currentFieldValue(renderData, 'templateId') &&
           _.isEqual(
-            currentFieldValue(templateData.cloudExtraParams, 'renderData'),
+            currentFieldValue(templateData!.cloudExtraParams, 'renderData'),
             currentFieldValue(renderData, 'renderData'),
           ))
       );
@@ -146,7 +172,7 @@ const CloudPrint = props => {
     );
   }, [templateData?.cloudExtraParams, renderData]);
 
-  const initRenderData = data => {
+  const initRenderData = (data: CloudPrintField[]) => {
     data.forEach(item => {
       switch (item.fieldKey) {
         case 'name':
@@ -158,7 +184,7 @@ const CloudPrint = props => {
         case 'renderData':
           item.masterDesc = _l('主表');
           item.subDesc = _l('动态表格');
-          item.value = item.value.map(v => ({
+          item.value = item.value!.map(v => ({
             ...v,
             toControlOptions: v.isDetail ? relationControls : masterControls,
           }));
@@ -169,10 +195,10 @@ const CloudPrint = props => {
           }
 
           if (!item.fromField?.fields) {
-            item.fromField.fields = [];
+            item.fromField!.fields = [];
           }
 
-          item.systemField.fields = item.systemField.fields.map(item => ({
+          item.systemField!.fields = item.systemField!.fields!.map(item => ({
             ...item,
             toControlOptions:
               _.findIndex(masterControls, v => v.value === item.controlId) > -1 ? masterControls : relationControls,
@@ -207,13 +233,14 @@ const CloudPrint = props => {
       setOriginalData('');
       updateRenderData(result);
     }
+
     return undefined;
   };
 
   const handleSave = () => {
     const cloneData = _.cloneDeep(renderData);
-    const mapData = _.find(cloneData, { fieldKey: 'renderData' });
-    mapData.value = mapData.value.map(item => ({
+    const mapData = (_.find as FindCloudField)(cloneData, { fieldKey: 'renderData' })!;
+    mapData.value = mapData.value!.map(item => ({
       fromKey: item.fromKey,
       isDetail: item.isDetail,
       toControlId: item.toControlId,
@@ -261,13 +288,17 @@ const CloudPrint = props => {
       });
   };
 
-  const updateRenderData = analysisData => {
+  const updateRenderData = (analysisData: CloudAnalysisSheet[]) => {
     setRenderData(prevData => {
       const newData = [...prevData];
       newData.forEach(item => {
         if (item.fieldKey === 'renderData') {
-          item.fromField.fields = _.reduce(analysisData, (res, v) => res.concat(v.mappedFields), []);
-          item.value = item.fromField.fields.map(v => ({
+          item.fromField!.fields = _.reduce<CloudAnalysisSheet, CloudSourceField[]>(
+            analysisData,
+            (res, v) => res.concat(v.mappedFields),
+            [],
+          );
+          item.value = item.fromField!.fields!.map(v => ({
             fromKey: v.text,
             isDetail: templateType === '1' ? v.sheetIndex !== masterTableIndex : false, // 标签只能绑定当前表【主表中的内容】
             toControlId: '',
@@ -297,7 +328,7 @@ const CloudPrint = props => {
         });
     } else {
       const cloneData = _.cloneDeep(templateData?.cloudExtraParams);
-      setRenderData(initRenderData(cloneData));
+      setRenderData(initRenderData(cloneData!));
     }
   }, [templateData]);
 

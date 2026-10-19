@@ -7,6 +7,7 @@ import type { SortableDragHandle } from 'ming-ui/components/SortableList';
 import sheetAjax from 'src/api/worksheet';
 import { printQrBarCode } from 'worksheet/common/PrintQrBarCode';
 import { formatValuesOfCondition, redefineComplexControl } from 'worksheet/common/WorkSheetFilter/util';
+import type { CloudPrintField } from 'src/components/DynamicRender';
 import { selectRecords } from 'src/components/SelectRecords';
 import { filterData } from 'src/pages/FormSet/components/columnRules/config.js';
 import { PRINT_TYPE, PRINT_TYPE_STYLE } from 'src/pages/Print/core/config';
@@ -22,10 +23,7 @@ import RangeDrop from '../../components/RangeDrop';
 import type { PrintRangeData } from '../../components/RangeDrop';
 import { PrintCountLimitModal } from './components/PrintCountSetting';
 
-export interface PrintCloudParameter {
-  fieldKey?: string | undefined;
-  value?: unknown;
-}
+export type PrintCloudParameter = CloudPrintField;
 type WirePrint = HapApi.MD.Entity.Worksheet.PrintListModel;
 export type PrintItemData = Omit<Partial<WirePrint>, 'views' | 'filters' | 'cloudExtraParams'> &
   Omit<PrintRangeData, 'views'> & {

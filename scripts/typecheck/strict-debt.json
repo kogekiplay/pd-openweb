@@ -913,7 +913,6 @@
     "src/pages/FormExtend/common/MapField.tsx",
     "src/pages/FormExtend/index.tsx",
     "src/pages/FormSet/components/AliasDialog/index.tsx",
-    "src/pages/FormSet/components/CloudPrint/index.tsx",
     "src/pages/FormSet/components/DrawerFooter.tsx",
     "src/pages/FormSet/components/EditPrint.tsx",
     "src/pages/FormSet/components/PrintTemSetting/index.tsx",

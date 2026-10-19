@@ -5,6 +5,96 @@ import { Icon, Input, Radio } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import './index.less';
 
+/** Cloud-print metadata from Worksheet.LoadCloudPrintDatas (serviceType 0), and its actual UI writes.
+ * The eight known field keys form a union; extra wire properties stay on the original objects.
+ * Descriptions parsed from user JSON are opaque and are only handed to the legacy renderer.
+ */
+export interface CloudControlOption {
+  value?: string | undefined;
+  label?: import('react').ReactNode;
+  disabled?: boolean | undefined;
+}
+export interface CloudMapping {
+  fromKey?: string | number | undefined;
+  isDetail?: boolean | undefined;
+  toControlId?: string | undefined;
+  fromTableName?: string | undefined;
+  toControlOptions?: CloudControlOption[] | undefined;
+}
+export interface CloudSourceField {
+  text?: string | number | undefined;
+  tableName?: string | undefined;
+  desc?: unknown;
+  sheetName?: string | undefined;
+  sheetIndex?: number | undefined;
+}
+export interface CloudSystemField {
+  controlId?: string | undefined;
+  tableName?: string | undefined;
+  // The renderer can select its deleted-control option, whose label is a React element.
+  controlName?: import('react').ReactNode;
+  toControlOptions?: CloudControlOption[] | undefined;
+}
+interface CloudFieldMetadata {
+  title?: string | undefined;
+  desc?: string | undefined;
+  hint?: string | undefined;
+  required?: boolean | undefined;
+}
+type CloudTextKey = 'name' | 'sn' | 'templateId';
+type CloudTextField = {
+  [K in CloudTextKey]: CloudFieldMetadata & {
+    fieldKey: K;
+    type: 'text';
+    value?: string | undefined;
+    placeholder?: string | undefined;
+  };
+}[CloudTextKey];
+export type CloudPrintField =
+  | CloudTextField
+  | (CloudFieldMetadata & { fieldKey: 'serviceKey'; type: 'title'; value?: string | undefined })
+  | (CloudFieldMetadata & {
+      fieldKey: 'cloudPrintType';
+      type: 'radio';
+      value?: string | undefined;
+      options?: Array<{ value: string; text?: string | undefined }> | undefined;
+    })
+  | (CloudFieldMetadata & {
+      fieldKey: 'linkButton';
+      type: 'button';
+      value?: string | undefined;
+      name?: string | undefined;
+      link?: string | undefined;
+    })
+  | (CloudFieldMetadata & {
+      fieldKey: 'functionFields';
+      type: 'function';
+      value?: string | undefined;
+      name?: string | undefined;
+      onClick?: (() => void) | undefined;
+    })
+  | (CloudFieldMetadata & {
+      fieldKey: 'renderData';
+      type: 'mapping';
+      value?: CloudMapping[] | undefined;
+      masterDesc?: string | undefined;
+      subDesc?: string | undefined;
+      fromField?: { title?: string | undefined; fields?: CloudSourceField[] | undefined } | undefined;
+      systemField?: { title?: string | undefined; fields?: CloudSystemField[] | undefined } | undefined;
+    });
+export type CloudFieldKey = CloudPrintField['fieldKey'];
+/** Lodash's object matcher chooses exactly this discriminant; no copying or validation is performed. */
+export type FindCloudField = <K extends CloudFieldKey>(
+  data: CloudPrintField[] | undefined,
+  matcher: { fieldKey: K },
+) => Extract<CloudPrintField, { fieldKey: K }> | undefined;
+export interface DynamicRenderProps {
+  data?: CloudPrintField[] | undefined;
+  onChange?: ((data: CloudPrintField[]) => void) | undefined;
+}
+
+// Public protocol is finite; the existing implementation's internal strict debt remains tracked.
+export default function DynamicRender(props: DynamicRenderProps): import('react').ReactElement;
 export default function DynamicRender(props) {
   const { data = [], onChange } = props;
   const [formData, setFormData] = useState(data);
@@ -133,7 +223,7 @@ export default function DynamicRender(props) {
           _.findIndex(item.value, v => v.isDetail) > -1 && _.findLastIndex(item.value, v => !v.isDetail);
 
         return (
-          (<div key={fieldKey} className="dynamicField mappingField">
+          <div key={fieldKey} className="dynamicField mappingField">
             <div className="mappingHeader flexRow alignItemsCenter mBottom20">
               <div className="fromField flex">{item.fromField?.title || _l('源字段')}</div>
               <div style={{ width: 40 }}></div>
@@ -147,7 +237,7 @@ export default function DynamicRender(props) {
                 !!fromFieldItem.toControlId && !_.find(options, option => option.value === fromFieldItem.toControlId);
 
               return (
-                (<Fragment key={fieldIndex}>
+                <Fragment key={fieldIndex}>
                   {_.isNumber(lastMasterFieldIndex) && _.findIndex(item.value, v => v.isDetail) === fieldIndex ? (
                     <div className="Font13 bold mBottom15 pTop10">{item.subDesc}</div>
                   ) : null}
@@ -159,8 +249,8 @@ export default function DynamicRender(props) {
                     <Icon icon="arrow_forward" className="Font20 colorPrimary mLeft10 mRight10 LineHeight36" />
                     <Select
                       className="Height36 flex minWidth0"
-                      classNames={{ popup: { root: "mappedFieldPopup" } }}
-                      showSearch={{ optionFilterProp: "label" }}
+                      classNames={{ popup: { root: 'mappedFieldPopup' } }}
+                      showSearch={{ optionFilterProp: 'label' }}
                       optionLabelProp="label"
                       value={fromFieldItem.toControlId || ''}
                       placeholder={_l('请选择')}
@@ -178,10 +268,10 @@ export default function DynamicRender(props) {
                       onChange={(_value, data) => handleChange(data, type, fieldKey, fieldIndex)}
                     />
                   </div>
-                </Fragment>)
+                </Fragment>
               );
             })}
-          </div>)
+          </div>
         );
 
       default:
