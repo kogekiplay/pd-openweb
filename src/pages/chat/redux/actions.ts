@@ -680,6 +680,9 @@ export const addCurrentSession = (result: any) => (dispatch: AppDispatch, getSta
   result.isGroup = !!result.groupId;
   result.id = result.isGroup ? result.groupId : result.accountId;
   if (currentSessionList.length >= 2) {
+    // 【判空是必要的】`currentSessionList[0]` 在 `noUncheckedIndexedAccess` 下是
+    // `ChatSession | undefined`（实测去掉判空会报 TS2339）。
+    // 原实现在此处解构 undefined 会抛 TypeError，下面逐字复现该失败。
     const firstCurrentSession = currentSessionList[0];
 
     if (!firstCurrentSession) {
@@ -688,10 +691,9 @@ export const addCurrentSession = (result: any) => (dispatch: AppDispatch, getSta
     }
 
     // `formatSession` 不保证会话一定有 `id`（如实建模为可选）。
-    // 【保持原调用，不提前 return】原实现会把 undefined 传给
-    // `removeCurrentSession`，reducer 侧 `item.id !== action.id` 于是**会删掉
-    // `id` 为 undefined 的会话** —— 这是既有行为，不能靠"缺 id 就跳过"改变它。
-    // 因此把 action creator 的形参放宽为 `string | undefined`（见其定义处）。
+    // 【保持原调用，不提前 return】原实现会把 undefined 传给 removeCurrentSession，
+    // reducer 侧 `item.id !== action.id` 会删掉 `id` 为 undefined 的会话 —— 既有行为，
+    // 不能靠"缺 id 就跳过"改变它。故把 action creator 形参放宽为 `string | undefined`。
     const { id } = firstCurrentSession;
     dispatch(removeCurrentSession(id));
     dispatch(removeMessages(id));
