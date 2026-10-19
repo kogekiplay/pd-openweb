@@ -434,3 +434,5 @@ RangeDrop/BtnRangeDrop及真实getShowViews视图消费边界：strict50,856→5
 2026-10-19 自定义动作列表父层：strict50,783→50,748，逐文件/错误码无新增，fast8413/2268keys和baseline原字节不变，debt3068→3065，clean1712/4777。四完整产品模块Babel全文同历史，15组真实父层/API/feature/升级/helper对照、14非法编译和原地push引用变异通过；275/275正式release及全部门禁/四项编译/runtime/publish通过。候选1d6912c889包含原BtnTd批次，尚未部署，现网9cd5复核健康。DSH8140初审未通过，已在目标文件写明动作any/整数组断言/9条新增诊断等修正范围。详见[列表父层质量记录](custom-button-list-strict-20261019.md)，全仓目标active。
 
 2026-10-19 打印模板行/共享菜单：strict50,748→50,727，文件/错误码无新增，fast8413/2268keys基线原字节不变，debt3065→3063，clean1714/4777。四完整产品模块Babel全文同历史，14组真实打印/筛选/云参数/范围/菜单对照及14非法编译通过；修正真实墙钟防抖规格和打印异常宿主重复启动后，276/276正式release/全部门禁/四项编译/runtime/publish通过，失败日志完整保留。候选6d0f4ec004包含旧1d691/4dc5，尚未部署，现网9cd5复核健康；DSH最新仍待去除新any/模拟异常/未证明重写后独立验收。见[打印模板行质量记录](print-item-strict-20261019.md)，全仓目标active。
+
+2026-10-19 打印控制器/创建抽屉/次数卡：strict50,727→50,698，29条清零且逐文件/错误码无新增，fast8413/2268keys和baseline原字节不变，debt3063→3062，clean1715/4777。三个完整产品模块Babel全文同历史，16组实际控制器/卡片/行回调/API/升级/原生异常对照、14非法编译及排序失败clone变异通过；277/277正式release/全门禁/四项编译/runtime/publish通过。候选6e7cd53429整合原6d0f/1d691/4dc5，尚未部署，相对现网9cd5累计减少110条strict；现网复核健康。见[打印控制器质量记录](print-controller-strict-20261019.md)，全仓目标active。
