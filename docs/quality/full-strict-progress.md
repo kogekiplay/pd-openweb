@@ -1,5 +1,9 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-19 模板编辑器与上传生命周期
+
+EditPrint实际Props/State、设置与在线创建helper合同有限，32+15+1条终点诊断清零；全仓50,625→50,577、逐文件/错误码无新增，debt3,059→3,056、clean1,721/4,777，fast只收紧至8,400/2,266keys。17组完整真实editor/settings/uploader/API/helper历史流程、19非法编译/真实基类any控制9条、2变异、280/280正式release/全部门禁/四项编译/runtime/publish通过，4完整模块Babel输出与历史相同。候选993bf610b5已完整冻结尚未部署，生产仍9cd5，Chat待独立验收未合入；发布空间当前足够。详见 `edit-print-strict-20261019.md`。全仓目标继续。
+
 ## 2026-10-19 DynamicRender内部与DrawerFooter
 
 真实实现props/state/事件及footer回调已有限化，17条终点诊断清零；全仓50,642→50,625，无新增文件/错误码，debt3,061→3,059、clean1,718/4,777。fast只收紧至8,410/2,267keys。两个完整模块同一Babel输出与历史字节相同，9组新增/19组既有完整交互、28非法编译/实际state any控制组、2变异、279/279正式release/全部门禁/四项编译/runtime/publish通过。候选e6edc241cd已冻结尚未部署，生产仍9cd5。完整恢复校验后归档旧ae标记目录，持久材料累计8份，实时发布预算恢复足够。详见 `dynamic-render-strict-20261019.md`、`release-storage-20261019.md`。全仓强类型/正式strict继续。
