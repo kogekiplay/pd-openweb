@@ -1,6 +1,25 @@
 import _ from 'lodash';
 import appManagementAjax from 'src/api/appManagement';
 import attachmentAjax from 'src/api/attachment';
+import type { PrintAdvanceSetting } from 'src/pages/FormSet/components/PrintTemSetting';
+
+export interface EditDocumentParams {
+  doc?: string | undefined;
+  fileName?: string | undefined;
+  allowDownloadPermission?: number | undefined;
+  allowEditAfterPrint?: boolean | undefined;
+  advanceSettings?: PrintAdvanceSetting[] | undefined;
+}
+export interface CreateEditFileLinkProps {
+  worksheetId?: string | undefined;
+  downLoadUrl?: string | undefined;
+  type?: number | undefined;
+  createType?: number | undefined;
+  name?: string | undefined;
+  params?: EditDocumentParams | undefined;
+  createCompleted?: ((id?: string) => unknown) | undefined;
+}
+type CreateEditResult = string | false | null | undefined;
 
 const DEFAULT = {
   doc: undefined,
@@ -10,10 +29,10 @@ const DEFAULT = {
   advanceSettings: [],
 };
 
-export const createEditFileLink = async props => {
+export const createEditFileLink = async (props: CreateEditFileLinkProps) => {
   const { worksheetId, downLoadUrl, type = 2, createType, createCompleted, name, params } = props;
 
-  const token = await appManagementAjax.getToken({
+  const token: unknown = await appManagementAjax.getToken({
     worksheetId: worksheetId,
     tokenType: 5,
   });
@@ -29,14 +48,14 @@ export const createEditFileLink = async props => {
     ...(params || DEFAULT),
   };
 
-  const res = await window.mdyAPI('', '', option, {
+  const res: CreateEditResult = await window.mdyAPI('', '', option, {
     ajaxOptions: {
       url: ajaxUrl,
     },
   });
 
   if (!res) {
-    alert(res.message, 2);
+    alert((res as { message?: string } | null | undefined)!.message, 2);
     !!createCompleted && createCompleted();
   } else {
     const data = await attachmentAjax.getAttachmentEditDetail({

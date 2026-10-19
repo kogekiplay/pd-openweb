@@ -7,9 +7,38 @@ import { Tooltip } from 'ming-ui/antd-components';
 import sheetAjax from 'src/api/worksheet';
 import { getAdvanceSetting } from 'src/pages/widgetConfig/util/setting';
 import DynamicDefaultValue from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue';
+import type { DynamicValueSource } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/dynamicTypes';
 import { transferValue } from 'src/pages/widgetConfig/widgetSetting/components/DynamicDefaultValue/util';
 import { renderText as renderCellText } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
+
+type PrintTextSetting = HapApi.MD.Entity.Worksheet.AdvanceSettingItem;
+export type PrintAdvanceSetting = PrintTextSetting | { key: 'enableEmptyPlaceholder'; value?: number | undefined };
+export type PrintSettingKey = 'export_type' | 'export_name' | 'enableEmptyPlaceholder' | 'emptyPlaceholderMode';
+export type PrintAdvanceMap = Partial<
+  Record<'export_type' | 'export_name' | 'emptyPlaceholderMode', PrintTextSetting>
+> & { enableEmptyPlaceholder?: PrintAdvanceSetting | undefined } & Record<string, PrintAdvanceSetting | undefined>;
+export interface PrintSettingsPatch {
+  templateName?: string;
+  allowDownloadPermission?: number;
+  allowEditAfterPrint?: boolean;
+  advanceSettings?: PrintAdvanceSetting[];
+}
+export interface PrintTemSettingProps {
+  templateName?: string | undefined;
+  allowDownloadPermission?: number | undefined;
+  allowEditAfterPrint?: boolean | undefined;
+  advanceSettings?: PrintAdvanceSetting[] | undefined;
+  projectId?: string | undefined;
+  worksheetId?: string | undefined;
+  exampleData?: unknown;
+  controls?: FormControl[] | undefined;
+  onChange?: ((patch: PrintSettingsPatch) => unknown) | undefined;
+  updateExampleData?: ((data: unknown) => unknown) | undefined;
+}
+type ExportNameOption = { label: string; value: string; type?: never };
+type ExportNameSource = Pick<DynamicValueSource, 'cid' | 'rcid' | 'staticValue'>;
+type PreviewReplace = (pattern: RegExp, replacer: (match: string, key: string) => unknown) => string;
 
 const EXPORT_NAME_TYPE = [
   {
@@ -43,7 +72,7 @@ const DefaultName = styled.div`
   }
 `;
 
-function PrintTemSetting(props) {
+function PrintTemSetting(props: PrintTemSettingProps) {
   const {
     projectId,
     worksheetId,
@@ -55,9 +84,9 @@ function PrintTemSetting(props) {
     allowDownloadPermission,
     onChange = () => {},
     updateExampleData = () => {},
-  }: { controls: FormControl[]; [key: string]: any } = props;
+  } = props;
 
-  const advanceMap = _.keyBy(advanceSettings, 'key');
+  const advanceMap: PrintAdvanceMap = _.keyBy(advanceSettings, 'key');
   const type = advanceMap.export_type?.value || '0';
   const exportName = advanceMap.export_name?.value;
   const enableEmptyPlaceholder = !!Number(advanceMap.enableEmptyPlaceholder?.value);
@@ -96,14 +125,14 @@ function PrintTemSetting(props) {
     return `$temp-name$_${titleControl ? '$' + titleControl.controlId + '$_' : ''}$print-time$`;
   };
 
-  const getValue = key => {
+  const getValue = (key: string): unknown => {
     switch (key) {
       case 'temp-name':
         return templateName;
       case 'print-time':
         return moment(new Date()).format('YYYYMMDD');
       default:
-        const value = _.get(exampleData, key);
+        const value: unknown = _.get(exampleData, key);
         const control = controls.find(l => l.controlId === key);
 
         if (value) return renderCellText({ ...control, value: value });
@@ -115,13 +144,13 @@ function PrintTemSetting(props) {
   const getPreviewText = () => {
     const text = type === '0' ? getDefaultExportName() : exportName;
 
-    return text ? text.replace(/\$(.*?)\$/g, (_, key) => getValue(key)) : '';
+    return text ? (text!.replace as PreviewReplace)(/\$(.*?)\$/g, (_, key) => getValue(key)) : '';
   };
 
-  const onChangeExportName = newData => {
+  const onChangeExportName = (newData: FormControl) => {
     const { defsource } = getAdvanceSetting(newData);
     let fields = '';
-    safeParse(defsource || '[]').forEach(item => {
+    (safeParse as (text: string) => ExportNameSource[])(defsource || '[]').forEach(item => {
       const { cid, rcid, staticValue } = item;
 
       if (cid) {
@@ -134,7 +163,7 @@ function PrintTemSetting(props) {
     onChangeAdvance({ key: 'export_name', value: fields });
   };
 
-  const onChangeAdvance = value => {
+  const onChangeAdvance = (value: PrintAdvanceSetting) => {
     const exist = _.find(advanceSettings, i => i.key === value.key);
     onChange({
       advanceSettings: exist
@@ -145,9 +174,9 @@ function PrintTemSetting(props) {
     });
   };
 
-  const onChangeType = item => {
+  const onChangeType = (item: ExportNameOption) => {
     if (type === item.type) return;
-    if (type === 1) onChangeAdvance({ key: 'export_name', value: getDefaultExportName() });
+    if ((type as string | number) === 1) onChangeAdvance({ key: 'export_name', value: getDefaultExportName() });
 
     onChangeAdvance({ key: 'export_type', value: item.value });
   };
@@ -156,7 +185,7 @@ function PrintTemSetting(props) {
     <Fragment>
       <div className="tiTop mTop32">{_l('3.设置')}</div>
       <div className="mTop24 Font13 bold mBottom16">{_l('模版名称')}</div>
-      <Input className="w100" value={templateName} onChange={value => onChange({ templateName: value })} />
+      <Input className="w100" value={templateName} onChange={(value: string) => onChange({ templateName: value })} />
       <div className="mTop24 Font13 bold mBottom16">{_l('导出文件名称')}</div>
       <div className="mBottom14">
         {EXPORT_NAME_TYPE.map(item => (
@@ -192,7 +221,7 @@ function PrintTemSetting(props) {
               },
               type: 2,
             }}
-            allControls={controls.filter(i => i.controlId.length > 23 || ALLOW_SYS_IDS.includes(i.controlId))}
+            allControls={controls.filter(i => i.controlId!.length > 23 || ALLOW_SYS_IDS.includes(i.controlId!))}
             onChange={onChangeExportName}
           />
         )}
@@ -238,7 +267,7 @@ function PrintTemSetting(props) {
               className="mTop10 w100"
               placeholder={_l('请输入占位符')}
               value={emptyPlaceholderMode}
-              onChange={value => {
+              onChange={(value: string) => {
                 onChangeAdvance({ key: 'emptyPlaceholderMode', value });
               }}
             />

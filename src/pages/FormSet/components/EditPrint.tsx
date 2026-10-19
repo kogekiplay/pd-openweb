@@ -1,23 +1,80 @@
 import React from 'react';
 import { shallowEqual } from 'react-redux';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
-import Trigger from '@rc-component/trigger';
 import { Icon, LoadDiv, Menu, MenuItem } from 'ming-ui';
 import appManagementAjax from 'src/api/appManagement';
 import attachmentAjax from 'src/api/attachment';
 import sheetAjax from 'src/api/worksheet';
-import createUploader from 'src/utils/createUploader';
 import { createEditFileLink } from 'src/pages/UploadTemplateSheet/utils';
 import { pathCompletion } from 'src/utils/common';
+import type { FormControl } from 'src/utils/controlTypes';
+import createUploader from 'src/utils/createUploader';
 import { VersionProductType } from 'src/utils/enum';
 import RegExpValidator from 'src/utils/expression';
 import { getFeatureStatus } from 'src/utils/project';
+import type { UploadedFileResponse, Uploader, UploaderFile } from 'src/utils/uploader/types';
+import type { PrintItemData, PrintSortableItemProps } from '../containers/Print/PrintSortableItem';
 import DrawerFooter from './DrawerFooter';
+import type { PrintAdvanceMap, PrintAdvanceSetting, PrintSettingsPatch } from './PrintTemSetting';
 import PrintTemSetting from './PrintTemSetting';
 import './editPrint.less';
 
-const SUFFIX: Record<string, string> = {
+export type PrintFileType = 'Word' | 'Excel';
+export type PrintUploadFile = Pick<UploaderFile, 'id' | 'name' | 'percent'>;
+export type PrintUploadIdentity = { id?: string | undefined };
+export type EditPrintUploader = Pick<Uploader, 'destroy' | 'stop' | 'disableBrowse' | 'setOption'> & {
+  // The actual uploader removes by id only and returns without changing its queue for an empty identity.
+  removeFile(file: PrintUploadIdentity | string): void;
+};
+export interface EditPrintProps {
+  type: '' | 'new' | 'edit' | 'preview';
+  worksheetId?: string | undefined;
+  worksheetName?: string | undefined;
+  downLoadUrl?: string | undefined;
+  templateId?: string | undefined;
+  templateData?:
+    | Pick<PrintItemData, 'name' | 'formName' | 'allowDownloadPermission' | 'allowEditAfterPrint' | 'advanceSettings'>
+    | undefined;
+  fileType?: PrintFileType | undefined;
+  appId?: string | undefined;
+  roleType?: number | undefined;
+  projectId?: string | undefined;
+  controls?: FormControl[] | undefined;
+  exampleData?: unknown;
+  updateExampleData: (data: unknown) => unknown;
+  updatePrint?: PrintSortableItemProps['updatePrint'] | undefined;
+  onClose: () => unknown;
+  refreshFn: (showEditPrint?: boolean, id?: string) => unknown;
+  // onEdit reads this prop, independently of the similarly named state field.
+  createEditLoading?: boolean | undefined;
+}
+export interface EditPrintState {
+  loading: boolean;
+  suc: boolean;
+  loadPer: number;
+  bindCreateUpload: boolean;
+  url: string;
+  key: string | undefined;
+  fileName: string | undefined;
+  templateName: string | undefined;
+  file: PrintUploadIdentity;
+  hasChange: boolean;
+  allowDownloadPermission: number;
+  allowDownloadChange: boolean;
+  popupVisible: boolean;
+  error: boolean;
+  createEditLoading: boolean;
+  allowEditAfterPrint: boolean;
+  featureType: ReturnType<typeof getFeatureStatus>;
+  advanceSettings: PrintAdvanceSetting[];
+  createType: number | undefined;
+  isCreate?: boolean | undefined;
+  saveLoading?: boolean | undefined;
+}
+
+const SUFFIX: Record<PrintFileType, string> = {
   Word: 'docx',
   Excel: 'xlsx',
 };
@@ -35,8 +92,13 @@ const EDIT_OPTIONS = [
   },
 ];
 
-class EditPrint extends React.Component<any, any> {
-  constructor(props) {
+class EditPrint extends React.Component<EditPrintProps, EditPrintState> {
+  declare con: React.RefObject<HTMLParagraphElement | null> | HTMLParagraphElement | null;
+  declare uploader: EditPrintUploader | undefined;
+  declare setState: React.Component<EditPrintProps, EditPrintState>['setState'] &
+    ((patch: Partial<EditPrintState>, callback?: () => void) => void);
+
+  constructor(props: EditPrintProps) {
     super(props);
     this.state = {
       loading: false,
@@ -59,14 +121,14 @@ class EditPrint extends React.Component<any, any> {
       advanceSettings: [],
       createType: undefined,
     };
-    this.con = React.createRef();
+    this.con = React.createRef<HTMLParagraphElement>();
   }
 
   override componentDidMount() {
     this.setData();
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: EditPrintProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         this.props.templateId !== prevProps.templateId ||
@@ -87,7 +149,7 @@ class EditPrint extends React.Component<any, any> {
     this.uploaderDestroy();
   }
 
-  setData = (nextProps?) => {
+  setData = (nextProps?: EditPrintProps) => {
     const { fileType, templateData = {}, worksheetName, type } = nextProps || this.props;
 
     this.setState({
@@ -101,14 +163,14 @@ class EditPrint extends React.Component<any, any> {
     });
 
     this.createUploader(fileType);
-    this.con.addEventListener('dragover', e => {
+    (this.con as HTMLParagraphElement).addEventListener('dragover', (e: DragEvent) => {
       e.stopPropagation();
       //阻止浏览器默认打开文件的操作
       e.preventDefault();
-      e.dataTransfer.dropEffect = 'copy';
+      e.dataTransfer!.dropEffect = 'copy';
     });
     //拖拽区域
-    this.con.addEventListener(
+    (this.con as HTMLParagraphElement).addEventListener(
       'drop',
       e => {
         e.stopPropagation();
@@ -133,7 +195,7 @@ class EditPrint extends React.Component<any, any> {
   /**
    * 创建上传
    */
-  createUploader(fileType = 'Word') {
+  createUploader(fileType: PrintFileType = 'Word') {
     this.uploader = createUploader({
       browse_button: 'editorFiles',
       bucket: 3,
@@ -142,7 +204,7 @@ class EditPrint extends React.Component<any, any> {
       },
       type: 33,
       init: {
-        BeforeUpload: (_up, file) => {
+        BeforeUpload: (_up: EditPrintUploader, file: PrintUploadFile) => {
           if (RegExpValidator.getExtOfFileName(file.name).toLocaleLowerCase() !== SUFFIX[fileType]) {
             alert(_l('上传失败，文件错误'), 3);
             return false;
@@ -159,14 +221,18 @@ class EditPrint extends React.Component<any, any> {
           });
           return undefined;
         },
-        FilesAdded: up => {
+        FilesAdded: (up: EditPrintUploader) => {
           up.setOption('auto_start', true);
           up.disableBrowse();
         },
-        UploadProgress: (_uploader, file) => {
+        UploadProgress: (_uploader: EditPrintUploader, file: PrintUploadFile) => {
           this.setState({ loading: true, suc: false, loadPer: file.percent });
         },
-        FileUploaded: (up, file, info) => {
+        FileUploaded: (
+          up: EditPrintUploader,
+          file: PrintUploadFile,
+          info: { response: Pick<UploadedFileResponse, 'key'> },
+        ) => {
           const { key } = info.response;
           this.setState(
             {
@@ -206,7 +272,7 @@ class EditPrint extends React.Component<any, any> {
     const { fileName, createType, key, templateName, allowDownloadPermission, allowEditAfterPrint, advanceSettings } =
       this.state;
     const { worksheetId, downLoadUrl, templateId, refreshFn, fileType = 'Word', onClose } = this.props;
-    const advanceMap = _.keyBy(advanceSettings, 'key');
+    const advanceMap: PrintAdvanceMap = _.keyBy(advanceSettings, 'key');
     const enableEmptyPlaceholder = !!Number(advanceMap.enableEmptyPlaceholder?.value);
     const emptyPlaceholderMode = advanceMap.emptyPlaceholderMode?.value;
 
@@ -218,7 +284,7 @@ class EditPrint extends React.Component<any, any> {
     this.setState({ saveLoading: true });
     let option;
     //功能模块 token枚举，3 = 导出excel，4 = 导入excel生成表，5= word打印
-    const token = await appManagementAjax.getToken({
+    const token: unknown = await appManagementAjax.getToken({
       worksheetId: worksheetId || templateId,
       tokenType: 5,
     });
@@ -244,7 +310,7 @@ class EditPrint extends React.Component<any, any> {
           url: downLoadUrl + EDIT_PRINT_URL,
         },
       })
-      .then(res => {
+      .then((res: unknown) => {
         if (res) {
           refreshFn();
           onClose();
@@ -275,7 +341,7 @@ class EditPrint extends React.Component<any, any> {
         allowEditAfterPrint,
         advanceSettings,
       },
-      createCompleted: id => {
+      createCompleted: (id?: string) => {
         this.setState({ createEditLoading: false });
         refreshFn(true, id);
       },
@@ -300,7 +366,7 @@ class EditPrint extends React.Component<any, any> {
       });
   };
 
-  onChange = value => this.setState(value);
+  onChange = (value: PrintSettingsPatch) => this.setState(value);
 
   getDisabledOkBtn = () => {
     const {
@@ -391,7 +457,7 @@ class EditPrint extends React.Component<any, any> {
           offset: [0, 10],
           overflow: { adjustX: true, adjustY: true },
         }}
-        getPopupContainer={triggerNode => triggerNode.parentElement}
+        getPopupContainer={triggerNode => triggerNode.parentElement!}
       >
         <span className={cx('editBtn mLeft10', { disable: createEditLoading })}>
           {createEditLoading ? (
@@ -442,7 +508,12 @@ class EditPrint extends React.Component<any, any> {
       <div className="editPrint upload flexColumn h100">
         <h5 className="tempTitle flexRow alignItemsCenter">
           <span className="flex overflow_ellipsis">
-            {templateId && !isCreate ? _l('编辑模板: %0', _.get(templateData, 'name')) : _l('新建模板')}
+            {templateId && !isCreate
+              ? (_l as (source: string, value: string | undefined) => string)(
+                  '编辑模板: %0',
+                  _.get(templateData, 'name'),
+                )
+              : _l('新建模板')}
           </span>
           <Icon
             icon="close"

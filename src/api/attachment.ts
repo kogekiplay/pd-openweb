@@ -51,7 +51,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getAttachmentEditDetail: function (args: ApiArgs, options: ApiOptions = {}) {
+  getAttachmentEditDetail: function (args: ApiArgs, options: ApiOptions = {}): ApiResultOf<{ wpsEditUrl?: string | undefined }> {
     return mdyAPI('Attachment', 'GetAttachmentEditDetail', args, options);
   },
   /**
