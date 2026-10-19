@@ -88,6 +88,15 @@ export interface ChatSession {
   isForbidInvite?: boolean | undefined;
   /** 是否置顶（`ChatPanelHeader` 解构读） */
   isTop?: boolean | undefined;
+  /* ── 以下为 `ChatPanelHeader` / 部门树等消费的扩展字段 ── */
+  /** 用户全名（`ChatPanelHeader` 读） */
+  fullname?: string | undefined;
+  /** 部门名（`ChatPanelHeader` 读） */
+  mapDepartmentName?: unknown;
+  /** 状态选项（`ChatPanelHeader` 真值判断后渲染） */
+  onStatusOption?: unknown;
+  /** 弱关联计数（部门/外部联系人扩展） */
+  weak_count?: number | undefined;
   /**
    * 其余字段按会话类型扩展（群成员、部门、状态等）。
    * 保留 `unknown` 索引签名：这些是**真正随类型变化的扩展元数据**，
@@ -174,6 +183,19 @@ export interface ChatMessage {
   location?: { [key: string]: unknown } | undefined;
   /** 关联用户（解构读） */
   user?: { [key: string]: unknown } | undefined;
+  /* ── 以下为 `utils/index.ts` 消息格式化时**读写**的字段 ── */
+  /** 群名称（`utils` 读，与 `uname` 二选一展示） */
+  groupname?: string | undefined;
+  /** 用户名称（`utils` 读） */
+  uname?: string | undefined;
+  /** 消息 id 别名（`utils: message.msgid = message.id` 赋值） */
+  msgid?: string | undefined;
+  /** 时间戳（`utils: message.timestamp = formatMsgDate(...)` 赋值） */
+  timestamp?: unknown;
+  /** 未读分隔线标记（`utils` 读） */
+  unreadLine?: boolean | undefined;
+  /** 引用消息体（`Message:205-206` 渲染 `MessageRefer` 时传入） */
+  refer?: unknown;
   /** 其余按消息种类扩展的元数据 */
   [key: string]: unknown;
 }
