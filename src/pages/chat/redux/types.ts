@@ -221,6 +221,42 @@ export interface ChatOutboundDraft {
  * `from`/`msg`/`type`/`time`/`isGroup`/`sysType`/`wdAdminid`/`iswd`/`value`/`name`/`iconType`/
  * `atlist`（以及它写入的 `_time`/`messageAtlist`/`sendMsg`）。其余按键保留 `unknown` 索引。
  */
+/**
+ * `updateSessionList` 的**局部补丁**形状：`actions.ts` 内多处
+ * `dispatch(updateSessionList({ ... }))` 只带要改的字段。
+ * 【字段依据】该函数体内实际访问的键（`'X' in result` 与 `result.X`）：
+ * `id`/`clearCount`/`count`/`messageCount`/`addMsg`/`atlist`/`at_msg`/`msg`/`msgId`/
+ * `isPush`/`isContact`/`isTop`/`isWithdraw`/`isSession`/`refer`/`reflist`/`sendMsg`/
+ * `showBadge`/`time`/`weak`。其余按键保留 `unknown` 索引。
+ */
+export interface ChatSessionPatch {
+  id?: string | undefined;
+  clearCount?: number | undefined;
+  count?: number | undefined;
+  messageCount?: number | undefined;
+  addMsg?: string | undefined;
+  atlist?: string[] | undefined;
+  at_msg?: { [key: string]: unknown } | undefined;
+  /**
+   * 预览正文：本文件所有 `updateSessionList({ msg })` 传的都是**字符串模板**
+   * （`${name}: ${result.msg.con}` / `${name}: ${message.msg.con}`），故是 `string`。
+   */
+  msg?: string | undefined;
+  msgId?: string | number | undefined;
+  isPush?: boolean | undefined;
+  isContact?: boolean | undefined;
+  isTop?: boolean | undefined;
+  isWithdraw?: boolean | undefined;
+  isSession?: boolean | undefined;
+  refer?: unknown;
+  reflist?: unknown[] | undefined;
+  sendMsg?: string | null | undefined;
+  showBadge?: number | boolean | undefined;
+  time?: number | string | undefined;
+  weak?: unknown;
+  [key: string]: unknown;
+}
+
 export interface ChatRawSessionWire {
   id?: string | number | undefined;
   value?: string | undefined;
@@ -298,6 +334,10 @@ export interface ChatRawMessageWire {
   msgid?: string | number | undefined;
   /** 系统消息判别键（`'dtype' in message`） */
   dtype?: unknown;
+  /** 推送类标记：`addSession` 读 `result.isPush` 写进会话补丁 */
+  isPush?: boolean | undefined;
+  /** 是否会话：`addSession` 在无 id 时写 `result.isSession = false` */
+  isSession?: boolean | undefined;
   /** 归一化过程中写入的发送者对象 */
   fromAccount?:
     | { id?: string | undefined; name?: string | undefined; logo?: string | undefined; [key: string]: unknown }

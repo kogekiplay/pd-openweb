@@ -1,6 +1,12 @@
 import _ from 'lodash';
 import type { AppDispatch, GetState } from 'src/redux/types';
-import type { ChatMessage, ChatToolbarConfig } from './types';
+import type {
+  ChatMessage,
+  ChatRawMessageWire,
+  ChatRawSessionWire,
+  ChatSessionPatch,
+  ChatToolbarConfig,
+} from './types';
 import type { ChatAction } from './reducers';
 import { dateConvertToUserZone } from 'src/utils/project';
 import * as utils from '../utils';
@@ -12,7 +18,7 @@ import * as socket from '../utils/socket';
  * 设置会话列表
  * @param {*} result
  */
-export const setSessionList = (result: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const setSessionList = (result: ChatRawSessionWire[]) => (dispatch: AppDispatch, getState: GetState) => {
   const { toolbarConfig } = getState().chat;
   dispatch({
     type: 'SET_SESSION_LIST',
@@ -24,7 +30,7 @@ export const setSessionList = (result: any) => (dispatch: AppDispatch, getState:
  * 添加更多的会话
  * @param {*} result
  */
-export const addSessionList = (result: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const addSessionList = (result: ChatRawSessionWire[]) => (dispatch: AppDispatch, getState: GetState) => {
   const { toolbarConfig } = getState().chat;
   dispatch({
     type: 'ADD_SESSION_LIST',
@@ -36,7 +42,7 @@ export const addSessionList = (result: any) => (dispatch: AppDispatch, getState:
  * 更新会话列表数据
  * @param {*} result
  */
-export const updateSessionList = (result: any) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateSessionList = (result: ChatSessionPatch) => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList, currentSessionList, toolbarConfig } = getState().chat;
   const newSessionList = _.cloneDeep(sessionList);
   const { id } = result;
@@ -116,8 +122,10 @@ export const updateSessionList = (result: any) => (dispatch: AppDispatch, getSta
 
       // 设置 @ 消息
       if ('atlist' in result) {
-        item.atlist = result.atlist;
-        if (result.atlist.length) {
+        // 【就地窄化（lead 13:23 允许；不缓存）】`'atlist' in result` 后 TS 仍视为可空，
+        // 两个读取点各自收窄，读取次数与基线一致，表达式形态不变。
+        item.atlist = result.atlist as string[];
+        if ((result.atlist as string[]).length) {
           item.messageAtlist = result.atlist;
         } else if (result.isWithdraw) {
           // 如果是撤回的，必须得清空
@@ -194,7 +202,7 @@ export const removeSession = (id: string) => {
  * 添加会话
  * @param {*} result
  */
-export const addSession = (result: any, id?: string) => (dispatch: AppDispatch, getState: GetState) => {
+export const addSession = (result: ChatRawMessageWire, id?: string) => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
 
   // 兼容连续消息
@@ -205,7 +213,9 @@ export const addSession = (result: any, id?: string) => (dispatch: AppDispatch, 
     const msg = {
       count: 0,
       id,
-      msg: `${name}: ${result.msg.con}`,
+      // 【局部窄化（lead 13:23 允许）】此处 `msg` 是 socket 的**对象**形态（`{ con }`），
+      // 不是系统消息那种字符串；`isPush` 在 wire 上未单列，按索引取值后断言为布尔。
+      msg: `${name}: ${(result.msg as { con?: unknown }).con}`,
       isPush: result.isPush,
     };
 
