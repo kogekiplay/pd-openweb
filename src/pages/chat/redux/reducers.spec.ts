@@ -431,6 +431,27 @@ function main(): void {
     );
   });
 
+  check('**结构不变量**：actions.ts 派发的每个 type 都有 reducer case（且反向也无孤儿）', () => {
+    /**
+     * 【为什么要有这条】
+     * 派发一个没有 case 的 `type`，redux 的 default 分支会**静默返回原 state** ——
+     * 不报错、不警告，行为上等于"什么都没发生"。这类拼写漂移（如
+     * `UPDATE_SHOW_ADD_RESSBOOK` 少个字母）单测数据是发现不了的，只能做**静态对账**。
+     * 本用例读两个源文件，断言"派发的 type 集合"与"case 处理的 type 集合"**完全相等**。
+     */
+    const fs = require('node:fs');
+    const path = require('node:path');
+    const read = (rel: string) => fs.readFileSync(path.join(F.ROOT, rel), 'utf8');
+    const dispatched = Array.from(
+      new Set(Array.from(read(path.join(F.REDUX_REL, 'actions.ts')).matchAll(/type: '([A-Z_]+)'/g), (m: any) => m[1])),
+    ).sort();
+    const handled = Array.from(
+      new Set(Array.from(read(path.join(F.REDUX_REL, 'reducers.ts')).matchAll(/case '([A-Z_]+)':/g), (m: any) => m[1])),
+    ).sort();
+    assert.deepEqual(dispatched, handled, '派发集合与 case 集合必须一致；差异=' +
+      JSON.stringify({ '只有派发': dispatched.filter((x: any) => !handled.includes(x)), '只有 case': handled.filter((x: any) => !dispatched.includes(x)) }));
+  });
+
   check('REMOVE_MESSAGES 的**先 delete 原 state 再浅复制**副作用（如实保留）', () => {
     const { root, init } = boot('current');
     const s1 = root(init(), { type: 'SET_MESSAGE', id: 'k1', result: [MSG_1] });

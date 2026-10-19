@@ -303,6 +303,7 @@ function reducersOf(load: (rel: string) => any) {
 }
 
 module.exports = {
+  ROOT,
   BASE_REV,
   BASE_REDUCERS_SHA,
   UTILS_REL,
