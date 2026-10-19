@@ -2,6 +2,7 @@ import _ from 'lodash';
 import type { AppDispatch, GetState } from 'src/redux/types';
 import type {
   ChatMessage,
+  ChatOutboundDraft,
   ChatRawMessageWire,
   ChatRawSessionWire,
   ChatSessionPatch,
@@ -1081,7 +1082,18 @@ export const pushPageMessage = (id: string, result: ChatMessage[]) => {
  * @param {*} newMessage
  * @param {*} prevMessage
  */
-export const addMessage = (newMessage: any, prevMessage: any) => (dispatch: AppDispatch) => {
+/**
+ * 发送一条新消息（先构造待发消息，再交给 `formatMessage`）。
+ * 【有限声明依据】
+ * - `newMessage` 是**出站草稿** `ChatOutboundDraft`：`sendMsg: newMessage` 原样保存便于重发；
+ *   它读取的 `waitingid`/`msg`/`togroup`/`touser`/`type`/`sysType`/`refer`/`referMessage`/
+ *   `card`/`file`/`isPrepare` 均已在该接口上显式声明。
+ * - `prevMessage` 是列表里上一条 `ChatMessage`（`formatMessage(message, prevMessage)` 的第二参）。
+ * 【本函数内部那条 `message` 字面量仍是手写形状】它的 `refer` 是**出站摘要**
+ * （`{ msg, type, user.full_name }`），与 `ChatMessage.refer`（`{ msgid, iswd, user.account_id }`）
+ * **形状本就不同**，不能直接改成 `ChatMessage`；该处在下批单独建模。
+ */
+export const addMessage = (newMessage: ChatOutboundDraft, prevMessage?: ChatMessage) => (dispatch: AppDispatch) => {
   const { Account: account } = md.global;
   // sysType / refer / card / isPrepare 是按消息种类【后面才补上】的
   //（系统消息 / 引用 / 卡片 / 预发送），所以要在这里写出形状。
@@ -1131,10 +1143,10 @@ export const addMessage = (newMessage: any, prevMessage: any) => (dispatch: AppD
   if (newMessage.refer) {
     const { referMessage } = newMessage;
     message.refer = {
-      msg: referMessage.msg.con,
-      type: referMessage.type,
+      msg: referMessage!.msg!.con,
+      type: referMessage!.type,
       user: {
-        full_name: referMessage.fromAccount.name,
+        full_name: referMessage!.fromAccount!.name,
       },
     };
   }
@@ -1144,7 +1156,7 @@ export const addMessage = (newMessage: any, prevMessage: any) => (dispatch: AppD
     message.card = newMessage.card;
   } else if (newMessage.type === Constant.MSGTYPE_PIC) {
     // 图片消息
-    newMessage.file.url = window.config.FilePath + newMessage.file.key;
+    newMessage.file!.url = window.config!.FilePath! + newMessage.file!.key!;
     message.msg.files = newMessage.file;
     message.isPrepare = newMessage.isPrepare || false;
   } else if (newMessage.type === Constant.MSGTYPE_FILE || newMessage.type === Constant.MSGTYPE_APP_VIDEO) {

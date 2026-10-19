@@ -223,10 +223,24 @@ export interface ChatOutboundDraft {
   type?: number | undefined;
   /** @ 参数（群聊） */
   atParam?: unknown;
-  /** 引用消息（完整对象，便于重发） */
-  referMessage?: unknown;
   /** 引用指向（`{ msgid }`） */
   refer?: { msgid?: string | undefined; [key: string]: unknown } | undefined;
+  /* ── 以下为 `addMessage` **实际读取**的出站字段（逐处取证） ── */
+  /** 引用消息的完整对象：读 `referMessage.msg.con` / `.type` / `.fromAccount.name` */
+  referMessage?:
+    | {
+        msg?: { con?: string | undefined; [key: string]: unknown } | undefined;
+        type?: number | undefined;
+        fromAccount?: { name?: string | undefined; [key: string]: unknown } | undefined;
+        [key: string]: unknown;
+      }
+    | undefined;
+  /** 卡片消息体：`message.card = newMessage.card` */
+  card?: unknown;
+  /** 图片/文件附件：`newMessage.file.url` 会被赋值、`message.msg.files = newMessage.file` */
+  file?: { key?: string | undefined; url?: string | undefined; [key: string]: unknown } | undefined;
+  /** 预发送标记：`message.isPrepare = newMessage.isPrepare || false` */
+  isPrepare?: boolean | undefined;
   /** 其余按消息种类扩展的出站字段 */
   [key: string]: unknown;
 }
