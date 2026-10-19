@@ -312,7 +312,7 @@ export const formatMessage = (message: ChatMessage, prevMessage?: ChatMessage): 
  * 随后参与 `messages` 字典；返回 `ChatMessage`。
  * 入参是**原始 socket 载荷**（未经过 `formatMessage`），故保持未标注并在下方"未覆盖"中列出。
  */
-export const formatNewMessage = (message, prevMessage): ChatMessage => {
+export const formatNewMessage = (message: ChatMessage, prevMessage?: ChatMessage): ChatMessage => {
   message.iswd = false;
   message.fromAccount = {
     id: message.from,

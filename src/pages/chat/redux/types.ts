@@ -380,6 +380,8 @@ export interface ChatMessage {
   groupname?: string | undefined;
   /** 用户名称（`utils` 读） */
   uname?: string | undefined;
+  /** 发送者头像：`formatNewMessage` 写 `fromAccount.logo`、`formatNewSession` 读 `message.logo` */
+  logo?: string | undefined;
   /** 消息 id 别名（`utils: message.msgid = message.id` 赋值，故与 `id` 同类型） */
   msgid?: string | number | undefined;
   /**
