@@ -276,7 +276,7 @@ export const filterSessionList = (list: ChatSession[]): ChatSession[] => {
  * 批量格式化消息（原始接口返回 → 可渲染消息）。
  *
  * 【为什么保持未标注】它的入参是**接口原始返回**，在 3 个范围外调用点
- * （`MessageView:71/261/340`）里，`res` 的类型是 `unknown`（来自 `getMessage(...)` 的
+ * （`MessageView` 里调用 `ajax.getMessage(...)` 之后）`res` 的类型是 `unknown`（来自 `getMessage(...)` 的
  * Promise 结果，经 `_.isArray` 判断后仍未收窄）。一旦把入参标注为 `ChatMessage[]`，
  * 这 3 处会新增 `TS2345` —— 属**范围外**文件，按 lead 规则不在本批编辑、
  * 由 lead 处理实现侧。因此这里保持原有未标注形态，`any` 残留在下方"未覆盖"中如实列出。

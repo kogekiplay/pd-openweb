@@ -59,8 +59,8 @@ export type ChatAction =
   | { type: 'UPDATE_INBOX_SESSION'; id: string; data: Partial<ChatSession> }
   /* ── 消息记录 ── */
   // 【载荷形状逐点核对真实 dispatch】全部是**数组**，没有单条形态：
-  // - `resetMessage(id, result)`           ← `MessageView:223` `utils.formatMessages(res)`
-  // - `setMessage(id, result)`             ← `MessageView:71`  `utils.formatMessages(res)`
+  // - `resetMessage(id, result)`           ← `MessageView` 里 `utils.formatMessages(res)`
+  // - `setMessage(id, result)`             ← `MessageView` 里 `utils.formatMessages(res)`
   // - `addMessage` 初始 SET                ← `addMessage` 里 `[utils.formatMessage(...)]`（**已包数组**）
   // - `updateFileMessage` / `updateMessage` ← `newCurrentMessage`（`map` 结果，数组）
   // - `updateWithdrawMessage` SET          ← `currentMessage`（数组）

@@ -466,7 +466,7 @@ export const operate = (status: any) => (dispatch: AppDispatch, getState: GetSta
  */
 /**
  * 发送置顶请求。
- * 【有限声明依据】三个调用方（SessionList:449 / ChatPanelHeader:188 / inboxHeader:96）
+ * 【有限声明依据】三个调用方（`SessionList` / `ChatPanelHeader` / `Inbox/components/inboxHeader`）
  * 传的都是同一形状：`{ type, value, isTop }`。
  */
 export const sendSetTop = (message: { type: number; value: string; isTop: boolean }) => (_dispatch: AppDispatch, getState: GetState) => {
@@ -1057,7 +1057,7 @@ export const setMessage = (id: string, result: ChatMessage[]) => (dispatch: AppD
  */
 /**
  * 重新填充聊天记录。
- * 【有限声明依据】唯一调用点 `MessageView:223` 传的是 `utils.formatMessages(res)`（数组）。
+ * 【有限声明依据】调用点都在 `MessageView` 里（`resetMessage` 两处），传的是 `utils.formatMessages(res)`（数组）。
  */
 export const resetMessage = (id: string, result: ChatMessage[]) => {
   return {
@@ -1074,7 +1074,7 @@ export const resetMessage = (id: string, result: ChatMessage[]) => {
  */
 /**
  * 向上加载一页（前插）。
- * 【有限声明依据】`MessageView:261/450` 都传 `utils.formatMessages(res)`（数组）。
+ * 【有限声明依据】`MessageView` 里两处 `addPageMessage` 都传 `utils.formatMessages(res)`（数组）。
  */
 export const addPageMessage = (id: string, result: ChatMessage[]) => {
   return {
@@ -1091,7 +1091,7 @@ export const addPageMessage = (id: string, result: ChatMessage[]) => {
  */
 /**
  * 向下补齐一页（后接）。
- * 【有限声明依据】`MessageView:286` 传 `formatMessages(res)`、`:320` 传 `formatMessages(bottomUnread)`（均为数组）。
+ * 【有限声明依据】`MessageView` 里两处 `pushPageMessage`：一处传 `formatMessages(res)`、另一处传 `formatMessages(bottomUnread)`（均为数组）。
  */
 export const pushPageMessage = (id: string, result: ChatMessage[]) => {
   return {
@@ -1789,7 +1789,7 @@ export const newWithdrawGroupMessage = (message: { gid: string; id?: string | nu
  */
 /**
  * 设置引用消息。
- * 【有限声明依据】唯一调用点 `Message/index.tsx:84` 传的是组件 props 的 `message`，
+ * 【有限声明依据】唯一调用点 `Message` 组件里传的是组件 props 的 `message`，
  * 即当前列表里的一条 `ChatMessage`；与 `ChatAction` 里 `SET_REFER_MESSAGE.message` 同型。
  */
 export const setReferMessage = (id: string, message: ChatMessage) => {
@@ -1973,7 +1973,7 @@ export const refresh = () => (dispatch: AppDispatch, getState: GetState) => {
  */
 /**
  * 发送免打扰设置请求。
- * 【有限声明依据】两个调用点（`inboxHeader:112`、`SessionList:517`）传的都是
+ * 【有限声明依据】两个调用点（`inboxHeader`、`SessionList`）传的都是
  * `{ type, AccountID, isSilent }` —— **与 `setSlience`（入站事件）形状不同**，
  * 不要合并成一个类型。
  */
@@ -2038,8 +2038,8 @@ export const setSocketState = (state: number) => {
 /**
  * 局部更新 toolbar 配置。
  * 【有限声明依据】真实调用点传的都是**部分配置**：
- * `Apps/index.tsx:117` `{ hideOpenCommonApp: ... }`、
- * `SettingDrawer/index.tsx:95` 账号设置补丁（`{ ...values, ...param }` 形态）。
+ * `Apps` 的 `index.tsx` 里 `{ hideOpenCommonApp: ... }`、
+ * `SettingDrawer` 的 `index.tsx` 里账号设置补丁（`{ ...values, ...param }` 形态）。
  * 与 `ChatAction` 里 `SET_TOOLBAR_CONFIG.result` 的 `Partial<ChatToolbarConfig>` 同型。
  */
 export const setToolbarConfig = (config: Partial<ChatToolbarConfig>) => {

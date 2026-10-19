@@ -103,7 +103,7 @@ export const getMessage = (conf: {
   page?: number;
   num?: number;
   keyword?: string;
-  /** 真实调用点既传字符串方向（'up'/'down'）也传数字（`MessageView:288 direction: 1`） */
+  /** 真实调用点既传字符串方向（'up'/'down'）也传数字（`MessageView` 里有 `direction: 1`） */
   direction?: string | number;
 }): ApiResultOf<ChatMessage[]> | undefined => {
   // 【返回值含 undefined 的依据】只有 `SESSIONTYPE_GROUP` / `SESSIONTYPE_USER` 两个分支
