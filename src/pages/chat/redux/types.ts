@@ -130,6 +130,20 @@ export interface ChatSession {
   _time?: unknown;
   /** @ 成员列表备份（`item.messageAtlist = item.atlist`） */
   messageAtlist?: unknown;
+  /* ── 以下为 `actions.ts` 对**会话对象**直接写入的字段（逐行取证） ── */
+  /** 未读计数：`actions.ts:79/88` `item.messageCount = result.clearCount / 0` */
+  messageCount?: number | undefined;
+  /** 群头像：`actions.ts:843` `item.logo = avatar`（`updateGroupAvatar`，`sessionList.map`） */
+  logo?: string | undefined;
+  /** 是否已验证：`actions.ts:937` `item.isVerified = isVerified`（`currentSessionList.map`） */
+  isVerified?: boolean | undefined;
+  /** @ 消息体：`actions.ts:128` `item.at_msg = result.at_msg`（更新会话时透传） */
+  at_msg?: {
+    time?: unknown;
+    message_id?: unknown;
+    msgid?: unknown;
+    [key: string]: unknown;
+  } | undefined;
   /** `count`：未读计数（`actions.ts:575` 读 `currentSession.count`；`SessionList` 里当数字用） */
   count?: number | undefined;
   /** `isRender`：渲染标记（`actions.ts:970` 写 `currentSession.isRender`） */
