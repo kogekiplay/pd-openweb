@@ -97,23 +97,22 @@ export interface ChatSession {
   onStatusOption?: unknown;
   /** 弱关联计数（部门/外部联系人扩展） */
   weak_count?: number | undefined;
-  /**
-   * 其余字段按会话类型扩展（群成员、部门、状态等）。
-   * 保留 `unknown` 索引签名：这些是**真正随类型变化的扩展元数据**，
-   * 已消费的字段都在上面显式声明，不是"整对象塞索引"的逃生口。
-   * 【实测依据】移除该索引签名会让 chat 范围炸出 **1305 条**新诊断、影响 **113 个文件**。
-   */
-  [key: string]: unknown;
-  /** `count`：未读计数（`actions.ts:575` 读 `currentSession.count`） */
-  /** SessionList/ChatPanel 里当数字用（`count : 0`） */
+  /** `count`：未读计数（`actions.ts:575` 读 `currentSession.count`；`SessionList` 里当数字用） */
   count?: number | undefined;
   /** `isRender`：渲染标记（`actions.ts:970` 写 `currentSession.isRender`） */
   isRender?: boolean | undefined;
-  /** `refer`/`reflist`：引用相关（`actions.ts:1658/1668` 读 `session.refer`/`session.reflist`） */
-  /** `actions.ts:1658` 只做真值判断 */
+  /** `refer`/`reflist`：引用相关（`actions.ts:1658/1668` 只做真值判断） */
   refer?: unknown;
   reflist?: unknown[] | undefined;
-
+  /**
+   * 其余字段按会话类型扩展（群成员、部门、状态等）。
+   * 保留 `unknown` 索引签名：这些是**真正 opaque** 的扩展元数据。
+   * 上面已按「直接读取 / 解构 / props.session.x / _.get / 等价变量」五种访问形式
+   * 把能证明的消费字段全部显式声明；索引签名只兜住不可枚举的扩展。
+   * （不以"删除后新增诊断数"作为必要性证明 —— 那种统计会把消费方自身的
+   *  隐式 any 一并计入，无法区分"索引承载了真实字段"与"消费方本就没标注"。）
+   */
+  [key: string]: unknown;
 }
 
 /**
