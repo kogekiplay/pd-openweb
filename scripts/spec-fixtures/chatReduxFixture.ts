@@ -199,6 +199,11 @@ function loadRealUtils(): Record<string, any> {
       return str ? String(str).replace(matchHTML, m => rules[m] || m) : '';
     },
     pathCompletion: () => '',
+    /**
+     * 【为什么是恒等替身】真实实现按用户时区换算时刻，会让规格**依赖运行环境的时区**；
+     * 本规格刻意保持时区无关（已验证 UTC / Kiritimati / Etc/GMT+12 结果一致）。
+     * 代价：**时区换算本身不被测**（两侧都走同一替身，故对被测逻辑仍是公平对照）。
+     */
     dateConvertToUserZone: (v: unknown) => v,
     /**
      * `src/pages/chat/utils/constant.ts` 的**关键常量真实值**（不是空对象）。
