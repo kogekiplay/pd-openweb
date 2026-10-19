@@ -26,7 +26,16 @@
  */
 export interface ChatSession {
   /** 会话 id；`REMOVE_SESSION`/`REMOVE_CURRENT_SESSION` 按它过滤 */
+  /**
+   * 会话 id。
+   * 【为何允许 number（lead 15:29 实测反例）】`formatNewSession` 的**系统消息分支**只写
+   * `value = id`、`time`、`msg`，**不改 `id` 本身** —— 数值 id 会原样返回
+   * （`formatter-shapes.cjs`：`systemSessionId: 123` / `systemSessionValue: 123`）。
+   */
+  /** 会话 id；`REMOVE_SESSION`/`REMOVE_CURRENT_SESSION` 按它过滤 */
   id?: string | undefined;
+  /** `filterSessionList` 按 `value` 去重（lodash `groupBy('value')`） */
+  /** 去重键；同 `id`：系统分支不改它，数值形态可达 */
   /** `filterSessionList` 按 `value` 去重（lodash `groupBy('value')`） */
   value?: string | undefined;
   isGroup?: boolean | undefined;
@@ -49,6 +58,13 @@ export interface ChatSession {
    */
   sendMsg?: string | null;
   /** `atlist`：被 @ 的成员列表（`actions.ts:1618/1647/1648` 读取并 filter） */
+  /**
+   * @ 列表补丁。
+   * 【present/undefined 合同（lead 15:29 要求）】如实允许"键存在但值为 `undefined`"：
+   * `'atlist' in result` **不证明**值一定是数组，所以这里带 `| undefined`。
+   * 消费点若需要 `.length`，用**擦除式非空断言**（零运行时）保留原生的"对 undefined 取属性"失败，
+   * 而不是 `as string[]` 把非数组硬说成数组。
+   */
   atlist?: string[] | undefined;
   /** `isSession`：是否会话（`actions.ts:683`） */
   isSession?: boolean | undefined;
@@ -124,7 +140,14 @@ export interface ChatSession {
    * **无条件**读取 `item.from.id`（与本人 accountId 比较）与 `item.from.name`（撤回/预览文案，
    * 直接用于模板拼接与 `_l(..., name)`）。即"只要 from 存在，它就是完整的发送者对象"。
    */
-  from?: { id: string; name: string; [key: string]: unknown } | undefined;
+  /**
+   * 发送者对象。
+   * 【为何 `id` 可选（lead 实测反例）】`formatSession({ from: { name: 'User' } })` 会**成功返回**，
+   * 且 `from.id` 仍为 `undefined`（`formatter-shapes.cjs`：
+   * `formatSessionCanReturnMissingSenderId: true`）。
+   * "读取某字段"不等于"生产方保证该字段必填"——之前声明必填是**过度声称**。
+   */
+  from?: { id?: string | undefined; name: string; [key: string]: unknown } | undefined;
   /** 系统消息类型：`!item.sysType` 判断是否系统消息 */
   sysType?: number | undefined;
   /** 撤回管理员 id：`item.wdAdminid === accountId` 判断是否管理员撤回 */
@@ -301,8 +324,51 @@ export interface ChatRawSessionWire {
  * 【字段依据】`formatNewMessage` / `formatNewSession` 与它们转交的 `formatMessage` /
  * `formatSession` 实际读写的字段，逐行取证；其余按键保留 `unknown` 索引。
  */
-export interface ChatRawMessageWire {
+/**
+ * **普通 socket 消息的原始 wire**（`receiveMessage` → `formatNewMessage` 的真实入参）。
+ *
+ * 【为什么单独收一层，而不是复用 `ChatRawMessageWire`】
+ * `formatNewMessage` **完全不动 `msg`** —— 它只写 `iswd` 与 `fromAccount`，然后转交
+ * `formatMessage`。所以输出里 `msg` 保持输入形态。lead 实测反例：
+ * `formatNewMessage({..., msg: 'wire string'})` 返回原对象且 `msg` 仍是 **string**
+ * （`formatter-shapes.cjs`：`formatNewMessageLeavesStringMsg: "string"`）。
+ *
+ * 而**真实生产方**传的都是对象 msg：`actions.ts` 里读 `message.msg.con` / `message.msg.files`
+ * 共 6 处，说明普通消息的 `msg` 已是 `{ con, files }`。故这里**按真实生产方收紧**为对象，
+ * 不再用"string | object"泛化后靠断言抹平。
+ */
+export interface ChatNewMessageWire {
   id?: string | number | undefined;
+  from?: string | undefined;
+  uname?: string | undefined;
+  logo?: string | undefined;
+  /** 真实生产方恒为对象（见上） */
+  msg?: { con?: string | undefined; files?: unknown; [key: string]: unknown } | undefined;
+  time?: number | string | undefined;
+  type?: number | undefined;
+  iswd?: boolean | undefined;
+  isMine?: boolean | undefined;
+  isDuplicated?: boolean | undefined;
+  timestamp?: string | null | undefined;
+  unreadLine?: boolean | undefined;
+  isPush?: boolean | undefined;
+  isSession?: boolean | undefined;
+  dtype?: unknown;
+  fromAccount?:
+    | { id?: string | undefined; name?: string | undefined; logo?: string | undefined; [key: string]: unknown }
+    | undefined;
+  [key: string]: unknown;
+}
+
+export interface ChatRawMessageWire {
+  /**
+   * 消息/会话 id（wire 阶段）。
+   * 【为什么是 string 而不是 string | number】`formatNewSession` 的系统消息分支不改 `id`，
+   * 若允许数值 id，输出会带数值 id 并**连锁污染**会话列表契约（`removeCurrentSession(id)` 等）。
+   * lead 15:29 的要求是：**无法证明是合法生产值时，按生产证据收紧入参**，而不是放宽输出。
+   * 真实 socket 消息的 `id` 由服务端给出且下游按字符串比较，故此处收紧为 `string`。
+   */
+  id?: string | undefined;
   /**
    * 发送者：wire 阶段是 **id 字符串**；`formatNewSession` 会把它**原地改型**成发送者对象。
    * 因此这里如实写成**过渡联合**（lead 方案要求"msg/from 原地改型如实建过渡联合"）。
@@ -330,7 +396,7 @@ export interface ChatRawMessageWire {
   isGroup?: boolean | undefined;
   groupname?: string | undefined;
   to?: string | undefined;
-  value?: string | number | undefined;
+  value?: string | undefined;
   msgid?: string | number | undefined;
   /** 系统消息判别键（`'dtype' in message`） */
   dtype?: unknown;
@@ -350,15 +416,27 @@ export interface ChatRawMessageWire {
  * 此时 `msg` 与 `from` 已被**原地改型**为对象（见该函数内两处赋值）。
  * 这是 lead 方案里"原地转换过渡"那一层，如实反映"同一对象、字段类型已变"。
  */
-export interface ChatSessionWireNormalized extends ChatRawMessageWire {
-  msg: { con?: unknown; files?: unknown; [key: string]: unknown };
-  from: {
-    id?: string | undefined;
-    name?: string | undefined;
-    avatar?: string | undefined;
-    [key: string]: unknown;
-  };
-}
+/**
+ * `formatNewSession` 的**规范化输出形态**（两个分支各自的真实结果）。
+ *
+ * 【为什么是联合而不是单一接口（lead 实测反例）】
+ * - **系统消息分支**（`'dtype' in message`）只写 `msg`（string → `{con}`）、`time`、`value`，
+ *   **从不写 `from`** → 输出**可能没有自有 `from`**；`id`/`value` 也保持原始形态（可能是 number）
+ *   （`formatter-shapes.cjs`：`systemSessionHasFrom: false` / `systemSessionId: 123`）。
+ * - **非系统分支**会把 `from` 由 id 字符串**原地改型**为发送者对象。
+ * 所以"from 必有对象"只对非系统分支成立，不能一律断言。
+ */
+export type ChatSessionWireNormalized =
+  | (ChatRawMessageWire & {
+      /** 系统分支：msg 被改成对象；from 未被写入 */
+      msg: { con?: unknown; files?: unknown; [key: string]: unknown };
+      from?: ChatRawMessageWire['from'];
+    })
+  | (ChatRawMessageWire & {
+      /** 非系统分支：msg/from 都被原地改型 */
+      msg: { con?: unknown; files?: unknown; [key: string]: unknown };
+      from: { id?: string | undefined; name?: string | undefined; avatar?: string | undefined; [key: string]: unknown };
+    });
 
 /**
  * 一条聊天消息。

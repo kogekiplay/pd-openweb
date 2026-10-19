@@ -122,10 +122,11 @@ export const updateSessionList = (result: ChatSessionPatch) => (dispatch: AppDis
 
       // 设置 @ 消息
       if ('atlist' in result) {
-        // 【就地窄化（lead 13:23 允许；不缓存）】`'atlist' in result` 后 TS 仍视为可空，
-        // 两个读取点各自收窄，读取次数与基线一致，表达式形态不变。
-        item.atlist = result.atlist as string[];
-        if ((result.atlist as string[]).length) {
+        // 【擦除式合同（lead 15:29 允许）】`'atlist' in result` 不证明值一定是数组，
+        // 故类型上保留 `| undefined`；`.length` 处用非空断言**仅擦除类型**（零运行时），
+        // 若值确为 undefined，仍由原生 "Cannot read properties of undefined" 失败 —— 原行为保留。
+        item.atlist = result.atlist;
+        if (result.atlist!.length) {
           item.messageAtlist = result.atlist;
         } else if (result.isWithdraw) {
           // 如果是撤回的，必须得清空

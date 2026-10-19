@@ -7,6 +7,7 @@ import { dateConvertToUserZone } from 'src/utils/project';
 import Constant from './constant';
 import type {
   ChatMessage,
+  ChatNewMessageWire,
   ChatRawMessageWire,
   ChatRawSessionWire,
   ChatSession,
@@ -329,7 +330,7 @@ export const formatMessage = (message: ChatMessage, prevMessage?: ChatMessage): 
  * 入参是**原始 socket 载荷**（未经过 `formatMessage`），故保持未标注并在下方"未覆盖"中列出。
  */
 export const formatNewMessage = (
-  message: ChatRawMessageWire,
+  message: ChatNewMessageWire,
   prevMessage?: ChatMessage,
 ): ChatMessage => {
   message.iswd = false;
