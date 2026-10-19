@@ -23,7 +23,7 @@
  * 本模块恰好涉及 `Object.assign([], ...)`（保留数组额外属性）、`delete` 副作用
  * 与 `undefined` 值，用 JSON 比较会把差异**看不见**。
  *
- * 【覆盖】共 **24 个 A/B 场景 + 37 个 check 用例**（合计 61 项），对应 lead 点名的行为面：
+ * 【覆盖】共 **24 个 A/B 场景 + 38 个 check 用例**（合计 62 项），对应 lead 点名的行为面：
  *
  * A/B（逐步快照 + 每步「是否返回原引用」）：
  * - 初始值（12 个切片）；`SET/ADD/UPDATE_SESSION_LIST`、`REMOVE_SESSION`、`ADD_SESSION`
@@ -470,6 +470,35 @@ function main(): void {
     ).sort();
     assert.deepEqual(dispatched, handled, '派发集合与 case 集合必须一致；差异=' +
       JSON.stringify({ '只有派发': dispatched.filter((x: any) => !handled.includes(x)), '只有 case': handled.filter((x: any) => !dispatched.includes(x)) }));
+  });
+
+  check('`UPDATE_MESSAGE` / `UPDATE_CURRENT_SESSION` 返回**副本**而非载荷本身', () => {
+    /**
+     * 【为什么必须有 —— 由变异测试发现】
+     * 两个 UPDATE 的实现都是"复制"：
+     *   `UPDATE_MESSAGE`          → `Object.assign({}, action.result)`
+     *   `UPDATE_CURRENT_SESSION`  → `Object.assign([], action.result)`
+     * 把它们改成**直接返回载荷**（`return action.result`）时，值断言全绿 ——
+     * 因为返回的对象/数组与载荷深度相等。但语义差别是真实的：
+     * **副本**意味着调用方之后改载荷不会波及 state，反之亦然。
+     * （这与 `SET_CURRENT_SESSION` 的 copy-vs-alias 用例同类，只是换了两个 action。）
+     */
+    const { root, init } = boot('current');
+
+    // ① UPDATE_MESSAGE 返回新对象
+    const msgPayload = { k9: [MSG_2] };
+    const updated = root(init(), { type: 'UPDATE_MESSAGE', result: msgPayload });
+    assert.ok(updated.messages !== msgPayload, 'UPDATE_MESSAGE 返回**新对象**（不是载荷本身）');
+    assert.deepEqual(updated.messages, msgPayload, '内容与载荷一致');
+
+    // ② UPDATE_CURRENT_SESSION 返回新数组
+    const sessPayload = [SESSION_A, SESSION_B];
+    const updatedSess = root(init(), { type: 'UPDATE_CURRENT_SESSION', result: sessPayload });
+    assert.ok(
+      (updatedSess.currentSessionList as unknown) !== (sessPayload as unknown),
+      'UPDATE_CURRENT_SESSION 返回**新数组**（不是载荷本身）',
+    );
+    assert.deepEqual(updatedSess.currentSessionList, sessPayload, '内容与载荷一致');
   });
 
   check('真实 formatMsgDate：跨年分支与 isHourMinute 两态、以及未来时间分支（**确定性**）', () => {
