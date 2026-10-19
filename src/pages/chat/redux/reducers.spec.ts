@@ -547,10 +547,13 @@ function main(): void {
      * 于是 `message.type === Constant.MSGTYPE_TEXT` **恒 false** ——
      * "连续文本消息合并"分支**永远不进**。已把替身换成真实常量值（`MSGTYPE_TEXT: 1`）。
      */
-    F.installHost({ localStorage: F.makeLocalStorage({}) });
+    // 【accountId 显式设为 'me'】此前夹具不设 accountId（undefined），
+    // 于是 `from === accountId` 的 isMine=true 是靠 `undefined === undefined` **空过**的。
+    F.installHost({ localStorage: F.makeLocalStorage({}), accountId: 'me' });
     const utils = F.loadRealUtils();
     const accountId = (globalThis as { md?: { global?: { Account?: { accountId?: string } } } }).md
       ?.global?.Account?.accountId;
+    assert.ok(accountId === 'me', '宿主 accountId 必须是显式 "me"，否则 isMine=true 是空过');
 
     // ① 普通消息：timestamp 是文案字符串；isMine 由 from === accountId 决定
     const m1 = { id: 'm1', from: 'other', time: 1700000000000, type: 1 };
@@ -559,7 +562,9 @@ function main(): void {
     assert.equal(out1.isMine, false, 'from 非本人 → isMine=false');
 
     const mine = { id: 'm9', from: accountId, time: 1700000000000, type: 1 };
-    assert.equal(utils.formatMessage(mine).isMine, true, 'from 是本人 → isMine=true');
+    assert.equal(utils.formatMessage(mine).isMine, true, 'from 是本人(me) → isMine=true');
+    // 对照：同一次宿主设置下，别的 from 必须是 false
+    assert.equal(utils.formatMessage({ id: 'm10', from: 'not-me', time: 1700000000000, type: 1 }).isMine, false, 'from 非本人 → isMine=false');
 
     // ② 连续文本消息（同一发送者、间隔 < 3 分钟、type=1）→ timestamp 置 null、isDuplicated=true
     const m2 = { id: 'm2', from: 'other', time: 1700000000000 + 1000, type: 1 };
@@ -683,7 +688,17 @@ function main(): void {
     utils.formatSession(self3);
     assert.ok(String(self3.msg.con).includes('管理员'), 'isSelf + iswd + wdAdminid===accountId：走管理员文案，实际=' + self3.msg.con);
 
-    // ④ 非自己 + 撤回 + 自己是管理员：另一种文案（含成员名）
+    // ④ formatNewSession 的**本人分支**：`accountId === message.from` 时 value 取 to
+    //    （此前 accountId 恒 undefined，这个分支从未执行）
+    const own: Record<string, any> = { id: 'o1', from: 'me', to: 'sess-1', msg: { con: 'hi' }, type: 1 };
+    utils.formatNewSession(own);
+    assert.equal(own.value, 'sess-1', 'accountId === from（本人）→ value 取 to');
+    // 对照：非本人时 value 取 from
+    const notOwn: Record<string, any> = { id: 'o2', from: 'other', to: 'sess-2', msg: { con: 'hi' }, type: 1 };
+    utils.formatNewSession(notOwn);
+    assert.equal(notOwn.value, 'other', 'accountId !== from → value 取 from');
+
+    // ⑤ 非自己 + 撤回 + 自己是管理员：另一种文案（含成员名）
     const other: Record<string, any> = { id: 's4', type: 1, msg: { con: 'z' }, from: { id: 'other', name: '对方' }, iswd: true, wdAdminid: 'me' };
     utils.formatSession(other);
     assert.ok(String(other.msg.con).includes('你撤回了成员'), '非自己 + iswd + 自己是管理员：走成员撤回文案，实际=' + other.msg.con);
