@@ -83,8 +83,14 @@ export interface ChatSession {
    * `item.msg.con = con`（**字符串拼接结果**）、随后 `htmlDecodeReg(item.msg.con)`。
    */
   msg?: {
-    /** 预览正文：`formatSession` 末尾 `item.msg.con = htmlDecodeReg(item.msg.con)`，产出恒为 string */
-    con: string;
+    /**
+     * 预览正文。
+     * 【为何允许 `undefined`】`formatSession` 末尾确实把它写成 string，
+     * 但 `updateSessionList` 里 `item.msg.con = result.msg` 位于 `'count' in result` 守卫内、
+     * **没有 `msg` 守卫**，补丁未带 `msg` 时就会写入 `undefined`。
+     * 故这里如实体现在 `string | undefined`，而不是声称"恒为 string"。
+     */
+    con?: string | undefined;
     files?: unknown;
     [key: string]: unknown;
   } | undefined;
@@ -330,7 +336,13 @@ export interface ChatSessionPatch {
    * （`${name}: ${result.msg.con}` / `${name}: ${message.msg.con}`），故是 `string`。
    */
   msg?: string | undefined;
-  msgId?: string | number | undefined;
+  /**
+   * 消息 id 补丁。
+   * 【为何是 string】唯一写入点是 `newUserMessage`/`newGroupMessage` 的
+   * `msgId: message.id`，而该值同文件内被与**字符串**会话 `value` 直接比较
+   * （`sessionList.filter(item => item.value === message.id)`），故按字符串建模。
+   */
+  msgId?: string | undefined;
   isPush?: boolean | undefined;
   isContact?: boolean | undefined;
   isTop?: boolean | undefined;

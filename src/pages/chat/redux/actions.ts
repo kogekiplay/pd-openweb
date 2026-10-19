@@ -5,6 +5,7 @@ import type {
   ChatOutboundDraft,
   ChatPendingMessage,
   ChatRawMessageWire,
+  ChatSession,
   ChatRawSessionWire,
   ChatSessionPatch,
   ChatToolbarConfig,
@@ -48,10 +49,10 @@ export const updateSessionList = (result: ChatSessionPatch) => (dispatch: AppDis
   const { sessionList, currentSessionList, toolbarConfig } = getState().chat;
   const newSessionList = _.cloneDeep(sessionList);
   const { id } = result;
-  const adjust: any[] = [];
+  const adjust: ChatSession[] = [];
   let hasClearCount = false;
 
-  newSessionList.forEach((item: any) => {
+  newSessionList.forEach(item => {
     if (item.value === id) {
       // 草稿
       if ('sendMsg' in result) {
@@ -63,9 +64,9 @@ export const updateSessionList = (result: ChatSessionPatch) => (dispatch: AppDis
 
       // 计数
       if ('count' in result) {
-        item.count = 'weak' in result ? item.count : (item.count || 0) + result.count;
+        item.count = 'weak' in result ? item.count : (item.count || 0) + result.count!;
         item.time = utils.formatMsgDate(dateConvertToUserZone(result.time || utils.getCurrentTime()));
-        item.msg.con = result.msg;
+        item.msg!.con = result.msg;
         item.id = result.msgId;
         item.isPush = result.isPush;
         adjust.push(item);
@@ -75,7 +76,7 @@ export const updateSessionList = (result: ChatSessionPatch) => (dispatch: AppDis
             item.weak_count = result.count;
             item.isPush = item.count ? true : false;
           } else {
-            item.count = item.count + result.count;
+            item.count = item.count! + result.count!;
             item.isPush = true;
           }
         }
@@ -100,11 +101,11 @@ export const updateSessionList = (result: ChatSessionPatch) => (dispatch: AppDis
       // 添加会话
       if ('addMsg' in result) {
         item.time = utils.formatMsgDate(dateConvertToUserZone(result.time || utils.getCurrentTime()));
-        item.msg.con = result.addMsg;
+        item.msg!.con = result.addMsg;
         adjust.push(item);
         delete item.isSession;
         let isSetTop = false;
-        const newCurrentSessionList = currentSessionList.map((n: any) => {
+        const newCurrentSessionList = currentSessionList.map(n => {
           if (n.id === item.value && 'isSession' in n) {
             isSetTop = true;
             n.isTop = false;
@@ -176,8 +177,8 @@ export const updateSessionList = (result: ChatSessionPatch) => (dispatch: AppDis
 
   // 新的计数会话排到第一个位置
   if (adjust.length) {
-    const { value } = adjust[0];
-    const list = newSessionList.filter((item: any) => value !== item.value);
+    const { value } = adjust[0]!;
+    const list = newSessionList.filter(item => value !== item.value);
     dispatch({
       type: 'SET_SESSION_LIST',
       result: utils.sortSession(adjust.concat(list), value, toolbarConfig.messageListShowType),
