@@ -6,10 +6,16 @@
  *
  * 【哪些真实、哪些替身】
  * - **真实**：`reducers.ts` 本身（两侧都从真实源码编译执行，**不复制假 reducer**）；
- *   `utils.filterSessionList` / `sortSession` / `getToolbarConfig`（按 AST 从真实
- *   `src/pages/chat/utils/index.ts` 抽声明原文后执行）。
- * - **替身（宿主可控）**：`localStorage`（4 个开关）、`md.global.Account.messageListShowType`、
- *   `utils` 的重依赖（moment/Emotion/src alias）。
+ *   `utils` 的 **10 个 helper**（按 AST 从真实 `src/pages/chat/utils/index.ts` 抽声明原文后执行）：
+ *   会话列表 `filterSessionList`/`sortSession`/`sortTop`、工具栏 `getToolbarConfig`、
+ *   消息 `formatMessage`/`formatNewMessage`/`formatMsgDate`、
+ *   会话 `formatSession`/`formatNewSession`、时间 `getCurrentTime`。
+ * - **真实库**：`lodash`、`moment`（`moment` 仅把**无参调用**即"取当前时间"固定为
+ *   `2026-10-19 12:00:00`，其余调用——解析入参、`.subtract` 等——全走真实实现）。
+ * - **受控替身**：`localStorage`（4 个开关）、`md.global.Account`（`messageListShowType`/
+ *   `accountId`）、`_l`（**实现 `%0` 占位替换**，不做语言切换）、`htmlDecodeReg`（逐字忠实副本）、
+ *   `Constant`（**真实取值**，非空对象）、`dateConvertToUserZone`（恒等，为时区无关性）。
+ * - **不可达替身**：`Emotion`、`pathCompletion`（抽取的 helper 不引用）。
  * - 不发真实网络/socket、不写真实 localStorage。
  *
  * 【为什么用 `deepEqual`/`Object.is` 而不是 `JSON.stringify`】
