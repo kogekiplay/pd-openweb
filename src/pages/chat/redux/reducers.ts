@@ -43,11 +43,14 @@ export type ChatAction =
   | { type: 'SET_CURRENT_SESSION'; result: ChatSession }
   /* ── 当前会话列表 ── */
   | { type: 'ADD_CURRENT_SESSION'; result: ChatSession[] }
-  | { type: 'REMOVE_CURRENT_SESSION'; id: string }
+  // 【按真实生产方】`removeCurrentSession(id: string | undefined)` 会透传会话 id，
+  // `formatSession` 不保证会话必有 id，故这里如实放宽（不是收紧）。
+  | { type: 'REMOVE_CURRENT_SESSION'; id: string | undefined }
   | { type: 'UPDATE_CURRENT_SESSION'; result: ChatSession[] }
   /* ── inbox 会话列表 ── */
   | { type: 'ADD_INBOX_SESSION'; result: ChatSession[] }
-  | { type: 'REMOVE_INBOX_SESSION'; id: string }
+  // 同 REMOVE_CURRENT_SESSION：`removeCurrentInbox(id: string | undefined)`。
+  | { type: 'REMOVE_INBOX_SESSION'; id: string | undefined }
   | { type: 'REMOVE_ALL_INBOX_SESSION' }
   | { type: 'UPDATE_INBOX_SESSION'; id: string; data: Partial<ChatSession> }
   /* ── 消息记录 ── */
@@ -60,7 +63,8 @@ export type ChatAction =
   | { type: 'ADD_PAGE_MESSAGE'; id: string; result: ChatMessage[] }
   | { type: 'PUSH_PAGE_MESSAGE'; id: string; result: ChatMessage[] }
   | { type: 'REMOVE_MESSAGE'; id: string; messageId: string }
-  | { type: 'REMOVE_MESSAGES'; id: string }
+  // 同 REMOVE_CURRENT_SESSION：`removeMessages(id: string | undefined)`。
+  | { type: 'REMOVE_MESSAGES'; id: string | undefined }
   | { type: 'UPDATE_MESSAGE'; result: ChatMessagesState }
   /* ── 引用消息 ── */
   | { type: 'SET_REFER_MESSAGE'; id: string; message: ChatMessage }
@@ -212,7 +216,10 @@ const messages = (state: ChatMessagesState = {}, action: ChatAction): ChatMessag
     case 'REMOVE_MESSAGES':
       // 【现有副作用，保留】先 delete 原 state 的键、再浅复制 —— 不是纯函数。
       // 依 lead 要求：不默默克隆、不修成纯函数；老负例（RTK 开发中间件会报变异）如实保留。
-      delete state[action.id];
+      // 【擦除标记】`action.id` 按真实生产方可为 undefined（见 ChatAction 注释）；
+      // 原实现在该情形下把 undefined 转成字符串键 `"undefined"` 去 delete（等于无操作）。
+      // 非空断言只擦除类型上的可空，产物与基线逐字一致（tsc/babel 两条管线均已验证）。
+      delete state[action.id!];
       return Object.assign({}, state);
     case 'UPDATE_MESSAGE':
       return Object.assign({}, action.result);
