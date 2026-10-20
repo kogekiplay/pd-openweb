@@ -8,11 +8,68 @@ import createLinksForMessage from 'src/utils/createLinksForMessage';
 import { dateConvertToUserZone } from 'src/utils/project';
 import { formatMsgDate } from '../../utils';
 import * as ajax from '../../utils/ajax';
+import type { ChatSession } from '../../redux/types';
+import type { MessageArgs } from 'src/utils/messageLinkTypes';
 import './index.less';
 
-const classify = files => {
-  const imagelist = [];
-  const filelist = [];
+
+/** 动态附件（`classify` 真实读取/写入的字段：分类、图标类名、原下标、下载地址等） */
+interface FeedAttachment {
+  /** 1 = 图片，2 = 文件 */
+  attachmentType?: number | undefined;
+  /** `classify` 写入：`getClassNameByExt(ext)` 的图标类名 */
+  icon?: string | undefined;
+  ext?: string | undefined;
+  /** `classify` 写入：附件在原始数组里的下标（预览定位用） */
+  index?: number | undefined;
+  fileID?: string | undefined;
+  previewUrl?: string | undefined;
+  originalFilename?: string | undefined;
+  downloadUrl?: string | undefined;
+  sourceID?: string | undefined;
+  commentID?: string | undefined;
+  fromType?: unknown;
+  docVersionID?: string | undefined;
+  [key: string]: unknown;
+}
+
+/** `formatFeeds` 归一化后的动态条目（列表/详情共用的真实消费形状） */
+export interface PostFeedItem {
+  autoID?: string | undefined;
+  postID?: string | undefined;
+  message?: string | undefined;
+  rUserList?: unknown;
+  rGroupList?: unknown;
+  categories?: unknown;
+  createTime?: number | string | undefined;
+  commentCount?: number | undefined;
+  user?: { userHead?: string | undefined; userName?: string | undefined; [key: string]: unknown } | undefined;
+  attachments?: FeedAttachment[] | undefined;
+  /** `formatFeeds` 写入：转链接并截断后的正文 */
+  content?: string | undefined;
+  /** `formatFeeds` 写入：`classify` 的分类结果 */
+  previewAttachments?: { imagelist: FeedAttachment[]; filelist: FeedAttachment[] } | undefined;
+  splitTime?: string | undefined;
+  [key: string]: unknown;
+}
+
+interface FeesItemProps {
+  item: PostFeedItem;
+}
+
+interface FeedsProps {
+  session: ChatSession;
+  onSetPanelVisible: (visible: boolean) => void;
+}
+
+interface FeedsState {
+  postList: PostFeedItem[];
+  loading: boolean;
+}
+
+const classify = (files: FeedAttachment[]) => {
+  const imagelist: FeedAttachment[] = [];
+  const filelist: FeedAttachment[] = [];
   files.forEach((item, index: number) => {
     if (item.attachmentType === 1) {
       item.index = index;
@@ -29,17 +86,18 @@ const classify = files => {
   };
 };
 
-export const formatFeeds = attachments => {
-  return attachments.map(item => {
+export const formatFeeds = (attachments: PostFeedItem[]) => {
+  return attachments.map((item: PostFeedItem) => {
     if (item.attachments) {
       item.previewAttachments = classify(item.attachments);
     }
 
+    // 擦除标记：`createLinksForMessage` 的必填正文/提及列表由动态接口给出（原 any 直接传）。
     item.content = createLinksForMessage({
-      message: item.message,
-      rUserList: item.rUserList,
-      rGroupList: item.rGroupList,
-      categories: item.categories,
+      message: item.message as string,
+      rUserList: item.rUserList as MessageArgs['rUserList'],
+      rGroupList: item.rGroupList as MessageArgs['rGroupList'],
+      categories: item.categories as MessageArgs['categories'],
       noLink: true,
       filterFace: true,
       doNotEscapeHTML: true,
@@ -49,11 +107,11 @@ export const formatFeeds = attachments => {
   });
 };
 
-export class FeesItem extends Component<any, any> {
-  constructor(props) {
+export class FeesItem extends Component<FeesItemProps, Record<string, never>> {
+  constructor(props: FeesItemProps) {
     super(props);
   }
-  handlePreview(item, event) {
+  handlePreview(item: FeedAttachment, event: { stopPropagation: () => void }) {
     event.stopPropagation();
     const { attachments } = this.props.item;
     const { index } = item;
@@ -72,7 +130,7 @@ export class FeesItem extends Component<any, any> {
       {},
     );
   }
-  handlePreviewFeed(item) {
+  handlePreviewFeed(item: PostFeedItem) {
     const { postID } = item;
 
     const removeFn = function () {
@@ -97,10 +155,10 @@ export class FeesItem extends Component<any, any> {
         }
       });
   }
-  renderImage(files) {
+  renderImage(files: FeedAttachment[]) {
     return (
       <div className="feed-imageList">
-        {files.map(item => (
+        {files.map((item: FeedAttachment) => (
           <div key={item.fileID} className="feed-image-item" onClick={this.handlePreview.bind(this, item)}>
             <img src={item.previewUrl} />
           </div>
@@ -108,10 +166,10 @@ export class FeesItem extends Component<any, any> {
       </div>
     );
   }
-  renderFile(files) {
+  renderFile(files: FeedAttachment[]) {
     return (
       <div className="feed-filelist">
-        {files.map(item => (
+        {files.map((item: FeedAttachment) => (
           <div className="feed-file-item" key={item.fileID} onClick={this.handlePreview.bind(this, item)}>
             <div className="file-icon">
               <i className={item.icon} />
@@ -131,16 +189,18 @@ export class FeesItem extends Component<any, any> {
     const { item } = this.props;
     const { user, previewAttachments } = item;
     const { imagelist, filelist } = previewAttachments || {};
+    // 擦除标记：动态条目必有创建者、正文由 formatFeeds 写入（原 any 直接读）；
+    // 缺省时原实现抛原生 TypeError / 渲染 'undefined'。
     return (
       <div className="ChatPanel-Feeds-item" key={item.autoID} onClick={this.handlePreviewFeed.bind(this, item)}>
         <div className="feed-creator">
           <div className="feed-creator-avatar">
-            <img src={user.userHead} />
+            <img src={user!.userHead} />
           </div>
-          <div className="feed-creator-info flex ellipsis">{user.userName}</div>
+          <div className="feed-creator-info flex ellipsis">{user!.userName}</div>
         </div>
         <div className="feed-body">
-          <div className="feed-content" dangerouslySetInnerHTML={{ __html: item.content }}></div>
+          <div className="feed-content" dangerouslySetInnerHTML={{ __html: item.content as string }}></div>
           {imagelist && imagelist.length ? this.renderImage(imagelist) : undefined}
           {filelist && filelist.length ? this.renderFile(filelist) : undefined}
         </div>
@@ -168,8 +228,8 @@ export class FeesItem extends Component<any, any> {
   }
 }
 
-export default class Feeds extends Component<any, any> {
-  constructor(props) {
+export default class Feeds extends Component<FeedsProps, FeedsState> {
+  constructor(props: FeedsProps) {
     super(props);
     this.state = {
       postList: [],
@@ -210,7 +270,7 @@ export default class Feeds extends Component<any, any> {
           ) : undefined}
         </div>
         <div className="ChatPanel-Feeds-body">
-          {postList.map(item => (
+          {postList.map((item: PostFeedItem) => (
             <FeesItem item={item} key={item.autoID} />
           ))}
           {loading ? <LoadDiv size="small" /> : undefined}

@@ -4,9 +4,11 @@ import moment from 'moment';
 import { ScrollView } from 'ming-ui';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import * as ajax from '../../utils/ajax';
+import type { ChatSession } from '../../redux/types';
 import { FeesItem, formatFeeds } from './index';
+import type { PostFeedItem } from './index';
 
-const splitFeeds = list => {
+const splitFeeds = (list: PostFeedItem[]): PostFeedItem[] => {
   const ranges: Record<string, moment.Moment[]> = {};
   ranges[_l('今天')] = [moment().startOf('day'), moment().endOf('day')];
   ranges[_l('最近七天')] = [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')];
@@ -19,10 +21,14 @@ const splitFeeds = list => {
     const keys = Object.keys(ranges);
 
     for (i = 0; i < keys.length; i++) {
-      if (feedTime.isAfter(ranges[keys[i]][0]) && feedTime.isBefore(ranges[keys[i]][1])) {
-        if (!oSplit[keys[i]]) {
-          feed.splitTime = keys[i];
-          oSplit[keys[i]] = true;
+      // 擦除标记：keys 来自 Object.keys(ranges)，循环内 i 必为有效下标（原 any 直接索引）。
+      if (
+        feedTime.isAfter(ranges[keys[i] as string]![0]) &&
+        feedTime.isBefore(ranges[keys[i] as string]![1])
+      ) {
+        if (!oSplit[keys[i] as string]) {
+          feed.splitTime = keys[i] as string;
+          oSplit[keys[i] as string] = true;
         }
 
         return;
@@ -43,8 +49,19 @@ const splitFeeds = list => {
   return list;
 };
 
-export default class FeedsPanel extends Component<any, any> {
-  constructor(props) {
+interface FeedsPanelProps {
+  session: ChatSession;
+  onSetPanelVisible: (visible: boolean) => void;
+}
+
+interface FeedsPanelState {
+  pageIndex: number;
+  loading: boolean;
+  feeds: PostFeedItem[];
+}
+
+export default class FeedsPanel extends Component<FeedsPanelProps, FeedsPanelState> {
+  constructor(props: FeedsPanelProps) {
     super(props);
     this.state = {
       pageIndex: 1,
@@ -73,9 +90,9 @@ export default class FeedsPanel extends Component<any, any> {
       .getFeed({
         gID: session.id,
         pIndex: pageIndex,
-        lastPostAutoID: feeds.length ? feeds[feeds.length - 1].autoID : null,
+        lastPostAutoID: feeds.length ? feeds[feeds.length - 1]!.autoID : null,
       })
-      .then(result => {
+      .then((result: { postList?: PostFeedItem[] }) => {
         const { postList } = result;
         this.setState({
           pageIndex: postList && postList.length >= 10 ? pageIndex + 1 : 0,
@@ -97,7 +114,7 @@ export default class FeedsPanel extends Component<any, any> {
         </div>
         <div className="content">
           <ScrollView onScrollEnd={this.handleScrollEnd.bind(this)} className="flex">
-            {feeds.map(item => (
+            {feeds.map((item: PostFeedItem) => (
               <FeesItem item={item} key={item.autoID} />
             ))}
             <LoadDiv className={cx({ Hidden: !loading })} size="small" />
