@@ -3,16 +3,17 @@ import _ from 'lodash';
 import { Dialog } from 'ming-ui';
 import functionWrap from 'ming-ui/components/FunctionWrap';
 import { CardItem } from 'src/pages/widgetConfig/widgetSetting/components/StyleContent/StyleContentItems';
+import type { RuleStyleData, RuleStyleDialogProps } from './types';
 
-function StyleSettingDialog(props) {
+function StyleSettingDialog(props: RuleStyleDialogProps) {
   const { data, values, id, onChange, onClose = () => {} } = props;
-  const [styleData, setStyleData] = useState({});
+  const [styleData, setStyleData] = useState<RuleStyleData>({});
 
   useEffect(() => {
     const currentControl = _.find(data, c => c.controlId === id);
     const tempValue = _.find(values, v => v.controlId === id);
 
-    if (!tempValue.value) {
+    if (!tempValue!.value) {
       setStyleData({
         ..._.pick(currentControl, ['type', 'controlId', 'controlName']),
         advancedSetting: {
@@ -25,9 +26,10 @@ function StyleSettingDialog(props) {
       return;
     }
 
+    // JSON.parse itself performs the legacy coercion (or native failure); do not pre-convert the value.
     setStyleData({
       ..._.pick(currentControl, ['type', 'controlId', 'controlName']),
-      advancedSetting: { ...JSON.parse(tempValue.value || '{}') },
+      advancedSetting: { ...JSON.parse((tempValue!.value || '{}') as string) },
     });
   }, []);
 
@@ -53,7 +55,7 @@ function StyleSettingDialog(props) {
     >
       <CardItem
         data={styleData}
-        onChange={newData => {
+        onChange={(newData: RuleStyleData) => {
           setStyleData(newData);
         }}
         from="rule"
@@ -62,6 +64,6 @@ function StyleSettingDialog(props) {
   );
 }
 
-export default function openStyleSettingDialog(props) {
+export default function openStyleSettingDialog(props: RuleStyleDialogProps) {
   return functionWrap(StyleSettingDialog, props);
 }

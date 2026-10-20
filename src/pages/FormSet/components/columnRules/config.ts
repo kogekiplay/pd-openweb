@@ -29,7 +29,12 @@ import { getUnUniqName } from 'src/utils/common';
 import { getSwitchItemNames } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 
-interface RuleSelection extends Omit<FormControl, 'type' | 'value'> {
+export type RuleActionPermission = 'add' | 'delete' | 'edit';
+
+export interface RuleSelection extends Omit<FormControl, 'type' | 'value' | 'permission' | 'childControlIds'> {
+  /** Rule action permissions are the named checkbox operations, not a field's permission bit. */
+  permission?: RuleActionPermission[] | undefined;
+  childControlIds?: Array<string | undefined> | undefined;
   type?: number | string | undefined;
   value?: unknown;
 }
@@ -58,7 +63,7 @@ interface RuleColumn extends Omit<FormControl, 'data' | 'value'> {
 }
 interface RuleFieldText {
   parentId: string;
-  controlId: string;
+  controlId: string | undefined;
   name: string;
   isDel: boolean;
   showSetting?: boolean | RuleSelection | undefined;
@@ -159,13 +164,13 @@ export const TABS_DISPLAY = [
   },
 ];
 
-export const RELATE_PERMISSION_DISPLAY = [
+export const RELATE_PERMISSION_DISPLAY: Array<{ text: string; value: RuleActionPermission }> = [
   { text: _l('允许选择已有记录'), value: 'add' },
   { text: _l('允许取消关联'), value: 'delete' },
   // { text: _l('允许编辑记录'), value: 'edit' },
 ];
 
-export const SUBLIST_PERMISSION_DISPLAY = [
+export const SUBLIST_PERMISSION_DISPLAY: Array<{ text: string; value: RuleActionPermission }> = [
   { text: _l('允许新增明细'), value: 'add' },
   { text: _l('可删除已有明细'), value: 'delete' },
   { text: _l('可编辑已有明细'), value: 'edit' },
@@ -199,6 +204,8 @@ export function getReTree(tree: FormControl[]) {
 }
 
 //根据controlId找到node
+export type RuleDropdownControl = FormControl;
+
 export function deepSearch(tree: FormControl[] = [], controlId: string | undefined): FormControl | null {
   let results: FormControl | null = null;
 

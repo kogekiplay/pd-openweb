@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import { Checkbox, Dialog, Switch } from 'ming-ui';
 import functionWrap from 'ming-ui/components/FunctionWrap';
 import { ACTION_DISPLAY, deepSearch, RELATE_PERMISSION_DISPLAY, SUBLIST_PERMISSION_DISPLAY } from '../config';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { RuleSelection } from '../config';
+import type { RuleSettingDialogProps } from './types';
 
 const SectionConfirmWrap = styled.div`
   display: flex;
@@ -39,14 +40,14 @@ const SectionConfirmWrap = styled.div`
   }
 `;
 
-function SettingDialog(props) {
+function SettingDialog(props: RuleSettingDialogProps) {
   const { data, values, id, onChange, actionType } = props;
   const [visible, setVisible] = useState(true);
-  const parentItem = deepSearch(data, id);
+  const parentItem = deepSearch(data, id)!;
   const parentValue = _.find(values, v => v.controlId === id && _.isEmpty(v.childControlIds)) || {};
   const childValue = _.find(values, v => v.controlId === id && !_.isEmpty(v.childControlIds)) || {};
-  const [parentConfig, setParentConfig] = useState(parentValue);
-  const [childConfig, setChildConfig] = useState(childValue);
+  const [parentConfig, setParentConfig] = useState<RuleSelection>(parentValue);
+  const [childConfig, setChildConfig] = useState<RuleSelection>(childValue);
   const permission = parentConfig.permission || [];
   const childControlIds = childConfig.childControlIds || [];
   const actionItem = _.find(ACTION_DISPLAY, a => a.value === actionType);
@@ -58,14 +59,14 @@ function SettingDialog(props) {
       overlayClosable={false}
       title={
         parentItem.type === 34
-          ? _l('子表%0动作设置', _.get(actionItem, 'titleLabel'))
-          : _l('关联记录%0动作设置', _.get(actionItem, 'titleLabel'))
+          ? _l('子表%0动作设置', _.get(actionItem, 'titleLabel')!)
+          : _l('关联记录%0动作设置', _.get(actionItem, 'titleLabel')!)
       }
       okText={_l('确认')}
       onOk={() => {
-        const newControls: FormControl[] = values.filter(v => v.controlId !== parentItem.controlId);
+        const newControls: RuleSelection[] = values.filter(v => v.controlId !== parentItem.controlId);
         const index = _.findIndex(values, v => v.controlId === parentItem.controlId);
-        const addControls = [].concat(parentConfig);
+        const addControls = ([] as RuleSelection[]).concat(parentConfig);
 
         if (!_.isEmpty(childConfig.childControlIds)) {
           addControls.push(childConfig);
@@ -118,7 +119,7 @@ function SettingDialog(props) {
         <div className="editContainer">
           <div className="title">{_l('字段设置')}</div>
           <div className="textSecondary">
-            {_l('未勾选时，按字段原属性；勾选后，字段%0', _.get(actionItem, 'label'))}
+            {_l('未勾选时，按字段原属性；勾选后，字段%0', _.get(actionItem, 'label')!)}
           </div>
           <div className="rowItem">
             <div className="rowTitle flex Bold">{_l('全选')}</div>
@@ -165,6 +166,6 @@ function SettingDialog(props) {
   );
 }
 
-export default function openSettingDialog(props) {
+export default function openSettingDialog(props: RuleSettingDialogProps) {
   return functionWrap(SettingDialog, props);
 }

@@ -1,4 +1,5 @@
 import { Component, Fragment } from 'react';
+import type { ReactNode } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -15,12 +16,13 @@ import {
   showArrowSetting,
   TAB_TYPES,
 } from '../config';
+import type { RuleDropdownControl, RuleSelection } from '../config';
 import openSettingDialog from './SettingDialog';
 import openStyleSettingDialog from './StyleSettingDialog';
+import type { RuleActionDropdownProps, RuleActionDropdownState } from './types';
 import './ActionDropDown.less';
-import type { FormControl } from 'src/utils/controlTypes';
 
-export default class DropDownItem extends Component<any, any> {
+export default class DropDownItem extends Component<RuleActionDropdownProps, RuleActionDropdownState> {
   declare box: HTMLDivElement | null | undefined;
 
   static override propTypes = {
@@ -31,7 +33,7 @@ export default class DropDownItem extends Component<any, any> {
     actionType: PropTypes.number,
     actionError: PropTypes.bool,
   };
-  constructor(props) {
+  constructor(props: RuleActionDropdownProps) {
     super(props);
 
     const defaultData = getNewDropDownData(props.dropDownData, props.actionType) || [];
@@ -53,7 +55,7 @@ export default class DropDownItem extends Component<any, any> {
     });
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: RuleActionDropdownProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { dropDownData = [], actionType } = this.props;
 
@@ -69,20 +71,23 @@ export default class DropDownItem extends Component<any, any> {
 
   handleSearch = _.throttle(() => {
     let { keyword, originData } = this.state;
-    const extendId = [];
+    const extendId: Array<string | undefined> = [];
 
-    const filterFn = item =>
+    const filterFn = (item: RuleDropdownControl) =>
       (item.controlName || '').search(new RegExp(keyword.trim().replace(/([,.+?:()*[\]^$|{}\\-])/g, '\\$1'), 'i')) !==
       -1;
 
     function treeFilter() {
-      const filterData = [];
+      const filterData: RuleDropdownControl[] = [];
       originData.forEach(item => {
-        let newRelationData = [];
+        let newRelationData: RuleDropdownControl[] = [];
 
         if (!_.isEmpty(item.relationControls)) {
-          const childFilter = item.relationControls
-            .map(re => ({ ...re, relationControls: (re.relationControls || []).filter(i => filterFn(i)) }))
+          const childFilter = item
+            .relationControls!.map(re => ({
+              ...re,
+              relationControls: (re.relationControls || []).filter(i => filterFn(i)),
+            }))
             .filter(i => {
               if (!_.isEmpty(i.relationControls)) extendId.push(i.controlId);
               return !_.isEmpty(i.relationControls) || filterFn(i);
@@ -110,7 +115,7 @@ export default class DropDownItem extends Component<any, any> {
     });
   }, 100);
 
-  updateExtendId(item) {
+  updateExtendId(item: RuleDropdownControl) {
     this.setState({
       extendId: _.includes(this.state.extendId, item.controlId)
         ? this.state.extendId.filter(it => it !== item.controlId)
@@ -118,7 +123,7 @@ export default class DropDownItem extends Component<any, any> {
     });
   }
 
-  updateValues(parentId, controlId: string) {
+  updateValues(parentId: string | undefined, controlId: string | undefined) {
     const { values, onChange, actionType, from } = this.props;
     const { dropDownData = [] } = this.state;
     let newValues = values.concat([]);
@@ -133,7 +138,7 @@ export default class DropDownItem extends Component<any, any> {
           newValues = newValues.filter(n => !(n.controlId === controlId && !_.isEmpty(n.childControlIds)));
           newValues = newValues.concat([
             {
-              controlId: currentItem.controlId,
+              controlId: currentItem!.controlId,
               childControlIds: [],
               ...(actionType === 3
                 ? {
@@ -182,7 +187,7 @@ export default class DropDownItem extends Component<any, any> {
     onChange('controls', newValues);
   }
 
-  hasSet(item) {
+  hasSet(item: { controlId?: string | undefined }) {
     const { values = [], actionType } = this.props;
     const settingValues = values.filter(
       v =>
@@ -193,13 +198,13 @@ export default class DropDownItem extends Component<any, any> {
 
   getTextByValue() {
     const { values = [], actionType, dropDownData, from, onChange } = this.props;
-    const currentArr = getTextById(dropDownData, values, actionType, from) || [];
+    const currentArr = getTextById(dropDownData!, values, actionType, from) || [];
     return (
       <Fragment>
         {currentArr.map((item, index) => {
           return (
             <span key={index} className={cx('valueText', { disabled: item.isDel })}>
-              <Tooltip title={!item.isDel ? '' : <span>{_l('ID: %0', item.controlId)}</span>} placement="bottom">
+              <Tooltip title={!item.isDel ? '' : <span>{_l('ID: %0', item.controlId!)}</span>} placement="bottom">
                 <span className="ellipsis controlNameBox">{item.name}</span>
               </Tooltip>
               {item.showSetting && (
@@ -243,9 +248,10 @@ export default class DropDownItem extends Component<any, any> {
     );
   }
 
-  renderChecked(item, parentControl: Record<string, any> = {}) {
+  renderChecked(item: RuleDropdownControl, parentControl: Partial<RuleDropdownControl> = {}) {
     const { values = [], actionType } = this.props;
-    const findChildItem = id => _.find(values, v => v.controlId === id && _.isEmpty(v.childControlIds));
+    const findChildItem = (id: string | undefined) =>
+      _.find(values, v => v.controlId === id && _.isEmpty(v.childControlIds));
 
     const hasParentControl = ruleTable(parentControl);
 
@@ -272,8 +278,9 @@ export default class DropDownItem extends Component<any, any> {
     return (
       <Checkbox
         checked={!!checked}
-        disabled={disabled}
-        onClick={(_checked: boolean, _value, e) => {
+        // The legacy expression can return the selected parent object; Checkbox consumes its truthiness.
+        disabled={disabled as boolean | undefined}
+        onClick={(_checked: boolean, _value: unknown, e: React.MouseEvent) => {
           e.stopPropagation();
           if (disabled) return;
           this.updateValues(hasParentControl ? parentControl.controlId : '', item.controlId);
@@ -282,11 +289,11 @@ export default class DropDownItem extends Component<any, any> {
     );
   }
 
-  updateSelectAll(item, isChecked?: boolean | undefined) {
+  updateSelectAll(item: RuleDropdownControl, isChecked?: boolean | undefined) {
     const { values, onChange } = this.props;
     const index = _.findIndex(values, v => v.controlId === item.controlId);
     const ids = (item.relationControls || []).map(i => i.controlId);
-    let newControls: FormControl[] = values.filter(v => !_.includes(ids, v.controlId));
+    let newControls: RuleSelection[] = values.filter(v => !_.includes(ids, v.controlId));
     const addValues = ids.map(i => ({ controlId: i, childControlIds: [] }));
 
     if (isChecked) {
@@ -300,7 +307,7 @@ export default class DropDownItem extends Component<any, any> {
     onChange('controls', newControls);
   }
 
-  renderItem(item: Record<string, any> = {}, parentControl: Record<string, any> = {}, deepIndex: number) {
+  renderItem(item: RuleDropdownControl = {}, parentControl: Partial<RuleDropdownControl> = {}, deepIndex: number) {
     const { values = [], actionType, from } = this.props;
     const { extendId = [] } = this.state;
     // 子表、关联表格可编辑不显示下拉
@@ -369,7 +376,7 @@ export default class DropDownItem extends Component<any, any> {
     );
   }
 
-  renderList(dropData, parentControl?, deepIndex = 0) {
+  renderList(dropData: RuleDropdownControl[], parentControl?: RuleDropdownControl, deepIndex = 0): ReactNode[] {
     const { values = [], actionType, from } = this.props;
     const { extendId } = this.state;
 
@@ -380,14 +387,18 @@ export default class DropDownItem extends Component<any, any> {
           {!_.isEmpty(_.get(item, 'relationControls')) &&
           _.includes(extendId, item.controlId) &&
           showArrowSetting(item, values, actionType, from)
-            ? this.renderList(item.relationControls, item, deepIndex + 1)
+            ? this.renderList(item.relationControls!, item, deepIndex + 1)
             : null}
         </Fragment>
       );
     });
   }
 
-  getAllControls(dropDownData = [], newValue = [], parentItem?) {
+  getAllControls(
+    dropDownData: RuleDropdownControl[] = [],
+    newValue: RuleSelection[] = [],
+    parentItem?: RuleDropdownControl,
+  ) {
     dropDownData.forEach(item => {
       if (!parentItem || (parentItem && parentItem.type === 52)) {
         newValue.push({
@@ -411,7 +422,7 @@ export default class DropDownItem extends Component<any, any> {
     return newValue;
   }
 
-  renderContent(dropDownData) {
+  renderContent(dropDownData: RuleDropdownControl[]) {
     return (
       <Fragment>
         {!this.state.keyword && this.props.showSelectAll && (
@@ -481,7 +492,7 @@ export default class DropDownItem extends Component<any, any> {
         mouseEnterDelay={0.1}
         popupAlign={{ points: ['tl', 'bl'], offset: [0, 4] }}
         popup={menu}
-        getPopupContainer={() => this.box}
+        getPopupContainer={() => this.box!}
       >
         <div
           className={cx('fixedRuleDropdownSelected', { errorBorder: actionError, disabled })}

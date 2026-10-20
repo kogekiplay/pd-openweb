@@ -122,7 +122,7 @@ class RuleItems extends React.Component<any, any> {
     const currentArr = getTextById(worksheetControls, actionItem.controls, actionItem.type, 'rule') || [];
 
     const renderDetailValue = () => {
-      function renderDynamicValue(value, controlId: string) {
+      function renderDynamicValue(value, controlId: string | undefined) {
         const dynamicValue = safeParse(value, 'array');
 
         let currentControl = { type: 2 };
