@@ -7,7 +7,10 @@ import styled from 'styled-components';
 import { Icon, LoadDiv, Support } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import worksheetAjax from 'src/api/worksheet';
+import type { WorksheetIndexConfig } from 'src/api/worksheet';
 import CreateIndex from 'worksheet/common/CreateIndex';
+import type { IndexAvailableField, SelectedIndexField } from 'worksheet/common/CreateIndex/types';
+import type { WorksheetInfo } from 'src/pages/worksheet/types';
 import MoreOption from '../components/MoreOption';
 import '../components/MoreOption.less';
 
@@ -182,23 +185,28 @@ const ArrowDown = styled.span`
 const sortRules: Record<string, string> = { 1: _l('升序'), '-1': _l('降序'), text: _l('文本索引') };
 const FILTER_TYPE_LIST = [40, 42, 43, 21, 25, 45, 14, 34, 22, 10010, 30, 47, 49, 50, 51, 52, 54];
 
-function FormIndexSetting(props) {
+export interface FormIndexSettingProps {
+  worksheetInfo: Pick<WorksheetInfo, 'worksheetId' | 'appId'>;
+}
+
+function FormIndexSetting(props: FormIndexSettingProps) {
+  // Nullable DOM/name/field accesses retain their existing native failure paths; no fallback is added.
   const { worksheetInfo } = props;
   const { worksheetId, appId } = worksheetInfo;
-  const input = React.createRef();
+  const input = React.createRef<HTMLInputElement>();
   const [showCreateIndex, setShowCreateIndex] = useState(false);
   const [isRename, setIsRename] = useState(false);
-  const [currentIndexInfo, setCurrentIndexInfo] = useState({});
+  const [currentIndexInfo, setCurrentIndexInfo] = useState<Partial<WorksheetIndexConfig>>({});
   const [isEdit, setIsEdit] = useState(false);
-  const [indexList, setIndexList] = useState([]); // indexStateId: 1: 成功 -1: 失败 0:排队
-  const [templateId, setTemplateId] = useState('');
+  const [indexList, setIndexList] = useState<WorksheetIndexConfig[]>([]); // indexStateId: 1: 成功 -1: 失败 0:排队
+  const [templateId, setTemplateId] = useState<string | undefined>('');
   // 必须给初值 false：不给的话状态类型被推成 undefined，setX(true/false) 全是 TS2345。
   // 运行时等价——每个传 popupVisible 的站点都把 onPopupVisibleChange 接回了 state
   // （否则 undefined→false 会把 Trigger 从非受控切成受控、弹层再也打不开）。
   // rc-trigger 5 给回调补上准确类型之后才暴露出来。
   const [showMoreOption, setShowMoreOption] = useState(false);
   const [isloading, setIsloading] = useState(true);
-  const [selectedIndexList, setSelectedIndexList] = useState([{}]);
+  const [selectedIndexList, setSelectedIndexList] = useState<SelectedIndexField[]>([{}]);
   const [worksheetAvailableFields, setWorksheetAvailableFields] = useState<
     HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetAvailableFieldModel[]
   >([]);
@@ -212,7 +220,7 @@ function FormIndexSetting(props) {
 
   useEffect(() => {
     if (isRename) {
-      input.current.focus();
+      input.current!.focus();
     }
   }, [isRename]);
 
@@ -229,7 +237,7 @@ function FormIndexSetting(props) {
   };
 
   // 重命名
-  const editIndex = obj => {
+  const editIndex = (obj: Pick<WorksheetIndexConfig, 'indexConfigId' | 'customeIndexName'>) => {
     worksheetAjax
       .updateRowIndexCustomeIndexName({
         appId,
@@ -249,7 +257,7 @@ function FormIndexSetting(props) {
   };
 
   // 根据字段id值获取字段信息;
-  const getFieldObjById = id => {
+  const getFieldObjById = (id: string | undefined): Partial<IndexAvailableField> => {
     return (
       (!_.isEmpty(_.filter(worksheetAvailableFields, item => item.id === id)) &&
         _.filter(worksheetAvailableFields, item => item.id === id)[0]) ||
@@ -266,8 +274,8 @@ function FormIndexSetting(props) {
   if (sort !== '') {
     list = indexList.sort((a, b) => {
       return sort === 'ASC'
-        ? a.customeIndexName.charCodeAt(0) - b.customeIndexName.charCodeAt(0)
-        : b.customeIndexName.charCodeAt(0) - a.customeIndexName.charCodeAt(0);
+        ? a.customeIndexName!.charCodeAt(0) - b.customeIndexName!.charCodeAt(0)
+        : b.customeIndexName!.charCodeAt(0) - a.customeIndexName!.charCodeAt(0);
     });
   }
 
@@ -309,9 +317,9 @@ function FormIndexSetting(props) {
                 setCurrentIndexInfo({});
                 setSelectedIndexList([
                   {
-                    fieldId: worksheetAvailableFields.length ? worksheetAvailableFields[0].id : '',
-                    name: worksheetAvailableFields.length ? worksheetAvailableFields[0].name : '',
-                    type: worksheetAvailableFields.length ? worksheetAvailableFields[0].type : '',
+                    fieldId: worksheetAvailableFields.length ? worksheetAvailableFields[0]!.id : '',
+                    name: worksheetAvailableFields.length ? worksheetAvailableFields[0]!.name : '',
+                    type: worksheetAvailableFields.length ? worksheetAvailableFields[0]!.type : '',
                     indexType: '1',
                     selectFiledsList: worksheetAvailableFields,
                   },
@@ -350,13 +358,14 @@ function FormIndexSetting(props) {
                   // 运维创建索引且非升降序、文本类型
                   let notSystemIndexTypeList = [1, -1, 'text'];
                   let isSpecial =
-                    item.isSystem && item.indexFields.some(item => !_.includes(notSystemIndexTypeList, item.indexType));
+                    item.isSystem &&
+                    item.indexFields!.some(item => !_.includes(notSystemIndexTypeList, item.indexType));
                   if (!isSpecial && item.isSystem) return '';
 
                   const type =
                     item.uniqueIndex && !item.wildcardIndex
                       ? 1
-                      : item.wildcardIndex || item.indexFields.some(item => item.indexType === 'text')
+                      : item.wildcardIndex || item.indexFields!.some(item => item.indexType === 'text')
                         ? 2
                         : 0;
 
@@ -382,7 +391,7 @@ function FormIndexSetting(props) {
                               setIsRename(false);
                               if (!_.trim(e.target.value)) {
                                 alert(_l('请输入索引名称'), 3);
-                                input.current.focus();
+                                input.current!.focus();
                                 return;
                               }
 
@@ -432,9 +441,9 @@ function FormIndexSetting(props) {
                                     : it.fieldId}
                               </span>
                               <span className="rule textTertiary">
-                                {!isSpecial ? `（${sortRules[it.indexType]}）` : `（${it.indexType}）`}
+                                {!isSpecial ? `（${sortRules[it.indexType!]}）` : `（${it.indexType}）`}
                               </span>
-                              {i < item.indexFields.length - 1 ? '、' : ''}
+                              {i < item.indexFields!.length - 1 ? '、' : ''}
                             </span>
                           ))}
                         </div>
@@ -446,7 +455,7 @@ function FormIndexSetting(props) {
                             onClick={() => {
                               let selectFiledsList = _.differenceWith(
                                 worksheetAvailableFields,
-                                item.indexFields,
+                                item.indexFields!,
                                 (item1, item2) => item1.id === item2.fieldId,
                               );
                               let newFields = (item.indexFields || []).map(n => {

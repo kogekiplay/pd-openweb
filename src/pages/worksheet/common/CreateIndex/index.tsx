@@ -5,7 +5,9 @@ import _ from 'lodash';
 import { Checkbox, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import worksheetAjax from 'src/api/worksheet';
+import type { RowIndexSaveArgs } from 'src/api/worksheet';
 import DrawerFooter from 'src/pages/FormSet/components/DrawerFooter';
+import type { CreateIndexProps, CreateIndexState, IndexAvailableField, SelectedIndexField } from './types';
 import './index.less';
 
 const { Option } = Select;
@@ -95,15 +97,15 @@ const QA_TEXT = [
   },
 ];
 
-const USERS_INDEX = {
+const USERS_INDEX: IndexAvailableField = {
   controlType: 0,
   id: 'users',
   name: 'users',
   type: 0,
 };
 
-export default class CreateIndex extends Component<any, any> {
-  constructor(props) {
+export default class CreateIndex extends Component<CreateIndexProps, CreateIndexState> {
+  constructor(props: CreateIndexProps) {
     super(props);
     this.state = {
       selectedIndexList: props.selectedIndexList || [{}],
@@ -139,7 +141,7 @@ export default class CreateIndex extends Component<any, any> {
     indexList.forEach(item => {
       if (
         item.indexConfigId !== currentIndexInfo.indexConfigId &&
-        (item.wildcardIndex || item.indexFields.some(it => it.indexType === 'text'))
+        (item.wildcardIndex || item.indexFields!.some(it => it.indexType === 'text'))
       ) {
         hasTestIndex = true;
       }
@@ -157,7 +159,7 @@ export default class CreateIndex extends Component<any, any> {
     }
 
     this.setState({ saveLoading: true });
-    let params = {
+    let params: RowIndexSaveArgs = {
       appId,
       worksheetId, // 工作表Id
       customeIndexName, // 自定义索引名称
@@ -210,7 +212,7 @@ export default class CreateIndex extends Component<any, any> {
             let indexStateId =
               (res.rowIndexConfigs || []).filter(item => item.indexConfigId === currentIndexInfo.indexConfigId)
                 .length &&
-              (res.rowIndexConfigs || []).filter(item => item.indexConfigId === currentIndexInfo.indexConfigId)[0]
+              (res.rowIndexConfigs || []).filter(item => item.indexConfigId === currentIndexInfo.indexConfigId)[0]!
                 .indexStateId;
             if (indexStateId === -1) return alert(_l('操作失败'), 2);
             alert(_l('操作成功'));
@@ -236,10 +238,10 @@ export default class CreateIndex extends Component<any, any> {
 
     this.props.onClose();
   };
-  changeIndexField = (value, index: number) => {
+  changeIndexField = (value: string | undefined, index: number) => {
     let { selectedIndexList = [] } = this.state;
     const { worksheetAvailableFields = [] } = this.props;
-    if (value === selectedIndexList[index].fieldId) return;
+    if (value === selectedIndexList[index]!.fieldId) return;
     let type = _.get(worksheetAvailableFields.filter(item => item.id === value)[0], 'type');
     let temp = selectedIndexList.map((item, i) => {
       if (i === index) {
@@ -267,7 +269,7 @@ export default class CreateIndex extends Component<any, any> {
       selectedIndexList: copySelectedIndexList,
     });
   };
-  changeFieldValue = (value, index: number) => {
+  changeFieldValue = (value: SelectedIndexField['indexType'], index: number) => {
     let { selectedIndexList = [] } = this.state;
     let copySelectedIndexList = [...selectedIndexList];
     copySelectedIndexList[index] = {
@@ -285,9 +287,9 @@ export default class CreateIndex extends Component<any, any> {
     let temp =
       _.differenceWith(worksheetAvailableFields, selectedIndexList, (item1, item2) => item1.id === item2.fieldId) || [];
     copySelectedIndexList.push({
-      fieldId: temp.length ? temp[0].id : '',
-      name: temp.length ? temp[0].name : '',
-      type: temp.length ? temp[0].type : '',
+      fieldId: temp.length ? temp[0]!.id : '',
+      name: temp.length ? temp[0]!.name : '',
+      type: temp.length ? temp[0]!.type : '',
       indexType: '1',
       selectFiledsList: temp,
     });
@@ -372,12 +374,14 @@ export default class CreateIndex extends Component<any, any> {
                       </span>
                     </Tooltip>
                   ) : (
-                    <Select
+                    <Select<string | undefined, { value?: string | undefined; children?: string | undefined }>
                       placeholder={_l('请选择')}
                       className="col1 mRight8"
                       value={item.fieldId}
                       onChange={value => this.changeIndexField(value, index)}
-                      showSearch={{ filterOption: (val, option) => option.children.toLowerCase().includes(val.toLowerCase()) }}
+                      showSearch={{
+                        filterOption: (val, option) => option!.children!.toLowerCase().includes(val.toLowerCase()),
+                      }}
                     >
                       {(item.selectFiledsList || []).concat(USERS_INDEX).map(f => (
                         <Option value={f.id} key={f.id}>
@@ -386,7 +390,7 @@ export default class CreateIndex extends Component<any, any> {
                       ))}
                     </Select>
                   )}
-                  <Select
+                  <Select<SelectedIndexField['indexType']>
                     className="col2"
                     onChange={value => this.changeFieldValue(value, index)}
                     placeholder={_l('请选择')}

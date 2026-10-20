@@ -10,6 +10,48 @@ export interface CloudPrintSaveArgs {
   serviceType?: number | undefined;
 }
 
+/** The generated DTO models strings; the index editor also produces numeric sort rules. */
+export type WorksheetIndexField = Omit<HapApi.MD.Entity.Worksheet.IndexField, 'indexType'> & {
+  indexType?: string | number | undefined;
+};
+export type WorksheetIndexConfig = Omit<HapApi.MD.Entity.Worksheet.WorksheetRowIndexConfig, 'indexFields'> & {
+  indexFields?: WorksheetIndexField[] | undefined;
+};
+export interface RowIndexSaveArgs {
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+  customeIndexName?: string | undefined;
+  indexFields: {
+    fieldId?: string | undefined;
+    indexType?: string | number | undefined;
+    isSystem: boolean;
+  }[];
+  uniqueIndex: boolean;
+  wildcardIndex: boolean;
+  sparseIndex: boolean;
+  backgroundIndex: boolean;
+  indexConfigId?: string | undefined;
+  isSystemIndex?: boolean | undefined;
+  systemIndexName?: string | undefined;
+}
+export interface RowIndexRemoveArgs {
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+  indexConfigId?: string | undefined;
+  isSystemIndex?: boolean | undefined;
+  systemIndexName?: string | undefined;
+}
+export interface RowIndexRenameArgs {
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+  indexConfigId?: string | undefined;
+  customeIndexName?: string | undefined;
+}
+export interface RowIndexOperationResult {
+  responseEnum: number;
+  rowIndexConfigs?: WorksheetIndexConfig[] | undefined;
+}
+
 export default {
   /**
    * 获取视图权限
@@ -2353,7 +2395,7 @@ export default {
    * @returns {Promise<Boolean, ErrorModel>}
    **/
 
-  addRowIndex: function (args: ApiArgs, options: ApiOptions = {}) {
+  addRowIndex: function (args: RowIndexSaveArgs, options: ApiOptions = {}): ApiResultOf<RowIndexOperationResult> {
     return mdyAPI('Worksheet', 'AddRowIndex', args, options);
   },
   /**
@@ -2376,7 +2418,7 @@ export default {
   * @returns {Promise<Boolean, ErrorModel>}
   **/
 
-  updateRowIndex: function (args: ApiArgs, options: ApiOptions = {}) {
+  updateRowIndex: function (args: RowIndexSaveArgs, options: ApiOptions = {}): ApiResultOf<RowIndexOperationResult> {
     return mdyAPI('Worksheet', 'UpdateRowIndex', args, options);
   },
   /**
@@ -2391,7 +2433,7 @@ export default {
    * @returns {Promise<Boolean, ErrorModel>}
    **/
 
-  updateRowIndexCustomeIndexName: function (args: ApiArgs, options: ApiOptions = {}) {
+  updateRowIndexCustomeIndexName: function (args: RowIndexRenameArgs, options: ApiOptions = {}): ApiResultOf<number> {
     return mdyAPI('Worksheet', 'UpdateRowIndexCustomeIndexName', args, options);
   },
   /**
@@ -2407,7 +2449,7 @@ export default {
    * @returns {Promise<Boolean, ErrorModel>}
    **/
 
-  removeRowIndex: function (args: ApiArgs, options: ApiOptions = {}) {
+  removeRowIndex: function (args: RowIndexRemoveArgs, options: ApiOptions = {}): ApiResultOf<RowIndexOperationResult> {
     return mdyAPI('Worksheet', 'RemoveRowIndex', args, options);
   },
   /**
