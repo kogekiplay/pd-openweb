@@ -364,11 +364,28 @@ export const formatNewMessage = (
  * 直接进入会话列表流程；返回 `ChatSession`。
  * 入参是**原始 socket 载荷**（`msg` 在该分支里是字符串而非对象），故保持未标注。
  */
-export const formatNewSession = (message: ChatRawMessageWire): ChatSession => {
+/**
+ * 公开调用签名：**只接受有限原始 wire**（`from` 只能是发送者 id 字符串、`msg` 按形态有限）。
+ * lead 2026-10-20 反例 2（对象 `from` 被再包一层）在此被**编译期拒绝**，
+ * 而不是靠末尾 `as` 抹平。
+ */
+type FormatNewSession = (message: ChatRawMessageWire) => ChatSession;
+
+export const formatNewSession: FormatNewSession = (
+  message: ChatRawMessageWire | ChatSessionWireNormalized,
+): ChatSession => {
+  // 【三层合同（lead 2026-10-20 反例 2 的修法）】
+  //   · 原始 wire（**公开签名**）：`from` 只能是 id 字符串；`msg` 系统分支是 string、普通分支是对象；
+  //   · 过渡形态（**实现签名**里才允许）：本函数对**同一对象**逐属性原地改型
+  //     （系统分支 msg 包成对象；普通分支 from 变成发送者对象）；
+  //   · 输出形态：`ChatSession`。
+  // 实现签名取"原始 ∪ 过渡"的联合，于是**写入点不需要任何断言**；
+  // 运行表达式/对象引用/读取次数与基线逐字一致。
   if ('dtype' in message) {
     // 系统消息
     message.msg = {
-      con: message.msg,
+      // 读取点擦除式收窄：该分支里 msg 仍是**原始字符串**（尚未被包成对象）。
+      con: message.msg as string | undefined,
     };
     message.time = getCurrentTime();
     message.value = message.id;
@@ -377,31 +394,27 @@ export const formatNewSession = (message: ChatRawMessageWire): ChatSession => {
     message.iswd = false;
     message.name = message.isGroup ? message.groupname : message.uname;
     message.msgid = message.id;
-    // 【局部窄化断言（lead 13:23 允许）】`else` 分支内 `from` 尚未被下面的赋值改型，
-    // 仍是 wire 阶段的 **id 字符串**；过渡联合在此收窄为 string。
-    // 【不缓存】按 lead 要求"不缓存迁就类型"：每个读取点就地收窄，读取次数与基线一致。
     message.value = message.isGroup
       ? message.to
-      : md.global.Account.accountId === (message.from as string | undefined)
+      : md.global.Account.accountId === message.from
         ? message.to
         : (message.from as string | undefined);
     message.logo = message.isGroup ? message.avatar : message.logo;
     message.type = message.isGroup ? Constant.SESSIONTYPE_GROUP : Constant.SESSIONTYPE_USER;
     message.time = message.time ? message.time : getCurrentTime();
+    // `from.name` 的目标契约是 `string`（`ChatSession.from`）；普通/群消息 wire 的昵称来源是
+    // `uname`，声明为可选（群会话走 groupname，且 `from.name` 只在 `!sysType` 分支被读）。
+    // 这里用**擦除式收窄**表达该契约，不做默认值替换：运行期若真缺 uname，行为与基线一致。
     message.from = {
       id: message.from as string | undefined,
-      name: message.uname,
+      name: message.uname as string,
       avatar: message.logo,
     };
   }
 
-  // 【归一化点 —— 逐分支如实说明（原来那句"两个分支都已把 msg/from 改成对象"是**假的**，lead 15:29 指出）】
-  //   · 系统消息分支（`'dtype' in message`）：只把 `msg` 由 string 改成 `{ con }`，
-  //     另外写 `time` 与 `value`；**从不写 `from`**，也不改 `id`。
-  //   · 非系统分支：把 `msg` 保持为 socket 的对象形态，并把 `from` 由 id 字符串**原地改型**为发送者对象。
-  // 因此这里收窄到的 `ChatSessionWireNormalized` 是**两分支联合**（系统分支允许无 `from`），
-  // 而不是"from 必有对象"的单一声称 —— 这也正是本批修正的核心。
-  return formatSession(message as ChatSessionWireNormalized as ChatSession);
+  // 归一化点：以上写入完成后对象已是会话形态，交给 `formatSession` 做统一归一化。
+  // 过渡类型是**两分支各自的真实结果**（系统分支无 from），不是"from 必有对象"的单一声称。
+  return formatSession(message as ChatSessionWireNormalized);
 };
 
 /**

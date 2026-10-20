@@ -46,15 +46,22 @@ export type ChatAction =
   /* ── toolbar 配置 ── */
   | { type: 'SET_TOOLBAR_CONFIG'; result: Partial<ChatToolbarConfig> }
   /* ── 当前会话 ── */
-  | { type: 'SET_CURRENT_SESSION'; result: ChatSession }
+  /**
+   * 【为何允许 `undefined`（lead 2026-10-20 派发检查）】真实生产方里
+   * `setNewCurrentSession(newSessionList.find(...))` 的 `find` 结果类型上是
+   * `ChatSession | undefined`；reducer 的 `Object.assign({}, action.result)` 对
+   * `undefined` 源**本就安全**（返回 `{}`，与基线运行一致）。故如实建模为联合，
+   * 而不是把 undefined 断言掉。
+   */
+  | { type: 'SET_CURRENT_SESSION'; result: ChatSession | undefined }
   /* ── 当前会话列表 ── */
-  | { type: 'ADD_CURRENT_SESSION'; result: ChatSession[] }
+  | { type: 'ADD_CURRENT_SESSION'; result: ChatSession }
   // 【按真实生产方】`removeCurrentSession(id: string | undefined)` 会透传会话 id，
   // `formatSession` 不保证会话必有 id，故这里如实放宽（不是收紧）。
   | { type: 'REMOVE_CURRENT_SESSION'; id: string | undefined }
   | { type: 'UPDATE_CURRENT_SESSION'; result: ChatSession[] }
   /* ── inbox 会话列表 ── */
-  | { type: 'ADD_INBOX_SESSION'; result: ChatSession[] }
+  | { type: 'ADD_INBOX_SESSION'; result: ChatSession }
   // 同 REMOVE_CURRENT_SESSION：`removeCurrentInbox(id: string | undefined)`。
   | { type: 'REMOVE_INBOX_SESSION'; id: string | undefined }
   | { type: 'REMOVE_ALL_INBOX_SESSION' }
@@ -68,7 +75,7 @@ export type ChatAction =
   // - `updateWithdrawMessage` SET          ← `currentMessage`（数组）
   // 旧注释说"单条"是错的：真实代码在 SET 前已把它包成数组。
   // 因此动作收紧为 `ChatMessage[]`，与 state 的数组形状一致。
-  | { type: 'SET_MESSAGE'; id: string; result: ChatMessage[] }
+  | { type: 'SET_MESSAGE'; id: string; result: (ChatMessage | undefined)[] }
   | { type: 'ADD_MESSAGE'; id: string; result: ChatMessage }
   // 【为什么是 `(ChatMessage | undefined)[]` 而不是 `ChatMessage[]`】
   // 该动作的 `result` 在 reducer 里**作为 concat 的接收者**使用：

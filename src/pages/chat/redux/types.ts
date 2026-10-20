@@ -75,6 +75,13 @@ export interface ChatSession {
   atlist?: string[] | undefined;
   /** `isSession`：是否会话（`actions.ts` 的 `addCurrentSession`/`updateSessionList` 读写） */
   isSession?: boolean | undefined;
+  /**
+   * inbox 会话的请求时间戳。
+   * 【真实生产方】`addCurrentInbox` 里 `dispatch({ type: 'ADD_INBOX_SESSION',
+   * result: { ...result, requestNow: Date.now() } })`，随后 reducer 把它 concat 进
+   * `currentInboxList`；`updateInoxRequestNow` 也写这个字段。
+   */
+  requestNow?: number | undefined;
   /** `commonGroup`/`top_info` 等会话扩展字段（`actions.ts` 的 `updateSessionList` 读取 `top_info`） */
   /** `actions.ts` 的 `updateSessionList` 读写 `top_info.isTop` */
   top_info?: { isTop?: boolean | undefined; [key: string]: unknown } | undefined;
@@ -421,7 +428,16 @@ export interface ChatSessionPatch {
 }
 
 export interface ChatRawSessionWire {
-  id?: string | number | undefined;
+  /**
+   * 会话 id。
+   * 【为何收紧为 string（lead 2026-10-20 反例 1）】此前允许 `string | number`，
+   * 而 `formatSession` **从不转换 id**、`ChatSession.id` 又声明为 `string | undefined` ——
+   * 于是 `formatSessionList([{ id: 123, ... }])` 会成功返回 `id = 123`，与宣称矛盾。
+   * 生产侧没有任何"数值会话 id"的证据（所有消费点都按字符串使用：`item.value === id`、
+   * `REMOVE_SESSION` 过滤、`setCurrentSessionId(id)`），故按生产证据**收紧输入**，
+   * 而不是放宽输出。
+   */
+  id?: string | undefined;
   value?: string | undefined;
   /** 原始时间：归一化后被 `formatMsgDate` 改写成文案，原值备份到 `_time` */
   time?: number | string | undefined;
@@ -443,7 +459,7 @@ export interface ChatRawSessionWire {
    * 预览正文。`con` 声明为 `string | undefined`：wire 阶段是**未解码字符串**，
    * `formatSession` 用 `htmlDecodeReg(con)`（形参 `unknown`、返回 `string`）解码后写回。
    */
-  msg?: { con?: string | undefined; files?: unknown; [key: string]: unknown } | undefined;
+  msg?: { con?: string | undefined; files?: ChatMessageFiles | undefined; [key: string]: unknown } | undefined;
   /**
    * 未读数。
    * 【证据】`refresh` 里 `res.forEach(item => { item.count = 0 })` 清零后
@@ -483,30 +499,19 @@ export interface ChatRawSessionWire {
  * 共 6 处，说明普通消息的 `msg` 已是 `{ con, files }`。故这里**按真实生产方收紧**为对象，
  * 不再用"string | object"泛化后靠断言抹平。
  */
-export interface ChatNewMessageWire {
-  id?: string | number | undefined;
-  from?: string | undefined;
-  uname?: string | undefined;
-  logo?: string | undefined;
-  /** 真实生产方恒为对象（见上） */
-  msg?: { con?: string | undefined; files?: unknown; [key: string]: unknown } | undefined;
-  time?: number | string | undefined;
-  type?: number | undefined;
-  iswd?: boolean | undefined;
-  isMine?: boolean | undefined;
-  isDuplicated?: boolean | undefined;
-  timestamp?: string | null | undefined;
-  unreadLine?: boolean | undefined;
-  isPush?: boolean | undefined;
-  isSession?: boolean | undefined;
-  dtype?: unknown;
-  fromAccount?:
-    | { id?: string | undefined; name?: string | undefined; logo?: string | undefined; [key: string]: unknown }
-    | undefined;
-  [key: string]: unknown;
-}
+export interface ChatNewMessageWire extends ChatUserMessageWire {}
 
-export interface ChatRawMessageWire {
+/**
+ * 消息 wire 的**公共字段**（系统通知 / 普通消息两形态共享；不含判别键与 msg/from）。
+ *
+ * 【为什么拆成「基类 + 两成员」（lead 2026-10-20 反例 2）】
+ * 原 `ChatRawMessageWire` 把**原始输入**和**原地过渡态**混成一个联合
+ * （`from?: string | 发送者对象`、`msg?: string | 对象`）。于是"对象 from"这种
+ * **只可能出现在过渡态**的形状也能作为原始入参传进去，`formatNewSession` 会把该对象
+ * 再包一层，返回的 `from.id` 是对象、声明却是 string —— 实测反例。
+ * 现按 lead 要求分开：**有限原始（本层）** → 过渡（`ChatSessionWireNormalized`）→ 输出（`ChatSession`）。
+ */
+export interface ChatMessageWireBase {
   /**
    * 消息/会话 id（wire 阶段）。
    * 【为什么是 string 而不是 string | number】`formatNewSession` 的系统消息分支不改 `id`，
@@ -515,23 +520,10 @@ export interface ChatRawMessageWire {
    * 真实 socket 消息的 `id` 由服务端给出且下游按字符串比较，故此处收紧为 `string`。
    */
   id?: string | undefined;
-  /**
-   * 发送者：wire 阶段是 **id 字符串**；`formatNewSession` 会把它**原地改型**成发送者对象。
-   * 因此这里如实写成**过渡联合**（lead 方案要求"msg/from 原地改型如实建过渡联合"）。
-   */
-  from?:
-    | string
-    | { id?: string | undefined; name?: string | undefined; avatar?: string | undefined; [key: string]: unknown }
-    | undefined;
   uname?: string | undefined;
   name?: string | undefined;
   logo?: string | undefined;
   avatar?: string | undefined;
-  /** 原始正文：系统消息分支里是 **string**，其余是对象（原地改型的来源） */
-  msg?:
-    | string
-    | { con?: unknown; files?: unknown; oldCon?: unknown; [key: string]: unknown }
-    | undefined;
   time?: number | string | undefined;
   type?: number | undefined;
   iswd?: boolean | undefined;
@@ -539,17 +531,12 @@ export interface ChatRawMessageWire {
   isDuplicated?: boolean | undefined;
   timestamp?: string | null | undefined;
   unreadLine?: boolean | undefined;
-  isGroup?: boolean | undefined;
-  groupname?: string | undefined;
-  to?: string | undefined;
-  value?: string | undefined;
-  msgid?: string | number | undefined;
-  /** 系统消息判别键（`'dtype' in message`） */
-  dtype?: unknown;
   /** 推送类标记：`addSession` 读 `result.isPush` 写进会话补丁 */
   isPush?: boolean | undefined;
   /** 是否会话：`addSession` 在无 id 时写 `result.isSession = false` */
   isSession?: boolean | undefined;
+  /** `formatNewSession` 系统分支写入 `value = id` / 普通分支写入会话 value */
+  value?: string | undefined;
   /** 归一化过程中写入的发送者对象 */
   fromAccount?:
     | { id?: string | undefined; name?: string | undefined; logo?: string | undefined; [key: string]: unknown }
@@ -558,31 +545,76 @@ export interface ChatRawMessageWire {
 }
 
 /**
- * **归一化写入后的过渡形态**：`formatNewSession` 完成逐属性写入、但还没交给 `formatSession` 时。
- * 此时 `msg` 与 `from` 已被**原地改型**为对象（见该函数内两处赋值）。
- * 这是 lead 方案里"原地转换过渡"那一层，如实反映"同一对象、字段类型已变"。
+ * **系统通知消息的原始 wire**（`formatNewSession` 里 `'dtype' in message` 为真的分支）。
+ * 该分支只把 **string 正文**包成 `{ con }`，并写 `time` 与 `value`；
+ * **从不写 `from`**、也不改 `id`（lead 15:29 反例 2 实测：`systemSessionHasFrom: false`）。
  */
+export interface ChatSystemMessageWire extends ChatMessageWireBase {
+  /** 判别键：必填，使 `'dtype' in message` 能把联合收窄到本形态 */
+  dtype: unknown;
+  /** 通知正文是字符串（随后被包成 `{ con }`） */
+  msg?: string | undefined;
+  value?: string | undefined;
+}
+
 /**
- * `formatNewSession` 的**规范化输出形态**（两个分支各自的真实结果）。
+ * **普通（用户 / 群）消息的原始 wire**：`from` 是发送者 **id 字符串**，`msg` 是对象。
  *
- * 【为什么是联合而不是单一接口（lead 实测反例）】
- * - **系统消息分支**（`'dtype' in message`）只写 `msg`（string → `{con}`）、`time`、`value`，
- *   **从不写 `from`** → 输出**可能没有自有 `from`**；`id`/`value` 也保持原始形态（可能是 number）
- *   （`formatter-shapes.cjs`：`systemSessionHasFrom: false` / `systemSessionId: 123`）。
- * - **非系统分支**会把 `from` 由 id 字符串**原地改型**为发送者对象。
- * 所以"from 必有对象"只对非系统分支成立，不能一律断言。
+ * 【关键】`formatNewSession` 会把 `from` **原地改型**为发送者对象 ——
+ * 那是**过渡态**（见 `ChatSessionWireNormalized`），**不是**本原始入参允许的形状。
+ * 因此这里 `from` 只允许 `string`：把"对象 from"当原始输入传进来会在编译期被拒
+ * （lead 2026-10-20 反例 2 的修法）。
  */
-export type ChatSessionWireNormalized =
-  | (ChatRawMessageWire & {
-      /** 系统分支：msg 被改成对象；from 未被写入 */
-      msg: { con?: unknown; files?: unknown; [key: string]: unknown };
-      from?: ChatRawMessageWire['from'];
-    })
-  | (ChatRawMessageWire & {
-      /** 非系统分支：msg/from 都被原地改型 */
-      msg: { con?: unknown; files?: unknown; [key: string]: unknown };
-      from: { id?: string | undefined; name?: string | undefined; avatar?: string | undefined; [key: string]: unknown };
-    });
+export interface ChatUserMessageWire extends ChatMessageWireBase {
+  /** 原始发送者 id 字符串（对象 from 不是合法原始输入） */
+  from?: string | undefined;
+  /** 原始正文对象（附件复用 `ChatMessageFiles` 有限合同） */
+  msg?:
+    | {
+        con?: string | undefined;
+        files?: ChatMessageFiles | undefined;
+        oldCon?: string | undefined;
+        [key: string]: unknown;
+      }
+    | undefined;
+  isGroup?: boolean | undefined;
+  groupname?: string | undefined;
+  to?: string | undefined;
+  msgid?: string | number | undefined;
+}
+
+/** 系统通知 / 普通消息两种**原始** wire 的联合（用 `'dtype' in message` 判别）。 */
+export type ChatRawMessageWire = ChatSystemMessageWire | ChatUserMessageWire;
+
+/**
+ * **归一化写入后的过渡形态**：`formatNewSession` 完成逐属性写入、但还没交给 `formatSession` 时。
+ *
+ * 两个分支的真实结果不同（这点此前被一句假注释掩盖过，lead 15:29 指出）：
+ * - **系统分支**：`msg` 由 string 变成 `{ con }`，写 `time`/`value`；**不写 from**。
+ * - **普通分支**：`msg` 保持对象，`from` 由 id 字符串**原地改型**为发送者对象。
+ * 两者都是**同一个对象**（就地改型），过渡类型只描述"写入之后"的字段形态。
+ */
+export interface ChatSystemMessageWireNormalized extends ChatMessageWireBase {
+  /** 系统消息判别键（过渡态里仍保留） */
+  dtype: unknown;
+  /** 系统分支：msg 由 string 被包成对象；**from 仍缺省**（该分支从不写它） */
+  msg: { con?: string | undefined; files?: ChatMessageFiles | undefined; [key: string]: unknown };
+  value?: string | undefined;
+}
+
+export interface ChatUserMessageWireNormalized extends ChatMessageWireBase {
+  /** 普通分支：msg 保持对象形态 */
+  msg: { con?: string | undefined; files?: ChatMessageFiles | undefined; [key: string]: unknown };
+  /** 普通分支：from 由 id 字符串**原地改型**为发送者对象 */
+  from: { id?: string | undefined; name: string; avatar?: string | undefined; [key: string]: unknown };
+  value?: string | undefined;
+  isGroup?: boolean | undefined;
+  groupname?: string | undefined;
+  to?: string | undefined;
+  msgid?: string | number | undefined;
+}
+
+export type ChatSessionWireNormalized = ChatSystemMessageWireNormalized | ChatUserMessageWireNormalized;
 
 /**
  * 一条聊天消息。
@@ -592,6 +624,41 @@ export type ChatSessionWireNormalized =
  * `isMineMessage` + 事后补的 `sysType`/`refer`/`card`/`isPrepare`），
  * 加上消费方读取的字段（`id`/`isMine`/`isGroup`/`isDuplicated`/`logo`/`uname`/`msgid`…）。
  */
+/**
+ * 附件（`msg.files`）的**有限实际合同**（输入 wire 与输出消息共用同一份）。
+ *
+ * 【依据】字段按消费者真实读取取证（`MessageToolbar` 的 `key`/`name`、`ImageMessage` 的
+ * `url`、`FileMessage` 的 `size`/`name`/`id`、表情的 `isEmotion`、音频 `len`、兜底 `fsize`）。
+ * 【为何单独命名（lead 2026-10-20 反例 3）】输入 wire 的 `files` 原写成 `unknown`，
+ * 于是 `{ size: 'large', key: 99 }` 也能进函数，而输出 `ChatMessage` 宣称
+ * `size: number` / `key: string` —— 输入与输出矛盾。既然消费者读的是这些有限字段，
+ * 输入侧就必须复用**同一**合同，不能用 unknown 放行后靠末尾断言抹平。
+ */
+export interface ChatMessageFiles {
+  /** 文件存储 key（下载 URL 参数） */
+  key?: string | undefined;
+  /** 文件名 */
+  name?: string | undefined;
+  /** 访问 URL */
+  url?: string | undefined;
+  /** 文件 id */
+  id?: string | number | undefined;
+  /** 字节大小 */
+  size?: number | undefined;
+  /** 是否表情 */
+  isEmotion?: boolean | undefined;
+  /** 备用大小（`formatFileSize(files.fsize || files.size)`） */
+  fsize?: number | undefined;
+  /** 音频时长（被 `parseInt` 处理，故可能是字符串形态） */
+  len?: string | number | undefined;
+  /** 附件 id 标记（`!files.id || files.aid`） */
+  aid?: unknown;
+  /** 缩略图集（`thumbs.web_1` 等） */
+  thumbs?: { [key: string]: unknown } | undefined;
+  /** 其余按消息种类扩展的附件字段 */
+  [key: string]: unknown;
+}
+
 export interface ChatMessage {
   /**
    * 消息 id。
@@ -638,36 +705,7 @@ export interface ChatMessage {
      * - `FileMessage` 等读 `size`/`name`/`id`；
      * - 表情消息读 `isEmotion`，另有 `len`/`fsize`/`aid` 等按消息种类扩展。
      */
-    files?: {
-      /** 文件存储 key（下载 URL 参数） */
-      key?: string | undefined;
-      /** 文件名 */
-      name?: string | undefined;
-      /** 访问 URL */
-      url?: string | undefined;
-      /** 文件 id */
-      id?: string | number | undefined;
-      /** 字节大小 */
-      size?: number | undefined;
-      /** 是否表情 */
-      isEmotion?: boolean | undefined;
-      /**
-       * 文件大小（备用字段）：`FileMessage:131` `formatFileSize(files.fsize || files.size)`
-       * —— 与 `size` 互为兜底，故同为 number。
-       */
-      fsize?: number | undefined;
-      /**
-       * 音频时长：`AudioMessage:67` `parseInt(files.len) || 0`。
-       * 注意被 `parseInt` 处理，故**可能是字符串形态**，如实写 `string | number`。
-       */
-      len?: string | number | undefined;
-      /** 附件 id 标记：`FileMessage:34` `!files.id || files.aid` 真值判断 */
-      aid?: unknown;
-      /** 缩略图集（`thumbs.web_1` 等） */
-      thumbs?: { [key: string]: unknown } | undefined;
-      /** 其余按消息种类扩展的附件字段 */
-      [key: string]: unknown;
-    } | undefined;
+    files?: ChatMessageFiles | undefined;
     /** 撤回前的原文：`updateWithdrawMessage` 里 `item.msg.oldCon = item.msg.con`，故同 `con` 类型 */
     oldCon?: string | undefined;
     [key: string]: unknown;
@@ -961,10 +999,10 @@ export interface ChatState {
  * `from` 仍是"对象或字符串"的过渡联合。沿用会话 wire 会让这个联合漏进
  * `receiveMessage(id, ...)` 的 `id: string`。
  */
-export interface ChatNewUserMessageEvent extends ChatRawMessageWire {
+export interface ChatNewUserMessageEvent extends ChatUserMessageWire {
   from: string;
   /** 单聊消息正文：该事件里 msg **已是对象**（会话 wire 的联合不适用） */
-  msg: { con?: string | undefined; files?: unknown; oldCon?: unknown; [key: string]: unknown };
+  msg: { con?: string | undefined; files?: ChatMessageFiles | undefined; oldCon?: string | undefined; [key: string]: unknown };
   /** 发送者昵称（拼 `"昵称: 正文"` 用） */
   uname?: string | undefined;
   /** 未读数（本 handler 会写它） */
@@ -979,10 +1017,10 @@ export interface ChatNewUserMessageEvent extends ChatRawMessageWire {
  * 与 `ChatNewUserMessageEvent` 同构：`from`/`msg` 在该事件里**已不是过渡联合**
  * （`from` 是发送者 id 字符串、`msg` 是对象），且群消息总有 `to`。
  */
-export interface ChatGroupMessageEvent extends ChatRawMessageWire {
+export interface ChatGroupMessageEvent extends ChatUserMessageWire {
   from: string;
   to: string;
-  msg: { con?: string | undefined; files?: unknown; [key: string]: unknown };
+  msg: { con?: string | undefined; files?: ChatMessageFiles | undefined; [key: string]: unknown };
   /** 发送者昵称（拼 `"昵称: 正文"` 用） */
   uname?: string | undefined;
   /** 未读数（本 handler 会写它） */
@@ -1002,7 +1040,7 @@ export interface ChatGroupMessageEvent extends ChatRawMessageWire {
  * 只出现在 `\`${message.name}: ${message.msg}\`` 与透传 `msg: message.msg` 两处，
  * 两处都要求字符串。这与 `ChatNewUserMessageEvent`（msg 是对象）**不同**。
  */
-export interface ChatNotifyMessageEvent extends ChatRawMessageWire {
+export interface ChatNotifyMessageEvent extends ChatSystemMessageWire {
   from: string;
   /** 系统会话 id（本 handler 按 `dtype` 覆写成 'post'/'system'/'hr' 等字面量） */
   id: string;
@@ -1011,8 +1049,8 @@ export interface ChatNotifyMessageEvent extends ChatRawMessageWire {
   msg: string;
   /** 发起人名称（存在时前缀拼进正文） */
   name?: string | undefined;
-  /** 判别用的事件子类型 */
-  dtype?: number | string | undefined;
+  /** 判别用的事件子类型（该事件按协议带 `dtype`；`switch` 的 default 仅为防御分支） */
+  dtype: number | string;
   count?: number | undefined;
   isSilent?: boolean | undefined;
   weak?: boolean | undefined;

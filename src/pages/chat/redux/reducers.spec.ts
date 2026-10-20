@@ -23,7 +23,7 @@
  * 本模块涉及 `Object.assign([], ...)`、`delete` 副作用与 `undefined` 值；
  * 若用 JSON 比较，`undefined` 自有键会**直接消失**，稀疏元素也会被抹平。
  *
- * 【覆盖】共 **24 个 A/B 场景 + 38 个 check 用例**（合计 62 项），对应 lead 点名的行为面：
+ * 【覆盖】共 **24 个 A/B 场景 + 39 个 check 用例**（合计 63 项），对应 lead 点名的行为面：
  *
  * A/B（逐步快照 + 每步「是否返回原引用」）：
  * - 初始值（12 个切片）；`SET/ADD/UPDATE_SESSION_LIST`、`REMOVE_SESSION`、`ADD_SESSION`
@@ -208,8 +208,11 @@ const SCENARIOS: Scenario[] = [
   {
     name: 'ADD/UPDATE/REMOVE_CURRENT_SESSION',
     steps: [
-      { type: 'ADD_CURRENT_SESSION', result: [SESSION_A] },
-      { type: 'ADD_CURRENT_SESSION', result: [SESSION_B] },
+      // 【真实生产形态】`addCurrentSession` 派发的是**单个会话对象**
+      // （`ADD_CURRENT_SESSION` 载荷已按生产者如实收为 `ChatSession`）；
+      // reducer 的 `state.concat(action.result)` 对单对象同样追加一项。
+      { type: 'ADD_CURRENT_SESSION', result: SESSION_A },
+      { type: 'ADD_CURRENT_SESSION', result: SESSION_B },
       { type: 'UPDATE_CURRENT_SESSION', result: [SESSION_B] },
       { type: 'REMOVE_CURRENT_SESSION', id: 's2' },
     ],
@@ -217,17 +220,18 @@ const SCENARIOS: Scenario[] = [
   {
     name: 'ADD/REMOVE_INBOX_SESSION 与 REMOVE_ALL_INBOX_SESSION',
     steps: [
-      { type: 'ADD_INBOX_SESSION', result: [SESSION_A] },
-      { type: 'ADD_INBOX_SESSION', result: [SESSION_B] },
+      { type: 'ADD_INBOX_SESSION', result: SESSION_A },
+      { type: 'ADD_INBOX_SESSION', result: SESSION_B },
       { type: 'REMOVE_INBOX_SESSION', id: 's1' },
-      { type: 'ADD_INBOX_SESSION', result: [SESSION_C] },
+      { type: 'ADD_INBOX_SESSION', result: SESSION_C },
       { type: 'REMOVE_ALL_INBOX_SESSION' },
     ],
   },
   {
     name: 'UPDATE_INBOX_SESSION（按 value 命中则展开合并）',
     steps: [
-      { type: 'ADD_INBOX_SESSION', result: [SESSION_A, SESSION_B] },
+      { type: 'ADD_INBOX_SESSION', result: SESSION_A },
+      { type: 'ADD_INBOX_SESSION', result: SESSION_B },
       { type: 'UPDATE_INBOX_SESSION', id: 'v1', data: { isSilent: true } },
     ],
   },
@@ -749,6 +753,47 @@ function main(): void {
     const out3 = utils.formatSession(s3);
     assert.ok(out3 === s3, 'formatSession 就地改型并返回同一对象');
     assert.equal(out3.from.id, undefined, 'from.id 可以仍是 undefined（不强制生产方补齐）');
+  });
+
+  check('【运行对照】lead 2026-10-20 三个反例：**类型层已收紧**，但运行期行为与基线一致', () => {
+    /**
+     * lead 2026-10-20 的三个反例输入，本批已按生产证据在**类型层**收紧：
+     *   ① `ChatRawSessionWire.id` 只允许 `string`（formatSession 从不转换 id）；
+     *   ② `ChatMessageWire` 的普通分支 `from` 只能是 id 字符串（对象 from 属过渡态，非原始输入）；
+     *   ③ `ChatNewMessageWire.msg.files` 复用有限合同 `ChatMessageFiles`（不再是 unknown）。
+     * 但 lead 也要求「**保留 raw 异常路径的运行对照**」——即这些**非法输入若真的运行**，
+     * 行为必须与基线一模一样（不因类型修正而改变运行语义）。故此处刻意用 `as never`
+     * 构造非法输入，只断言**运行期事实**：
+     */
+    F.installHost({ localStorage: F.makeLocalStorage({}) });
+    const utils = F.loadRealUtils();
+
+    // ① 数值会话 id：运行期原样返回，绝不转字符串
+    //   （`formatSessionList` 只是 `filter+map` 包装并逐项委托 `formatSession`，
+    //     故在其委托目标上做同一对照即可 —— 夹具当前抽取的 helper 含 `formatSession`。）
+    const numericSession = { id: 123, type: 3, msg: { con: 'text' } };
+    const sessionOut1 = utils.formatSession(numericSession as never);
+    assert.equal(sessionOut1.id, 123, '运行期：数值会话 id **原样返回**（formatSession 不转换 ID）');
+
+    // ② 对象 from：运行期仍走 else 分支并把该对象**再包一层** → from.id 即原对象
+    const objectFrom = { id: 'm', from: { id: 'u', name: 'Nested' }, uname: 'User', msg: { con: 'text' }, type: 1 };
+    // 入参会被**原地改型**（`from` 被覆盖），故先抓住原对象引用再比较
+    const originalSender = objectFrom.from;
+    const sessionOut2 = utils.formatNewSession(objectFrom as never);
+    assert.equal(
+      (sessionOut2.from as { id: unknown }).id,
+      originalSender,
+      '运行期：对象 from 被再包一层（from.id 即原 from 对象）—— 这正是类型层要拒的原因',
+    );
+
+    // ③ 附件非法值：运行期原样保留，不做任何归一化/兜底
+    const badFiles = { id: 'm', from: 'u', msg: { files: { size: 'large', key: 99 } }, time: '2026-10-19T06:00:00Z' };
+    const msgOut = utils.formatNewMessage(badFiles as never);
+    assert.deepEqual(
+      msgOut.msg!.files,
+      { size: 'large', key: 99 },
+      '运行期：附件对象**原样保留**（formatNewMessage 不归一化 files）',
+    );
   });
 
   check('真实 formatMessage：isMine / 连续消息合并 / isDuplicated 三分支', () => {

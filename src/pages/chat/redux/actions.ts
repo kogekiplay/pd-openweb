@@ -234,14 +234,16 @@ export const addSession = (result: ChatRawMessageWire, id?: string) => (dispatch
     }
   }
 
-  result = utils.formatNewSession(result);
-  if (!result.id) {
-    result.isSession = false;
+  // 【三层合同】入参是原始 wire；`formatNewSession` 就地改型并返回**同一对象**，
+  // 归一化结果用独立局部承接，使进入 action 的载荷类型与真实值一致（`ChatSession`）。
+  const session = utils.formatNewSession(result);
+  if (!session.id) {
+    session.isSession = false;
   }
 
   dispatch({
     type: 'ADD_SESSION',
-    result: [result],
+    result: [session],
   });
 };
 
@@ -674,6 +676,14 @@ export const closeSessionPanel = () => (dispatch: AppDispatch, getState: GetStat
 /**
  * 设置一个新的会话信息
  * @param {*} result
+ */
+/**
+ * 打开/设置当前会话。
+ * 【入参为何保留 `| undefined`（lead 2026-10-20 派发检查）】真实生产方确有
+ * `setNewCurrentSession(newSessionList.find(...))` 这种可能为 `undefined` 的调用；
+ * 动作 `SET_CURRENT_SESSION` 已**如实**允许 `undefined`（reducer 的
+ * `Object.assign({}, action.result)` 对 undefined 源返回 `{}`，与基线运行一致）。
+ * 函数体里的 `if (result && result.value)` 是**既有运行表达式**，原样保留。
  */
 export const setNewCurrentSession = (result: ChatSession | undefined) => (dispatch: AppDispatch) => {
   /* 【点会话列表时 dev 下报 A state mutation was detected ... 'chat.sessionList.N.id'】
@@ -1195,7 +1205,11 @@ export const addMessage = (newMessage: ChatOutboundDraft, prevMessage?: ChatMess
     message.isPrepare = newMessage.isPrepare || false;
   }
 
-  const id = newMessage.togroup || newMessage.touser;
+  // 【依据既有守卫收窄（lead 2026-10-20）】`id` 取自 togroup/touser，可能为 `undefined`；
+  // 下面的 `_.isEmpty(id)` 守卫会把空值/缺项提前 return，因此进入派发时它必定是非空字符串。
+  // TS 无法内建 lodash 的 isEmpty 语义，故用**擦除式断言**把该守卫证据接到 `id: string` 上
+  // （零运行时，`as` 被编译器完全擦除，运行表达式不变）。
+  const id = (newMessage.togroup || newMessage.touser) as string;
 
   if (_.isEmpty(id)) return;
 
@@ -1416,38 +1430,39 @@ export const receiveMessage = (id: string, message: ChatNewMessageWire) => (disp
 
   if (currentMessage && !unnecessary) {
     const prevMessage = currentMessage[currentMessage.length - 1];
-    message = utils.formatNewMessage(message, prevMessage);
+    // 【三层合同（lead 2026-10-20）】入参是**原始 wire**（`ChatNewMessageWire`）；
+    // `formatNewMessage` 会把同一对象就地改型并返回 `ChatMessage`，故用独立局部承接，
+    // 后续读取与派发都用**归一化后**的类型，不再需要逐处 `as ChatMessage`。
+    // 运行期仍是同一个对象引用，表达式求值顺序不变。
+    const normalized = utils.formatNewMessage(message, prevMessage);
     if (
       prevMessage &&
       prevMessage.isMineMessage &&
-      prevMessage.from === (message as ChatMessage).from &&
-      _.get(prevMessage, 'msg.con') === _.get(message, 'msg.con')
+      prevMessage.from === normalized.from &&
+      _.get(prevMessage, 'msg.con') === _.get(normalized, 'msg.con')
     ) {
       return;
     }
 
-    const isGroup = 'groupname' in message;
-    const sessionId = isGroup
-      ? (message as ChatMessage).to
-      : (message as ChatMessage).isMine
-        ? (message as ChatMessage).to
-        : (message as ChatMessage).from;
+    const isGroup = 'groupname' in normalized;
+    const sessionId = isGroup ? normalized.to : normalized.isMine ? normalized.to : normalized.from;
     const bottom = $(`#ChatPanel-${sessionId}`).data('isBottom');
     const isBottom = bottom == undefined ? true : bottom;
 
-    if (!(message as ChatMessage).isMine && !isBottom) {
-      dispatch(addBottomUnreadMessage(sessionId as string, message as ChatMessage));
+    if (!normalized.isMine && !isBottom) {
+      // 擦除式断言：`sessionId` 由 from/to 组成，此处与基线一样按字符串拼容器 id 使用。
+      dispatch(addBottomUnreadMessage(sessionId as string, normalized));
       return;
     } else {
       setTimeout(() => {
-        utils.scrollEnd((message as ChatMessage).to as string, true);
+        utils.scrollEnd(normalized.to as string, true);
       }, 100);
     }
 
     dispatch({
       type: 'ADD_MESSAGE',
       id,
-      result: message,
+      result: normalized,
     });
   }
 };
