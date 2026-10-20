@@ -3,7 +3,18 @@ import { Popup } from 'antd-mobile';
 import styled from 'styled-components';
 import { Button, Dialog, FunctionWrap, LoadDiv, MobilePersonalInfo, Textarea, UserName } from 'ming-ui';
 import chatbotApi from 'src/pages/workflow/apiV2/chatbot';
+import type { ChatbotFeedbackOwner, ChatbotFeedbackParams } from 'src/pages/workflow/apiV2/chatbot';
 import { browserIsMobile } from 'src/utils/common';
+
+export interface GetHelpOptions extends Omit<ChatbotFeedbackParams, 'opinion'> {
+  type?: 1 | 2 | undefined;
+  onClose?: (() => void) | undefined;
+}
+
+/** FunctionWrap always injects the close callback before rendering GetHelp. */
+interface GetHelpProps extends GetHelpOptions {
+  onClose: () => void;
+}
 
 const PopupWrapper = styled.div`
   padding: var(--space-4);
@@ -23,7 +34,7 @@ const PopupWrapper = styled.div`
   }
 `;
 
-const textInfo: Record<number, { title: string; desc: string; okText: string }> = {
+const textInfo: Record<1 | 2, { title: string; desc: string; okText: string }> = {
   1: { title: _l('反馈'), desc: _l('描述使用过程中遇到的问题，反馈通知给流程拥有者'), okText: _l('发送') },
   2: {
     title: _l('反馈给平台'),
@@ -32,15 +43,15 @@ const textInfo: Record<number, { title: string; desc: string; okText: string }> 
   },
 };
 
-function GetHelp(props) {
+function GetHelp(props: GetHelpProps) {
   const { onClose, type = 1, chatbotId, messageId, instanceId, flowNodeId } = props; //type: 1: 用户反馈 2: 管理员反馈
   const [loading, setLoading] = useState(type === 1);
-  const [owner, setOwner] = useState({});
+  const [owner, setOwner] = useState<ChatbotFeedbackOwner>({});
   const [content, setContent] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [personalInfoVisible, setPersonalInfoVisible] = useState(false);
   const isMobile = browserIsMobile();
-  const textareaRef = useRef<any>(undefined);
+  const textareaRef = useRef<HTMLTextAreaElement | null | undefined>(undefined);
 
   useEffect(() => {
     onInit();
@@ -107,7 +118,9 @@ function GetHelp(props) {
           placeholder={_l('请输入描述')}
           value={content}
           onChange={value => setContent(value)}
-          manualRef={con => { textareaRef.current = con; }}
+          manualRef={con => {
+            textareaRef.current = con;
+          }}
         />
       </Fragment>
     );
@@ -144,4 +157,4 @@ function GetHelp(props) {
   );
 }
 
-export default props => FunctionWrap(GetHelp, { ...props });
+export default (props: GetHelpOptions) => FunctionWrap(GetHelp, { ...props });

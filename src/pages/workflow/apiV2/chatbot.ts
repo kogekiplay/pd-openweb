@@ -1,5 +1,24 @@
 import base, { controllerName } from './base';
 import type { ApiArgs, ApiOptions } from './apiTypes';
+
+/** Owner fields consumed by GetHelp. Missing fields remain missing in the UI. */
+export interface ChatbotFeedbackOwner {
+  companyId?: string | undefined;
+  fullName?: string | undefined;
+  accountId?: string | undefined;
+}
+
+/** The UI retains its empty initial owner for a falsy JSON response. */
+export type ChatbotFeedbackOwnerResult = ChatbotFeedbackOwner | false | 0 | '' | null | undefined;
+
+/** User feedback identifies a message; platform feedback identifies a flow node. */
+export interface ChatbotFeedbackParams {
+  chatbotId?: string | undefined;
+  messageId?: string | undefined;
+  instanceId?: string | undefined;
+  flowNodeId?: string | undefined;
+  opinion: string;
+}
 /**
  * chatbot
 */
@@ -44,7 +63,7 @@ const chatbot = {
    * null
    * @param {Object} options 配置参数
    */
-  getOwner: function(args, options?) {
+  getOwner: function(args: { chatbotId?: string | undefined }, options?: ApiOptions): ApiResultOf<ChatbotFeedbackOwnerResult> {
     base.ajaxOptions.url = base.server(options) + '/chatbot/getOwner';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chatbotgetOwner', args, $.extend({}, base, options));
@@ -98,7 +117,7 @@ const chatbot = {
    * null
    * @param {Object} options 配置参数
    */
-  feedback: function(args, options?) {
+  feedback: function(args: ChatbotFeedbackParams, options?: ApiOptions): ApiResultOf<unknown> {
     base.ajaxOptions.url = base.server(options) + '/chatbot/feedback';
     base.ajaxOptions.type = 'POST';
     return mdyAPI(controllerName, 'chatbotfeedback', args, $.extend({}, base, options));
