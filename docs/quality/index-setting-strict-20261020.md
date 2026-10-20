@@ -20,4 +20,6 @@ tools、syntax/fast/strict收紧及颜色/圆角/排版/key门禁通过。新增
 
 旧聊天在最后提交前停止，8项工作文件已原样保全并与本轮源码复核；恢复后16组规格及完整Babel对照再次通过。证据 `/private/tmp/hap-index-setting-20261020/` 保留早期失败、修正后日志、正负探针、变异、lint/样式/基线差分。原始恢复快照在当前工作区 `work/recovery-20261020-0950/`。
 
-正式release和冻结候选待本次提交后完成；未发布。生产仍为10月19日已验 `4dcca88234`，每日上海16:45按完整空间预算推进可回滚整合发布。Chat新修正 `3f6c4a41a` 仍需独立终验，不属于本索引批次，不混入本批−102。
+正式release **281/281**（保留1项原有隔离known-failure）、全部类型门禁与四项编译完成，**1分44秒**；Webpack资产验证1095 JS/387 CSS/3 runtime、publish通过。源码候选 **47024c33133ab683e63009bf5db887dbe42299c3** 已完整冻结至 `/private/tmp/hap-index-setting-47024c3313-artifact-20261020/`，17,098 payload文件和3份元数据均从压缩包重新逐一读回校验；包232,214,485 bytes，SHA256 `808e156c1a1c740fa1c61e353b6e72ab18f10da777a9e6cfdfb742cabc08844a`，入口SHA256 `8522c773d485cfe1a0e441e89c26585456328ffa75c826f8aafba1d0a30b1ba9`。最终源码/基线/规格SHA见`final-source-manifest.json`。
+
+候选未上传、未部署。生产仍为10月19日已验 `4dcca88234`，每日上海16:45按实时完整空间预算推进可回滚整合发布。Chat新修正 `3f6c4a41a` 仍需闭合两个发送者合同与必要消费者诊断，不属于本索引批次，不混入本批−102。
