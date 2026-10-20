@@ -75,7 +75,15 @@ export type ChatAction =
   // - `updateWithdrawMessage` SET          ← `currentMessage`（数组）
   // 旧注释说"单条"是错的：真实代码在 SET 前已把它包成数组。
   // 因此动作收紧为 `ChatMessage[]`，与 state 的数组形状一致。
-  | { type: 'SET_MESSAGE'; id: string; result: (ChatMessage | undefined)[] }
+  /**
+   * SET_MESSAGE 的 id 是**展开后的最终回执**会话 id：正常是 string，但当原始 ack **自有
+   * `to: undefined`**（或 getter 返回 undefined）时，`{to: 会话id, ...ack}` 会如实覆盖成
+   * undefined，`updateMessage` 就按原值派发（lead 13:44 在真实 sendMessage + 真实
+   * actions.updateMessage + 真实 reducer 链上复现：SET_MESSAGE 动作确有自有 id 且值为 undefined，
+   * reducer 按原生属性键语义把它存成字符串键 `"undefined"`）。
+   * 因此这里不能再声明必为 string；`id: undefined` 是**合法最终回执形态**，不是兜底/伪造。
+   */
+  | { type: 'SET_MESSAGE'; id: string | undefined; result: (ChatMessage | undefined)[] }
   | { type: 'ADD_MESSAGE'; id: string; result: ChatMessage }
   // 【为什么是 `(ChatMessage | undefined)[]` 而不是 `ChatMessage[]`】
   // 该动作的 `result` 在 reducer 里**作为 concat 的接收者**使用：
@@ -218,7 +226,9 @@ const currentInboxList = (state: ChatSession[] = [], action: ChatAction): ChatSe
 const messages = (state: ChatMessagesState = {}, action: ChatAction): ChatMessagesState => {
   switch (action.type) {
     case 'SET_MESSAGE':
-      return Object.assign({}, state, { [action.id]: action.result });
+      // 擦除标记：id 类型上可为 undefined（原始 ack 显式/ getter 覆盖；见 ChatAction 注释）。
+      // 原实现直接 `[action.id]`，JS 计算属性键语义下 undefined 会变成键 "undefined"，这里保留同样行为。
+      return Object.assign({}, state, { [action.id as string]: action.result });
     case 'ADD_MESSAGE':
       // 原实现 `(state[id] || []).concat([result])`：缺键时以空数组起步（**这是原有行为，保留**）
       return Object.assign({}, state, {

@@ -492,7 +492,7 @@ export const operate = (
  * 【有限声明依据】三个调用方（`SessionList` / `ChatPanelHeader` / `Inbox/components/inboxHeader`）
  * 传的都是同一形状：`{ type, value, isTop }`。
  */
-export const sendSetTop = (message: { type: number; value: string; isTop: boolean }) => (_dispatch: AppDispatch, getState: GetState) => {
+export const sendSetTop = (message: { type?: number | undefined; value?: string | undefined; isTop: boolean }) => (_dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
   const { isTop } = message;
 
@@ -944,7 +944,7 @@ export const updateGroupAbout = (groupId: string, about: string) => (dispatch: A
  * @param {*} isPushNotice
  */
 export const updateGroupPushNotice =
-  (groupId: string, isPushNotice: boolean) => (dispatch: AppDispatch, getState: GetState) => {
+  (groupId: string | undefined, isPushNotice: boolean) => (dispatch: AppDispatch, getState: GetState) => {
     const { currentSessionList, sessionList } = getState().chat;
     const newCurrentSessionList = currentSessionList.map(item => {
       if (item.id === groupId) {
@@ -1260,7 +1260,9 @@ export const removeMessages = (id: string | undefined) => {
 export const updateMessage = (message: ChatMessageReceiptWire) => (dispatch: AppDispatch, getState: GetState) => {
   const { messages } = getState().chat;
   const { to, waitingid, socket } = message;
-  const currentMessage = messages[to] || [];
+  // 擦除标记：`to` 类型上可为 undefined（原始 ack 显式覆盖）；原实现直接 `messages[to]`，
+  // JS 属性键语义下 undefined 会变成键 "undefined"，这里保留完全相同的索引行为。
+  const currentMessage = messages[to as string] || [];
   const newCurrentMessage = currentMessage
     .filter(item => item)
     .map(item => {
@@ -1312,7 +1314,7 @@ export const updateMessage = (message: ChatMessageReceiptWire) => (dispatch: App
     type: 'SET_MESSAGE',
     id: to,
     result: newCurrentMessage,
-  });
+  } satisfies ChatAction);
 };
 
 /**
@@ -2017,7 +2019,7 @@ export const refresh = () => (dispatch: AppDispatch, getState: GetState) => {
  * `{ type, AccountID, isSilent }` —— **与 `setSlience`（入站事件）形状不同**，
  * 不要合并成一个类型。
  */
-export const sendSetSlience = (message: { type: number; AccountID: string; isSilent: boolean }) => () => {
+export const sendSetSlience = (message: { type?: number | undefined; AccountID?: string | undefined; isSilent: boolean }) => () => {
   socket.Contact.setSlience(message);
 };
 

@@ -254,6 +254,15 @@ export interface ChatSession {
  * `addMessage` 处明确注释「保留发给后端的消息数据，便于重发」，因此这里是**对象**，
  * 不是 `number | string`（那是另一处业务：会话列表的 localStorage 草稿文本）。
  */
+/**
+ * 群聊 @ 参数（`ChatPanelSession.getAtParam` 的真实返回）。
+ * `toUser` 为被 @ 的成员 id 列表；`'all'` 表示 @所有人。
+ */
+export interface ChatAtParam {
+  gid: string;
+  toUser: string[] | 'all';
+}
+
 export interface ChatOutboundDraft {
   /** 预发送临时 id（`utils.getUUID()`），也是 `ChatMessage.waitingId` 的来源 */
   waitingid?: string | undefined;
@@ -267,10 +276,16 @@ export interface ChatOutboundDraft {
   togroup?: string | undefined;
   /** 消息类型（`Constant.SESSIONTYPE_*`） */
   type?: number | undefined;
-  /** @ 参数（群聊） */
-  atParam?: unknown;
+  /** @ 参数（群聊）：真实生产方是 `getAtParam` 的 `ChatAtParam`，单聊为 `false` */
+  atParam?: ChatAtParam | false | undefined;
   /** 引用指向（`{ msgid }`） */
-  refer?: { msgid?: string | undefined; [key: string]: unknown } | undefined;
+  /**
+   * 引用指向。
+   * 【为何 msgid 允许 number】真实生产方 `ChatPanelSession.sendMessage` 写的是
+   * `refer: { msgid: currentReferMessage.id }`，而消息 id 本身就是 `string | number`
+   * （`ChatMessage.id`，见 `MessageView` 用 `Date.now()` 构造提醒消息的证据）。
+   */
+  refer?: { msgid?: string | number | undefined; [key: string]: unknown } | undefined;
   /* ── 以下为 `addMessage` **实际读取**的出站字段（逐处取证） ── */
   /** 引用消息的完整对象：读 `referMessage.msg.con` / `.type` / `.fromAccount.name` */
   referMessage?:
@@ -315,8 +330,16 @@ export interface ChatOutboundDraft {
  */
 export interface ChatMessageReceiptWire {
   id?: string | number | undefined;
-  /** 会话 id（= messages 字典键） */
-  to: string;
+  /**
+   * 会话 id（= messages 字典键）。
+   *
+   * 【为何允许 undefined】这是**消费方展开后**交给 `actions.updateMessage` 的最终输入：
+   * `{to: 会话id, ...raw}` —— raw ack **缺 to** 时保留注入串；raw **自有 to: undefined**
+   * （或 getter 返回 undefined）时会覆盖成 undefined（lead 13:21 真实 sendMessage 实测）。
+   * 因此最终 to 可能是 undefined；`updateMessage` 的索引/派发按**原生属性键语义**消费
+   * （`undefined` → 键 `"undefined"`），不补默认值、不改分支。
+   */
+  to: string | undefined;
   /** 预发送临时 id，用来找到本地那条待确认消息 */
   waitingid?: string | undefined;
   /** 转系统消息判别（`'isContact' in message`） */
@@ -358,6 +381,45 @@ export interface ChatMessageReceiptWire {
       }
     | undefined;
   [key: string]: unknown;
+}
+
+/**
+ * 服务器 **原始发送回执**（socket `send message` / `send group message` 的 ack 载荷）。
+ *
+ * 【为什么必须与 `ChatMessageReceiptWire` 分开】
+ * `ChatMessageReceiptWire` 是交给 `actions.updateMessage` 的 **Redux 输入**，`to` 必填
+ * （updateMessage 直接拿它当 messages 字典键）。但 socket 层**不补任何字段**、直接
+ * `resolve(data)`：lead 在固定源码独立宿主实测 ack `(null,{id:'m'})` 后成功返回**同一对象**、
+ * 无自有 `to`，`result.to === undefined`，无条件读 `to` 会抛原生 TypeError；把该真实 ack 赋给
+ * 旧返回类型得到精确 TS2741。因此原始 ack 的 `to` 只能是**可缺省**：带 `to`（服务端真实形态）
+ * 时是字符串，不带时由消费方在 `{to: 会话id, ...原始ack}` 的展开顺序里保留注入值。
+ */
+export interface ChatSendRawAck {
+  id?: string | number | undefined;
+  /**
+   * 会话 id。**缺省**时消费方 `{to: 会话id, ...ack}` 的展开不覆盖、保留注入值；
+   * 但**自有 `to: undefined`（或返回 undefined 的 getter）会如实覆盖成 undefined** ——
+   * lead 13:21 在真实 `ChatPanelSession.sendMessage` 里实测到该路径，故这里允许显式 undefined。
+   */
+  to?: string | undefined;
+  /** 预发送临时 id（`updateMessage` 按它匹配本地待确认消息） */
+  waitingid?: string | undefined;
+  /** 服务器侧附加信息（`updateMessage` 读 `time`/`refer`/`msg.files`） */
+  socket?: ChatMessageReceiptWire['socket'];
+  /** 被引用消息（`updateMessage` 引用回填时读；消费方也会显式先注入一份） */
+  referMessage?: ChatMessageReceiptWire['referMessage'];
+}
+
+/**
+ * 发送失败的服务器 ack（socket ack 的第一个参数）。
+ *
+ * 【真实消费点】`ChatPanelSession.sendMessage` 的失败回调 `const { error } = result` 后按
+ * `'not my contract'` 分支；该消费不再靠隐式/传染 any。
+ * 【其它失败形态】同步 emit 抛错由 Promise 原语转成 `reject(Error)`；此时读 `error` 得
+ * `undefined`（分支不进入），与旧运行行为一致。
+ */
+export interface ChatSendAckError {
+  error?: string | undefined;
 }
 
 /**
@@ -498,6 +560,10 @@ export interface ChatRawSessionWire {
    * 直接把 `res` 交给 `setSessionList`，故该字段经此路径**会被写入并存储**。
    */
   count?: number | undefined;
+  /** 免打扰标记（`SessionList` 的未读汇总与"新消息提醒"循环读取） */
+  isSilent?: boolean | undefined;
+  /** 角标/计数形态（`SessionList` 的 `[1,2].includes` 判断；`ChatSession` 同） */
+  showBadge?: number | boolean | undefined;
   atlist?: string[] | undefined;
   /** `formatSession` 归一化时写入的备份字段 */
   _time?: number | string | undefined;

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import { UserCard } from 'ming-ui';
-import type { RootState } from 'src/redux/types';
+import type { AppDispatch, RootState } from 'src/redux/types';
 import AudioMessage from '../../components/Message/AudioMessage';
 import CardMessage from '../../components/Message/CardMessage';
 import FileMessage from '../../components/Message/FileMessage';
@@ -20,18 +20,40 @@ import * as actions from '../../redux/actions';
 import * as utils from '../../utils';
 import Constant from '../../utils/constant';
 import * as socket from '../../utils/socket';
+import type {
+  ChatMessage,
+  ChatMessagesState,
+  ChatOutboundDraft,
+  ChatSession,
+} from '../../redux/types';
+import type { ChatWithdrawPayload } from '../../utils/socket';
 import './index.less';
 
-class Message extends Component<any, any> {
+interface MessageContainerProps {
+  dispatch: AppDispatch;
+  currentSession: ChatSession;
+  messages: ChatMessagesState;
+  message: ChatMessage;
+  session: ChatSession;
+  nextMessage: ChatMessage;
+  /** 定位到消息 id（ 传的是引用消息的 msgid，父级按 id 处理） */
+  onGotoMessage: (id: string | number) => void;
+}
+
+interface MessageContainerState {
+  moreVisible: boolean;
+}
+
+class Message extends Component<MessageContainerProps, MessageContainerState> {
   declare avatar: HTMLImageElement | null | undefined;
 
-  constructor(props) {
+  constructor(props: MessageContainerProps) {
     super(props);
     this.state = {
       moreVisible: false,
     };
   }
-  override shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps: MessageContainerProps) {
     const { currentSession } = this.props;
 
     if (currentSession.value == nextProps.currentSession.value) {
@@ -41,7 +63,7 @@ class Message extends Component<any, any> {
     return false;
   }
 
-  handleSetMessageMoreVisible(visible) {
+  handleSetMessageMoreVisible(visible: boolean) {
     this.setState({
       moreVisible: visible,
     });
@@ -49,15 +71,16 @@ class Message extends Component<any, any> {
   handleMouseLeave() {
     this.handleSetMessageMoreVisible(false);
   }
-  handleUpdateKcFile(newMessage) {
+  handleUpdateKcFile(newMessage: ChatMessage) {
     const { session } = this.props;
-    this.props.dispatch(actions.updateFileMessage(newMessage, session.id));
+    // 擦除标记：会话必有 id（原 any 直接传）。
+    this.props.dispatch(actions.updateFileMessage(newMessage, session.id as string));
   }
   handleWithdrawMessage() {
     const { session, message } = this.props;
     const { to } = message;
     const { isAdmin } = session;
-    const param = {
+    const param: ChatWithdrawPayload = {
       messageId: message.id,
       [session.isGroup ? 'groupid' : 'touser']: message.to,
       time: message.time,
@@ -70,10 +93,11 @@ class Message extends Component<any, any> {
 
     socket.Message.sendWithdrawMessgae(type, param).then(result => {
       const { socket: newMessage } = result;
-      this.props.dispatch(actions.updateWithdrawMessage(to, newMessage));
+      // 擦除标记：撤回回执的 to 是会话 id（原 any 直接传）。
+      this.props.dispatch(actions.updateWithdrawMessage(to as string, newMessage));
       this.props.dispatch(
         actions.updateSessionList({
-          id: to,
+          id: to as string,
           addMsg: newMessage.msg.con,
         }),
       );
@@ -81,20 +105,23 @@ class Message extends Component<any, any> {
   }
   handleAddReferMessage() {
     const { currentSession, message } = this.props;
-    this.props.dispatch(actions.setReferMessage(currentSession.value, message));
+    // 擦除标记：当前会话必有 value（原 any 直接传）。
+    this.props.dispatch(actions.setReferMessage(currentSession.value as string, message));
     utils.highlightReferMessage(currentSession.value);
   }
   handleRetry() {
     const { message, session } = this.props;
     const messageType = session.isGroup ? Constant.SESSIONTYPE_GROUP : Constant.SESSIONTYPE_USER;
     const { sendMsg } = message;
-    socket.Message.send(messageType, sendMsg).then(result => {
-      const { atParam } = sendMsg;
+    // 擦除标记：重发只发生在有出站草稿的预发送消息上（原 any 直接传）。
+    socket.Message.send(messageType, sendMsg as ChatOutboundDraft).then(result => {
+      const { atParam } = sendMsg as ChatOutboundDraft;
       this.props.dispatch(
         actions.updateMessage({
-          to: session.id,
-          referMessage: sendMsg.referMessage,
-          video: sendMsg.video,
+          to: session.id as string,
+          referMessage: (sendMsg as ChatOutboundDraft).referMessage,
+          video: (sendMsg as ChatOutboundDraft & { video?: unknown }).video,
+          // 服务器原始 ack 按原顺序展开（缺 to 保留注入值；自有 to 覆盖，含显式 undefined）。
           ...result,
         }),
       );
@@ -115,17 +142,21 @@ class Message extends Component<any, any> {
         return <TextMessage message={message} />;
       case Constant.MSGTYPE_PIC:
         return (
-          <ImageMessage message={message} session={session} messageLength={_.get(messages[session.id], 'length')} />
+          <ImageMessage
+            message={message}
+            session={session}
+            messageLength={_.get(messages[session.id as string], 'length')}
+          />
         );
       case Constant.MSGTYPE_FILE:
         return <FileMessage message={message} session={session} />;
       case Constant.MSGTYPE_CARD:
         // 知识文件是卡片类型的，要按照文件类型显示...
-        if (message.card.md === 'kcfile') {
+        if (message.card!.md === 'kcfile') {
           return (
             <KcFileMessage onUpdateKcFile={this.handleUpdateKcFile.bind(this)} message={message} session={session} />
           );
-        } else if (message.card.md === 'worksheet') {
+        } else if (message.card!.md === 'worksheet') {
           return <WorksheetFileMessage message={message} session={session} />;
         } else {
           return <CardMessage session={session} message={message} />;
@@ -146,7 +177,8 @@ class Message extends Component<any, any> {
     const { moreVisible } = this.state;
     const { message, nextMessage, session } = this.props;
     const { fromAccount = {}, timestamp, isMine, unreadLine, isMineMessage } = message;
-    const isDuplicated = message.isDuplicated && message.from === nextMessage.from;
+    // 擦除标记： 在类型上是 boolean|undefined，真实消费方按真假值用（原 any 直接传）。
+    const isDuplicated: boolean = (message.isDuplicated && message.from === nextMessage.from) as unknown as boolean;
 
     return (
       <div data-isminemessage={isMineMessage || false}>

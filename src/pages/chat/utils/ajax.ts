@@ -176,20 +176,20 @@ type MessageQueryByIdParams = {
  * 信封返回类型），只声明这一个方法的返回，不改请求/错误处理/其他接口。
  */
 export const getMessage = (conf: {
-  type?: number;
-  id?: string;
+  type?: number | undefined;
+  id?: string | undefined;
   /**
    * 【为何是 `number | string` 而不是 `unknown`】真实调用点只有 `MessageView` 的
    * 两处，传的是 `const { time } = messageList[...] || {}` —— 即 `ChatMessage['time']`
    * 的 `number | string | undefined`。用 `unknown` 会让"传个对象进去"也编译通过，
    * 收紧后能挡住这类误用；`MessageQueryParams.sincetime` 仍是 wire 侧的 `unknown`。
    */
-  sincetime?: number | string;
-  page?: number;
-  num?: number;
-  keyword?: string;
+  sincetime?: number | string | undefined;
+  page?: number | undefined;
+  num?: number | undefined;
+  keyword?: string | undefined;
   /** 真实调用点既传字符串方向（'up'/'down'）也传数字（`MessageView` 里有 `direction: 1`） */
-  direction?: string | number;
+  direction?: string | number | undefined;
 }): ApiResultOf<ChatMessage[]> | undefined => {
   // 【返回值含 undefined 的依据】只有 `SESSIONTYPE_GROUP` / `SESSIONTYPE_USER` 两个分支
   // 会 return；其他 `conf.type` 会**落到函数末尾返回 undefined**。如实声明，不假保证。
@@ -234,12 +234,12 @@ export const getMessage = (conf: {
  * @param {*} conf
  */
 export const getMessageById = (conf: {
-  type?: number;
-  id?: string;
-  msgid?: string | number;
-  size?: number;
+  type?: number | undefined;
+  id?: string | undefined;
+  msgid?: string | number | undefined;
+  size?: number | undefined;
   /** 真实调用点传的是 `config.MSG_LENGTH_MORE`（`MessageView:232`） */
-  num?: number;
+  num?: number | undefined;
 }) => {
   const param: MessageQueryByIdParams = {};
   let url = '';

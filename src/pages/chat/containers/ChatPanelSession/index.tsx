@@ -7,16 +7,26 @@ import styled from 'styled-components';
 import ErrorBoundary from 'ming-ui/components/ErrorBoundary';
 import { mdNotification } from 'ming-ui/functions';
 import userAJAX from 'src/api/user';
-import type { RootState } from 'src/redux/types';
+import type { AppDispatch, RootState } from 'src/redux/types';
 import { setCaretPosition } from 'src/utils/common';
 import CardToolbar from '../../components/CardToolbar';
 import MessageSendText from '../../components/MessageSendText';
 import SendToolbar from '../../components/SendToolbar';
+import type { EmotionPicMessage, FileMessage } from '../../components/SendToolbar';
 import Textarea from '../../components/Textarea';
 import * as actions from '../../redux/actions';
 import * as utils from '../../utils';
 import Constant from '../../utils/constant';
 import * as socket from '../../utils/socket';
+import type {
+  ChatAtParam,
+  ChatMessage,
+  ChatSendAckError,
+  ChatMessagesState,
+  ChatOutboundDraft,
+  ChatReferMessageState,
+  ChatSession,
+} from '../../redux/types';
 import ChatPanelHeader from '../ChatPanelHeader';
 import ChatPanelSessionInfo from '../ChatPanelSessionInfo';
 import MessageView from '../MessageView';
@@ -33,11 +43,51 @@ const WarnBox = styled.div`
   background: rgba(244, 67, 54, 0.1);
 `;
 
-class ChatPanelSession extends Component<any, any> {
+
+/** 宿主 window 上本组件读写的私有字段（`Window` 带 `[key: string]: any`，点访问会触发 TS4111） */
+type ChatPanelSessionWindow = Window & {
+  /** 表情/光标操作维护的当前光标位置（原实现直接在 window 上读写） */
+  currentCursortPosition: number;
+};
+
+/** 卡片消息（`CardToolbar.onSendCardMsg` 的 `result`，至少含 card） */
+interface CardMessage {
+  card: NonNullable<ChatMessage['card']>;
+  [key: string]: unknown;
+}
+
+/** `connect` 注入的 props + 容器传入的 `session` */
+interface ChatPanelSessionProps {
+  dispatch: AppDispatch;
+  session: ChatSession;
+  currentSession: ChatSession;
+  messages: ChatMessagesState;
+  referMessage: ChatReferMessageState;
+  currentSessionList: ChatSession[];
+  isWindow: boolean;
+  socketState: number;
+}
+
+interface ChatPanelSessionState {
+  value: string;
+  infoVisible: boolean;
+  searchText: string;
+  isOpenFile: boolean;
+  /** `isContact in session ? session.isContact : true` 的结果（真实可能缺省） */
+  isContact: boolean | undefined;
+  isSecured: boolean;
+}
+
+interface ChatPanelWrapperProps {
+  session: ChatSession;
+  currentSession: ChatSession;
+}
+
+class ChatPanelSession extends Component<ChatPanelSessionProps, ChatPanelSessionState> {
   declare currentHeight: number;
   declare isFocus: boolean;
 
-  constructor(props) {
+  constructor(props: ChatPanelSessionProps) {
     super(props);
     const { session } = this.props;
     const { id, isGroup } = session;
@@ -48,7 +98,8 @@ class ChatPanelSession extends Component<any, any> {
       infoVisible: isGroup ? !localStorage.getItem('chatInfoHidden') : false,
       searchText: '',
       isOpenFile: false,
-      isContact: 'isContact' in session ? session.isContact : true,
+      // 擦除式收窄：`in` 之后该属性会落到索引签名（unknown）；真实 wire 上是 boolean。
+      isContact: 'isContact' in session ? (session as { isContact?: boolean }).isContact : true,
       isSecured: true,
     };
     window[`onChangeChatValue-${id}`] = this.handleChange;
@@ -57,7 +108,7 @@ class ChatPanelSession extends Component<any, any> {
       this.checkAccountSecured();
     }
   }
-  override shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps: ChatPanelSessionProps) {
     const { session } = this.props;
 
     if (nextProps.currentSession.value === session.id) {
@@ -78,7 +129,7 @@ class ChatPanelSession extends Component<any, any> {
    * 获取是否是风险账号
    */
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: ChatPanelSessionProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const value = this.props.currentSession.value;
       value && this.focus(value);
@@ -99,21 +150,23 @@ class ChatPanelSession extends Component<any, any> {
     });
   }
 
-  focus(id) {
+  focus(id: string) {
     if (typeof id !== 'string') return;
     $(`#ChatPanel-${id} .ChatPanel-Textarea`).find('.Textarea').focus();
   }
-  jointMessageText(value, emotionText) {
-    const { currentCursortPosition } = window;
+  jointMessageText(value: string, emotionText: string) {
+    // 双击断言仅用于跨过 `Window` 索引签名的收窄（`currentCursortPosition` 由本目录代码维护）；
+    // 编译后仍是 `window.currentCursortPosition`，运行期不变。
+    const { currentCursortPosition } = window as unknown as ChatPanelSessionWindow;
     const start = value.slice(0, currentCursortPosition);
     const end = value.slice(currentCursortPosition, value.length);
-    window.currentCursortPosition = currentCursortPosition + emotionText.length;
+    (window as unknown as ChatPanelSessionWindow).currentCursortPosition = currentCursortPosition + emotionText.length;
     return {
       length: start.length + emotionText.length,
       msg: `${start}${emotionText}${end}`,
     };
   }
-  handleSetInfoVisible(visible) {
+  handleSetInfoVisible(visible: boolean) {
     const { isGroup } = this.props.session;
 
     if (isGroup) {
@@ -125,7 +178,7 @@ class ChatPanelSession extends Component<any, any> {
       isOpenFile: false,
     });
   }
-  handleSearchText(searchText) {
+  handleSearchText(searchText: string) {
     const { session } = this.props;
     const { infoVisible, isOpenFile } = this.state;
     this.setState({
@@ -134,7 +187,7 @@ class ChatPanelSession extends Component<any, any> {
       isOpenFile: searchText ? false : isOpenFile,
     });
   }
-  handleOpenFile(isOpenFile) {
+  handleOpenFile(isOpenFile: boolean) {
     const { session } = this.props;
     const { infoVisible } = this.state;
     this.setState({
@@ -143,10 +196,11 @@ class ChatPanelSession extends Component<any, any> {
       searchText: '',
     });
   }
-  handlePrepareUpload(temporaryMessage) {
+  handlePrepareUpload(temporaryMessage: FileMessage) {
     const { session, messages } = this.props;
-    const currentMessages = messages[session.id] || [];
-    const sendMsg = {
+    // 擦除标记：真实会话必有 id（容器按 session.id 渲染 `#ChatPanel-${id}`）；缺 id 时行为与基线一致。
+    const currentMessages = messages[session.id as string] || [];
+    const sendMsg: ChatOutboundDraft = {
       ...temporaryMessage,
       waitingid: temporaryMessage.file.id,
       isPrepare: true,
@@ -160,7 +214,7 @@ class ChatPanelSession extends Component<any, any> {
 
     this.props.dispatch(actions.addMessage(sendMsg, currentMessages[currentMessages.length - 1]));
   }
-  handleSendEmotionTextMsg(emotionText) {
+  handleSendEmotionTextMsg(emotionText: string) {
     const { value } = this.state;
     const { currentSession } = this.props;
     const { msg, length } = this.jointMessageText(value, emotionText);
@@ -170,7 +224,7 @@ class ChatPanelSession extends Component<any, any> {
     });
     setCaretPosition(textarea.get(0), length);
   }
-  handleBlur(value) {
+  handleBlur(value: string) {
     // 草稿
     if (document.visibilityState === 'visible') {
       const { id } = this.props.session;
@@ -184,11 +238,11 @@ class ChatPanelSession extends Component<any, any> {
 
     this.updateValue(value);
   }
-  handleChange = value => {
+  handleChange = (value: string) => {
     this.updateValue(value);
-    window.currentCursortPosition = value.length;
+    (window as unknown as ChatPanelSessionWindow).currentCursortPosition = value.length;
   };
-  updateValue(value) {
+  updateValue(value: string) {
     const { session, isWindow } = this.props;
     const { id } = session;
     const draftValue = _.trim(value) ? value : '';
@@ -229,7 +283,8 @@ class ChatPanelSession extends Component<any, any> {
   handleSelectedUser() {
     const { session } = this.props;
     const textarea = $(`#ChatPanel-${session.id}`).find('.ChatPanel-textarea textarea');
-    const value = textarea.val();
+    // 擦除标记：`val()` 的声明返回是 string | number | string[] | undefined；原实现原样存入 state。
+    const value = textarea.val() as string;
     this.setState({
       value,
     });
@@ -239,12 +294,13 @@ class ChatPanelSession extends Component<any, any> {
    */
   handleRemoveReferMessage() {
     const { session } = this.props;
-    this.props.dispatch(actions.removeReferMessage(session.id));
+    // 擦除标记：同上，真实会话必有 id。
+    this.props.dispatch(actions.removeReferMessage(session.id as string));
   }
   /**
    * 文字消息
    */
-  handleSendMsg(value) {
+  handleSendMsg(value?: string) {
     if ((window.config.SocketPolling && !IM.socket.connected) || this.props.socketState !== 0) {
       return;
     }
@@ -277,7 +333,7 @@ class ChatPanelSession extends Component<any, any> {
   /**
    * 卡片消息
    */
-  handleSendCardMsg(card) {
+  handleSendCardMsg(card: CardMessage) {
     if ((window.config.SocketPolling && !IM.socket.connected) || this.props.socketState !== 0) {
       return;
     }
@@ -293,7 +349,7 @@ class ChatPanelSession extends Component<any, any> {
   /**
    * 表情图片消息
    */
-  handleSendEmotionPicMsg(pic) {
+  handleSendEmotionPicMsg(pic: EmotionPicMessage) {
     if ((window.config.SocketPolling && !IM.socket.connected) || this.props.socketState !== 0) {
       return;
     }
@@ -307,7 +363,7 @@ class ChatPanelSession extends Component<any, any> {
   /**
    * 图片&附件消息
    */
-  handleSendFileMsg(file, msg) {
+  handleSendFileMsg(file: FileMessage, msg: string) {
     if ((window.config.SocketPolling && !IM.socket.connected) || this.props.socketState !== 0) {
       return;
     }
@@ -318,7 +374,8 @@ class ChatPanelSession extends Component<any, any> {
       msg,
       ...file,
     };
-    this.props.dispatch(actions.removeMessage(session.id, file.file.id));
+    // 擦除标记：会话与上传文件在发送链路上必然有 id（原实现 direct 传 any）；缺 id 时行为与基线一致。
+    this.props.dispatch(actions.removeMessage(session.id as string, file.file.id as string));
     this.sendMessage(sendMsg);
     !this.state.value && this.handleRemoveReferMessage();
   }
@@ -331,7 +388,8 @@ class ChatPanelSession extends Component<any, any> {
     }
 
     const { session, messages } = this.props;
-    const currentMessages = messages[session.id] || [];
+    // 擦除标记：真实会话必有 id（容器按 session.id 渲染 DOM）；运行期不变。
+    const currentMessages = messages[session.id as string] || [];
     socket.Message.sendShake(Constant.SESSIONTYPE_USER, {
       aid: session.id,
     }).then(() => {
@@ -348,13 +406,14 @@ class ChatPanelSession extends Component<any, any> {
   /**
    * 发送消息
    */
-  sendMessage(param) {
+  sendMessage(param: ChatOutboundDraft) {
     const { session, messages, referMessage } = this.props;
-    const currentMessages = messages[session.id] || [];
-    const currentReferMessage = referMessage[session.id];
+    // 擦除标记：真实会话必有 id；索引取值运行期不变。
+    const currentMessages = messages[session.id as string] || [];
+    const currentReferMessage = referMessage[session.id as string];
     const messageType = session.isGroup ? Constant.SESSIONTYPE_GROUP : Constant.SESSIONTYPE_USER;
-    const atParam = session.isGroup ? this.getAtParam(session.id) : false;
-    const sendMsg = {
+    const atParam = session.isGroup ? this.getAtParam(session.id as string) : false;
+    const sendMsg: ChatOutboundDraft = {
       ...param,
       atParam,
     };
@@ -383,8 +442,9 @@ class ChatPanelSession extends Component<any, any> {
       result => {
         this.props.dispatch(
           actions.updateMessage({
-            to: session.id,
+            to: session.id as string,
             referMessage: sendMsg.referMessage,
+            // 原始 ack 缺 to 时保留注入值，自有 to（含显式 undefined/getter）按原顺序覆盖。
             ...result,
           }),
         );
@@ -397,7 +457,8 @@ class ChatPanelSession extends Component<any, any> {
           });
         }
       },
-      result => {
+      // 有限失败消费边界，保留同步 emit 异常与原生解构行为。
+      (result: ChatSendAckError) => {
         const { error } = result;
 
         if (error === 'not my contract') {
@@ -406,7 +467,7 @@ class ChatPanelSession extends Component<any, any> {
           });
           this.props.dispatch(
             actions.updateMessage({
-              to: session.id,
+              to: session.id as string,
               waitingid: sendMsg.waitingid,
               id: sendMsg.waitingid,
               isContact: false,
@@ -422,10 +483,10 @@ class ChatPanelSession extends Component<any, any> {
       },
     );
   }
-  getAtParam(id) {
+  getAtParam(id: string): ChatAtParam | false {
     const textarea = $(`#ChatPanel-${id}`).find('.ChatPanel-textarea textarea');
     const textareaEl = textarea.get(0) as MentionsInputElement;
-    let atList = [];
+    let atList: string[] | 'all' = [];
 
     if (textareaEl?.getMentions) {
       textareaEl.getMentions(users => {
@@ -435,12 +496,13 @@ class ChatPanelSession extends Component<any, any> {
             break;
           }
 
-          atList.push(users[i].id);
+          // 擦除标记：此处 atList 仍是数组（`'all'` 分支已 break）；原实现直接 push。
+          (atList as string[]).push(users[i].id);
         }
       });
     }
 
-    if (atList.length || atList === 'all') {
+    if (atList.length || (atList as string[] | 'all') === 'all') {
       return {
         gid: id,
         toUser: atList,
@@ -492,7 +554,7 @@ class ChatPanelSession extends Component<any, any> {
                   value={value}
                   session={session}
                   placeholder={isContact ? _l('说点什么…') : hideChat ? _l('聊天功能已关闭') : ''}
-                  referMessage={referMessage[id]}
+                  referMessage={referMessage[id as string]}
                   onSendMsg={this.handleSendMsg.bind(this)}
                   onBlur={this.handleBlur.bind(this)}
                   onChange={this.handleChange.bind(this)}
@@ -538,8 +600,8 @@ const ChatPanelSessionConnect = connect((state: RootState) => {
   };
 })(ErrorBoundary.wrap(ChatPanelSession));
 
-class ChatPanelWrapper extends Component<any, any> {
-  constructor(props) {
+class ChatPanelWrapper extends Component<ChatPanelWrapperProps, Record<string, never>> {
+  constructor(props: ChatPanelWrapperProps) {
     super(props);
   }
   override render() {

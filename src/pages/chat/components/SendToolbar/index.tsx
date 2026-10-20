@@ -10,22 +10,98 @@ import MentionsInput from 'src/components/MentionsInput';
 import type { MentionsInputElement } from 'src/components/MentionsInput';
 import { setCaretPosition } from 'src/utils/common';
 import createUploader from 'src/utils/createUploader';
+import type { Uploader, UploaderFile } from 'src/utils/createUploader';
 import RegExpValidator from 'src/utils/expression';
 import { UploadError } from 'src/utils/uploader/constants';
 import * as utils from '../../utils';
+import type { ChatSession } from '../../redux/types';
 import config from '../../utils/config';
 import Constant from '../../utils/constant';
 import fileConfirm from '../fileConfirm/fileConfirm';
 import './index.less';
 
-const recurShowFileConfirm = (up, files, i: number, length, cb) => {
+
+/** 表情图片消息（本组件 `onSendEmotionPicMsg` 的真实生产载荷） */
+export interface EmotionPicMessage {
+  file: { name?: string | undefined; [key: string]: unknown };
+  type: number;
+  [key: string]: unknown;
+}
+
+/**
+ * 附件/上传消息（`onSendFileMsg` 与 `onPrepareUpload` 的真实生产载荷）。
+ * 【两条真实路径】`onPrepareUpload`（`recurShowFileConfirm`）传队列里的 `UploaderFile`；
+ * `onSendFileMsg`（`FileUploaded`）传服务端上传响应，并在紧邻的几行补写 `id`/`name`/`ft`。
+ * 两者共同被下游消费的是 `id`/`name`/`key`/`url`/`size` 等字段，故用同一有限合同。
+ */
+export interface FileMessageFile {
+  id?: string | undefined;
+  name?: string | undefined;
+  key?: string | undefined;
+  url?: string | undefined;
+  size?: number | undefined;
+  [key: string]: unknown;
+}
+export interface FileMessage {
+  file: FileMessageFile;
+  type: number;
+  [key: string]: unknown;
+}
+
+/** 知识中心选文件对话框返回的节点（`handleSendCardToChat` 的真实消费字段） */
+interface KcFileNode {
+  id?: string | undefined;
+  name?: string | undefined;
+  ext?: string | undefined;
+  [key: string]: unknown;
+}
+
+/** `src/components/emotion/emotion` 是 JS 模块（无类型导出）；这里只声明本组件用到的形状 */
+interface EmotionOptions {
+  historySize: number;
+  autoHide: boolean;
+  mdBear: boolean;
+  showAru: boolean;
+  offset: number;
+  relatedLeftSpace: number;
+  onMDBearSelect: (name: string, _src: unknown, targetEmotionSrc: string) => void;
+  onSelect: (name: string, _value: unknown, emotionText: string) => void;
+}
+type EmotionConstructor = new (element: unknown, options: EmotionOptions) => unknown;
+
+/** 容器（`ChatPanelSession`）传入的回调：与本组件真实调用一一对应 */
+export interface SendToolbarProps {
+  session: ChatSession;
+  socketState: number;
+  onSendEmotionTextMsg: (emotionText: string) => void;
+  onSendEmotionPicMsg: (message: EmotionPicMessage) => void;
+  onSendFileMsg: (file: FileMessage, msg: string) => void;
+  onPrepareUpload: (message: FileMessage) => void;
+  onSelectedUser: (user: string) => void;
+  onShake: () => void;
+  onChangeValue: (value: string) => void;
+}
+
+interface SendToolbarState {
+  visible: boolean;
+  isHidden: boolean;
+}
+
+const recurShowFileConfirm = (
+  up: Uploader,
+  files: UploaderFile[],
+  i: number,
+  length: number,
+  cb: ((message: FileMessage) => void) | undefined,
+) => {
   if (i >= length) {
     // 最后一次调用时启动重新开始上传
     up.start();
     return false;
   }
 
-  const file = files[i];
+  // 擦除标记：递归只在 `i < length` 时进入（上一行已判），缺元素时原实现直接抛原生 TypeError。
+  const file = files[i]!;
 
   fileConfirm(file, {
     yesFn() {
@@ -57,15 +133,15 @@ const recurShowFileConfirm = (up, files, i: number, length, cb) => {
   return undefined;
 };
 
-export default class SendToolbar extends Component<any, any> {
+export default class SendToolbar extends Component<SendToolbarProps, SendToolbarState> {
   declare at: HTMLDivElement | null | undefined;
 
   // 这些原来都是隐式挂上去的，TS 下不声明就是 TS2339
-  emotion;
-  uploadFile;
+  emotion: HTMLDivElement | null | undefined;
+  uploadFile: HTMLDivElement | null | undefined;
   initUploadTimer: ReturnType<typeof setTimeout> | undefined;
 
-  constructor(props) {
+  constructor(props: SendToolbarProps) {
     super(props);
     this.state = {
       visible: true,
@@ -93,17 +169,18 @@ export default class SendToolbar extends Component<any, any> {
     const { id } = this.props.session;
     const isFileTrsnsfer = id === 'file-transfer';
 
-    new Emotion(this.emotion, {
+    new (Emotion as unknown as EmotionConstructor)(this.emotion, {
       historySize: 30,
       autoHide: false,
       mdBear: true,
       showAru: true,
       offset: isFileTrsnsfer ? 313 : 263,
       relatedLeftSpace: isFileTrsnsfer ? -304 : -264,
-      onMDBearSelect: (name: string, _src, targetEmotionSrc) => {
+      onMDBearSelect: (name: string, _src: unknown, targetEmotionSrc: string) => {
         // 注意：ft 这个字段是作为七牛文件存储的类型判断的，所以要注意加上这个字段
         // 1.图片 2.附件 3.音频
-        name = name == 'null' ? null : name;
+        // 擦除标记：`name == 'null'` 时把 null 原样传下去（下方三目只做真值判断）；非空断言为擦除标记。
+        name = (name == 'null' ? null : name)!;
         const bearFile = {
           ft: 1,
           hash: '',
@@ -119,7 +196,7 @@ export default class SendToolbar extends Component<any, any> {
         };
         this.props.onSendEmotionPicMsg(message);
       },
-      onSelect: (name: string, _value, emotionText) => {
+      onSelect: (name: string, _value: unknown, emotionText: string) => {
         this.props.onSendEmotionTextMsg(emotionText || name);
       },
     });
@@ -139,7 +216,8 @@ export default class SendToolbar extends Component<any, any> {
     // 取凭证也交给 createUploader 了（bucket: 1 与原来手写的一致，type 用默认 0，
     // 与原来的 getToken(tokenFiles) 相同），所以下面的 FilesAdded 里不再自己取。
     const uploader = createUploader({
-      browse_button: this.uploadFile,
+      // 擦除标记：调用发生在 componentDidMount 之后，ref 已注入；原 any 直接传。
+      browse_button: this.uploadFile as HTMLElement,
       multi_selection: true,
       drop_element: `ChatPanel-${session.id}`,
       paste_element: `ChatPanel-${session.id}`,
@@ -154,18 +232,18 @@ export default class SendToolbar extends Component<any, any> {
           const tokenFiles = [];
 
           for (let j = 0; j < files.length; j++) {
-            if (RegExpValidator.validateFileExt('.' + RegExpValidator.getExtOfFileName(files[j].name))) {
+            if (RegExpValidator.validateFileExt('.' + RegExpValidator.getExtOfFileName(files[j]!.name))) {
               count++;
             } else {
-              uploader.removeFile(files[j]);
+              uploader.removeFile(files[j]!);
             }
 
-            let fileExt = `.${RegExpValidator.getExtOfFileName(files[j].name)}`;
+            let fileExt = `.${RegExpValidator.getExtOfFileName(files[j]!.name)}`;
 
             tokenFiles.push({ bucket: 1, ext: fileExt }); //chat 上传都用 bucket: 1
           }
 
-          const emptyFiles = files => {
+          const emptyFiles = (files: UploaderFile[]) => {
             files.forEach(item => {
               uploader.removeFile(item);
             });
@@ -205,7 +283,8 @@ export default class SendToolbar extends Component<any, any> {
           uploader.settings.multipart_params = { token: file.token };
           uploader.settings.multipart_params.key = file.key;
           uploader.settings.multipart_params['x:serverName'] = window.config.FilePath; //chat 上传都用 window.config.FilePath
-          uploader.settings.multipart_params['x:filePath'] = file.key ? file.key.replace(file.fileName, '') : '';
+          // 擦除标记：BeforeUpload 阶段凭证已挂上（`fileName` 必存在）；缺省时原实现抛原生 TypeError。
+          uploader.settings.multipart_params['x:filePath'] = file.key ? file.key.replace(file.fileName as string, '') : '';
           uploader.settings.multipart_params['x:fileName'] = (file.fileName || '').replace(/\.[^.]*$/, '');
           uploader.settings.multipart_params['x:originalFileName'] = encodeURIComponent(
             file.name.indexOf('.') > -1 ? file.name.split('.').slice(0, -1).join('.') : file.name,
@@ -236,7 +315,9 @@ export default class SendToolbar extends Component<any, any> {
           uploadFile.name = file.name;
           uploadFile.ft = isPicture ? 1 : 2;
 
-          _this.props.onSendFileMsg({ file: uploadFile, type }, msg);
+          // 擦除标记：`UploadedFileResponse` 是接口类型（无索引签名），而附件合同带索引签名；
+          // 上面三行刚把 id/name/ft 写进同一对象，运行期就是该合同，断言被 babel 完全剥离。
+          _this.props.onSendFileMsg({ file: uploadFile as FileMessageFile, type }, msg);
         },
         Error(_uploader, error) {
           if (error.code === UploadError.FILE_SIZE_ERROR) {
@@ -269,12 +350,13 @@ export default class SendToolbar extends Component<any, any> {
       sourceType: SOURCE_TYPE.CHAT,
       isAddressBookSelect: false,
       defaultMaxHeight: 380,
-      getPopupContainer: () => textarea.get(0).parentNode,
+      // 擦除标记：MentionsInput 只在输入框存在时初始化；缺元素时原实现抛原生 TypeError。
+      getPopupContainer: () => textarea.get(0)!.parentNode,
       chatParas: {
         groupId: session.id,
         avatar: session.avatar,
       },
-      onSelected: user => {
+      onSelected: (user: string) => {
         this.props.onSelectedUser(`@${user}`);
       },
     });
@@ -283,13 +365,14 @@ export default class SendToolbar extends Component<any, any> {
     const { at } = this;
     const { session, onChangeValue } = this.props;
     const $textarea = $(`#ChatPanel-${session.id}`).find('.ChatPanel-textarea textarea');
-    const $target = $(at);
+    // 擦除标记：`at` 由本组件 ref 注入（render 之后必存在）；缺省时原实现抛原生 TypeError。
+    const $target = $(at!);
     const $container = $(`#ChatPanel-${session.id}`).find('.mentionsAutocompleteList');
 
     if (!$target.data('open') || !$container.is(':visible')) {
       onChangeValue($textarea.val() + '@');
       setTimeout(() => {
-        setCaretPosition($textarea.get(0), String($textarea.val() ?? '').length);
+        setCaretPosition($textarea.get(0)!, String($textarea.val() ?? '').length);
       }, 0);
       $target.data('open', true);
     } else {
@@ -297,7 +380,7 @@ export default class SendToolbar extends Component<any, any> {
       $target.data('open', false);
     }
   }
-  handleChange(visible) {
+  handleChange(visible: boolean) {
     this.setState({
       visible,
     });
@@ -315,11 +398,13 @@ export default class SendToolbar extends Component<any, any> {
           dialogTitle: _l('选择路径'),
         })
         .then(result => {
-          if (!result || !result.node) {
+          // 擦除标记：`result` 的声明是 `{}`（对话框架未导出返回类型）；原实现在缺 node 时抛 Error，
+          // 断言被 babel 剥离，运行表达式与失败路径完全不变。
+          if (!result || !(result as { node?: KcFileNode[] }).node) {
             throw new Error();
           }
 
-          result.node.forEach(item => {
+          (result as { node?: KcFileNode[] }).node!.forEach((item: KcFileNode) => {
             this.handleSendCardToChat(item);
           });
         });
@@ -330,16 +415,20 @@ export default class SendToolbar extends Component<any, any> {
     this.setState({ visible: false });
   }
   handleIpcRenderer() {
-    window.ipcRenderer && window.ipcRenderer.send('cutpic', 'O');
+    // 擦除标记：Electron 宿主注入的可选对象（`Window` 带 `[key:string]: any`）。
+    // 保留原来的 `&&` 短路写法（编译后逐字节相同，含 ipcRenderer 缺失时不调用的语义）。
+    (window as unknown as { ipcRenderer?: { send: (...args: unknown[]) => void } }).ipcRenderer &&
+      (window as unknown as { ipcRenderer?: { send: (...args: unknown[]) => void } }).ipcRenderer!.send('cutpic', 'O');
   }
-  handleSendCardToChat(file) {
+  handleSendCardToChat(file: KcFileNode) {
     const { session } = this.props;
     const params = {
       cards: [
         {
           entityId: file.id,
           cardType: 'kcfile',
-          title: file.name + '.' + file.ext,
+          // 擦除标记：对话框节点带 name/ext（原 any 直接拼接）；缺省时与原实现同为字符串拼接结果。
+          title: (file.name as string) + '.' + (file.ext as string),
         },
       ],
       // message: `[${ _l('知识') }] ${ file.name }`,
@@ -394,7 +483,7 @@ export default class SendToolbar extends Component<any, any> {
         builtinPlacements={config.builtinPlacements}
         popup={this.renderMenu()}
         popupAlign={{ offset: [id === 'file-transfer' ? -50 : -20, -20] }}
-        getPopupContainer={() => document.querySelector('.ChatPanel-wrapper')}
+        getPopupContainer={() => document.querySelector('.ChatPanel-wrapper') as HTMLElement}
       >
         <Tooltip title={_l('发送本地文件')}>
           <div className="icon-btn">

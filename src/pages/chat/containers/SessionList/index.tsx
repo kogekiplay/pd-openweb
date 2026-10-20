@@ -9,7 +9,7 @@ import { Tooltip } from 'ming-ui/antd-components';
 import ClickAway from 'ming-ui/components/ClickAway';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import GroupController from 'src/api/group';
-import type { RootState } from 'src/redux/types';
+import type { AppDispatch, RootState } from 'src/redux/types';
 import { getRequest, pathCompletion } from 'src/utils/common';
 import SessionItem from '../../components/SessionItem';
 import * as actions from '../../redux/actions';
@@ -18,38 +18,93 @@ import * as ajax from '../../utils/ajax';
 import Constant from '../../utils/constant';
 import * as socket from '../../utils/socket';
 import './index.less';
+import type { MouseEvent, ReactNode } from 'react';
+import type { ScrollViewHandle } from 'ming-ui/components/ScrollView';
+import type { ChatRawSessionWire, ChatSession, ChatUserMessageWire } from '../../redux/types';
 
 const ClickAwayable = ClickAway;
-class ContextMenu extends Component<any, any> {
+
+/** 右键菜单定位偏移（`getOffsetData` 的返回） */
+interface OffsetData {
+  x?: number | undefined;
+  y?: number | undefined;
+}
+
+interface ContextMenuProps {
+  visible?: boolean | undefined;
+  /** 唯一用法（`SessionList.render`）总会传入；初值 `[]` 的占位在菜单打开前不会被读取 */
+  offset: OffsetData;
+  children?: ReactNode;
+}
+
+/**
+ * 本节读写的 window 外部回调（原实现直接 `window.handleOpenChatPanel = ...` /
+ * `window.setUnreadCount(...)`）。`Window` 在 `types/global.d.ts` 里带 `[key: string]: any`，
+ * 点访问会触发 TS4111；这里用**擦除式**交叉类型收窄 —— 编译后仍是 `window.xxx`，运行不变。
+ */
+type SessionListWindow = Window & {
+  handleOpenChatPanel?: ((id: string) => void) | undefined;
+  setUnreadCount?: ((count: number) => void) | undefined;
+};
+
+/** `connect` 注入的 props（mapStateToProps 的返回值 + dispatch） */
+interface SessionListProps {
+  dispatch: AppDispatch;
+  sessionList: ChatSession[];
+  currentSession: ChatSession;
+  currentSessionList: ChatSession[];
+  socketState: number;
+  messageListShowType?: number | undefined;
+  isOpenCommonApp?: boolean | undefined;
+  visible?: boolean | undefined;
+}
+
+interface SessionListState {
+  pageIndex: number;
+  loading: boolean;
+  isMore: boolean;
+  menuVisible: boolean;
+  /** 右键菜单当前指向的会话（初始 `{}`，菜单只在真实会话上打开） */
+  hoverItem: ChatSession;
+  /** 定位偏移：初值是占位的 `[]`（菜单打开前不读），打开时由 `getOffsetData` 赋 `{x,y}` */
+  offset: unknown;
+  isFeed: boolean | undefined;
+  isClear: boolean;
+  chatCount: number;
+  showSessionCount: number;
+}
+class ContextMenu extends Component<ContextMenuProps, Record<string, never>> {
   declare popup: HTMLDivElement | undefined;
 
-  constructor(props) {
+  constructor(props: ContextMenuProps) {
     super(props);
   }
   override componentDidMount() {
     this.popup = document.createElement('div');
     this.popup.className = 'ChatList-ContextMenu';
-    document.querySelector('body').appendChild(this.popup);
+    // 擦除标记：body 必然存在（HTML 文档）；若真缺，appendChild 仍抛原生 TypeError。
+    document.querySelector('body')!.appendChild(this.popup);
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: ContextMenuProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.visible) {
         this.renderLayer(this.props);
       } else {
-        $(this.popup).hide();
+        $(this.popup!).hide();
       }
     }
   }
-  handleShow(offset) {
-    $(this.popup).show().css({
-      left: offset.x,
-      top: offset.y,
+  handleShow(offset: OffsetData) {
+    $(this.popup!).show().css({
+      // 擦除标记：`getOffsetData` 必设 x 与 y（右侧或左侧、上方或下方各一支）；运行期不变。
+      left: offset.x!,
+      top: offset.y!,
     });
   }
-  renderLayer(props) {
+  renderLayer(props: ContextMenuProps) {
     let { children, offset } = props;
-    const root = createRoot(this.popup);
+    const root = createRoot(this.popup!);
 
     root.render(children);
 
@@ -62,7 +117,7 @@ class ContextMenu extends Component<any, any> {
   }
 }
 
-const getOffsetData = function (rootW: number, rootH: number, nativeEvent) {
+const getOffsetData = function (rootW: number, rootH: number, nativeEvent: { clientX: number; clientY: number }): OffsetData {
   const { clientX, clientY } = nativeEvent;
   const screenW = window.innerWidth;
   const screenH = window.innerHeight;
@@ -70,7 +125,7 @@ const getOffsetData = function (rootW: number, rootH: number, nativeEvent) {
   const left = !right;
   const top = screenH - clientY > rootH;
   const bottom = !top;
-  const offset: Record<string, any> = {};
+  const offset: OffsetData = {};
 
   if (right) {
     offset.x = clientX + 5;
@@ -91,13 +146,15 @@ const getOffsetData = function (rootW: number, rootH: number, nativeEvent) {
   return offset;
 };
 
-class SessionList extends Component<any, any> {
+class SessionList extends Component<SessionListProps, SessionListState> {
   declare isWindowChat: boolean;
   declare resizeObserver: ResizeObserver | undefined;
   declare sessionListWrap: HTMLDivElement | null | undefined;
   declare loading: boolean | undefined;
+  /** ScrollView 实例（ref 注入；当前代码只存不读） */
+  declare scrollView: ScrollViewHandle | null | undefined;
 
-  constructor(props) {
+  constructor(props: SessionListProps) {
     super(props);
     this.state = {
       pageIndex: 1,
@@ -118,14 +175,14 @@ class SessionList extends Component<any, any> {
     // 会话列表
     this.getChatSessionList(this.state.pageIndex);
     // 全局打开会话窗口
-    window.handleOpenChatPanel = this.handleOpenChatPanel.bind(this);
+    (window as SessionListWindow).handleOpenChatPanel = this.handleOpenChatPanel.bind(this);
     // !visible && this.handleResizeObserver();
   }
   override componentWillUnmount() {
-    this.resizeObserver && this.resizeObserver.unobserve(this.sessionListWrap);
+    this.resizeObserver && this.resizeObserver.unobserve(this.sessionListWrap!);
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: SessionListProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { chatCount } = this.state;
       const { sessionList, currentSession } = this.props;
@@ -135,7 +192,7 @@ class SessionList extends Component<any, any> {
         return;
       }
 
-      const currentChatCount = sessionList.reduce((count, item) => {
+      const currentChatCount = sessionList.reduce((count: number, item: ChatSession) => {
         if (item.count && 'isSilent' in item) {
           return item.isSilent ? count : (count += item.count);
         } else if (item.count && ('isPush' in item ? item.isPush : true)) {
@@ -144,7 +201,7 @@ class SessionList extends Component<any, any> {
           return count;
         }
       }, 0);
-      window.setUnreadCount && window.setUnreadCount(currentChatCount);
+      (window as SessionListWindow).setUnreadCount && (window as SessionListWindow).setUnreadCount!(currentChatCount);
       if (currentChatCount !== chatCount) {
         this.setState({
           chatCount: currentChatCount,
@@ -152,7 +209,7 @@ class SessionList extends Component<any, any> {
       }
 
       if (prevProps.currentSession.id && currentSession.id !== prevProps.currentSession.id) {
-        const { id } = getRequest();
+        const { id } = getRequest() as { id?: string | undefined };
 
         if (this.isWindowChat && id) {
           history.replaceState(null, '', window.location.pathname);
@@ -160,11 +217,13 @@ class SessionList extends Component<any, any> {
       }
 
       if (prevProps.messageListShowType !== this.props.messageListShowType) {
-        prevProps.dispatch(actions.setSessionList(sessionList));
+        // 二次归一化路径（既有行为）：已格式化的会话再走一次 `setSessionList`；
+        // 动作入参类型是原始 wire，这里用擦除式断言表达"运行期交给 formatSession 处理"，不改行为。
+        prevProps.dispatch(actions.setSessionList(sessionList as unknown as ChatRawSessionWire[]));
       }
 
       if (this.isWindowChat && sessionList.length && _.isEmpty(currentSession)) {
-        const { id, type } = getRequest();
+        const { id, type } = getRequest() as { id?: string | undefined; type?: number | string | undefined };
 
         const target = _.find(sessionList, {
           value: id,
@@ -190,10 +249,12 @@ class SessionList extends Component<any, any> {
   }
   handleResizeObserver() {
     this.resizeObserver = new ResizeObserver(() => {
-      const { clientHeight } = this.sessionListWrap;
+      const { clientHeight } = this.sessionListWrap!;
       const sessionHeight = 42;
       const marginBottom = 5;
-      const count = parseInt((clientHeight + marginBottom) / sessionHeight);
+      // 擦除标记：`parseInt` 的声明形参是 string，但其内部 ToString 对 number 与 String() 等价；
+      // 运行期结果与基线完全一致（保留原算式）。
+      const count = parseInt(((clientHeight + marginBottom) / sessionHeight) as unknown as string);
       this.setState({
         showSessionCount: count > 0 ? count - 1 : count,
       });
@@ -218,7 +279,7 @@ class SessionList extends Component<any, any> {
         pageIndex,
         pageSize: 30,
       })
-      .then(sessionList => {
+      .then((sessionList: ChatRawSessionWire[]) => {
         if (_.isEmpty(sessionList)) {
           this.setState({
             isMore: false,
@@ -239,9 +300,11 @@ class SessionList extends Component<any, any> {
         // 页面刚加加载完看是否存在未读消息，有的话加新消息提醒
         if (pageIndex === 1 && sessionList.length) {
           for (let i = 0; i < sessionList.length; i++) {
-            const session = sessionList[i] || {};
-            const hasPush = 'isPush' in session ? session.isPush : true;
-            const notSilient = 'isSilent' in session ? !session.isSilent || [1, 2].includes(session.showBadge) : true;
+            const session: ChatRawSessionWire = sessionList[i] || {};
+            // 擦除标记：`in` 收窄后该属性落到索引签名（unknown）；真实 wire 上它是 boolean（见 ChatRawSessionWire）
+            const hasPush = 'isPush' in session ? (session as { isPush?: boolean }).isPush : true;
+            // 擦除标记：`showBadge` 值域含 boolean（见 ChatSession）；`includes(boolean)` 恒 false，与基线一致。
+            const notSilient = 'isSilent' in session ? !session.isSilent || [1, 2].includes(session.showBadge as number) : true;
 
             if (session && session.count && hasPush && notSilient) {
               utils.flashTitle();
@@ -251,7 +314,7 @@ class SessionList extends Component<any, any> {
         }
       });
   }
-  addInbox = ({ id, type }) => {
+  addInbox = ({ id, type }: { id: string; type?: number | string | undefined }) => {
     const message = {
       count: 0,
       id,
@@ -275,14 +338,16 @@ class SessionList extends Component<any, any> {
     });
     this.props.dispatch(actions.addSysSession(id, message));
   };
-  addSession = ({ id, type = 1 }) => {
+  addSession = ({ id, type = 1 }: { id: string; type?: number | string | undefined }) => {
     ajax
       .chatSessionItem({
         type,
         value: id,
-      })
+      })! // 擦除标记：`chatSessionItem` 在未知 type 分支落空返回 undefined；落空时 `.then` 仍抛原生 TypeError
       .then(result => {
-        let data = {};
+        // 【有限联合】该对象同时被 `actions.addSession`（原始 wire）与 `handleOpenPanel`（会话消费）使用：
+        // 前者要求 `from` 为 id 字符串，后者要求 `ChatSession` 形状；运行期是同一对象，故如实写成交叉。
+        let data: ChatUserMessageWire & ChatSession = {};
 
         if (type == Constant.SESSIONTYPE_USER) {
           data = {
@@ -315,16 +380,16 @@ class SessionList extends Component<any, any> {
   handleScrollEnd() {
     this.getChatSessionList(this.state.pageIndex);
   }
-  handleRemoveFlashTitle(value) {
+  handleRemoveFlashTitle(value: string | undefined) {
     const { sessionList } = this.props;
     utils.removeFlashTitle(value, sessionList);
   }
-  handleOpenChatPanel(id) {
+  handleOpenChatPanel(id: string) {
     const { sessionList } = this.props;
     const item = sessionList.filter(item => item.value === id)[0];
     item && this.handleOpenPanel(item);
   }
-  handleOpenPanel(item) {
+  handleOpenPanel(item: ChatSession) {
     // 看是否打开过全局窗口
     // if (utils.chatWindow.is(item.value)) {
     //   return;
@@ -342,7 +407,7 @@ class SessionList extends Component<any, any> {
 
     // 同步窗口
     const sessionType = Number(item.type) || (item.isGroup ? Constant.SESSIONTYPE_GROUP : Constant.SESSIONTYPE_USER);
-    const param = {
+    const param: { id?: string | undefined; type: number; showBadge?: number | undefined } = {
       id: item.value,
       type: sessionType,
     };
@@ -388,7 +453,7 @@ class SessionList extends Component<any, any> {
     // 如果不存在其他计数关闭新消息提醒
     this.handleRemoveFlashTitle(item.value);
   }
-  handleRemoveSession(item, event) {
+  handleRemoveSession(item: ChatSession, event: MouseEvent) {
     event.stopPropagation();
     // 看是否打开过全局窗口
     // if (utils.chatWindow.is(item.value)) {
@@ -400,9 +465,10 @@ class SessionList extends Component<any, any> {
       type: item.type,
     }).then(() => {});
   }
-  handleContextMenu(item, event) {
+  handleContextMenu(item: ChatSession, event: MouseEvent) {
     event.preventDefault();
-    const isFeed = 'isPost' in item ? item.isPost : item.type > 2 ? false : true;
+    // 擦除标记：真实会话的 `type` 恒有值；若缺省，`undefined > 2` 为 false（与基线一致），不改分支。
+    const isFeed = 'isPost' in item ? item.isPost : (item.type as number) > 2 ? false : true;
     const isFileTransfer = item.value === Constant.FILE_TRANSFER.id;
     const rootW = 190;
     const rootH = isFeed ? 150 : 110;
@@ -414,7 +480,7 @@ class SessionList extends Component<any, any> {
       isFeed: isFileTransfer ? false : isFeed,
     });
   }
-  handleContextClearMenu(event) {
+  handleContextClearMenu(event: MouseEvent) {
     event.preventDefault();
     const rootW = 190;
     const rootH = 110;
@@ -466,7 +532,7 @@ class SessionList extends Component<any, any> {
 
     this.handleClickAway();
   }
-  handleClearAllCount(visible) {
+  handleClearAllCount(visible: boolean | undefined) {
     const { chatCount } = this.state;
 
     if (visible) {
@@ -688,11 +754,11 @@ class SessionList extends Component<any, any> {
               this.scrollView = scrollView;
             }}
           >
-            {sessionList.map(item => (
+            {sessionList.map((item: ChatSession) => (
               <SessionItem
                 onOpenPanel={this.handleOpenPanel.bind(this, item)}
                 onRemoveSession={this.handleRemoveSession.bind(this, item)}
-                onContextMenu={event => {
+                onContextMenu={(event: MouseEvent) => {
                   this.handleContextMenu(item, event);
                 }}
                 item={item}
@@ -712,7 +778,7 @@ class SessionList extends Component<any, any> {
               onClickAway={this.handleClickAway.bind(this)}
               onClickAwayExceptions={['.ChatPanel-addToolbar-menu']}
             >
-              <ContextMenu visible={menuVisible} offset={offset}>
+              <ContextMenu visible={menuVisible} offset={offset as OffsetData}>
                 {isClear ? this.renderClearMenu() : this.renderMenu()}
               </ContextMenu>
             </ClickAwayable>
@@ -722,7 +788,8 @@ class SessionList extends Component<any, any> {
           <div
             className="flexRow alignItemsCenter justifyContentCenter mTop5"
             onClick={() => {
-              document.querySelector('.toolbarWrap .sessionList').click();
+              // 擦除标记：工具栏节点由父级布局渲染；若真缺，`.click()` 仍抛原生 TypeError。
+              document.querySelector<HTMLElement>('.toolbarWrap .sessionList')!.click();
             }}
           >
             <Tooltip title={chatCount ? _l('未读消息') : _l('展开')} placement="left" align={{ offset: [-3, 0] }}>
