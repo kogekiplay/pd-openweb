@@ -1582,7 +1582,6 @@
     "src/pages/chat/lib/addressBook/containers/ProjectContacts.tsx",
     "src/pages/chat/lib/addressBook/containers/SiderBar.tsx",
     "src/pages/chat/lib/addressBook/index.tsx",
-    "src/pages/chat/redux/reducers.ts",
     "src/pages/chat/utils/ajax.ts",
     "src/pages/chat/utils/cardSender.tsx",
     "src/pages/chat/utils/group.ts",
