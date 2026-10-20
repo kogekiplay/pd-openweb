@@ -44,6 +44,38 @@ try {
   const defaults = run(['--filter', 'pass', '--concurrency', 'not-number', '--timeout']);
   assert.equal(defaults.status, 0);
   assert.match(defaults.stdout, /concurrency 1/);
+  // Observe the actual default pool through child lifetimes: every discovered
+  // fixture must run once, while at most four may occupy a slot simultaneously.
+  const lifetimes = path.join(directory, 'lifetimes.jsonl');
+  for (let i = 0; i < 6; i++) {
+    fs.writeFileSync(
+      path.join(directory, `src/nested/pool-${i}.spec.ts`),
+      `const fs = require('node:fs');\n` +
+        `const mark = event => fs.appendFileSync(${JSON.stringify(lifetimes)}, JSON.stringify([event, ${i}]) + '\\n');\n` +
+        `mark('start'); setTimeout(() => mark('end'), 150);\n`,
+    );
+  }
+  const pooled = run(['--filter', 'pool-']);
+  assert.equal(pooled.status, 0, pooled.stderr);
+  assert.match(pooled.stdout, /6\/6 passed/);
+  const active = new Set<number>(),
+    started = new Set<number>(),
+    ended = new Set<number>();
+  for (const line of fs.readFileSync(lifetimes, 'utf8').trim().split('\n')) {
+    const [event, id] = JSON.parse(line) as ['start' | 'end', number];
+    if (event === 'start') {
+      assert.ok(!started.has(id));
+      started.add(id);
+      active.add(id);
+      assert.ok(active.size <= 4, 'default pool oversubscribed the host');
+    } else {
+      assert.ok(active.delete(id));
+      ended.add(id);
+    }
+  }
+  assert.equal(active.size, 0);
+  assert.equal(started.size, 6);
+  assert.equal(ended.size, 6);
   fs.writeFileSync(path.join(directory, 'src/stray.test.ts'), "throw Error('must never run');");
   const naming = run(['--filter', 'pass']);
   assert.equal(naming.status, 1);

@@ -34,6 +34,10 @@ const SEARCH_DIRS = ['src', 'scripts', 'CI'];
 // pre-push 和 release 无限期挂起，且不给任何诊断信息 —— 比失败更难查。
 // 已知有 spec 真的在跑定时器：SearchInput 用真实 setTimeout，CountDown 打桩 setInterval。
 const DEFAULT_TIMEOUT_MS = 30000;
+// Specs can start their own child processes (BtnTd tests native rejection exits).
+// Using every logical CPU oversubscribes the host and can exhaust the unchanged
+// per-spec wall-clock limit. Bound the default; explicit --concurrency still works.
+const DEFAULT_CONCURRENCY = Math.min(4, os.availableParallelism());
 
 interface RunnerArgs {
   filter: string | null | undefined;
@@ -49,7 +53,7 @@ interface SpecResult {
   ms: number;
 }
 function parseArgs(argv: string[]): RunnerArgs {
-  const args: RunnerArgs = { filter: null, concurrency: os.availableParallelism(), timeout: DEFAULT_TIMEOUT_MS };
+  const args: RunnerArgs = { filter: null, concurrency: DEFAULT_CONCURRENCY, timeout: DEFAULT_TIMEOUT_MS };
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === '--filter') args.filter = argv[++i];
     else if (argv[i] === '--concurrency') args.concurrency = Math.max(1, parseInt(String(argv[++i]), 10) || 1);
