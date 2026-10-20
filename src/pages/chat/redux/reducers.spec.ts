@@ -23,7 +23,7 @@
  * 本模块涉及 `Object.assign([], ...)`、`delete` 副作用与 `undefined` 值；
  * 若用 JSON 比较，`undefined` 自有键会**直接消失**，稀疏元素也会被抹平。
  *
- * 【覆盖】共 **24 个 A/B 场景 + 39 个 check 用例**（合计 63 项），对应 lead 点名的行为面：
+ * 【覆盖】共 **24 个 A/B 场景 + 40 个 check 用例**（合计 64 项），对应 lead 点名的行为面：
  *
  * A/B（逐步快照 + 每步「是否返回原引用」）：
  * - 初始值（12 个切片）；`SET/ADD/UPDATE_SESSION_LIST`、`REMOVE_SESSION`、`ADD_SESSION`
@@ -794,6 +794,55 @@ function main(): void {
       { size: 'large', key: 99 },
       '运行期：附件对象**原样保留**（formatNewMessage 不归一化 files）',
     );
+  });
+
+  check('【真实发送者形态】缺昵称的普通消息 / 系统通知的字符串发送者（lead 2026-10-20 反例）', () => {
+    /**
+     * lead 2026-10-20 指名两项**现有公开合同允许、真实实现成功返回**的输入。
+     * 本批把有限原始/过渡/输出都如实放开，这里用**真实实现**锁住运行期事实：
+     *   ① `ChatRawMessageWire` 的 `uname` 可缺 → `from.name` 实际为 `undefined`（不能声明必为 string）；
+     *   ② `ChatNotifyMessageEvent.from: string` 是真实生产方形态 → 系统分支不写 from，
+     *      `formatSession` 也不改它，最终仍是字符串 `'u'`（不能声明必为对象）。
+     * 两者都必须**返回同一对象**（原地改型/引用不变）。
+     */
+    // 显式设 accountId：否则 `undefined === undefined` 会让 `isSelf` 空过成 true
+    F.installHost({ localStorage: F.makeLocalStorage({}), accountId: 'me' });
+    const utils = F.loadRealUtils();
+
+    // ① 缺昵称的普通消息
+    const user = { id: 'm', from: 'u', msg: { con: 'text' }, type: 1 };
+    const userSession = utils.formatNewSession(user);
+    assert.ok(userSession === user, '缺昵称普通消息：就地改型并返回**同一对象**');
+    const userFrom = userSession.from as Record<string, unknown>;
+    assert.equal(typeof userFrom, 'object', '普通分支：from 被原地改型为**对象**');
+    assert.equal(userFrom.id, 'u', '普通分支：from.id 是原 id 字符串');
+    assert.equal(userFrom.name, undefined, '**from.name 实际为 undefined**（uname 可缺，不得声明为必有 string）');
+
+    // ② 系统通知的字符串发送者
+    const notice = { id: 'post', from: 'u', dtype: 0, type: 4, msg: 'notice' };
+    const noticeSession = utils.formatNewSession(notice);
+    assert.ok(noticeSession === notice, '系统通知：同样返回**同一对象**');
+    assert.equal(noticeSession.from, 'u', '**系统分支不写 from** → 字符串发送者被原样透传');
+    // 系统分支把 string msg 包成 { con }；随后 formatSession 因 `from` 存在且无 sysType 又走了
+    // 非系统文案分支（from 是字符串 → `from.name` 为 undefined）——这正是"字符串发送者被
+    // 原样透传、下游按其真实形态处理"的证据，锁死基线行为。
+    assert.deepEqual(noticeSession.msg, { con: 'undefined: notice' }, '系统分支包成 { con } 后经 formatSession 文案拼接');
+    assert.equal(noticeSession.value, 'post', '系统分支写 value = id');
+
+    // ③ 真正缺 from 的系统输入变体仍合法且不改出 from
+    const systemNoFrom = { dtype: 'system', id: 'm', msg: 'x', type: 3 };
+    const systemNoFromSession = utils.formatNewSession(systemNoFrom);
+    assert.ok(systemNoFromSession === systemNoFrom, '无 from 的系统输入：返回同一对象');
+    assert.equal(
+      Object.prototype.hasOwnProperty.call(systemNoFromSession, 'from'),
+      false,
+      '系统分支**不写 from**：原本没有的字段不会被凭空创建',
+    );
+
+    // ④ 对照组：带昵称的普通消息 → from.name 就是 uname
+    const userNamed = { id: 'm2', from: 'u2', uname: 'User', msg: { con: 'hi' }, type: 1 };
+    const namedSession = utils.formatNewSession(userNamed);
+    assert.equal((namedSession.from as Record<string, unknown>).name, 'User', '带 uname 时 from.name 就是该昵称');
   });
 
   check('真实 formatMessage：isMine / 连续消息合并 / isDuplicated 三分支', () => {

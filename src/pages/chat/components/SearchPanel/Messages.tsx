@@ -79,7 +79,8 @@ export default class Messages extends Component<any, any> {
         type,
         page: pageIndex,
         keyword: searchText,
-      })
+      })! // 擦除标记（零运行时）：`getMessage` 在其它 `conf.type` 分支会落空返回 undefined；
+      // 这里保留基线的原生行为（若真落空，随后 `.then` 仍抛 TypeError），不新增守卫/默认值。
       .then(res => {
         // res = res.reverse();
         this.setState({

@@ -11,6 +11,7 @@ import type {
   ChatRawMessageWire,
   ChatRawSessionWire,
   ChatSession,
+  ChatSessionSender,
   ChatSessionWireNormalized,
 } from '../redux/types';
 
@@ -165,7 +166,10 @@ const formatSession = (item: ChatRawSessionWire): ChatSession => {
 
   if (item.from && !item.sysType) {
     const { iswd } = item;
-    const isSelf = item.from.id === md.global.Account.accountId;
+    // 【擦除标记：from 是有限联合（对象 | 字符串）】系统通知透传时 `from` 仍是字符串，
+    // 对其取 `.id` 运行期为 `undefined`（与基线完全一致）；这里用擦除式收窄表达该读取，
+    // 不改变运行表达式（`as` 被编译器剥离）与原生行为。
+    const isSelf = (item.from as ChatSessionSender).id === md.global.Account.accountId;
     const isAdmin = item.wdAdminid === md.global.Account.accountId;
     const isFileTransfer = item.value === 'file-transfer';
     const wdAdminid = item.wdAdminid;
@@ -189,12 +193,13 @@ const formatSession = (item: ChatRawSessionWire): ChatSession => {
 
       if (iswd) {
         if (wdAdminid) {
-          con = isAdmin ? `${_l('你撤回了成员“%0”的一条消息', item.from.name)}` : `${_l('管理员撤回了一条成员消息')}`;
+          con = isAdmin
+            ? `${_l('你撤回了成员“%0”的一条消息', (item.from as ChatSessionSender).name as string)}` : `${_l('管理员撤回了一条成员消息')}`;
         } else {
-          con = `"${item.from.name}"${item.msg!.con}`;
+          con = `"${(item.from as ChatSessionSender).name}"${item.msg!.con}`;
         }
       } else {
-        con = `${item.from.name}: ${item.msg!.con}`;
+        con = `${(item.from as ChatSessionSender).name}: ${item.msg!.con}`;
       }
 
       item.msg!.con = con;
@@ -402,12 +407,13 @@ export const formatNewSession: FormatNewSession = (
     message.logo = message.isGroup ? message.avatar : message.logo;
     message.type = message.isGroup ? Constant.SESSIONTYPE_GROUP : Constant.SESSIONTYPE_USER;
     message.time = message.time ? message.time : getCurrentTime();
-    // `from.name` 的目标契约是 `string`（`ChatSession.from`）；普通/群消息 wire 的昵称来源是
-    // `uname`，声明为可选（群会话走 groupname，且 `from.name` 只在 `!sysType` 分支被读）。
-    // 这里用**擦除式收窄**表达该契约，不做默认值替换：运行期若真缺 uname，行为与基线一致。
+    // 【发送者对象：`name` 如实可为 undefined】`uname` 在普通消息 wire 上**可选**
+    // （群会话走 `groupname`；lead 反例 `{ id:'m', from:'u', msg:{...}, type:1 }` 就没有 uname），
+    // 故这里**不再**用 `message.uname as string` 假装它是 string —— `ChatSessionSender.name`
+    // 已如实声明可选。`from` 本身仍按原表达式逐属性写入（不新增默认值/运行检查）。
     message.from = {
       id: message.from as string | undefined,
-      name: message.uname as string,
+      name: message.uname,
       avatar: message.logo,
     };
   }

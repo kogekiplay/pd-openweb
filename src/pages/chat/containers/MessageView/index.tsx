@@ -58,7 +58,9 @@ class MessageView extends Component<any, any> {
       const isAddUnreadLine = topUnread && unreadCount;
 
       if (isAddUnreadLine && res[res.length - unreadCount]) {
-        res[res.length - unreadCount].unreadLine = true;
+        // 擦除标记（零运行时）：同一索引表达式在上面的 if 里已判真；此处保留基线的
+        // 原生行为（若真的越界为 undefined，属性写入仍抛 TypeError），不改成守卫/默认值。
+        res[res.length - unreadCount]!.unreadLine = true;
       }
 
       if (session.accountId && !session.isContact) {
@@ -289,7 +291,7 @@ class MessageView extends Component<any, any> {
           type,
           id: session.id,
           direction: 1,
-        })
+        })! // 擦除标记（零运行时）：同上，保留 `getMessage` 落空时 `.then` 的原生 TypeError。
         .then(res => {
           this.setState({
             loading: false,

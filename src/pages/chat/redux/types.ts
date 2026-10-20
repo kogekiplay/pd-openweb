@@ -31,6 +31,23 @@
  * 【字段来源】消费方实际读取的字段（计数见上）。全部可选：生产方是接口返回，
  * 不同会话类型（单聊/群聊/动态/通讯录）字段并不齐备，**不能假定始终存在**。
  */
+/**
+ * 会话里的**发送者对象**（`ChatSession.from` 的对象形态）。
+ *
+ * 【为何 `name` 也可缺（lead 2026-10-20 反例）】公开合法输入
+ * `formatNewSession({ id: 'm', from: 'u', msg: { con: 'text' }, type: 1 })`（**不带 uname**）
+ * 会成功返回同一对象，且 `from.name` 实际是 `undefined` —— 实现里 `name: message.uname`
+ * 只是赋值，`message.uname as string` 并不是存在性证据。因此这里如实声明可选，
+ * 而不是继续声称"from 存在就是完整发送者"。
+ */
+export interface ChatSessionSender {
+  id?: string | undefined;
+  /** 昵称：**可为 `undefined`**（`uname` 在 wire 上可选） */
+  name?: string | undefined;
+  avatar?: string | undefined;
+  [key: string]: unknown;
+}
+
 export interface ChatSession {
   /** 会话 id；`REMOVE_SESSION`/`REMOVE_CURRENT_SESSION` 按它过滤 */
   /**
@@ -167,7 +184,16 @@ export interface ChatSession {
    * `formatSessionCanReturnMissingSenderId: true`）。
    * "读取某字段"不等于"生产方保证该字段必填"——之前声明必填是**过度声称**。
    */
-  from?: { id?: string | undefined; name: string; [key: string]: unknown } | undefined;
+  /**
+   * 发送者。
+   * 【有限联合（lead 2026-10-20 反例 2）】
+   *   · **对象**：普通/群消息经 `formatNewSession` 原地改型后的形态（`name` **可为 undefined**）；
+   *   · **字符串**：`ChatNotifyMessageEvent.from: string` 的系统通知经 `formatNewSession`
+   *     系统分支（不写 from）+ `formatSession`（也不改它）后**原样透传**的形态；
+   *   · **缺省**：系统输入本身可以没有 `from`。
+   * 之前只声明对象形态，等于把真实可达的字符串/缺项藏起来。
+   */
+  from?: ChatSessionSender | string | undefined;
   /** 系统消息类型：`!item.sysType` 判断是否系统消息 */
   sysType?: number | undefined;
   /** 撤回管理员 id：`item.wdAdminid === accountId` 判断是否管理员撤回 */
@@ -454,7 +480,13 @@ export interface ChatRawSessionWire {
    * `name` 声明为必填：`formatSession` 把它传给 `_l('...%0...', item.from.name)`，
    * 而 `_l` 的形参是 `(string | number)[]` —— 即该位置**按字符串使用**。
    */
-  from?: { id?: string | undefined; name: string; avatar?: string | undefined; [key: string]: unknown } | undefined;
+  /**
+   * 发送者（会话 wire 阶段）。
+   * 【有限联合】API 会话里是**对象**；系统通知（`ChatNotifyMessageEvent.from: string`）
+   * 经 `formatNewSession` 直接转入 `formatSession` 时仍是**字符串**；也可以没有。
+   * 对象形态的 `name` 可为 undefined（见 `ChatSessionSender`）。
+   */
+  from?: ChatSessionSender | string | undefined;
   /**
    * 预览正文。`con` 声明为 `string | undefined`：wire 阶段是**未解码字符串**，
    * `formatSession` 用 `htmlDecodeReg(con)`（形参 `unknown`、返回 `string`）解码后写回。
@@ -597,6 +629,11 @@ export type ChatRawMessageWire = ChatSystemMessageWire | ChatUserMessageWire;
 export interface ChatSystemMessageWireNormalized extends ChatMessageWireBase {
   /** 系统消息判别键（过渡态里仍保留） */
   dtype: unknown;
+  /**
+   * 系统分支**不写** `from`：它保持输入原样 —— 可能是 `ChatNotifyMessageEvent.from`（string），
+   * 也可能**根本没有**该字段。故此处如实声明为可选字符串（不能写成对象，也不能写成 unknown）。
+   */
+  from?: string | undefined;
   /** 系统分支：msg 由 string 被包成对象；**from 仍缺省**（该分支从不写它） */
   msg: { con?: string | undefined; files?: ChatMessageFiles | undefined; [key: string]: unknown };
   value?: string | undefined;
@@ -605,8 +642,8 @@ export interface ChatSystemMessageWireNormalized extends ChatMessageWireBase {
 export interface ChatUserMessageWireNormalized extends ChatMessageWireBase {
   /** 普通分支：msg 保持对象形态 */
   msg: { con?: string | undefined; files?: ChatMessageFiles | undefined; [key: string]: unknown };
-  /** 普通分支：from 由 id 字符串**原地改型**为发送者对象 */
-  from: { id?: string | undefined; name: string; avatar?: string | undefined; [key: string]: unknown };
+  /** 普通分支：from 由 id 字符串**原地改型**为发送者对象（`name` 可为 undefined：`uname` 可选） */
+  from: ChatSessionSender;
   value?: string | undefined;
   isGroup?: boolean | undefined;
   groupname?: string | undefined;
