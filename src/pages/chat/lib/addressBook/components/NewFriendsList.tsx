@@ -6,9 +6,40 @@ import LoadDiv from 'ming-ui/components/LoadDiv';
 import { pathCompletion } from 'src/utils/common';
 import API, { editAgreeFriend, editRefuseFriend } from '../api';
 
-export default class NewFriendsList extends React.Component<any, any> {
-  constructor() {
-    super();
+/** 待验证好友申请行（`fetchNewFriends` 返回的 list 元素；createAccount 是申请人的账号信息） */
+interface NewFriendAccount {
+  accountId?: string | undefined;
+  avatar?: string | undefined;
+  fullname?: string | undefined;
+  companyName?: string | undefined;
+}
+
+interface NewFriendItem {
+  createAccount: NewFriendAccount;
+  /** 申请备注 */
+  message?: string | undefined;
+  /** 已处理标记：undefined = 未处理；true = 已同意；false = 已拒绝 */
+  added?: boolean | undefined;
+}
+
+interface NewFriendsListProps {
+  /** 父级是否已完成首屏加载（false → 重置并重新拉取） */
+  isLoaded: boolean;
+  /** 最后通知父级是否还有待验证申请（避免提前触发 render） */
+  update: (hasApplies: boolean) => void;
+}
+
+interface NewFriendsListState {
+  isLoading: boolean;
+  pageIndex: number;
+  hasMore: boolean;
+  listData: NewFriendItem[] | null;
+}
+
+export default class NewFriendsList extends React.Component<NewFriendsListProps, NewFriendsListState> {
+  constructor(props: NewFriendsListProps) {
+    // 原实现 `super()` 未传 props；React 之后仍会写 this.props，运行等价（Babel 1 行差异）。
+    super(props);
     this.state = {
       isLoading: false,
       pageIndex: 1,
@@ -19,7 +50,7 @@ export default class NewFriendsList extends React.Component<any, any> {
     this.fetch = this.fetch.bind(this);
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: NewFriendsListProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.isLoaded !== prevProps.isLoaded && this.props.isLoaded === false) {
         this.setState(
@@ -48,14 +79,14 @@ export default class NewFriendsList extends React.Component<any, any> {
     API.fetchNewFriends({
       pageIndex: this.state.pageIndex,
       pageSize: 10,
-    }).then(({ allCount, list }) => {
+    }).then(({ allCount, list }: { allCount?: number; list?: NewFriendItem[] }) => {
       const { listData, pageIndex } = this.state;
 
       if (allCount !== 0) {
         this.setState({
-          hasMore: list && list.length >= 10,
+          hasMore: (list && list.length >= 10) as boolean,
           pageIndex: pageIndex + 1,
-          listData: (listData || []).concat(list),
+          listData: (listData || []).concat(list as NewFriendItem[]),
         });
       }
 
@@ -70,7 +101,8 @@ export default class NewFriendsList extends React.Component<any, any> {
   updateListData(accountId: string, isAdd: boolean) {
     const { listData } = this.state;
     this.setState({
-      listData: _.map(listData, item => {
+      // 擦除标记：分页拉取前 listData 可能为 null（原 any 直接 map；lodash 对 null 返回 []）。
+      listData: _.map(listData as NewFriendItem[] | null, (item: NewFriendItem) => {
         if (item.createAccount.accountId === accountId) {
           return {
             ...item,
@@ -116,26 +148,31 @@ export default class NewFriendsList extends React.Component<any, any> {
               <th>{_l('联系人')}</th>
               <th>{_l('备注')}</th>
               <th>{_l('组织')}</th>
-              <th width="30%" className="TxtCenter">
+              {/* 擦除标记：obsolete 的 `width` 属性已不在 React 19 类型里；spread 保留同一 DOM 属性值。 */}
+              <th
+                {...({ width: "30%" } as unknown as React.ThHTMLAttributes<HTMLTableCellElement>)}
+                className="TxtCenter"
+              >
                 {_l('操作')}
               </th>
             </tr>
           </thead>
           <tbody className="textSecondary">
-            {listData.length &&
-              listData.map(item => {
+            {/* 擦除标记：非首屏分支下 listData 必已存在（原 any 直接取 length/map）。 */}
+            {listData!.length &&
+              listData!.map((item: NewFriendItem) => {
                 return (
                   <tr key={item.createAccount.accountId}>
                     <td className="pRight24 userItem">
                       <a
-                        href={pathCompletion('/user_' + item.createAccount.accountId)}
+                        href={pathCompletion('/user_' + (item.createAccount.accountId as string))}
                         className="Hand NoUnderline TxtMiddle"
                         target="_blank"
                       >
                         <img className="circle avatar" src={item.createAccount.avatar} />
                       </a>
                       <a
-                        href={pathCompletion('/user_' + item.createAccount.accountId)}
+                        href={pathCompletion('/user_' + (item.createAccount.accountId as string))}
                         className="Bold Hand overflow_ellipsis textPrimary mLeft8"
                         title={item.createAccount.fullname}
                       >
@@ -150,10 +187,10 @@ export default class NewFriendsList extends React.Component<any, any> {
                     </td>
                     {item.added === undefined ? (
                       <td className="TxtCenter">
-                        <Button type="primary" size="small" action={() => this.add(item.createAccount.accountId)}>
+                        <Button type="primary" size="small" action={() => this.add(item.createAccount.accountId as string)}>
                           {_l('同意')}
                         </Button>
-                        <Button type="link" size="small" action={() => this.refuse(item.createAccount.accountId)}>
+                        <Button type="link" size="small" action={() => this.refuse(item.createAccount.accountId as string)}>
                           {_l('拒绝')}
                         </Button>
                       </td>

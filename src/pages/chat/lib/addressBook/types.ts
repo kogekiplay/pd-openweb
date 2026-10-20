@@ -1,0 +1,55 @@
+/**
+ * 地址簿共享类型（2026-10-20 持续目标·部门树切片）。
+ *
+ * 【为什么集中】`ProjectContacts`（容器）与 `ProjectContactsList`（组件）各声明过一份
+ * `DepartmentNode`，两份的 `subs` 递归字段一旦写法不同（`unknown[]` vs `DepartmentNode[]`），
+ * 在跨文件传参时 TS 会判为"两个同名但无关的类型"。这里收成**一份**真实形状。
+ */
+
+/** 部门树节点：`pagedDepartmentTrees` 返回项 + 组件补的 `subs`/`haveSubDepartment` */
+export interface DepartmentNode {
+  departmentId?: string | undefined;
+  departmentName?: string | undefined;
+  subs?: DepartmentNode[] | undefined;
+  /** 是否有下级部门（决定展开箭头是否占位） */
+  haveSubDepartment?: boolean | undefined;
+  [key: string]: unknown;
+}
+
+/** 用户详情里的「我的组织/应用」卡片（`userCards` 元素） */
+export interface AddressBookUserCard {
+  companyName?: string | undefined;
+  projectId?: string | undefined;
+  [key: string]: unknown;
+}
+
+/** 用户详情（`fetchUserDetail` resolve 的账号信息 + 卡片列表） */
+export interface AddressBookUserDetail {
+  accountId?: string | undefined;
+  avatar?: string | undefined;
+  fullname?: string | undefined;
+  isContact?: boolean | undefined;
+  isFriend?: boolean | undefined;
+  userCards?: AddressBookUserCard[] | undefined;
+  [key: string]: unknown;
+}
+
+/** 群组详情（`GroupDetail` 渲染与设置回调更新的字段） */
+export interface AddressBookGroupDetail {
+  groupId?: string | undefined;
+  avatar?: string | undefined;
+  name?: string | undefined;
+  groupMemberCount?: number | undefined;
+  createTime?: string | number | undefined;
+  isOpen?: boolean | undefined;
+  isDelete?: boolean | undefined;
+  createAccount?: { fullname?: string | undefined; [key: string]: unknown } | undefined;
+  [key: string]: unknown;
+}
+
+/** 地址簿打开聊天面板时注入的选择回调（payload 由各入口给：会话/群/应用） */
+export interface AddressBookCallbackPayload {
+  accountId?: string | undefined;
+  groupId?: string | undefined;
+  type?: string | undefined;
+}
