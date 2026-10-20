@@ -26,7 +26,6 @@
     "src/components/Agent/ui/embed/index.ts",
     "src/components/Agent/ui/embed/protocol.ts",
     "src/components/Agent/workParts.ts",
-    "src/components/ArchivedList/index.tsx",
     "src/components/ChangeLang/index.tsx",
     "src/components/DateFilter/index.tsx",
     "src/components/Form/DesktopForm/components/DeskFormWidget.tsx",

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactElement } from 'react';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -24,6 +24,30 @@ const FROM_TYPE = {
   log: 3,
 };
 
+type ArchivedItem = {
+  id?: string | number | undefined;
+  start?: string | undefined;
+  end?: string | undefined;
+  text?: string | undefined;
+};
+
+type ArchivedLogResponseItem = {
+  archivedId?: string | number | undefined;
+  startTime?: string | undefined;
+  endTime?: string | undefined;
+  text?: string | undefined;
+};
+
+type ArchivedListProps = {
+  type?: number;
+  archivedItem?: ArchivedItem;
+  showSelectItem?: boolean;
+  params?: ApiArgs;
+  iconClassName?: string;
+  onChange?: (item: ArchivedItem) => void;
+  customRender?: () => ReactElement;
+};
+
 export default ({
   type,
   archivedItem = {},
@@ -32,12 +56,12 @@ export default ({
   iconClassName,
   onChange = () => {},
   customRender,
-}) => {
+}: ArchivedListProps) => {
   const [showList, setShowList] = useState(false);
-  const [list, setList] = useState([]);
+  const [list, setList] = useState<ArchivedItem[]>([]);
   const [selectItem, setSelectItem] = useState(archivedItem);
 
-  const onSelect = (item = {}) => {
+  const onSelect = (item: ArchivedItem = {}) => {
     setSelectItem(item);
     onChange(item);
     setShowList(false);
@@ -108,12 +132,12 @@ export default ({
       promiseFn.then(res => {
         const list =
           type === FROM_TYPE.log
-            ? (res.list || []).map(({ archivedId, startTime, endTime, text }) => ({
+            ? (res.list || []).map(({ archivedId, startTime, endTime, text }: ArchivedLogResponseItem) => ({
                 id: archivedId,
                 start: startTime,
                 end: endTime,
                 text,
-              }))
+              } satisfies ArchivedItem))
             : res;
         setList(list.reverse());
       });
