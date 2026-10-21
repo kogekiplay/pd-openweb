@@ -39,7 +39,8 @@ export interface InboxItem {
     | undefined;
   /** 收件箱条目创建时间（`mergeTopicState` 原样透传给消息组件） */
   createTime?: string | number | undefined;
-  isFavorite?: boolean | undefined;
+  /** Star 的真实输入和更新值都是字符串标记。 */
+  isFavorite?: '0' | '1' | undefined;
   /** 后端可能给字符串数字（本函数用 `parseInt` 归一化） */
   inboxType?: string | number | undefined;
   inboxId?: string | number | undefined;
