@@ -1481,7 +1481,6 @@
     "src/pages/chat/components/Inbox/components/baseComponent/appFilter.tsx",
     "src/pages/chat/components/Inbox/components/baseComponent/avatar.tsx",
     "src/pages/chat/components/Inbox/components/baseComponent/commentArea.tsx",
-    "src/pages/chat/components/Inbox/components/baseComponent/inboxFilter.tsx",
     "src/pages/chat/components/Inbox/components/baseComponent/messageContent.tsx",
     "src/pages/chat/components/Inbox/components/baseComponent/replyTo.tsx",
     "src/pages/chat/components/Inbox/components/baseComponent/star.tsx",
