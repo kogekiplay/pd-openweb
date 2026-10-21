@@ -36,14 +36,18 @@ export interface ChatShakePayload {
   [key: string]: unknown;
 }
 
-/** 撤回消息载荷（`Message.handleWithdrawMessage` 的真实构造） */
+/**
+ * 撤回消息载荷（`Message.handleWithdrawMessage` 的真实构造）。
+ * 该对象由 `containers/Message/index.tsx:83` 的**字面量精确构造**
+ * （messageId + 三目写入 groupid/touser + time + 条件写入 adminid），
+ * 故逐字段声明、不留宽索引——拼错 `adminId`/`messageID` 会被拒。
+ */
 export interface ChatWithdrawPayload {
   messageId: ChatMessage['id'];
   time?: ChatMessage['time'];
   touser?: string | undefined;
   groupid?: string | undefined;
   adminid?: string | undefined;
-  [key: string]: unknown;
 }
 
 /** 撤回回执：调用方只解构 `result.socket` 并交给 `updateWithdrawMessage` */
@@ -133,10 +137,13 @@ export interface ChatSetSlienceParam {
 }
 
 /** `fetchUploadToken` 的回执：实现只读 `token`/`key` 判断成功 */
+/**
+ * `upload token` 回执：实现只读 `token`/`key` 判断成功（二者都有才 resolve）。
+ * 本模块不读其它字段，故不留宽索引。
+ */
 export interface ChatUploadTokenAck {
   token?: string | undefined;
   key?: string | undefined;
-  [key: string]: unknown;
 }
 
 
