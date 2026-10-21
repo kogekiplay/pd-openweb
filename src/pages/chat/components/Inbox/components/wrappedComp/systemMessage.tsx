@@ -2,7 +2,8 @@ import { Fragment, lazy, PureComponent, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import { match } from 'path-to-regexp';
 import styled from 'styled-components';
-import xss from 'xss';
+// 根入口把 `./default` 全部导出挂到 module.exports，`whiteList` 是同一对象（同 commentArea 批次说明）
+import xss, { whiteList } from 'xss';
 import { Icon, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import TaskCenterController from 'src/api/taskCenter';
@@ -15,6 +16,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import { getRequest, pathCompletion } from 'src/utils/common';
 import { addBehaviorLog, dateConvertToUserZone } from 'src/utils/project';
 import { MSG_DONE_TEXT, MSGTYPES } from '../../constants';
+import type { InboxItem } from '../../util';
 import { formatInboxItem, linkifySanitizedHtml } from '../../util';
 import Avatar from '../baseComponent/avatar';
 import Star from '../baseComponent/star';
@@ -54,10 +56,57 @@ const removeWebUrlPrefix = (href: string | undefined) => {
  * @returns
  */
 
-export default class SystemMessage extends PureComponent<any, any> {
+
+/** 应用信息（底部应用名/图标分支真实读取） */
+interface SystemMessageApp {
+  status?: number | undefined;
+  color?: string | undefined;
+  iconUrl?: string | undefined;
+  id?: string | undefined;
+  name?: string | undefined;
+}
+
+/** 关联流程信息（`getWorkflowDetail` 写入并渲染的三字段） */
+interface SystemMessageProcessInfo {
+  name: string;
+  deleted: boolean;
+  id: string;
+}
+
+/**
+ * 系统消息 props：`Message.content`、时间、消息类型与应用/流程上下文；
+ * `formatInboxItem` 需要的其余字段由父级透传（调用点做一次边界断言）。
+ */
+interface SystemMessageProps {
+  Message?: { content?: string | undefined } | undefined;
+  createTime?: number | string | undefined;
+  readTime?: number | string | undefined;
+  inboxType: number;
+  app?: SystemMessageApp | null | undefined;
+  processId?: string | null | undefined;
+  status?: unknown;
+  accountId?: string | undefined;
+}
+
+interface SystemMessageState {
+  showAddressBook: boolean;
+  processInfo: SystemMessageProcessInfo | null;
+}
+
+/**
+ * `ErrorDialog`（worksheet 目录的未类型化外部组件）在本文件被调用的**真实入参形状**：
+ * 三个字段都是可选，且本文件只按这三种组合调用。集中声明一次，避免三个调用点重复写同一对象字面量类型。
+ */
+type ErrorDialogProps = {
+  fileKey?: string | undefined;
+  isBatch?: boolean | undefined;
+  isAttachment?: boolean | undefined;
+};
+
+export default class SystemMessage extends PureComponent<SystemMessageProps, SystemMessageState> {
   declare msg: HTMLSpanElement | null | undefined;
 
-  override state = {
+  override state: SystemMessageState = {
     showAddressBook: false,
     processInfo: null,
   };
@@ -69,17 +118,18 @@ export default class SystemMessage extends PureComponent<any, any> {
       $(this.msg).on('click', 'a', function (this: HTMLElement, evt) {
         const $this = $(this);
         const href = removeWebUrlPrefix($(evt.target).attr('href'));
-        const hrefWithoutQuery = href.split('?')[0];
+        // 擦除标记：split 首段必存在（原 any 直接取）；缺省时原实现抛原生 TypeError。
+        const hrefWithoutQuery = href.split('?')[0] as string;
 
         if ($(evt.target).attr('t') === 'taskCmd') {
           var opValue = $this.attr('opvalue');
           var taskId = $this.attr('taskid');
           var opUser = $this.attr('opuser');
-          var func = opValue === '1' ? 'agreeApplyJoinTask' : 'refuseJoinTask';
+          var func: 'agreeApplyJoinTask' | 'refuseJoinTask' = opValue === '1' ? 'agreeApplyJoinTask' : 'refuseJoinTask';
           TaskCenterController[func]({
             taskID: taskId,
             accountID: opUser,
-          }).then(function (data) {
+          }).then(function (data: { status?: unknown; error?: { msg?: string } | null }) {
             if (data.status) {
               alert(_l('操作成功'));
             } else if (data.error) {
@@ -125,7 +175,7 @@ export default class SystemMessage extends PureComponent<any, any> {
                 workId={ids[1]}
                 onLoad={() => {
                   const refreshBtn = document.querySelector('.ChatPanel-active .inboxHeader .refreshBtn');
-                  refreshBtn && refreshBtn.click();
+                  refreshBtn && (refreshBtn as HTMLElement).click();
                 }}
                 onClose={() => {
                   root.unmount();
@@ -140,7 +190,8 @@ export default class SystemMessage extends PureComponent<any, any> {
           evt.preventDefault();
           evt.stopPropagation();
           const id = hrefWithoutQuery.slice(hrefWithoutQuery.indexOf('excelerrorpage') + 15).split('/');
-          ErrorDialog({
+          // 擦除标记：`openErrorDialog` 的形参尚未类型化（其自身批次处理），这里按真实调用形状收窄。
+          (ErrorDialog as unknown as (props: ErrorDialogProps) => void)({
             fileKey: id[0],
           });
           return;
@@ -150,7 +201,7 @@ export default class SystemMessage extends PureComponent<any, any> {
           evt.preventDefault();
           evt.stopPropagation();
           const id = hrefWithoutQuery.slice(hrefWithoutQuery.indexOf('excelbatcherrorpage') + 15).split('/');
-          ErrorDialog({
+          (ErrorDialog as unknown as (props: ErrorDialogProps) => void)({
             fileKey: id[1],
             isBatch: true,
           });
@@ -170,7 +221,7 @@ export default class SystemMessage extends PureComponent<any, any> {
           evt.preventDefault();
           evt.stopPropagation();
           const arr = hrefWithoutQuery.split('/');
-          ErrorDialog({
+          (ErrorDialog as unknown as (props: ErrorDialogProps) => void)({
             fileKey: arr[arr.length - 1],
             isAttachment: true,
           });
@@ -255,16 +306,22 @@ export default class SystemMessage extends PureComponent<any, any> {
   override render() {
     const { Message = {}, createTime, inboxType, app = null, processId = null, status, readTime } = this.props;
     const { showAddressBook, processInfo } = this.state;
-    const { typeName, isFavorite, inboxId } = formatInboxItem(this.props);
+    // 边界断言：父级把收件箱条目字段直接透传为 props（`formatInboxItem` 的入参见其切片）。
+    const { typeName, isFavorite, inboxId } = formatInboxItem(
+      this.props as unknown as InboxItem,
+    );
     const parse = Emotion.parse;
+    // 星标在 wire 上是字符串 '0'/'1'（`Star` 按 === '1' 判断）。`InboxItem.isFavorite` 已按真实消费
+    // 形状声明为 `string | number | boolean`（服务端与本地两种形态），而 `Star` 的 props 只接受字符串——
+    // 这里把透传值收窄到 `Star` 的真实入参类型，不改对象字面量形态。
     const starProps = {
       isFavorite,
       inboxId,
     };
-    delete xss.whiteList.video;
+    delete whiteList.video;
     let content = Message.content || '';
     const xssOptions = {
-      whiteList: Object.assign({}, xss.whiteList, {
+      whiteList: Object.assign({}, whiteList, {
         a: ['target', 'href', 'title', 'optype', 'opvalue', 'taskid', 'opuser', 't'],
       }),
     };
@@ -371,7 +428,7 @@ export default class SystemMessage extends PureComponent<any, any> {
                 <Tooltip title={`${formatMsgDate(dateConvertToUserZone(readTime))} ${_l('完成')}`}>
                   <Done className="hoverColorPrimary Hand">
                     <Icon icon="done" className="mRight6" />
-                    <span className="text">{MSG_DONE_TEXT[inboxType] || _l('已处理')}</span>
+                    <span className="text">{(MSG_DONE_TEXT as Record<number, string>)[inboxType] || _l('已处理')}</span>
                     <span className="mRight12 mLeft12 textDisabled">|</span>
                   </Done>
                 </Tooltip>
