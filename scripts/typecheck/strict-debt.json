@@ -1515,7 +1515,6 @@
     "src/pages/chat/components/MyStatus/PersonalStatus.tsx",
     "src/pages/chat/components/MyStatus/index.tsx",
     "src/pages/chat/components/MyStatus/util.ts",
-    "src/pages/chat/components/SearchMember/index.tsx",
     "src/pages/chat/components/SearchPanel/Files.tsx",
     "src/pages/chat/components/SearchPanel/Members.tsx",
     "src/pages/chat/components/SearchPanel/Messages.tsx",
