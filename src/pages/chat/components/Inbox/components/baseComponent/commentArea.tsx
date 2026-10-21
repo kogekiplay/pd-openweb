@@ -4,7 +4,9 @@ import _ from 'lodash';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import filterXSS from 'xss';
-import { whiteList } from 'xss/lib/default';
+// 根入口 `xss` 把 `./default` 的全部导出挂到 module.exports（lib/index.js 的循环），
+// `whiteList` 是**同一个对象**；改用根入口消除 'xss/lib/default' 缺声明（全仓 4 处同样的共享缺口，本文件先闭合）。
+import { whiteList } from 'xss';
 import { UserCard } from 'ming-ui';
 import confirm from 'ming-ui/components/Dialog/Confirm';
 import DiscussionController from 'src/api/discussion';
@@ -19,9 +21,94 @@ import { SOURCE_TYPE } from '../../constants';
 import { buildSourceLink, formatTopic, splitSourceId } from '../../util';
 import Avatar from './avatar';
 import ReplyTo from './replyTo';
+import type { MessageArgs } from 'src/utils/messageLinkTypes';
 import UserLink from './userLink';
 
-const removeTopicConfirm = props => {
+
+/** 评论/回复里的账号信息（`Avatar`/`UserLink` 真实读取的字段） */
+interface CommentUser {
+  accountId?: string | undefined;
+  fullname?: string | undefined;
+  avatar?: string | undefined;
+}
+
+/** 删除评论/回复所需字段（`removeTopicConfirm`/`removeTopic` 两个函数的真实入参） */
+interface RemoveTopicProps {
+  sourceId?: string | undefined;
+  sourceType?: number | undefined;
+  discussionId?: string | undefined;
+  replyId?: string | null | undefined;
+  isDeleteAttachment?: unknown;
+  removeCallback: (id?: string) => void;
+}
+
+/** `formatTopic` 归一化后的评论条目（本文件真实消费的字段；其余在索引签名里） */
+interface CommentTopic {
+  discussionId?: string | undefined;
+  sourceId?: string | undefined;
+  sourceType?: number | undefined;
+  replyId?: string | null | undefined;
+  message?: string | undefined;
+  accountsInMessage?: MessageArgs['rUserList'];
+  groupsInMessage?: MessageArgs['rGroupList'];
+  categories?: MessageArgs['categories'];
+  attachment?: unknown;
+  createAccount?: CommentUser | undefined;
+  replyAccount?: CommentUser | null | undefined;
+  canDelete?: boolean | undefined;
+  createTime?: number | string | undefined;
+  isDeleteAttachment?: unknown;
+  projectId?: string | undefined;
+  appId?: string | undefined;
+}
+
+/** 评论上下文里的 params（`getComponentProps`/`CommentArea` 共用的真实字段） */
+interface CommentParams {
+  sourceId: string;
+  sourceType?: number | undefined;
+  discussionId?: string | undefined;
+  extendsId?: string | undefined;
+  name?: string | undefined;
+  projectId?: string | undefined;
+  appId?: string | undefined;
+  createAccount?: CommentUser | undefined;
+}
+
+/** `getComponentProps` 的入参：评论组件的公共上下文 */
+interface CommentContext {
+  params: CommentParams;
+}
+
+interface CommentItemProps extends CommentTopic {
+  addCallback: (comment: CommentTopic) => void;
+  removeCallback: (id?: string) => void;
+  /** 由父级 cloneElement 注入的评论输入组件（其 props 由父级按需补齐） */
+  children: React.ReactElement<Record<string, unknown>>;
+}
+
+interface CommentAreaParams extends CommentParams {
+  /** 与 commentsProps 里的 type 不同：这里给 `clickLoadMore` 用 */
+  type?: number | undefined;
+}
+
+interface CommentAreaProps {
+  params: CommentAreaParams;
+  commentsProps: {
+    comments?: CommentTopic[] | undefined;
+    commentsCount?: number | undefined;
+  };
+}
+
+interface CommentAreaState {
+  /** 动态加载全部评论 */
+  loadAllComments: boolean;
+  commenterIsFocus: boolean;
+  comments: CommentTopic[];
+  /** 初始值来自 `comments && comments.length > 0`，无评论时为 undefined（既有行为） */
+  showComments: boolean | undefined;
+}
+
+const removeTopicConfirm = (props: RemoveTopicProps) => {
   const { replyId, isDeleteAttachment } = props;
   const title = replyId ? _l('回复') : _l('评论');
   const header = isDeleteAttachment
@@ -35,7 +122,7 @@ const removeTopicConfirm = props => {
   });
 };
 
-const removeTopic = function (props) {
+const removeTopic = function (props: RemoveTopicProps) {
   const { sourceType, sourceId, discussionId } = props;
 
   if (sourceType === SOURCE_TYPE.POST) {
@@ -77,7 +164,7 @@ const removeTopic = function (props) {
   }
 };
 
-const getComponentProps = function (props) {
+const getComponentProps = function (props: CommentContext) {
   const {
     params: { sourceType, discussionId, extendsId, name, projectId, createAccount },
   } = props;
@@ -87,9 +174,10 @@ const getComponentProps = function (props) {
     autoFocus: true,
     shrinkAfterSubmit: true,
   };
-  const decodedName = htmlDecodeReg(name);
+  // 擦除标记：评论上下文里的 name 是标题文案（原 any 直接传）。
+  const decodedName = htmlDecodeReg(name as string);
   const { sourceId, childId } = splitSourceId(props.params.sourceId);
-  var map = {
+  var map: Record<string | number, Record<string, unknown> | undefined> = {
     [SOURCE_TYPE.TASK]: {
       selectGroupOptions: {
         projectId,
@@ -145,7 +233,8 @@ const getComponentProps = function (props) {
         '|' +
         _l('日程'),
     },
-    [SOURCE_TYPE.POST]: {
+    // 擦除标记：`SOURCE_TYPE.POST` 是 undefined，运行期键名为字符串 "undefined"（既有行为）。
+    [SOURCE_TYPE.POST as unknown as string | number]: {
       sourceId,
       sourceType,
       replyId: discussionId,
@@ -155,15 +244,15 @@ const getComponentProps = function (props) {
     },
   };
 
-  return $.extend(true, commonProps, map[sourceType]);
+  return $.extend(true, commonProps, map[sourceType as string | number]);
 };
 
 export interface CommentItemState {
   showCommenter: boolean;
 }
 
-class CommentItem extends React.Component<any, CommentItemState> {
-  constructor(props) {
+class CommentItem extends React.Component<CommentItemProps, CommentItemState> {
+  constructor(props: CommentItemProps) {
     super(props);
     this.state = {
       showCommenter: false,
@@ -174,7 +263,7 @@ class CommentItem extends React.Component<any, CommentItemState> {
     const { replyId } = this.props;
     $(`.inboxBox .commentItem-${replyId}`)
       .find('[data-accountid],[data-groupid]')
-      .each((_i, ele) => {
+      .each((_i, ele: Element) => {
         if ($(ele).attr('bindUserCard')) return;
         $(ele).attr('bindUserCard', 'true');
         let accountId = $(ele).attr('data-accountid');
@@ -196,7 +285,8 @@ class CommentItem extends React.Component<any, CommentItemState> {
         dangerouslySetInnerHTML={{
           __html: filterXSS(
             createLinksForMessage({
-              message: message,
+              // 擦除标记：评论正文由接口给出（原 any 直接传）。
+              message: message as string,
               rUserList: accountsInMessage,
               rGroupList: groupsInMessage,
               categories,
@@ -251,14 +341,15 @@ class CommentItem extends React.Component<any, CommentItemState> {
 
   renderBottomBar() {
     const { canDelete, sourceId, sourceType } = this.props;
-    const createTime = dateConvertToUserZone(this.props.createTime);
+    // 擦除标记：评论的 createTime 由接口给出（原 any 直接传）。
+    const createTime = dateConvertToUserZone(this.props.createTime as number);
 
     const buildLink = () => {
       switch (sourceType) {
         case SOURCE_TYPE.POST:
           return (
             <a
-              href={buildSourceLink(sourceType, sourceId)}
+              href={buildSourceLink(sourceType, sourceId as string)}
               className="textTertiary NoUnderline"
               title={_l('点击查看动态详情')}
             >
@@ -268,7 +359,7 @@ class CommentItem extends React.Component<any, CommentItemState> {
         case SOURCE_TYPE.TASK:
           return (
             <a
-              href={buildSourceLink(sourceType, sourceId)}
+              href={buildSourceLink(sourceType, sourceId as string)}
               className="textTertiary NoUnderline"
               title={_l('点击查看任务详情')}
             >
@@ -278,7 +369,7 @@ class CommentItem extends React.Component<any, CommentItemState> {
         case SOURCE_TYPE.FOLDER:
           return (
             <a
-              href={buildSourceLink(sourceType, sourceId)}
+              href={buildSourceLink(sourceType, sourceId as string)}
               className="textTertiary NoUnderline"
               title={_l('点击查看项目详情')}
             >
@@ -288,7 +379,7 @@ class CommentItem extends React.Component<any, CommentItemState> {
         case SOURCE_TYPE.CALENDAR: {
           return (
             <a
-              href={buildSourceLink(sourceType, sourceId)}
+              href={buildSourceLink(sourceType, sourceId as string)}
               className="textTertiary NoUnderline"
               title={_l('点击查看日程详情')}
             >
@@ -354,7 +445,7 @@ class CommentItem extends React.Component<any, CommentItemState> {
             <div className="mTop5 mBottom5">
               {React.cloneElement(this.props.children, {
                 autoFoucs: true,
-                onSubmit: discussion => {
+                onSubmit: (discussion: CommentTopic) => {
                   addCallback(discussion);
                 },
                 onSubmitCallback: () => {
@@ -371,7 +462,7 @@ class CommentItem extends React.Component<any, CommentItemState> {
   }
 }
 
-export default class CommentArea extends React.Component<any, any> {
+export default class CommentArea extends React.Component<CommentAreaProps, CommentAreaState> {
   static override propTypes = {
     commentsProps: PropTypes.shape({
       comments: PropTypes.array,
@@ -386,7 +477,7 @@ export default class CommentArea extends React.Component<any, any> {
     }),
   };
 
-  constructor(props) {
+  constructor(props: CommentAreaProps) {
     super(props);
     const {
       params: { sourceType },
@@ -397,27 +488,27 @@ export default class CommentArea extends React.Component<any, any> {
     this.state = {
       loadAllComments: false, // 动态加载全部评论
       commenterIsFocus: false,
-      comments: _.map(comments || [], comment => {
-        return formatTopic(comment, sourceType);
+      comments: _.map(comments || [], (comment: CommentTopic) => {
+        return formatTopic(comment, sourceType) as CommentTopic;
       }),
 
       showComments: comments && comments.length > 0,
     };
   }
 
-  addCommentCallback = comment => {
+  addCommentCallback = (comment: CommentTopic) => {
     const {
       params: { sourceType },
     } = this.props;
     const comments = this.state.comments.slice(0);
     this.setState({
-      comments: [formatTopic(comment, sourceType)].concat(comments),
+      comments: [formatTopic(comment, sourceType) as CommentTopic].concat(comments),
     });
   };
 
-  removeCommentCallback(id) {
+  removeCommentCallback(id?: string) {
     this.setState({
-      comments: _.filter(this.state.comments, ({ discussionId }) => discussionId !== id),
+      comments: _.filter(this.state.comments, ({ discussionId }: CommentTopic) => discussionId !== id),
     });
   }
 
@@ -430,13 +521,13 @@ export default class CommentArea extends React.Component<any, any> {
       .getMorePostComments({
         postID: sourceId,
       })
-      .then(data => {
+      .then((data: unknown) => {
         if (data === 'error') {
           alert(_l('操作失败'), 2);
         } else {
           this.setState({
             loadAllComments: true,
-            comments: _.map(data, comment => formatTopic(comment, type)),
+            comments: _.map(data as CommentTopic[], (comment: CommentTopic) => formatTopic(comment, type) as CommentTopic),
           });
         }
       });

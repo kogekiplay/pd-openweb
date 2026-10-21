@@ -113,8 +113,7 @@ export default class Inbox extends React.Component<InboxProps, InboxState> {
       dropdownData: (DROPDOWN_GROUPLIST as Record<string, string[] | undefined>)[inboxType as string],
       changeType: this.changeType,
       changeFaviorite: this.changeFaviorite,
-      // 擦除标记：筛选弹层回传的是 handleSave 产物（与 InboxFilterValue 同构；原 any 直接透传）。
-      changeInboxFilter: this.changeInboxFilter as (filter: unknown) => void,
+      changeInboxFilter: this.changeInboxFilter,
       changeUpdateNow: this.changeUpdateNow,
     };
     return <InboxHeader {...props} />;

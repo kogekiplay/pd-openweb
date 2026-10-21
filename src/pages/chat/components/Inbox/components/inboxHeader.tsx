@@ -13,17 +13,41 @@ import PropTypes from 'prop-types';
 import { Dropdown, Icon } from 'ming-ui';
 import Config from 'src/pages/chat/utils/config';
 import * as socket from 'src/pages/chat/utils/socket';
-import type { RootState } from 'src/redux/types';
+import type { AppDispatch, RootState } from 'src/redux/types';
+import type { ChatSession } from '../../../redux/types';
 import { pathCompletion } from 'src/utils/common';
 import * as actions from '../../../redux/actions';
 import { TYPE_GROUP, TYPES } from '../constants';
 import InboxFilter from './baseComponent/inboxFilter';
+import type { InboxFilterValue } from '../util';
+
+
+/**
+ * 头部 props：`Inbox.renderHeader()` 组装的 11 项 + connect 注入的 3 项。
+ * `type` 取自 `TYPES`（**字符串**数字），`inboxType` 取自 `INBOXTYPES`（字符串键）。
+ */
+interface InboxHeaderProps {
+  dispatch: AppDispatch;
+  currentSession: ChatSession;
+  sessionList: ChatSession[];
+  title?: string | undefined;
+  type?: string | undefined;
+  inboxFavorite?: boolean | undefined;
+  inboxType?: string | undefined;
+  filter?: unknown;
+  dropdownData?: string[] | undefined;
+  changeType: (type: string) => void;
+  changeFaviorite: (favorite: boolean) => void;
+  /** 筛选弹层 `handleSave` 的产物（与 `InboxFilter.onChange` 同一类型） */
+  changeInboxFilter: (filter: InboxFilterValue | null) => void;
+  changeUpdateNow: () => void;
+}
 
 export interface InboxHeaderState {
   settingVisible: boolean;
 }
 
-class InboxHeader extends React.Component<any, InboxHeaderState> {
+class InboxHeader extends React.Component<InboxHeaderProps, InboxHeaderState> {
   static override propTypes = {
     title: PropTypes.string,
     type: PropTypes.oneOf(_.values(TYPES)),
@@ -43,16 +67,18 @@ class InboxHeader extends React.Component<any, InboxHeaderState> {
 
   renderDropDown() {
     const { type, dropdownData, inboxType, changeType } = this.props;
-    const parsedData = _.map(dropdownData, key => {
-      const dict = TYPE_GROUP[inboxType];
+    const parsedData = _.map(dropdownData, (key: string) => {
+      // 擦除标记：`TYPE_GROUP` 的键来自 `INBOXTYPES` 常量（索引签名）；真实 inboxType 必有对应分组。
+      const dict = TYPE_GROUP[inboxType as string];
       return {
-        text: dict[key],
+        text: dict![key],
         value: key,
       };
     });
 
     if (parsedData.length <= 1) {
-      return <span>{parsedData[0].text}</span>;
+      // 擦除标记：`length <= 1` 时 `parsedData[0]` 必存在（原 any 直接取）。
+      return <span>{parsedData[0]!.text}</span>;
     } else {
       return (
         <span>
@@ -65,9 +91,10 @@ class InboxHeader extends React.Component<any, InboxHeaderState> {
             data={parsedData}
             menuStyle={{ left: '0 !important', transform: 'translateX(-50%)' }}
             renderTitle={() => ''}
-            onChange={data => {
+            onChange={(data: string | undefined) => {
               this.handleClick(false);
-              changeType(data);
+              // 擦除标记：Dropdown 选项必有 value（原 any 直接传）。
+              changeType(data as string);
             }}
           />
         </span>
@@ -120,7 +147,8 @@ class InboxHeader extends React.Component<any, InboxHeaderState> {
 
   handleClearUnread = () => {
     const { currentSession, sessionList } = this.props;
-    const item = _.find(sessionList, { value: currentSession.value }) || {};
+    // 擦除标记：`|| {}` 兜底在未命中时给空对象（既有实现）；字段读取按 partial 处理。
+    const item: Partial<ChatSession> = _.find(sessionList, { value: currentSession.value }) || {};
 
     if (item.count || item.weak_count) {
       socket.Contact.clearUnread(Object.assign({}, item)).then(() => {
@@ -139,7 +167,9 @@ class InboxHeader extends React.Component<any, InboxHeaderState> {
     const { top_info, type, isPush, isSilent } = currentSession;
     const isTop = top_info ? top_info.isTop : false;
     const isPushNotice = 'isPush' in currentSession || 'isSilent' in currentSession;
-    const isPushNoticeValue = type === 2 ? isPush : !isSilent;
+    // 擦除标记：`type` 来自字符串常量 TYPES，这里的 `=== 2`（数字）**恒为 false**（既有代码；
+    // 是否属业务 bug 待 lead 决策，本批只保持运行语义不变）。
+    const isPushNoticeValue = (type as unknown as number) === 2 ? isPush : !isSilent;
 
     if (md.global.Account.isPortal && !isPushNotice) {
       return null;
@@ -187,7 +217,8 @@ class InboxHeader extends React.Component<any, InboxHeaderState> {
 
   override render() {
     const { inboxFavorite, title, filter, currentSession } = this.props;
-    const clsNameFunc = flag =>
+    // 擦除标记：`inboxFavorite` 在 propTypes 里是 bool（原 any 直接参与 cx 真假判断）。
+    const clsNameFunc = (flag: boolean | undefined) =>
       cx('inboxItem Hand', {
         'colorPrimary borderColorPrimary': flag,
         hoverColorPrimary: !flag,
