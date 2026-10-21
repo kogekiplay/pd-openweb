@@ -4,21 +4,7 @@ import { LoadDiv, ScrollView } from 'ming-ui';
 import ContactItem from './ContactItem';
 import ListNull from './ListNull';
 
-/**
- * 联系人行。只声明列表真实读取/透传的字段（**不加 index signature**）：
- * 父级也有自己的接口形态（如 `ProjectContacts.UserModel`），接口类型不会获得隐式索引签名，
- * 加宽索引会让它们无法赋进来。
- */
-interface ContactRow {
-  accountId?: string | undefined;
-  avatar?: string | undefined;
-  fullname?: string | undefined;
-  isContact?: boolean | undefined;
-  isFriend?: boolean | undefined;
-}
-
-/** 列表数据：无关键词时按首字母分组（Record），搜索时是平铺数组 */
-type ContactListData = Record<string, ContactRow[]> | ContactRow[] | null;
+import type { AddressBookAccount as ContactRow, AddressBookContacts as ContactListData, AddressBookContactEntry } from 'src/api/addressBookTypes';
 
 interface ContactClickPayload {
   /** 点击行带回的账号 id（行数据里可能缺省，故显式允许 undefined） */
@@ -41,7 +27,7 @@ interface ContactListProps {
 
 interface SingleListProps {
   title?: string | undefined;
-  list?: ContactRow[] | undefined;
+  list?: AddressBookContactEntry[] | undefined;
 }
 
 export default class ContactList extends React.Component<ContactListProps> {
@@ -68,15 +54,15 @@ export default class ContactList extends React.Component<ContactListProps> {
     this.props.fetch();
   }
 
-  renderList(list: ContactRow[] | undefined) {
+  renderList(list: AddressBookContactEntry[] | null | undefined) {
     return (
       <React.Fragment>
-        {_.map(list, (item: ContactRow) => (
+        {_.map(list, (item: AddressBookContactEntry) => (
           <ContactItem
             {...item}
-            key={item.accountId}
+            key={item!.accountId}
             itemClickHandler={this.props.itemClickHandler}
-            isSelected={item.accountId === this.props.selectedAccountId}
+            isSelected={item!.accountId === this.props.selectedAccountId}
             searchDepartmentUsers={this.props.searchDepartmentUsers}
           />
         ))}
@@ -99,13 +85,13 @@ export default class ContactList extends React.Component<ContactListProps> {
 
     if (isSearch) {
       // 擦除标记：搜索分支 list 是平铺数组（原 any 直接读 length）。
-      if (!isLoading && list && (list as ContactRow[]).length === 0) {
+      if (!isLoading && list && (list as AddressBookContactEntry[]).length === 0) {
         return <ListNull isSearch={isSearch} type={'contacts'} />;
       }
 
       return (
         <React.Fragment>
-          {this.renderList(list as ContactRow[])}
+          {this.renderList(list as AddressBookContactEntry[])}
           {isLoading ? <LoadDiv className="mTop10" /> : null}
         </React.Fragment>
       );

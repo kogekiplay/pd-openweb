@@ -6,21 +6,9 @@ import ContactList from '../components/ContactList';
 import ListSearchBar from '../components/ListSearchBar';
 import UserDetail from '../components/UserDetail';
 
-/** 地址簿列表行（各容器从接口拿到后按首字母分组/平铺渲染的同一形态） */
-interface AddressBookRow {
-  accountId?: string | undefined;
-  avatar?: string | undefined;
-  fullname?: string | undefined;
-  /** 首字母（接口返回，用于分组标题） */
-  firstCode?: string | undefined;
-  isFriend?: boolean | undefined;
-  isContact?: boolean | undefined;
-}
+import type { AddressBookAccount as AddressBookRow, AddressBookContacts as AddressBookListData, AddressBookContactEntry } from 'src/api/addressBookTypes';
 
-/** 列表数据：无关键词时按首字母分组，搜索时是平铺数组 */
-type AddressBookListData = Record<string, AddressBookRow[]> | AddressBookRow[] | null;
-
-const formatContactsData = (store: AddressBookListData, list: AddressBookRow[]): AddressBookListData => {
+const formatContactsData = (store: AddressBookListData, list: AddressBookRow[] | null | undefined): AddressBookListData => {
   // 擦除标记：分组结果就是「首字母 → 行数组」字典（原 any 直接当字典用）。
   const result = (store || {}) as Record<string, AddressBookRow[]>;
   _.each(list, item => {
@@ -56,7 +44,7 @@ interface ContactContainerState {
   listData: AddressBookListData;
   isLoading: boolean;
   /** 首屏为 true，分页后沿用 list && list.length 的条数/缺项。 */
-  hasMore: boolean | number | undefined;
+  hasMore: boolean | number | null | undefined;
   /** 初始为 null，点击行后写入（可能为 undefined——原实现直接赋值） */
   selectedAccountId: string | null | undefined;
   pageIndex: number;
@@ -69,7 +57,7 @@ interface ContactContainerState {
 }
 
 export default class Friends extends React.Component<Record<string, never>, ContactContainerState> {
-  declare promise: ApiResult | null;
+  declare promise: ReturnType<typeof API.fetchFriends> | null;
 
   constructor(props: Record<string, never>) {
     // 原实现 `super()` 未传 props；React 之后仍会写 this.props，运行等价（Babel 1 行差异）。
@@ -124,7 +112,7 @@ export default class Friends extends React.Component<Record<string, never>, Cont
       if (keywords) {
         // 擦除标记：搜索分支 listData 是平铺数组（原 any 直接 concat）。
         this.setState({
-          listData: ((listData || []) as AddressBookRow[]).concat(data.list),
+          listData: ((listData || []) as AddressBookContactEntry[]).concat(data.list),
         });
       } else {
         this.setState({

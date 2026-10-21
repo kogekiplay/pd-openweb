@@ -1,4 +1,11 @@
 import type { AddressBookUserDetail } from './types';
+import type {
+  AddressBookAccount,
+  AddressBookFriendApplication,
+  AddressBookPage,
+  AddressBookRecommendation,
+  AddressBookRequest,
+} from 'src/api/addressBookTypes';
 import AddressListController from 'src/api/addressBook';
 import DepartmentController from 'src/api/department';
 import GroupController from 'src/api/group';
@@ -39,7 +46,7 @@ const fetchContacts = function ({
   pageSize = 100,
   isFilterOther = false,
   keywords = '',
-}: ContactsParams = {}) {
+}: ContactsParams = {}): AddressBookRequest<AddressBookPage<AddressBookAccount>> {
   /**
    * 获取我的所有联系人
    * @param {Object} args 请求参数
@@ -176,7 +183,9 @@ export default {
     return DepartmentController.getDepartmentUsers(params);
   },
 
-  fetchNewFriends: ({ pageIndex, pageSize = 10 }: { pageIndex?: number | undefined; pageSize?: number | undefined }) => {
+  fetchNewFriends: ({ pageIndex, pageSize = 10 }: { pageIndex?: number | undefined; pageSize?: number | undefined }): AddressBookRequest<
+    AddressBookPage<AddressBookFriendApplication>
+  > => {
     const params = {
       pageIndex,
       pageSize,
@@ -184,7 +193,9 @@ export default {
     return AddressListController.getNewFriends(params);
   },
 
-  fetchRecommends: ({ pageIndex, pageSize = 5 }: { pageIndex?: number | undefined; pageSize?: number | undefined }) => {
+  fetchRecommends: ({ pageIndex, pageSize = 5 }: { pageIndex?: number | undefined; pageSize?: number | undefined }): AddressBookRequest<
+    AddressBookPage<AddressBookRecommendation>
+  > => {
     const params = {
       pageIndex,
       pageSize,

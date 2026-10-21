@@ -7,15 +7,9 @@ import { addFriendConfirm } from 'ming-ui/functions';
 import { pathCompletion } from 'src/utils/common';
 import API, { editIgnoreRecommends } from '../api';
 
-/** 推荐好友行（`fetchRecommends` 返回的 list 元素） */
-interface RecommendItem {
-  accountId?: string | undefined;
-  avatar?: string | undefined;
-  fullname?: string | undefined;
-  /** 手机通讯录里的备注名 */
-  mobileName?: string | undefined;
-  companyName?: string | undefined;
-  /** 已处理标记：undefined = 未处理；true = 已添加；false = 已忽略 */
+import type { AddressBookRecommendation } from 'src/api/addressBookTypes';
+
+interface RecommendItem extends AddressBookRecommendation {
   added?: boolean | undefined;
 }
 
@@ -29,8 +23,8 @@ interface RecommendsListProps {
 interface RecommendsListState {
   isLoading: boolean;
   pageIndex: number;
-  hasMore: boolean | undefined;
-  listData: (RecommendItem | undefined)[] | null;
+  hasMore: boolean | null | undefined;
+  listData: (RecommendItem | null | undefined)[] | null;
 }
 
 export default class RecommendsList extends React.Component<RecommendsListProps, RecommendsListState> {
@@ -71,7 +65,7 @@ export default class RecommendsList extends React.Component<RecommendsListProps,
     const { listData } = this.state;
     this.setState({
       // 擦除标记：分页拉取前 listData 可能为 null（原 any 直接 map；lodash 对 null 返回 []）。
-      listData: _.map(listData, (item: RecommendItem | undefined) => {
+      listData: _.map(listData, (item: RecommendItem | null | undefined) => {
         if (item!.accountId === accountId) {
           return {
             ...item,
@@ -109,7 +103,7 @@ export default class RecommendsList extends React.Component<RecommendsListProps,
     API.fetchRecommends({
       pageIndex: this.state.pageIndex,
       pageSize: 10,
-    }).then(({ allCount, list }: { allCount?: number; list?: RecommendItem[] }) => {
+    }).then(({ allCount, list }) => {
       const { listData, pageIndex } = this.state;
 
       if (allCount !== 0) {
@@ -155,7 +149,7 @@ export default class RecommendsList extends React.Component<RecommendsListProps,
           <tbody className="textSecondary">
             {/* 擦除标记：非首屏分支下 listData 必已存在（原 any 直接取 length/map）。 */}
             {listData!.length &&
-              listData!.map((item: RecommendItem | undefined) => {
+              listData!.map((item: RecommendItem | null | undefined) => {
                 return (
                   <tr key={item!.accountId}>
                     <td className="userItem pRight24">

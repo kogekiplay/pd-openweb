@@ -6,19 +6,9 @@ import LoadDiv from 'ming-ui/components/LoadDiv';
 import { pathCompletion } from 'src/utils/common';
 import API, { editAgreeFriend, editRefuseFriend } from '../api';
 
-/** 待验证好友申请行（`fetchNewFriends` 返回的 list 元素；createAccount 是申请人的账号信息） */
-interface NewFriendAccount {
-  accountId?: string | undefined;
-  avatar?: string | undefined;
-  fullname?: string | undefined;
-  companyName?: string | undefined;
-}
+import type { AddressBookFriendApplication } from 'src/api/addressBookTypes';
 
-interface NewFriendItem {
-  createAccount: NewFriendAccount;
-  /** 申请备注 */
-  message?: string | undefined;
-  /** 已处理标记：undefined = 未处理；true = 已同意；false = 已拒绝 */
+interface NewFriendItem extends AddressBookFriendApplication {
   added?: boolean | undefined;
 }
 
@@ -32,8 +22,8 @@ interface NewFriendsListProps {
 interface NewFriendsListState {
   isLoading: boolean;
   pageIndex: number;
-  hasMore: boolean;
-  listData: NewFriendItem[] | null;
+  hasMore: boolean | null | undefined;
+  listData: (NewFriendItem | null | undefined)[] | null;
 }
 
 export default class NewFriendsList extends React.Component<NewFriendsListProps, NewFriendsListState> {
@@ -79,14 +69,14 @@ export default class NewFriendsList extends React.Component<NewFriendsListProps,
     API.fetchNewFriends({
       pageIndex: this.state.pageIndex,
       pageSize: 10,
-    }).then(({ allCount, list }: { allCount?: number; list?: NewFriendItem[] }) => {
+    }).then(({ allCount, list }) => {
       const { listData, pageIndex } = this.state;
 
       if (allCount !== 0) {
         this.setState({
-          hasMore: (list && list.length >= 10) as boolean,
+          hasMore: list && list.length >= 10,
           pageIndex: pageIndex + 1,
-          listData: (listData || []).concat(list as NewFriendItem[]),
+          listData: (listData || []).concat(list),
         });
       }
 
@@ -102,8 +92,8 @@ export default class NewFriendsList extends React.Component<NewFriendsListProps,
     const { listData } = this.state;
     this.setState({
       // 擦除标记：分页拉取前 listData 可能为 null（原 any 直接 map；lodash 对 null 返回 []）。
-      listData: _.map(listData as NewFriendItem[] | null, (item: NewFriendItem) => {
-        if (item.createAccount.accountId === accountId) {
+      listData: _.map(listData, (item: NewFriendItem | null | undefined) => {
+        if (item!.createAccount!.accountId === accountId) {
           return {
             ...item,
             added: isAdd,
@@ -150,7 +140,7 @@ export default class NewFriendsList extends React.Component<NewFriendsListProps,
               <th>{_l('组织')}</th>
               {/* 擦除标记：obsolete 的 `width` 属性已不在 React 19 类型里；spread 保留同一 DOM 属性值。 */}
               <th
-                {...({ width: "30%" } as unknown as React.ThHTMLAttributes<HTMLTableCellElement>)}
+                {...({ width: "30%" } satisfies React.ThHTMLAttributes<HTMLTableCellElement> & { width: string })}
                 className="TxtCenter"
               >
                 {_l('操作')}
@@ -160,43 +150,43 @@ export default class NewFriendsList extends React.Component<NewFriendsListProps,
           <tbody className="textSecondary">
             {/* 擦除标记：非首屏分支下 listData 必已存在（原 any 直接取 length/map）。 */}
             {listData!.length &&
-              listData!.map((item: NewFriendItem) => {
+              listData!.map((item: NewFriendItem | null | undefined) => {
                 return (
-                  <tr key={item.createAccount.accountId}>
+                  <tr key={item!.createAccount!.accountId}>
                     <td className="pRight24 userItem">
                       <a
-                        href={pathCompletion('/user_' + (item.createAccount.accountId as string))}
+                        href={pathCompletion('/user_' + (item!.createAccount!.accountId as string))}
                         className="Hand NoUnderline TxtMiddle"
                         target="_blank"
                       >
-                        <img className="circle avatar" src={item.createAccount.avatar} />
+                        <img className="circle avatar" src={item!.createAccount!.avatar} />
                       </a>
                       <a
-                        href={pathCompletion('/user_' + (item.createAccount.accountId as string))}
+                        href={pathCompletion('/user_' + (item!.createAccount!.accountId as string))}
                         className="Bold Hand overflow_ellipsis textPrimary mLeft8"
-                        title={item.createAccount.fullname}
+                        title={item!.createAccount!.fullname}
                       >
-                        {item.createAccount.fullname || ''}
+                        {item!.createAccount!.fullname || ''}
                       </a>
                     </td>
                     <td className="pRight24">
-                      <div className="overflow_ellipsis TxtMiddle">{item.message || _l('无备注信息')}</div>
+                      <div className="overflow_ellipsis TxtMiddle">{item!.message || _l('无备注信息')}</div>
                     </td>
                     <td>
-                      <div className="overflow_ellipsis TxtMiddle wMax100">{item.createAccount.companyName || ''}</div>
+                      <div className="overflow_ellipsis TxtMiddle wMax100">{item!.createAccount!.companyName || ''}</div>
                     </td>
-                    {item.added === undefined ? (
+                    {item!.added === undefined ? (
                       <td className="TxtCenter">
-                        <Button type="primary" size="small" action={() => this.add(item.createAccount.accountId as string)}>
+                        <Button type="primary" size="small" action={() => this.add(item!.createAccount!.accountId as string)}>
                           {_l('同意')}
                         </Button>
-                        <Button type="link" size="small" action={() => this.refuse(item.createAccount.accountId as string)}>
+                        <Button type="link" size="small" action={() => this.refuse(item!.createAccount!.accountId as string)}>
                           {_l('拒绝')}
                         </Button>
                       </td>
                     ) : (
                       <td className="TxtCenter">
-                        <span className="textSecondary">{item.added ? _l('已添加') : _l('已拒绝')}</span>
+                        <span className="textSecondary">{item!.added ? _l('已添加') : _l('已拒绝')}</span>
                       </td>
                     )}
                   </tr>
