@@ -7,15 +7,9 @@ import { DROPDOWN_GROUPLIST, INBOXTYPES, TYPENAMES } from '../constants';
 import InboxHeader from './inboxHeader';
 import InboxList from './inboxList';
 import '../style.less';
+import type { InboxFilterValue } from '../util';
 
 /** 筛选器回传值（与 `inboxList` 的筛选条件结构一致；本组件只透传） */
-interface InboxFilterValue {
-  user?: { accountId?: string | undefined } | null | undefined;
-  startTime?: string | null | undefined;
-  endTime?: string | null | undefined;
-  appId?: string | null | undefined;
-}
-
 interface InboxProps {
   /**
    * `INBOXTYPES` 的键（'post'/'calendar'/…）。

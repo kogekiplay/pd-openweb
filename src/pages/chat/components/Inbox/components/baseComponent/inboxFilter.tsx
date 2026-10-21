@@ -7,10 +7,32 @@ import 'moment/locale/zh-cn';
 import { Icon, MdAntDateRangePicker } from 'ming-ui';
 import { quickSelectUser } from 'ming-ui/functions';
 import AppFilter from './appFilter';
+import type { InboxFilterUser, InboxFilterValue } from '../../util';
 
 const customDate = 8;
 
-const dateScope = [
+interface InboxFilterProps {
+  inboxType?: string | undefined;
+  filter?: unknown;
+  onChange: (value: InboxFilterValue | null) => void;
+}
+
+interface InboxFilterState {
+  userValue?: InboxFilterUser | null | undefined;
+  timeLevel?: number | null | undefined;
+  /** 时间区间（`dateScope[].format()` 的两元素区间） */
+  time?: string[] | null | undefined;
+  appId?: string | null | undefined;
+}
+
+/** 时间快捷项；「自定义日期」没有 `format`（由日期区间选择器接管） */
+interface DateScopeItem {
+  name: string;
+  value: number;
+  format?: (() => string[]) | undefined;
+}
+
+const dateScope: DateScopeItem[] = [
   {
     name: _l('今天'),
     value: 1,
@@ -78,8 +100,8 @@ const dateScope = [
   },
 ];
 
-export default class InboxFilter extends React.Component<any, any> {
-  constructor(props) {
+export default class InboxFilter extends React.Component<InboxFilterProps, InboxFilterState> {
+  constructor(props: InboxFilterProps) {
     super(props);
     this.state = {
       userValue: null,
@@ -89,7 +111,7 @@ export default class InboxFilter extends React.Component<any, any> {
     };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: InboxFilterProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (_.isEmpty(this.props.filter)) {
         this.setState({
@@ -109,7 +131,8 @@ export default class InboxFilter extends React.Component<any, any> {
       user: userValue,
       startTime,
       endTime,
-      timeName: timeLevel ? _.find(dateScope, { value: timeLevel }).name : null,
+      // 擦除标记：timeLevel 只能来自 dateScope 选项（原 any 直接取）；缺省时原实现抛原生 TypeError。
+      timeName: timeLevel ? (_.find(dateScope, { value: timeLevel }) as DateScopeItem).name : null,
       appId,
     });
   };
@@ -156,7 +179,7 @@ export default class InboxFilter extends React.Component<any, any> {
     }
   };
 
-  handleChangeUser = data => {
+  handleChangeUser = (data: InboxFilterUser[]) => {
     this.setState(
       {
         userValue: data[0],
@@ -165,9 +188,11 @@ export default class InboxFilter extends React.Component<any, any> {
     );
   };
 
-  handleChangeTime = time => {
+  /** `setState` 回调调用时不带参数（此时 time 为 undefined，由 timeLevel 对应项的 `format()` 计算） */
+  handleChangeTime = (time?: string[] | null) => {
     const { timeLevel } = this.state;
-    const { format } = _.find(dateScope, { value: timeLevel });
+    // 擦除标记：同上，timeLevel 只能来自 dateScope 选项。
+    const { format } = _.find(dateScope, { value: timeLevel }) as DateScopeItem;
     const data = format ? format() : time;
 
     if (data) {
@@ -237,8 +262,9 @@ export default class InboxFilter extends React.Component<any, any> {
                 allowClear={false}
                 suffixIcon={null}
                 format="YYYY-MM-DD"
-                onChange={data => {
-                  const [start, end] = data;
+                onChange={(data: Array<{ format: (fmt: string) => string }>) => {
+                  // 擦除标记：日期区间选择器必给两个日期（原 any 直接解构）。
+                  const [start, end] = data as [{ format: (fmt: string) => string }, { format: (fmt: string) => string }];
                   this.handleChangeTime([
                     start.format('YYYY-MM-DD'),
                     moment(end.format('YYYY-MM-DD')).add(1, 'days').format('YYYY-MM-DD'),
@@ -248,7 +274,7 @@ export default class InboxFilter extends React.Component<any, any> {
             )}
           </div>
         </div>
-        {['workflow', 'worksheet'].includes(inboxType) && (
+        {['workflow', 'worksheet'].includes(inboxType as string) && (
           <div className="flexRow mBottom10">
             <div className="textSecondary Font14 mRight15 timeLabel">{_l('应用')}</div>
             <div className="flexColumn flex">

@@ -12,6 +12,30 @@ interface InboxCreateUser {
 }
 
 /** 收件箱条目（`formatInboxItem` 真实读取的字段；其余在索引签名里） */
+
+/**
+ * 筛选器选中的账号（`quickSelectUser` 回调元素，渲染时读 avatar/fullname）。
+ * 【为何集中】`inboxFilter`（生产者）与 `Inbox`（消费者）各声明过一份；集中一份避免漂移。
+ */
+export interface InboxFilterUser {
+  accountId?: string | undefined;
+  fullname?: string | undefined;
+  avatar?: string | undefined;
+}
+
+/**
+ * `handleSave` 交给父级 `changeInboxFilter` 的筛选参数（`null` = 清空筛选）。
+ * **生产方**是 `baseComponent/inboxFilter` 的 `handleSave`（会写 `timeName`），
+ * **消费方**是 `Inbox.changeInboxFilter`。此前消费方那份漏了 `timeName`，属真实漂移。
+ */
+export interface InboxFilterValue {
+  user?: InboxFilterUser | null | undefined;
+  startTime?: string | null | undefined;
+  endTime?: string | null | undefined;
+  timeName?: string | null | undefined;
+  appId?: string | null | undefined;
+}
+
 export interface InboxItem {
   CreateUser?: InboxCreateUser | undefined;
   /**
