@@ -217,9 +217,8 @@ class SessionList extends Component<SessionListProps, SessionListState> {
       }
 
       if (prevProps.messageListShowType !== this.props.messageListShowType) {
-        // 二次归一化路径（既有行为）：已格式化的会话再走一次 `setSessionList`；
-        // 动作入参类型是原始 wire，这里用擦除式断言表达"运行期交给 formatSession 处理"，不改行为。
-        prevProps.dispatch(actions.setSessionList(sessionList as unknown as ChatRawSessionWire[]));
+        // 显示方式变化时，已格式化的列表按原路径再格式化；入口合同同时接受两种有限形状。
+        prevProps.dispatch(actions.setSessionList(sessionList));
       }
 
       if (this.isWindowChat && sessionList.length && _.isEmpty(currentSession)) {

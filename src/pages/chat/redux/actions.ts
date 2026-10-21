@@ -1,17 +1,18 @@
 import _ from 'lodash';
 import type { AppDispatch, GetState } from 'src/redux/types';
 import type {
+  ChatGroupMessageEvent,
   ChatMessage,
   ChatMessageReceiptWire,
-  ChatGroupMessageEvent,
+  ChatNewMessageWire,
   ChatNewUserMessageEvent,
   ChatNotifyMessageEvent,
   ChatOutboundDraft,
   ChatPendingMessage,
   ChatRawMessageWire,
-  ChatNewMessageWire,
-  ChatSession,
   ChatRawSessionWire,
+  ChatSession,
+  ChatSessionFormatInput,
   ChatSessionPatch,
   ChatToolbarConfig,
 } from './types';
@@ -26,7 +27,7 @@ import * as socket from '../utils/socket';
  * 设置会话列表
  * @param {*} result
  */
-export const setSessionList = (result: ChatRawSessionWire[]) => (dispatch: AppDispatch, getState: GetState) => {
+export const setSessionList = (result: ChatSessionFormatInput[]) => (dispatch: AppDispatch, getState: GetState) => {
   const { toolbarConfig } = getState().chat;
   dispatch({
     type: 'SET_SESSION_LIST',

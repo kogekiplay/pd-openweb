@@ -515,6 +515,12 @@ export interface ChatSessionPatch {
   [key: string]: unknown;
 }
 
+/**
+ * formatSessionList 的两条真实输入：API 原始会话，或 SessionList 在显示方式变化时
+ * 再次提交的已格式化会话。保持两种有限形状，不把整个列表断言成原始 wire。
+ */
+export type ChatSessionFormatInput = ChatRawSessionWire | ChatSession;
+
 export interface ChatRawSessionWire {
   /**
    * 会话 id。

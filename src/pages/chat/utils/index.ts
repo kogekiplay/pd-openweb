@@ -9,8 +9,8 @@ import type {
   ChatMessage,
   ChatNewMessageWire,
   ChatRawMessageWire,
-  ChatRawSessionWire,
   ChatSession,
+  ChatSessionFormatInput,
   ChatSessionSender,
   ChatSessionWireNormalized,
 } from '../redux/types';
@@ -142,11 +142,11 @@ export const sortSession = (
  * @param {*} sessionList
  */
 /**
- * 批量格式化会话（接口原始返回 → 会话对象）。
+ * 批量格式化会话（API 原始返回或现有会话 → 会话对象）。
  * 【有限声明依据】调用点为 `actions.setSessionList`/`addSessionList`，结果经 `sortSession`
  * 存入 `sessionList`，故是 `ChatSession[]`。入参保留 `Array.isArray` 防御。
  */
-export const formatSessionList = (sessionList: ChatRawSessionWire[]): ChatSession[] => {
+export const formatSessionList = (sessionList: ChatSessionFormatInput[]): ChatSession[] => {
   sessionList = (Array.isArray(sessionList) ? sessionList : []).filter(item => item);
   return sessionList.map(item => {
     return formatSession(item);
@@ -158,7 +158,7 @@ export const formatSessionList = (sessionList: ChatRawSessionWire[]): ChatSessio
  * `sendMsg` 在此赋 `localStorage.getItem(...)`（`string | null`），是
  * `ChatSession.sendMsg` 类型的直接来源。
  */
-const formatSession = (item: ChatRawSessionWire): ChatSession => {
+const formatSession = (item: ChatSessionFormatInput): ChatSession => {
   item.type = Number(item.type);
   if (item.type === Constant.SESSIONTYPE_USER || item.type === Constant.SESSIONTYPE_GROUP) {
     item.isGroup = item.type === Constant.SESSIONTYPE_GROUP;
