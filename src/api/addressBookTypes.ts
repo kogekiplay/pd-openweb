@@ -34,3 +34,14 @@ export type AddressBookContacts =
   | Record<string, AddressBookAccount[]>
   | AddressBookContactEntry[]
   | null;
+
+export interface AddressBookSearchGroup {
+  groupId?: string | undefined;
+  avatar?: string | undefined;
+  name?: string | undefined;
+}
+
+export interface AddressBookSearchResult {
+  accounts: { list: AddressBookAccount[] };
+  groups: { list: AddressBookSearchGroup[] };
+}

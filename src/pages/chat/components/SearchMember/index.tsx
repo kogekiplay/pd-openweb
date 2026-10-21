@@ -7,7 +7,11 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, LoadDiv, ScrollView } from 'ming-ui';
 import * as actions from 'src/pages/chat/redux/actions';
-import type { RootState } from 'src/redux/types';
+import type { AppDispatch, RootState } from 'src/redux/types';
+import type { ScrollViewHandle } from 'ming-ui/components/ScrollView';
+import type { ScrollInfo } from 'ming-ui/components/ScrollView/types';
+import type { ChatRawMessageWire } from '../../redux/types';
+import type { AddressBookRequest, AddressBookSearchResult } from 'src/api/addressBookTypes';
 import * as ajax from '../../utils/ajax';
 import './index.less';
 
@@ -29,21 +33,70 @@ const SearchWrap = styled.div`
   }
 `;
 
-const flatten = res => {
-  const result = [];
+
+/** 搜索结果里的联系人（该接口没有权威类型，这里只声明本组件真实读取的字段） */
+interface AddressAccount {
+  accountId?: string | undefined;
+  user?: { userId?: string | undefined } | undefined;
+  avatarMiddle?: string | undefined;
+  fullname?: string | undefined;
+  profession?: string | undefined;
+  companyName?: string | undefined;
+}
+
+/** 搜索结果里的群组 */
+interface AddressGroup {
+  groupId?: string | undefined;
+  avatar?: string | undefined;
+  name?: string | undefined;
+}
+
+type AddressBookEntry = AddressAccount | AddressGroup;
+
+/** 通讯录搜索接口的返回形状：两个列表（`flatten` 与 `renderProject` 真实读取） */
+type AddressBookResult = AddressBookSearchResult;
+interface SearchMemberProps {
+  /** `toolbarConfig.sessionListVisible`（connect 注入） */
+  sessionListVisible: boolean;
+  /** 由使用方传入的嵌入模式标记 */
+  embed?: boolean | undefined;
+  /**
+   * `SessionListDrawer` 真实传入的受控搜索值，本组件当前**不读取**（自己维护 state.value）；
+   * 保留为不透明字段以匹配调用方，不假装成已消费的形状。
+   */
+  searchValue?: unknown;
+  setSearchValue?: unknown;
+  addGroupSession: (groupId: string, msg?: ChatRawMessageWire) => void;
+  addUserSession: (id: string, msg?: ChatRawMessageWire) => void;
+}
+
+interface SearchMemberState {
+  value: string;
+  loading: boolean;
+  /** 初值是占位 `[]`；首次搜索完成后才写入真实结果对象（`renderProject` 只在非 loading 时渲染） */
+  result: AddressBookResult | [];
+  flattenResult: AddressBookEntry[];
+  currentIndex: number;
+  accountsVisible: boolean;
+  groupsVisible: boolean;
+}
+
+const flatten = (res: AddressBookResult): AddressBookEntry[] => {
+  const result: AddressBookEntry[] = [];
   result.push(...res.accounts.list, ...res.groups.list);
   return result;
 };
 
-class SearchMember extends Component<any, any> {
+class SearchMember extends Component<SearchMemberProps, SearchMemberState> {
   /**
    * 正在飞的搜索请求；换关键字时先 abort 掉上一条。
-   * 类型是 any：它是 src/api 的返回（ApiResult），.abort() 来自底层 XHR，
-   * 本仓没有该形状的权威类型，写死一个形状反而是假的确定性。
+   * 用全局 `ApiResult`（`Promise<any> & { abort }`，见 types/global.d.ts）——它就是
+   * `mdyAPI` 返回值的真实形状；`then` 的结果再按本组件消费的形状注解。
    */
-  ajax: any = null;
+  ajax: AddressBookRequest<AddressBookSearchResult> | null = null;
+  declare scrollView: ScrollViewHandle | null | undefined;
 
-  constructor(props) {
+  constructor(props: SearchMemberProps) {
     super(props);
     this.state = {
       value: '',
@@ -55,12 +108,12 @@ class SearchMember extends Component<any, any> {
       groupsVisible: true,
     };
   }
-  inputRef = React.createRef();
+  inputRef = React.createRef<HTMLInputElement>();
   override componentDidMount() {
     this.handleFocus();
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: SearchMemberProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.sessionListVisible && !prevProps.sessionListVisible) {
         this.handleFocus();
@@ -81,7 +134,7 @@ class SearchMember extends Component<any, any> {
     this.setState({ loading: true });
     this.ajax && this.ajax.abort();
     this.ajax = ajax.getAllAddressbookByKeywords(value.trim());
-    this.ajax.then(result => {
+    this.ajax.then((result: AddressBookResult) => {
       this.setState({
         loading: false,
         result,
@@ -91,9 +144,11 @@ class SearchMember extends Component<any, any> {
   };
   adjustViewport(direction: string) {
     const { flattenResult, currentIndex } = this.state;
-    const { viewport } = (this.scrollView && this.scrollView.getScrollInfo()) || {};
-    const $scrollViewEl = $(viewport);
-    const current = flattenResult[currentIndex] || {};
+    // 擦除标记：`|| {}` 兜底在取不到滚动信息时给空对象（原实现就是这样），断言只是把声明接上。
+    const { viewport } = (this.scrollView && this.scrollView.getScrollInfo()) || ({} as ScrollInfo);
+    // 擦除标记：viewport 缺省时 jQuery 得到空集合（与原实现一致）。
+    const $scrollViewEl = $(viewport as HTMLElement);
+    const current: Partial<AddressAccount> & Partial<AddressGroup> = flattenResult[currentIndex] || {};
     const id = current.accountId ? (current.user ? current.user.userId : current.accountId) : current.groupId;
     const $currentEl = $(`#project-container-item-${id}`);
 
@@ -105,21 +160,26 @@ class SearchMember extends Component<any, any> {
     // 运行期不变（那种情况下 position.top 仍是 undefined）。
     const position = $currentEl.position() || ({} as JQuery.Coordinates);
 
+    // 擦除标记：jQuery v4 的 `height()` 声明可空；Selector 命中的节点必有布局盒（原 any 直接比较）。
     if (direction === 'up') {
-      if (position.top < 0 || position.top + $currentEl.height() >= $scrollViewEl.height()) {
-        this.scrollView.scrollToElement($currentEl[0]);
+      if (
+        position.top < 0 ||
+        position.top + ($currentEl.height() as number) >= ($scrollViewEl.height() as number)
+      ) {
+        // 擦除标记：滚动容器由 ref 注入（本方法只在滚动/键盘回调里调用）；缺省时原实现同样抛原生 TypeError。
+        this.scrollView!.scrollToElement($currentEl[0]);
       }
     } else if (direction === 'down') {
-      if (position.top + $currentEl.height() >= $scrollViewEl.height()) {
-        const { scrollTop, scrollHeight, maxScrollTop } = this.scrollView.getScrollInfo() || {};
-        const bottom = scrollHeight - scrollTop - position.top - $currentEl.height();
-        this.scrollView.scrollTo({ top: maxScrollTop - bottom });
+      if (position.top + ($currentEl.height() as number) >= ($scrollViewEl.height() as number)) {
+        const { scrollTop, scrollHeight, maxScrollTop } = (this.scrollView!.getScrollInfo() || {}) as ScrollInfo;
+        const bottom = scrollHeight - scrollTop - position.top - ($currentEl.height() as number);
+        this.scrollView!.scrollTo({ top: maxScrollTop - bottom });
       } else if (position.top < 0) {
-        this.scrollView.scrollToElement($currentEl[0]);
+        this.scrollView!.scrollToElement($currentEl[0]);
       }
     }
   }
-  handleChange = _.debounce(value => {
+  handleChange = _.debounce((value: string) => {
     if (!value.trim()) return;
     this.setState(
       {
@@ -155,34 +215,37 @@ class SearchMember extends Component<any, any> {
         },
       );
     } else if (which === 13 && flattenResult.length && currentIndex !== -1) {
-      this.handleOpenSession(flattenResult[currentIndex]);
+      // 擦除标记：该分支已确保 currentIndex !== -1（且有结果）；缺元素时原实现同样传 undefined。
+      this.handleOpenSession(flattenResult[currentIndex]!);
     } else if (which === 27) {
       this.setState({ value: '' });
     }
   };
-  handleOpenSession(data) {
-    const { groupId, accountId } = data;
+  handleOpenSession(data: AddressBookEntry) {
+    // 擦除标记：条目要么是群组要么是联系人（原 any 直接解构）；缺字段时与原实现一致得到 undefined。
+    const { groupId, accountId } = data as AddressAccount & AddressGroup;
 
     if (groupId) {
-      const msg = {
+      const msg: ChatRawMessageWire = {
         to: groupId,
-        avatar: data.avatar,
-        groupname: data.name,
+        avatar: (data as AddressGroup).avatar,
+        groupname: (data as AddressGroup).name,
         msg: { con: '' },
       };
       this.props.addGroupSession(groupId, msg);
     } else {
-      const msg = {
-        logo: data.avatarMiddle,
-        uname: data.fullname,
+      const msg: ChatRawMessageWire = {
+        logo: (data as AddressAccount).avatarMiddle,
+        uname: (data as AddressAccount).fullname,
         sysType: 1,
       };
-      this.props.addUserSession(accountId, msg);
+      // 擦除标记：非群组条目必有 accountId（原 any 直接传）。
+      this.props.addUserSession(accountId as string, msg);
     }
 
     this.setState({ value: '' });
   }
-  renderAccount(account, currentResult) {
+  renderAccount(account: AddressAccount, currentResult: Partial<AddressAccount> & Partial<AddressGroup>) {
     const id = account.user ? account.user.userId : account.accountId;
     const isCurrent = id === (currentResult.user ? currentResult.user.userId : currentResult.accountId);
     return (
@@ -206,7 +269,7 @@ class SearchMember extends Component<any, any> {
       </div>
     );
   }
-  renderGroup(group, currentResult) {
+  renderGroup(group: AddressGroup, currentResult: Partial<AddressAccount> & Partial<AddressGroup>) {
     const isCurrent = group.groupId === currentResult.groupId;
     return (
       <div
@@ -225,8 +288,11 @@ class SearchMember extends Component<any, any> {
     );
   }
   renderProject() {
-    const { result, loading, flattenResult, currentIndex, accountsVisible, groupsVisible } = this.state;
-    const currentResult = flattenResult[currentIndex] || {};
+    // 擦除标记：`renderProject` 只在搜索完成（`loading=false`）后渲染，此时 `result` 已是结果对象；
+    // 初始占位 `[]` 不会被读（原实现同样如此）。
+    const { result, loading, flattenResult, currentIndex, accountsVisible, groupsVisible } = this
+      .state as SearchMemberState & { result: AddressBookResult };
+    const currentResult: Partial<AddressAccount> & Partial<AddressGroup> = flattenResult[currentIndex] || {};
     const count = result.groups.list.length + result.accounts.list.length;
     return (
       <div className="content">
@@ -243,7 +309,7 @@ class SearchMember extends Component<any, any> {
               <Icon icon={accountsVisible ? 'arrow-up-border' : 'arrow-down-border'} className="textSecondary Font16" />
             </div>
             {accountsVisible && (
-              <div>{result.accounts.list.map(account => this.renderAccount(account, currentResult))}</div>
+              <div>{result.accounts.list.map((account: AddressAccount) => this.renderAccount(account, currentResult))}</div>
             )}
           </div>
         )}
@@ -259,7 +325,9 @@ class SearchMember extends Component<any, any> {
               </div>
               <Icon icon={groupsVisible ? 'arrow-up-border' : 'arrow-down-border'} className="textSecondary Font16" />
             </div>
-            {groupsVisible && <div>{result.groups.list.map(group => this.renderGroup(group, currentResult))}</div>}
+            {groupsVisible && (
+              <div>{result.groups.list.map((group: AddressGroup) => this.renderGroup(group, currentResult))}</div>
+            )}
           </div>
         )}
         {!loading && !count ? (
@@ -332,5 +400,5 @@ export default connect(
   (state: RootState) => ({
     sessionListVisible: state.chat.toolbarConfig.sessionListVisible,
   }),
-  dispatch => bindActionCreators(_.pick(actions, ['addGroupSession', 'addUserSession']), dispatch),
+  (dispatch: AppDispatch) => bindActionCreators(_.pick(actions, ['addGroupSession', 'addUserSession']), dispatch),
 )(SearchMember);

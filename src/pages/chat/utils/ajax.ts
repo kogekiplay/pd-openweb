@@ -1,3 +1,4 @@
+import type { AddressBookRequest, AddressBookSearchResult } from 'src/api/addressBookTypes';
 import _ from 'lodash';
 import CommonAjax from 'src/api/addressBook';
 import ChatController from 'src/api/chat';
@@ -346,7 +347,7 @@ export const getCountByTabName = (param: CountByTabNameParams) => {
   }
 };
 
-export const getAllAddressbookByKeywords = (keyword: string) => {
+export const getAllAddressbookByKeywords = (keyword: string): AddressBookRequest<AddressBookSearchResult> => {
   return CommonAjax.getAllChatAddressbookByKeywords({
     keywords: keyword,
   });
