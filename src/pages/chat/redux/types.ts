@@ -258,6 +258,13 @@ export interface ChatSession {
  * 群聊 @ 参数（`ChatPanelSession.getAtParam` 的真实返回）。
  * `toUser` 为被 @ 的成员 id 列表；`'all'` 表示 @所有人。
  */
+/** 卡片选择结果的待发送形状；CardToolbar 原样转交，面板发送前再补 msg。 */
+export interface ChatCardDraftMessage {
+  card: NonNullable<ChatMessage['card']>;
+  type?: number | undefined;
+  [key: string]: unknown;
+}
+
 export interface ChatAtParam {
   gid: string;
   toUser: string[] | 'all';

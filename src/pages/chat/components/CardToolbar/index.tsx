@@ -8,9 +8,38 @@ import taskCenter from 'src/api/taskCenter';
 import * as cardSender from '../../utils/cardSender';
 import config from '../../utils/config';
 import Constant from '../../utils/constant';
+import type { ChatSession, ChatCardDraftMessage } from '../../redux/types';
 import './index.less';
 
-const items = [
+
+/** 菜单项（`toolItems` getter 返回、`handleOpen` 消费；`fn` 是类上的方法名） */
+interface CardToolbarItem {
+  name: string;
+  icon: string;
+  classname: string;
+  fn: 'onSelectTask' | 'onSelectSchedule' | 'onNewVote' | 'onNewFeed';
+}
+
+/** 卡片发送方（`cardSender` 各选择器读取的会话描述，构造器里由 `session` 拼出） */
+interface CardAcceptor {
+  avatar?: string | undefined;
+  id?: string | undefined;
+  isPost?: boolean | undefined;
+  projectId?: string | undefined;
+  type: number;
+}
+
+/** 容器（`ChatPanelSession`）传入的 props */
+interface CardToolbarProps {
+  session: ChatSession;
+  onSendCardMsg: (card: ChatCardDraftMessage) => void;
+}
+
+interface CardToolbarState {
+  visible: boolean;
+}
+
+const items: CardToolbarItem[] = [
   {
     name: _l('任务'),
     icon: 'icon-task',
@@ -37,8 +66,10 @@ const items = [
   },
 ];
 
-export default class CardToolbar extends Component<any, any> {
-  constructor(props) {
+export default class CardToolbar extends Component<CardToolbarProps, CardToolbarState> {
+  declare acceptor: CardAcceptor;
+
+  constructor(props: CardToolbarProps) {
     super(props);
     const { session } = this.props;
     this.state = {
@@ -48,14 +79,15 @@ export default class CardToolbar extends Component<any, any> {
       avatar: session.avatar,
       id: session.id,
       isPost: session.isPost,
-      projectId: session.projectId ? session.project.projectId : '',
+      // 擦除标记：`session.projectId` 为真时 `session.project` 必存在（原 any 直接读）；缺省时原实现抛原生 TypeError。
+      projectId: session.projectId ? (session.project as { projectId?: string }).projectId : '',
       type: session.isGroup ? Constant.SESSIONTYPE_GROUP : Constant.SESSIONTYPE_USER,
     };
   }
-  get toolItems() {
+  get toolItems(): CardToolbarItem[] {
     const { isGroup } = this.props.session;
     const forbidSuites = _.uniq(md.global.SysSettings.forbidSuites.split('|')).filter(item => item !== '5');
-    return items.filter(item => {
+    return items.filter((item: CardToolbarItem) => {
       if (item.icon === 'icon-task') {
         return !forbidSuites.includes('2');
       }
@@ -67,13 +99,17 @@ export default class CardToolbar extends Component<any, any> {
       return isGroup ? !forbidSuites.includes('1') : false;
     });
   }
-  handleOpen(item) {
-    item.fn && this[item.fn]();
+  handleOpen(item: CardToolbarItem) {
+    // 擦除标记：`fn` 是类方法名的有限联合；原实现动态取方法调用，运行表达式不变。
+    item.fn && (this[item.fn] as () => void)();
     this.setState({
       visible: false,
     });
   }
   onSelectTask() {
+    // 【必须保留实参】`selectTask` 的函数体确实忽略该参数，但实参表达式 `this.acceptor`
+    // 在**调用时就会被求值**——它是 getter，读取本身有副作用（lead 2026-10-21 反例：抛异常 getter 必须抛）。
+    // 删掉实参会让 getter 不被读，这是行为回退，故保留。
     cardSender.selectTask(this.acceptor).then(result => {
       if (!this.props.session.isGroup) {
         taskCenter
@@ -91,9 +127,11 @@ export default class CardToolbar extends Component<any, any> {
     });
   }
   onSelectSchedule() {
+    // 同上：实参 `this.acceptor` 的求值（getter 读取）必须保留，不能因"被忽略"而删除。
     cardSender.selectSchedule(this.acceptor).then(result => {
       if (!this.props.session.isGroup) {
-        const calendarOpts = result.card.entityid.split('_');
+        // 擦除标记：日程卡片的 entityid 必存在（原 any 直接 split）；缺省时原实现抛原生 TypeError。
+        const calendarOpts = (result.card.entityid as string).split('_');
         calendar
           .addMembers({
             calendarID: calendarOpts[0],
@@ -128,7 +166,7 @@ export default class CardToolbar extends Component<any, any> {
         this.props.onSendCardMsg(result);
       });
   }
-  handleChange(visible) {
+  handleChange(visible: boolean) {
     this.setState({
       visible,
     });
@@ -136,7 +174,7 @@ export default class CardToolbar extends Component<any, any> {
   renderToolbar() {
     return (
       <div className="ChatPanel-addToolbar-menu">
-        {this.toolItems.map((item, index) => (
+        {this.toolItems.map((item: CardToolbarItem, index: number) => (
           <div
             key={index}
             className={cx('menuItem', {
@@ -170,7 +208,7 @@ export default class CardToolbar extends Component<any, any> {
         builtinPlacements={config.builtinPlacements}
         popup={this.renderToolbar()}
         popupAlign={{ offset: [64, -10] }}
-        getPopupContainer={() => document.querySelector('.ChatPanel-wrapper')}
+        getPopupContainer={() => document.querySelector('.ChatPanel-wrapper') as HTMLElement}
       >
         <div className={cx('ChatPanel-addToolbar addToolbarHover')}>
           <i className="icon-plus" />

@@ -4,13 +4,119 @@ import moment from 'moment';
 import { browserIsMobile, htmlEncodeReg, pathCompletion } from 'src/utils/common';
 import { MSGTYPES, SOURCE_TYPE } from './constants';
 
-export const formatInboxItem = function (inboxItem) {
+/** 收件箱创建人 */
+interface InboxCreateUser {
+  accountId?: string | undefined;
+  fullname?: string | undefined;
+  avatar?: string | undefined;
+}
+
+/** 收件箱条目（`formatInboxItem` 真实读取的字段；其余在索引签名里） */
+export interface InboxItem {
+  CreateUser?: InboxCreateUser | undefined;
+  /**
+   * 收件箱里的讨论对象。`wrappedComp/commonTopic` 直接读 name/sourceId/extendsId/sourceType/
+   * message/accountsInMessage/isDeleted/canReply，故逐个声明（其余仍在索引签名里）。
+   */
+  discussion?:
+    | {
+        entityName?: string | undefined;
+        /** 讨论标题/正文摘要（`mergeFromSourceState` 作为 fromMessage） */
+        name?: string | undefined;
+        /** 来源实体 id（拼来源链接） */
+        sourceId?: string | undefined;
+        /** 工作表场景的 `appId|viewId` 串（`extendsId.split('|')[0]`） */
+        extendsId?: string | undefined;
+        /** 来源类型（`SOURCE_TYPE`） */
+        sourceType?: number | undefined;
+        /** 讨论正文（`createLinksForMessage` 输入） */
+        message?: string | undefined;
+        /** 消息 @ 的人（`createLinksForMessage` 的 rUserList） */
+        accountsInMessage?: unknown[] | undefined;
+        isDeleted?: boolean | undefined;
+        canReply?: boolean | undefined;
+      }
+    | undefined;
+  /** 收件箱条目创建时间（`mergeTopicState` 原样透传给消息组件） */
+  createTime?: string | number | undefined;
+  isFavorite?: boolean | undefined;
+  /** 后端可能给字符串数字（本函数用 `parseInt` 归一化） */
+  inboxType?: string | number | undefined;
+  inboxId?: string | number | undefined;
+  /**
+   * 动态（Post）类型收件箱条目的载荷。
+   * 【为什么显式声明】此前靠根层 `[key: string]: unknown` 兜住，导致拼错 `inboxTyp`/`accountID`
+   * 等也会被放行（lead 2026-10-21 反例 2）。真实消费点 `postMention.tsx` 会读它，
+   * 故这里按其真实读取形状声明；其余未读字段不再用宽索引兜。
+   */
+  Post?:
+    | {
+        postID?: string | undefined;
+        message?: string | undefined;
+        postType?: number | undefined;
+        comments?: unknown[] | undefined;
+        commentCount?: string | number | undefined;
+        rUserList?: unknown;
+        rGroupList?: unknown;
+        categories?: unknown;
+        linkTitle?: string | undefined;
+        linkUrl?: string | undefined;
+        linkThumb?: string | undefined;
+        linkDesc?: string | undefined;
+      }
+    | undefined;
+}
+
+/** 评论/动态条目（`formatTopic` 两个分支读取字段的并集） */
+interface TopicSource {
+  user?:
+    | {
+        accountId?: string | undefined;
+        userMiddleHead?: string | undefined;
+        userName?: string | undefined;
+      }
+    | undefined;
+  replyID?: string | number | undefined;
+  replyUser?:
+    | { accountId?: string | undefined; userName?: string | undefined }
+    | undefined;
+  replyAccountId?: string | undefined;
+  replyUserName?: string | undefined;
+  allowOperate?: string | undefined;
+  attachments?: unknown[] | undefined;
+  askDeleteAttachment?: string | undefined;
+  postID?: string | undefined;
+  commentID?: string | undefined;
+  message?: unknown;
+  rUserList?: unknown;
+  rGroupList?: unknown;
+  createTime?: number | string | undefined;
+  Secretary?: unknown;
+  createAccount?: { accountId?: string | undefined } | undefined;
+  replyId?: string | null | undefined;
+  sourceId?: string | undefined;
+  name?: string | undefined;
+  discussionId?: string | undefined;
+  replyAccount?: unknown;
+  accountsInMessage?: unknown;
+}
+
+/**
+ * 【真实缺失常量，待 lead 决策】`MSGTYPES` 里没有 `CheckMentioned/CheckReply/CheckComment` 三个键：
+ * 这三条 case 的判别值在运行期是 `undefined`，而 `parseInt(inboxType)` 只会得到数值或 NaN，
+ * 因此它们**不会命中任何真实消息**（既有死分支）。本批不改行为（新增常量值属于业务变更），
+ * 只用擦除式读法把「键缺失」如实表达出来。
+ */
+export const formatInboxItem = function (inboxItem: InboxItem) {
   const createUser = inboxItem.CreateUser || {};
   const { accountId, fullname, avatar } = createUser;
-  const { discussion } = inboxItem;
+  // 擦除标记：工作表类消息必带 discussion（原 any 直接解构）；缺省时原实现抛原生 TypeError。
+  const { discussion } = inboxItem as { discussion: { entityName?: string | undefined } };
 
   let typeName = '';
-  const inboxType = parseInt(inboxItem.inboxType, 10);
+  // 擦除标记：`inboxType` 的声明是 string | number，parseInt 内部 ToString 与 String() 等价。
+  // 单次断言即可：`string` 已是该字段联合的成员；parseInt 的 ToString 对数字等价。
+  const inboxType = parseInt(inboxItem.inboxType as string, 10);
 
   switch (inboxType) {
     // 私信 deprecated
@@ -90,13 +196,13 @@ export const formatInboxItem = function (inboxItem) {
       typeName = _l('发表了审批讨论');
       break;
     // 考勤
-    case MSGTYPES.CheckMentioned:
+    case (MSGTYPES as { CheckMentioned?: number }).CheckMentioned as number: // 键缺失，见文件头注释
       typeName = _l('在考勤讨论中提到了你');
       break;
-    case MSGTYPES.CheckReply:
+    case (MSGTYPES as { CheckReply?: number }).CheckReply as number:
       typeName = _l('在考勤讨论中回复了你');
       break;
-    case MSGTYPES.CheckComment:
+    case (MSGTYPES as { CheckComment?: number }).CheckComment as number:
       typeName = _l('发表了考勤讨论');
       break;
     // 工作表
@@ -145,14 +251,15 @@ export const formatInboxItem = function (inboxItem) {
   };
 };
 
-export const formatTopic = function (item, type) {
-  var formatedData = {};
+export const formatTopic = function (item: TopicSource, type: number | undefined) {
+  // 两个分支写入的字段并集；调用方均未类型化，这里用记录类型承接
+  var formatedData: Record<string, unknown> = {};
   var User;
   var ReplyUser;
   var isReply;
   var canDelete;
   if (type === SOURCE_TYPE.POST) {
-    User = item.user;
+    User = item.user as NonNullable<TopicSource['user']>;
     isReply = item.replyID;
     ReplyUser = null;
     if (isReply && item.replyUser) {
@@ -191,12 +298,13 @@ export const formatTopic = function (item, type) {
   } else {
     var topic = item;
     var attachments = topic.attachments;
-    User = topic.createAccount;
+    User = topic.createAccount as NonNullable<TopicSource['createAccount']>;
     isReply = !!topic.replyId;
     canDelete = User.accountId === md.global.Account.accountId;
     formatedData = {
       canDelete: canDelete,
-      isDeleteAttachment: canDelete && attachments.length,
+      // 擦除标记：非帖子分支的 topic 必有 attachments 数组（原 any 直接读）；缺省时原实现抛原生 TypeError。
+      isDeleteAttachment: canDelete && attachments!.length,
       sourceId: item.sourceId,
       name: item.name,
       message: topic.message,
@@ -214,7 +322,7 @@ export const formatTopic = function (item, type) {
   return { ...formatedData, sourceType: type };
 };
 
-export const splitSourceId = sourceId => {
+export const splitSourceId = (sourceId: string) => {
   let [_sourceId, childId] = sourceId.split('|');
   return {
     sourceId: _sourceId,
@@ -222,7 +330,12 @@ export const splitSourceId = sourceId => {
   };
 };
 
-export const buildSourceLink = function (type, _sourceId, _extendsId?, inboxId?) {
+export const buildSourceLink = function (
+  type: number | undefined,
+  _sourceId: string,
+  _extendsId?: string | undefined,
+  inboxId?: string | undefined,
+) {
   var linkUrl = '';
   const { sourceId, childId } = splitSourceId(_sourceId);
 
@@ -266,7 +379,7 @@ export const buildSourceLink = function (type, _sourceId, _extendsId?, inboxId?)
   return pathCompletion(linkUrl);
 };
 
-export function isWithinOneHour(timestamp) {
+export function isWithinOneHour(timestamp: number) {
   const currentTime = Date.now();
   const oneHour = 60 * 60 * 1000;
   return Math.abs(currentTime - timestamp) <= oneHour;
@@ -315,7 +428,8 @@ export function linkifySanitizedHtml(sanitizedHtml: string, options = {}) {
       if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
       const p = node.parentNode;
 
-      if (p && p.nodeType === 1 && opts.ignoreTags.has(p.tagName)) {
+      // 擦除标记：文本节点的父节点是元素时才有 tagName（原 any 直接读）。
+      if (p && p.nodeType === 1 && opts.ignoreTags.has((p as Element).tagName)) {
         return NodeFilter.FILTER_REJECT;
       }
 
@@ -327,7 +441,8 @@ export function linkifySanitizedHtml(sanitizedHtml: string, options = {}) {
   while (walker.nextNode()) nodes.push(walker.currentNode);
 
   for (const node of nodes) {
-    const text = node.nodeValue;
+    // 擦除标记：walker 只接受非空文本节点（acceptNode 已过滤），故 nodeValue 必有值。
+    const text = node.nodeValue as string;
     const matches = linkify.match(text);
     if (!matches) continue;
 
@@ -345,7 +460,8 @@ export function linkifySanitizedHtml(sanitizedHtml: string, options = {}) {
 
     if (last < text.length) frag.append(text.slice(last));
 
-    node.parentNode.replaceChild(frag, node);
+    // 擦除标记：walker 节点来自 doc.body 子树，必有父节点（原 any 直接调用）。
+    node.parentNode!.replaceChild(frag, node);
   }
 
   return doc.body.innerHTML;
