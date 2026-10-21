@@ -8,6 +8,7 @@ import ContactList from '../components/ContactList';
 import DepartmentUsers from '../components/DepartmentUsers';
 import ListSearchBar from '../components/ListSearchBar';
 import ProjectContactsList from '../components/ProjectContactsList';
+import type { DepartmentNode } from '../types';
 
 const SearchContainer = styled.div`
   width: 100%;
@@ -59,15 +60,61 @@ const SearchContainer = styled.div`
   }
 `;
 
-const formatDepartmentData = list => {
-  const departments = {};
+
+/** 地址簿用户（hap-api 的 `UserModel`；本容器只透传/计数，不读内部字段） */
+type AddressUser = HapApi.MD.Web.Ajax.ResultModel.User.UserModel;
+
+/** 部门折叠面板的本地模型（`formatDepartmentData` 构造、`updateDeptModel` 局部更新） */
+interface DepartmentBucket {
+  departmentName?: string | undefined;
+  departmentId?: string | undefined;
+  isOpen: boolean;
+  isLoading: boolean;
+  list: AddressUser[];
+}
+
+type DepartmentMap = Record<string, DepartmentBucket>;
+
+/** 容器由 `lib/addressBook/index.tsx` 渲染：`<ProjectContacts projectId={projectId} />` */
+interface ProjectContactsProps {
+  projectId?: string | null | undefined;
+}
+
+interface ProjectContactsState {
+  listData: AddressUser[];
+  departments: DepartmentMap | null;
+  selectedAccountId?: string | null | undefined;
+  isLoading: boolean;
+  keywords: string;
+  hasMore: boolean;
+  pageIndex: number;
+  pageSize: number;
+  groupList: AddressUser[];
+  usersPageIndex: number;
+  usersLoading: boolean;
+  hideBackBtn?: boolean | undefined;
+  isFriend?: boolean | undefined;
+  /** 首屏由 `fetchDepartments` 写入（初值缺省） */
+  isMore?: boolean | undefined;
+  isMoreUsers?: boolean | undefined;
+  allCount?: number | undefined;
+  groupName?: string | undefined;
+  groupId?: string | undefined;
+  departmentLoading?: boolean | undefined;
+  /** 部门分页累积（首屏前缺省） */
+  departmentsList?: DepartmentNode[];
+}
+
+const formatDepartmentData = (list: DepartmentNode[] | undefined): DepartmentMap => {
+  const departments: DepartmentMap = {};
   const concatedList = (list || []).concat({
     departmentName: _l('未分配部门的联系人'),
     departmentId: '',
   });
   _.forEach(concatedList, item => {
     const { departmentId, departmentName } = item;
-    departments[departmentId] = {
+    // 擦除标记：真实部门数据都带 departmentId（末尾追加项显式给 ''）；缺省时索引得到 undefined 键。
+    departments[departmentId as string] = {
       departmentName,
       departmentId,
       isOpen: false,
@@ -79,11 +126,11 @@ const formatDepartmentData = list => {
   return departments;
 };
 
-export default class ProjectContacts extends React.Component<any, any> {
+export default class ProjectContacts extends React.Component<ProjectContactsProps, ProjectContactsState> {
   declare promise: ApiResult | null;
 
-  constructor() {
-    super();
+  constructor(props: ProjectContactsProps) {
+    super(props);
 
     this.state = {
       // store
@@ -115,7 +162,7 @@ export default class ProjectContacts extends React.Component<any, any> {
     this.fetchDepartments();
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: ProjectContactsProps) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState({}, this.fetchDepartments);
       if (!_.isEqual(prevProps.projectId, this.props.projectId)) {
@@ -209,7 +256,7 @@ export default class ProjectContacts extends React.Component<any, any> {
     return this.promise.then(data => {
       const { pageIndex, departmentsList = [] } = this.state;
 
-      let currentPageData = (data || []).map(item => ({ ...item, subs: [] }));
+      let currentPageData = (data || []).map((item: DepartmentNode) => ({ ...item, subs: [] }));
       let result = pageIndex > 1 ? departmentsList.concat(currentPageData) : currentPageData;
       this.setState({
         departments: formatDepartmentData(result),
@@ -225,7 +272,7 @@ export default class ProjectContacts extends React.Component<any, any> {
     });
   };
 
-  fetchDepartmentUser(departmentId) {
+  fetchDepartmentUser(departmentId: string) {
     const { projectId } = this.props;
     this.updateDeptModel(departmentId, {
       isLoading: true,
@@ -246,10 +293,11 @@ export default class ProjectContacts extends React.Component<any, any> {
       });
   }
 
-  updateDeptModel(id, payload) {
+  updateDeptModel(id: string, payload: Partial<DepartmentBucket>) {
+    // 擦除标记：`updateDeptModel` 只在部门已加载后调用（首屏 departments 为 null，原实现同样解构抛 TypeError）。
     const {
       departments: { [id]: department },
-    } = this.state;
+    } = this.state as { departments: DepartmentMap };
 
     this.setState({
       departments: {
@@ -259,7 +307,14 @@ export default class ProjectContacts extends React.Component<any, any> {
     });
   }
 
-  itemClickHandler({ accountId, isFriend }: { accountId?: string; [key: string]: any }) {
+  itemClickHandler({
+    accountId,
+    isFriend,
+  }: {
+    accountId?: string | undefined;
+    isFriend?: boolean | undefined;
+    isContact?: boolean | undefined;
+  }) {
     this.setState({
       selectedAccountId: accountId,
       isFriend,
@@ -267,7 +322,7 @@ export default class ProjectContacts extends React.Component<any, any> {
     });
   }
 
-  handleSelectGroup = id => {
+  handleSelectGroup = (id: string | undefined) => {
     const { usersPageIndex } = this.state;
     const { projectId } = this.props;
     this.setState({ isMoreUsers: false });
@@ -302,21 +357,25 @@ export default class ProjectContacts extends React.Component<any, any> {
         pageSize: 20,
       })
       .then(({ listUser }) => {
-        const groupList = usersPageIndex > 1 ? this.state.groupList.concat(listUser.list) : listUser.list;
+        // 擦除标记：`listUser` 在 `ProjectRootDepartmentModel` 里声明为可选，但真实响应必带（原 any 直接读）。
+        // 擦除标记：`list` 在 `ListModel_UserModel` 里声明为可选，真实响应必带（原 any 直接读）。
+        const groupList =
+          usersPageIndex > 1 ? this.state.groupList.concat(listUser!.list!) : listUser!.list!;
         this.setState({
-          isMoreUsers: groupList.length !== listUser.allCount,
+          isMoreUsers: groupList.length !== listUser!.allCount,
           usersLoading: false,
           usersPageIndex: usersPageIndex + 1,
           groupList,
-          allCount: listUser.allCount,
+          allCount: listUser!.allCount,
         });
       });
   };
 
-  selectCurrentDepartment = (id, name: string) => {
+  selectCurrentDepartment = (id: string, name: string) => {
     this.setState({ groupId: id, groupList: [], usersPageIndex: 1, groupName: name, usersLoading: true }, () => {
       if (this.props.projectId === id) {
-        this.handleLoadAll(id);
+        // 擦除标记：`handleLoadAll` 实际不接收参数（原实现多传的 id 被忽略）；为保持运行表达式不变，仅做类型层收窄。
+        (this.handleLoadAll as (id?: string) => void)(id);
       } else {
         this.handleSelectGroup(id);
       }
@@ -404,7 +463,7 @@ export default class ProjectContacts extends React.Component<any, any> {
             <DepartmentUsers
               usersLoading={usersLoading}
               groupList={groupList}
-              groupId={groupId}
+              {...{ groupId }}
               projectId={this.props.projectId}
               isMoreUsers={this.state.isMoreUsers}
               handleSelectGroup={this.handleSelectGroup}

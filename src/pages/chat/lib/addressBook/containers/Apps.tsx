@@ -10,7 +10,7 @@ export default function Apps() {
       <div
         className="contacts-apps-item"
         onClick={() => {
-          config.callback({ type: 'worksheet' });
+          config.callback!({ type: 'worksheet' });
         }}
       >
         <span className="contacts-apps-icon">
@@ -21,7 +21,7 @@ export default function Apps() {
       <div
         className="contacts-apps-item"
         onClick={() => {
-          config.callback({ type: 'workflow' });
+          config.callback!({ type: 'workflow' });
         }}
       >
         <span className="contacts-apps-icon">
@@ -33,7 +33,7 @@ export default function Apps() {
         <div
           className="contacts-apps-item"
           onClick={() => {
-            config.callback({ type: 'post' });
+            config.callback!({ type: 'post' });
           }}
         >
           <span className="contacts-apps-icon">
@@ -46,7 +46,7 @@ export default function Apps() {
         <div
           className="contacts-apps-item"
           onClick={() => {
-            config.callback({ type: 'task' });
+            config.callback!({ type: 'task' });
           }}
         >
           <span className="contacts-apps-icon">
@@ -59,7 +59,7 @@ export default function Apps() {
         <div
           className="contacts-apps-item"
           onClick={() => {
-            config.callback({ type: 'calendar' });
+            config.callback!({ type: 'calendar' });
           }}
         >
           <span className="contacts-apps-icon">
@@ -72,7 +72,7 @@ export default function Apps() {
         <div
           className="contacts-apps-item"
           onClick={() => {
-            config.callback({ type: 'knowledge' });
+            config.callback!({ type: 'knowledge' });
           }}
         >
           <span className="contacts-apps-icon">
@@ -85,7 +85,7 @@ export default function Apps() {
         <div
           className="contacts-apps-item"
           onClick={() => {
-            config.callback({ type: 'hr' });
+            config.callback!({ type: 'hr' });
           }}
         >
           <span className="contacts-apps-icon">
@@ -97,7 +97,7 @@ export default function Apps() {
       <div
         className="contacts-apps-item"
         onClick={() => {
-          config.callback({ type: 'system' });
+          config.callback!({ type: 'system' });
         }}
       >
         <span className="contacts-apps-icon">
@@ -108,7 +108,7 @@ export default function Apps() {
       <div
         className="contacts-apps-item"
         onClick={() => {
-          config.callback({ type: 'file-transfer' });
+          config.callback!({ type: 'file-transfer' });
         }}
       >
         <span className="contacts-apps-icon">

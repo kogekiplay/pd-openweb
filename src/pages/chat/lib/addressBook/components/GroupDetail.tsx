@@ -3,24 +3,34 @@ import { Icon, ScrollView } from 'ming-ui';
 import settingGroup from 'src/pages/Group/settingGroup';
 import { closeGroup, openGroup } from '../api';
 import { config } from '../config';
+import type { AddressBookGroupDetail, AddressBookSettingResult, AddressBookGroupPatch } from '../types';
 import { pathCompletion } from 'src/utils/common';
 
-export default class GroupDetail extends React.Component<any, any> {
-  constructor(props) {
+interface GroupDetailProps {
+  group?: AddressBookGroupDetail | undefined;
+  /** 当前群状态（1 = 已删除，用于 CLOSE_GROUP 分支） */
+  groupStatus?: number | undefined;
+  /** 用局部补丁更新父级的群信息（父级方法要求字符串 groupId） */
+  updateGroupModel: (groupId: string, patch: AddressBookGroupPatch) => void;
+}
+
+export default class GroupDetail extends React.Component<GroupDetailProps> {
+  constructor(props: GroupDetailProps) {
     super(props);
 
     this.openSettingDialog = this.openSettingDialog.bind(this);
   }
 
   openSettingDialog() {
+    // 擦除标记：`render` 已保证 group 存在（原 any 直接解构）。
     const {
       group: { groupId, groupMemberCount },
       groupStatus,
       updateGroupModel,
-    } = this.props;
+    } = this.props as { group: AddressBookGroupDetail; groupStatus?: number; updateGroupModel: GroupDetailProps['updateGroupModel'] };
     settingGroup({
       groupID: groupId,
-      success: (type, groupInfo) => {
+      success: (type: string, groupInfo: AddressBookSettingResult) => {
         if (
           ![
             'UPDATE_AVATAR',
@@ -36,7 +46,7 @@ export default class GroupDetail extends React.Component<any, any> {
         )
           return;
 
-        let newInfo: Record<string, any> = {};
+        let newInfo: AddressBookGroupPatch = {};
 
         switch (type) {
           case 'UPDATE_AVATAR':
@@ -47,8 +57,11 @@ export default class GroupDetail extends React.Component<any, any> {
             break;
           case 'ADD_MEMBERS':
           case 'REMOVE_USER':
+            // 擦除标记：群成员数由后端给出（原 any 直接运算）；缺省时原实现算 NaN/抛原生 TypeError。
             newInfo.groupMemberCount =
-              type === 'REMOVE_USER' ? Math.max(0, groupMemberCount - 1) : groupMemberCount + groupInfo.accounts.length;
+              type === 'REMOVE_USER'
+                ? Math.max(0, (groupMemberCount as number) - 1)
+                : (groupMemberCount as number) + (groupInfo.accounts as unknown[]).length;
             break;
           case 'CLOSE_GROUP':
             newInfo.isOpen = false;
@@ -63,7 +76,7 @@ export default class GroupDetail extends React.Component<any, any> {
             break;
         }
 
-        updateGroupModel(groupId, newInfo);
+        updateGroupModel(groupId as string, newInfo);
       },
     });
   }
@@ -71,19 +84,19 @@ export default class GroupDetail extends React.Component<any, any> {
   renderHeader() {
     const {
       group: { avatar, name, groupId, isOpen },
-    } = this.props;
+    } = this.props as { group: AddressBookGroupDetail };
     return (
       <React.Fragment>
         {isOpen === false ? (
           <div className="detail-header">
-            <img src={avatar} className="detail-header-avatar disabled" />
+            <img src={avatar as string} className="detail-header-avatar disabled" />
             <div className="detail-header-info textDisabled">
               <div className="Font18 clearfix">{name}</div>
             </div>
           </div>
         ) : (
           <div className="detail-header">
-            <img src={avatar} className="detail-header-avatar" />
+            <img src={avatar as string} className="detail-header-avatar" />
             <div className="detail-header-info">
               <div className="Font18 clearfix">
                 {name}
@@ -101,7 +114,7 @@ export default class GroupDetail extends React.Component<any, any> {
               href="javascript:void 0;"
               className="detail-btn bgColorPrimary hoverBgColorPrimaryDark NoUnderline"
               onClick={() => {
-                config.callback({ groupId });
+                config.callback!({ groupId });
               }}
             >
               <Icon icon="chat" className="mRight5 Font18" />
@@ -125,10 +138,11 @@ export default class GroupDetail extends React.Component<any, any> {
     const {
       group: { groupId },
       updateGroupModel,
-    } = this.props;
-    openGroup(groupId).then(result => {
+    } = this.props as { group: AddressBookGroupDetail; updateGroupModel: GroupDetailProps['updateGroupModel'] };
+    // 擦除标记：群详情必带 groupId（原 any 直接传）。
+    openGroup(groupId as string).then(result => {
       if (result) {
-        updateGroupModel(groupId, { isOpen: true });
+        updateGroupModel(groupId as string, { isOpen: true });
       } else {
         alert(_l('操作失败，请重新尝试'), 2);
       }
@@ -139,10 +153,11 @@ export default class GroupDetail extends React.Component<any, any> {
     const {
       group: { groupId },
       updateGroupModel,
-    } = this.props;
-    closeGroup(groupId).then(result => {
+    } = this.props as { group: AddressBookGroupDetail; updateGroupModel: GroupDetailProps['updateGroupModel'] };
+    // 擦除标记：同上。
+    closeGroup(groupId as string).then(result => {
       if (result) {
-        updateGroupModel(groupId, { isOpen: false });
+        updateGroupModel(groupId as string, { isOpen: false });
       } else {
         alert(_l('操作失败，请重新尝试'), 2);
       }
@@ -152,12 +167,13 @@ export default class GroupDetail extends React.Component<any, any> {
   renderDetail() {
     const {
       group: { groupMemberCount, createTime, isOpen, createAccount },
-    } = this.props;
+    } = this.props as { group: AddressBookGroupDetail };
     return (
       <div className="Font13 mTop24">
         <div className="detail-info-row">
           <span className="textSecondary">{_l('创建人')}：</span>
-          {createAccount.fullname}
+          {/* 擦除标记：群详情必带创建者（原 any 直接读）；缺省时原实现抛原生 TypeError。 */}
+          {createAccount!.fullname}
         </div>
         <div className="detail-info-row clearfix">
           <span className="textSecondary">{_l('群组状态')}：</span>
@@ -185,7 +201,7 @@ export default class GroupDetail extends React.Component<any, any> {
     );
   }
 
-  override render() {
+  override render(): React.ReactNode {
     if (!this.props.group) return null;
     return (
       <ScrollView>

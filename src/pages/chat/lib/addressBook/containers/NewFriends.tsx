@@ -5,9 +5,18 @@ import ListNull from '../components/ListNull';
 import NewFriendsList from '../components/NewFriendsList';
 import RecommendsList from '../components/RecommendsList';
 
-export default class NewFriends extends React.Component<any, any> {
-  constructor() {
-    super();
+interface NewFriendsState {
+  loadedRecommends: boolean;
+  haveRecommends: boolean;
+  loadedApplys: boolean;
+  haveApplys: boolean;
+  firstLoading: boolean;
+}
+
+export default class NewFriends extends React.Component<Record<string, never>, NewFriendsState> {
+  constructor(props: Record<string, never>) {
+    // 原实现 `super()` 未传 props；React 之后仍会写 this.props，运行等价（Babel 1 行差异）。
+    super(props);
 
     this.state = {
       loadedRecommends: false,
@@ -21,7 +30,7 @@ export default class NewFriends extends React.Component<any, any> {
     this.updateApplysFlag = this.updateApplysFlag.bind(this);
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: Record<string, never>) {
     if (!shallowEqual(prevProps, this.props)) {
       this.setState({
         loadedRecommends: false,
@@ -33,7 +42,7 @@ export default class NewFriends extends React.Component<any, any> {
     }
   }
 
-  updateRecommendsFlag(haveRecommends) {
+  updateRecommendsFlag(haveRecommends: boolean) {
     this.setState({
       loadedRecommends: true,
       haveRecommends,
@@ -41,7 +50,7 @@ export default class NewFriends extends React.Component<any, any> {
     });
   }
 
-  updateApplysFlag(haveApplys) {
+  updateApplysFlag(haveApplys: boolean) {
     this.setState({
       loadedApplys: true,
       haveApplys,

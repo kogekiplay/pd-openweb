@@ -6,7 +6,27 @@ import addFriends from 'src/components/addFriends';
 import SiderBarTabItem from '../components/SiderBarTabItem';
 import SiderBarTabList from '../components/SiderBarTabList';
 
-export default class SideBar extends React.Component<any, any> {
+/** 左侧分组行：内置分组（`SIDER_BAR_LIST`）与收拢后的项目行两种形态 */
+export interface SiderBarRow {
+  type?: string | undefined;
+  name?: string | undefined;
+  projectId?: string | null | undefined;
+  /** 分隔线行（没有 type/name） */
+  dividor?: boolean | undefined;
+  icon?: string | undefined;
+  tip?: string | undefined;
+  /** 项目行下面的子分组 */
+  list?: SiderBarRow[] | undefined;
+}
+
+interface SideBarProps {
+  type?: string | undefined;
+  projectId?: string | null | undefined;
+  list?: SiderBarRow[] | undefined;
+  updateHighlightTab: (type: string | undefined, projectId: string | null | undefined) => void;
+}
+
+export default class SideBar extends React.Component<SideBarProps> {
   static override propTypes = {
     type: PropTypes.string.isRequired,
     projectId: PropTypes.string,
@@ -16,7 +36,7 @@ export default class SideBar extends React.Component<any, any> {
     updateHighlightTab: PropTypes.func.isRequired,
   };
 
-  getOpenState(list, projectId: string, type) {
+  getOpenState(list: SiderBarRow[] | undefined, projectId?: string | null, type?: string) {
     return !!_.find(list, item => {
       if (projectId) {
         return item.projectId === projectId && item.type === type;
@@ -26,7 +46,7 @@ export default class SideBar extends React.Component<any, any> {
     });
   }
 
-  renderItem(item, index: number) {
+  renderItem(item: SiderBarRow, index: number) {
     const { type, projectId, updateHighlightTab } = this.props;
     const isProject = !!item.projectId;
     const isActive = isProject ? type === item.type && projectId === item.projectId : type === item.type;
@@ -35,13 +55,14 @@ export default class SideBar extends React.Component<any, any> {
       key: index,
       isActive,
       clickHandler: () => {
+        // 擦除标记：分组行必带 type/projectId（原 any 直接透传；缺省时父级同样收到 undefined）。
         updateHighlightTab(item.type, item.projectId);
       },
     };
     return <SiderBarTabItem {...props} />;
   }
 
-  renderTabs(item, index: number) {
+  renderTabs(item: SiderBarRow, index: number) {
     const { type, projectId } = this.props;
 
     if (item.dividor) {

@@ -79,13 +79,41 @@ const UserItem = styled.div`
   }
 `;
 
-export default class DepartmentUsers extends Component<any, any> {
-  constructor(props) {
+/** 部门成员行（`groupList` 元素） */
+interface DepartmentUser {
+  accountId?: string | undefined;
+  avatar?: string | undefined;
+  fullname?: string | undefined;
+  jobInfos?: { jobName?: string | undefined }[] | undefined;
+}
+
+interface DepartmentUsersProps {
+  groupId?: string | undefined;
+  selectedAccountId?: string | null | undefined;
+  isMoreUsers?: boolean | undefined;
+  projectId?: string | null | undefined;
+  handleLoadAll: () => void;
+  /** 父级方法带一个可缺省的群 id（本组件无参调用） */
+  handleSelectGroup: (id?: string | undefined) => void;
+  usersLoading?: boolean | undefined;
+  groupList?: DepartmentUser[] | undefined;
+  allCount?: number | undefined;
+  groupName?: string | undefined;
+  hideBackBtn?: boolean | undefined;
+}
+
+interface DepartmentUsersState {
+  showDetail: boolean;
+  selectedAccountId?: string | null | undefined;
+}
+
+export default class DepartmentUsers extends Component<DepartmentUsersProps, DepartmentUsersState> {
+  constructor(props: DepartmentUsersProps) {
     super(props);
     this.state = { showDetail: props.selectedAccountId ? true : false, selectedAccountId: props.selectedAccountId };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: DepartmentUsersProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.groupId, this.props.groupId)) {
         this.setState({
@@ -132,8 +160,10 @@ export default class DepartmentUsers extends Component<any, any> {
                 <ScrollView className="h100" onScrollEnd={this.handleScrollEnd}>
                   {groupList.length ? (
                     <Fragment>
-                      {groupList.map((item, index: number) => {
-                        let jobs = (item.jobInfos || []).map(n => n.jobName).join(';');
+                      {groupList.map((item: DepartmentUser, index: number) => {
+                        let jobs = (item.jobInfos || [])
+                          .map<string | undefined>((n: { jobName?: string | undefined }) => n.jobName)
+                          .join(';');
                         return (
                           <UserItem
                             key={`${item.accountId}-${index}`}

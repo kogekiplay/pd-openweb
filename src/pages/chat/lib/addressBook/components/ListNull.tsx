@@ -1,5 +1,12 @@
 
-export default function ListNull(props) {
+interface ListNullProps {
+  /** 搜索态：显示「无匹配结果」 */
+  isSearch?: boolean | undefined;
+  /** 列表类型：groups / contacts / newfriends（决定空态文案） */
+  type?: string | undefined;
+}
+
+export default function ListNull(props: ListNullProps) {
   const { isSearch, type } = props;
 
   if (isSearch) {

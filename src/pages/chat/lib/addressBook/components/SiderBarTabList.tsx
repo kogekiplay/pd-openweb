@@ -2,15 +2,29 @@ import React from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 
-export default class SiderTabList extends React.Component<any, any> {
+interface SiderBarTabListProps {
+  /** 分组标题 */
+  name?: string | undefined;
+  /** 初始展开状态 */
+  isOpen: boolean;
+  /** 展开时渲染的内容 */
+  children?: React.ReactNode;
+}
+
+interface SiderBarTabListState {
+  isOpen: boolean;
+}
+
+export default class SiderTabList extends React.Component<SiderBarTabListProps, SiderBarTabListState> {
   static override propTypes = {
     name: PropTypes.string.isRequired,
     isOpen: PropTypes.bool.isRequired,
     children: PropTypes.node,
   };
 
-  constructor(props) {
-    super();
+  constructor(props: SiderBarTabListProps) {
+    // 原实现 `super()` 未传 props；React 之后仍会写 this.props，运行等价（Babel 1 行差异）。
+    super(props);
 
     this.state = {
       isOpen: props.isOpen,
@@ -20,7 +34,7 @@ export default class SiderTabList extends React.Component<any, any> {
   }
 
   toggleList() {
-    this.setState(prevState => ({
+    this.setState((prevState: SiderBarTabListState) => ({
       isOpen: !prevState.isOpen,
     }));
   }

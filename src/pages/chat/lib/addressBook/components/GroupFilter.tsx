@@ -5,7 +5,19 @@ import Icon from 'ming-ui/components/Icon';
 import MenuItem from 'ming-ui/components/MenuItem';
 import { GROUP_STATUS, SEARCH_GROUP_TYPES } from '../constants';
 
-function GroupFilter(props) {
+interface GroupFilterProps {
+  /** 群组类型筛选变化（SEARCH_GROUP_TYPES） */
+  /** Dropdown 的回调签名是 (value: number | undefined)（原实参同形态） */
+  changeGroupFilter: (value: number | undefined) => void;
+  /** 是否显示已关闭群组 */
+  changeGroupStatus: () => void;
+  searchGroupType?: number | undefined;
+  groupStatus?: number | undefined;
+  /** 项目内群组只给「我加入的 / 我创建的 / 所有群组」 */
+  isProject?: boolean | undefined;
+}
+
+function GroupFilter(props: GroupFilterProps) {
   const { changeGroupFilter, changeGroupStatus, searchGroupType, groupStatus, isProject } = props;
 
   const dropDownData = isProject

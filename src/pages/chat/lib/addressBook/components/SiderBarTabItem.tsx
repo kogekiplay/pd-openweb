@@ -4,7 +4,15 @@ import PropTypes from 'prop-types';
 import { Tooltip } from 'ming-ui/antd-components';
 import Icon from 'ming-ui/components/Icon';
 
-function SiderTabItem(props) {
+interface SiderBarTabItemProps {
+  name?: string | undefined;
+  isActive?: boolean | undefined;
+  clickHandler: () => void;
+  icon?: string | undefined;
+  tip?: string | undefined;
+}
+
+function SiderTabItem(props: SiderBarTabItemProps) {
   const { name, isActive, clickHandler, icon, tip } = props;
   const cls = cx('list-item', {
     'list-item-active': isActive,

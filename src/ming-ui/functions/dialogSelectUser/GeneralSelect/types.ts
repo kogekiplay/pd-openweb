@@ -62,7 +62,7 @@ export interface UserRequest {
   filterAccountIds?: Array<string | undefined> | undefined;
   prefixAccountIds?: Array<string | undefined> | undefined;
   filterFriend?: boolean | undefined;
-  filterProjectId?: string | undefined;
+  filterProjectId?: string | null | undefined;
   includeUndefinedAndMySelf?: boolean | undefined;
   includeSystemField?: boolean | undefined;
   includeMySelf?: boolean | undefined;
@@ -109,7 +109,7 @@ export interface UserSettings {
   prefixAccountIds?: Array<string | undefined> | undefined;
   selectedAccountIds?: Array<string | undefined> | undefined;
   filterSystemAccountId?: string[] | undefined;
-  filterProjectId?: string | undefined;
+  filterProjectId?: string | null | undefined;
   filterFriend?: boolean | undefined;
   filterResigned?: boolean | undefined;
   filterAll?: boolean | undefined;

@@ -1,8 +1,29 @@
+import type { AddressBookUserDetail } from './types';
 import AddressListController from 'src/api/addressBook';
 import DepartmentController from 'src/api/department';
 import GroupController from 'src/api/group';
 import UserController from 'src/api/user';
 import { GROUP_STATUS, SEARCH_GROUP_TYPES } from './constants';
+
+/** 联系人分页查询参数（`fetchContacts` 的入参，`range` 由各包装方法补） */
+interface ContactsParams {
+  projectId?: string | null | undefined;
+  keywords?: string | undefined;
+  pageIndex?: number | undefined;
+  pageSize?: number | undefined;
+  isFilterOther?: boolean | undefined;
+  range?: number | undefined;
+}
+
+/** 群组分页查询参数 */
+interface GroupsParams {
+  projectId?: string | null | undefined;
+  keywords?: string | undefined;
+  pageIndex?: number | undefined;
+  pageSize?: number | undefined;
+  searchGroupType?: number | undefined;
+  groupStatus?: number | undefined;
+}
 
 const RANGES = {
   ALL: 0,
@@ -18,7 +39,7 @@ const fetchContacts = function ({
   pageSize = 100,
   isFilterOther = false,
   keywords = '',
-} = {}) {
+}: ContactsParams = {}) {
   /**
    * 获取我的所有联系人
    * @param {Object} args 请求参数
@@ -49,7 +70,7 @@ const fetchGroups = function ({
   pageSize = 20,
   searchGroupType = SEARCH_GROUP_TYPES.ALL,
   groupStatus = GROUP_STATUS.ALL,
-} = {}) {
+}: GroupsParams = {}) {
   return GroupController.getGroups({
     keywords,
     searchGroupType,
@@ -66,8 +87,13 @@ export default {
   /**
    * Contacts
    */
-  fetchAllContacts: ({ pageIndex, pageSize, keywords, isFilterOther }: { pageIndex?: number; keywords?: string; [key: string]: any }) => {
-    const params = {
+  fetchAllContacts: ({
+    pageIndex,
+    pageSize,
+    keywords,
+    isFilterOther,
+  }: { pageIndex?: number | undefined; pageSize?: number | undefined; keywords?: string | undefined; isFilterOther?: boolean | undefined }) => {
+    const params: ContactsParams = {
       pageIndex,
       pageSize,
       keywords,
@@ -77,8 +103,12 @@ export default {
     return fetchContacts(params);
   },
 
-  fetchFriends: ({ keywords, pageIndex, pageSize }: { keywords?: string; pageIndex?: number; [key: string]: any }) => {
-    const params = {
+  fetchFriends: ({
+    keywords,
+    pageIndex,
+    pageSize,
+  }: { keywords?: string | undefined; pageIndex?: number | undefined; pageSize?: number | undefined }) => {
+    const params: ContactsParams = {
       pageIndex,
       pageSize,
       keywords,
@@ -87,8 +117,12 @@ export default {
     return fetchContacts(params);
   },
 
-  fetchOthers: ({ keywords, pageIndex, pageSize }: { keywords?: string; pageIndex?: number; [key: string]: any }) => {
-    const params = {
+  fetchOthers: ({
+    keywords,
+    pageIndex,
+    pageSize,
+  }: { keywords?: string | undefined; pageIndex?: number | undefined; pageSize?: number | undefined }) => {
+    const params: ContactsParams = {
       pageIndex,
       pageSize,
       keywords,
@@ -97,8 +131,18 @@ export default {
     return fetchContacts(params);
   },
 
-  fetchProjectContacts: ({ keywords, pageIndex, pageSize, projectId }: { keywords?: string; pageIndex?: number; projectId?: string; [key: string]: any }) => {
-    const params = {
+  fetchProjectContacts: ({
+    keywords,
+    pageIndex,
+    pageSize,
+    projectId,
+  }: {
+    keywords?: string | undefined;
+    pageIndex?: number | undefined;
+    pageSize?: number | undefined;
+    projectId?: string | null | undefined;
+  }) => {
+    const params: ContactsParams = {
       pageIndex,
       pageSize,
       keywords,
@@ -108,7 +152,11 @@ export default {
     return fetchContacts(params);
   },
 
-  fetchDepartments: ({ projectId, pageIndex, pageSize }: { projectId?: string; pageIndex?: number; [key: string]: any }) => {
+  fetchDepartments: ({
+    projectId,
+    pageIndex,
+    pageSize,
+  }: { projectId?: string | null | undefined; pageIndex?: number | undefined; pageSize?: number | undefined }) => {
     const params = {
       projectId,
       pageIndex,
@@ -117,7 +165,10 @@ export default {
     return DepartmentController.getProjectDepartmentByPage(params);
   },
 
-  fetchDepartmentUsers: ({ projectId, departmentId }: { projectId?: string; [key: string]: any }) => {
+  fetchDepartmentUsers: ({
+    projectId,
+    departmentId,
+  }: { projectId?: string | null | undefined; departmentId?: string | undefined }) => {
     const params = {
       projectId,
       departmentId,
@@ -125,7 +176,7 @@ export default {
     return DepartmentController.getDepartmentUsers(params);
   },
 
-  fetchNewFriends: ({ pageIndex, pageSize = 10 }: { pageIndex?: number; [key: string]: any }) => {
+  fetchNewFriends: ({ pageIndex, pageSize = 10 }: { pageIndex?: number | undefined; pageSize?: number | undefined }) => {
     const params = {
       pageIndex,
       pageSize,
@@ -133,7 +184,7 @@ export default {
     return AddressListController.getNewFriends(params);
   },
 
-  fetchRecommends: ({ pageIndex, pageSize = 5 }: { pageIndex?: number; [key: string]: any }) => {
+  fetchRecommends: ({ pageIndex, pageSize = 5 }: { pageIndex?: number | undefined; pageSize?: number | undefined }) => {
     const params = {
       pageIndex,
       pageSize,
@@ -151,7 +202,7 @@ export default {
     projectId = '',
     searchGroupType = SEARCH_GROUP_TYPES.JOINED,
     groupStatus = GROUP_STATUS.ALL,
-  } = {}) => {
+  }: GroupsParams = {}) => {
     const params = {
       projectId,
       pageIndex,
@@ -169,7 +220,7 @@ export default {
   /**
    * Users
    */
-  fetchUserDetail: (accountId: string) => {
+  fetchUserDetail: (accountId: string): Promise<AddressBookUserDetail | undefined> => {
     return new Promise((resolve, reject) => {
       UserController.getAccountDetail({
         accountId,
@@ -183,7 +234,21 @@ export default {
     });
   },
 
-  searchAddressbookAndDepartment: ({ projectId, keywords, range, pageIndex, pageSize, isFilterOther }: { projectId?: string; keywords?: string; pageIndex?: number; [key: string]: any }) => {
+  searchAddressbookAndDepartment: ({
+    projectId,
+    keywords,
+    range,
+    pageIndex,
+    pageSize,
+    isFilterOther,
+  }: {
+    projectId?: string | null | undefined;
+    keywords?: string | undefined;
+    range?: number | undefined;
+    pageIndex?: number | undefined;
+    pageSize?: number | undefined;
+    isFilterOther?: boolean | undefined;
+  }) => {
     return AddressListController.searchAddressbookAndDepartment({
       projectId,
       keywords,

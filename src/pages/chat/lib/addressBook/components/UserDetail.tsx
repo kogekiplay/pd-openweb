@@ -13,15 +13,32 @@ import { pathCompletion } from 'src/utils/common';
 import copy from 'src/utils/copyToClipboard';
 import API, { removeFriend } from '../api';
 import { config } from '../config';
+import type { AddressBookUserCard, AddressBookUserDetail } from '../types';
 import AddFriend from './AddFriend';
 
-const defaultState = {
+interface UserDetailProps {
+  /** 要展示的用户；null 表示清空（父级切走时会显式置 null） */
+  accountId?: string | null | undefined;
+  projectId?: string | null | undefined;
+  hideBackBtn?: boolean | undefined;
+  /** 返回按钮回调（父级传入） */
+  back?: () => void;
+}
+
+interface UserDetailState {
+  data: AddressBookUserDetail | null | undefined;
+  isLoading: boolean;
+}
+
+/** `fetchUserDetail` 失败分支写入的默认 state */
+const defaultState: UserDetailState = {
   data: null,
   isLoading: false,
 };
 
-export default class UserDetail extends React.Component<any, any> {
-  constructor(props) {
+
+export default class UserDetail extends React.Component<UserDetailProps, UserDetailState> {
+  constructor(props: UserDetailProps) {
     super(props);
 
     this.state = defaultState;
@@ -38,7 +55,7 @@ export default class UserDetail extends React.Component<any, any> {
     }
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: UserDetailProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.accountId && this.props.accountId !== prevProps.accountId) {
         this.fetchUserDetail(this.props.accountId);
@@ -53,9 +70,9 @@ export default class UserDetail extends React.Component<any, any> {
       isLoading: true,
     });
     API.fetchUserDetail(accountId)
-      .then(data => {
+      .then((data: AddressBookUserDetail | undefined) => {
         if (data) {
-          data.userCards = (_.get(data, 'userCards') || []).filter(item => item.companyName);
+          data.userCards = (_.get(data, 'userCards') || []).filter((item: AddressBookUserCard) => item.companyName);
 
           this.setState({
             ...defaultState,
@@ -92,7 +109,8 @@ export default class UserDetail extends React.Component<any, any> {
       title: _l('确认删除当前好友？'),
       description: _l('删除后您将不显示在对方的好友列表里'),
       onOk: () => {
-        removeFriend(accountId).then(() => {
+        // 擦除标记：只有带 accountId 时才显示删除好友入口（原 any 直接传）。
+        removeFriend(accountId as string).then(() => {
           alert(_l('删除成功'), 1);
           this.setState({
             data: {
@@ -106,7 +124,8 @@ export default class UserDetail extends React.Component<any, any> {
   }
 
   renderFriendTag() {
-    const { isFriend, accountId } = this.state.data;
+    // 擦除标记：调用方只在 data 已加载时渲染（原 any 直接解构）；缺省时原实现抛原生 TypeError。
+    const { isFriend, accountId } = this.state.data as AddressBookUserDetail;
     if (accountId === md.global.Account.accountId) return null;
     if (!isFriend) {
       return (
@@ -150,16 +169,16 @@ export default class UserDetail extends React.Component<any, any> {
   renderHeader() {
     const {
       data: { avatar, fullname, userCards = [], accountId, isContact },
-    } = this.state;
+    } = this.state as { data: AddressBookUserDetail };
     const companyName = _.get(userCards, '[0].companyName');
-    const commonOrg = _.filter(userCards, card =>
+    const commonOrg = _.filter(userCards, (card: AddressBookUserCard) =>
       _.some(_.get(md, 'global.Account.projects', []), project => project.projectId === card.projectId),
     );
 
     return (
       <React.Fragment>
         <div className="detail-header">
-          <img src={avatar} className="detail-header-avatar" />
+          <img src={avatar as string} className="detail-header-avatar" />
           <div className="detail-header-info flexRow">
             <div className="flex ellipsis pRight10">
               <div className="ellipsis bold">{fullname}</div>
@@ -180,7 +199,7 @@ export default class UserDetail extends React.Component<any, any> {
             className="detail-btn bgColorPrimary hoverBgColorPrimaryDark NoUnderline"
             onClick={() => {
               if (isContact) {
-                config.callback({ accountId });
+                config.callback!({ accountId });
               } else {
                 this.addFriendConfirm();
               }
@@ -205,7 +224,8 @@ export default class UserDetail extends React.Component<any, any> {
   }
 
   onCopyID = () => {
-    copy(_.get(this.state.data, 'accountId'));
+    // 擦除标记：复制用户 ID（原 any 直接传）。
+    copy(_.get(this.state.data, 'accountId') as string);
     alert(_l('复制成功'));
   };
 
@@ -235,7 +255,8 @@ export default class UserDetail extends React.Component<any, any> {
 
     if (data === null) return null;
     if (!isLoading && data === undefined) {
-      return <AddFriend accountId={accountId} />;
+      // 擦除标记：`AddFriend` 的 accountId 可选；父级把 null 也当缺省传（原 any 直接传）。
+      return <AddFriend accountId={accountId as string} />;
     }
 
     return (

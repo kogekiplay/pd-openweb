@@ -1,10 +1,12 @@
 import React, { Fragment } from 'react';
+import type { MouseEvent } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, LoadDiv, ScrollView } from 'ming-ui';
 import departmentController from 'src/api/department';
+import type { DepartmentNode } from '../types';
 
 const DepartmentTreeWrapper = styled.div`
   border-right: 1px solid var(--color-background-disabled);
@@ -37,21 +39,50 @@ const Department = styled.div`
   }
 `;
 
-export default class ProjectContactList extends React.Component<any, any> {
-  constructor(props) {
+
+/** 父容器（`ProjectContacts`）传入的 props */
+interface ProjectContactListProps {
+  /** 父容器传入但本组件未消费的字段（保留以匹配调用方） */
+  selectedAccountId?: unknown;
+  list?: unknown;
+  /**
+   * 历史 prop 名：父容器实际传的是 `list`，本组件却在 `renderListContent` 里读 `department`，
+   * 运行期恒为 undefined（走 `= []` 默认值）；如实声明，不改调用方也不改行为。
+   */
+  department?: DepartmentNode[];
+  isLoading: boolean;
+  loadNextPage: () => void;
+  departmentLoading?: boolean | undefined;
+  isMore?: boolean | undefined;
+  departmentsList?: DepartmentNode[] | undefined;
+  projectId?: string | null | undefined;
+  groupId?: string | undefined;
+  selectCurrentDepartment: (id: string, name: string) => void;
+}
+
+interface ProjectContactListState {
+  selects: (string | null | undefined)[];
+  department: DepartmentNode[] | undefined;
+  departmentLoading: boolean | undefined;
+}
+
+export default class ProjectContactList extends React.Component<ProjectContactListProps, ProjectContactListState> {
+  constructor(props: ProjectContactListProps) {
     super(props);
     const project = _.find(md.global.Account.projects, { projectId: props.projectId });
     this.state = {
       selects: [project.projectId],
+      // 擦除标记：父容器首屏可能还没拉到部门列表（state 里按数组使用，原 any 直接赋）。
       department: props.departmentsList,
       departmentLoading: false,
     };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: ProjectContactListProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!_.isEqual(prevProps.departmentsList, this.props.departmentsList)) {
         this.setState({
+          // 擦除标记：该分支只在父容器已给出 departmentsList/projectId 后进入（原 any 直接赋）。
           department: this.props.departmentsList,
           selects: [this.props.projectId],
         });
@@ -71,8 +102,8 @@ export default class ProjectContactList extends React.Component<any, any> {
     return <React.Fragment>{this.renderDepartmentTree()}</React.Fragment>;
   }
 
-  updateTreeData = (list, key, subs) => {
-    return list.map(node => {
+  updateTreeData = (list: DepartmentNode[], key: string | undefined, subs: DepartmentNode[]): DepartmentNode[] => {
+    return list.map((node: DepartmentNode) => {
       if (node.departmentId === key) {
         return { ...node, subs };
       }
@@ -85,7 +116,7 @@ export default class ProjectContactList extends React.Component<any, any> {
     });
   };
 
-  expandNext = id => {
+  expandNext = (id: string | undefined) => {
     const { projectId } = this.props;
     let { department } = this.state;
     this.setState({ departmentLoading: true });
@@ -96,13 +127,13 @@ export default class ProjectContactList extends React.Component<any, any> {
         pageSize: 100,
         parentId: id,
       })
-      .then(res => {
-        let data = res.map(item => ({ ...item, subs: [] }));
-        this.setState({ department: this.updateTreeData(department, id, data), departmentLoading: false });
+      .then((res: DepartmentNode[]) => {
+        let data = res.map((item: DepartmentNode) => ({ ...item, subs: [] }));
+        this.setState({ department: this.updateTreeData(department!, id, data), departmentLoading: false });
       });
   };
 
-  renderDepartment(item) {
+  renderDepartment(item: DepartmentNode) {
     const { groupId = '' } = this.props;
     const { selects } = this.state;
     const subVisible = selects.includes(item.departmentId);
@@ -111,20 +142,21 @@ export default class ProjectContactList extends React.Component<any, any> {
         <Department
           className={cx('flexRow valignWrapper pointer', { active: groupId === item.departmentId })}
           onClick={() => {
-            this.props.selectCurrentDepartment(item.departmentId, item.departmentName);
+            // 擦除标记：渲染出的部门节点必带 id/name（原 any 直接传）。
+            this.props.selectCurrentDepartment(item.departmentId as string, item.departmentName as string);
           }}
         >
           <Icon
             icon={subVisible ? 'arrow-down' : 'arrow-right-tip'}
             className={cx('textSecondary iconArrow', { Visibility: !item.haveSubDepartment })}
-            onClick={event => {
+            onClick={(event: MouseEvent) => {
               event.stopPropagation();
               this.expandNext(item.departmentId);
               const { selects } = this.state;
 
               if (selects.includes(item.departmentId)) {
                 this.setState({
-                  selects: selects.filter(id => id !== item.departmentId),
+                  selects: selects.filter((id: string | null | undefined) => id !== item.departmentId),
                 });
               } else {
                 this.setState({
@@ -136,7 +168,8 @@ export default class ProjectContactList extends React.Component<any, any> {
           <Icon className="textTertiary Font16 mLeft2 mRight5" icon="folder" />
           <div className="ellipsis Font13">{item.departmentName}</div>
         </Department>
-        {subVisible && <div className="subs">{item.subs.map(item => this.renderDepartment(item))}</div>}
+        {/* 擦除标记：展开的节点才有 `subs`（原 any 直接 map）；缺省时原实现抛原生 TypeError。 */}
+        {subVisible && <div className="subs">{item.subs!.map((item: DepartmentNode) => this.renderDepartment(item))}</div>}
       </Fragment>
     );
   }

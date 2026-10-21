@@ -1,4 +1,5 @@
 import React from 'react';
+import type { ChangeEvent } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -11,9 +12,28 @@ import AddFriends from 'src/components/addFriends';
 import createGroup from 'src/pages/Group/createGroup/load';
 import { existAccountHint } from 'src/utils/inviteCommon';
 
-export default class SearchBar extends React.Component<any, any> {
-  constructor(props) {
-    super();
+interface ListSearchBarProps {
+  /** 外部传入的当前关键词（组件内部输入框会跟随它变化） */
+  keywords?: string | undefined;
+  /** 关键词变化的防抖回调（构造器里包成 500ms debounce） */
+  search: (value: string) => void;
+  /** 右侧按钮类型：contacts / friends / projectContacts / groups */
+  type?: string | undefined;
+  projectId?: string | null | undefined;
+}
+
+interface ListSearchBarState {
+  /** 输入框当前值（外部 keywords 可缺省，如实允许 undefined） */
+  value?: string | undefined;
+}
+
+export default class SearchBar extends React.Component<ListSearchBarProps, ListSearchBarState> {
+  /** 构造器里生成的防抖搜索（`componentWillUnmount` 里 cancel） */
+  declare search: _.DebouncedFunc<(value: string) => void>;
+
+  constructor(props: ListSearchBarProps) {
+    // 原实现 `super()` 未传 props；React 之后仍会写入 this.props，运行等价（Babel 有 1 行差异）。
+    super(props);
     this.state = {
       value: props.keywords || '',
     };
@@ -22,7 +42,7 @@ export default class SearchBar extends React.Component<any, any> {
     this.searchHandler = this.searchHandler.bind(this);
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: ListSearchBarProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.keywords !== prevProps.keywords) {
         this.setState({
@@ -38,7 +58,7 @@ export default class SearchBar extends React.Component<any, any> {
     }
   }
 
-  searchHandler(event) {
+  searchHandler(event: ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;
     this.setState({
       value,
@@ -61,10 +81,10 @@ export default class SearchBar extends React.Component<any, any> {
           SelectUserSettings: {
             filterAccountIds: [md.global.Account.accountId],
             filterProjectId: projectId,
-            callback: function (users) {
+            callback: function (users: { accountId?: string }[]) {
               InviteController.inviteUser({
                 sourceId: projectId,
-                accountIds: users.map(o => o.accountId),
+                accountIds: users.map((o: { accountId?: string }) => o.accountId),
                 fromType: 4,
               }).then(function (result) {
                 existAccountHint(result);

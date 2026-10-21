@@ -13,24 +13,52 @@ import NewFriends from './containers/NewFriends';
 import Others from './containers/Others';
 import ProjectContacts from './containers/ProjectContacts';
 import SiderBar from './containers/SiderBar';
+import type { SiderBarRow } from './containers/SiderBar';
+import type { AddressBookClosePayload } from './types';
 import './style.less';
 
 const Dialog = MingDialog.DialogBase;
 
-class AddressBook extends React.Component<any, any> {
-  constructor(props) {
-    super();
+interface AddressBookState {
+  /** 当前选中的左侧分组（`TYPES` 值） */
+  type?: string | undefined;
+  /** 当前项目筛选（null = 不限） */
+  projectId: string | null | undefined;
+  /** 左侧列表项（内置分组 + 收拢后的项目） */
+  list: SiderBarRow[];
+}
+
+interface AddressBookProps {
+  type?: string | undefined;
+}
+
+/** 地址簿弹层入口（父级按 showAddressBook/showNewFriends/closeDialog 控制） */
+interface AddressBookDialogProps {
+  showAddressBook?: boolean | undefined;
+  showNewFriends?: boolean | undefined;
+  /**
+   * 关闭弹层。Dialog onClose 会传事件对象，工具栏调用方会传 `{target}` 形态的数据判断来源，
+   * 而 `config.callback` 的消费方传的是 `AddressBookCallbackPayload` —— 三种都是对象，按 object 承接。
+   */
+  closeDialog: (data?: AddressBookClosePayload | undefined) => void;
+}
+
+class AddressBook extends React.Component<AddressBookProps, AddressBookState> {
+  constructor(props: AddressBookProps) {
+    // 原实现 `super()` 未传 props；React 之后仍会写 this.props，运行等价（Babel 1 行差异）。
+    super(props);
 
     this.state = {
       type: props.type,
       projectId: null,
-      list: SIDER_BAR_LIST.concat(gatherProjects()),
+      // 擦除标记：内置分组与收拢后的项目是两种行形状（原 any 直接 concat）。
+      list: (SIDER_BAR_LIST as SiderBarRow[]).concat(gatherProjects() as SiderBarRow[]),
     };
 
     this.updateHighlightTab = this.updateHighlightTab.bind(this);
   }
 
-  override shouldComponentUpdate(_nextProps, nextState) {
+  override shouldComponentUpdate(_nextProps: AddressBookProps, nextState: AddressBookState) {
     return !shallowEqual(nextState, this.state);
   }
 
@@ -42,6 +70,7 @@ class AddressBook extends React.Component<any, any> {
         return <NewFriends />;
       case TYPES.ALL_GROUPS:
       case TYPES.PROJECT_GROUPS:
+        // 擦除标记：projectId 初始为 null（不限项目），子级只按真值和请求参数消费；null 与 undefined 等价（原 any 直接透传）。
         return <Groups projectId={projectId} />;
       case TYPES.ALL_CONTACTS:
         return <Contacts />;
@@ -60,7 +89,7 @@ class AddressBook extends React.Component<any, any> {
     return undefined;
   }
 
-  updateHighlightTab(type, projectId: string) {
+  updateHighlightTab(type: string | undefined, projectId: string | null | undefined) {
     this.setState({
       type,
       projectId,
@@ -78,7 +107,7 @@ class AddressBook extends React.Component<any, any> {
   }
 }
 
-export default function AddressBookDialog(props) {
+export default function AddressBookDialog(props: AddressBookDialogProps) {
   const dialogProps = {
     width: 900,
     visible: props.showAddressBook,
