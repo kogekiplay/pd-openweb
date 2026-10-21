@@ -1491,7 +1491,6 @@
     "src/pages/chat/components/Inbox/components/inboxMessage.tsx",
     "src/pages/chat/components/Inbox/components/wrappedComp/commonTopic.tsx",
     "src/pages/chat/components/Inbox/components/wrappedComp/postReply.tsx",
-    "src/pages/chat/components/Inbox/components/wrappedComp/systemMessage.tsx",
     "src/pages/chat/components/Inbox/index.tsx",
     "src/pages/chat/components/KeyboardShortcuts/index.tsx",
     "src/pages/chat/components/Members/InviteOrAddUsers.tsx",
