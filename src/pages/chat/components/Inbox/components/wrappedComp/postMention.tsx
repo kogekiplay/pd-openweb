@@ -4,6 +4,7 @@ import { MSGTYPES } from '../../constants';
 import { formatInboxItem } from '../../util';
 import BaseMessageComponent from '../baseComponent/messageContent';
 import { pathCompletion } from 'src/utils/common';
+import type { MessageArgs } from 'src/utils/messageLinkTypes';
 
 /**
  * 动态提到我的
@@ -11,8 +12,53 @@ import { pathCompletion } from 'src/utils/common';
  * @class PostMention
  * @extends {React.Component}
  */
-export default class PostMention extends React.Component<any, any> {
-  constructor(props) {
+/** 动态里被提到/回复到的主题（帖子本身或某条评论） */
+interface PostTopicItem {
+  message?: string | undefined;
+  rUserList?: MessageArgs['rUserList'];
+  rGroupList?: MessageArgs['rGroupList'];
+  categories?: MessageArgs['categories'];
+  attachments?: unknown[] | undefined;
+  postID?: string | undefined;
+  commentID?: string | undefined;
+  replyID?: string | undefined;
+  replyAccountId?: unknown;
+  commentCount?: string | number | undefined;
+  comments?: PostTopicItem[] | undefined;
+}
+
+/** 收件箱动态条目（`PostMention` 真实读取的字段） */
+interface PostMentionInboxItem {
+  inboxType?: number | undefined;
+  createTime?: string | number | undefined;
+  Post?: {
+    postID?: string | undefined;
+    message?: string | undefined;
+    postType?: number | undefined;
+    comments?: PostTopicItem[] | undefined;
+    commentCount?: string | number | undefined;
+    MedalPost?: {
+      MedalName?: string | undefined;
+      MedalPath?: string | undefined;
+      MedalDescription?: string | undefined;
+    };
+    rUserList?: MessageArgs['rUserList'];
+    rGroupList?: MessageArgs['rGroupList'];
+    categories?: MessageArgs['categories'];
+    linkTitle?: string | undefined;
+    linkUrl?: string | undefined;
+    linkThumb?: string | undefined;
+    linkDesc?: string | undefined;
+  };
+}
+
+interface PostMentionProps extends PostMentionInboxItem {
+  inboxType?: number | undefined;
+  Post: NonNullable<PostMentionInboxItem['Post']>;
+}
+
+export default class PostMention extends React.Component<PostMentionProps, Record<string, unknown>> {
+  constructor(props: PostMentionProps) {
     super(props);
 
     if (
@@ -24,7 +70,7 @@ export default class PostMention extends React.Component<any, any> {
         ...this.mergeTopicState(false),
         ...this.mergeFromSourceState(false),
         // 获取createUser信息和typeName
-        ...formatInboxItem(props),
+        ...formatInboxItem(props as Parameters<typeof formatInboxItem>[0]),
       };
     } else if (props.inboxType === MSGTYPES.PostMentionedGroup || props.inboxType === MSGTYPES.PostMentionedUser) {
       // 动态直接 提到
@@ -43,30 +89,33 @@ export default class PostMention extends React.Component<any, any> {
    * @memberof PostMention
    */
   mergeTopicState(fromPost: boolean) {
-    const inboxItem = this.props;
+    const inboxItem = this.props as PostMentionProps;
     const createTime = inboxItem.createTime;
-    let item = null,
-      comments,
-      commentsCount;
+    let item: PostTopicItem | null = null,
+      comments: PostTopicItem[] | undefined,
+      commentsCount: number | undefined;
 
     if (fromPost) {
       // 动态直接提到我，从Post中取
-      item = inboxItem.Post;
+      item = inboxItem.Post as PostTopicItem;
       comments = item.comments;
-      commentsCount = parseInt(item.commentCount, 10);
+      commentsCount = parseInt(item.commentCount as string, 10);
     } else {
       // 动态回复提到我，从Post的第一条评论中取
+      // 擦除标记：该分支必带至少一条评论（原 any 直接解构）；缺省时原实现抛原生 TypeError。
       const {
         Post: {
           comments: [comment], // inbox显示的这一条
         },
-      } = inboxItem;
-      item = comment;
+      } = inboxItem as PostMentionProps & { Post: { comments: PostTopicItem[] } };
+      // 擦除标记：该分支必带至少一条评论（原 any 直接取）；缺省时原实现抛原生 TypeError。
+      item = comment as PostTopicItem;
     }
 
     // 消息 @的人和群组 #话题
+    // 擦除标记：上面两个分支都保证 item 存在（原 any 直接解构）。
     const { message, rUserList, rGroupList, categories, attachments, postID, commentID, replyID, replyAccountId } =
-      item;
+      item as PostTopicItem;
 
     if (fromPost) {
       return {
@@ -104,7 +153,7 @@ export default class PostMention extends React.Component<any, any> {
     const inboxItem = this.props;
     const {
       Post: { postID, message, rUserList, rGroupList, categories },
-    } = inboxItem;
+    } = inboxItem as PostMentionProps;
 
     if (fromPost) {
       return {
@@ -138,7 +187,8 @@ export default class PostMention extends React.Component<any, any> {
 
     switch (post.postType) {
       case 0:
-        const medal = post.MedalPost;
+        // 擦除标记：勋章类型动态必带 MedalPost（原 any 直接取）；缺省时原实现抛原生 TypeError。
+        const medal = post.MedalPost!;
         const medalName = medal.MedalName;
         const medalPath = medal.MedalPath;
         const description = medal.MedalDescription;
@@ -149,10 +199,17 @@ export default class PostMention extends React.Component<any, any> {
               <img className="lazy" src={medalPath} />
             </div>
             <div>
-              <p className="colorPrimary mTop20" style={{ 'font-size': '12px', 'line-height': '20px' }}>
+              {/* 擦除标记：既有 style 用连字符键（原 any 直接传），运行期行为不变。 */}
+              <p className="colorPrimary mTop20" style={{ 'font-size': '12px', 'line-height': '20px' } as React.CSSProperties}>
                 {medalName}
               </p>
-              <p className={{ color: 'var(--color-text-secondary)', 'font-size': '12px', 'line-height': '20px' }}>
+              {/* 擦除标记：【既有 bug，仅记录】这里把 style 对象传给了 className（原 any 直接传）；
+                  为保持运行行为不变只做类型擦除，是否改回 style 交 lead。 */}
+              <p
+                className={
+                  { color: 'var(--color-text-secondary)', 'font-size': '12px', 'line-height': '20px' } as unknown as string
+                }
+              >
                 {description}
               </p>
             </div>
@@ -163,7 +220,7 @@ export default class PostMention extends React.Component<any, any> {
         const { linkTitle, linkUrl, linkThumb, linkDesc } = post;
         return (
           <div>
-            <a target="_blank" href={linkUrl} class="WordBreak">
+            <a target="_blank" href={linkUrl} className="WordBreak">
               {linkTitle}
             </a>
             {linkThumb ? <img className="lazy" src={linkThumb} /> : null}
@@ -183,10 +240,12 @@ export default class PostMention extends React.Component<any, any> {
               <i className={'Font24 textTertiary' + className}></i>
             </div>
             <div className="textContainer">
-              {post.message.substring(0, 25) + (post.message.length > 25 ? '...' : '')}
+              {/* 擦除标记：Q&A/投票动态必带 message（原 any 直接调）；缺省时原实现抛原生 TypeError。 */}
+              {(post.message as string).substring(0, 25) +
+                ((post.message as string).length > 25 ? '...' : '')}
             </div>
-            <div class="viewDetail">
-              <a target="_blank" href={pathCompletion(fromLink)} class="detailBtn boderRadAll_3">
+            <div className="viewDetail">
+              <a target="_blank" href={pathCompletion(fromLink)} className="detailBtn boderRadAll_3">
                 {_l('查看详情')}
               </a>
             </div>
