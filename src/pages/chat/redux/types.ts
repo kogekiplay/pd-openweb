@@ -1060,6 +1060,14 @@ export interface ChatToolbarConfig {
   /** 以下为 `setToolbarConfig` 的真实调用点写入的开关（Apps/FavoriteDrawer 等） */
   hideOpenCommonApp?: boolean | undefined;
   isOpenCommonApp?: boolean | undefined;
+  /** 消息列表开关：ChatList/index 的渲染条件与账号设置都会读写。 */
+  isOpenMessageList?: boolean | undefined;
+  /** AI 助手开关：ChatList/Mingo 的渲染条件与账号设置都会读写。 */
+  isOpenMingoAI?: boolean | undefined;
+  /** 超级搜索开关：ChatList/Toolbar 的渲染条件与账号设置都会读写。 */
+  isOpenSearch?: boolean | undefined;
+  /** 工具名称显示开关：ChatList/Toolbar 的渲染条件与账号设置都会读写。 */
+  isShowToolName?: boolean | undefined;
   /** 其余按功能扩展的 UI 开关 */
   [key: string]: unknown;
 }
