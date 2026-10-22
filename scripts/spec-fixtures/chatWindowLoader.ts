@@ -13,7 +13,7 @@ interface Subject {
 }
 type Constructor = new (props: Data) => Subject;
 interface Call { controller: string; action: string; args: Data; options: Data; }
-function makeFixture(options: { uiLeaves?: readonly string[]; moduleOverride?: (file: string, request: string) => unknown; sdkOverride?: (call: Call) => { value: unknown } | undefined } = {}) {
+function makeFixture(options: { uiLeaves?: readonly string[]; realGroupHelpers?: boolean; moduleOverride?: (file: string, request: string) => unknown; sdkOverride?: (call: Call) => { value: unknown } | undefined } = {}) {
   const leaves = new Map<string, unknown>();
   const cache = new Map<string, Data>();
   const calls: Call[] = [], trace: string[] = [], dispatched: Data[] = [];
@@ -75,7 +75,7 @@ function makeFixture(options: { uiLeaves?: readonly string[]; moduleOverride?: (
           if (!leaves.has(base)) leaves.set(base, Object.assign(() => null, { fixturePath: base }));
           return leaves.get(base);
         }
-        if (base === 'src/pages/chat/utils/group' && options.uiLeaves) return { addGroupMembers: () => { throw new Error('Unexpected group mutation'); } };
+        if (base === 'src/pages/chat/utils/group' && options.uiLeaves && !options.realGroupHelpers) return { addGroupMembers: () => { throw new Error('Unexpected group mutation'); } };
         const found = ['', '.ts', '.tsx', '/index.ts', '/index.tsx'].map(ext => base + ext).find(p => fs.existsSync(path.join(harness.ROOT, p)) && fs.statSync(path.join(harness.ROOT, p)).isFile());
         if (found) return load(found);
       }

@@ -31,7 +31,7 @@ export default class InviteOrAddUsers extends Component<any, any> {
         addGroupMembers({
           id: id,
           type: Constant.SESSIONTYPE_GROUP,
-          projectId: project.projectId,
+          projectId: project?.projectId,
         });
       } else {
         alert(_l('当前仅允许群主及管理员邀请新成员'), 2);
