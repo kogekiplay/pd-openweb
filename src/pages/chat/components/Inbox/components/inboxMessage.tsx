@@ -1,12 +1,13 @@
 import _ from 'lodash';
 import { MSGTYPES } from '../constants';
+import type { InboxItem } from '../util';
 import * as Components from './wrappedComp';
 
 const { SystemMessage, PostReply, PostMention, CommonTopic } = Components;
 
-export default function InboxMessage(_props) {
+export default function InboxMessage(_props: { inboxItem: InboxItem }) {
   const { inboxItem } = _props;
-  const inboxType = parseInt(inboxItem.inboxType, 10);
+  const inboxType = parseInt(inboxItem.inboxType as string, 10);
   let props = _.extend({}, inboxItem, {
     inboxType,
   });

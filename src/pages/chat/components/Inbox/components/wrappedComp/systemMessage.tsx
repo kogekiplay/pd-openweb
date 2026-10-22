@@ -56,16 +56,6 @@ const removeWebUrlPrefix = (href: string | undefined) => {
  * @returns
  */
 
-
-/** 应用信息（底部应用名/图标分支真实读取） */
-interface SystemMessageApp {
-  status?: number | undefined;
-  color?: string | undefined;
-  iconUrl?: string | undefined;
-  id?: string | undefined;
-  name?: string | undefined;
-}
-
 /** 关联流程信息（`getWorkflowDetail` 写入并渲染的三字段） */
 interface SystemMessageProcessInfo {
   name: string;
@@ -73,19 +63,8 @@ interface SystemMessageProcessInfo {
   id: string;
 }
 
-/**
- * 系统消息 props：`Message.content`、时间、消息类型与应用/流程上下文；
- * `formatInboxItem` 需要的其余字段由父级透传（调用点做一次边界断言）。
- */
-interface SystemMessageProps {
-  Message?: { content?: string | undefined } | undefined;
-  createTime?: number | string | undefined;
-  readTime?: number | string | undefined;
+interface SystemMessageProps extends InboxItem {
   inboxType: number;
-  app?: SystemMessageApp | null | undefined;
-  processId?: string | null | undefined;
-  status?: unknown;
-  accountId?: string | undefined;
 }
 
 interface SystemMessageState {
@@ -307,9 +286,7 @@ export default class SystemMessage extends PureComponent<SystemMessageProps, Sys
     const { Message = {}, createTime, inboxType, app = null, processId = null, status, readTime } = this.props;
     const { showAddressBook, processInfo } = this.state;
     // 边界断言：父级把收件箱条目字段直接透传为 props（`formatInboxItem` 的入参见其切片）。
-    const { typeName, isFavorite, inboxId } = formatInboxItem(
-      this.props as unknown as InboxItem,
-    );
+    const { typeName, isFavorite, inboxId } = formatInboxItem(this.props);
     const parse = Emotion.parse;
     // 星标在 wire 上是字符串 '0'/'1'（`Star` 按 === '1' 判断）。`InboxItem.isFavorite` 已按真实消费
     // 形状声明为 `string | number | boolean`（服务端与本地两种形态），而 `Star` 的 props 只接受字符串——

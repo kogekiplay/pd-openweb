@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import type { Reducer } from 'redux';
-import type { ChatState } from './types';
 import * as utils from '../utils/';
+import type { ChatState } from './types';
 import type {
   ChatBottomUnreadMessageState,
   ChatGotoMessageState,
@@ -65,7 +65,7 @@ export type ChatAction =
   // 同 REMOVE_CURRENT_SESSION：`removeCurrentInbox(id: string | undefined)`。
   | { type: 'REMOVE_INBOX_SESSION'; id: string | undefined }
   | { type: 'REMOVE_ALL_INBOX_SESSION' }
-  | { type: 'UPDATE_INBOX_SESSION'; id: string; data: Partial<ChatSession> }
+  | { type: 'UPDATE_INBOX_SESSION'; id: string | undefined; data: Partial<ChatSession> }
   /* ── 消息记录 ── */
   // 【载荷形状逐点核对真实 dispatch】全部是**数组**，没有单条形态：
   // - `resetMessage(id, result)`           ← `MessageView` 里 `utils.formatMessages(res)`
@@ -145,10 +145,7 @@ const sessionList = (state: ChatSession[] = [], action: ChatAction): ChatSession
  * @param {*} state
  * @param {*} action
  */
-const toolbarConfig = (
-  state: ChatToolbarConfig = utils.getToolbarConfig(),
-  action: ChatAction,
-): ChatToolbarConfig => {
+const toolbarConfig = (state: ChatToolbarConfig = utils.getToolbarConfig(), action: ChatAction): ChatToolbarConfig => {
   switch (action.type) {
     case 'SET_TOOLBAR_CONFIG':
       return Object.assign({}, state, action.result);
@@ -276,10 +273,7 @@ const messages = (state: ChatMessagesState = {}, action: ChatAction): ChatMessag
  * @param {*} state
  * @param {*} action
  */
-const referMessage = (
-  state: ChatReferMessageState = {},
-  action: ChatAction,
-): ChatReferMessageState => {
+const referMessage = (state: ChatReferMessageState = {}, action: ChatAction): ChatReferMessageState => {
   switch (action.type) {
     case 'SET_REFER_MESSAGE':
       return Object.assign({}, state, { [action.id]: action.message });

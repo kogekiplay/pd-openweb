@@ -1,3 +1,12 @@
+import type { DiscussionReplyParams, DiscussionReplyResponse, InboxEndpoint } from './inboxTypes';
+
+const getDiscussionMsg: InboxEndpoint<DiscussionReplyParams, DiscussionReplyResponse | null | undefined> = function (
+  args: DiscussionReplyParams,
+  options: ApiOptions = {},
+) {
+  return mdyAPI('Discussion', 'GetDiscussionMsg', args, options);
+};
+
 export default {
   /**
    * 添加讨论
@@ -84,9 +93,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getDiscussionMsg: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Discussion', 'GetDiscussionMsg', args, options);
-  },
+  getDiscussionMsg,
   /**
    * 获取源附件（不分页）
    * @param {Object} args 请求参数

@@ -22,7 +22,8 @@ export interface InboxPostTopic {
   replyUserName?: string | undefined;
   commentCount?: string | number | undefined;
   comments?: InboxPostTopic[] | undefined;
-  user?: { accountId?: string | undefined; userMiddleHead?: string | undefined; userName?: string | undefined } | undefined;
+  user?:
+    { accountId?: string | undefined; userMiddleHead?: string | undefined; userName?: string | undefined } | undefined;
   replyUser?: { accountId?: string | undefined; userName?: string | undefined } | undefined;
   allowOperate?: string | undefined;
   askDeleteAttachment?: string | undefined;
@@ -32,7 +33,9 @@ export interface InboxPostTopic {
 
 export interface InboxPost extends InboxPostTopic {
   postType?: number | undefined;
-  MedalPost?: { MedalName?: string | undefined; MedalPath?: string | undefined; MedalDescription?: string | undefined } | undefined;
+  MedalPost?:
+    | { MedalName?: string | undefined; MedalPath?: string | undefined; MedalDescription?: string | undefined }
+    | undefined;
   linkTitle?: string | undefined;
   linkUrl?: string | undefined;
   linkThumb?: string | undefined;
@@ -99,4 +102,47 @@ export interface InboxMessageBody {
   name?: string | undefined;
   projectId?: string | undefined;
   children?: ReactNode;
+}
+
+export interface InboxSystemFields {
+  Message?: { content?: string | undefined } | undefined;
+  readTime?: string | number | undefined;
+  app?:
+    | {
+        status?: number | undefined;
+        color?: string | undefined;
+        iconUrl?: string | undefined;
+        id?: string | undefined;
+        name?: string | undefined;
+      }
+    | null
+    | undefined;
+  processId?: string | null | undefined;
+  status?: unknown;
+  accountId?: string | undefined;
+}
+
+export interface InboxItem extends InboxSystemFields {
+  CreateUser?: InboxUser | undefined;
+  /**
+   * 收件箱里的讨论对象。`wrappedComp/commonTopic` 直接读 name/sourceId/extendsId/sourceType/
+   * message/accountsInMessage/isDeleted/canReply，故逐个声明。
+   */
+  discussion?:
+    | (InboxMessageBody & { entityName?: string | undefined; accountsInMessage?: TopicSource['accountsInMessage'] })
+    | undefined;
+  /** 收件箱条目创建时间（`mergeTopicState` 原样透传给消息组件） */
+  createTime?: string | number | undefined;
+  /** Star 的真实输入和更新值都是字符串标记。 */
+  isFavorite?: '0' | '1' | undefined;
+  /** 后端可能给字符串数字（本函数用 `parseInt` 归一化） */
+  inboxType?: string | number | undefined;
+  inboxId?: string | number | undefined;
+  /**
+   * 动态（Post）类型收件箱条目的载荷。
+   * 【为什么显式声明】此前靠根层 `[key: string]: unknown` 兜住，导致拼错 `inboxTyp`/`accountID`
+   * 等也会被放行（lead 2026-10-21 反例 2）。真实消费点 `postMention.tsx` 会读它，
+   * 故这里按其真实读取形状声明；其余未读字段不再用宽索引兜。
+   */
+  Post?: InboxPost | undefined;
 }

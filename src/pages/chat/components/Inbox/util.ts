@@ -1,9 +1,9 @@
-import type { InboxUser, InboxPost, TopicSource, NormalizedComment, InboxMessageBody } from './payloadTypes';
 // linkify-it 6 去掉了 default export，类要从具名导出取。
 import { LinkifyIt } from 'linkify-it';
 import moment from 'moment';
 import { browserIsMobile, htmlEncodeReg, pathCompletion } from 'src/utils/common';
 import { MSGTYPES, SOURCE_TYPE } from './constants';
+import type { InboxItem, NormalizedComment, TopicSource } from './payloadTypes';
 
 /**
  * 筛选器选中的账号（`quickSelectUser` 回调元素，渲染时读 avatar/fullname）。
@@ -28,28 +28,7 @@ export interface InboxFilterValue {
   appId?: string | null | undefined;
 }
 
-export interface InboxItem {
-  CreateUser?: InboxUser | undefined;
-  /**
-   * 收件箱里的讨论对象。`wrappedComp/commonTopic` 直接读 name/sourceId/extendsId/sourceType/
-   * message/accountsInMessage/isDeleted/canReply，故逐个声明（其余仍在索引签名里）。
-   */
-  discussion?: (InboxMessageBody & { entityName?: string | undefined; accountsInMessage?: TopicSource['accountsInMessage'] }) | undefined;
-  /** 收件箱条目创建时间（`mergeTopicState` 原样透传给消息组件） */
-  createTime?: string | number | undefined;
-  /** Star 的真实输入和更新值都是字符串标记。 */
-  isFavorite?: '0' | '1' | undefined;
-  /** 后端可能给字符串数字（本函数用 `parseInt` 归一化） */
-  inboxType?: string | number | undefined;
-  inboxId?: string | number | undefined;
-  /**
-   * 动态（Post）类型收件箱条目的载荷。
-   * 【为什么显式声明】此前靠根层 `[key: string]: unknown` 兜住，导致拼错 `inboxTyp`/`accountID`
-   * 等也会被放行（lead 2026-10-21 反例 2）。真实消费点 `postMention.tsx` 会读它，
-   * 故这里按其真实读取形状声明；其余未读字段不再用宽索引兜。
-   */
-  Post?: InboxPost | undefined;
-}
+export type { InboxItem } from './payloadTypes';
 
 /**
  * 【真实缺失常量，待 lead 决策】`MSGTYPES` 里没有 `CheckMentioned/CheckReply/CheckComment` 三个键：

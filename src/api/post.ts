@@ -1,3 +1,12 @@
+import type { InboxEndpoint, PostReplyParams, PostReplyResponse } from './inboxTypes';
+
+const getReplyMessage: InboxEndpoint<PostReplyParams, PostReplyResponse | null | undefined> = function (
+  args: PostReplyParams,
+  options: ApiOptions = {},
+) {
+  return mdyAPI('Post', 'GetReplyMessage', args, options);
+};
+
 export default {
   /**
    * 发布动态
@@ -208,9 +217,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getReplyMessage: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Post', 'GetReplyMessage', args, options);
-  },
+  getReplyMessage,
   /**
    * 获取置顶动态
    * @param {Object} args 请求参数

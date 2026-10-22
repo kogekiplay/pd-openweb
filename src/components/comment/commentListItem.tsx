@@ -11,6 +11,7 @@ import { LoadDiv, PreferenceTime, UserHead, UserName } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import confirm from 'ming-ui/components/Dialog/Confirm';
 import discussionAjax from 'src/api/discussion';
+import type { DiscussionReplyResponse, InboxRequest } from 'src/api/inboxTypes';
 import UploadFiles from 'src/components/UploadFiles';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
 import { SOURCE_TYPE } from './config';
@@ -36,7 +37,7 @@ const newWhiteList = Object.assign({}, whiteList, { img: ['src', 'alt', 'title',
 
 // 评论内容列表
 export default class CommentListItem extends React.Component<any, any> {
-  declare ajax: ApiResult | undefined;
+  declare ajax: InboxRequest<DiscussionReplyResponse | null | undefined> | undefined;
   declare singleTalk: HTMLDivElement | null | undefined;
 
   static override propTypes = {
@@ -118,9 +119,9 @@ export default class CommentListItem extends React.Component<any, any> {
       sourceType,
     });
     this.ajax.then(source => {
-      if (source.code === 1) {
+      if (source!.code === 1) {
         this.setState({
-          replayMsg: source.data,
+          replayMsg: source!.data,
         });
       } else {
         alert(_l('获取回复内容失败'), 2);

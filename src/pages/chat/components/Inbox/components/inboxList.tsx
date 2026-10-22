@@ -8,20 +8,44 @@ import { ScrollView } from 'ming-ui';
 import Button from 'ming-ui/components/Button';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import inboxController from 'src/api/inbox';
+import type { InboxMessagesResponse, InboxRequest } from 'src/api/inboxTypes';
+import type { AppDispatch } from 'src/redux/types';
 import * as actions from '../../../redux/actions';
 import { LOADTYPES, NAMES, TYPES } from '../constants';
+import type { InboxFilterValue, InboxItem } from '../util';
 import { isWithinOneHour } from '../util';
 import Message from './inboxMessage';
 
-let InboxList = class InboxList extends React.Component<any, any> {
-  declare ajaxRequest: ApiResult | undefined;
+interface InboxListProps {
+  dispatch: AppDispatch;
+  type?: string | undefined;
+  inboxType?: string | undefined;
+  inboxFavorite?: boolean | undefined;
+  clearUnread?: boolean | undefined;
+  count?: number | undefined;
+  weak_count?: number | undefined;
+  updateNow?: number | undefined;
+  requestNow?: number | undefined;
+  filter?: InboxFilterValue | null | undefined;
+}
+
+export interface InboxListState {
+  failed: boolean;
+  pageIndex: number;
+  list: InboxItem[];
+  isLoading: boolean;
+  hasMoreData: boolean;
+}
+
+class InboxList extends React.Component<InboxListProps, InboxListState> {
+  declare ajaxRequest: InboxRequest<InboxMessagesResponse | null | undefined> | undefined;
 
   static override propTypes = {
     inboxFavorite: PropTypes.bool,
     type: PropTypes.oneOf(_.values(TYPES)),
   };
 
-  constructor(props) {
+  constructor(props: InboxListProps) {
     super(props);
     this.state = {
       failed: false,
@@ -36,7 +60,7 @@ let InboxList = class InboxList extends React.Component<any, any> {
     this.fetchInboxList();
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: InboxListProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (
         !_.isEqual(_.omit(this.props, 'count', 'requestNow'), _.omit(prevProps, 'count', 'requestNow')) ||
@@ -52,6 +76,7 @@ let InboxList = class InboxList extends React.Component<any, any> {
           },
           () => {
             this.fetchInboxList();
+            // The refresh signal retains a missing inbox key and uses the previous dispatch receiver.
             prevProps.dispatch(actions.updateInoxRequestNow(this.props.inboxType));
           },
         );
@@ -80,17 +105,18 @@ let InboxList = class InboxList extends React.Component<any, any> {
       appId,
     });
     this.ajaxRequest
-      .then(({ inboxList }) => {
+      .then(response => {
+        const { inboxList } = response!;
         if (pageIndex === 1) {
           this.setState({
-            hasMoreData: inboxList.length > 0,
-            list: inboxList,
+            hasMoreData: inboxList!.length > 0,
+            list: inboxList!,
             isLoading: false,
           });
         } else {
           this.setState({
-            hasMoreData: inboxList.length > 0,
-            list: list.concat(inboxList),
+            hasMoreData: inboxList!.length > 0,
+            list: list.concat(inboxList!),
             isLoading: false,
           });
         }
@@ -122,19 +148,19 @@ let InboxList = class InboxList extends React.Component<any, any> {
     return undefined;
   }
 
-  renderList() {
+  renderList(): React.ReactNode {
     const { count } = this.props;
     const { list, pageIndex, isLoading, failed } = this.state;
 
     if (list.length) {
-      return this.state.list.map((inboxItem, index: number) => (
+      return this.state.list.map((inboxItem: InboxItem, index: number) => (
         <Fragment key={inboxItem.inboxId}>
           <Message
             {...{
               inboxItem,
             }}
           />
-          {index === count - 1 && (
+          {index === count! - 1 && (
             <Divider className="inboxDivider Font13" plain>
               {_l('以上为新消息')}
             </Divider>
@@ -144,6 +170,9 @@ let InboxList = class InboxList extends React.Component<any, any> {
     } else if (pageIndex === 1 && !isLoading && !failed) {
       return this.renderNullDiv();
     }
+    // 【显式返回 undefined】与原先"落到函数末尾隐式返回 undefined"运行行为完全相同，
+    // 只为满足 noImplicitReturns（不是新增渲染分支）。
+    return undefined;
   }
 
   renderLoading() {
@@ -182,7 +211,10 @@ let InboxList = class InboxList extends React.Component<any, any> {
       return (
         <div className="nullTip commMsg">
           <div className="Font18">{_l('还没有消息')}</div>
-          <div className="Font14 textTertiary">{_l('在这查看所有和%0相关的消息', NAMES[inboxType])}</div>
+          <div className="Font14 textTertiary">
+            {/* The real translator applies String to each argument, including missing and inherited lookup values. */}
+            {(_l as (key: string, ...args: unknown[]) => string)('在这查看所有和%0相关的消息', Reflect.get(NAMES, inboxType as string))}
+          </div>
         </div>
       );
     }
@@ -196,6 +228,5 @@ let InboxList = class InboxList extends React.Component<any, any> {
       </ScrollView>
     );
   }
-};
-InboxList = connect()(InboxList);
-export default InboxList;
+}
+export default connect()(InboxList);

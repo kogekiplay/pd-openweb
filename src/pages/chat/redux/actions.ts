@@ -798,7 +798,7 @@ export const addCurrentInbox = (result: ChatSession) => (dispatch: AppDispatch, 
  * 更新 inbox 时间
  * @param {*} result
  */
-export const updateInoxRequestNow = (id: string) => {
+export const updateInoxRequestNow = (id: string | undefined) => {
   return {
     type: 'UPDATE_INBOX_SESSION',
     id,

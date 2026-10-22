@@ -2,9 +2,21 @@ import React from 'react';
 import Icon from 'ming-ui/components/Icon';
 import inboxController from 'src/api/inbox';
 import { browserIsMobile } from 'src/utils/common';
+import type { InboxMessageBody } from '../../payloadTypes';
 
-export default class Star extends React.Component<any, any> {
-  constructor(props) {
+/** `Star` 的 props（父级透传收件箱条目的星标与 id） */
+interface StarProps {
+  /** 后端给字符串 '0'/'1'（渲染处按 === '1' 判断） */
+  isFavorite?: InboxMessageBody['isFavorite'];
+  inboxId?: string | number | undefined;
+}
+
+interface StarState {
+  isFavorite?: InboxMessageBody['isFavorite'];
+}
+
+export default class Star extends React.Component<StarProps, StarState> {
+  constructor(props: StarProps) {
     super(props);
     this.state = {
       isFavorite: props.isFavorite,
@@ -12,7 +24,7 @@ export default class Star extends React.Component<any, any> {
     this.clickHandler = this.clickHandler.bind(this);
   }
 
-  clickHandler(flag: string) {
+  clickHandler(flag: NonNullable<InboxMessageBody['isFavorite']>) {
     const { inboxId } = this.props;
 
     return () => {

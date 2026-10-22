@@ -47,8 +47,8 @@ class PostMain extends React.Component<any, any> {
     const postID = this.props.postItem.postID;
 
     postAjax.getReplyMessage({ postID, commentID: replyID }).then(data => {
-      if (data.Message) {
-        this.setState({ message: data.Message });
+      if (data!.Message) {
+        this.setState({ message: data!.Message });
       } else {
         this.setState({ message: _l('内容已删除') });
       }

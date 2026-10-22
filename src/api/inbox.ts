@@ -1,3 +1,19 @@
+import type { InboxEndpoint, InboxFavoriteParams, InboxMessagesParams, InboxMessagesResponse } from './inboxTypes';
+
+const setInboxFavorite: InboxEndpoint<InboxFavoriteParams, boolean> = function (
+  args: InboxFavoriteParams,
+  options: ApiOptions = {},
+) {
+  return mdyAPI('Inbox', 'SetInboxFavorite', args, options);
+};
+
+const getInboxMessage: InboxEndpoint<InboxMessagesParams, InboxMessagesResponse | null | undefined> = function (
+  args: InboxMessagesParams,
+  options: ApiOptions = {},
+) {
+  return mdyAPI('Inbox', 'GetInboxMessage', args, options);
+};
+
 export default {
   /**
    * 设置Inbox加星状态
@@ -8,9 +24,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  setInboxFavorite: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Inbox', 'SetInboxFavorite', args, options);
-  },
+  setInboxFavorite,
   /**
    * 获取消息
    * @param {Object} args 请求参数
@@ -31,7 +45,5 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getInboxMessage: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Inbox', 'GetInboxMessage', args, options);
-  },
+  getInboxMessage,
 };
