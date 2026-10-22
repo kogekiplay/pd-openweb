@@ -1,11 +1,13 @@
 import { Component } from 'react';
+import type { ChatMessage, ChatSession } from '../../../redux/types';
+import FileMessage from '../FileMessage';
 import * as utils from '../../../utils/';
 import { handleMessageFilePreview } from '../MessageToolbar';
 import './index.less';
 
-const formatTime = (seconds = 0) => {
-  let minute = parseInt((seconds / 60) % 60);
-  let second = parseInt(seconds % 60);
+const formatTime = (seconds: number = 0) => {
+  let minute: number | string = parseInt(String((seconds / 60) % 60));
+  let second: number | string = parseInt(String(seconds % 60));
 
   minute = minute >= 10 ? minute : `0${minute}`;
   second = second >= 10 ? second : `0${second}`;
@@ -17,10 +19,15 @@ export interface VideoMessageState {
   loading: boolean;
 }
 
-export default class VideoMessage extends Component<any, VideoMessageState> {
+export interface VideoMessageProps {
+  message: ChatMessage;
+  session: ChatSession;
+}
+
+export default class VideoMessage extends Component<VideoMessageProps, VideoMessageState> {
   declare _isMounted: boolean | undefined;
 
-  constructor(props) {
+  constructor(props: VideoMessageProps) {
     super(props);
     this.state = {
       loading: false,
@@ -29,7 +36,9 @@ export default class VideoMessage extends Component<any, VideoMessageState> {
   override componentDidMount() {
     const { loading } = this.state;
     const { session, message } = this.props;
-    const { video_pic } = message.msg.files;
+    const files = message.msg?.files;
+    if (files === undefined || files === null) return;
+    const { video_pic } = files;
 
     if (video_pic && !loading) {
       this._isMounted = true;
@@ -49,10 +58,13 @@ export default class VideoMessage extends Component<any, VideoMessageState> {
       });
     }
   }
+  override componentWillUnmount() {
+    this._isMounted = false;
+  }
   handleMessageFilePreview() {
     handleMessageFilePreview.call(this);
   }
-  handleLoadImage(url) {
+  handleLoadImage(url: string) {
     return new Promise(resolve => {
       const image = new Image();
       image.onload = resolve;
@@ -60,7 +72,9 @@ export default class VideoMessage extends Component<any, VideoMessageState> {
     });
   }
   override render() {
-    const { files } = this.props.message.msg;
+    const { message, session } = this.props;
+    const files = message.msg?.files;
+    if (files === undefined || files === null) return <FileMessage message={message} session={session} />;
     const { video_pic, video_duration, video_width, video_height } = files;
     const size = {
       width: (video_width || 2) > (video_height || 1) ? 240 : 180,

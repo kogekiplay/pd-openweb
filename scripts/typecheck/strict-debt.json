@@ -1481,7 +1481,6 @@
     "src/pages/chat/components/Message/MessageToolbar/index.tsx",
     "src/pages/chat/components/Message/SystemMessage/index.tsx",
     "src/pages/chat/components/Message/TextMessage/index.tsx",
-    "src/pages/chat/components/Message/VideoMessage/index.tsx",
     "src/pages/chat/components/Message/WorksheetFileMessage/index.tsx",
     "src/pages/chat/components/MessageSendText/index.tsx",
     "src/pages/chat/components/MyStatus/CustomDatePicker.tsx",

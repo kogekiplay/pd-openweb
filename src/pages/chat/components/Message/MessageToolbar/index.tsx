@@ -1,4 +1,6 @@
 import { Component } from 'react';
+import type { ChatMessage, ChatSession } from '../../../redux/types';
+import { contextProperty, contextQueryIndex, contextMegabytes } from './previewContextNative';
 import cx from 'classnames';
 import copy from 'src/utils/copyToClipboard';
 import moment from 'moment';
@@ -16,12 +18,12 @@ import type { MentionsInputElement } from 'src/components/MentionsInput';
 
 const confirm = Dialog.confirm;
 
-const getImageContextIndex = (id, list) => {
+const getImageContextIndex = (id: ChatMessage['id'], list: unknown[]) => {
   let index = -1;
 
   for (let i = 0, length = list.length; i < length; i++) {
     index++;
-    if (list[i].id == id) {
+    if (contextProperty(list[i], 'id') == id) {
       break;
     }
   }
@@ -29,35 +31,38 @@ const getImageContextIndex = (id, list) => {
   return index;
 };
 
-const formatMessage = (id, res) => {
-  res = res.filter(item => item.msg && item.msg.files);
+const formatMessage = (id: ChatMessage['id'], res: unknown[]) => {
+  res = res.filter(item => contextProperty(item, 'msg') && contextProperty(contextProperty(item, 'msg'), 'files'));
   const index = getImageContextIndex(id, res);
-  res = res.map(item => {
-    const { files } = item.msg;
-    const isPicture = RegExpValidator.fileIsPicture(`.${RegExpValidator.getExtOfFileName(files.name)}`);
-    const bigImg = parseInt(files.size / 1024 / 1024) >= 20;
+  const attachments = res.map(item => {
+    const files = contextProperty(contextProperty(item, 'msg'), 'files');
+    const isPicture = RegExpValidator.fileIsPicture(`.${RegExpValidator.getExtOfFileName(contextProperty(files, 'name'))}`);
+    const bigImg = parseInt(String(contextMegabytes(contextProperty(files, 'size')))) >= 20;
     return {
-      fileid: files.id || '',
-      name: files.name || '',
+      fileid: contextProperty(files, 'id') || '',
+      name: contextProperty(files, 'name') || '',
       path: isPicture
         ? bigImg
-          ? files.url
-          : `${files.url}${files.url.indexOf('?') >= 0 ? '&' : '?'}imageMogr2/auto-orient`
-        : files.url,
-      size: files.size,
+          ? contextProperty(files, 'url')
+          : `${contextProperty(files, 'url')}${Number(contextQueryIndex(contextProperty(files, 'url'))) >= 0 ? '&' : '?'}imageMogr2/auto-orient`
+        : contextProperty(files, 'url'),
+      size: contextProperty(files, 'size'),
       previewAttachmentType: 'QINIU',
     };
   });
   return {
-    res,
+    res: attachments,
     index,
   };
 };
 
-/** 由 File / Image / VideoMessage 以 handleMessageFilePreview.call(this) 调用，this 是那个类组件实例。
- *  三个宿主都是 Component<any, any>，React 19 的类型里 Readonly<any> 是索引签名、满足不了必填属性，
- *  所以这里如实写成「一个类组件实例」，读 props.message / props.session。 */
-export const handleMessageFilePreview = function (this: Component<any, any>) {
+/** Raw SDK members are consumed lazily; these finite fields never certify a whole message DTO. */
+export type ImageContextPreviewAttachment = ReturnType<typeof formatMessage>['res'][number];
+export interface MessageFilePreviewHost {
+  readonly props: { readonly message: ChatMessage; readonly session: ChatSession };
+}
+/** Called by the actual File, Image and Video class instances. */
+export const handleMessageFilePreview = function (this: MessageFilePreviewHost) {
   const { message, session } = this.props;
   const { id } = message;
 
@@ -83,11 +88,11 @@ export const handleMessageFilePreview = function (this: Component<any, any>) {
         },
         {
           preLoadMoreAttachments() {
-            return new Promise(resolve => {
+            return new Promise<ImageContextPreviewAttachment[]>((resolve, reject) => {
               ajax
                 .getImageContext({
                   ...params,
-                  msgid: originalRes[0].id,
+                  msgid: contextProperty(originalRes[0], 'id'),
                   type: 1,
                 })
                 .then(prevRes => {
@@ -96,22 +101,22 @@ export const handleMessageFilePreview = function (this: Component<any, any>) {
                   prevRes.reverse();
                   prevRes.forEach(item => originalRes.unshift(item));
                   resolve(res);
-                });
+                }).catch(reject);
             });
           },
           loadMoreAttachments() {
-            return new Promise(resolve => {
+            return new Promise<ImageContextPreviewAttachment[]>((resolve, reject) => {
               ajax
                 .getImageContext({
                   ...params,
-                  msgid: originalRes[originalRes.length - 1].id,
+                  msgid: contextProperty(originalRes[originalRes.length - 1], 'id'),
                   type: 2,
                 })
                 .then(nextRes => {
                   nextRes.forEach(item => originalRes.push(item));
                   const { res } = formatMessage(id, nextRes);
                   resolve(res);
-                });
+                }).catch(reject);
             });
           },
         },

@@ -1,0 +1,17 @@
+# Chat 预览上下文原始边界与失败重试（2026-10-23）
+
+基线 f925407bdfcddb8c879a55c5da39a885ef88d34a；协作观察固定495ccba47f7e61435b8b27b0f8314cb1eea4e861。独立核实际File/Image/Video宿主→getImageContext→格式化→previewAttachments翻页→实际AttachmentsPreview动作/局部Redux。只交付此完整子链及Video有限props，不称整个MessageToolbar或整个通用预览系统已经严格化；Toolbar其余分享/DOM/按钮仍有29条诊断与旧any，需要继续。
+
+实际getImageContext仅检查数组外形，不能把元素宣称为已验证ChatMessage。固定GET/customParseResponse配置对应src/common/global.ts的实际异步Promise<unknown>协议；窗口旧any声明是存量边界，没有改整个SDK或把unknown转成DTO。端点输出Promise<unknown[]>，非数组仍新建空数组，数组保持同一对象；原始行id只作为不解释的SDK翻页锚点，session id仍有限字符串。原SDK receiver、请求构造顺序、默认值、同步失败和原生then失败保留。
+
+formatter逐访问消费未知成员，contextProperty只做原生GetV：非空值Object装箱、Reflect.get使用原始receiver，nullish目标仍原生TypeError；不验证/克隆整行，不提前遍历字段。preview字段键有限，原样传递的path/size等保持unknown，不宣称已解码URL/数字。文件扩展名三个函数实际先String处理输入，公开签名因此接受unknown，Babel整模块不变。
+
+原大小算式先进行原生数值转换；单参Math.max保留数字/数字字符串/缺项/对象valueOf及Symbol、BigInt（包括对象返回BigInt）的原生失败，再执行同样除法。仅对最终数值商在parseInt前显式String，保持指数表示等原parseInt行为。URL仍按原次序读取两次，原indexOf查找/调用保留receiver及返回值；与0比较前的Number保留包括BigInt结果的符号比较语义。getter、原始值/引用、原生错误类别与自定义异常同一对象由完整产品前后规格约束；不做断言桥、复制DTO或新增宽索引。
+
+真实行为修复：上下页new Promise必须把SDK拒绝及then回调中的格式化失败传回外层，否则永远pending。追到实际预览动作后还发现catch只提示错误、不清isLoadingMore；新增失败动作只复位加载状态，保留附件、当前位置和loadMoreFinished，允许重试。正常prev pop→format→reverse→unshift、next push→format及原数组/行引用顺序保持。Video公开props复用ChatMessage/ChatSession，视频字段按实际URL/时长/尺寸角色（保留数字字符串）登记；缺files回退真实FileMessage，卸载后原Image成功回执不再写state。时长parseInt只对已数值的取模结果显式String。
+
+证据目录：/Users/kogeki/dev/HAP-工作记录/20261023-message-preview-toolbar。正常基线/候选各完整7项，覆盖三宿主、实际SDK、翻页数组变更、getter/primitive receiver/BigInt/原生失败和Video实际加载/渲染。SDK拒绝、格式化失败、Video缺项、卸载及真实预览动作/Redux失败重试共5类旧反例实际退出1，候选通过；含仅修外层Promise仍不能清UI加载状态的中间真实失败。SDK与DOM/UI叶子受控，无真实业务/会话写入。规格保持进程至main完成，不改30秒或并发4。
+
+8个完整模块Babel字节相同；Toolbar3函数、Ajax1函数、预览动作1函数/Reducer1函数、Video3成员与纯数字String转换逐一读完整差异，其余语句/类成员AST相同，新增原生有限操作体单独审查。公开正负/非any探针自身0、传递程序25227存量，编译实际退出1；协作源的直接导出NoAny探针实际TS2344，源回调的数组注解/非空断言不代替合同核验，本批不新增源提交/路径接收。
+
+隔离raw strict49052→49033、Chat318→299，逐(文件,错误码)新增0；Video7→0，Toolbar41→29。strict-debt只精确移除Video一个已清零文件，其余项和门禁/配置/既有失败隔离保持。最终源码SHA、完整输入摘要、清洁提交直接strict、正常hook推送、正式release与候选/回滚材料在本目录最终回执和共享当前状态绑定；未部署包不称上线，全仓总目标active。

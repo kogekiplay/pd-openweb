@@ -13,11 +13,11 @@ interface RegExpValidatorType {
   isVideo: (fileExt?: string) => boolean;
   /** 判断 webpack/url-loader 意义上的"需要走请求"的 url */
   isUrlRequest: (url?: string) => boolean;
-  getExtOfFileName: (fileName?: string) => string;
-  getNameOfFileName: (fileName?: string) => string;
+  getExtOfFileName: (fileName?: unknown) => string;
+  getNameOfFileName: (fileName?: unknown) => string;
   /** 可执行文件等危险扩展名一律不放行 */
   validateFileExt: (fileExt?: string) => boolean;
-  fileIsPicture: (fileExt?: string) => boolean;
+  fileIsPicture: (fileExt?: unknown) => boolean;
 }
 
 const RegExpValidator = {} as RegExpValidatorType;
@@ -59,7 +59,7 @@ RegExpValidator.isUrlRequest = (url?: string) => {
  * @param {string} fileName - 文件名
  * @returns {string} - 文件扩展名
  */
-RegExpValidator.getExtOfFileName = (fileName = '') => {
+RegExpValidator.getExtOfFileName = (fileName: unknown = '') => {
   return get(String(fileName).match(/\.([0-9a-z_A-Z]+)$/), '1') || '';
 };
 
@@ -68,7 +68,7 @@ RegExpValidator.getExtOfFileName = (fileName = '') => {
  * @param {string} fileName - 文件名
  * @returns {string} - 文件名（不包含扩展名）
  */
-RegExpValidator.getNameOfFileName = (fileName = '') => {
+RegExpValidator.getNameOfFileName = (fileName: unknown = '') => {
   const base = String(fileName).split(/[\\/]/).pop() || '';
   const dot = base.lastIndexOf('.');
   return dot > 0 ? base.slice(0, dot) : base;
@@ -88,7 +88,7 @@ RegExpValidator.validateFileExt = function (fileExt = '') {
  * @param {string} fileExt - 文件扩展名
  * @returns {boolean} - 文件扩展名是否有效
  */
-RegExpValidator.fileIsPicture = function (fileExt = '') {
+RegExpValidator.fileIsPicture = function (fileExt: unknown = '') {
   return /^\.(jpg|gif|png|jpeg|bmp|webp|heic|heif|svg|tif|tiff)$/.test(String(fileExt).toLowerCase());
 };
 

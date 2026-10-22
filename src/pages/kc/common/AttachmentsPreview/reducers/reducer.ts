@@ -137,6 +137,7 @@ function isLoadingMore(state = false, action: ReduxAction) {
       return true;
     case 'FILE_PREVIEW_INIT':
     case 'FILE_PREVIEW_LOAD_MORE_SUCESS':
+    case 'FILE_PREVIEW_LOAD_MORE_FAILURE':
       return false;
     default:
       return state;

@@ -472,6 +472,7 @@ function loadMoreAttachments(state, dispatch: AttachmentsPreviewDispatch, isPre?
         // }
       })
       .catch(() => {
+        dispatch({ type: 'FILE_PREVIEW_LOAD_MORE_FAILURE' });
         alert(_l('加载更多失败'), 2);
       });
   }

@@ -45,7 +45,8 @@ interface ChatSessionItemParam {
 interface ImageContextParams {
   isGroup?: boolean | undefined;
   id?: string | undefined;
-  msgid?: string | number | undefined;
+  /** Raw context row IDs are forwarded as opaque SDK anchors, without interpreting their shape. */
+  msgid?: unknown;
   size?: number | undefined;
   /** 0 全部 / 1 上文 / 2 下文 */
   type?: number | undefined;
@@ -253,11 +254,11 @@ export const getMessageById = (conf: {
  * 获取消息流中的文件
  * @param {*} conf
  */
-export const getImageContext = (conf: ImageContextParams) => {
+export const getImageContext = (conf: ImageContextParams): Promise<unknown[]> => {
   const param: {
     groupid?: string | number;
     accountid?: string | number;
-    msgid?: string | number;
+    msgid?: unknown;
     size?: number;
     /** 0 全部 / 1 上文 / 2 下文 */
     type?: number;
@@ -275,21 +276,21 @@ export const getImageContext = (conf: ImageContextParams) => {
   param.msgid = conf.msgid || '';
   param.size = conf.size || 20;
   param.type = conf.type || 0; // 0：表示全部上下文图片消息；1：表示上文图片消息；2：表示下文图片消息
-  return window
-    .mdyAPI('', '', param, {
-      customParseResponse: true,
-      ajaxOptions: {
-        type: 'GET',
-        url: _.get(window, 'config.HTTP_SERVER') + url,
-      },
-    })
-    .then((res: unknown) => {
-      if (!_.isArray(res)) {
-        res = [];
-      }
+  // This fixed GET/customParseResponse mode uses the actual asynchronous SDK ABI; payload members remain unknown.
+  const request: Promise<unknown> = window.mdyAPI('', '', param, {
+    customParseResponse: true,
+    ajaxOptions: {
+      type: 'GET',
+      url: _.get(window, 'config.HTTP_SERVER') + url,
+    },
+  });
+  return request.then((res: unknown): unknown[] => {
+    if (!_.isArray(res)) {
+      return [];
+    }
 
-      return res;
-    });
+    return res;
+  });
 };
 
 /**
