@@ -1,6 +1,6 @@
 /** Actual FileMessage/ImageMessage modules with controlled upload/image/preview hosts. */
 const assert:typeof import('node:assert/strict')=require('node:assert/strict');
-const {makeMessageChain}=require('../../scripts/spec-fixtures/messageReferKcLoader.ts') as {makeMessageChain:import('./scripts/spec-fixtures/messageReferKcLoader').MakeMessageChain};
+const {makeMessageChain}=require('../../scripts/spec-fixtures/messageReferKcLoader.ts') as {makeMessageChain:import('../../scripts/spec-fixtures/messageReferKcLoader').MakeMessageChain};
 type Data=Record<string,unknown>;let passed=0;async function check(name:string,fn:()=>unknown|Promise<unknown>){await fn();passed++;console.log('  ✓ '+name);}
 async function main(){
  await check('FileMessage empty attachment renders the actual disabled branch and preserves message/session references',()=>{const f=makeMessageChain(),message={msg:{files:null},metadata:{kept:true}},session={id:'s'},item=f.instance(f.type('src/pages/chat/components/Message/FileMessage/index.tsx'),{message,session});const tree=item.render() as {props:Data};assert.equal(tree.props['aria-disabled'],true);assert.equal(item.props['message'],message);assert.equal(item.props['session'],session);assert.doesNotThrow(()=>item.handleMessageFilePreview());});
