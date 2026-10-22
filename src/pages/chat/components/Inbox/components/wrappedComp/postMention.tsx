@@ -156,17 +156,10 @@ export default class PostMention extends React.Component<InboxItem, InboxMessage
               <img className="lazy" src={medalPath} />
             </div>
             <div>
-              {/* 擦除标记：既有 style 用连字符键（原 any 直接传），运行期行为不变。 */}
-              <p className="colorPrimary mTop20" style={{ 'font-size': '12px', 'line-height': '20px' } as React.CSSProperties}>
+              <p className="colorPrimary mTop20" style={{ fontSize: '12px', lineHeight: '20px' }}>
                 {medalName}
               </p>
-              {/* 擦除标记：【既有 bug，仅记录】这里把 style 对象传给了 className（原 any 直接传）；
-                  为保持运行行为不变只做类型擦除，是否改回 style 交 lead。 */}
-              <p
-                className={
-                  { color: 'var(--color-text-secondary)', 'font-size': '12px', 'line-height': '20px' } as unknown as string
-                }
-              >
+              <p style={{ color: 'var(--color-text-secondary)', fontSize: '12px', lineHeight: '20px' }}>
                 {description}
               </p>
             </div>

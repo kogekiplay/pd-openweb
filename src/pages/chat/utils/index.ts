@@ -722,7 +722,11 @@ export const windowOpen = (id, name: string, isGroup: boolean) => {
   const iTop = (window.screen.availHeight - 660) / 2; // 获得窗口的垂直位置;
   const iLeft = (window.screen.availWidth - 930) / 2; // 获得窗口的水平位置;
   const options = 'width=930,height=598,toolbar=no,menubar=no,location=no,status=no,top=' + iTop + ',left=' + iLeft;
-  window.open(pathCompletion(`/chat_window?id=${id}&name=${name}&type=${type}`), '_blank', options);
+  window.open(
+    pathCompletion(`/chat_window?id=${encodeURIComponent(String(id))}&name=${encodeURIComponent(name)}&type=${type}`),
+    '_blank',
+    options,
+  );
 };
 
 /**
