@@ -21,6 +21,7 @@ import './GlobalSearchAllContent.less';
 
 const ClickAwayable = ClickAway;
 export default class GlobalSearchAllContent extends Component<any, any> {
+  private rightRequestVersion = 0;
   declare leftAjax: ApiResult | null | undefined;
   declare rightAjax: ApiResult | undefined;
 
@@ -266,15 +267,26 @@ export default class GlobalSearchAllContent extends Component<any, any> {
     const { searchKeyword } = this.state;
 
     this.rightAjax && this.rightAjax.abort();
+    const requestVersion = ++this.rightRequestVersion;
     this.rightAjax = CommonAjax.getAllChatAddressbookByKeywords({
       keywords: searchKeyword,
     });
     this.rightAjax.then(result => {
+      if (requestVersion !== this.rightRequestVersion || searchKeyword !== this.state.searchKeyword) return;
       this.setState({
         rightLoading: false,
         rightResult: result,
       });
     });
+  }
+
+  override componentWillUnmount() {
+    try {
+      this.rightAjax && this.rightAjax.abort();
+    } finally {
+      this.rightRequestVersion += 1;
+      this.requestDebounce.cancel();
+    }
   }
 
   renderRightContent() {
@@ -307,9 +319,11 @@ export default class GlobalSearchAllContent extends Component<any, any> {
       );
     }
 
-    const { groups = { list: [] }, accounts = { list: [] } } = rightResult;
+    const { groups: rawGroups, accounts: rawAccounts } = rightResult;
+    const groups = rawGroups ?? { list: [] };
+    const accounts = rawAccounts ?? { list: [] };
 
-    if (accounts.list.length || groups.list.length) {
+    if ((accounts.list ?? []).length || (groups.list ?? []).length) {
       return (
         <ScrollView className="globalSearchAllContentUserListCon">
           <UserList

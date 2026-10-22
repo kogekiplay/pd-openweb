@@ -11,7 +11,7 @@ import type { AppDispatch, RootState } from 'src/redux/types';
 import type { ScrollViewHandle } from 'ming-ui/components/ScrollView';
 import type { ScrollInfo } from 'ming-ui/components/ScrollView/types';
 import type { ChatRawMessageWire } from '../../redux/types';
-import type { AddressBookRequest, AddressBookSearchResult } from 'src/api/addressBookTypes';
+import type { AddressBookRequest, AddressBookSearchResult, AddressBookSearchEntry, AddressBookSearchRow } from 'src/api/addressBookTypes';
 import * as ajax from '../../utils/ajax';
 import './index.less';
 
@@ -34,28 +34,13 @@ const SearchWrap = styled.div`
 `;
 
 
-/** 搜索结果里的联系人（该接口没有权威类型，这里只声明本组件真实读取的字段） */
-interface AddressAccount {
-  accountId?: string | undefined;
-  user?: { userId?: string | undefined } | undefined;
-  avatarMiddle?: string | undefined;
-  fullname?: string | undefined;
-  profession?: string | undefined;
-  companyName?: string | undefined;
-}
-
-/** 搜索结果里的群组 */
-interface AddressGroup {
-  groupId?: string | undefined;
-  avatar?: string | undefined;
-  name?: string | undefined;
-}
-
-type AddressBookEntry = AddressAccount | AddressGroup;
+type AddressAccount = AddressBookSearchEntry;
+type AddressGroup = AddressBookSearchEntry;
+type AddressBookEntry = AddressBookSearchRow;
 
 /** 通讯录搜索接口的返回形状：两个列表（`flatten` 与 `renderProject` 真实读取） */
 type AddressBookResult = AddressBookSearchResult;
-interface SearchMemberProps {
+export interface SearchMemberProps {
   /** `toolbarConfig.sessionListVisible`（connect 注入） */
   sessionListVisible: boolean;
   /** 由使用方传入的嵌入模式标记 */
@@ -67,10 +52,10 @@ interface SearchMemberProps {
   searchValue?: unknown;
   setSearchValue?: unknown;
   addGroupSession: (groupId: string, msg?: ChatRawMessageWire) => void;
-  addUserSession: (id: string, msg?: ChatRawMessageWire) => void;
+  addUserSession: (id: string | undefined, msg?: ChatRawMessageWire) => void;
 }
 
-interface SearchMemberState {
+export interface SearchMemberState {
   value: string;
   loading: boolean;
   /** 初值是占位 `[]`；首次搜索完成后才写入真实结果对象（`renderProject` 只在非 loading 时渲染） */
@@ -83,16 +68,13 @@ interface SearchMemberState {
 
 const flatten = (res: AddressBookResult): AddressBookEntry[] => {
   const result: AddressBookEntry[] = [];
-  result.push(...res.accounts.list, ...res.groups.list);
+  result.push(...(res.accounts?.list ?? []), ...(res.groups?.list ?? []));
   return result;
 };
 
 class SearchMember extends Component<SearchMemberProps, SearchMemberState> {
-  /**
-   * 正在飞的搜索请求；换关键字时先 abort 掉上一条。
-   * 用全局 `ApiResult`（`Promise<any> & { abort }`，见 types/global.d.ts）——它就是
-   * `mdyAPI` 返回值的真实形状；`then` 的结果再按本组件消费的形状注解。
-   */
+  private requestVersion = 0;
+  /** Same ordinary SDK request; no metadata index or any receipt bridge. */
   ajax: AddressBookRequest<AddressBookSearchResult> | null = null;
   declare scrollView: ScrollViewHandle | null | undefined;
 
@@ -133,8 +115,10 @@ class SearchMember extends Component<SearchMemberProps, SearchMemberState> {
     const { value } = this.state;
     this.setState({ loading: true });
     this.ajax && this.ajax.abort();
+    const requestVersion = ++this.requestVersion;
     this.ajax = ajax.getAllAddressbookByKeywords(value.trim());
     this.ajax.then((result: AddressBookResult) => {
+      if (requestVersion !== this.requestVersion || value !== this.state.value) return;
       this.setState({
         loading: false,
         result,
@@ -142,6 +126,14 @@ class SearchMember extends Component<SearchMemberProps, SearchMemberState> {
       });
     });
   };
+  override componentWillUnmount() {
+    try {
+      this.ajax && this.ajax.abort();
+    } finally {
+      this.requestVersion += 1;
+      this.handleChange.cancel();
+    }
+  }
   adjustViewport(direction: string) {
     const { flattenResult, currentIndex } = this.state;
     // 擦除标记：`|| {}` 兜底在取不到滚动信息时给空对象（原实现就是这样），断言只是把声明接上。
@@ -215,32 +207,30 @@ class SearchMember extends Component<SearchMemberProps, SearchMemberState> {
         },
       );
     } else if (which === 13 && flattenResult.length && currentIndex !== -1) {
-      // 擦除标记：该分支已确保 currentIndex !== -1（且有结果）；缺元素时原实现同样传 undefined。
-      this.handleOpenSession(flattenResult[currentIndex]!);
+      this.handleOpenSession(flattenResult[currentIndex]);
     } else if (which === 27) {
       this.setState({ value: '' });
     }
   };
   handleOpenSession(data: AddressBookEntry) {
-    // 擦除标记：条目要么是群组要么是联系人（原 any 直接解构）；缺字段时与原实现一致得到 undefined。
-    const { groupId, accountId } = data as AddressAccount & AddressGroup;
+    if (data === null || data === undefined) return;
+    const { groupId, accountId } = data;
 
     if (groupId) {
       const msg: ChatRawMessageWire = {
         to: groupId,
-        avatar: (data as AddressGroup).avatar,
-        groupname: (data as AddressGroup).name,
+        avatar: data.avatar,
+        groupname: data.name,
         msg: { con: '' },
       };
       this.props.addGroupSession(groupId, msg);
     } else {
       const msg: ChatRawMessageWire = {
-        logo: (data as AddressAccount).avatarMiddle,
-        uname: (data as AddressAccount).fullname,
+        logo: data.avatarMiddle,
+        uname: data.fullname,
         sysType: 1,
       };
-      // 擦除标记：非群组条目必有 accountId（原 any 直接传）。
-      this.props.addUserSession(accountId as string, msg);
+      this.props.addUserSession(accountId, msg);
     }
 
     this.setState({ value: '' });
@@ -288,15 +278,13 @@ class SearchMember extends Component<SearchMemberProps, SearchMemberState> {
     );
   }
   renderProject() {
-    // 擦除标记：`renderProject` 只在搜索完成（`loading=false`）后渲染，此时 `result` 已是结果对象；
-    // 初始占位 `[]` 不会被读（原实现同样如此）。
-    const { result, loading, flattenResult, currentIndex, accountsVisible, groupsVisible } = this
-      .state as SearchMemberState & { result: AddressBookResult };
+    const { result, loading, flattenResult, currentIndex, accountsVisible, groupsVisible } = this.state;
+    if (Array.isArray(result)) return null;
     const currentResult: Partial<AddressAccount> & Partial<AddressGroup> = flattenResult[currentIndex] || {};
-    const count = result.groups.list.length + result.accounts.list.length;
+    const count = (result.groups?.list ?? []).length + (result.accounts?.list ?? []).length;
     return (
       <div className="content">
-        {!!result.accounts.list.length && (
+        {!!(result.accounts?.list ?? []).length && (
           <div>
             <div
               className="project-container-head flexRow alignItemsCenter"
@@ -304,16 +292,16 @@ class SearchMember extends Component<SearchMemberProps, SearchMemberState> {
             >
               <div className="flex bold">
                 {_l('联系人')}
-                <span className="mLeft5 colorPrimary">{result.accounts.list.length}</span>
+                <span className="mLeft5 colorPrimary">{(result.accounts?.list ?? []).length}</span>
               </div>
               <Icon icon={accountsVisible ? 'arrow-up-border' : 'arrow-down-border'} className="textSecondary Font16" />
             </div>
             {accountsVisible && (
-              <div>{result.accounts.list.map((account: AddressAccount) => this.renderAccount(account, currentResult))}</div>
+              <div>{(result.accounts?.list ?? []).map(account => account === null || account === undefined ? null : this.renderAccount(account, currentResult))}</div>
             )}
           </div>
         )}
-        {!!result.groups.list.length && (
+        {!!(result.groups?.list ?? []).length && (
           <div>
             <div
               className="project-container-head flexRow alignItemsCenter"
@@ -321,12 +309,12 @@ class SearchMember extends Component<SearchMemberProps, SearchMemberState> {
             >
               <div className="flex bold">
                 {_l('聊天/群组')}
-                <span className="mLeft5 colorPrimary">{result.groups.list.length}</span>
+                <span className="mLeft5 colorPrimary">{(result.groups?.list ?? []).length}</span>
               </div>
               <Icon icon={groupsVisible ? 'arrow-up-border' : 'arrow-down-border'} className="textSecondary Font16" />
             </div>
             {groupsVisible && (
-              <div>{result.groups.list.map((group: AddressGroup) => this.renderGroup(group, currentResult))}</div>
+              <div>{(result.groups?.list ?? []).map(group => group === null || group === undefined ? null : this.renderGroup(group, currentResult))}</div>
             )}
           </div>
         )}

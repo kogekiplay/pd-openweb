@@ -42,10 +42,32 @@ export interface AddressBookSearchGroup {
   name?: string | undefined;
 }
 
-export interface AddressBookSearchResult {
-  accounts: { list: AddressBookAccount[] };
-  groups: { list: AddressBookSearchGroup[] };
+/** One finite raw view for mixed search records; all fields are read by SearchMember or GlobalSearch.UserList. */
+export interface AddressBookSearchEntry extends AddressBookAccount, AddressBookSearchGroup {
+  user?: { userId?: string | undefined } | null | undefined;
+  avatarMiddle?: string | undefined;
+  profession?: string | undefined;
+  userHead?: string | undefined;
+  userName?: string | undefined;
+  userJob?: string | undefined;
+  groupID?: string | undefined;
+  groupAvatar?: string | undefined;
+  groupName?: string | undefined;
 }
+export type AddressBookSearchRow = AddressBookSearchEntry | null | undefined;
+export interface AddressBookSearchPartition {
+  allCount?: number | undefined;
+  list?: AddressBookSearchRow[] | null | undefined;
+}
+export interface AddressBookSearchResult {
+  accounts?: AddressBookSearchPartition | null | undefined;
+  groups?: AddressBookSearchPartition | null | undefined;
+}
+export interface AddressBookChatKeywordParams {
+  keywords?: string | undefined;
+  pageSize?: number | undefined;
+}
+export type AddressBookChatKeywordEndpoint = InboxEndpoint<AddressBookChatKeywordParams, AddressBookSearchResult>;
 
 /** Actual page-query and SDK-mode contracts, shared with the existing wrappers/consumers. */
 export interface AddressBookContactsParams {

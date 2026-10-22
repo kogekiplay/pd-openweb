@@ -110,6 +110,7 @@ export default function UserList(props) {
       <ul className="userlist">
         {list &&
           list.map(item => {
+            if (item === null || item === undefined) return null;
             return (
               <li
                 className="userListItem valignWrapper"

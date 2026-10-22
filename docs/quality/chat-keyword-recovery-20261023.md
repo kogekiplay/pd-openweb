@@ -1,0 +1,15 @@
+# Chat 关键词搜索缺项与过期回执恢复（2026-10-23）
+
+基线4ab00089ed737e897555cd6d19bf4129fb9b0e17。完整SearchMember和GlobalSearch右侧实际共用GetAllChatAddressbookByKeywords；之前搜索包装层声明有限返回，底层SDK仍来自any，且页面强行假定accounts/groups及list总存在。缺项/自有undefined/null分区和list在真实flatten/render失败，nil行在真实行渲染或Enter解构失败，初始[]占位在直接renderProject失败。已abort旧请求仍能由宿主完成，覆盖新搜索；相同关键词、输入清空/变化尚未开始下一防抖、卸载回写/防抖及GlobalSearch右侧有同类反例。
+
+chatKeywordRecovery.spec.ts的partitions/nilrows/global/placeholder/stale/same/unmount/typing/globalstale/globalunmount十类在旧完整源码分别真实退出1。候选十类通过。此前只修缺项的候选在stale-before-fix失败也保留，不把中途结果冒充最终完成。
+
+修复保持raw结果、分区、数组和行对象引用；只在读取nullish分区/list时给空视图，原始缺键/undefined/null不回写。flatten保持accounts→groups顺序、重复和nil槽位；行渲染跳过nil，Enter落在nil/越界位置安全返回，不伪造账号或群ID。正常对象读取的全部getter顺序保持；缺ID的非nil账号原样传undefined，由既有真实addUserSession动作及Redux继续消费，不用as string遮盖。
+
+两个真实关键词请求owner用代次拒绝旧回执，Chat同时核对原始输入值，Global右侧核对其state关键词。abort仍用原字段访问/receiver，成功返回后才推进搜索代次；abort抛错时原请求仍能完成，reason原样抛。卸载在finally中令回执失效并取消原防抖；原300/500毫秒不改。Global的左侧请求和其它整页生命周期未在此宣称完成，props变化而state关键词尚未更新的独立窗口仍需继续核验。
+
+同份完整正常边界前后各5项：SDK所有模式/函数name与length/args/options/原返回；真实ajax→SearchMember的trim、20项分区getter轨迹、行字段及引用/abort receiver；实际行点击和键盘Enter→真实动作/Redux（含缺ID）；另一真实GlobalSearch→UserList字段渲染与分区引用；getter/同步SDK/abort异常原对象。SDK、DOM/UI及UserList的React hooks宿主受控；实际产品模块完整执行，不称浏览器或真实生产验收，无真实会话或业务写入。
+
+行为审计按实际SearchMember五个类成员、Global右侧四个类成员及flatten声明逐项AST绑定，UserList仅一处精确nil行guard；其它完整语句逐项相同。差异、实际命令和退出码在 /Users/kogeki/dev/HAP-工作记录/20261023-addressbook-keyword-lookup/。测试初始语法、错误Redux状态键等宿主/规格失败均保留，修正为读取真实currentSession/SET_CURRENT_SESSION，并实际点击产品行，不弱化产品断言。
+
+本批与SDK来源合同分提交，未部署；全仓strict及剩余DOM/全页any合同继续，不以本批恢复代替全仓完成。
