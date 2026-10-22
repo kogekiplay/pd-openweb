@@ -131,18 +131,20 @@ export default function PortalUserInfoDrawer(props) {
       });
   }, []);
 
+  const drawerTop = isMobile || [1, 3].includes(currentPcNaviStyle) ? 0 : 51;
+
   return (<>
     <Drawer
       size={isMobile ? '100%' : 480}
-      rootClassName={[1, 3].includes(currentPcNaviStyle) ? '' : 'Absolute'}
+      rootClassName="portalUserInfoDrawer"
+      rootStyle={{ top: drawerTop }}
       onClose={onClose}
       placement="right"
       open={visible}
      
       closable={false}
-      getContainer={![1, 3].includes(currentPcNaviStyle)}
       mask={true}
-      styles={{ body: { padding: 0 } }}
+      styles={{ body: { padding: 0 }, mask: { background: 'rgba(0, 0, 0, 0.1)' }, wrapper: { maxWidth: '100vw' } }}
     >
       <Wrap className={cx('flexColumn h100', { isMobile, leftNaviStyle: [1, 3].includes(currentPcNaviStyle) })}>
         {isMobile && (
