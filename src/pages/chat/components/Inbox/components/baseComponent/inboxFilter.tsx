@@ -13,7 +13,7 @@ const customDate = 8;
 
 interface InboxFilterProps {
   inboxType?: string | undefined;
-  filter?: unknown;
+  filter?: InboxFilterValue | null | undefined;
   onChange: (value: InboxFilterValue | null) => void;
 }
 
@@ -28,7 +28,8 @@ interface InboxFilterState {
 /** 时间快捷项；「自定义日期」没有 `format`（由日期区间选择器接管） */
 interface DateScopeItem {
   name: string;
-  value: number;
+  /** Searches also receive the cleared state; actual shortcut entries use numeric values. */
+  value: number | null | undefined;
   format?: (() => string[]) | undefined;
 }
 
@@ -131,8 +132,8 @@ export default class InboxFilter extends React.Component<InboxFilterProps, Inbox
       user: userValue,
       startTime,
       endTime,
-      // 擦除标记：timeLevel 只能来自 dateScope 选项（原 any 直接取）；缺省时原实现抛原生 TypeError。
-      timeName: timeLevel ? (_.find(dateScope, { value: timeLevel }) as DateScopeItem).name : null,
+      // Unknown nonzero levels preserve the original .name TypeError.
+      timeName: timeLevel ? _.find<DateScopeItem>(dateScope, { value: timeLevel })!.name : null,
       appId,
     });
   };
@@ -191,8 +192,8 @@ export default class InboxFilter extends React.Component<InboxFilterProps, Inbox
   /** `setState` 回调调用时不带参数（此时 time 为 undefined，由 timeLevel 对应项的 `format()` 计算） */
   handleChangeTime = (time?: string[] | null) => {
     const { timeLevel } = this.state;
-    // 擦除标记：同上，timeLevel 只能来自 dateScope 选项。
-    const { format } = _.find(dateScope, { value: timeLevel }) as DateScopeItem;
+    // Cleared or unknown levels preserve the original missing-format destructuring failure.
+    const { format } = _.find<DateScopeItem>(dateScope, { value: timeLevel })!;
     const data = format ? format() : time;
 
     if (data) {
@@ -262,12 +263,12 @@ export default class InboxFilter extends React.Component<InboxFilterProps, Inbox
                 allowClear={false}
                 suffixIcon={null}
                 format="YYYY-MM-DD"
-                onChange={(data: Array<{ format: (fmt: string) => string }>) => {
-                  // 擦除标记：日期区间选择器必给两个日期（原 any 直接解构）。
-                  const [start, end] = data as [{ format: (fmt: string) => string }, { format: (fmt: string) => string }];
+                onChange={(data: Array<{ format: (fmt: string) => string } | null | undefined> | null) => {
+                  // Preserve the original destructuring and .format failure sites for null or incomplete ranges.
+                  const [start, end] = data!;
                   this.handleChangeTime([
-                    start.format('YYYY-MM-DD'),
-                    moment(end.format('YYYY-MM-DD')).add(1, 'days').format('YYYY-MM-DD'),
+                    start!.format('YYYY-MM-DD'),
+                    moment(end!.format('YYYY-MM-DD')).add(1, 'days').format('YYYY-MM-DD'),
                   ]);
                 }}
               />
@@ -280,7 +281,7 @@ export default class InboxFilter extends React.Component<InboxFilterProps, Inbox
             <div className="flexColumn flex">
               <AppFilter
                 apkId={this.state.appId}
-                onChange={(appId: string) => {
+                onChange={(appId: string | undefined) => {
                   this.setState(
                     {
                       appId,

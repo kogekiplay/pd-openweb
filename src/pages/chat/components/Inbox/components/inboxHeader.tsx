@@ -34,7 +34,7 @@ interface InboxHeaderProps {
   type?: string | undefined;
   inboxFavorite?: boolean | undefined;
   inboxType?: string | undefined;
-  filter?: unknown;
+  filter?: InboxFilterValue | null | undefined;
   dropdownData?: string[] | undefined;
   changeType: (type: string) => void;
   changeFaviorite: (favorite: boolean) => void;

@@ -63,8 +63,29 @@ const SelectAppTrigger = styled.div`
   border-radius: var(--radius-sm);
 `;
 
-export default class AppFilter extends Component<any, any> {
-  constructor(props) {
+/** 应用条目：直接用接口模型（`getAllHomeApp` 的 HomeAppDto） */
+type HomeAppDto = Pick<HapApi.MD.Entity.HomeApp.HomeAppDto, 'id' | 'name' | 'iconColor' | 'iconUrl'>;
+/** 项目分组：接口模型 `validProject` 元素（本组件会补 externalApps + hasApps） */
+type AppProjectNode = HapApi.MD.Entity.HomeApp.ProjectForApp;
+
+interface AppFilterProps {
+  /** 当前选中的应用 id（父级筛选器维护） */
+  apkId?: string | null | undefined;
+  onChange: (appId: string | undefined) => void;
+}
+
+interface AppFilterState {
+  apps: AppProjectNode[] | undefined;
+  /** 当前选中应用（空对象 = 未选） */
+  app: HomeAppDto;
+  menuVisible: boolean;
+  searchValue: string;
+  /** 首次拉取后的完整数据源（`handleSearch` 从这里克隆过滤） */
+  dataSource?: AppProjectNode[] | undefined;
+}
+
+export default class AppFilter extends Component<AppFilterProps, AppFilterState> {
+  constructor(props: AppFilterProps) {
     super(props);
     this.state = {
       apps: [],
@@ -83,38 +104,41 @@ export default class AppFilter extends Component<any, any> {
       });
       this.setState({
         dataSource: data.validProject,
+        // Preserve the missing list in state; the existing render .map remains the native failure site.
         apps: data.validProject,
       });
     });
   }
-  handleSelection = app => {
+  handleSelection = (app: HomeAppDto) => {
     this.setState(
       {
         app,
         menuVisible: false,
       },
       () => {
+        // Clearing the selection uses the same empty object and emits its missing id.
         this.props.onChange(app.id);
       },
     );
   };
   handleSearch = () => {
     const { dataSource, searchValue } = this.state;
+    // Search before the response still fails at the original .forEach read.
     const apps = _.cloneDeep(dataSource);
-    apps.forEach(item => {
-      item.projectApps = (item.projectApps || []).filter(app =>
-        _.includes(app.name.toLowerCase(), searchValue.toLowerCase()),
+    apps!.forEach((item: AppProjectNode) => {
+      item.projectApps = (item.projectApps || []).filter((app: HomeAppDto) =>
+        _.includes(app.name!.toLowerCase(), searchValue.toLowerCase()),
       );
     });
     this.setState({
-      apps: apps.filter(item => item.projectApps.length),
+      apps: apps!.filter((item: AppProjectNode) => item.projectApps!.length),
     });
   };
-  renderAppList(apps) {
+  renderAppList(apps: HomeAppDto[] | undefined) {
     const { app } = this.state;
     return (
       <Fragment>
-        {apps.map(item => (
+        {apps!.map((item: HomeAppDto) => (
           <div
             className={cx('appWrapper valignWrapper', { active: item.id === app.id })}
             key={item.id}
@@ -158,13 +182,13 @@ export default class AppFilter extends Component<any, any> {
           />
           <Icon icon="search" className="textSecondary Font20" />
         </div>
-        {apps.map(item => (
-          <div className={cx('appListWrapper', { hide: !item.projectApps.length })} key={item.projectId}>
+        {apps!.map((item: AppProjectNode) => (
+          <div className={cx('appListWrapper', { hide: !item.projectApps!.length })} key={item.projectId}>
             <div className="textSecondary Font13 pBottom5 projectName">{item.projectName}</div>
             {this.renderAppList(item.projectApps)}
           </div>
         ))}
-        {apps.length ? null : (
+        {apps!.length ? null : (
           <div className="pTop100 pBottom100 TxtCenter Font17 textTertiary">{_l('暂无应用搜索结果')}</div>
         )}
       </AppFilterWrap>
@@ -179,11 +203,11 @@ export default class AppFilter extends Component<any, any> {
           popupRender={() => this.renderProjectList()}
           trigger={['click']}
           open={menuVisible}
-          onOpenChange={menuVisible => {
+          onOpenChange={(menuVisible: boolean) => {
             this.setState({ menuVisible });
             if (menuVisible) {
               setTimeout(() => {
-                const input = document.querySelector('.inboxAppFilterWrapper .searchWrapper input');
+                const input = document.querySelector<HTMLInputElement>('.inboxAppFilterWrapper .searchWrapper input');
                 input && input.focus();
               }, 200);
             }
