@@ -38,8 +38,8 @@ function loadTencentCaptcha() {
 export interface CaptchaResult {
   /** 0 = 通过；腾讯验证码里 2 = 用户把验证框关了 */
   ret: number;
-  ticket?: string;
-  randstr?: string;
+  ticket?: string | undefined;
+  randstr?: string | undefined;
 }
 
 export default function captcha(

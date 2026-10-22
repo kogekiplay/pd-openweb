@@ -1,4 +1,8 @@
 import { Component } from 'react';
+import type { ReactNode } from 'react';
+import type { CaptchaResult } from 'ming-ui/functions/captcha';
+import type { AddressBookAccountLookupRow, AddressBookAccountLookupEntry } from 'src/api/addressBookTypes';
+import type { InvitationAccounts } from 'src/api/invitationTypes';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Button, Icon, RadioGroup, Support } from 'ming-ui';
@@ -30,8 +34,34 @@ const TYPE_MODE = {
 
 const defaultList = [{ phone: '', isErr: false }];
 
-export default class MobileOrEmailInvite extends Component<any, any> {
-  constructor(props) {
+export interface MobileInviteProps {
+  projectId?: string | null | undefined;
+  fromType?: number | undefined;
+  needAlert?: boolean | undefined;
+  showInviteRules?: boolean | undefined;
+  onCancel: () => void;
+  setDetailMode: (mode: number) => void;
+}
+export interface MobileInviteInput { phone: string; isErr: boolean; }
+export interface MobileInviteChange { value: string; isErr?: boolean | undefined; }
+export interface MobileInviteState {
+  list: MobileInviteInput[];
+  loading: boolean;
+  keywords: string;
+  searchData: AddressBookAccountLookupEntry[] | null | undefined;
+  selectType: number | undefined;
+  showDialogSettingInviteRules?: boolean | undefined;
+}
+
+function markInvitedRows(rows: MobileInviteState['searchData'], item: AddressBookAccountLookupRow): MobileInviteState['searchData'] {
+  if (rows === null || rows === undefined) return rows;
+  return rows.map(i => i === null || i === undefined ? i : i.accountId === item.accountId ? { ...i, disabled: true } : i);
+}
+
+export default class MobileOrEmailInvite extends Component<MobileInviteProps, MobileInviteState> {
+  private lookupVersion = 0;
+  private lookupClosed = false;
+  constructor(props: MobileInviteProps) {
     super(props);
     this.state = {
       list: defaultList,
@@ -59,8 +89,11 @@ export default class MobileOrEmailInvite extends Component<any, any> {
 
     const _this = this;
 
-    var throttled = function (res) {
+    var throttled = function (res: CaptchaResult) {
       if (res.ret === 0) {
+        if (_this.lookupClosed) return;
+        const requestVersion = ++_this.lookupVersion;
+        const keywords = _this.state.keywords;
         Requests.getAccountByAccount({
           account: _this.getValue(),
           ticket: res.ticket,
@@ -68,9 +101,11 @@ export default class MobileOrEmailInvite extends Component<any, any> {
           captchaType: md.global.getCaptchaType(),
         })
           .then(res => {
+            if (_this.lookupClosed || requestVersion !== _this.lookupVersion || keywords !== _this.state.keywords) return;
             _this.setState({ searchData: res.list });
           })
           .catch(err => {
+            if (_this.lookupClosed || requestVersion !== _this.lookupVersion || keywords !== _this.state.keywords) return;
             if (err) {
               alert(_l('请输入手机号/邮箱地址'), 3);
             }
@@ -81,6 +116,11 @@ export default class MobileOrEmailInvite extends Component<any, any> {
     new captcha(throttled);
   };
 
+  override componentWillUnmount() {
+    this.lookupClosed = true;
+    this.lookupVersion += 1;
+  }
+
   handleAdd = () => {
     const { list = [] } = this.state;
     this.setState({
@@ -88,7 +128,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
     });
   };
 
-  handleChange = (data, index: number) => {
+  handleChange = (data: MobileInviteChange, index: number) => {
     this.setState({
       list: this.state.list.map((o, i) => {
         if (i === index) {
@@ -100,7 +140,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
     });
   };
 
-  invite = (accounts, cb?: (() => void) | undefined) => {
+  invite = (accounts: InvitationAccounts, cb?: (() => void) | undefined) => {
     const { projectId, onCancel, fromType } = this.props;
 
     InviteController.inviteUser({
@@ -131,7 +171,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
       });
   };
 
-  inviteFriend = item => {
+  inviteFriend = (item: AddressBookAccountLookupRow) => {
     if (item.accountId === md.global.Account.accountId) {
       alert(_l('不能添加自己为好友'), 3);
       return;
@@ -142,7 +182,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
 
     this.invite({ [encrypt(this.getValue())]: '' }, () => {
       this.setState({
-        searchData: this.state.searchData.map(i => (i.accountId === item.accountId ? { ...i, disabled: true } : i)),
+        searchData: markInvitedRows(this.state.searchData, item),
       });
     });
   };
@@ -167,7 +207,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
 
     this.setState({ loading: true });
 
-    let accountObj = {};
+    let accountObj: InvitationAccounts = {};
 
     for (var i = 0, length = list.length; i < length; i++) {
       if (list[i] && list[i].phone) {
@@ -187,8 +227,8 @@ export default class MobileOrEmailInvite extends Component<any, any> {
       });
   };
 
-  renderItem = (item, index: number) => {
-    let content = '';
+  renderItem = (item: MobileInviteInput, index: number) => {
+    let content: ReactNode = '';
 
     if (this.state.selectType === TYPE_MODE.MOBILE) {
       content = (
@@ -196,12 +236,12 @@ export default class MobileOrEmailInvite extends Component<any, any> {
           data={item}
           inputClassName="rowTel"
           allowDropdown={true}
-          onChange={data => this.handleChange(data, index)}
+          onChange={(data: MobileInviteChange) => this.handleChange(data, index)}
         />
       );
     } else {
       content = (
-        <EmailInput data={item} inputClassName="rowTel pLeft8" onChange={data => this.handleChange(data, index)} />
+        <EmailInput data={item} inputClassName="rowTel pLeft8" onChange={(data: MobileInviteChange) => this.handleChange(data, index)} />
       );
     }
 
@@ -223,7 +263,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
     );
   };
 
-  renderUserItem = item => {
+  renderUserItem = (item: AddressBookAccountLookupRow) => {
     const isDefault = _.isEmpty(this.state.searchData);
     return (
       <div className="userItem">
@@ -285,7 +325,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
             </Button>
           </div>
 
-          {listData && <div className="resultContent flex">{listData.map(i => this.renderUserItem(i))}</div>}
+          {listData && <div className="resultContent flex">{listData.map(i => i === null || i === undefined ? null : this.renderUserItem(i))}</div>}
         </div>
       );
     }
@@ -379,7 +419,7 @@ export default class MobileOrEmailInvite extends Component<any, any> {
         {showDialogSettingInviteRules && (
           <DialogSettingInviteRules
             showDialogSettingInviteRules={showDialogSettingInviteRules}
-            setValue={({ showDialogSettingInviteRules }) => this.setState({ showDialogSettingInviteRules })}
+            setValue={({ showDialogSettingInviteRules }: Pick<MobileInviteState, 'showDialogSettingInviteRules'>) => this.setState({ showDialogSettingInviteRules })}
             projectId={projectId}
           />
         )}

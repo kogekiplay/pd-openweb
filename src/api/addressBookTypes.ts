@@ -105,3 +105,21 @@ export interface AddressBookSearchDeptParams {
 /** Actual search consumer concatenates a missing/null result as a single sentinel. */
 export interface AddressBookSearchDeptResult { userResult?: AddressBookAccount[] | null | undefined; }
 export type AddressBookSearchDeptEndpoint = InboxEndpoint<AddressBookSearchDeptParams, AddressBookSearchDeptResult>;
+
+/** Lookup rows reuse the one account identity/name model; these fields are actually rendered/updated by MobileOrEmailInvite. */
+export interface AddressBookAccountLookupRow extends AddressBookAccount {
+  avatarBig?: string | undefined;
+  subInfo?: string | undefined;
+  disabled?: boolean | undefined;
+}
+export type AddressBookAccountLookupEntry = AddressBookAccountLookupRow | null | undefined;
+export interface AddressBookAccountLookupResult {
+  list?: AddressBookAccountLookupEntry[] | null | undefined;
+}
+export interface AddressBookAccountLookupParams {
+  account?: string | undefined;
+  ticket?: string | undefined;
+  randStr?: string | undefined;
+  captchaType?: number | undefined;
+}
+export type AddressBookAccountLookupEndpoint = InboxEndpoint<AddressBookAccountLookupParams, AddressBookAccountLookupResult>;
