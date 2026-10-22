@@ -1,3 +1,17 @@
+import type { AddressBookContactsEndpoint, AddressBookContactsParams, AddressBookPageQueryParams, AddressBookNewFriendsEndpoint, AddressBookRecommendsEndpoint } from './addressBookTypes';
+
+const getAllAddressbook: AddressBookContactsEndpoint = function (args: AddressBookContactsParams, options: ApiOptions = {}) {
+  return mdyAPI('AddressBook', 'GetAllAddressbook', args, options);
+};
+
+const getNewFriends: AddressBookNewFriendsEndpoint = function (args: AddressBookPageQueryParams, options: ApiOptions = {}) {
+  return mdyAPI('AddressBook', 'GetNewFriends', args, options);
+};
+
+const getMobileAddressRecommend: AddressBookRecommendsEndpoint = function (args: AddressBookPageQueryParams, options: ApiOptions = {}) {
+  return mdyAPI('AddressBook', 'GetMobileAddressRecommend', args, options);
+};
+
 export default {
   /**
    * 根据账号查找用户
@@ -22,9 +36,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getNewFriends: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('AddressBook', 'GetNewFriends', args, options);
-  },
+  getNewFriends,
   /**
    * 获取根据手机通讯录推荐的明道云联系人
    * @param {Object} args 请求参数
@@ -34,9 +46,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getMobileAddressRecommend: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('AddressBook', 'GetMobileAddressRecommend', args, options);
-  },
+  getMobileAddressRecommend,
   /**
   * 获取我的所有联系人
 通讯录（所有联系人/好友/其它协作对象）
@@ -52,9 +62,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getAllAddressbook: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('AddressBook', 'GetAllAddressbook', args, options);
-  },
+  getAllAddressbook,
   /**
   * 查询通讯录联系人以及部门
 通讯录（所有联系人/好友/其它协作对象）

@@ -12,15 +12,8 @@ import GroupController from 'src/api/group';
 import UserController from 'src/api/user';
 import { GROUP_STATUS, SEARCH_GROUP_TYPES } from './constants';
 
-/** 联系人分页查询参数（`fetchContacts` 的入参，`range` 由各包装方法补） */
-interface ContactsParams {
-  projectId?: string | null | undefined;
-  keywords?: string | undefined;
-  pageIndex?: number | undefined;
-  pageSize?: number | undefined;
-  isFilterOther?: boolean | undefined;
-  range?: number | undefined;
-}
+/** The parameter view is owned by the actual endpoint producer. */
+type ContactsParams = import('src/api/addressBookTypes').AddressBookContactsParams;
 
 /** 群组分页查询参数 */
 interface GroupsParams {

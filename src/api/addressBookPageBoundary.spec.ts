@@ -1,0 +1,55 @@
+/** Whole AddressBook/API wrapper/Contacts/Friends/Others/NewFriends consumers; only SDK/UI/DOM hosts are controlled. */
+import type { ChatWindowFixture } from '../../scripts/spec-fixtures/chatWindowLoader';
+const assert:typeof import('node:assert/strict')=require('node:assert/strict');
+const {makeFixture}=require('../../scripts/spec-fixtures/chatWindowLoader.ts') as {makeFixture(options:unknown):ChatWindowFixture};
+type Data=Record<string,unknown>;
+interface Subject{props:Data;state:Data;render():unknown;fetch():unknown;fetchContacts():Promise<unknown>;search(text:string):void;componentWillUnmount():void;componentDidMount():void;}
+type Constructor=new(props:Data)=>Subject;
+const prefix='src/pages/chat/lib/addressBook/';
+function pending(){let resolve!:(value:unknown)=>void,reject!:(reason:unknown)=>void;const children:Promise<unknown>[]=[];const abortThis:unknown[]=[];const request=Object.assign(new Promise<unknown>((yes,no)=>{resolve=yes;reject=no;}),{abort(this:unknown){abortThis.push(this);}});const then=request.then.bind(request);Object.defineProperty(request,'then',{value:(...args:Parameters<typeof then>)=>{const child=then(...args);children.push(child);void child.catch(()=>{});return child;}});return{request,children,abortThis,resolve,reject};}
+function fixture(){
+ const requests:Array<ReturnType<typeof pending>>=[],patches:Array<{subject:Subject;patch:Data}>=[],callbacks:Array<()=>void>=[];let defer=false,custom:{value:unknown}|undefined,thrown:unknown;
+ const Leaf=()=>null;
+ const f=makeFixture({uiLeaves:[prefix+'components/ContactList',prefix+'components/ListSearchBar',prefix+'components/UserDetail'],moduleOverride(_file:string,name:string){if(name==='ming-ui')return{LoadDiv:Leaf,ScrollView:Leaf,Icon:Leaf};if(name==='ming-ui/functions')return{addFriendConfirm:()=>{throw new Error('Unexpected real mutation');}};return undefined;},sdkOverride(){if(thrown!==undefined)throw thrown;if(custom)return custom;const p=pending();requests.push(p);return{value:p.request};}});
+ function instance(Type:Constructor,props:Data){const item=new Type(props);Reflect.set(item,'setState',(patch:Data,callback?:()=>void)=>{const entry={subject:item,patch};if(defer)patches.push(entry);else Reflect.set(item,'state',{...item.state,...patch});if(callback)callbacks.push(callback);});return item;}
+ function commit(){for(const {subject,patch}of patches.splice(0))Reflect.set(subject,'state',{...subject.state,...patch});for(const fn of callbacks.splice(0))fn();}
+ function Type(file:string){return f.load(prefix+file)['default'] as Constructor;}
+ async function resolve(i:number,value:unknown){const p=requests[i];assert.ok(p);p.resolve(value);await Promise.all(p.children);}
+ return{...f,requests,instance,commit,Type,resolveRequest:resolve,defer:(value:boolean)=>{defer=value;},setReturn:(value:unknown)=>{custom={value};},setFailure:(reason:unknown)=>{thrown=reason;}};
+}
+let passed=0;async function check(name:string,run:()=>unknown|Promise<unknown>){await run();passed++;console.log('  ✓ '+name);}
+async function main(){
+ await check('complete SDK endpoints preserve public key order, ABI, all modes, options and raw return references',()=>{
+  const f=fixture(),api=f.load('src/api/addressBook.ts')['default'] as Record<string,(args:Data,options?:unknown)=>unknown>;assert.deepEqual(Object.keys(api),['getAccountByAccount','getNewFriends','getMobileAddressRecommend','getAllAddressbook','searchAddressbookAndDepartment','getAllChatAddressbookByKeywords','getUserAddressbookByKeywords','addIgnoreMobileAddress','addFriend','removeFriend','editAgreeFriend','editRefuseFriend','editIgnoreFriend','editAddressBookOftenMetioned']);
+  for(const [name,action]of [['getAllAddressbook','GetAllAddressbook'],['getNewFriends','GetNewFriends'],['getMobileAddressRecommend','GetMobileAddressRecommend']]){const fn=api[name!]!;assert.equal(fn.name,name);assert.equal(fn.length,1);for(const options of [undefined,{},null,{ajaxOptions:{sync:true}},{customParseResponse:true},{isReadableStream:true},{agent:true},{ajaxOptions:{agent:true}}]){const args={projectId:null,pageIndex:undefined,pageSize:0},token={options};f.setReturn(token);assert.equal(fn(args,options),token);assert.equal(f.calls.at(-1)!.action,action);assert.equal(f.calls.at(-1)!.args,args);if(options!==undefined)assert.equal(f.calls.at(-1)!.options,options);else assert.deepEqual(f.calls.at(-1)!.options,{});}}
+ });
+ await check('actual wrapper defaults, destructuring/getter order and null/undefined handling retain native semantics',()=>{
+  const f=fixture(),api=f.load(prefix+'api.ts')['default'] as Record<string,(args?:Data)=>unknown>;
+  for(const [name,range]of [['fetchAllContacts',0],['fetchFriends',1],['fetchOthers',3],['fetchProjectContacts',2]] as const){const token={};f.setReturn(token);assert.equal(api[name]!({pageIndex:undefined,pageSize:undefined,keywords:undefined,projectId:null}),token);assert.deepEqual(f.calls.at(-1)!.args,{projectId:name==='fetchProjectContacts'?null:'',keywords:'',range,pageIndex:1,pageSize:100,isFilterOther:false});}
+  const trace:string[]=[];api['fetchAllContacts']!(Object.defineProperties({},{pageIndex:{get(){trace.push('page');return 0;}},pageSize:{get(){trace.push('size');return 0;}},keywords:{get(){trace.push('query');return '';}},isFilterOther:{get(){trace.push('filter');return false;}}}));assert.deepEqual(trace,['page','size','query','filter']);assert.equal(f.calls.at(-1)!.args['pageIndex'],0);
+  assert.throws(()=>api['fetchAllContacts']!(),TypeError);assert.throws(()=>Reflect.apply(api['fetchAllContacts']!,undefined,[null]),TypeError);
+  api['fetchNewFriends']!({pageIndex:undefined});assert.deepEqual(f.calls.at(-1)!.args,{pageIndex:undefined,pageSize:10});api['fetchRecommends']!({pageIndex:undefined});assert.deepEqual(f.calls.at(-1)!.args,{pageIndex:undefined,pageSize:5});
+ });
+ await check('Contacts/Friends/Others use the real request, grouping, getters, row refs, pagination and abort receiver',async()=>{
+  for(const [name,range]of [['Contacts',0],['Friends',1],['Others',3]] as const){const f=fixture(),item=f.instance(f.Type('containers/'+name+'.tsx'),{});item.fetch();assert.equal(f.calls[0]!.action,'GetAllAddressbook');assert.equal(f.calls[0]!.args['range'],range);let listReads=0,codeReads=0;const row=Object.defineProperty({accountId:'u',avatar:'/a'},'firstCode',{get(){codeReads++;return 'a';}}),list=[row];const p=f.requests[0]!;assert.equal(Reflect.get(item,'promise'),p.request);await f.resolveRequest(0,{get list(){listReads++;return list;}});assert.equal(listReads,3);assert.equal(codeReads,1);assert.equal((item.state['listData'] as Record<string,unknown[]>)['A']![0],row);assert.equal(item.state['pageIndex'],2);assert.equal(item.state['hasMore'],1);assert.equal(item.state['isLoading'],false);item.componentWillUnmount();assert.deepEqual(p.abortThis,[p.request]);}
+ });
+ await check('search/reset follows actual abort + deferred callback and concat keeps nil list entries and unknown metadata',async()=>{
+  const f=fixture(),item=f.instance(f.Type('containers/Contacts.tsx'),{});item.fetch();const initial=f.requests[0]!;await f.resolveRequest(0,{list:[]});item.search('query');assert.deepEqual(initial.abortThis,[initial.request]);assert.equal(f.calls.length,1);f.commit();assert.equal(f.calls.length,2);assert.equal(f.calls[1]!.args['keywords'],'query');await f.resolveRequest(1,{list:null,opaque:{preserved:true}});assert.deepEqual(item.state['listData'],[null]);assert.equal(item.state['hasMore'],null);
+  const g=fixture(),other=g.instance(g.Type('containers/Contacts.tsx'),{});other.state['keywords']='q';other.fetch();await g.resolveRequest(0,{});assert.equal((other.state['listData'] as unknown[]).length,1);assert.equal((other.state['listData'] as unknown[])[0],undefined);assert.equal(Object.hasOwn(other.state,'hasMore'),true);assert.equal(other.state['hasMore'],undefined);
+ });
+ await check('actual friend/recommend pages update their real parent only after list and loading patches',async()=>{
+  for(const [child,flag,method]of [['NewFriendsList','haveApplys','updateApplysFlag'],['RecommendsList','haveRecommends','updateRecommendsFlag']] as const)for(const allCount of [0,2,undefined]){const f=fixture(),parent=f.instance(f.Type('containers/NewFriends.tsx'),{}),update=Reflect.get(parent,method) as (flag:boolean)=>void,observed:Data[]=[];let item:Subject;item=f.instance(f.Type('components/'+child+'.tsx'),{isLoaded:false,update:(value:boolean)=>{observed.push({...item.state});update(value);}});item.componentDidMount();assert.equal(f.calls[0]!.action,child==='NewFriendsList'?'GetNewFriends':'GetMobileAddressRecommend');const row=child==='NewFriendsList'?{createAccount:{accountId:'u'},message:'Hi'}:{accountId:'u',mobileName:'Phone'};await f.resolveRequest(0,{allCount,list:[row]});assert.equal(observed.length,1);assert.equal(observed[0]!['isLoading'],false);assert.equal(parent.state[flag],allCount!==0);if(allCount!==0){assert.equal((item.state['listData'] as unknown[])[0],row);assert.doesNotThrow(()=>item.render());}else assert.equal(item.state['listData'],null);}
+ });
+ await check('nil page lists keep the existing appended sentinel and native rendering failure; promise errors retain identity/state',async()=>{
+  for(const child of ['NewFriendsList','RecommendsList']){const f=fixture(),item=f.instance(f.Type('components/'+child+'.tsx'),{isLoaded:false,update(){}});item.componentDidMount();await f.resolveRequest(0,{allCount:undefined,list:undefined});assert.deepEqual(item.state['listData'],[undefined]);assert.throws(()=>item.render(),TypeError);}
+  const f=fixture(),item=f.instance(f.Type('containers/Contacts.tsx'),{}),reason=new Error('SDK');const request=item.fetchContacts();const p=f.requests[0]!;p.reject(reason);await assert.rejects(request,error=>error===reason);assert.equal(item.state['listData'],null);
+  const g=fixture(),broken=g.instance(g.Type('containers/Contacts.tsx'),{});g.setFailure(reason);assert.throws(()=>broken.fetch(),error=>error===reason);assert.equal(broken.state['isLoading'],true);
+ });
+ await check('missing firstCode and missing request preserve the actual native failures without false new wire guarantees',async()=>{
+  const f=fixture(),item=f.instance(f.Type('containers/Contacts.tsx'),{});const request=item.fetchContacts();f.requests[0]!.resolve({list:[{accountId:'u'}]});await assert.rejects(request,TypeError);assert.equal(item.state['listData'],null);
+  const g=fixture(),other=g.instance(g.Type('containers/Others.tsx'),{});assert.throws(()=>other.search('x'),TypeError);assert.equal(g.calls.length,0);
+  const z=fixture(),api=z.load(prefix+'api.ts')['default'] as Record<string,(p:Data)=>unknown>;z.setReturn(undefined);assert.equal(api['fetchAllContacts']!({}),undefined);
+ });
+ console.log(`Actual AddressBook page consumers: ${passed} checks passed`);
+}
+main().catch(error=>{console.error(error);process.exitCode=1;});
