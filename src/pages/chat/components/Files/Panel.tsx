@@ -9,7 +9,11 @@ import Dropdown from 'ming-ui/components/Dropdown';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import * as ajax from '../../utils/ajax';
 import config from '../../utils/config';
+import type { ChatFileQuery } from 'src/api/chatTypes';
+import type { DateTimeRangeProps } from 'ming-ui/components/NewDateTimePicker/types';
+import type { ChatSession } from '../../redux/types';
 import { FileItem, splitFiles } from './index';
+import type { ChatFileItem } from './index';
 
 const { RangePicker } = DatePicker;
 
@@ -32,7 +36,7 @@ const fileTypeData = [
   },
 ];
 
-const filterDate = [
+const filterDate: { text: string; date: readonly [moment.Moment, moment.Moment] }[] = [
   {
     text: _l('今天'),
     date: [moment().startOf('day'), moment().endOf('day')],
@@ -51,8 +55,28 @@ const filterDate = [
   },
 ];
 
-export default class FilesPanel extends Component<any, any> {
-  constructor(props) {
+export interface FilesPanelProps {
+  session: ChatSession;
+}
+
+export interface FilesPanelState {
+  pageIndex: number;
+  loading: boolean;
+  files: ChatFileItem[];
+  /** -1 = 全部文件，或账号 id */
+  fromUser: number | string | undefined;
+  fileType: number | undefined;
+  start: string;
+  end: string;
+  visible: boolean;
+  selectedIndex: number;
+}
+
+
+export default class FilesPanel extends Component<FilesPanelProps, FilesPanelState> {
+  declare fromUserData: { text: string; value: number | string }[];
+
+  constructor(props: FilesPanelProps) {
     super(props);
     this.state = {
       pageIndex: 1,
@@ -85,7 +109,7 @@ export default class FilesPanel extends Component<any, any> {
   getFiles() {
     const { session } = this.props;
     const { fileType, loading, fromUser, pageIndex, files, start, end } = this.state;
-    const param = {
+    const param: ChatFileQuery = {
       pageIndex,
       pageSize: 10,
       fileType,
@@ -123,7 +147,7 @@ export default class FilesPanel extends Component<any, any> {
       });
     });
   }
-  handleFileTypeChange(value) {
+  handleFileTypeChange(value: number | undefined) {
     this.setState(
       {
         pageIndex: 1,
@@ -136,7 +160,7 @@ export default class FilesPanel extends Component<any, any> {
       },
     );
   }
-  handleFromUserChange(value) {
+  handleFromUserChange(value: number | string | undefined) {
     this.setState(
       {
         fromUser: value,
@@ -154,7 +178,7 @@ export default class FilesPanel extends Component<any, any> {
       visible,
     });
   }
-  handleDateChange(date, index: number) {
+  handleDateChange(date: readonly [moment.Moment, moment.Moment], index: number) {
     const [start, end] = date;
     this.setState(
       {
@@ -189,7 +213,7 @@ export default class FilesPanel extends Component<any, any> {
   }
   renderToolbar() {
     const { selectedIndex } = this.state;
-    const rangePickerProps = {
+    const rangePickerProps: DateTimeRangeProps = {
       offset: {
         left: -542,
         top: -197,
@@ -197,7 +221,7 @@ export default class FilesPanel extends Component<any, any> {
       allowClear: false,
       max: moment(),
       popupParentNode: () => document.querySelector<HTMLElement>('.ChatPanel-FilesPanel-filterDate'),
-      onOk: selectValue => {
+      onOk: (selectValue: readonly [moment.Moment, moment.Moment]) => {
         this.handleDateChange(selectValue, 4);
       },
     };
@@ -283,7 +307,7 @@ export default class FilesPanel extends Component<any, any> {
         <div className="content">
           <ScrollView onScrollEnd={this.handleScrollEnd.bind(this)}>
             <div className={cx('flex', { 'ChatPanel-Image-list': fileType === 2 })}>
-              {files.map((item, index: number) => (
+              {files.map((item: ChatFileItem, index: number) => (
                 <FileItem item={item} key={item.fileId || index} fileType={fileType} />
               ))}
               <LoadDiv className={cx({ Hidden: !loading })} size="small" />

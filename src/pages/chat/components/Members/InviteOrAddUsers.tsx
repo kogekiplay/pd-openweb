@@ -15,15 +15,19 @@ const ITEMS = [
   },
 ];
 
-export default class InviteOrAddUsers extends Component<any, any> {
+import type { ChatSession } from '../../redux/types';
+
+export type InviteOrAddUsersProps = Pick<ChatSession, 'isAdmin' | 'isForbidInvite' | 'id' | 'groupId' | 'name' | 'project'>;
+
+export default class InviteOrAddUsers extends Component<InviteOrAddUsersProps, Record<string, never>> {
   declare $wrap: HTMLSpanElement | null | undefined;
 
-  constructor(props) {
+  constructor(props: InviteOrAddUsersProps) {
     super(props);
     this.state = {};
   }
 
-  handleClick = ({ key }) => {
+  handleClick = ({ key }: { key: string }) => {
     const { isAdmin, isForbidInvite, id, groupId, name, project = {} } = this.props;
 
     if (key === 'addUsers') {

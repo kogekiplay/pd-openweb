@@ -1,0 +1,15 @@
+# 文件面板过滤日期与成员栏合同（2026-10-23批次）
+
+固定基线a8ea1cde92805bad7c8295580bbf5552cf56d12c，固定协作5aa5745c2218bb97b264ca2bd69bca03b8b6a897。只审查Files/Panel、Members/index、Members/InviteOrAddUsers三条生产路径，移除协作FileQuery extends ApiArgs、下拉值as number/number|string、readonly Moment[]整段tuple断言、popupParentNode as HTMLElement、groupUsers as MemberRow[]、本地项目宽索引及id as string。按精确路径接收，不扩展为源提交其它路径或旧整包。
+
+文件过滤直接消费main唯一ChatFileQuery和ChatFileItem。Dropdown实际允许undefined，state与请求显式保留；既有getFileList仍原地把fileType||-1归一，fromUser/sendBy分支及缺键/自有undefined不变。范围预设是构造时真实两个Moment，按tuple声明。实际DatePicker barrel指向NewDateTimePicker/date-time-range；其普通模式onOk生产方只有两Moment齐全才回调，task模式才允许空端点。本页未使用task，直接消费公开DateTimeRangeProps并通过真实底层面板buttonOnClick→公开RangePicker→Files.Panel→SDK验证，不能误用旧DatePicker/RangePicker的不同合同。
+
+PositionContainer实际允许popupParentNode返回null并回落body，本页的querySelector保持可空，无元素断言。规格执行到公开RangePicker传入PositionContainer的props，DOM容器宿主为受控叶子，不声称浏览器布局或完整portal挂载验收。直接调用handleDateChange不完整输入仍保持原生format失败；测试以真实producer证明正常用户回调是完整tuple，不默认补日期。
+
+ChatSession、ChatGroupInfo/ChatSessionLookup的groupUsers统一为真实GroupMember[]可缺/null视图，成员栏不复制DTO或整数组强转。API Group.getGroupUsers已由main有限化，then直接按实际导出推导。MembersState保留原array或缺值，正常行/Avatar的缺ID默认sourceId空串、disabled、project透传和回调额外event保持。Lodash读取通过检查过的Pick<ChatSession,'project'>有限视图显式泛型，函数/参数/返回运行体不变。邀请props直接Pick真实ChatSession；null项目行为修复单列，不用断言掩盖。
+
+同份完整模块链在基线/候选各7项通过：真实Info传panel、Chat API与原地过滤、实际Dropdown undefined、真实现代日期回调、日期清除/格式化顺序/原生失败、分页数组引用、SDK拒绝/nil回执、会话getter、成员bar刷新、真实invite菜单→group helper及权限/更多邀请路径。SDK/socket、UI叶子/DOM宿主及邀请弹层宿主受控，未请求真实服务；原有夹具仍默认阻止group helper，仅该真实邀请检查显式启用并捕获宿主。
+
+独立缺项4项候选通过，两个旧源码真实失败保留。纯类型阶段相对独立行为修复副本，9个完整产品模块Babel字节相同；从旧基线到行为副本精确只有两个optional-access差异，AST单独核验。最初SDK默认group宿主阻断/DOM类名错误和AST optional-call父子访问顺序失败日志保留，修夹具/审计，不弱化产品门禁。真实公开导出正负/非any/有限键/普通-vs-task日期合同探针自身0诊断，传递程序与实际退出1单列。
+
+隔离候选全仓原始strict49123→49101，Chat354→332，全仓逐(文件,错误码)新增0；三路径零诊断。最终固定完整SHA、棘轮、正常main同步、正式构建/冻结及交接见 /Users/kogeki/dev/HAP-工作记录/20261023-chat-file-panel-members/。全仓strict及剩余已知合同未完成，总目标active，未部署，旧失败和恢复材料保留。

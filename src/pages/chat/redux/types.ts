@@ -1,4 +1,4 @@
-import type { GroupProject } from 'src/api/groupTypes';
+import type { GroupProject, GroupMember } from 'src/api/groupTypes';
 /**
  * `src/pages/chat/redux` 的有限类型
  *
@@ -148,7 +148,7 @@ export interface ChatSession {
   /** 群公告正文：`Announcement:23/25` `session.about !== value` 比较并回填，实为字符串 */
   about?: string | undefined;
   /** 群成员列表（解构读） */
-  groupUsers?: unknown[] | undefined;
+  groupUsers?: GroupMember[] | null | undefined;
   /** 是否管理员（`Message` 解构读，用于撤回权限） */
   isAdmin?: boolean | undefined;
   /** 是否已认证（解构读） */
