@@ -1,3 +1,4 @@
+import type { ChatSessionLookupRequest } from 'src/api/chatTypes';
 import type { AddressBookRequest, AddressBookSearchResult } from 'src/api/addressBookTypes';
 import _ from 'lodash';
 import CommonAjax from 'src/api/addressBook';
@@ -109,7 +110,7 @@ interface CreateDiscussionParams {
   accountIds?: string[] | undefined;
 }
 
-export const chatSessionItem = (param: ChatSessionItemParam) => {
+export const chatSessionItem = (param: ChatSessionItemParam): ChatSessionLookupRequest | undefined => {
   const timeout = 3000;
   const ajaxOptions = {
     timeout,

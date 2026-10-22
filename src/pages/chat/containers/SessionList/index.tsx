@@ -1,3 +1,4 @@
+import type { InboxType } from '../../components/Inbox/constants';
 import { Component, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import { shallowEqual } from 'react-redux';
@@ -313,7 +314,7 @@ class SessionList extends Component<SessionListProps, SessionListState> {
         }
       });
   }
-  addInbox = ({ id, type }: { id: string; type?: number | string | undefined }) => {
+  addInbox = ({ id, type }: { id: InboxType; type?: number | string | undefined }) => {
     const message = {
       count: 0,
       id,
@@ -351,21 +352,21 @@ class SessionList extends Component<SessionListProps, SessionListState> {
         if (type == Constant.SESSIONTYPE_USER) {
           data = {
             isGroup: false,
-            uname: result.fullname,
+            uname: result!.fullname,
             count: 0,
-            from: result.accountId,
-            logo: result.avatar,
+            from: result!.accountId,
+            logo: result!.avatar,
             sysType: 1,
             msg: { con: '' },
           };
         } else if (type == Constant.SESSIONTYPE_GROUP) {
           data = {
             isGroup: true,
-            groupname: result.name,
+            groupname: result!.name,
             count: 0,
-            to: result.groupId,
-            from: result.from,
-            avatar: result.avatar,
+            to: result!.groupId,
+            from: result!.from,
+            avatar: result!.avatar,
             sysType: 1,
             msg: { con: '' },
           };

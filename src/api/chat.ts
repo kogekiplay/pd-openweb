@@ -1,3 +1,9 @@
+import type { ChatGroupEndpoint, ChatGroupParams } from './chatTypes';
+
+const getGroupInfo: ChatGroupEndpoint = function (args: ChatGroupParams, options: ApiOptions = {}) {
+  return mdyAPI('Chat', 'GetGroupInfo', args, options);
+};
+
 export default {
   /**
    * 获取预览链接
@@ -39,9 +45,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupInfo: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Chat', 'GetGroupInfo', args, options);
-  },
+  getGroupInfo,
   /**
    * 获取群文件列表
    * @param {Object} args 请求参数

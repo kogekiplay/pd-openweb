@@ -40,10 +40,10 @@ let ChatWindow = class ChatWindow extends Component<{ dispatch: AppDispatch; [ke
         if (type == Constant.SESSIONTYPE_USER) {
           data = {
             isGroup: false,
-            uname: result.fullname,
+            uname: result!.fullname,
             count: 0,
-            from: result.accountId,
-            logo: result.avatar,
+            from: result!.accountId,
+            logo: result!.avatar,
             sysType: 1,
             msg: {
               con: '',
@@ -52,11 +52,11 @@ let ChatWindow = class ChatWindow extends Component<{ dispatch: AppDispatch; [ke
         } else if (type == Constant.SESSIONTYPE_GROUP) {
           data = {
             isGroup: true,
-            groupname: result.name,
+            groupname: result!.name,
             count: 0,
-            to: result.groupId,
-            from: result.from,
-            avatar: result.avatar,
+            to: result!.groupId,
+            from: result!.from,
+            avatar: result!.avatar,
             sysType: 1,
             msg: {
               con: '',
@@ -71,7 +71,7 @@ let ChatWindow = class ChatWindow extends Component<{ dispatch: AppDispatch; [ke
             value: id,
           }),
         );
-        this.props.dispatch(actions.addCurrentSession(result));
+        this.props.dispatch(actions.addCurrentSession(result!));
         this.setState({
           loading: false,
         });

@@ -5,7 +5,8 @@ import cx from 'classnames';
 import _ from 'lodash';
 import ClickAway from 'ming-ui/components/ClickAway';
 import LoadDiv from 'ming-ui/components/LoadDiv';
-import type { RootState } from 'src/redux/types';
+import type { AppDispatch, RootState } from 'src/redux/types';
+import type { ChatSession, ChatToolbarConfig } from '../../redux/types';
 import { Inbox } from '../../components/Inbox';
 import { requireInboxType } from '../../components/Inbox/identity';
 import * as actions from '../../redux/actions';
@@ -40,10 +41,28 @@ const exceptions = [
   '.inboxAppFilterWrapper',
 ];
 
-class ChatPanel extends Component<any, any> {
-  declare ajax: ApiResult | undefined;
+/** connect 注入的 5 项 + 宿主传入的 embed */
+interface ChatPanelProps {
+  dispatch: AppDispatch;
+  currentSession: ChatSession;
+  currentSessionList: ChatSession[];
+  currentInboxList: ChatSession[];
+  toolbarConfig: ChatToolbarConfig;
+  /** 嵌入模式（不响应点击外部关闭） */
+  embed?: boolean | undefined;
+}
 
-  constructor(props) {
+interface ChatPanelState {
+  loading: boolean;
+  isError: boolean;
+  /** 来自 `_.get(error, 'errorMessage')`（接口异常信息，可能缺省） */
+  error?: string | undefined;
+}
+
+class ChatPanel extends Component<ChatPanelProps, ChatPanelState> {
+  declare ajax: ReturnType<typeof ajax.chatSessionItem>;
+
+  constructor(props: ChatPanelProps) {
     super(props);
     this.state = {
       loading: false,
@@ -51,7 +70,7 @@ class ChatPanel extends Component<any, any> {
       error: undefined,
     };
   }
-  override shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps: ChatPanelProps) {
     const { currentSession } = nextProps;
 
     if ('isRender' in currentSession && !currentSession.isRender) {
@@ -77,14 +96,14 @@ class ChatPanel extends Component<any, any> {
     return true;
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: ChatPanelProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { currentSession: newCurrentSession } = this.props;
       const { currentSession, currentSessionList, currentInboxList } = prevProps;
       const sessionSuperfluous = currentSessionList.filter(
-        item => (item.groupId || item.accountId) === newCurrentSession.value,
+        (item: ChatSession) => (item.groupId || item.accountId) === newCurrentSession.value,
       );
-      const inboxSuperfluous = currentInboxList.filter(item => item.id === newCurrentSession.value);
+      const inboxSuperfluous = currentInboxList.filter((item: ChatSession) => item.id === newCurrentSession.value);
       const isExist = sessionSuperfluous.length || inboxSuperfluous.length;
 
       if (
@@ -111,7 +130,7 @@ class ChatPanel extends Component<any, any> {
       }
     }
   }
-  chatSessionItem(session) {
+  chatSessionItem(session: ChatSession) {
     this.setState({ isError: false, loading: true });
     if (this.ajax && this.ajax.abort) {
       this.ajax.abort();
@@ -126,29 +145,30 @@ class ChatPanel extends Component<any, any> {
     this.ajax
       .then(result => {
         this.setState({ loading: false });
-        if (result.groupId) {
-          if (result.groupId && !result.isMember) {
+        if (result!.groupId) {
+          if (result!.groupId && !result!.isMember) {
             alert(_l('已不在该群组中，请联系管理员'), 2);
             this.handleClosePanel();
             return;
           }
 
-          if (result.groupId && result.status !== 1) {
+          if (result!.groupId && result!.status !== 1) {
             alert(_l('该群组已关闭或删除'), 2);
             this.handleClosePanel();
             return;
           }
 
-          this.props.dispatch(actions.addCurrentSession(result));
-        } else if (result.accountId) {
-          if (result.accountId === 'file-transfer') {
-            result.isContact = true;
+          this.props.dispatch(actions.addCurrentSession(result!));
+        } else if (result!.accountId) {
+          if (result!.accountId === 'file-transfer') {
+            result!.isContact = true;
           }
 
-          this.props.dispatch(actions.addCurrentSession(result));
-          if (!result.isContact) {
+          this.props.dispatch(actions.addCurrentSession(result!));
+          if (!result!.isContact) {
             this.props.dispatch(
               actions.updateSessionList({
+                // A missing session value stays missing in the update payload.
                 id: session.value,
                 isContact: false,
               }),
@@ -156,14 +176,15 @@ class ChatPanel extends Component<any, any> {
           }
         }
       })
-      .catch(error => {
+      .catch((error: ApiRejection) => {
         this.setState({
           isError: true,
-          error: _.get(error, 'errorMessage'),
+          // 擦除标记：`errorMessage` 为接口异常文案（原 any 直接赋值）。
+          error: _.get(error, 'errorMessage') as string | undefined,
         });
       });
   }
-  inboxSessionItem(session) {
+  inboxSessionItem(session: ChatSession) {
     this.setState({ isError: false });
     this.props.dispatch(actions.addCurrentInbox(session));
   }
@@ -199,7 +220,7 @@ class ChatPanel extends Component<any, any> {
 
     return undefined;
   };
-  renderInbox(item) {
+  renderInbox(item: ChatSession) {
     const { currentSession = {} } = this.props;
     return (
       <div
@@ -232,10 +253,10 @@ class ChatPanel extends Component<any, any> {
           'ChatPanel-big': embed ? undefined : window.innerHeight > 2000,
         })}
       >
-        {currentSessionList.map(item => (
+        {currentSessionList.map((item: ChatSession) => (
           <ChatPanelSession session={item} key={item.id} />
         ))}
-        {currentInboxList.map(item => this.renderInbox(item))}
+        {currentInboxList.map((item: ChatSession) => this.renderInbox(item))}
         {loading && (
           <div className="ChatPanel ChatPanel-loading">
             {isError ? (

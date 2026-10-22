@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 import Emotion from 'src/components/emotion/emotion';
+import type { InboxType } from 'src/pages/chat/components/Inbox/constants';
 import { INBOXTYPES } from 'src/pages/chat/components/Inbox/constants';
 import { htmlDecodeReg, pathCompletion } from 'src/utils/common';
 import { dateConvertToUserZone } from 'src/utils/project';
@@ -794,7 +795,7 @@ export const getInboxId = function (type) {
   }
 };
 
-export const getIsInbox = id => _.toArray(INBOXTYPES).includes(id);
+export const getIsInbox = (id: unknown): id is InboxType => _.toArray<unknown>(INBOXTYPES).includes(id);
 
 /**
  * 是否还存在计数
