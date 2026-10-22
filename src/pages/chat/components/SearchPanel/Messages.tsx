@@ -7,28 +7,33 @@ import LoadDiv from 'ming-ui/components/LoadDiv';
 import { htmlDecodeReg, htmlEncodeReg } from 'src/utils/common';
 import * as ajax from '../../utils/ajax';
 import Constant from '../../utils/constant';
+import { formatMsgDate } from '../../utils';
 
 const format = (keyword, messages) => {
   return messages.map(item => {
-    item.time = item.time.replace(/(^.*)(:\d\d\..*$)/, '$1');
-    item.content = highlightMessageText(keyword, item.msg.con);
-    return item;
+    const time = item.time;
+    if (typeof time === 'number') {
+      item.time = formatMsgDate(time);
+    } else if (time !== undefined) {
+      item.time = time.replace(/(^.*)(:\d\d\..*$)/, '$1');
+    }
+    return Object.assign(item, { content: highlightMessageText(keyword, item.msg?.con) });
   });
 };
 
 const highlightMessageText = (keyword, message) => {
-  message = htmlDecodeReg(message);
+  let text = htmlDecodeReg(message);
   const ellipsisIndex = 25;
-  const firstIndex = message.indexOf(keyword);
+  const firstIndex = text.indexOf(keyword);
 
   if (firstIndex > ellipsisIndex) {
-    message = '...' + message.slice(firstIndex - ellipsisIndex);
+    text = '...' + text.slice(firstIndex - ellipsisIndex);
   }
 
   const reg = new RegExp(_.escapeRegExp(keyword), 'g');
-  message = htmlEncodeReg(message.replace(reg, '*#span1#*' + keyword + '*#span2#*'));
-  message = message.replace(/\*#span1#\*/g, '<span class="colorPrimary">').replace(/\*#span2#\*/g, '</span>');
-  return message;
+  text = htmlEncodeReg(text.replace(reg, '*#span1#*' + keyword + '*#span2#*'));
+  text = text.replace(/\*#span1#\*/g, '<span class="colorPrimary">').replace(/\*#span2#\*/g, '</span>');
+  return text;
 };
 
 export default class Messages extends Component<any, any> {
@@ -100,9 +105,9 @@ export default class Messages extends Component<any, any> {
       <div className="search-message" key={id} onClick={this.props.onGotoMessage.bind(this, message)}>
         <div className="search-message-info">
           <div className="userAvatar">
-            <img src={fromAccount.logo} />
+            <img src={fromAccount?.logo} />
           </div>
-          <div className="userName overflow_ellipsis">{fromAccount.name}</div>
+          <div className="userName overflow_ellipsis">{fromAccount?.name}</div>
           <div className="time">{time}</div>
         </div>
         <div className="search-message-content" dangerouslySetInnerHTML={{ __html: content }} />

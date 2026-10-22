@@ -11,6 +11,10 @@ import * as ajax from '../../utils/ajax';
 import Constant from '../../utils/constant';
 import './index.less';
 
+function fileCreatorName(account) {
+  return account?.fullname;
+}
+
 export const splitFiles = list => {
   const ranges: Record<string, moment.Moment[]> = {};
   ranges[_l('今天')] = [moment().startOf('day'), moment().endOf('day')];
@@ -95,8 +99,8 @@ export class FileItem extends Component<any, any> {
           <div className="time" title={item.$date}>
             {item.$date}
           </div>
-          <div className="creator" title={createAccount.fullname}>
-            {createAccount.fullname}
+          <div className="creator" title={fileCreatorName(createAccount)}>
+            {fileCreatorName(createAccount)}
           </div>
         </div>
         {/* <a href={$downUrl} className="download icon-download colorPrimary" target="_blank" title={_l('下载')} /> */}
@@ -117,7 +121,7 @@ export class FileItem extends Component<any, any> {
           <div className="image">
             <img src={item.previewUrl} />
           </div>
-          <div className="name">{item.createAccount.fullname}</div>
+          <div className="name">{fileCreatorName(item.createAccount)}</div>
         </div>,
       ];
     } else {

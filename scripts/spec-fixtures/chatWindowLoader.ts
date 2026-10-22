@@ -105,7 +105,7 @@ function makeFixture(options: { uiLeaves?: readonly string[]; moduleOverride?: (
     const node = value as Element, children = node.props['children'];
     return [node, ...(Array.isArray(children) ? children.flat() : [children]).flatMap(nodes)];
   }
-  return { load, calls, trace, dispatched, handlers, listeners, storage, opened, contacts, children, request, resolve, reject,
+  return { load, sdk, calls, trace, dispatched, handlers, listeners, storage, opened, contacts, children, request, resolve, reject,
     windowFor, entryFor, nodes, dispatch, getState: () => state,
     setSdkResult: (result: unknown) => { sdkResult = result; }, setSdkFailure: (failure: unknown) => { sdkFailure = failure; } };
 }
