@@ -1,0 +1,11 @@
+# 联系人分组/平铺与共享状态合同（2026-10-23）
+
+固定基线6daa6b4ed05fdf400ab2ee448c546fdde8146f61。Contacts/Friends/Others、ContactList、NewFriendsList/RecommendsList的实际来源继续使用main唯一AddressBookAccount/Page/ContactEntry；明确AddressBookContactGroups与AddressBookFlatContacts两个真实形态，firstCode显式允许null和缺项。动作入口如实接收原本已被断言隐藏的undefined账号ID，不改传输字段或参数默认值。
+
+消费者通过真实Array.isArray检查得到平铺或分组模型，删除result/store、listData concat和ContactList list/group索引上的假窄化。ContactList公开输入仍诚实接受两种数据形态和boolean模式，并对暂不匹配的形态安全显示空视图；不伪称TypeScript已从boolean证明整个异步state相关性。实际行renderer只接受平铺行，公开负探针拒绝分组字典传入。
+
+三个相同的ContactContainerState定义收成src/pages/chat/lib/addressBook/contactViewTypes.ts唯一来源，实际组件导入并重新导出同一类型；包含真实hasMore的boolean/number/null/undefined和可缺选中ID。纯状态整理相对独立行为副本8个完整产品模块Babel字节相同，不使用any、unknown双跳、宽值索引或DTO断言填编译缺口；分组字典是真实首字母键→有限行数组。
+
+公开真实导出正负/非any探针验证三个class共享状态同构、fetchContacts返回、真实list输入和行renderer边界、nullable firstCode及动作undefined参数；自身诊断、传递程序存量及实际退出码分别记录。行为修复的八类旧反例和正常getter/引用/取消异常保真独立记录于contact-view-recovery-20261023.md，不称行为体字节未变。
+
+全仓原始strict、逐(文件,错误码)、最终完整源码SHA、正常main推送、正式构建和候选冻结以 /Users/kogeki/dev/HAP-工作记录/20261023-contact-view-contracts/ 最终证据为准；baseline/debt/tsconfig、默认30秒和并发4、既有known-failure未放宽，目标active，未部署。关键词/账号lookup及写操作SDK来源、旧ProjectContacts未挂载helper和其余全仓债务仍继续，不把本批等同整个地址簿或全仓完成。

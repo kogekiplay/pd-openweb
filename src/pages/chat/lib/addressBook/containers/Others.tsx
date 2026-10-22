@@ -6,7 +6,7 @@ import ContactList from '../components/ContactList';
 import ListSearchBar from '../components/ListSearchBar';
 import UserDetail from '../components/UserDetail';
 
-import type { AddressBookAccount as AddressBookRow, AddressBookContacts as AddressBookListData, AddressBookContactGroups } from 'src/api/addressBookTypes';
+import type { AddressBookAccount as AddressBookRow, AddressBookContactGroups } from 'src/api/addressBookTypes';
 
 const formatContactsData = (store: AddressBookContactGroups | null, list: AddressBookRow[] | null | undefined): AddressBookContactGroups => {
   const result = store || {};
@@ -40,21 +40,8 @@ const defaultState = {
   keywords: '',
 };
 
-export interface ContactContainerState {
-  listData: AddressBookListData;
-  isLoading: boolean;
-  /** 首屏为 true，分页后沿用 list && list.length 的条数/缺项。 */
-  hasMore: boolean | number | null | undefined;
-  /** 初始为 null，点击行后写入（可能为 undefined——原实现直接赋值） */
-  selectedAccountId: string | null | undefined;
-  pageIndex: number;
-  keywords: string;
-  /** 仅 Contacts：是否过滤其它协作关系 */
-  isFilterOther?: boolean | undefined;
-  /** 仅 Others：选中行的好友/联系人标记 */
-  isFriend?: boolean | undefined;
-  isContact?: boolean | undefined;
-}
+export type { ContactContainerState } from '../contactViewTypes';
+import type { ContactContainerState } from '../contactViewTypes';
 
 export default class Others extends React.Component<Record<string, never>, ContactContainerState> {
   private requestVersion = 0;
