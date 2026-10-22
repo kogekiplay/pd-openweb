@@ -144,7 +144,7 @@ export default function PortalUserInfoDrawer(props) {
      
       closable={false}
       mask={true}
-      styles={{ body: { padding: 0 }, mask: { background: 'rgba(0, 0, 0, 0.1)' }, wrapper: { maxWidth: '100vw' } }}
+      styles={{ body: { padding: 0 }, mask: { background: 'var(--color-background-overlay-light)' }, wrapper: { maxWidth: '100vw' } }}
     >
       <Wrap className={cx('flexColumn h100', { isMobile, leftNaviStyle: [1, 3].includes(currentPcNaviStyle) })}>
         {isMobile && (

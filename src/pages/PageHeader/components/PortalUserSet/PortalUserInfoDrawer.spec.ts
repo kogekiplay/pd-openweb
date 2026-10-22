@@ -51,7 +51,7 @@ for (const currentPcNaviStyle of [1, 3, 0, 2]) {
     assert.equal(drawer.props['placement'], 'right');
     assert.equal(drawer.props['open'], true);
     assert.equal(drawer.props['mask'], true);
-    assert.deepEqual(drawer.props['styles'], { body: { padding: 0 }, mask: { background: 'rgba(0, 0, 0, 0.1)' }, wrapper: { maxWidth: '100vw' } });
+    assert.deepEqual(drawer.props['styles'], { body: { padding: 0 }, mask: { background: 'var(--color-background-overlay-light)' }, wrapper: { maxWidth: '100vw' } });
     assert.equal(drawer.props['onClose'], onClose);
     (drawer.props['onClose'] as () => void)();
     assert.equal(closed, 1);
