@@ -295,6 +295,7 @@ function makeReducerLoader(variant: 'orig' | 'current') {
       if (r === 'redux') return require('redux');
       if (r === 'lodash') return realLodash;
       if (r === '../utils/' || r === '../utils') return realUtils;
+      if (r === '../utils/sessionPropertyKey') return load('../utils/sessionPropertyKey.ts');
       if (r === 'src/redux/types') return {};
       if (r.startsWith('./')) return load(`${r.slice(2)}.ts`);
       throw new Error(`chat-fixture 没给 ${r} 打桩（${variant}/${rel}）`);

@@ -11,3 +11,5 @@ Redux会话属性键通过sessionPropertyKey仅将undefined映射到其原有属
 完整Babel8模块相同（含Info、父级、actions及实际公告/搜索生产模块），reducer与MessageView仅精确反转新增属性键函数调用及导入后全文相同。公开产品导出正负、非any和有限键探针自身0诊断；传递程序存量和实际退出1另记，不冒称全程序零诊断。审查副本全仓strict49428→49410，Chat474→456，逐(文件,错误码)新增0。新属性键函数是实际生产消费代码，纳入严格检查。
 
 完整证据、实际命令/退出码和固定源码绑定：/Users/kogeki/dev/HAP-工作记录/20261022-session-info-contracts/。最终SHA、棘轮收紧、正常main同步、正式构建与冻结材料以该目录最终证据为准。未部署生产；协作Members/Panel当前dirty仅保护不读取或整合。
+
+首次正式pre-push在fd1becb849a27102a6dab43334f2c39f3165a673退出1：331/332通过，旧chatReduxFixture不认识新增sessionPropertyKey导入。只为该真实模块增加原加载器入口，current编译当前源码，orig仍编译冻结历史，未手写辅助函数、改断言/隔离或跳hook。完整原A/B reducer规格修后退出0；原push.log/push-exit.json保留，后续正式推送用独立日志。
