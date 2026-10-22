@@ -1,3 +1,4 @@
+import type { AddressBookChatKeywordEndpoint, AddressBookChatKeywordParams } from './addressBookTypes';
 import type { AddressBookSearchDeptEndpoint, AddressBookSearchDeptParams } from './addressBookTypes';
 import type { AddressBookContactsEndpoint, AddressBookContactsParams, AddressBookPageQueryParams, AddressBookNewFriendsEndpoint, AddressBookRecommendsEndpoint } from './addressBookTypes';
 
@@ -15,6 +16,10 @@ const getMobileAddressRecommend: AddressBookRecommendsEndpoint = function (args:
 
 const searchAddressbookAndDepartment: AddressBookSearchDeptEndpoint = function (args: AddressBookSearchDeptParams, options: ApiOptions = {}) {
   return mdyAPI('AddressBook', 'SearchAddressbookAndDepartment', args, options);
+};
+
+const getAllChatAddressbookByKeywords: AddressBookChatKeywordEndpoint = function (args: AddressBookChatKeywordParams, options: ApiOptions = {}) {
+  return mdyAPI('AddressBook', 'GetAllChatAddressbookByKeywords', args, options);
 };
 
 export default {
@@ -94,9 +99,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  getAllChatAddressbookByKeywords: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('AddressBook', 'GetAllChatAddressbookByKeywords', args, options);
-  },
+  getAllChatAddressbookByKeywords,
   /**
   * 关键词搜索通讯录（任务 协作用户快速搜索）
   * @param {Object} args 请求参数

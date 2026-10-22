@@ -1,0 +1,13 @@
+# Chat 关键词SDK与真实两个消费方合同（2026-10-23）
+
+基线4ab00089ed737e897555cd6d19bf4129fb9b0e17。GetAllChatAddressbookByKeywords的实际生产调用包括chat/utils/ajax.ts和GlobalSearchAllContent，不能只检查Chat一侧。共享AddressBookSearchEntry复用唯一AddressBookAccount/SearchGroup，登记SearchMember实际读的user.userId/avatarMiddle/profession以及GlobalSearch.UserList实际读的groupID/groupAvatar/groupName/userHead/userName/userJob等有限字段，不加入宽值索引或假身份品牌。
+
+AddressBookSearchResult诚实允许缺失/自有undefined/null分区及list、nil行；不再把原始回执视为两个必填列表。公开SearchMemberProps/State直接使用该唯一来源，移除本地重复制账号/群组模型、result整体窄化、行/ID断言；addUserSession输入与真实动作同为string|undefined。未处理的ScrollInfo/DOM布局/height断言明确保留为下一独立链，不能称SearchMember所有断言已清除。
+
+SDK端点复用现有InboxEndpoint模式：普通JSON异步返回原abortable有限请求；sync/text/stream/customParseResponse/agent等不透明模式返回unknown。参数仅keywords/pageSize。具体同名函数从对象属性精确提到同模块const，仍直接调用同一mdyAPI，ABI/name/length/key顺序及原args/options/结果引用由完整SDK规格验证；没有metadata索引兼容桥。Global右侧实际rightAjax改为有限请求，整页state/其它请求和UserList通用props仍有既有any债务，不借本批宣称全页完成。
+
+纯SDK/句柄整理相对独立行为副本：5个完整产品模块Babel字节相同，SDK完整模块在精确还原同名同体函数位置后AST相同，不能笼统宣称整个SDK字节相同。两个消费方正常/缺项/过期回执的完整运行证据单列在chat-keyword-recovery-20261023.md。
+
+直接导入实际SDK、ajax、公开SearchMember state/props、Global右侧字段及真实动作做正负/非any/有限键探针。原探针因外部node类型目录及未使用断言声明失败的原日志保留，只修验证宿主/导出探针，不放宽产品tsconfig。自身诊断、传递程序存量与实际退出码分别记录，不把存量失败说成整程序通过。
+
+完整源码SHA、逐(文件,错误码)、必要门禁、正常main同步、正式构建和冻结候选以 /Users/kogeki/dev/HAP-工作记录/20261023-addressbook-keyword-lookup/ 最终回执为准。baseline/debt只收紧，30秒/并发4和既有known-failure不变。此批lead独立实现，无新增协作提交接收；账号lookup、quickSelectUser关键词SDK、MobileOrEmailInvite及其它全仓合同仍继续，总目标active，未部署。

@@ -1,3 +1,4 @@
+import type { AddressBookRequest, AddressBookSearchResult } from 'src/api/addressBookTypes';
 import React, { Component } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Skeleton } from 'antd';
@@ -23,7 +24,7 @@ const ClickAwayable = ClickAway;
 export default class GlobalSearchAllContent extends Component<any, any> {
   private rightRequestVersion = 0;
   declare leftAjax: ApiResult | null | undefined;
-  declare rightAjax: ApiResult | undefined;
+  declare rightAjax: AddressBookRequest<AddressBookSearchResult> | undefined;
 
   constructor(props) {
     super(props);
