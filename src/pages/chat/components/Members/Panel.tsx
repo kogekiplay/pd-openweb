@@ -5,10 +5,20 @@ import { ScrollView } from 'ming-ui';
 import Dropdown from 'ming-ui/components/Dropdown';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import GroupController from 'src/api/group';
+import type { ChatSession } from '../../redux/types';
 import InviteOrAddUsers from './InviteOrAddUsers';
 
-export class Member extends Component<any, any> {
-  constructor(props) {
+/** The actual Group API supplies the shared flat member view. */
+export type MemberItem = import('src/api/groupTypes').GroupMember;
+
+export interface MemberProps {
+  item: MemberItem;
+  /** 打开与某成员的会话（父级 `ChatPanelSessionInfo.handleOpenSession`） */
+  onOpenSession: (item: MemberItem) => void;
+}
+
+export class Member extends Component<MemberProps> {
+  constructor(props: MemberProps) {
     super(props);
   }
   override render() {
@@ -39,8 +49,27 @@ export class Member extends Component<any, any> {
   }
 }
 
-export default class MembersPanel extends Component<any, any> {
-  constructor(props) {
+export interface MembersPanelProps {
+  session: ChatSession;
+  /** 面板显隐（父级 `handleSetPanelVisible.bind(this, 'members')`） */
+  onSetPanelVisible: (visible: boolean) => void;
+  /** 打开与某成员的会话（与 `Member` 的同一回调） */
+  onOpenSession: (item: MemberItem) => void;
+}
+
+export interface MembersPanelState {
+  pageIndex: number;
+  loading: boolean;
+  members: MemberItem[];
+  dropdownData: { text: string; value: number }[];
+  /** `Dropdown.onChange` 的真实实参含 `undefined`，如实保持 */
+  dropdownValue: number | undefined;
+  /** 服务端成员总数；响应缺省时如实保持 `undefined` */
+  groupMemberCount?: number | undefined;
+}
+
+export default class MembersPanel extends Component<MembersPanelProps, MembersPanelState> {
+  constructor(props: MembersPanelProps) {
     super(props);
     this.state = {
       pageIndex: 1,
@@ -55,7 +84,7 @@ export default class MembersPanel extends Component<any, any> {
     };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: MembersPanelProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { session } = this.props;
 
@@ -102,7 +131,7 @@ export default class MembersPanel extends Component<any, any> {
       });
     });
   }
-  handleDropdownChange(value) {
+  handleDropdownChange(value: number | undefined) {
     this.setState(
       {
         pageIndex: 1,
@@ -144,7 +173,7 @@ export default class MembersPanel extends Component<any, any> {
         </div>
         <div className="content">
           <ScrollView onScrollEnd={this.handleScrollEnd.bind(this)} className="flex">
-            {members.map(item => (
+            {members.map((item: MemberItem) => (
               <Member item={item} key={item.accountId} onOpenSession={this.props.onOpenSession} />
             ))}
             <LoadDiv className={cx({ Hidden: !loading })} size="small" />

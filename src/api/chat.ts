@@ -1,7 +1,23 @@
-import type { ChatGroupEndpoint, ChatGroupParams } from './chatTypes';
+import type { ChatGroupEndpoint, ChatGroupParams, GroupFileEndpoint, GroupFileParams, UserFileEndpoint, UserFileParams, GroupCountEndpoint, GroupCountParams, UserCountEndpoint, UserCountParams } from './chatTypes';
 
 const getGroupInfo: ChatGroupEndpoint = function (args: ChatGroupParams, options: ApiOptions = {}) {
   return mdyAPI('Chat', 'GetGroupInfo', args, options);
+};
+
+const getGroupFileList: GroupFileEndpoint = function (args: GroupFileParams, options: ApiOptions = {}) {
+  return mdyAPI('Chat', 'GetGroupFileList', args, options);
+};
+
+const getUserFileList: UserFileEndpoint = function (args: UserFileParams, options: ApiOptions = {}) {
+  return mdyAPI('Chat', 'GetUserFileList', args, options);
+};
+
+const getGroupCountByTabName: GroupCountEndpoint = function (args: GroupCountParams, options: ApiOptions = {}) {
+  return mdyAPI('Chat', 'GetGroupCountByTabName', args, options);
+};
+
+const getUserCountByTabName: UserCountEndpoint = function (args: UserCountParams, options: ApiOptions = {}) {
+  return mdyAPI('Chat', 'GetUserCountByTabName', args, options);
 };
 
 export default {
@@ -61,9 +77,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupFileList: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Chat', 'GetGroupFileList', args, options);
-  },
+  getGroupFileList,
   /**
    * 获取用户聊天文件列表
    * @param {Object} args 请求参数
@@ -80,9 +94,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserFileList: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Chat', 'GetUserFileList', args, options);
-  },
+  getUserFileList,
   /**
    * 获取群组详情中tab计数
    * @param {Object} args 请求参数
@@ -93,9 +105,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupCountByTabName: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Chat', 'GetGroupCountByTabName', args, options);
-  },
+  getGroupCountByTabName,
   /**
    * 获取用户侧边栏数据
    * @param {Object} args 请求参数
@@ -106,9 +116,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getUserCountByTabName: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Chat', 'GetUserCountByTabName', args, options);
-  },
+  getUserCountByTabName,
   /**
    * 发送文件到消息
    * @param {Object} args 请求参数

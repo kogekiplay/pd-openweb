@@ -8,8 +8,30 @@ import { htmlDecodeReg, htmlEncodeReg } from 'src/utils/common';
 import * as ajax from '../../utils/ajax';
 import Constant from '../../utils/constant';
 import { formatMsgDate } from '../../utils';
+import type { ChatMessage, ChatSession } from '../../redux/types';
 
-const format = (keyword, messages) => {
+/** Search consumes raw HTTP rows; missing text/sender fields remain visible as absent data. */
+export interface SearchMessageInput extends Pick<ChatMessage, 'id' | 'time'> {
+  msg?: Pick<NonNullable<ChatMessage['msg']>, 'con'> | null | undefined;
+  fromAccount?: Pick<NonNullable<ChatMessage['fromAccount']>, 'logo' | 'name'> | null | undefined;
+}
+export type SearchMessageRow = SearchMessageInput & { content: string };
+
+export interface SearchMessagesProps {
+  session: ChatSession;
+  /** 搜索关键词（父级 `ChatPanelSessionInfo` 的 `searchText: string` 透传） */
+  searchText: string;
+  /** 跳到某条消息（父级 `ChatPanelSessionInfo.handleGotoMessage`，只取 `id`） */
+  onGotoMessage: (message: Pick<ChatMessage, 'id'>) => void;
+}
+
+export interface SearchMessagesState {
+  loading: boolean;
+  pageIndex: number;
+  messages: SearchMessageRow[];
+}
+
+const format = (keyword: string, messages: SearchMessageInput[]): SearchMessageRow[] => {
   return messages.map(item => {
     const time = item.time;
     if (typeof time === 'number') {
@@ -21,7 +43,7 @@ const format = (keyword, messages) => {
   });
 };
 
-const highlightMessageText = (keyword, message) => {
+const highlightMessageText = (keyword: string, message: unknown): string => {
   let text = htmlDecodeReg(message);
   const ellipsisIndex = 25;
   const firstIndex = text.indexOf(keyword);
@@ -36,8 +58,8 @@ const highlightMessageText = (keyword, message) => {
   return text;
 };
 
-export default class Messages extends Component<any, any> {
-  constructor(props) {
+export default class Messages extends Component<SearchMessagesProps, SearchMessagesState> {
+  constructor(props: SearchMessagesProps) {
     super(props);
     this.state = {
       loading: false,
@@ -50,7 +72,7 @@ export default class Messages extends Component<any, any> {
     this.updateMessages(searchText);
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: SearchMessagesProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.searchText !== prevProps.searchText) {
         this.setState(
@@ -66,10 +88,11 @@ export default class Messages extends Component<any, any> {
       }
     }
   }
-  updateMessages(searchText) {
+    updateMessages(searchText: string) {
     const { session } = this.props;
     const type = session.isGroup ? Constant.SESSIONTYPE_GROUP : Constant.SESSIONTYPE_USER;
     const { loading, pageIndex, messages } = this.state;
+    const input: SearchMessageInput[] = messages;
 
     if (loading || !pageIndex) {
       return;
@@ -91,7 +114,7 @@ export default class Messages extends Component<any, any> {
         this.setState({
           pageIndex: res && res.length >= 10 ? pageIndex + 1 : 0,
           loading: false,
-          messages: format(searchText, messages.concat(res || [])),
+          messages: format(searchText, input.concat(res || [])),
         });
       });
   }
@@ -99,18 +122,20 @@ export default class Messages extends Component<any, any> {
     const { searchText } = this.props;
     this.updateMessages(searchText);
   }
-  renderMessage(message) {
+    renderMessage(message: SearchMessageRow) {
     const { id, fromAccount, time, content } = message;
     return (
       <div className="search-message" key={id} onClick={this.props.onGotoMessage.bind(this, message)}>
         <div className="search-message-info">
           <div className="userAvatar">
-            <img src={fromAccount?.logo} />
+              {/* 缺失发送者只保留空字段，不伪造身份。 */}
+              <img src={fromAccount?.logo} />
           </div>
-          <div className="userName overflow_ellipsis">{fromAccount?.name}</div>
+              <div className="userName overflow_ellipsis">{fromAccount?.name}</div>
           <div className="time">{time}</div>
         </div>
-        <div className="search-message-content" dangerouslySetInnerHTML={{ __html: content }} />
+              {/* 擦除标记：`content` 由 format 写入；既有行为直接交给 dangerouslySetInnerHTML */}
+              <div className="search-message-content" dangerouslySetInnerHTML={{ __html: content }} />
       </div>
     );
   }

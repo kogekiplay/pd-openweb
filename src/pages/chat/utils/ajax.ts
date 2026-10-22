@@ -1,3 +1,4 @@
+import type { ChatFileQuery, ChatCountQuery } from 'src/api/chatTypes';
 import type { ChatSessionLookupRequest } from 'src/api/chatTypes';
 import type { AddressBookRequest, AddressBookSearchResult } from 'src/api/addressBookTypes';
 import _ from 'lodash';
@@ -67,27 +68,10 @@ interface FeedQueryParams {
  * `Files` / `Files.Panel` / `SearchPanel.Files` 构造的群/个人文件查询。
  * 字段依据同时来自真实生产点与 ChatController 两个接口的参数说明；原对象仍直接传给接口。
  */
-interface FileListParams {
-  groupId?: string | undefined;
-  withUser?: string | number | undefined;
-  pageIndex?: number | undefined;
-  pageSize?: number | undefined;
-  keywords?: string | undefined;
-  fileType?: number | undefined;
-  /** Files.Panel 的全部选项是 -1，选中成员时为账号 id。 */
-  fromUser?: string | number | undefined;
-  sendBy?: string | number | undefined;
-  start?: string | undefined;
-  end?: string | undefined;
-}
+type FileListParams = ChatFileQuery;
 
 /** SearchPanel 按会话类型构造的计数查询，原地补入 loadTabType 后原样传递。 */
-interface CountByTabNameParams {
-  groupId?: string | undefined;
-  withUser?: string | number | undefined;
-  keywords?: string | undefined;
-  loadTabType?: number | undefined;
-}
+type CountByTabNameParams = ChatCountQuery;
 
 /** `addMembers` 的入参 */
 interface AddMembersParams {

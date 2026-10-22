@@ -7,9 +7,33 @@ import RegExpValidator from 'src/utils/expression';
 import * as utils from '../../utils/';
 import * as ajax from '../../utils/ajax';
 import { FileItem } from '../Files';
+import type { ChatFileItem } from '../Files';
+import type { ChatSession } from '../../redux/types';
 
-const format = res => {
-  return res.map(file => {
+/**
+ * 文件搜索回执与格式化视图行**复用** `Files/index.tsx` 已导出的 `ChatFileItem`
+ * （仓库内该形态的唯一合同；本文件不另建同形第二份）。
+ *
+ * 【生产/消费依据】`utils/ajax.getFileList` 回执经 `format` 原地写入
+ * `$date`/`$size`/`iconClass`/`previewUrl`（`ChatFileItem` 已声明这四个派生字段），
+ * 再交给 `FileItem` 渲染（读 `previewUrl`/`type`/`createAccount`/`iconClass`/`name`/`$date`/`fileId`）。
+ */
+
+export interface SearchFilesProps {
+  session: ChatSession;
+  /** 搜索关键词（父级 `ChatPanelSessionInfo` 的 `searchText: string` 透传） */
+  searchText: string;
+}
+
+export interface SearchFilesState {
+  loading: boolean;
+  pageIndex: number;
+  files: ChatFileItem[];
+}
+
+const format = (res: ChatFileItem[]): ChatFileItem[] => {
+    // 原地在 wire 行上写入派生字段后返回（原实现即如此），故参数按 ChatFileItem 声明
+    return res.map((file: ChatFileItem): ChatFileItem => {
     file.$date = utils.formatMsgDate(file.time);
     file.$size = utils.formatFileSize(file.size);
     file.iconClass = getClassNameByExt(`.${RegExpValidator.getExtOfFileName(file.name)}`);
@@ -21,8 +45,8 @@ const format = res => {
   });
 };
 
-export default class Files extends Component<any, any> {
-  constructor(props) {
+export default class Files extends Component<SearchFilesProps, SearchFilesState> {
+  constructor(props: SearchFilesProps) {
     super(props);
     this.state = {
       loading: false,
@@ -35,7 +59,7 @@ export default class Files extends Component<any, any> {
     this.updateFiles(searchText);
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: SearchFilesProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.searchText !== prevProps.searchText) {
         this.setState(
@@ -51,7 +75,7 @@ export default class Files extends Component<any, any> {
       }
     }
   }
-  updateFiles(searchText) {
+    updateFiles(searchText: string) {
     const { session } = this.props;
     const { loading, pageIndex, files } = this.state;
 

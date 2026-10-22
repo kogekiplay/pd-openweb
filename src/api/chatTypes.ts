@@ -12,3 +12,47 @@ export type ChatGroupEndpoint = InboxEndpoint<ChatGroupParams, ChatGroupInfo | n
 /** Shared finite read view for the two actual session lookup producers. */
 export type ChatSessionLookup = LookupFields<GroupInfo & AccountInfo> & { from?: string | undefined };
 export type ChatSessionLookupRequest = InboxRequest<ChatSessionLookup | null | undefined>;
+
+/** Shared finite request view used by the group/user file and count routers. */
+export interface ChatFileQuery {
+  groupId?: string | undefined;
+  withUser?: string | number | undefined;
+  pageIndex?: number | undefined;
+  pageSize?: number | undefined;
+  keywords?: string | undefined;
+  fileType?: number | undefined;
+  fromUser?: string | number | undefined;
+  sendBy?: string | number | undefined;
+  start?: string | undefined;
+  end?: string | undefined;
+}
+export interface ChatCountQuery {
+  groupId?: string | undefined;
+  withUser?: string | number | undefined;
+  keywords?: string | undefined;
+  loadTabType?: number | undefined;
+}
+export interface ChatMatchedCounts {
+  matchedMessageCount?: number | undefined;
+  matchedFileCount?: number | undefined;
+  matchedMemberCount?: number | undefined;
+}
+/** Raw file row; formatting fields are declared by the actual file view, not by the wire model. */
+export interface ChatFileWire {
+  fileId?: string | number | undefined;
+  name?: string | undefined;
+  url?: string | undefined;
+  size?: number | undefined;
+  time?: string | number | undefined;
+  type?: number | undefined;
+  createAccount?: { fullname?: string | undefined } | null | undefined;
+}
+export interface ChatFileListReply { list?: ChatFileWire[] | null | undefined; }
+export type GroupFileParams = Omit<ChatFileQuery, 'withUser' | 'sendBy'>;
+export type UserFileParams = Omit<ChatFileQuery, 'groupId'>;
+export type GroupCountParams = Omit<ChatCountQuery, 'withUser'>;
+export type UserCountParams = Omit<ChatCountQuery, 'groupId'>;
+export type GroupFileEndpoint = InboxEndpoint<GroupFileParams, ChatFileListReply>;
+export type UserFileEndpoint = InboxEndpoint<UserFileParams, ChatFileListReply>;
+export type GroupCountEndpoint = InboxEndpoint<GroupCountParams, ChatMatchedCounts>;
+export type UserCountEndpoint = InboxEndpoint<UserCountParams, ChatMatchedCounts>;
