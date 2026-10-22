@@ -1,4 +1,4 @@
-import type { GroupAboutEndpoint, GroupAboutParams, GroupToPostEndpoint, GroupToPostParams } from './groupTypes';
+import type { GroupAboutEndpoint, GroupAboutParams, GroupToPostEndpoint, GroupToPostParams, GroupInfoEndpoint, GroupInfoParams, GroupUsersEndpoint, GroupUsersParams } from './groupTypes';
 
 const updateGroupAbout: GroupAboutEndpoint = function (args: GroupAboutParams, options: ApiOptions = {}) {
   return mdyAPI('Group', 'UpdateGroupAbout', args, options);
@@ -6,6 +6,14 @@ const updateGroupAbout: GroupAboutEndpoint = function (args: GroupAboutParams, o
 
 const updateGroupToPost: GroupToPostEndpoint = function (args: GroupToPostParams, options: ApiOptions = {}) {
   return mdyAPI('Group', 'UpdateGroupToPost', args, options);
+};
+
+const getGroupInfo: GroupInfoEndpoint = function (args: GroupInfoParams, options: ApiOptions = {}) {
+  return mdyAPI('Group', 'GetGroupInfo', args, options);
+};
+
+const getGroupUsers: GroupUsersEndpoint = function (args: GroupUsersParams, options: ApiOptions = {}) {
+  return mdyAPI('Group', 'GetGroupUsers', args, options);
 };
 
 export default {
@@ -120,9 +128,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupUsers: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Group', 'GetGroupUsers', args, options);
-  },
+  getGroupUsers,
   /**
    * 关键词搜索群组内有效成员
    * @param {Object} args 请求参数
@@ -156,9 +162,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getGroupInfo: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Group', 'GetGroupInfo', args, options);
-  },
+  getGroupInfo,
   /**
    * 群组名片
    * @param {Object} args 请求参数

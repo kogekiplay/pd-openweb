@@ -3,14 +3,15 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 import { Avatar, UserCard } from 'ming-ui';
 
-interface UserHeadProps {
+export interface UserHeadData { accountId?: string | undefined; userHead?: string | undefined; }
+export interface UserHeadProps<User extends UserHeadData = UserHeadData> {
   /** 调用方常把整条成员数据原样传进来，多余字段照收 */
-  user: { accountId: string; userHead?: string | undefined; [key: string]: unknown };
+  user: User;
   size?: number | undefined;
   className?: string | undefined;
   type?: string | undefined;
   /** 头像的点击事件 */
-  headClick?: ((accountId: string) => void) | undefined;
+  headClick?: ((accountId: User['accountId']) => void) | undefined;
   /** 网络 id */
   projectId?: string | null | undefined;
   appId?: string | undefined;
@@ -31,7 +32,7 @@ interface UserHeadProps {
 /**
  * 用户头像，带 hover 的层
  */
-export default class UserHead extends React.Component<UserHeadProps> {
+export default class UserHead<User extends UserHeadData = UserHeadData> extends React.Component<UserHeadProps<User>> {
   static override propTypes = {
     user: PropTypes.shape({
       accountId: PropTypes.string,
@@ -54,7 +55,7 @@ export default class UserHead extends React.Component<UserHeadProps> {
     size: 48,
   };
 
-  getDefaultImg = (accountId: string) => {
+  getDefaultImg = (accountId: string | undefined) => {
     let host = `${md.global.FileStoreConfig.pictureHost}/UserAvatar/`;
 
     switch (accountId) {
@@ -105,9 +106,7 @@ export default class UserHead extends React.Component<UserHeadProps> {
       </div>
     );
 
-    const disabled =
-      this.props.disabled ||
-      [
+    const disabledIds: readonly (string | undefined)[] = [
         'user-self',
         'user-sub',
         'user-undefined',
@@ -119,7 +118,8 @@ export default class UserHead extends React.Component<UserHeadProps> {
         '4',
         'isEmpty',
         'user-system',
-      ].includes(user.accountId);
+      ];
+    const disabled = this.props.disabled || disabledIds.includes(user.accountId);
 
     return (
       <UserCard

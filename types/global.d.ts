@@ -21,7 +21,7 @@
 // ---- 由 src/common/global.js 在启动时挂到 window 上 ----
 // 多语言翻译（src/common/global.ts 的 window._l）：key 查翻译表、查不到回落到 key 本身；
 // 参数按顺序替换文案里的 %0、%1……（替换时被 String() 化，所以数字也可以）。返回的永远是字符串。
-declare var _l: (key: string, ...args: (string | number)[]) => string;
+declare var _l: (key: string, ...args: (string | number | undefined)[]) => string;
 /**
  * 全局配置树。【形状取自生产运行时，不是照文档抄的】——
  * 2026-09-16 在 oa.tlytelec.com 上把 md.global 逐层 dump 下来生成。

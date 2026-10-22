@@ -2,8 +2,9 @@
 import type { ChatWindowFixture } from '../../../../../scripts/spec-fixtures/chatWindowLoader';
 const assert: typeof import('node:assert/strict') = require('node:assert/strict');
 const React: typeof import('react') = require('react');
-const { makeFixture } = require('../../../../../scripts/spec-fixtures/chatWindowLoader.ts') as { makeFixture(options: { uiLeaves?: string[]; moduleOverride?: (file: string, name: string) => unknown }): ChatWindowFixture };
+const { makeFixture } = require('../../../../../scripts/spec-fixtures/chatWindowLoader.ts') as { makeFixture(options: { uiLeaves?: string[]; moduleOverride?: (file: string, name: string) => unknown; sdkOverride?: SdkOverride }): ChatWindowFixture };
 type Data = Record<string, unknown>;
+type SdkOverride = (call: { controller: string; action: string; args: Data; options: Data }) => { value: unknown } | undefined;
 interface Element { type: unknown; props: Data; }
 interface Subject { props: Data; state: Data; render(): Element; renderTextarea(): Element; onChange(event: Data): void; handleChange(value: string): void; handleFocus(): void; handleBlur(event: Data): void; componentDidUpdate(previous: Data): void; handleChangeItem?: unknown; }
 type Constructor = new (props: Data) => Subject;
@@ -11,7 +12,7 @@ const prefix='src/pages/chat/';
 const settings='src/pages/Group/settingGroup/index.tsx';
 const ann=prefix+'components/Announcement/index.tsx', discussion=prefix+'components/DiscussionAnnouncement/index.tsx';
 const tick=()=>new Promise<void>(resolve=>setImmediate(resolve));
-function make() {
+function make(sdkOverride?: SdkOverride) {
  const slots: unknown[]=[], updates: unknown[][]=[], trace: string[]=[], projects=new Map<string, Data>();
  let cursor=0, closed=0, f!: ChatWindowFixture;
  let settingFactory: ((props:Data)=>Element)|undefined,settingProps:Data={},settingState:Data|undefined,settingMounted=false;
@@ -26,11 +27,11 @@ function make() {
  }
  const Leaf=()=>null;
  const Dialog=Object.assign(()=>null,{confirm:(options:unknown)=>{trace.push('upgrade');}});
- f=makeFixture({uiLeaves:[prefix+'components/Feeds',prefix+'components/Feeds/Panel',prefix+'components/Files/Panel',prefix+'components/Members',prefix+'components/Members/Panel',prefix+'components/SearchPanel', 'src/ming-ui/components/Icon','src/ming-ui/components/LoadDiv','src/ming-ui/components/Menu','src/ming-ui/components/MenuItem','src/pages/Group/createGroup/SelectAvatarTrigger','src/pages/Group/settingGroup/QrPopup','src/pages/chat/components/MyStatus/PersonalStatus'],moduleOverride(file,name){
+ f=makeFixture({...sdkOverride ? {sdkOverride} : {}, uiLeaves:[prefix+'components/Feeds',prefix+'components/Feeds/Panel',prefix+'components/Files/Panel',prefix+'components/Members',prefix+'components/Members/Panel',prefix+'components/SearchPanel', 'src/ming-ui/components/Icon','src/ming-ui/components/LoadDiv','src/ming-ui/components/Menu','src/ming-ui/components/MenuItem','src/pages/Group/createGroup/SelectAvatarTrigger','src/pages/Group/settingGroup/QrPopup','src/pages/chat/components/MyStatus/PersonalStatus'],moduleOverride(file,name){
   if(file===discussion&&name==='react')return {...React,useState};
   if(file===settings&&name==='react')return {...React,useCallback:(fn:unknown)=>fn,useEffect:(fn:()=>unknown)=>{if(!settingMounted)effects.push(fn);}};
   if(file===settings&&name==='react-use')return {useSetState:(initial:Data)=>{settingState??=initial;return [settingState,(patch:Data|((old:Data)=>Data))=>{settingState={...settingState,...(typeof patch==='function'?patch(settingState!):patch)};}];}};
-  if(name==='ming-ui/components/FunctionWrap')return (Type:(props:Data)=>Element,props:Data)=>{settingFactory=Type;settingProps={visible:true,onClose:()=>{},...props};};
+  if(name==='ming-ui/components/FunctionWrap')return (Type:(props:Data)=>Element,props:Data)=>{settingFactory=Type;settingProps={visible:true,onClose:()=>{trace.push('settings-close');},...props};};
   if((file===settings||file===prefix+'containers/ChatPanelHeader/index.tsx')&&name==='styled-components')return styled;
   if(file===settings&&name==='ming-ui')return {Dialog,Dropdown:f.load('src/ming-ui/components/Dropdown.tsx')['default'],Textarea:f.load('src/ming-ui/components/Textarea.tsx')['default'],Button:Leaf,Input:Leaf,Icon:Leaf,LoadDiv:Leaf,ScrollView:Leaf,Switch:Leaf,UserHead:Leaf,VerifyPasswordConfirm:Leaf};
   if(name==='src/components/addFriends')return Leaf;
@@ -64,7 +65,7 @@ function make() {
   function openSettings(session:Data){const Header=(f.load(prefix+'containers/ChatPanelHeader/index.tsx')['default'] as {WrappedComponent:Constructor}).WrappedComponent;const header=instance(Header,{...f.getState(),session,dispatch:f.dispatch});(header as unknown as {handleSettingGroup():void}).handleSettingGroup();assert.ok(settingFactory);}
  function renderSettings(){assert.ok(settingFactory);const tree=settingFactory(settingProps);settingMounted=true;return tree;}
  function runEffects(){for(const effect of effects.splice(0))effect();}
- return {...f,slots,updates,trace,projects,Group,Announcement,instance,renderDiscussion,element,Dropdown,Dialog,decode,closed:()=>closed,openSettings,renderSettings,runEffects};
+ return {...f,slots,updates,trace,projects,Group,Announcement,instance,renderDiscussion,element,Dropdown,Dialog,decode,closed:()=>closed,openSettings,renderSettings,runEffects,settingsState:()=>settingState};
 }
 let passed=0;
 async function check(name:string,run:()=>void|Promise<void>){await run();passed++;console.log('  ✓ '+name);}
@@ -156,7 +157,7 @@ async function main(){
   assert.deepEqual(f.dispatched.slice(-2).map(action=>action['type']),['UPDATE_CURRENT_SESSION','UPDATE_SESSION_LIST']);
  });
  await check('full Group API wrappers retain function ABI, raw argument/options references and all SDK modes',()=>{
-  const f=make();for(const [method,action]of [['updateGroupAbout','UpdateGroupAbout'],['updateGroupToPost','UpdateGroupToPost']]){const fn=f.Group[method!]!;assert.equal(fn.name,method);assert.equal(fn.length,1);const args={groupId:undefined,projectId:undefined,groupAbout:undefined};for(const options of [undefined,{}, {ajaxOptions:{sync:true}}, {customParseResponse:true}, {isReadableStream:true}, {agent:true}]){const token={mode:options};f.setSdkResult(token);assert.equal(fn(args,options),token);const call=f.calls.at(-1)!;assert.equal(call.controller,'Group');assert.equal(call.action,action);assert.equal(call.args,args);if(options)assert.equal(call.options,options);else assert.deepEqual(call.options,{});}}
+  const f=make();for(const [method,action]of [['updateGroupAbout','UpdateGroupAbout'],['updateGroupToPost','UpdateGroupToPost'],['getGroupInfo','GetGroupInfo'],['getGroupUsers','GetGroupUsers']]){const fn=f.Group[method!]!;assert.equal(fn.name,method);assert.equal(fn.length,1);const args={groupId:undefined,projectId:undefined,groupAbout:undefined};for(const options of [undefined,{}, {ajaxOptions:{sync:true}}, {customParseResponse:true}, {isReadableStream:true}, {agent:true}]){const token={mode:options};f.setSdkResult(token);assert.equal(fn(args,options),token);const call=f.calls.at(-1)!;assert.equal(call.controller,'Group');assert.equal(call.action,action);assert.equal(call.args,args);if(options)assert.equal(call.options,options);else assert.deepEqual(call.options,{});}}
  });
  await check('actual text/link and bootstrap producers retain missing/native failures and parsed references',()=>{
   const f=make(),utils=f.load(prefix+'utils/index.ts');const about=utils['convertGroupAbout'] as (value:unknown)=>string;
@@ -164,6 +165,47 @@ async function main(){
   assert.match(about('www.example.test\n<text>'),/http:\/\/www.example.test/);assert.match(about('a\nb'),/a<br\/>b/);
   assert.throws(()=>about({text:'x'}),TypeError);
   assert.throws(()=>f.decode({Account:{accountId:'self',projects:[{projectId:42}]},Config:{ProductCode:'server'},SysSettings:{}}),TypeError);
+ });
+ await check('real group lookup and member pagination preserve independent arrival order, getters, metadata and identity union',async()=>{
+  function deferred(){let resolve!:(value:unknown)=>void;const children:Promise<unknown>[]=[];const request=Object.assign(new Promise<unknown>(yes=>{resolve=yes;}),{abort(){}});const then=request.then.bind(request);Object.defineProperty(request,'then',{value:(...args:Parameters<typeof then>)=>{const child=then(...args);children.push(child);void child.catch(()=>{});return child;}});return{request,resolve,children};}
+  const info=deferred(),first=deferred(),next=deferred();let pages=0;
+  const f=make(call=>call.action==='GetGroupInfo'?{value:info.request}:call.action==='GetGroupUsers'?{value:(pages++===0?first:next).request}:undefined);
+  f.openSettings({id:'g'});f.renderSettings();f.runEffects();
+  assert.deepEqual(f.calls.map(call=>call.action),['GetGroupInfo','GetGroupUsers']);
+  assert.equal(f.settingsState()!['users'],undefined);
+  const project={projectId:'p',companyName:'Project'},admins:Data[]=[];
+  info.resolve({status:1,groupId:'g',name:'Group',isAdmin:true,isPost:true,project,adminUsers:admins,groupUsers:[]});await Promise.all(info.children);
+  assert.equal(f.settingsState()!['project'],project);assert.equal(f.settingsState()!['adminUsers'],admins);assert.equal(f.settingsState()!['loading'],false);assert.equal(f.settingsState()!['userLoading'],true);
+  const one={accountId:'one',status:1,groupUserRole:undefined},two={accountId:'two'},rows=[one,two],meta={opaque:'page'};let reads=0;
+  first.resolve({get groupUsers(){reads++;return rows;},groupMemberCount:3,matchedMemberCount:3,meta});await Promise.all(first.children);
+  assert.equal(reads,2);const state=f.settingsState()!;assert.equal((state['users'] as Data)['groupUsers'],rows);assert.equal((state['users'] as Data)['meta'],meta);assert.equal(state['userLoading'],false);
+  const tree=f.renderSettings(),scroll=f.nodes(tree).find(node=>typeof node.props['onScrollEnd']==='function')!;assert.ok(scroll);
+  const role=f.nodes(tree).find(node=>node.props['className']==='action'&&node.props['value']===undefined&&typeof node.props['renderPointer']==='function')!;assert.ok(role);
+  assert.doesNotThrow(()=> (role.props['renderPointer'] as ()=>unknown)());
+  const Dropdown=f.load('src/ming-ui/components/Dropdown.tsx')['default'] as Constructor&{defaultProps:Data};const control=f.instance(Dropdown,{...Dropdown.defaultProps,...role.props});
+  const callsBefore=f.calls.length;assert.throws(()=>(control as unknown as {handleChange(event:unknown,item:Data):void}).handleChange({},{value:undefined}),TypeError);assert.equal(f.calls.length,callsBefore);
+  const keyFailure=new Error('role key getter');const key=Object.defineProperty({},Symbol.toPrimitive,{value(){throw keyFailure;}});assert.throws(()=>(control as unknown as {handleChange(event:unknown,item:Data):void}).handleChange({},{value:key}),error=>error===keyFailure);assert.equal(f.calls.length,callsBefore);
+
+  (scroll.props['onScrollEnd'] as ()=>void)();assert.deepEqual(f.calls.at(-1)!['args'],{groupId:'g',keywords:'',pageIndex:2,pageSize:30});
+  const clone={accountId:'one'};next.resolve({groupUsers:[one,clone],groupMemberCount:3,matchedMemberCount:3});await Promise.all(next.children);
+  const joined=(f.settingsState()!['users'] as Data)['groupUsers'] as Data[];assert.deepEqual(joined,[one,two,clone]);assert.equal(joined[0],one);assert.equal(joined[2],clone);assert.equal(f.settingsState()!['pageIndex'],2);
+ });
+ await check('actual failed group lookups close the settings host without fabricating data',async()=>{
+  for(const response of [null,undefined,{status:0}]){const f=make(call=>call.action==='GetGroupUsers'?{value:Promise.resolve({groupUsers:[],groupMemberCount:0,matchedMemberCount:0})}:undefined);f.openSettings({id:'g'});f.renderSettings();f.runEffects();f.resolve(response);await Promise.all(f.children);assert.equal(f.trace.filter(value=>value==='settings-close').length,1);assert.ok(f.trace.includes('alert:该群组已关闭或删除:3'));}
+ });
+ await check('actual Header preserves owner callbacks, delayed search focus and keyboard/extra event arguments',()=>{
+  const f=make(),calls:unknown[][]=[],commits:Array<()=>void>=[];const Header=(f.load(prefix+'containers/ChatPanelHeader/index.tsx')['default'] as {WrappedComponent:Constructor}).WrappedComponent;
+  const item=f.instance(Header,{...f.getState(),session:{id:'g',isGroup:true,isPost:true,project:{companyName:'Org'}},dispatch:f.dispatch,searchText:'',isOpenFile:false,infoVisible:false,onSearchText:(...args:unknown[])=>calls.push(['search',...args]),onOpenFile:(...args:unknown[])=>calls.push(['file',...args]),onSetInfoVisible:(...args:unknown[])=>calls.push(['info',...args])});
+  Reflect.set(item,'setState',(patch:Data,callback?:()=>void)=>{Object.assign(item.state,patch);if(callback)commits.push(callback);});
+  const focus:unknown[]=[];Reflect.set(globalThis,'$',(input:unknown)=>({focus:()=>focus.push(input)}));
+  const subject=item as unknown as {handleSearch():void;handleChange(event:unknown):void;handleKeyDown(event:unknown):void;input:unknown;state:Data;render():Element;};
+  subject.handleSearch();assert.deepEqual(focus,[]);for(const callback of commits.splice(0))callback();assert.deepEqual(focus,[undefined]);
+  subject.input=null;subject.handleSearch();for(const callback of commits.splice(0))callback();assert.equal(focus.at(-1),null);
+  subject.handleChange({target:{value:'text'}});subject.handleKeyDown({which:13});subject.handleKeyDown({which:27});assert.deepEqual(calls,[['search','text'],['search','']]);
+  const event={type:'click'},nodes=f.nodes(subject.render());
+  const file=nodes.find(node=>String(node.props['className']).includes('icon-task-folder-solid'))!;(file.props['onClick'] as (event:unknown)=>void)(event);
+  const info=nodes.find(node=>String(node.props['className']).includes('icon-drop_down_menu'))!;(info.props['onClick'] as (event:unknown)=>void)(event);
+  assert.deepEqual(calls.slice(-2),[['file',true,event],['info',true,event]]);
  });
  console.log(`chat/Group mutation full boundary: ${passed} checks passed`);
 }

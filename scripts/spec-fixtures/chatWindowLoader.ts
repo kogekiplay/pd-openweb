@@ -13,7 +13,7 @@ interface Subject {
 }
 type Constructor = new (props: Data) => Subject;
 interface Call { controller: string; action: string; args: Data; options: Data; }
-function makeFixture(options: { uiLeaves?: readonly string[]; moduleOverride?: (file: string, request: string) => unknown } = {}) {
+function makeFixture(options: { uiLeaves?: readonly string[]; moduleOverride?: (file: string, request: string) => unknown; sdkOverride?: (call: Call) => { value: unknown } | undefined } = {}) {
   const leaves = new Map<string, unknown>();
   const cache = new Map<string, Data>();
   const calls: Call[] = [], trace: string[] = [], dispatched: Data[] = [];
@@ -37,10 +37,12 @@ function makeFixture(options: { uiLeaves?: readonly string[]; moduleOverride?: (
   const then = request.then.bind(request);
   Object.defineProperty(request, 'then', { value: (...args: Parameters<typeof then>) => { trace.push('then'); const child = then(...args); children.push(child); void child.catch(() => {}); return child; } });
   let sdkResult: unknown = request, sdkFailure: unknown;
+  const sdkOverride = options.sdkOverride;
   const sdk = (controller: string, action: string, args: Data, options: Data) => {
     trace.push('sdk:' + controller + '.' + action); calls.push({ controller, action, args, options });
     if (sdkFailure !== undefined) throw sdkFailure;
-    return sdkResult;
+    const override = sdkOverride?.({ controller, action, args, options });
+    return override ? override.value : sdkResult;
   };
   function load(file: string): Data {
     if (cache.has(file)) return cache.get(file)!;

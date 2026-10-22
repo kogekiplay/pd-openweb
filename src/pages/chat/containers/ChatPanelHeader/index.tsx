@@ -1,4 +1,9 @@
 import { Component } from 'react';
+import type { ChangeEvent, KeyboardEvent } from 'react';
+import type { InputJQuery } from 'src/library/jquery/types';
+
+/** Same runtime global; the finite input-ref overload preserves nullish constructor inputs. */
+declare const $: InputJQuery;
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import Trigger from '@rc-component/trigger';
@@ -9,9 +14,10 @@ import { Tooltip } from 'ming-ui/antd-components';
 import GroupController from 'src/api/group';
 import PersonalStatus from 'src/pages/chat/components/MyStatus/PersonalStatus';
 import settingGroup from 'src/pages/Group/settingGroup';
-import type { RootState } from 'src/redux/types';
+import type { AppDispatch, RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
 import * as actions from '../../redux/actions';
+import type { ChatSession } from '../../redux/types';
 import config from '../../utils/config';
 import Constant from '../../utils/constant';
 import { createDiscussion } from '../../utils/group';
@@ -25,10 +31,31 @@ const PersonalStatusWrap = styled(PersonalStatus)`
 
 const { GROUPACTION } = Constant;
 
-class ChatPanelHeader extends Component<any, any> {
+export interface ChatPanelHeaderProps {
+  dispatch: AppDispatch;
+  session: ChatSession;
+  currentSession: ChatSession;
+  isWindow: boolean;
+  socketState: number;
+  searchText: string;
+  isOpenFile: boolean;
+  infoVisible: boolean;
+  onSearchText: (text: string) => void;
+  onOpenFile: (isOpenFile: boolean) => void;
+  onSetInfoVisible: (visible: boolean) => void;
+}
+
+export interface ChatPanelHeaderState {
+  searchVisible: boolean;
+  focus: boolean;
+  value: string;
+  triggerVisible: boolean;
+}
+
+class ChatPanelHeader extends Component<ChatPanelHeaderProps, ChatPanelHeaderState> {
   declare input: HTMLInputElement | null | undefined;
 
-  constructor(props) {
+  constructor(props: ChatPanelHeaderProps) {
     super(props);
     this.state = {
       searchVisible: false,
@@ -38,7 +65,7 @@ class ChatPanelHeader extends Component<any, any> {
     };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: ChatPanelHeaderProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (!this.props.searchText) {
         this.setState({
@@ -88,12 +115,12 @@ class ChatPanelHeader extends Component<any, any> {
     });
     this.props.onSearchText('');
   }
-  handleChange(event) {
+  handleChange(event: ChangeEvent<HTMLInputElement>) {
     this.setState({
       value: event.target.value,
     });
   }
-  handleKeyDown(event) {
+  handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     // ESC
     if (event.which === 27) {
       this.handleSearchHidden();

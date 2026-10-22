@@ -1,5 +1,7 @@
 import { Fragment, useCallback, useEffect } from 'react';
-import type { GroupSettingOptions, GroupSettingProps } from './types';
+import type { GroupSettingOptions, GroupSettingProps, GroupSettingsState, GroupUsersQuery, GroupActionPatch, GroupMutationAction } from './types';
+import type { GroupMember } from 'src/api/groupTypes';
+import type { BootstrapProject } from 'src/common/bootstrapMetadata';
 import type { ChatSession } from 'src/pages/chat/redux/types';
 
 /** The active about editor shares the same finite text/admin fields as the chat session view. */
@@ -31,7 +33,7 @@ import { expireDialogAsync } from 'src/components/upgradeVersion';
 import { PERMISSION_ENUM } from 'src/pages/Admin/enum';
 import { existAccountHint } from 'src/utils/inviteCommon';
 import SelectAvatarTrigger from '../createGroup/SelectAvatarTrigger';
-import { BUTTONS, GROUP_INFOS, USER_ACTION_AJAX, USER_ACTION_MAP, USER_ACTIONS, USER_ACTIONS_MAP } from './config';
+import { BUTTONS, GROUP_INFOS, USER_ACTION_AJAX, USER_ACTION_MAP, USER_ACTIONS, USER_ACTIONS_MAP, rolePropertyKey } from './config';
 import QrPopup from './QrPopup';
 
 const ActionResult = {
@@ -235,10 +237,10 @@ function SettingGroup(props: GroupSettingProps) {
     covertOkDisabled: false,
     qrLoading: true,
   };
-  const [groupInfo, setState] = useSetState<typeof initialState & GroupSettingAboutFields>(initialState);
+  const [groupInfo, setState] = useSetState<GroupSettingsState>(initialState);
 
   const debouncedSearch = useCallback(
-    _.debounce(keywords => {
+    _.debounce((keywords: string) => {
       getGroupUsers({ keywords, pageIndex: 1 });
     }, 500),
     [groupID],
@@ -253,7 +255,7 @@ function SettingGroup(props: GroupSettingProps) {
     getGroupUsers();
   }, [groupID]);
 
-  const getGroupUsers = (params: Record<string, any> = {}) => {
+  const getGroupUsers = (params: GroupUsersQuery = {}) => {
     setState({ userLoading: true, ...params });
     const pageIndex = params.pageIndex || groupInfo.pageIndex;
 
@@ -269,7 +271,7 @@ function SettingGroup(props: GroupSettingProps) {
           users: {
             ...res,
             groupUsers:
-              pageIndex === 1 ? res.groupUsers : _.union(groupInfo.users.groupUsers, res.groupUsers, 'accountId'),
+              pageIndex === 1 ? res.groupUsers : _.union(groupInfo.users!.groupUsers, res.groupUsers, 'accountId'),
           },
           userLoading: false,
         });
@@ -305,7 +307,7 @@ function SettingGroup(props: GroupSettingProps) {
       height: 100,
     });
 
-  const addMembers = userArray => {
+  const addMembers = (userArray: GroupMember[]) => {
     invitationController
       .inviteUser({
         sourceId: groupID,
@@ -338,7 +340,7 @@ function SettingGroup(props: GroupSettingProps) {
     });
   };
 
-  const updateAvatar = ({ avatar, avatarName }) => {
+  const updateAvatar = ({ avatar, avatarName }: { avatar?: string | undefined; avatarName?: string | undefined }) => {
     groupAjax
       .updateGroupAvatar({
         groupId: groupID,
@@ -376,14 +378,14 @@ function SettingGroup(props: GroupSettingProps) {
       });
   };
 
-  const updateGroup = (params, type: number, keys?: string[], close?: boolean) => {
+  const updateGroup = (params: GroupActionPatch, type: GroupMutationAction, keys?: (keyof GroupActionPatch)[], close?: boolean) => {
     const ajaxFun = groupAjax[USER_ACTION_AJAX[type]];
     const isGroups = [8, 9].includes(type);
 
     ajaxFun({
       [isGroups ? 'groupIds' : 'groupId']: isGroups ? [groupID] : groupID,
       ...(keys ? _.pick(params, keys) : params),
-    }).then(res => {
+    }).then((res: unknown) => {
       if (res === ActionResult.Success || res === true) {
         USER_ACTION_MAP[type] && success(USER_ACTION_MAP[type], { ...params, groupId: groupID });
         setState(params);
@@ -429,7 +431,7 @@ function SettingGroup(props: GroupSettingProps) {
     });
   };
 
-  const onClickButton = item => {
+  const onClickButton = (item: (typeof BUTTONS)[number]) => {
     switch (item.key) {
       case 0:
         Dialog.confirm({
@@ -510,23 +512,25 @@ function SettingGroup(props: GroupSettingProps) {
     });
   };
 
+  // Scroll/member controls are mounted from the loaded page; initial loading short-circuits before access.
   const onScrollEnd = () => {
     if (moreUserLoading) return;
-    if (groupInfo.userLoading || groupInfo.users.matchedMemberCount <= groupInfo.users.groupUsers.length) return;
+    if (groupInfo.userLoading || groupInfo.users!.matchedMemberCount <= groupInfo.users!.groupUsers.length) return;
     moreUserLoading = true;
     getGroupUsers({ pageIndex: groupInfo.pageIndex + 1 });
   };
 
-  const onClickUserAction = (value, user) => {
-    const ajaxFun = groupAjax[USER_ACTION_AJAX[value]];
-    const isSingle = [0, 3].includes(value);
+  const onClickUserAction = (value: number | undefined, user: GroupMember) => {
+    const ajaxFun = groupAjax[USER_ACTION_AJAX[rolePropertyKey(value)]];
+    const singleUserActions: readonly (number | undefined)[] = [0, 3];
+    const isSingle = singleUserActions.includes(value);
 
     ajaxFun({
       groupId: groupID,
       [isSingle ? 'accountId' : 'accountIds']: isSingle ? user.accountId : [user.accountId],
-    }).then(res => {
-      USER_ACTION_MAP[value] &&
-        success(USER_ACTION_MAP[value], {
+    }).then((res: unknown) => {
+      USER_ACTION_MAP[rolePropertyKey(value)] &&
+        success(USER_ACTION_MAP[rolePropertyKey(value)], {
           groupId: groupID,
           accountId: user.accountId,
         });
@@ -536,22 +540,22 @@ function SettingGroup(props: GroupSettingProps) {
         setState({
           users: {
             ...groupInfo.users,
-            groupMemberCount: value !== 3 ? groupInfo.users.groupMemberCount : groupInfo.users.groupMemberCount - 1,
+            groupMemberCount: value !== 3 ? groupInfo.users!.groupMemberCount : groupInfo.users!.groupMemberCount - 1,
             matchedMemberCount:
-              value !== 3 ? groupInfo.users.matchedMemberCount : groupInfo.users.matchedMemberCount - 1,
+              value !== 3 ? groupInfo.users!.matchedMemberCount : groupInfo.users!.matchedMemberCount - 1,
             groupUsers:
               value !== 3
-                ? groupInfo.users.groupUsers.map(l =>
+                ? groupInfo.users!.groupUsers.map(l =>
                     l.accountId === user.accountId ? { ...l, groupUserRole: value } : l,
                   )
-                : groupInfo.users.groupUsers.filter(l => l.accountId !== user.accountId),
+                : groupInfo.users!.groupUsers.filter(l => l.accountId !== user.accountId),
           },
         });
       }
     });
   };
 
-  const onApplyUser = (value, user) => {
+  const onApplyUser = (value: number | undefined, user: GroupMember) => {
     if (value) {
       groupAjax
         .passJoinGroup({
@@ -589,7 +593,7 @@ function SettingGroup(props: GroupSettingProps) {
 
   const openCovertPost = () => setState({ covertVisible: true });
 
-  const onSelectProject = orgId => {
+  const onSelectProject = (orgId: string | undefined) => {
     if (orgId === groupInfo.chatOrgId) return;
 
     setState({ chatOrgId: orgId });
@@ -613,7 +617,7 @@ function SettingGroup(props: GroupSettingProps) {
   };
 
   const renderOrg = () => {
-    const projects = _.get(md, 'global.Account.projects', []).map(l => ({ value: l.projectId, text: l.companyName }));
+    const projects = _.get(md, 'global.Account.projects', []).map((l: BootstrapProject) => ({ value: l.projectId, text: l.companyName }));
 
     return (
       <Dropdown
@@ -643,7 +647,7 @@ function SettingGroup(props: GroupSettingProps) {
         <div className="flex overflow_ellipsis">
           <div className="Font17 textPrimary Bold mBottom8 overflow_ellipsis">{groupInfo.name}</div>
           {_.get(groupInfo, 'project.companyName') && (
-            <div className="Font13 textSecondary overflow_ellipsis">{groupInfo.project.companyName}</div>
+            <div className="Font13 textSecondary overflow_ellipsis">{groupInfo.project!.companyName}</div>
           )}
         </div>
         {groupInfo.isPost && (
@@ -657,7 +661,7 @@ function SettingGroup(props: GroupSettingProps) {
     );
   };
 
-  const renderUsers = (users, editable: boolean) => {
+  const renderUsers = (users: GroupMember[] | undefined, editable: boolean) => {
     if (!users) return undefined;
 
     return (
@@ -685,7 +689,7 @@ function SettingGroup(props: GroupSettingProps) {
     );
   };
 
-  const renderContentItem = item => {
+  const renderContentItem = (item: (typeof GROUP_INFOS)[number]) => {
     switch (item.key) {
       case 'name':
         return (
@@ -713,8 +717,8 @@ function SettingGroup(props: GroupSettingProps) {
         );
       case 'users':
         return renderUsers(
-          _.get(groupInfo, 'adminUsers', [])
-            .concat(_.get(groupInfo, 'groupUsers', []))
+          _.get<GroupSettingsState, 'adminUsers', GroupMember[]>(groupInfo, 'adminUsers', [])
+            .concat(_.get<GroupSettingsState, 'groupUsers', GroupMember[]>(groupInfo, 'groupUsers', []))
             .slice(0, PAGE_SIZE),
           true,
         );
@@ -876,9 +880,9 @@ function SettingGroup(props: GroupSettingProps) {
     );
   };
 
-  const renderUserItem = user => {
+  const renderUserItem = (user: GroupMember) => {
     const DropdownCon = user.status ? (
-      <Dropdown
+      <Dropdown<number>
         className="action"
         isAppendToBody
         menuStyle={{ width: 'auto', minWidth: '120px' }}
@@ -886,16 +890,16 @@ function SettingGroup(props: GroupSettingProps) {
         value={user.groupUserRole}
         disabled={!groupInfo.isAdmin}
         data={USER_ACTIONS.filter(l => l.value !== user.groupUserRole)}
-        onChange={value => onClickUserAction(value, user)}
+        onChange={(value: number | undefined) => onClickUserAction(value, user)}
         renderPointer={() => (
           <span className="actioWrap">
-            <span>{USER_ACTIONS_MAP[user.groupUserRole]}</span>
+            <span>{USER_ACTIONS_MAP[rolePropertyKey(user.groupUserRole)]}</span>
             <Icon icon="arrow-up-border1" className="Font14 textTertiary" />
           </span>
         )}
       />
     ) : (
-      <Dropdown
+      <Dropdown<number>
         className="action"
         isAppendToBody
         menuStyle={{ width: 'auto', minWidth: '120px' }}
@@ -912,7 +916,7 @@ function SettingGroup(props: GroupSettingProps) {
             value: 0,
           },
         ]}
-        onChange={value => onApplyUser(value, user)}
+        onChange={(value: number | undefined) => onApplyUser(value, user)}
         renderPointer={() => (
           <span className="actioWrap">
             <span>{_l('等待审批加入群组')}</span>
@@ -1067,7 +1071,7 @@ function SettingGroup(props: GroupSettingProps) {
             value={groupInfo.about}
             disabled={!groupInfo.isAdmin}
             placeholder={_l('请输入群公告')}
-            onChange={value => setState({ about: value })}
+            onChange={(value: string) => setState({ about: value })}
           />
         </div>
       </SettingDialog>

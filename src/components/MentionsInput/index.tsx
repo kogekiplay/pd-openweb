@@ -7,6 +7,7 @@ import functionWrap from 'ming-ui/components/FunctionWrap';
 import { dialogSelectUser } from 'ming-ui/functions';
 import categoryApi from 'src/api/category';
 import groupApi from 'src/api/group';
+import type { GroupMember } from 'src/api/groupTypes';
 import personalStyleAjax from 'src/api/personalStyle';
 import userApi from 'src/api/user';
 import { AT_ALL_TEXT, SOURCE_TYPE } from 'src/components/comment/config';
@@ -50,13 +51,21 @@ export interface MentionsInputElement extends HTMLTextAreaElement {
   messageText?: string;
 }
 
+/** The actual group lookup rows after mention decoration, including the synthetic all-members row. */
+export interface ChatMentionRow extends GroupMember {
+  type: string;
+  id: string | undefined;
+  showFullname?: string | undefined;
+}
+export interface ChatMentionPage { query: string; pageIndex: number; isMore: boolean; accounts: ChatMentionRow[]; }
+
 // 全角和半角
 const categoryLetterArr = ['#', '＃'];
 const atLetterArr = ['@', '＠'];
 
-const escapeRegExp = value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const escapeRegExp = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-const highlightTerm = (value, term) => {
+const highlightTerm = (value: string, term: string | undefined): string => {
   if (!term && !term?.length) {
     return value;
   }
@@ -97,7 +106,7 @@ const MentionsInput = props => {
   const [activeId, setActiveId] = useState('');
   const popupVisible = useRef(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
-  const chatPage = useRef({
+  const chatPage = useRef<ChatMentionPage>({
     query: '',
     pageIndex: 1,
     isMore: true,
@@ -587,8 +596,8 @@ const MentionsInput = props => {
           if (!isLatestRequest(requestId)) return;
 
           const { groupUsers } = data;
-          const responseData = { accounts: pageIndex === 1 ? [] : chatPage.current.accounts };
-          const atAll = [
+          const responseData: { accounts: ChatMentionRow[] } = { accounts: pageIndex === 1 ? [] : chatPage.current.accounts };
+          const atAll: ChatMentionRow[] = [
             {
               type: 'user',
               id: 'all',

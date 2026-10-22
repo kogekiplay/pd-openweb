@@ -1,4 +1,17 @@
-export const GROUP_INFOS = [
+import type { GroupUserAction, GroupMutationAction } from './types';
+export interface GroupInfoItem {
+  label: string;
+  key: 'name' | 'project.companyName' | 'adminUsers' | 'about' | 'users' | 'others';
+  type: 'text';
+  isPost?: boolean;
+  require?: boolean;
+}
+/** Preserve native numeric/undefined property lookup without claiming a missing wire role exists. */
+export function rolePropertyKey(value: number | undefined): number | 'undefined' {
+  return value === undefined ? 'undefined' : value;
+}
+
+export const GROUP_INFOS: GroupInfoItem[] = [
   {
     label: _l('群名称'),
     key: 'name',
@@ -35,7 +48,7 @@ export const GROUP_INFOS = [
   },
 ];
 
-export const USER_ACTIONS = [
+export const USER_ACTIONS: { text: string; value: GroupUserAction }[] = [
   {
     text: _l('管理员'),
     value: 1,
@@ -50,12 +63,13 @@ export const USER_ACTIONS = [
   },
 ];
 
-export const USER_ACTIONS_MAP: Record<number, string> = {
+export const USER_ACTIONS_MAP: Partial<Record<number | 'undefined', string>> = {
   0: _l('成员'),
   1: _l('管理员'),
 };
 
-export const USER_ACTION_AJAX: Record<number, string> = {
+type ActionMethod = 'removeAdmin' | 'addAdmin' | 'removeUser' | 'updateGroupHidden' | 'updateGroupForbidInvite' | 'updateGroupVerified' | 'updateGroupApproval' | 'closeGroup' | 'removeGroup' | 'exitGroup' | 'updateGroupPushNotice' | 'updateGroupToPost';
+export const USER_ACTION_AJAX: Record<GroupUserAction | GroupMutationAction, ActionMethod> & Partial<Record<number | 'undefined', ActionMethod>> = {
   0: 'removeAdmin',
   1: 'addAdmin',
   3: 'removeUser',
@@ -68,9 +82,9 @@ export const USER_ACTION_AJAX: Record<number, string> = {
   10: 'exitGroup',
   11: 'updateGroupPushNotice',
   12: 'updateGroupToPost',
-};
+} as const;
 
-export const USER_ACTION_MAP: Record<number, string> = {
+export const USER_ACTION_MAP: Record<GroupUserAction | GroupMutationAction, string> & Partial<Record<number | 'undefined', string>> = {
   1: 'ADD_ADMIN',
   0: 'REMOVE_ADMIN',
   3: 'REMOVE_USER',
@@ -83,7 +97,7 @@ export const USER_ACTION_MAP: Record<number, string> = {
   10: 'EXIT_GROUP',
   11: 'TROUBLE_FREE',
   12: 'UPDATE_POST',
-};
+} as const;
 
 export const BUTTONS = [
   {

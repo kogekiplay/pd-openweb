@@ -1,3 +1,4 @@
+import type { GroupProject } from 'src/api/groupTypes';
 /**
  * `src/pages/chat/redux` 的有限类型
  *
@@ -70,7 +71,7 @@ export interface ChatSession {
   accountId?: string | undefined;
   groupId?: string | undefined;
   /** `project.companyName` 被 ChatPanelHeader 读取 */
-  project?: { companyName?: string | undefined; [key: string]: unknown } | undefined;
+  project?: GroupProject | null | undefined;
   groupMemberCount?: number | undefined;
   /** SessionItem 里 `showBadge ? … : 0` 当作可计数/可布尔使用 */
   showBadge?: number | boolean | undefined;

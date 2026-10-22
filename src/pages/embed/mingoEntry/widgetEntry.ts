@@ -39,8 +39,7 @@ const LANG_ALIAS_MAP: Record<string, string> = {
   ms_my: 'ms',
 };
 const localePromises = {};
-let previousTranslate:
-  (((key: string, ...args: (string | number)[]) => string) & { __mingoEntryLite?: boolean }) | undefined;
+let previousTranslate: typeof window._l | undefined;
 let explicitAgentUrl = '';
 
 function trimSlash(url = '') {
@@ -118,7 +117,7 @@ function installEntryTranslator() {
     previousTranslate = window._l;
   }
 
-  const translator = function (key: string, ...args: (string | number)[]) {
+  const translator: typeof window._l = function (key, ...args) {
     let content: unknown = key;
     const entryTranslations = window.__mingoEntryTranslations || {};
 
