@@ -128,7 +128,7 @@ export default class ProjectContactList extends React.Component<ProjectContactLi
         parentId: id,
       })
       .then((res: DepartmentNode[]) => {
-        let data = res.map((item: DepartmentNode) => ({ ...item, subs: [] }));
+        let data = (res ?? []).map((item: DepartmentNode) => ({ ...item, subs: [] }));
         this.setState({ department: this.updateTreeData(department!, id, data), departmentLoading: false });
       });
   };

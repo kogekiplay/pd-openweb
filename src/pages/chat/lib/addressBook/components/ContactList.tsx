@@ -57,15 +57,18 @@ export default class ContactList extends React.Component<ContactListProps> {
   renderList(list: AddressBookContactEntry[] | null | undefined) {
     return (
       <React.Fragment>
-        {_.map(list, (item: AddressBookContactEntry) => (
+        {_.map(list, (item: AddressBookContactEntry) => {
+          if (item === null || item === undefined) return null;
+          return (
           <ContactItem
             {...item}
-            key={item!.accountId}
+            key={item.accountId}
             itemClickHandler={this.props.itemClickHandler}
-            isSelected={item!.accountId === this.props.selectedAccountId}
+            isSelected={item.accountId === this.props.selectedAccountId}
             searchDepartmentUsers={this.props.searchDepartmentUsers}
           />
-        ))}
+          );
+        })}
       </React.Fragment>
     );
   }
