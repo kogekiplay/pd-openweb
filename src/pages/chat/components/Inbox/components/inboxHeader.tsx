@@ -18,6 +18,8 @@ import type { ChatSession } from '../../../redux/types';
 import { pathCompletion } from 'src/utils/common';
 import * as actions from '../../../redux/actions';
 import { TYPE_GROUP, TYPES } from '../constants';
+import type { InboxType, InboxLoadType } from '../constants';
+import { hasOwnKey } from '../identity';
 import InboxFilter from './baseComponent/inboxFilter';
 import type { InboxFilterValue } from '../util';
 
@@ -31,12 +33,12 @@ interface InboxHeaderProps {
   currentSession: ChatSession;
   sessionList: ChatSession[];
   title?: string | undefined;
-  type?: string | undefined;
+  type?: InboxLoadType | undefined;
   inboxFavorite?: boolean | undefined;
-  inboxType?: string | undefined;
+  inboxType: InboxType;
   filter?: InboxFilterValue | null | undefined;
-  dropdownData?: string[] | undefined;
-  changeType: (type: string) => void;
+  dropdownData?: readonly InboxLoadType[] | undefined;
+  changeType: (type: InboxLoadType | undefined) => void;
   changeFaviorite: (favorite: boolean) => void;
   /** 筛选弹层 `handleSave` 的产物（与 `InboxFilter.onChange` 同一类型） */
   changeInboxFilter: (filter: InboxFilterValue | null) => void;
@@ -67,17 +69,17 @@ class InboxHeader extends React.Component<InboxHeaderProps, InboxHeaderState> {
 
   renderDropDown() {
     const { type, dropdownData, inboxType, changeType } = this.props;
-    const parsedData = _.map(dropdownData, (key: string) => {
-      // 擦除标记：`TYPE_GROUP` 的键来自 `INBOXTYPES` 常量（索引签名）；真实 inboxType 必有对应分组。
-      const dict = TYPE_GROUP[inboxType as string];
+    const parsedData = _.map(dropdownData, (key: InboxLoadType) => {
+      const dict = TYPE_GROUP[inboxType];
+      const text: string | undefined = hasOwnKey(dict, key) ? dict[key] : undefined;
       return {
-        text: dict![key],
+        text,
         value: key,
       };
     });
 
     if (parsedData.length <= 1) {
-      // 擦除标记：`length <= 1` 时 `parsedData[0]` 必存在（原 any 直接取）。
+      // Empty options preserve the original first-item .text TypeError; no fallback label is fabricated.
       return <span>{parsedData[0]!.text}</span>;
     } else {
       return (
@@ -91,10 +93,10 @@ class InboxHeader extends React.Component<InboxHeaderProps, InboxHeaderState> {
             data={parsedData}
             menuStyle={{ left: '0 !important', transform: 'translateX(-50%)' }}
             renderTitle={() => ''}
-            onChange={(data: string | undefined) => {
+            onChange={(data: InboxLoadType | undefined) => {
               this.handleClick(false);
-              // 擦除标记：Dropdown 选项必有 value（原 any 直接传）。
-              changeType(data as string);
+              // A missing option value remains missing in the parent state/request.
+              changeType(data);
             }}
           />
         </span>
@@ -167,9 +169,8 @@ class InboxHeader extends React.Component<InboxHeaderProps, InboxHeaderState> {
     const { top_info, type, isPush, isSilent } = currentSession;
     const isTop = top_info ? top_info.isTop : false;
     const isPushNotice = 'isPush' in currentSession || 'isSilent' in currentSession;
-    // 擦除标记：`type` 来自字符串常量 TYPES，这里的 `=== 2`（数字）**恒为 false**（既有代码；
-    // 是否属业务 bug 待 lead 决策，本批只保持运行语义不变）。
-    const isPushNoticeValue = (type as unknown as number) === 2 ? isPush : !isSilent;
+    // This is the normalized numeric session type, not the dropdown's textual load type.
+    const isPushNoticeValue = type === 2 ? isPush : !isSilent;
 
     if (md.global.Account.isPortal && !isPushNotice) {
       return null;

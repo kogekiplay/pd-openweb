@@ -7,6 +7,7 @@ import ClickAway from 'ming-ui/components/ClickAway';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import type { RootState } from 'src/redux/types';
 import { Inbox } from '../../components/Inbox';
+import { requireInboxType } from '../../components/Inbox/identity';
 import * as actions from '../../redux/actions';
 import * as ajax from '../../utils/ajax';
 import ChatPanelSession from '../ChatPanelSession';
@@ -207,7 +208,7 @@ class ChatPanel extends Component<any, any> {
       >
         <i onClick={this.handleClosePanel.bind(this)} className="ChatPanel-inbox-close icon-close colorPrimary" />
         <Inbox
-          inboxType={item.id}
+          inboxType={requireInboxType(item.id)}
           count={currentSession.value === item.id ? currentSession.count : 0}
           weak_count={currentSession.value === item.id ? currentSession.weak_count : 0}
           requestNow={currentSession.value === item.id ? item.requestNow : undefined}

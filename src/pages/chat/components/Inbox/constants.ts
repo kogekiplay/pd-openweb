@@ -61,7 +61,7 @@ export const TYPES = {
   WorkFlowSendTaskMessage: '47',
   FocusMessage: '48',
   WorkFlowSendMessage: '49',
-};
+} as const;
 
 /**
  * 消息类型
@@ -183,7 +183,10 @@ export const INBOXTYPES = {
   HR: 'hr',
   WORKSHEET: 'worksheet',
   WORKFLOW: 'workflow',
-};
+} as const;
+
+export type InboxType = typeof INBOXTYPES[keyof typeof INBOXTYPES];
+export type InboxLoadType = typeof TYPES[keyof typeof TYPES];
 
 export const NAMES = {
   [INBOXTYPES.POST]: _l('动态'),

@@ -4,6 +4,8 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { browserIsMobile } from 'src/utils/common';
 import { DROPDOWN_GROUPLIST, INBOXTYPES, TYPENAMES } from '../constants';
+import type { InboxType, InboxLoadType } from '../constants';
+import { requireInboxType } from '../identity';
 import InboxHeader from './inboxHeader';
 import InboxList from './inboxList';
 import '../style.less';
@@ -16,7 +18,7 @@ interface InboxProps {
    * 【为何可缺省】父级 `ChatPanel.renderInbox(item: ChatSession)` 传的是 `item.id`，
    * 而 `ChatSession.id` 类型上可缺省（运行期收件箱项必有 id）。这里如实承接，不补默认值。
    */
-  inboxType: string | undefined;
+  inboxType: InboxType | undefined;
   count?: number | undefined;
   weak_count?: number | undefined;
   clearUnread?: boolean | undefined;
@@ -26,16 +28,15 @@ interface InboxProps {
 }
 
 interface InboxState {
-  type: string;
+  type: InboxLoadType | undefined;
   inboxFavorite: boolean;
   filter: InboxFilterValue | null;
   updateNow?: number | undefined;
 }
 
-const getInitialLoadType = (inboxType: string | undefined): string => {
-  // 擦除标记：常量表按 INBOXTYPES 字面量键声明，入参是普通 string；真实调用只在已知键上命中。
-  if (inboxType && (DROPDOWN_GROUPLIST as Record<string, string[] | undefined>)[inboxType]) {
-    return (DROPDOWN_GROUPLIST as Record<string, string[] | undefined>)[inboxType]![0] as string;
+const getInitialLoadType = (inboxType: InboxType | undefined): InboxLoadType | undefined => {
+  if (inboxType && Object.hasOwn(DROPDOWN_GROUPLIST, inboxType) && DROPDOWN_GROUPLIST[inboxType]) {
+    return DROPDOWN_GROUPLIST[inboxType][0];
   } else {
     throw new Error('type in options not recognized!');
   }
@@ -73,7 +74,7 @@ export default class Inbox extends React.Component<InboxProps, InboxState> {
     }
   }
 
-  changeType = (type: string) => {
+  changeType = (type: InboxLoadType | undefined) => {
     this.setState({
       type,
     });
@@ -98,7 +99,7 @@ export default class Inbox extends React.Component<InboxProps, InboxState> {
   };
 
   renderHeader() {
-    const { inboxType } = this.props;
+    const inboxType = requireInboxType(this.props.inboxType);
     const { type, inboxFavorite, filter } = this.state;
 
     const props = {
@@ -109,8 +110,8 @@ export default class Inbox extends React.Component<InboxProps, InboxState> {
       title:
         INBOXTYPES.WORKSHEET === inboxType && md.global.Account.isPortal
           ? _l('消息')
-          : (TYPENAMES as Record<string, string>)[inboxType as string],
-      dropdownData: (DROPDOWN_GROUPLIST as Record<string, string[] | undefined>)[inboxType as string],
+          : TYPENAMES[inboxType],
+      dropdownData: DROPDOWN_GROUPLIST[inboxType],
       changeType: this.changeType,
       changeFaviorite: this.changeFaviorite,
       changeInboxFilter: this.changeInboxFilter,
