@@ -1,3 +1,5 @@
+import type { InboxItem } from '../../util';
+import type { InboxMessageBody, InboxPostTopic } from '../../payloadTypes';
 import React from 'react';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
 import { formatInboxItem } from '../../util';
@@ -9,8 +11,8 @@ import BaseMessageComponent from '../baseComponent/messageContent';
  * @class PostReply
  * @extends {React.Component}
  */
-export default class PostReply extends React.Component<any, any> {
-  constructor(props) {
+export default class PostReply extends React.Component<InboxItem, InboxMessageBody> {
+  constructor(props: InboxItem) {
     super(props);
 
     this.state = {
@@ -28,10 +30,10 @@ export default class PostReply extends React.Component<any, any> {
         comments: [comment], // inbox显示的这一条
       },
       createTime,
-    } = inboxItem;
+    } = inboxItem as InboxItem & { Post: { comments: InboxPostTopic[] } };
     // 消息 @的人和群组 #话题
     const { message, rUserList, rGroupList, categories, attachments, postID, commentID, replyID, replyAccountId } =
-      comment;
+      comment!;
     // 转成html
     return {
       message: createLinksForMessage({
@@ -53,7 +55,7 @@ export default class PostReply extends React.Component<any, any> {
     const inboxItem = this.props;
     const {
       Post: { postID, message, rUserList, rGroupList, categories },
-    } = inboxItem;
+    } = inboxItem as InboxItem & { Post: NonNullable<InboxItem['Post']> };
     // source
     const fromMessage = createLinksForMessage({
       message: message || '',

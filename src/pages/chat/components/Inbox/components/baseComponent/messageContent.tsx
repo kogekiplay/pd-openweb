@@ -2,7 +2,10 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import PropTypes from 'prop-types';
 import xss from 'xss';
-import { whiteList } from 'xss/lib/default';
+// 根入口 `xss` 会把 `./default` 的全部导出挂到 `module.exports`（lib/index.js 的 for-in 循环），
+// `whiteList` 是**同一个对象**；用根入口即可拿到官方类型声明（`xss/lib/default` 无 .d.ts）。
+// 与同目录 commentArea.tsx / 兄弟 systemMessage.tsx 写法一致。
+import { whiteList } from 'xss';
 import { UserCard } from 'ming-ui';
 import 'src/components/emotion/emotion';
 import UploadFile from 'src/components/UploadFiles';
@@ -27,7 +30,12 @@ export interface BaseMessageComponentState {
   partMsg?: string | undefined;
 }
 
-export default class BaseMessageComponent extends React.Component<any, BaseMessageComponentState> {
+import type { InboxMessageBody as BaseMessageComponentProps } from '../../payloadTypes';
+
+export default class BaseMessageComponent extends React.Component<
+  BaseMessageComponentProps,
+  BaseMessageComponentState
+> {
   static override propTypes = {
     isFavorite: PropTypes.oneOf(['0', '1']),
 
@@ -51,11 +59,12 @@ export default class BaseMessageComponent extends React.Component<any, BaseMessa
     canReply: true,
   };
 
-  constructor(props) {
+  constructor(props: BaseMessageComponentProps) {
     super(props);
     const { message } = props;
-    const partMsg = cutStringWithHtml(message, 600, 12);
-    const remainingMsg = message.replace(partMsg, '');
+    // 擦除标记：收件箱条目必有正文（原 any 直接传）。
+    const partMsg = cutStringWithHtml(message as string, 600, 12);
+    const remainingMsg = message!.replace(partMsg, '');
 
     if (remainingMsg.length) {
       this.state = {
@@ -103,7 +112,10 @@ export default class BaseMessageComponent extends React.Component<any, BaseMessa
 
   renderStar() {
     const { isFavorite, inboxId } = this.props;
-    return <Star {...{ isFavorite, inboxId }} />;
+    // `Star` 的 props 与本组件的 `isFavorite` 已同为 `'0' | '1'`，无需断言。
+    return (
+      <Star {...{ isFavorite, inboxId }} />
+    );
   }
 
   renderMsgHeader() {
@@ -126,7 +138,7 @@ export default class BaseMessageComponent extends React.Component<any, BaseMessa
     if (showBtn) {
       return expanded ? (
         <span className="LineHeight25 WordBreak">
-          <span dangerouslySetInnerHTML={{ __html: xss(message, xssOptions) }} />
+          <span dangerouslySetInnerHTML={{ __html: xss(message as string, xssOptions) }} />
           <a
             href="javascript:void(0);"
             onClick={() => {
@@ -138,7 +150,10 @@ export default class BaseMessageComponent extends React.Component<any, BaseMessa
         </span>
       ) : (
         <span className="LineHeight25 WordBreak">
-          <span dangerouslySetInnerHTML={{ __html: xss(partMsg, xssOptions) }} />
+          <span
+            // 擦除标记：showBtn 分支下 partMsg 必已由构造器写入（原 any 直接传）。
+            dangerouslySetInnerHTML={{ __html: xss(partMsg as string, xssOptions) }}
+          />
           <a
             href="javascript:void(0);"
             onClick={() => {
@@ -172,14 +187,14 @@ export default class BaseMessageComponent extends React.Component<any, BaseMessa
   renderSourceFrom() {
     const { fromLink, fromMessage, fromTitle, sourceId } = this.props;
     if (!fromTitle) return null;
-    const msg = $('<span>').html(xss(fromMessage)).text();
+    const msg = $('<span>').html(xss(fromMessage as string)).text();
     return (
       <div className="mTop5 comeFrom">
         {sourceId ? (
           <a
             className="fromLink"
             target="_blank"
-            href={pathCompletion(fromLink)}
+            href={pathCompletion(fromLink as string)}
             data-title={fromTitle}
             onClick={() => {
               const worksheetId = sourceId.split('|')[0];
@@ -207,7 +222,7 @@ export default class BaseMessageComponent extends React.Component<any, BaseMessa
     return (
       <div className="mTop10 pBottom10">
         {sourceId ? (
-          <a href={pathCompletion(fromLink)} target="_blank" className="textTertiary NoUnderline">
+          <a href={pathCompletion(fromLink as string)} target="_blank" className="textTertiary NoUnderline">
             {formatMsgDate(dateConvertToUserZone(createTime))}
           </a>
         ) : (
@@ -250,7 +265,7 @@ export default class BaseMessageComponent extends React.Component<any, BaseMessa
         case SOURCE_TYPE.TASK:
           return (
             <div>
-              <a href={pathCompletion(fromLink)} target="_blank">
+              <a href={pathCompletion(fromLink as string)} target="_blank">
                 {_l('点击这里')}
               </a>
               <span className="textTertiary mLeft5">{_l('申请任务查看和回复权限')}</span>
@@ -259,7 +274,7 @@ export default class BaseMessageComponent extends React.Component<any, BaseMessa
         case SOURCE_TYPE.FOLDER:
           return (
             <div>
-              <a href={pathCompletion(fromLink)} target="_blank">
+              <a href={pathCompletion(fromLink as string)} target="_blank">
                 {_l('点击这里')}
               </a>
               <span className="textTertiary mLeft5">{_l('申请项目查看和回复权限')}</span>

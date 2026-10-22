@@ -4,7 +4,6 @@ import { MSGTYPES } from '../../constants';
 import { formatInboxItem } from '../../util';
 import BaseMessageComponent from '../baseComponent/messageContent';
 import { pathCompletion } from 'src/utils/common';
-import type { MessageArgs } from 'src/utils/messageLinkTypes';
 
 /**
  * 动态提到我的
@@ -12,53 +11,11 @@ import type { MessageArgs } from 'src/utils/messageLinkTypes';
  * @class PostMention
  * @extends {React.Component}
  */
-/** 动态里被提到/回复到的主题（帖子本身或某条评论） */
-interface PostTopicItem {
-  message?: string | undefined;
-  rUserList?: MessageArgs['rUserList'];
-  rGroupList?: MessageArgs['rGroupList'];
-  categories?: MessageArgs['categories'];
-  attachments?: unknown[] | undefined;
-  postID?: string | undefined;
-  commentID?: string | undefined;
-  replyID?: string | undefined;
-  replyAccountId?: unknown;
-  commentCount?: string | number | undefined;
-  comments?: PostTopicItem[] | undefined;
-}
+import type { InboxItem } from '../../util';
+import type { InboxPostTopic as PostTopicItem, InboxMessageBody } from '../../payloadTypes';
 
-/** 收件箱动态条目（`PostMention` 真实读取的字段） */
-interface PostMentionInboxItem {
-  inboxType?: number | undefined;
-  createTime?: string | number | undefined;
-  Post?: {
-    postID?: string | undefined;
-    message?: string | undefined;
-    postType?: number | undefined;
-    comments?: PostTopicItem[] | undefined;
-    commentCount?: string | number | undefined;
-    MedalPost?: {
-      MedalName?: string | undefined;
-      MedalPath?: string | undefined;
-      MedalDescription?: string | undefined;
-    };
-    rUserList?: MessageArgs['rUserList'];
-    rGroupList?: MessageArgs['rGroupList'];
-    categories?: MessageArgs['categories'];
-    linkTitle?: string | undefined;
-    linkUrl?: string | undefined;
-    linkThumb?: string | undefined;
-    linkDesc?: string | undefined;
-  };
-}
-
-interface PostMentionProps extends PostMentionInboxItem {
-  inboxType?: number | undefined;
-  Post: NonNullable<PostMentionInboxItem['Post']>;
-}
-
-export default class PostMention extends React.Component<PostMentionProps, Record<string, unknown>> {
-  constructor(props: PostMentionProps) {
+export default class PostMention extends React.Component<InboxItem, InboxMessageBody> {
+  constructor(props: InboxItem) {
     super(props);
 
     if (
@@ -70,7 +27,7 @@ export default class PostMention extends React.Component<PostMentionProps, Recor
         ...this.mergeTopicState(false),
         ...this.mergeFromSourceState(false),
         // 获取createUser信息和typeName
-        ...formatInboxItem(props as Parameters<typeof formatInboxItem>[0]),
+        ...formatInboxItem(props),
       };
     } else if (props.inboxType === MSGTYPES.PostMentionedGroup || props.inboxType === MSGTYPES.PostMentionedUser) {
       // 动态直接 提到
@@ -89,7 +46,7 @@ export default class PostMention extends React.Component<PostMentionProps, Recor
    * @memberof PostMention
    */
   mergeTopicState(fromPost: boolean) {
-    const inboxItem = this.props as PostMentionProps;
+    const inboxItem = this.props;
     const createTime = inboxItem.createTime;
     let item: PostTopicItem | null = null,
       comments: PostTopicItem[] | undefined,
@@ -97,7 +54,7 @@ export default class PostMention extends React.Component<PostMentionProps, Recor
 
     if (fromPost) {
       // 动态直接提到我，从Post中取
-      item = inboxItem.Post as PostTopicItem;
+      item = inboxItem.Post!;
       comments = item.comments;
       commentsCount = parseInt(item.commentCount as string, 10);
     } else {
@@ -107,7 +64,7 @@ export default class PostMention extends React.Component<PostMentionProps, Recor
         Post: {
           comments: [comment], // inbox显示的这一条
         },
-      } = inboxItem as PostMentionProps & { Post: { comments: PostTopicItem[] } };
+      } = inboxItem as InboxItem & { Post: { comments: PostTopicItem[] } };
       // 擦除标记：该分支必带至少一条评论（原 any 直接取）；缺省时原实现抛原生 TypeError。
       item = comment as PostTopicItem;
     }
@@ -153,7 +110,7 @@ export default class PostMention extends React.Component<PostMentionProps, Recor
     const inboxItem = this.props;
     const {
       Post: { postID, message, rUserList, rGroupList, categories },
-    } = inboxItem as PostMentionProps;
+    } = inboxItem as InboxItem & { Post: NonNullable<InboxItem['Post']> };
 
     if (fromPost) {
       return {
@@ -185,10 +142,10 @@ export default class PostMention extends React.Component<PostMentionProps, Recor
     const inboxItem = this.props;
     const post = inboxItem.Post;
 
-    switch (post.postType) {
+    switch (post!.postType) {
       case 0:
         // 擦除标记：勋章类型动态必带 MedalPost（原 any 直接取）；缺省时原实现抛原生 TypeError。
-        const medal = post.MedalPost!;
+        const medal = post!.MedalPost!;
         const medalName = medal.MedalName;
         const medalPath = medal.MedalPath;
         const description = medal.MedalDescription;
@@ -217,7 +174,7 @@ export default class PostMention extends React.Component<PostMentionProps, Recor
         );
 
       case 1:
-        const { linkTitle, linkUrl, linkThumb, linkDesc } = post;
+        const { linkTitle, linkUrl, linkThumb, linkDesc } = post!;
         return (
           <div>
             <a target="_blank" href={linkUrl} className="WordBreak">
@@ -230,7 +187,7 @@ export default class PostMention extends React.Component<PostMentionProps, Recor
 
       case 4:
       case 7:
-        const className = post.postType == 4 ? 'icon-qa' : 'icon-votenobg';
+        const className = post!.postType == 4 ? 'icon-qa' : 'icon-votenobg';
         const from = this.mergeFromSourceState();
         const fromLink = from.fromLink;
 
@@ -241,8 +198,8 @@ export default class PostMention extends React.Component<PostMentionProps, Recor
             </div>
             <div className="textContainer">
               {/* 擦除标记：Q&A/投票动态必带 message（原 any 直接调）；缺省时原实现抛原生 TypeError。 */}
-              {(post.message as string).substring(0, 25) +
-                ((post.message as string).length > 25 ? '...' : '')}
+              {(post!.message as string).substring(0, 25) +
+                ((post!.message as string).length > 25 ? '...' : '')}
             </div>
             <div className="viewDetail">
               <a target="_blank" href={pathCompletion(fromLink)} className="detailBtn boderRadAll_3">

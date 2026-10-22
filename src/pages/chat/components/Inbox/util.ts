@@ -1,17 +1,9 @@
+import type { InboxUser, InboxPost, TopicSource, NormalizedComment, InboxMessageBody } from './payloadTypes';
 // linkify-it 6 去掉了 default export，类要从具名导出取。
 import { LinkifyIt } from 'linkify-it';
 import moment from 'moment';
 import { browserIsMobile, htmlEncodeReg, pathCompletion } from 'src/utils/common';
 import { MSGTYPES, SOURCE_TYPE } from './constants';
-
-/** 收件箱创建人 */
-interface InboxCreateUser {
-  accountId?: string | undefined;
-  fullname?: string | undefined;
-  avatar?: string | undefined;
-}
-
-/** 收件箱条目（`formatInboxItem` 真实读取的字段；其余在索引签名里） */
 
 /**
  * 筛选器选中的账号（`quickSelectUser` 回调元素，渲染时读 avatar/fullname）。
@@ -37,30 +29,12 @@ export interface InboxFilterValue {
 }
 
 export interface InboxItem {
-  CreateUser?: InboxCreateUser | undefined;
+  CreateUser?: InboxUser | undefined;
   /**
    * 收件箱里的讨论对象。`wrappedComp/commonTopic` 直接读 name/sourceId/extendsId/sourceType/
    * message/accountsInMessage/isDeleted/canReply，故逐个声明（其余仍在索引签名里）。
    */
-  discussion?:
-    | {
-        entityName?: string | undefined;
-        /** 讨论标题/正文摘要（`mergeFromSourceState` 作为 fromMessage） */
-        name?: string | undefined;
-        /** 来源实体 id（拼来源链接） */
-        sourceId?: string | undefined;
-        /** 工作表场景的 `appId|viewId` 串（`extendsId.split('|')[0]`） */
-        extendsId?: string | undefined;
-        /** 来源类型（`SOURCE_TYPE`） */
-        sourceType?: number | undefined;
-        /** 讨论正文（`createLinksForMessage` 输入） */
-        message?: string | undefined;
-        /** 消息 @ 的人（`createLinksForMessage` 的 rUserList） */
-        accountsInMessage?: unknown[] | undefined;
-        isDeleted?: boolean | undefined;
-        canReply?: boolean | undefined;
-      }
-    | undefined;
+  discussion?: (InboxMessageBody & { entityName?: string | undefined; accountsInMessage?: TopicSource['accountsInMessage'] }) | undefined;
   /** 收件箱条目创建时间（`mergeTopicState` 原样透传给消息组件） */
   createTime?: string | number | undefined;
   /** Star 的真实输入和更新值都是字符串标记。 */
@@ -74,56 +48,7 @@ export interface InboxItem {
    * 等也会被放行（lead 2026-10-21 反例 2）。真实消费点 `postMention.tsx` 会读它，
    * 故这里按其真实读取形状声明；其余未读字段不再用宽索引兜。
    */
-  Post?:
-    | {
-        postID?: string | undefined;
-        message?: string | undefined;
-        postType?: number | undefined;
-        comments?: unknown[] | undefined;
-        commentCount?: string | number | undefined;
-        rUserList?: unknown;
-        rGroupList?: unknown;
-        categories?: unknown;
-        linkTitle?: string | undefined;
-        linkUrl?: string | undefined;
-        linkThumb?: string | undefined;
-        linkDesc?: string | undefined;
-      }
-    | undefined;
-}
-
-/** 评论/动态条目（`formatTopic` 两个分支读取字段的并集） */
-interface TopicSource {
-  user?:
-    | {
-        accountId?: string | undefined;
-        userMiddleHead?: string | undefined;
-        userName?: string | undefined;
-      }
-    | undefined;
-  replyID?: string | number | undefined;
-  replyUser?:
-    | { accountId?: string | undefined; userName?: string | undefined }
-    | undefined;
-  replyAccountId?: string | undefined;
-  replyUserName?: string | undefined;
-  allowOperate?: string | undefined;
-  attachments?: unknown[] | undefined;
-  askDeleteAttachment?: string | undefined;
-  postID?: string | undefined;
-  commentID?: string | undefined;
-  message?: unknown;
-  rUserList?: unknown;
-  rGroupList?: unknown;
-  createTime?: number | string | undefined;
-  Secretary?: unknown;
-  createAccount?: { accountId?: string | undefined } | undefined;
-  replyId?: string | null | undefined;
-  sourceId?: string | undefined;
-  name?: string | undefined;
-  discussionId?: string | undefined;
-  replyAccount?: unknown;
-  accountsInMessage?: unknown;
+  Post?: InboxPost | undefined;
 }
 
 /**
@@ -135,8 +60,8 @@ interface TopicSource {
 export const formatInboxItem = function (inboxItem: InboxItem) {
   const createUser = inboxItem.CreateUser || {};
   const { accountId, fullname, avatar } = createUser;
-  // 擦除标记：工作表类消息必带 discussion（原 any 直接解构）；缺省时原实现抛原生 TypeError。
-  const { discussion } = inboxItem as { discussion: { entityName?: string | undefined } };
+  // 保留原解构时机；只有实际读取 entityName 的分支要求 discussion 存在。
+  const { discussion } = inboxItem;
 
   let typeName = '';
   // 擦除标记：`inboxType` 的声明是 string | number，parseInt 内部 ToString 与 String() 等价。
@@ -232,26 +157,26 @@ export const formatInboxItem = function (inboxItem: InboxItem) {
       break;
     // 工作表
     case MSGTYPES.WorkSheetReply:
-      typeName = _l('在%0讨论中回复了你', htmlEncodeReg(discussion.entityName));
+      typeName = _l('在%0讨论中回复了你', htmlEncodeReg(discussion!.entityName));
       break;
     case MSGTYPES.WorkSheetMentioned:
-      typeName = _l('在%0讨论中提到了你', htmlEncodeReg(discussion.entityName));
+      typeName = _l('在%0讨论中提到了你', htmlEncodeReg(discussion!.entityName));
       break;
     case MSGTYPES.WorkSheetComment:
-      typeName = _l('发表了%0讨论', htmlEncodeReg(discussion.entityName));
+      typeName = _l('发表了%0讨论', htmlEncodeReg(discussion!.entityName));
       break;
     // 工作表记录
     case MSGTYPES.WorkSheetRowReply:
-      typeName = _l('在%0讨论中回复了你', htmlEncodeReg(discussion.entityName));
+      typeName = _l('在%0讨论中回复了你', htmlEncodeReg(discussion!.entityName));
       break;
     case MSGTYPES.WorkSheetRowMentioned:
-      typeName = _l('在%0讨论中提到了你', htmlEncodeReg(discussion.entityName));
+      typeName = _l('在%0讨论中提到了你', htmlEncodeReg(discussion!.entityName));
       break;
     case MSGTYPES.WorkSheetRowComment:
-      typeName = _l('发表了%0讨论', htmlEncodeReg(discussion.entityName));
+      typeName = _l('发表了%0讨论', htmlEncodeReg(discussion!.entityName));
       break;
     case MSGTYPES.FocusMessage:
-      typeName = _l('在%0中发布了讨论', htmlEncodeReg(discussion.entityName));
+      typeName = _l('在%0中发布了讨论', htmlEncodeReg(discussion!.entityName));
       break;
 
     default:
@@ -276,9 +201,9 @@ export const formatInboxItem = function (inboxItem: InboxItem) {
   };
 };
 
-export const formatTopic = function (item: TopicSource, type: number | undefined) {
-  // 两个分支写入的字段并集；调用方均未类型化，这里用记录类型承接
-  var formatedData: Record<string, unknown> = {};
+export const formatTopic = function (item: TopicSource, type: number | undefined): NormalizedComment {
+  // Feed 与 discussion 的写入字段在同一有限结果合同中声明。
+  var formatedData: NormalizedComment = {};
   var User;
   var ReplyUser;
   var isReply;

@@ -21,50 +21,24 @@ import { SOURCE_TYPE } from '../../constants';
 import { buildSourceLink, formatTopic, splitSourceId } from '../../util';
 import Avatar from './avatar';
 import ReplyTo from './replyTo';
-import type { MessageArgs } from 'src/utils/messageLinkTypes';
 import UserLink from './userLink';
 
 
-/** 评论/回复里的账号信息（`Avatar`/`UserLink` 真实读取的字段） */
-interface CommentUser {
-  accountId?: string | undefined;
-  fullname?: string | undefined;
-  avatar?: string | undefined;
-}
+import type { InboxUser as CommentUser, NormalizedComment as CommentTopic, TopicSource } from '../../payloadTypes';
 
 /** 删除评论/回复所需字段（`removeTopicConfirm`/`removeTopic` 两个函数的真实入参） */
 interface RemoveTopicProps {
   sourceId?: string | undefined;
   sourceType?: number | undefined;
   discussionId?: string | undefined;
-  replyId?: string | null | undefined;
+  replyId?: string | number | null | undefined;
   isDeleteAttachment?: unknown;
-  removeCallback: (id?: string) => void;
-}
-
-/** `formatTopic` 归一化后的评论条目（本文件真实消费的字段；其余在索引签名里） */
-interface CommentTopic {
-  discussionId?: string | undefined;
-  sourceId?: string | undefined;
-  sourceType?: number | undefined;
-  replyId?: string | null | undefined;
-  message?: string | undefined;
-  accountsInMessage?: MessageArgs['rUserList'];
-  groupsInMessage?: MessageArgs['rGroupList'];
-  categories?: MessageArgs['categories'];
-  attachment?: unknown;
-  createAccount?: CommentUser | undefined;
-  replyAccount?: CommentUser | null | undefined;
-  canDelete?: boolean | undefined;
-  createTime?: number | string | undefined;
-  isDeleteAttachment?: unknown;
-  projectId?: string | undefined;
-  appId?: string | undefined;
+  removeCallback: (id?: string | number | null) => void;
 }
 
 /** 评论上下文里的 params（`getComponentProps`/`CommentArea` 共用的真实字段） */
 interface CommentParams {
-  sourceId: string;
+  sourceId?: string | undefined;
   sourceType?: number | undefined;
   discussionId?: string | undefined;
   extendsId?: string | undefined;
@@ -80,10 +54,13 @@ interface CommentContext {
 }
 
 interface CommentItemProps extends CommentTopic {
-  addCallback: (comment: CommentTopic) => void;
-  removeCallback: (id?: string) => void;
+  categories?: TopicSource['categories'];
+  projectId?: string | undefined;
+  appId?: string | undefined;
+  addCallback: (comment: TopicSource) => void;
+  removeCallback: (id?: string | number | null) => void;
   /** 由父级 cloneElement 注入的评论输入组件（其 props 由父级按需补齐） */
-  children: React.ReactElement<Record<string, unknown>>;
+  children: React.ReactElement<{ autoFoucs?: boolean; onSubmit?: (comment: TopicSource) => void; onSubmitCallback?: () => void }>;
 }
 
 interface CommentAreaParams extends CommentParams {
@@ -94,7 +71,7 @@ interface CommentAreaParams extends CommentParams {
 interface CommentAreaProps {
   params: CommentAreaParams;
   commentsProps: {
-    comments?: CommentTopic[] | undefined;
+    comments?: TopicSource[] | undefined;
     commentsCount?: number | undefined;
   };
 }
@@ -176,7 +153,7 @@ const getComponentProps = function (props: CommentContext) {
   };
   // 擦除标记：评论上下文里的 name 是标题文案（原 any 直接传）。
   const decodedName = htmlDecodeReg(name as string);
-  const { sourceId, childId } = splitSourceId(props.params.sourceId);
+  const { sourceId, childId } = splitSourceId(props.params.sourceId!);
   var map: Record<string | number, Record<string, unknown> | undefined> = {
     [SOURCE_TYPE.TASK]: {
       selectGroupOptions: {
@@ -445,7 +422,7 @@ class CommentItem extends React.Component<CommentItemProps, CommentItemState> {
             <div className="mTop5 mBottom5">
               {React.cloneElement(this.props.children, {
                 autoFoucs: true,
-                onSubmit: (discussion: CommentTopic) => {
+                onSubmit: (discussion: TopicSource) => {
                   addCallback(discussion);
                 },
                 onSubmitCallback: () => {
@@ -488,25 +465,25 @@ export default class CommentArea extends React.Component<CommentAreaProps, Comme
     this.state = {
       loadAllComments: false, // 动态加载全部评论
       commenterIsFocus: false,
-      comments: _.map(comments || [], (comment: CommentTopic) => {
-        return formatTopic(comment, sourceType) as CommentTopic;
+      comments: _.map(comments || [], (comment: TopicSource) => {
+        return formatTopic(comment, sourceType);
       }),
 
       showComments: comments && comments.length > 0,
     };
   }
 
-  addCommentCallback = (comment: CommentTopic) => {
+  addCommentCallback = (comment: TopicSource) => {
     const {
       params: { sourceType },
     } = this.props;
     const comments = this.state.comments.slice(0);
     this.setState({
-      comments: [formatTopic(comment, sourceType) as CommentTopic].concat(comments),
+      comments: [formatTopic(comment, sourceType)].concat(comments),
     });
   };
 
-  removeCommentCallback(id?: string) {
+  removeCommentCallback(id?: string | number | null) {
     this.setState({
       comments: _.filter(this.state.comments, ({ discussionId }: CommentTopic) => discussionId !== id),
     });
@@ -521,13 +498,13 @@ export default class CommentArea extends React.Component<CommentAreaProps, Comme
       .getMorePostComments({
         postID: sourceId,
       })
-      .then((data: unknown) => {
+      .then((data: TopicSource[] | 'error') => {
         if (data === 'error') {
           alert(_l('操作失败'), 2);
         } else {
           this.setState({
             loadAllComments: true,
-            comments: _.map(data as CommentTopic[], (comment: CommentTopic) => formatTopic(comment, type) as CommentTopic),
+            comments: _.map(data, (comment: TopicSource) => formatTopic(comment, type)),
           });
         }
       });
