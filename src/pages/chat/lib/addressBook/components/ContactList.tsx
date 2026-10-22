@@ -4,7 +4,7 @@ import { LoadDiv, ScrollView } from 'ming-ui';
 import ContactItem from './ContactItem';
 import ListNull from './ListNull';
 
-import type { AddressBookAccount as ContactRow, AddressBookContacts as ContactListData, AddressBookContactEntry } from 'src/api/addressBookTypes';
+import type { AddressBookContacts as ContactListData, AddressBookContactEntry } from 'src/api/addressBookTypes';
 
 export interface ContactClickPayload {
   /** 点击行带回的账号 id（行数据里可能缺省，故显式允许 undefined） */
@@ -87,20 +87,20 @@ export default class ContactList extends React.Component<ContactListProps> {
     const { isLoading, list, isSearch } = this.props;
 
     if (isSearch) {
-      // 擦除标记：搜索分支 list 是平铺数组（原 any 直接读 length）。
-      if (!isLoading && list && (list as AddressBookContactEntry[]).length === 0) {
+      const rows = Array.isArray(list) ? list : null;
+      if (!isLoading && rows && rows.length === 0) {
         return <ListNull isSearch={isSearch} type={'contacts'} />;
       }
 
       return (
         <React.Fragment>
-          {this.renderList(list as AddressBookContactEntry[])}
+          {this.renderList(rows)}
           {isLoading ? <LoadDiv className="mTop10" /> : null}
         </React.Fragment>
       );
     } else {
-      // 擦除标记：非搜索分支 list 是字母分组字典（原 any 直接取 keys）。
-      const keys = _.keys(list as Record<string, ContactRow[]>);
+      const groups = Array.isArray(list) ? null : list;
+      const keys = _.keys(groups);
       if (!keys.length && isLoading) return <LoadDiv className="mTop10" />;
       return (
         <React.Fragment>
@@ -108,7 +108,7 @@ export default class ContactList extends React.Component<ContactListProps> {
             keys.sort((a, b) => a.localeCompare(b)),
             key => {
               const props = {
-                list: (list as Record<string, ContactRow[]>)[key],
+                list: groups?.[key],
                 title: key,
               };
               return this.renderSingleList(props);

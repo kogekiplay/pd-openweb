@@ -88,12 +88,15 @@ export default class NewFriendsList extends React.Component<NewFriendsListProps,
     });
   }
 
-  updateListData(accountId: string, isAdd: boolean) {
+  updateListData(accountId: string | undefined, isAdd: boolean) {
     const { listData } = this.state;
     this.setState({
       // 擦除标记：分页拉取前 listData 可能为 null（原 any 直接 map；lodash 对 null 返回 []）。
       listData: _.map(listData, (item: NewFriendItem | null | undefined) => {
-        if (item!.createAccount!.accountId === accountId) {
+        if (item === null || item === undefined) return item;
+        const author = item.createAccount;
+        if (author === null || author === undefined) return item;
+        if (author.accountId === accountId) {
           return {
             ...item,
             added: isAdd,
@@ -105,7 +108,7 @@ export default class NewFriendsList extends React.Component<NewFriendsListProps,
     });
   }
 
-  add(accountId: string) {
+  add(accountId: string | undefined) {
     return editAgreeFriend(accountId).then(data => {
       if (data) {
         this.updateListData(accountId, true);
@@ -115,7 +118,7 @@ export default class NewFriendsList extends React.Component<NewFriendsListProps,
     });
   }
 
-  refuse(accountId: string) {
+  refuse(accountId: string | undefined) {
     return editRefuseFriend(accountId).then(data => {
       if (data) {
         this.updateListData(accountId, false);
@@ -151,42 +154,45 @@ export default class NewFriendsList extends React.Component<NewFriendsListProps,
             {/* 擦除标记：非首屏分支下 listData 必已存在（原 any 直接取 length/map）。 */}
             {listData!.length &&
               listData!.map((item: NewFriendItem | null | undefined) => {
+                if (item === null || item === undefined) return null;
+                const author = item.createAccount;
+                if (author === null || author === undefined) return null;
                 return (
-                  <tr key={item!.createAccount!.accountId}>
+                  <tr key={item.createAccount?.accountId}>
                     <td className="pRight24 userItem">
                       <a
-                        href={pathCompletion('/user_' + (item!.createAccount!.accountId as string))}
+                        href={pathCompletion('/user_' + author.accountId)}
                         className="Hand NoUnderline TxtMiddle"
                         target="_blank"
                       >
-                        <img className="circle avatar" src={item!.createAccount!.avatar} />
+                        <img className="circle avatar" src={item.createAccount?.avatar} />
                       </a>
                       <a
-                        href={pathCompletion('/user_' + (item!.createAccount!.accountId as string))}
+                        href={pathCompletion('/user_' + item.createAccount?.accountId)}
                         className="Bold Hand overflow_ellipsis textPrimary mLeft8"
-                        title={item!.createAccount!.fullname}
+                        title={item.createAccount?.fullname}
                       >
-                        {item!.createAccount!.fullname || ''}
+                        {item.createAccount?.fullname || ''}
                       </a>
                     </td>
                     <td className="pRight24">
-                      <div className="overflow_ellipsis TxtMiddle">{item!.message || _l('无备注信息')}</div>
+                      <div className="overflow_ellipsis TxtMiddle">{item.message || _l('无备注信息')}</div>
                     </td>
                     <td>
-                      <div className="overflow_ellipsis TxtMiddle wMax100">{item!.createAccount!.companyName || ''}</div>
+                      <div className="overflow_ellipsis TxtMiddle wMax100">{item.createAccount?.companyName || ''}</div>
                     </td>
-                    {item!.added === undefined ? (
+                    {item.added === undefined ? (
                       <td className="TxtCenter">
-                        <Button type="primary" size="small" action={() => this.add(item!.createAccount!.accountId as string)}>
+                        <Button type="primary" size="small" action={() => this.add(item.createAccount?.accountId)}>
                           {_l('同意')}
                         </Button>
-                        <Button type="link" size="small" action={() => this.refuse(item!.createAccount!.accountId as string)}>
+                        <Button type="link" size="small" action={() => this.refuse(item.createAccount?.accountId)}>
                           {_l('拒绝')}
                         </Button>
                       </td>
                     ) : (
                       <td className="TxtCenter">
-                        <span className="textSecondary">{item!.added ? _l('已添加') : _l('已拒绝')}</span>
+                        <span className="textSecondary">{item.added ? _l('已添加') : _l('已拒绝')}</span>
                       </td>
                     )}
                   </tr>

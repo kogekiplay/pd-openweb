@@ -49,8 +49,10 @@ function extractMethods(
     program: { body: BabelNode[] };
   };
   const found: Record<string, { start: number; end: number }> = {};
+  const runtimeFields: string[] = [];
   const visit = (node: BabelNode | null | undefined): void => {
     if (!node || typeof node !== 'object') return;
+    if (node.type === 'ClassProperty' && node.key?.name === 'requestVersion' && typeof node.start === 'number' && typeof node.end === 'number') runtimeFields.push(source.slice(node.start, node.end));
     if (
       node.type === 'ClassMethod' &&
       node.key &&
@@ -77,7 +79,7 @@ function extractMethods(
   const body = methods
     .map((name) => source.slice(found[name]!.start, found[name]!.end).replace(/^\s*override\s+/, ''))
     .join('\n');
-  const wrapped = `var __cls = class {\n  constructor(props, state, setState) {\n    this.props = props;\n    this.state = state;\n    this.setState = setState;\n  }\n${extraMembers}\n${body}\n};\n`;
+  const wrapped = `var __cls = class {\n${runtimeFields.join('\n')}\n  constructor(props, state, setState) {\n    this.props = props;\n    this.state = state;\n    this.setState = setState;\n  }\n${extraMembers}\n${body}\n};\n`;
   const transformed = harness.transformSync(wrapped, { filename: 'abContainers-snippet.tsx' });
   if (!transformed || typeof transformed.code !== 'string') throw new Error('babel 未能转换抽出的方法片段');
   const code = transformed.code.replace(/^['"]use strict['"];\s*/, '');

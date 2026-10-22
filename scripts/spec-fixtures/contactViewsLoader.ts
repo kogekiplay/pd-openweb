@@ -1,0 +1,12 @@
+/** Whole contact/page product classes; SDK/UI/DOM controlled, setState commit callbacks are explicit. */
+import type {ChatWindowFixture} from './chatWindowLoader';
+const {makeFixture}=require('./chatWindowLoader.ts') as {makeFixture(options:unknown):ChatWindowFixture};
+const assert:typeof import('node:assert/strict')=require('node:assert/strict');
+type Data=Record<string,unknown>;
+export interface Subject{props:Data;state:Data;render():unknown;fetch():unknown;fetchContacts():Promise<unknown>;search(text:string):void;changeFilter?:()=>void;abortRequest():void;componentWillUnmount():void;componentDidMount():void;}
+export type Constructor=new(props:Data)=>Subject;
+function pending(){let resolve!:(value:unknown)=>void,reject!:(reason:unknown)=>void;const children:Promise<unknown>[]=[];const aborted:unknown[]=[];const request=Object.assign(new Promise<unknown>((yes,no)=>{resolve=yes;reject=no;}),{abort(this:unknown){aborted.push(this);}});const then=request.then.bind(request);Object.defineProperty(request,'then',{value:(...args:Parameters<typeof then>)=>{const p=then(...args);children.push(p);void p.catch(()=>{});return p;}});return{request,resolve,reject,children,aborted};}
+const prefix='src/pages/chat/lib/addressBook/';
+function makeContactViews(){Reflect.set(globalThis,'alert',()=>{});const requests:Array<ReturnType<typeof pending>>=[],patches:Array<{item:Subject;patch:Data}>=[],callbacks:Array<()=>void>=[];const Leaf=()=>null;const f=makeFixture({uiLeaves:[prefix+'components/UserDetail',prefix+'components/ListSearchBar'],moduleOverride(_file:string,name:string){if(name==='ming-ui')return{LoadDiv:Leaf,ScrollView:Leaf,Icon:Leaf};if(name==='ming-ui/functions')return{addFriendConfirm:()=>{throw new Error('Unexpected host mutation');}};return undefined;},sdkOverride(){const p=pending();requests.push(p);return{value:p.request};}});function instance(Type:Constructor,props:Data){const item=new Type(props);Reflect.set(item,'setState',(patch:Data,callback?:()=>void)=>{patches.push({item,patch});Reflect.set(item,'state',{...item.state,...patch});if(callback)callbacks.push(callback);});return item;}function commit(){for(const fn of callbacks.splice(0))fn();}async function resolve(i:number,value:unknown){const p=requests[i];assert.ok(p);p.resolve(value);await Promise.all(p.children);}return{...f,requests,patches,instance,commit,resolveRequest:resolve,Type:(file:string)=>f.load(prefix+file)['default'] as Constructor};}
+module.exports={makeContactViews};
+export type MakeContactViews=typeof makeContactViews;

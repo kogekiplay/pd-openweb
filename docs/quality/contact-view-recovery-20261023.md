@@ -1,0 +1,15 @@
+# 联系人视图重置与缺项恢复（2026-10-23）
+
+固定基线6daa6b4ed05fdf400ab2ee448c546fdde8146f61。实际Contacts/Friends/Others按首字母分组，旧firstCode缺项在toUpperCase失败；Others首次search直接abort空句柄失败；已abort请求仍可能由宿主完成，旧分组回执在新搜索期间写入Map，随后新回执concat失败或污染数组；重复同关键词重置和卸载后也会接受旧回执。新完整组件规格在旧源码按code/cancel/stale/same/unmount/views/rows/filter分别运行，全部实际退出1，命令/日志保留。没有用手写等价函数替代产品组件。
+
+修复让nullish firstCode进入已有#分组，raw行、firstCode缺键/自有undefined/null与行引用不变；正常字符串和有toUpperCase方法的对象保留原读取/调用次数，非文本不默认强制String。所有容器在取消成功后才推进请求代次，搜索/过滤/props重置/卸载使旧回执失效。abort若抛异常则原view/request仍有效、相同reason原样抛，原请求仍能完成。过期回执在读payload字段和写state之前停止；同关键词重置也按代次区分，不靠关键词碰巧相等。
+
+最终复核另发现加载中切换Contacts过滤条件不重置isLoading，旧源码和最初候选都只发出1个请求，替换请求被fetch防重入挡住；candidate-filter-before-fix与old-filter实际退出1保留。过滤重置明确恢复isLoading=false，完整规格验证第二个真实SDK查询的过滤参数、旧回执不读payload及新行/加载状态。
+
+平铺/分组视图使用实际Array.isArray判定，兼容形态保留原引用；不匹配形态显示空视图，不把对象键/数组字段渲染成伪联系人。三个容器只把已确认的平铺数组concat，或把已确认的分组字典送入原grouper，删除原整对象/整数组断言。dictionary的push索引标记仅保留原“缺键先写数组”的局部构造依据，原getter/失败不被替代。
+
+好友/推荐列表保留concat追加的nil哨兵及raw state，渲染/局部更新跳过nil项；好友申请缺author也不造身份。正常好友行第一次author读取供原首个链接使用，tr key仍保留编译后的最后一次独立读取，后续属性求值顺序及次数保持，绝不把所有读取缓存为一份快照。账户ID缺项原样转给现有动作wrapper，删除id as string但不伪造ID；URL原字符串拼接不变。SDK/UI/DOM宿主受控，无真实好友、联系人或权限写入。
+
+同份完整正常边界前后各6项通过，候选8类完整回归通过。旧API分页规格中专门记录“当前bug必须抛错”的断言按本轮实际修复升级为强检查：#分组/缺键和引用保持、nil行不崩溃且state同引用、首次search实际发出range=3查询；增加非法非字符串firstCode仍原生失败，未删覆盖或放宽门禁。原旧预期在新源码失败的日志legacy-pages-before-update保留。旧推荐列表规格同样记录了缺项必须崩溃的旧预期（legacy-rows实际14/15、退出1）；现增加nil哨兵保留及非nil行getter异常原对象检查，保留分页/API与原有其它断言。旧方法提取宿主从真实类字段源码初始化requestVersion，原断言保持；新的完整模块规格负责实际取消/异步边界。
+
+完整行为差异按六个类逐成员列出并绑定前后AST SHA；其它成员/模块语句逐项相同，除三个grouper各两处nullish firstCode表达式。全量Babel差异与类型阶段证据在 /Users/kogeki/dev/HAP-工作记录/20261023-contact-view-contracts/。与纯状态合同整理分提交，未部署。

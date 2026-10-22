@@ -264,31 +264,31 @@ export default {
   },
 };
 
-export const editAgreeFriend = (accountId: string) => {
+export const editAgreeFriend = (accountId: string | undefined) => {
   return AddressListController.editAgreeFriend({
     accountId,
   });
 };
 
-export const editRefuseFriend = (accountId: string) => {
+export const editRefuseFriend = (accountId: string | undefined) => {
   return AddressListController.editRefuseFriend({
     accountId,
   });
 };
 
-export const editIgnoreFriend = (accountId: string) => {
+export const editIgnoreFriend = (accountId: string | undefined) => {
   return AddressListController.editIgnoreFriend({
     accountId,
   });
 };
 
-export const editIgnoreRecommends = (recomendId: string) => {
+export const editIgnoreRecommends = (recomendId: string | undefined) => {
   return AddressListController.addIgnoreMobileAddress({
     recomendId,
   });
 };
 
-export const removeFriend = (accountId: string) => {
+export const removeFriend = (accountId: string | undefined) => {
   return AddressListController.removeFriend({
     accountId,
   });

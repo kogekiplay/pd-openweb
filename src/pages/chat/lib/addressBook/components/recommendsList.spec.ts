@@ -208,14 +208,20 @@ check('fetch：满 10 条 → hasMore=true', async () => {
   assert.equal(h.instance.state.listData!.length, 10);
 });
 
-check('fetch：缺失 list 原样存入 undefined，后续行读取保留原生失败', async () => {
+check('fetch：缺失 list 保留 undefined 哨兵，局部更新保持哨兵且不崩溃', async () => {
   const h = make({ omitList: true });
   h.instance.fetch();
   await h.flush();
   assert.equal(h.instance.state.hasMore, undefined);
   assert.deepEqual(h.instance.state.listData, [undefined]);
   assert.deepEqual(h.updates, [true]);
-  assert.throws(() => h.instance.updateListData('a1', true), TypeError);
+  h.instance.updateListData('a1', true);
+  assert.deepEqual(h.instance.state.listData, [undefined], '局部更新保留原 undefined 哨兵');
+  const broken: RecommendItem = {};
+  const reason = new Error('account getter failure');
+  Object.defineProperty(broken, 'accountId', { get() { throw reason; } });
+  h.instance.state.listData = [broken];
+  assert.throws(() => h.instance.updateListData('a1', true), error => error === reason, '非 nil 行原字段 getter 异常原样保留');
 });
 
 check('fetch：allCount === 0 → 不追加列表，仍 update(false)', async () => {

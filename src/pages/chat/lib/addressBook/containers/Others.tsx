@@ -6,15 +6,13 @@ import ContactList from '../components/ContactList';
 import ListSearchBar from '../components/ListSearchBar';
 import UserDetail from '../components/UserDetail';
 
-import type { AddressBookAccount as AddressBookRow, AddressBookContacts as AddressBookListData, AddressBookContactEntry } from 'src/api/addressBookTypes';
+import type { AddressBookAccount as AddressBookRow, AddressBookContacts as AddressBookListData, AddressBookContactGroups } from 'src/api/addressBookTypes';
 
-const formatContactsData = (store: AddressBookListData, list: AddressBookRow[] | null | undefined): AddressBookListData => {
-  // 擦除标记：分组结果就是「首字母 → 行数组」字典（原 any 直接当字典用）。
-  const result = (store || {}) as Record<string, AddressBookRow[]>;
+const formatContactsData = (store: AddressBookContactGroups | null, list: AddressBookRow[] | null | undefined): AddressBookContactGroups => {
+  const result = store || {};
   _.each(list, item => {
     const { firstCode } = item;
-    // 擦除标记：接口行必带 firstCode（原 any 直接 toUpperCase）。
-    const title = /[A-Z]/.test((firstCode as string).toUpperCase()) ? (firstCode as string).toUpperCase() : '#';
+    const title = /[A-Z]/.test((firstCode ?? '').toUpperCase()) ? (firstCode ?? '').toUpperCase() : '#';
 
     if (!result[title]) {
       result[title] = [];
@@ -42,7 +40,7 @@ const defaultState = {
   keywords: '',
 };
 
-interface ContactContainerState {
+export interface ContactContainerState {
   listData: AddressBookListData;
   isLoading: boolean;
   /** 首屏为 true，分页后沿用 list && list.length 的条数/缺项。 */
@@ -59,6 +57,7 @@ interface ContactContainerState {
 }
 
 export default class Others extends React.Component<Record<string, never>, ContactContainerState> {
+  private requestVersion = 0;
   declare promise: ReturnType<typeof API.fetchOthers> | null;
 
   constructor(props: Record<string, never>) {
@@ -77,6 +76,7 @@ export default class Others extends React.Component<Record<string, never>, Conta
 
   override componentDidUpdate(prevProps: Record<string, never>) {
     if (!shallowEqual(prevProps, this.props)) {
+      this.abortRequest();
       this.setState(defaultState, this.fetch);
     }
   }
@@ -89,11 +89,11 @@ export default class Others extends React.Component<Record<string, never>, Conta
     if (this.promise && this.promise.abort) {
       this.promise.abort();
     }
+    this.requestVersion += 1;
   }
 
   search(keywords: string) {
-    // 擦除标记：原实现未判空，首次搜索时 promise 为 null 会抛原生 TypeError（行为保持）。
-    this.promise!.abort();
+    this.abortRequest();
     this.setState(
       {
         isLoading: false,
@@ -107,20 +107,21 @@ export default class Others extends React.Component<Record<string, never>, Conta
   }
 
   fetchContacts() {
+    const requestVersion = this.requestVersion;
     const { pageIndex, keywords } = this.state;
     this.promise = API.fetchOthers({ pageIndex, keywords });
     return this.promise.then(data => {
+      if (requestVersion !== this.requestVersion) return undefined;
       const { listData } = this.state;
 
       if (keywords) {
-        // 擦除标记：搜索分支 listData 是平铺数组（原 any 直接 concat）。
         this.setState({
-          listData: ((listData || []) as AddressBookContactEntry[]).concat(data.list),
+          listData: (Array.isArray(listData) ? listData : []).concat(data.list),
         });
       } else {
         this.setState({
           pageIndex: pageIndex + 1,
-          listData: formatContactsData(listData, data.list),
+          listData: formatContactsData(Array.isArray(listData) ? null : listData, data.list),
         });
       }
 
@@ -130,12 +131,14 @@ export default class Others extends React.Component<Record<string, never>, Conta
   }
 
   fetch() {
+    const requestVersion = this.requestVersion;
     const { isLoading, pageIndex, hasMore } = this.state;
     if (isLoading || !hasMore) return;
     this.setState({
       isLoading: true,
     });
     this.fetchContacts().then(hasMore => {
+      if (requestVersion !== this.requestVersion) return;
       this.setState({
         isLoading: false,
         pageIndex: pageIndex + 1,

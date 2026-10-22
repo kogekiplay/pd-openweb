@@ -9,7 +9,7 @@ export interface AddressBookAccount {
   avatar?: string | undefined;
   fullname?: string | undefined;
   companyName?: string | undefined;
-  firstCode?: string | undefined;
+  firstCode?: string | null | undefined;
   isContact?: boolean | undefined;
   isFriend?: boolean | undefined;
   departments?: string[] | undefined;
@@ -32,10 +32,9 @@ export interface AddressBookPage<T> {
 
 /** concat(list) appends a missing/null list as a single value in search mode. */
 export type AddressBookContactEntry = AddressBookAccount | null | undefined;
-export type AddressBookContacts =
-  | Record<string, AddressBookAccount[]>
-  | AddressBookContactEntry[]
-  | null;
+export type AddressBookContactGroups = Record<string, AddressBookAccount[]>;
+export type AddressBookFlatContacts = AddressBookContactEntry[];
+export type AddressBookContacts = AddressBookContactGroups | AddressBookFlatContacts | null;
 
 export interface AddressBookSearchGroup {
   groupId?: string | undefined;

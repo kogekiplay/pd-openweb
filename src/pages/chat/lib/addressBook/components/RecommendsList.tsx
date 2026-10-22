@@ -61,12 +61,13 @@ export default class RecommendsList extends React.Component<RecommendsListProps,
     }
   }
 
-  updateListData(accountId: string, isAdd: boolean) {
+  updateListData(accountId: string | undefined, isAdd: boolean) {
     const { listData } = this.state;
     this.setState({
       // 擦除标记：分页拉取前 listData 可能为 null（原 any 直接 map；lodash 对 null 返回 []）。
       listData: _.map(listData, (item: RecommendItem | null | undefined) => {
-        if (item!.accountId === accountId) {
+        if (item === null || item === undefined) return item;
+        if (item.accountId === accountId) {
           return {
             ...item,
             added: isAdd,
@@ -78,13 +79,13 @@ export default class RecommendsList extends React.Component<RecommendsListProps,
     });
   }
 
-  add(accountId: string) {
+  add(accountId: string | undefined) {
     addFriendConfirm({
       accountId,
     });
   }
 
-  ignore(accountId: string) {
+  ignore(accountId: string | undefined) {
     return editIgnoreRecommends(accountId).then(data => {
       if (data) {
         this.updateListData(accountId, false);
@@ -150,38 +151,39 @@ export default class RecommendsList extends React.Component<RecommendsListProps,
             {/* 擦除标记：非首屏分支下 listData 必已存在（原 any 直接取 length/map）。 */}
             {listData!.length &&
               listData!.map((item: RecommendItem | null | undefined) => {
+                if (item === null || item === undefined) return null;
                 return (
-                  <tr key={item!.accountId}>
+                  <tr key={item.accountId}>
                     <td className="userItem pRight24">
-                      <a href={pathCompletion('/user_' + (item!.accountId as string))} className="Hand NoUnderline" target="_blank">
-                        <img className="circle avatar" src={item!.avatar} />
+                      <a href={pathCompletion('/user_' + item.accountId)} className="Hand NoUnderline" target="_blank">
+                        <img className="circle avatar" src={item.avatar} />
                       </a>
                       <a
-                        href={pathCompletion('/user_' + (item!.accountId as string))}
+                        href={pathCompletion('/user_' + item.accountId)}
                         className="Bold Hand overflow_ellipsis textPrimary mLeft8"
-                        title={item!.fullname}
+                        title={item.fullname}
                       >
-                        {item!.fullname || ''}
+                        {item.fullname || ''}
                       </a>
                     </td>
                     <td className="pRight24">
-                      <div className="overflow_ellipsis TxtMiddle">{item!.mobileName}</div>
+                      <div className="overflow_ellipsis TxtMiddle">{item.mobileName}</div>
                     </td>
                     <td>
-                      <div className="overflow_ellipsis TxtMiddle wMax100">{item!.companyName || ''}</div>
+                      <div className="overflow_ellipsis TxtMiddle wMax100">{item.companyName || ''}</div>
                     </td>
-                    {item!.added === undefined ? (
+                    {item.added === undefined ? (
                       <td className="TxtCenter">
-                        <Button type="primary" size="small" onClick={() => this.add(item!.accountId as string)}>
+                        <Button type="primary" size="small" onClick={() => this.add(item.accountId)}>
                           {_l('添加')}
                         </Button>
-                        <Button type="link" size="small" action={() => this.ignore(item!.accountId as string)}>
+                        <Button type="link" size="small" action={() => this.ignore(item.accountId)}>
                           {_l('忽略')}
                         </Button>
                       </td>
                     ) : (
                       <td className="TxtCenter">
-                        <span className="textSecondary">{item!.added ? _l('已添加') : _l('忽略')}</span>
+                        <span className="textSecondary">{item.added ? _l('已添加') : _l('忽略')}</span>
                       </td>
                     )}
                   </tr>
