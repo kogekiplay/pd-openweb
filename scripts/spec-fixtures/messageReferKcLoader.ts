@@ -3,7 +3,7 @@ import type {ChatWindowFixture} from './chatWindowLoader';
 const {makeFixture}=require('./chatWindowLoader.ts') as {makeFixture(options:unknown):ChatWindowFixture};
 const assert:typeof import('node:assert/strict')=require('node:assert/strict');
 type Data=Record<string,unknown>;
-export interface Subject {props:Data;state:Data;render():unknown;renderUserMessage():unknown;renderMessageContent():unknown;handleGotoMessage(value:unknown):void;handlePreview(event:unknown):void;getNodeDetail():void;format(value?:unknown):Data;componentDidMount():void;componentDidUpdate(props:Data):void;handleMessageFilePreview():void;}
+export interface Subject {props:Data;state:Data;render():unknown;renderUserMessage():unknown;renderMessageContent():unknown;handleGotoMessage(value:unknown):void;handlePreview(event:unknown):void;getNodeDetail():void;format(value?:unknown):Data;componentDidMount():void;componentDidUpdate(props:Data):void;componentWillUnmount?():void;handleBeforeUpload?(uploader:unknown):void;handleStopFile?():void;handleMessageFilePreview():void;_isMounted?:boolean;}
 type Constructor=new(props:Data)=>Subject;
 function pending(){let resolve!:(value:unknown)=>void,reject!:(reason:unknown)=>void;const children:Promise<unknown>[]=[],aborted:unknown[]=[];const request=Object.assign(new Promise<unknown>((yes,no)=>{resolve=yes;reject=no;}),{abort(this:unknown){aborted.push(this);}});const then=request.then.bind(request);Object.defineProperty(request,'then',{value:(...args:Parameters<typeof then>)=>{const p=then(...args);children.push(p);void p.catch(()=>{});return p;}});return{request,children,aborted,resolve,reject};}
 function makeMessageChain(){
