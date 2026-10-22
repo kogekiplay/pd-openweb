@@ -194,7 +194,7 @@ async function main() {
   });
   await check('actual date shortcut toggles, user retention and external clear reset preserve the filter state sequence', () => {
     const moment: typeof import('moment') = require('moment'); const originalNow = moment.now;
-    moment.now = () => Date.UTC(2026, 9, 22, 6);
+    moment.now = () => new Date(2026, 9, 22, 12).getTime();
     try {
       const changes: unknown[] = [];
       const filter = subject(Filter, { filter: { appId: 'old' }, onChange: (x: unknown) => changes.push(x) });
