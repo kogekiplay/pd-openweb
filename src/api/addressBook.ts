@@ -1,3 +1,4 @@
+import type { AddressBookSearchDeptEndpoint, AddressBookSearchDeptParams } from './addressBookTypes';
 import type { AddressBookContactsEndpoint, AddressBookContactsParams, AddressBookPageQueryParams, AddressBookNewFriendsEndpoint, AddressBookRecommendsEndpoint } from './addressBookTypes';
 
 const getAllAddressbook: AddressBookContactsEndpoint = function (args: AddressBookContactsParams, options: ApiOptions = {}) {
@@ -10,6 +11,10 @@ const getNewFriends: AddressBookNewFriendsEndpoint = function (args: AddressBook
 
 const getMobileAddressRecommend: AddressBookRecommendsEndpoint = function (args: AddressBookPageQueryParams, options: ApiOptions = {}) {
   return mdyAPI('AddressBook', 'GetMobileAddressRecommend', args, options);
+};
+
+const searchAddressbookAndDepartment: AddressBookSearchDeptEndpoint = function (args: AddressBookSearchDeptParams, options: ApiOptions = {}) {
+  return mdyAPI('AddressBook', 'SearchAddressbookAndDepartment', args, options);
 };
 
 export default {
@@ -78,9 +83,7 @@ export default {
   * @param {Boolean} options.silent 是否禁止错误弹层
   * @returns {Promise<Boolean, ErrorModel>}
   **/
-  searchAddressbookAndDepartment: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('AddressBook', 'SearchAddressbookAndDepartment', args, options);
-  },
+  searchAddressbookAndDepartment,
   /**
   * 搜索聊天联系人以及群组，需要过滤自己
 聊天右侧/右上角Smart快速搜索

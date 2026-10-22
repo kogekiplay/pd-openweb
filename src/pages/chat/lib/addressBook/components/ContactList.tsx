@@ -6,14 +6,14 @@ import ListNull from './ListNull';
 
 import type { AddressBookAccount as ContactRow, AddressBookContacts as ContactListData, AddressBookContactEntry } from 'src/api/addressBookTypes';
 
-interface ContactClickPayload {
+export interface ContactClickPayload {
   /** 点击行带回的账号 id（行数据里可能缺省，故显式允许 undefined） */
   accountId?: string | undefined;
   isFriend?: boolean | undefined;
   isContact?: boolean | undefined;
 }
 
-interface ContactListProps {
+export interface ContactListProps {
   fetch: () => void;
   /** 点击某个联系人（`ContactItem` 传的是 `{accountId,isFriend,isContact}` 对象） */
   itemClickHandler: (item: ContactClickPayload) => void;

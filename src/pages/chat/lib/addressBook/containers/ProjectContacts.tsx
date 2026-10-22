@@ -1,3 +1,6 @@
+import { sessionPropertyKey } from '../../../utils/sessionPropertyKey';
+import type { AddressBookContactEntry, AddressBookRequest, AddressBookSearchDeptResult } from 'src/api/addressBookTypes';
+import type { DepartmentTreeReply } from 'src/api/departmentTypes';
 import React from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
@@ -76,12 +79,12 @@ interface DepartmentBucket {
 type DepartmentMap = Record<string, DepartmentBucket>;
 
 /** 容器由 `lib/addressBook/index.tsx` 渲染：`<ProjectContacts projectId={projectId} />` */
-interface ProjectContactsProps {
+export interface ProjectContactsProps {
   projectId?: string | null | undefined;
 }
 
-interface ProjectContactsState {
-  listData: AddressUser[];
+export interface ProjectContactsState {
+  listData: AddressBookContactEntry[];
   departments: DepartmentMap | null;
   selectedAccountId?: string | null | undefined;
   isLoading: boolean;
@@ -113,8 +116,8 @@ const formatDepartmentData = (list: DepartmentNode[] | undefined): DepartmentMap
   });
   _.forEach(concatedList, item => {
     const { departmentId, departmentName } = item;
-    // 擦除标记：真实部门数据都带 departmentId（末尾追加项显式给 ''）；缺省时索引得到 undefined 键。
-    departments[departmentId as string] = {
+    // Preserve the native missing-ID property spelling without claiming the wire ID exists.
+    departments[sessionPropertyKey(departmentId)] = {
       departmentName,
       departmentId,
       isOpen: false,
@@ -127,7 +130,7 @@ const formatDepartmentData = (list: DepartmentNode[] | undefined): DepartmentMap
 };
 
 export default class ProjectContacts extends React.Component<ProjectContactsProps, ProjectContactsState> {
-  declare promise: ApiResult | null;
+  declare promise: AddressBookRequest<AddressBookSearchDeptResult> | AddressBookRequest<DepartmentTreeReply> | null;
 
   constructor(props: ProjectContactsProps) {
     super(props);

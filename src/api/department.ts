@@ -1,3 +1,9 @@
+import type { DepartmentTreeEndpoint, DepartmentTreeParams } from './departmentTypes';
+
+const pagedDepartmentTrees: DepartmentTreeEndpoint = function (args: DepartmentTreeParams, options: ApiOptions = {}) {
+  return mdyAPI('Department', 'PagedDepartmentTrees', args, options);
+};
+
 export default {
   /**
    * 创建部门（Admin）
@@ -433,9 +439,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  pagedDepartmentTrees: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Department', 'PagedDepartmentTrees', args, options);
-  },
+  pagedDepartmentTrees,
   /**
    * 获取 部门所有下级（树结构，可取全网络）
    * @param {Object} args 请求参数

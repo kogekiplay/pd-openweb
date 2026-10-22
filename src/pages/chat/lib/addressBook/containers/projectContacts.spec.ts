@@ -13,6 +13,7 @@ import type { SpecHarness } from '../../../../../../scripts/spec-harness';
 
 const assert: typeof import('node:assert/strict') = require('node:assert/strict');
 const harness: SpecHarness = require('../../../../../../scripts/spec-harness.ts');
+const { sessionPropertyKey } = require('../../../utils/sessionPropertyKey.ts') as typeof import('../../../utils/sessionPropertyKey');
 
 interface BabelNode {
   type: string;
@@ -62,11 +63,12 @@ function extractFormatDepartmentData(): (list: DepartmentNode[] | undefined) => 
   if (!transformed || typeof transformed.code !== 'string') throw new Error('babel 未能转换抽出的声明片段');
   const code = transformed.code.replace(/^['"]use strict['"];\s*/, '');
   // 依赖注入：`_`（lodash 的 forEach）+ `_l`（翻译桩，用来标识"未分配部门"那条文案）
-  const create = new Function('_', '_l', `${code}\nreturn formatDepartmentData;`) as (
+  const create = new Function('_', '_l', 'sessionPropertyKey', `${code}\nreturn formatDepartmentData;`) as (
     lodash: { forEach: (collection: unknown, iteratee: (item: DepartmentNode) => void) => void },
     translate: (key: string) => string,
+    propertyKey: typeof sessionPropertyKey,
   ) => (list: DepartmentNode[] | undefined) => Record<string, DepartmentBucket>;
-  return create(require('lodash'), (key: string) => `[${key}]`);
+  return create(require('lodash'), (key: string) => `[${key}]`, sessionPropertyKey);
 }
 
 const UNASSIGNED_KEY = '';

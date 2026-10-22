@@ -69,7 +69,7 @@ export interface UserRequest {
   pageIndex?: number | undefined;
   pageSize?: number | undefined;
   parentId?: string | undefined;
-  onlyMyJoin?: unknown;
+  onlyMyJoin?: boolean | undefined;
   searchGroupType?: number | undefined;
   departmentId?: string | undefined;
   groupId?: string | undefined;

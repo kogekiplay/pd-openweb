@@ -71,3 +71,16 @@ export type AddressBookContactsEndpoint = InboxEndpoint<AddressBookContactsParam
 export type AddressBookNewFriendsEndpoint = InboxEndpoint<AddressBookPageQueryParams, AddressBookPage<AddressBookFriendApplication>>;
 
 export type AddressBookRecommendsEndpoint = InboxEndpoint<AddressBookPageQueryParams, AddressBookPage<AddressBookRecommendation>>;
+
+export interface AddressBookSearchDeptParams {
+  projectId?: string | null | undefined;
+  keywords?: string | undefined;
+  range?: number | undefined;
+  pageIndex?: number | undefined;
+  pageSize?: number | undefined;
+  isFilterOther?: boolean | undefined;
+}
+
+/** Actual search consumer concatenates a missing/null result as a single sentinel. */
+export interface AddressBookSearchDeptResult { userResult?: AddressBookAccount[] | null | undefined; }
+export type AddressBookSearchDeptEndpoint = InboxEndpoint<AddressBookSearchDeptParams, AddressBookSearchDeptResult>;

@@ -1,3 +1,4 @@
+import type { DepartmentTreeNode } from 'src/api/departmentTypes';
 declare module 'react' {
   interface ImgHTMLAttributes<T> { placeholder?: string | undefined; }
 }
@@ -11,12 +12,8 @@ declare module 'react' {
  */
 
 /** 部门树节点：`pagedDepartmentTrees` 返回项 + 组件补的 `subs`/`haveSubDepartment` */
-export interface DepartmentNode {
-  departmentId?: string | undefined;
-  departmentName?: string | undefined;
+export interface DepartmentNode extends DepartmentTreeNode {
   subs?: DepartmentNode[] | undefined;
-  /** 是否有下级部门（决定展开箭头是否占位） */
-  haveSubDepartment?: boolean | undefined;
 }
 
 /** 用户详情里的「我的组织/应用」卡片（`userCards` 元素） */
