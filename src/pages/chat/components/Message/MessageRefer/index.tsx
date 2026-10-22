@@ -1,14 +1,20 @@
+import type { MouseEvent } from 'react';
+import type { ChatMessage } from '../../../redux/types';
 import { Component } from 'react';
 import kc from 'src/api/kc';
 import previewAttachments from 'src/components/previewAttachments/previewAttachments';
 import Constant from '../../../utils/constant';
 import './index.less';
 
-export default class MessageRefer extends Component<any, any> {
-  constructor(props) {
+export interface MessageReferProps {
+  message: NonNullable<ChatMessage['refer']>;
+  onGotoMessage: (id: ChatMessage['id']) => void;
+}
+export default class MessageRefer extends Component<MessageReferProps, Record<string, never>> {
+  constructor(props: MessageReferProps) {
     super(props);
   }
-  handleGotoMessage(event) {
+  handleGotoMessage(event: MouseEvent) {
     event.stopPropagation();
     const { message } = this.props;
     const { iswd } = message;
@@ -17,10 +23,10 @@ export default class MessageRefer extends Component<any, any> {
       this.props.onGotoMessage(message.msgid);
     }
   }
-  handlePreview(event) {
+  handlePreview(event: MouseEvent) {
     const { message } = this.props;
     const { card, msgdetail = {} } = message;
-    const { files } = msgdetail;
+    const { files } = msgdetail ?? {};
 
     if (files) {
       event.stopPropagation();
@@ -55,7 +61,7 @@ export default class MessageRefer extends Component<any, any> {
       this.props.onGotoMessage(message.msgid);
     }
   }
-  renderIcon(type) {
+  renderIcon(type: NonNullable<ChatMessage['refer']>['type']) {
     if (type === Constant.MSGTYPE_FILE) {
       return <i className="icon-defaultFile" />;
     } else if (type === Constant.MSGTYPE_PIC) {
@@ -74,7 +80,7 @@ export default class MessageRefer extends Component<any, any> {
             <div className="text">{_l('该消息已撤回')}</div>
           ) : (
             <div className="text">
-              “ {this.renderIcon(type)} {user.full_name}：
+              “ {this.renderIcon(type)} {user?.full_name}：
               <span onClick={this.handlePreview.bind(this)} className="colorPrimary">
                 {message.msg}
               </span>{' '}

@@ -1327,14 +1327,13 @@ export const updateMessage = (message: ChatMessageReceiptWire) => (dispatch: App
  * 【有限声明依据】函数体里 `return newMessage;` 直接作为 `messages` 数组的元素，
  * 因此它就是一条 `ChatMessage`（原实现靠 `any` 隐式满足该契约）。
  */
-export const updateFileMessage = (newMessage: ChatMessage, to: string) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateFileMessage = (newMessage: ChatMessage, to: string | undefined) => (dispatch: AppDispatch, getState: GetState) => {
   const { messages } = getState().chat;
   const { id } = newMessage;
-  // 【擦除标记】`messages[to]` 类型上可缺失；非空断言擦除（零运行时），
-  // 原 `.map` 调用不变，缺项时仍由**原生**报错。
-  const currentMessage = messages[to]!;
+  const currentMessage = messages[to];
+  if (currentMessage === undefined) return;
   const newCurrentMessage = currentMessage.map(item => {
-    if (item!.id === id) {
+    if (item && item.id === id) {
       return newMessage;
     }
 

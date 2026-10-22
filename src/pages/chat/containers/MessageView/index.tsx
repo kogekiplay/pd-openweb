@@ -51,13 +51,13 @@ interface MessageViewProps {
   bottomUnreadMessage: ChatBottomUnreadMessageState;
 }
 
-interface MessageViewState {
+export interface MessageViewState {
   isMore: boolean;
   loading: boolean;
   isBottom: boolean;
   topUnread: number;
   /** 待定位的消息 id（`componentDidUpdate` 里读、`handleGotoMessage` 写） */
-  gotoMessageId: string | number;
+  gotoMessageId: ChatMessage['id'];
   isDownLoadingMessage: boolean;
   direction: LoadDirection;
   /** 上一次失败的加载参数；false 表示没有错误 */
@@ -262,7 +262,7 @@ class MessageView extends Component<MessageViewProps, MessageViewState> {
         });
     });
   }
-  handleGotoMessage(id: string | number) {
+  handleGotoMessage(id: ChatMessage['id']) {
     const { session, messages } = this.props;
     const currentMessage = messages[session.id as string] || [];
     const message = _.find(currentMessage, { id });
@@ -653,6 +653,8 @@ class MessageView extends Component<MessageViewProps, MessageViewState> {
     );
   }
 }
+
+export type MessageViewGoto = MessageView['handleGotoMessage'];
 
 export default connect((state: RootState) => {
   const { currentSession, messages, sessionList, gotoMessage, bottomUnreadMessage } = state.chat;

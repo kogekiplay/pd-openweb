@@ -1,3 +1,4 @@
+import type { KcNodeDetail } from 'src/api/kcTypes';
 import { createRoot } from 'react-dom/client';
 import copy from 'src/utils/copyToClipboard';
 import doT from 'dot';
@@ -316,32 +317,12 @@ const selectSendToMethods = defineMethods<SelectSendToFields>()({
 SelectSendTo.prototype = selectSendToMethods;
 type SelectSendToInstance = SelectSendToFields & typeof selectSendToMethods;
 
-/** 知识节点 / 文件夹的归属，决定「本网络可见」那一档的文案 */
-interface ShareRootInfo {
-  project?: { companyDisplayName?: string };
-  owner?: { fullname?: string };
-}
+type ShareRootInfo = NonNullable<KcNodeDetail['rootInfo']>;
 
 /** 被分享的对象。三种来源：知识节点（调用方传入或 KcController.getNodeDetail）、普通附件
  *  （AttachmentController.shareAttachmentByPost）、七牛附件（formatQiniuPath 拼出来的），
  *  字段是三者的并集，只列这个文件里真正读写过的。 */
-interface ShareNode {
-  id?: string;
-  name?: string;
-  ext?: string;
-  size?: number;
-  /** 知识节点类型，1 是文件夹 */
-  type?: number;
-  /** 见 enum.ts NODE_VISIBLE_TYPE / WORKSHEET_VISIBLE_TYPE */
-  visibleType?: number;
-  isOpenShare?: boolean;
-  shareUrl?: string;
-  viewUrl?: string;
-  rootInfo?: ShareRootInfo;
-  canChangeSharable?: boolean;
-  canChangeEditable?: boolean;
-  canDownload?: boolean;
-  allowDown?: boolean;
+export interface ShareNode extends KcNodeDetail {
   fileID?: string;
   originalFileName?: string;
   fileName?: string;

@@ -1,3 +1,4 @@
+import type { KcNodeReply } from 'src/api/kcTypes';
 import type { GroupProject, GroupMember } from 'src/api/groupTypes';
 /**
  * `src/pages/chat/redux` 的有限类型
@@ -882,12 +883,7 @@ export interface ChatMessage {
    *   传给预览组件；
    * - `viewUrl` / `size` 同处取用（`viewUrl : ''`、`size : 0` 兜底）。
    */
-  kcFile?: {
-    downloadUrl?: string | undefined;
-    viewUrl?: string | undefined;
-    size?: number | undefined;
-    [key: string]: unknown;
-  } | undefined;
+  kcFile?: KcNodeReply;
   /** 未读数（会话化消息时读 `.count`） */
   count?: number | undefined;
   /** 账号 id（会话化消息时读） */
@@ -968,14 +964,11 @@ export interface ChatMessage {
           full_name?: string | undefined;
           /** 引用者头像（`updateMessage` 回执里写入 `avatar: referMessage.fromAccount.logo`） */
           avatar?: string | undefined;
-          [key: string]: unknown;
         }
       | undefined;
     msgdetail?: {
-      files?: { id?: unknown; name?: string | undefined; url?: string | undefined; size?: unknown; [key: string]: unknown } | undefined;
-      [key: string]: unknown;
+      files?: { id?: unknown; name?: string | undefined; url?: string | undefined; size?: unknown; } | undefined;
     } | undefined;
-    [key: string]: unknown;
   } | undefined;
   /** 其余按消息种类扩展的元数据 */
   [key: string]: unknown;

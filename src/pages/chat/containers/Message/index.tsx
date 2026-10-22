@@ -29,7 +29,7 @@ import type {
 import type { ChatWithdrawPayload } from '../../utils/socket';
 import './index.less';
 
-interface MessageContainerProps {
+export interface MessageContainerProps {
   dispatch: AppDispatch;
   currentSession: ChatSession;
   messages: ChatMessagesState;
@@ -37,7 +37,7 @@ interface MessageContainerProps {
   session: ChatSession;
   nextMessage: ChatMessage;
   /** 定位到消息 id（ 传的是引用消息的 msgid，父级按 id 处理） */
-  onGotoMessage: (id: string | number) => void;
+  onGotoMessage: (id: ChatMessage['id']) => void;
 }
 
 interface MessageContainerState {
@@ -73,8 +73,7 @@ class Message extends Component<MessageContainerProps, MessageContainerState> {
   }
   handleUpdateKcFile(newMessage: ChatMessage) {
     const { session } = this.props;
-    // 擦除标记：会话必有 id（原 any 直接传）。
-    this.props.dispatch(actions.updateFileMessage(newMessage, session.id as string));
+    this.props.dispatch(actions.updateFileMessage(newMessage, session.id));
   }
   handleWithdrawMessage() {
     const { session, message } = this.props;
@@ -150,17 +149,20 @@ class Message extends Component<MessageContainerProps, MessageContainerState> {
         );
       case Constant.MSGTYPE_FILE:
         return <FileMessage message={message} session={session} />;
-      case Constant.MSGTYPE_CARD:
+      case Constant.MSGTYPE_CARD: {
         // 知识文件是卡片类型的，要按照文件类型显示...
-        if (message.card!.md === 'kcfile') {
+        const card = message.card;
+        if (card === null || card === undefined) return undefined;
+        if (card.md === 'kcfile') {
           return (
             <KcFileMessage onUpdateKcFile={this.handleUpdateKcFile.bind(this)} message={message} session={session} />
           );
-        } else if (message.card!.md === 'worksheet') {
+        } else if (message.card?.md === 'worksheet') {
           return <WorksheetFileMessage message={message} session={session} />;
         } else {
           return <CardMessage session={session} message={message} />;
         }
+      }
 
       case Constant.MSGTYPE_AUDIO:
         return <AudioMessage message={message} />;
