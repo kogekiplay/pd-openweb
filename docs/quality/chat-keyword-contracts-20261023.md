@@ -11,3 +11,5 @@ SDK端点复用现有InboxEndpoint模式：普通JSON异步返回原abortable有
 直接导入实际SDK、ajax、公开SearchMember state/props、Global右侧字段及真实动作做正负/非any/有限键探针。原探针因外部node类型目录及未使用断言声明失败的原日志保留，只修验证宿主/导出探针，不放宽产品tsconfig。自身诊断、传递程序存量与实际退出码分别记录，不把存量失败说成整程序通过。
 
 完整源码SHA、逐(文件,错误码)、必要门禁、正常main同步、正式构建和冻结候选以 /Users/kogeki/dev/HAP-工作记录/20261023-addressbook-keyword-lookup/ 最终回执为准。baseline/debt只收紧，30秒/并发4和既有known-failure不变。此批lead独立实现，无新增协作提交接收；账号lookup、quickSelectUser关键词SDK、MobileOrEmailInvite及其它全仓合同仍继续，总目标active，未部署。
+
+最终提交复核曾在Global右侧新增一条TS4111（49101→49102）。比较器实际失败，但原命令串未短路，a1842a8b8d76e92b9b48101a76f09d5b15971c60仍通过pre-push并推main；没有为该中间源码构建/部署。原tuple-committed-main.json与pre-push日志完整保留。后续普通追加修正为已知字面键的computed访问，保留同一getter/receiver/值，不新增索引声明或断言；整页any债务仍明确未完成。修正后必须再次在完整提交跑raw strict并逐tuple无新增，比较成功才顺序触发推送。

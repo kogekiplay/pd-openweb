@@ -273,7 +273,7 @@ export default class GlobalSearchAllContent extends Component<any, any> {
       keywords: searchKeyword,
     });
     this.rightAjax.then(result => {
-      if (requestVersion !== this.rightRequestVersion || searchKeyword !== this.state.searchKeyword) return;
+      if (requestVersion !== this.rightRequestVersion || searchKeyword !== this.state['searchKeyword']) return;
       this.setState({
         rightLoading: false,
         rightResult: result,
