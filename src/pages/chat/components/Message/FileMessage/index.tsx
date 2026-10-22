@@ -1,3 +1,4 @@
+import type { ChatMessage, ChatSession } from '../../../redux/types';
 import { Component } from 'react';
 import previewAttachments from 'src/components/previewAttachments/previewAttachments';
 import { formatFileSize, getClassNameByExt } from 'src/utils/common';
@@ -13,12 +14,16 @@ export interface FileMessageState {
   cancelShow: boolean;
 }
 
-export default class FileMessage extends Component<any, FileMessageState> {
+export interface FileMessageProps {
+  message: ChatMessage;
+  session: ChatSession;
+}
+export default class FileMessage extends Component<FileMessageProps, FileMessageState> {
   declare iconClassName: string;
-  declare uploader: { stop(): void; start(): void; removeFile(file: { id: string }): void } | null;
-  declare uploadFileId: string | undefined;
+  declare uploader: { stop(): void; start(): void; removeFile(file: { id: string | number }): void } | null;
+  declare uploadFileId: string | number | undefined;
 
-  constructor(props) {
+  constructor(props: FileMessageProps) {
     super(props);
     this.state = {
       progress: 0,
@@ -43,7 +48,7 @@ export default class FileMessage extends Component<any, FileMessageState> {
   handleBeforeUpload = (uploader: FileMessage['uploader']) => {
     this.uploader = uploader;
   };
-  handleUploadProgress = progress => {
+  handleUploadProgress = (progress: number | string) => {
     this.setState({
       progress: Number(progress),
       cancelShow: true,

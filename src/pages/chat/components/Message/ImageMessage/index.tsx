@@ -1,3 +1,4 @@
+import type { ChatMessage, ChatSession } from '../../../redux/types';
 import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -7,13 +8,24 @@ import previewAttachments from 'src/components/previewAttachments/previewAttachm
 import Config from 'src/pages/chat/utils/config';
 import * as utils from '../../../utils/';
 import FileMessage from '../FileMessage';
+import { hasAttachmentData } from '../attachment';
 import { handleMessageFilePreview } from '../MessageToolbar';
 import './index.less';
 
-export default class ImageMessage extends Component<any, any> {
+export interface ImageMessageProps {
+  message: ChatMessage;
+  session: ChatSession;
+  messageLength?: number | undefined;
+}
+export interface ImageMessageState {
+  loading: boolean;
+  previewUrl: string;
+  isError: boolean;
+}
+export default class ImageMessage extends Component<ImageMessageProps, ImageMessageState> {
   declare _isMounted: boolean | undefined;
 
-  constructor(props) {
+  constructor(props: ImageMessageProps) {
     super(props);
     this.state = {
       loading: false,
@@ -23,8 +35,9 @@ export default class ImageMessage extends Component<any, any> {
   }
   override componentDidMount() {
     const { session, message, messageLength } = this.props;
-    const { files } = message.msg;
-    const previewUrl = message.kcFile ? files.url : _.get(files, 'thumbs.web_1') || files.url;
+    const files = message.msg?.files;
+    if (!hasAttachmentData(files)) return;
+    const previewUrl = String(message.kcFile ? files.url : _.get(files, 'thumbs.web_1') || files.url);
     this._isMounted = true;
     this.handleLoadImage(previewUrl)
       .then(() => {
@@ -38,7 +51,7 @@ export default class ImageMessage extends Component<any, any> {
             previewUrl,
           },
           () => {
-            utils.scrollEnd(session.id, messageLength <= Config.MSG_LENGTH_MORE);
+            utils.scrollEnd(session.id, messageLength !== undefined && messageLength <= Config.MSG_LENGTH_MORE);
           },
         );
       })
@@ -49,7 +62,7 @@ export default class ImageMessage extends Component<any, any> {
   override componentWillUnmount() {
     this._isMounted = false;
   }
-  handleLoadImage(url) {
+  handleLoadImage(url: string) {
     return new Promise((resolve, reject) => {
       const image = new Image();
       image.onload = resolve;
@@ -59,7 +72,8 @@ export default class ImageMessage extends Component<any, any> {
   }
   handleMessageFilePreview() {
     const { message, session } = this.props;
-    const { files } = message.msg;
+    const files = message.msg?.files;
+    if (!hasAttachmentData(files)) return;
 
     if (session.accountId && !session.isContact) {
       return;
@@ -83,9 +97,9 @@ export default class ImageMessage extends Component<any, any> {
   override render() {
     const { loading, previewUrl, isError } = this.state;
     const { message, session } = this.props;
-    const { files } = message.msg;
+    const files = message.msg?.files;
 
-    if (isError) {
+    if (isError || !hasAttachmentData(files)) {
       return <FileMessage message={message} session={session} />;
     }
 

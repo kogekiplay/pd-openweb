@@ -1,0 +1,11 @@
+# FileMessage/ImageMessage finite attachment合同（2026-10-23）
+
+固定main基线3d8b7a60315cee3a817fd00f1ff41b3050267339。FileMessage和ImageMessage的真实父级是Message容器，真实附件来源是ChatMessage.msg.files/kcFile、MessageToolbar的getImageContext/previewAttachments、上传进度回调和会话滚动。两组件原props/state及回调参数为any，严格模式各2条。没有复制另一个附件DTO，直接复用ChatMessage/ChatSession/ChatMessageFiles及已有hasAttachmentData判定。
+
+FileMessage公开props为真实message/session，state保留progress/cancel/cancelShow；上传id允许实际文件id string/number，progress接受DOM/上传器可能给的string/number后仍Number转换，uploader stop/remove/start及window callback identity/清理顺序保持。缺文件走现有“附件信息缺失”展示，普通文件预览仍交真实MessageToolbar。
+
+ImageMessage公开props为真实message/session/可缺messageLength，state为loading/previewUrl/isError；真实图片加载使用URL字符串化保持WebIDL ToString语义，缺files不创建Image请求而回退真实FileMessage，KC文件仍把同一kcFile对象交previewAttachments，非联系人保护和unmount标记保持。scrollEnd在有messageLength时使用原比较，缺项不伪造长度。
+
+真实完整边界前后6项通过：空附件/父级引用、上传callback/primitive progress/取消序列、普通文件预览请求参数和引用、Image缺附件回退、真实Image加载/滚动/unmount、KC preview同对象/非联系人保护。宿主的Image、SDK/DOM/preview和UI叶子受控，无网络/业务/会话写入；基础源码的Image缺files旧失败日志保留，候选行为修复按实际UI安全分支验证。
+
+差异审计仅FileMessage的constructor/handleUploadProgress与ImageMessage的constructor/componentDidMount/handleLoadImage/render及attachment type predicate；其它成员/语句完整AST相同。全仓Counter绑定最终SHA，strict-debt只移除两条已清零文件，不改配置、门禁、超时、并发、断言或隔离。未部署。
