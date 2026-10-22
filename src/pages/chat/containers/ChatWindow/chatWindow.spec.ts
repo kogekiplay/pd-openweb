@@ -75,7 +75,7 @@ async function main() {
   });
   await check('malformed raw queries display feedback without consuming the mount latch or starting a request', () => {
     const f = makeFixture();
-    for (const search of ['', '?id=u', '?id=u&type', '?id=u&type=9', '?id=u&type=1&type=2', '?id=u&id=v&type=1', '?type=1', '?id&type=2', '?id=&type=2']) {
+    for (const search of ['', '?id=u', '?id=u&type', '?id=u&type=9', '?id=u&type=1&type=2', '?id=u&id=v&type=1', '?type=1', '?id&type=2', '?id=&type=2', '?id=u&type=01', '?id=u&type=1e0']) {
       const nodes = f.nodes(f.entryFor(search));
       assert.equal(nodes.some(node => 'session' in node.props), false, search);
       const feedback = nodes.find(node => node.props['role'] === 'alert'); assert.ok(feedback, search);
@@ -94,6 +94,31 @@ async function main() {
       assert.deepEqual({ ...qs.parse(search) }, { id, name, type: group ? '2' : '1' });
       const session = sessionFrom(f, search); assert.equal(session['id'], id); assert.equal(session['name'], name);
     }
+  });
+  await check('opener and cache keep the existing missing scalar behavior without inventing IDs or names', () => {
+    const f = makeFixture(); const utils = f.load('src/pages/chat/utils/index.ts');
+    const opener = utils['windowOpen'] as (id: undefined, name: undefined, group: boolean) => void;
+    opener(undefined, undefined, false);
+    assert.equal(f.opened[0]![0], '/chat_window?id=undefined&name=undefined&type=1');
+    const cache = utils['chatWindow'] as { set(id: undefined): void; is(id: undefined): boolean; remove(id: undefined): void };
+    cache.set(undefined); assert.equal(cache.is(undefined), true); cache.remove(undefined); assert.equal(cache.is(undefined), false);
+  });
+  await check('the real account-session action keeps missing IDs and explicit undefined fields through formatting/Redux', async () => {
+    const f = makeFixture();
+    const add = f.load('src/pages/chat/redux/actions.ts')['addUserSession'] as (id: undefined, message: Data, open: boolean) => unknown;
+    f.dispatch(add(undefined, { logo: '/avatar.png', uname: undefined, sysType: 1 }, false));
+    const first = (f.getState()['sessionList'] as Data[])[0]!;
+    assert.equal(first['value'], undefined); assert.equal(first['isSession'], false);
+    const select = f.load('src/pages/chat/redux/actions.ts')['setCurrentSessionId'] as (id: undefined) => unknown;
+    f.dispatch(select(undefined)); assert.equal(f.contacts[0], first);
+    assert.notEqual(f.getState()['currentSession'], first);
+    assert.equal((f.getState()['currentSession'] as Data)['value'], undefined);
+    assert.equal((first['from'] as Data)['id'], undefined); assert.equal(f.calls.length, 0);
+    const requested = makeFixture(); const requestAdd = requested.load('src/pages/chat/redux/actions.ts')['addUserSession'] as typeof add;
+    requested.dispatch(requestAdd(undefined, {}, false));
+    assert.deepEqual(requested.calls[0]!['args'], { accountId: undefined });
+    requested.resolve({ avatar: '/avatar.png', fullname: undefined }); await Promise.all(requested.children);
+    assert.equal((requested.getState()['sessionList'] as Data[])[0]!['value'], undefined);
   });
   await check('public input guard narrows scalar canonical identities without cloning or coercing raw objects', () => {
     const f = makeFixture(); const guard = f.load('src/pages/chat/utils/windowSession.ts')['isChatWindowSession'] as (value: unknown) => boolean;

@@ -11,13 +11,21 @@ import * as ajax from '../../utils/ajax';
 import Constant from '../../utils/constant';
 import * as socket from '../../utils/socket';
 import * as socketEvent from '../../utils/socketEvent';
+import type { ChatWindowSession } from '../../utils/windowSession';
+import type { ChatSession, ChatUserMessageWire } from '../../redux/types';
 import ChatPanelSession from '../ChatPanelSession';
 import '../ChatPanel/index.less';
 
 let hasMounted = false;
 // connect 包过、会收到 dispatch；socketEvent 里的函数用 .call(this) 调，要求 this.props.dispatch 存在
-let ChatWindow = class ChatWindow extends Component<{ dispatch: AppDispatch; [key: string]: any }, any> {
-  constructor(props) {
+export interface ChatWindowProps {
+  dispatch: AppDispatch;
+  session: ChatWindowSession;
+  currentSessionList: RootState['chat']['currentSessionList'];
+}
+
+let ChatWindow = class ChatWindow extends Component<ChatWindowProps, { loading: boolean }> {
+  constructor(props: ChatWindowProps) {
     super(props);
     this.state = {
       loading: true,
@@ -33,9 +41,9 @@ let ChatWindow = class ChatWindow extends Component<{ dispatch: AppDispatch; [ke
       .chatSessionItem({
         type,
         value: id,
-      })
+      })!
       .then(result => {
-        let data = {};
+        let data: ChatUserMessageWire & ChatSession = {};
 
         if (type == Constant.SESSIONTYPE_USER) {
           data = {
@@ -107,6 +115,7 @@ let ChatWindow = class ChatWindow extends Component<{ dispatch: AppDispatch; [ke
     );
   }
 };
+export type ChatWindowState = InstanceType<typeof ChatWindow>['state'];
 const PreloadedChatWindow = preall(ChatWindow);
 const ConnectChatWindow = connect((state: RootState) => {
   const { currentSessionList, isWindow } = state.chat;

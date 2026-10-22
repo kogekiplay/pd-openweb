@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 import { ScrollView } from 'ming-ui';
 import type { RootState } from 'src/redux/types';
+import type { ChatSessionLookup } from 'src/api/chatTypes';
 import Announcement from '../../components/Announcement';
 import DiscussionAnnouncement from '../../components/DiscussionAnnouncement';
 import Feeds from '../../components/Feeds';
@@ -91,7 +92,7 @@ class ChatPanelSessionInfo extends Component<any, any> {
     const { session } = this.props;
     this.props.dispatch(actions.setGotoMessage(session.id, id));
   }
-  handleOpenSession(user) {
+  handleOpenSession(user: Pick<ChatSessionLookup, 'accountId' | 'fullname' | 'avatar'>) {
     const { accountId, fullname, avatar } = user;
     const { isWindow } = this.props;
 

@@ -322,7 +322,7 @@ export const addGroupSession =
  * @param {*} cb
  */
 export const addUserSession =
-  (id: string, msg: ChatRawMessageWire = {} as ChatRawMessageWire, isOpen = true, cb?: (() => void) | undefined) =>
+  (id: string | undefined, msg: ChatRawMessageWire = {}, isOpen = true, cb?: (() => void) | undefined) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
     // if (utils.chatWindow.is(id)) {
@@ -720,7 +720,7 @@ export const setCurrentSessionId =
    * @param message 叠加到该会话上的**局部覆盖**（`{ ...session, ...message }` 后派发为
    * `SET_CURRENT_SESSION.result`，其类型是 `ChatSession`）
    */
-  (id: string, message: Partial<ChatSession> = {}) =>
+  (id: string | undefined, message: Partial<ChatSession> = {}) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const { sessionList } = getState().chat;
     const found = sessionList.filter(item => item.value === id)[0];

@@ -1,0 +1,13 @@
+# 独立聊天窗口真实合同（2026-10-22）
+
+行为修复独立提交39e0b5d9fa755801bbbd5200a9da99c421981608，原始URL→入口守卫→窗口挂载现在只接受标量非空ID与1/2（字符串或数字）类型。URL生产方实际发出的类型是1/2；手写01、1e0等旧可被宽松比较接受的非标准URL现在显示无效参数。没有把query-string的数组/null断言成字符串，也不改解析对象或删额外字段。勋章description的样式修复见chat-window-medal-behavior-20261022.md。
+
+本次类型传播让ChatWindowProps只有dispatch/session/currentSessionList，state只有loading；请求直接消费api/chatTypes与真实ajax.chatSessionItem有限返回，不使用协作快照的Promise<自造宽索引回执>断言或Record组装。入口根节点非空标记保留原失败位置，泛型移除any。存储key与opener ID按真实标量/缺项输入声明。调用方handleOpenSession从真实查询模型取accountId/fullname/avatar有限视图；缺失ID一路传给addUserSession、setCurrentSessionId，未靠非空断言或补造ID截断。addUserSession默认空对象本身满足原始wire，无须断言。
+
+公开导出探针发现preall内部PreState明确为loading/failed，但其返回声明把state变any；真实反例编译出现非any约束失败、错误状态负例未使用。现返回ComponentClass<Props,PreState>，保留实际bootstrap状态，不把它冒称内部Window状态。ChatWindowState从实际Window类派生；公开正负探针同时检查真实连接组件props、内部状态、bootstrap状态、用户回调、请求字段和cache/opener/action参数的非any及有限键。
+
+完整Babel核验10个产品模块相同（含Window、preall、actions、Info、ajax、socketEvent、两API与Redux）；detail与单列行为阶段相同。utils仅多显式String(name)表达原encodeURIComponent对声明的string/undefined输入已有转换，二者实跑；PostMention只反转两段p样式差异后AST全文相同。窗口10项与勋章5项完整类/生产消费回归通过，原缺项/自有undefined/null、getter次序、原引用、原生同步/异步失败均保留。SDK/socket宿主和UI/bootstrap叶子受控，无真实会话业务操作。
+
+原始strict基线49439/Chat485，最终审查副本49428/Chat474；逐(文件,错误码)新增0。中间未传播的accountId→addUserSession、setCurrentSessionId诊断以及探针环境路径/any状态原失败原样留存，不改断言绕过。公开探针自身0诊断不等于传递程序或全仓strict通过，实际编译退出及剩余存量另记。
+
+证据：/Users/kogeki/dev/HAP-工作记录/20261022-chat-window-input-medal/。协作固定快照2f381e371378f9a048835957c6b8042b9c1d3895的Window/detail仅用于独立对比，因其原始URL假窄化、宽回执与Promise断言，不按原样接收，不计整笔/整支。最终完整SHA、正式门禁、debt收紧和未部署候选以最终证据为准。

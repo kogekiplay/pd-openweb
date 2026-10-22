@@ -7,8 +7,8 @@ import ConnectChatWindow from 'src/pages/chat/containers/ChatWindow';
 import { isChatWindowSession } from 'src/pages/chat/utils/windowSession';
 import store from 'src/redux/configureStore';
 
-export default class ChatWindowEntrypoint extends Component<any, any> {
-  constructor(props) {
+export default class ChatWindowEntrypoint extends Component {
+  constructor(props: object) {
     super(props);
   }
 
@@ -30,6 +30,6 @@ export default class ChatWindowEntrypoint extends Component<any, any> {
   }
 }
 
-const root = createRoot(document.getElementById('app'));
+const root = createRoot(document.getElementById('app')!);
 
 root.render(<ChatWindowEntrypoint />);

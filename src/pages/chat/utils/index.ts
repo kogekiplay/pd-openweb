@@ -717,13 +717,13 @@ export const playSystemNewMsgAudio = () => playPromptAudio('systemNewMsgAudio');
  * @param {*} id
  * @param {*} isGroup
  */
-export const windowOpen = (id, name: string, isGroup: boolean) => {
+export const windowOpen = (id: string | undefined, name: string | undefined, isGroup: boolean) => {
   const type = isGroup ? Constant.SESSIONTYPE_GROUP : Constant.SESSIONTYPE_USER;
   const iTop = (window.screen.availHeight - 660) / 2; // 获得窗口的垂直位置;
   const iLeft = (window.screen.availWidth - 930) / 2; // 获得窗口的水平位置;
   const options = 'width=930,height=598,toolbar=no,menubar=no,location=no,status=no,top=' + iTop + ',left=' + iLeft;
   window.open(
-    pathCompletion(`/chat_window?id=${encodeURIComponent(String(id))}&name=${encodeURIComponent(name)}&type=${type}`),
+    pathCompletion(`/chat_window?id=${encodeURIComponent(String(id))}&name=${encodeURIComponent(String(name))}&type=${type}`),
     '_blank',
     options,
   );
@@ -733,13 +733,13 @@ export const windowOpen = (id, name: string, isGroup: boolean) => {
  * 管理全局聊天的窗口
  */
 export const chatWindow = {
-  set(id) {
+  set(id: string | undefined) {
     safeLocalStorageSetItem(`chat_window_${id}`, String(true));
   },
-  remove(id) {
+  remove(id: string | undefined) {
     localStorage.removeItem(`chat_window_${id}`);
   },
-  is(id) {
+  is(id: string | undefined) {
     return !!localStorage.getItem(`chat_window_${id}`);
   },
 };

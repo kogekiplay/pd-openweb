@@ -467,11 +467,11 @@ export default function preall(Comp: FunctionSentinel, options?: GlobalMetaReque
 export default function preall<Props extends object>(
   Comp: React.ComponentType<Props>,
   options?: GlobalMetaRequest,
-): React.ComponentClass<Props>;
+): React.ComponentClass<Props, PreState>;
 export default function preall<Props extends object>(
   Comp: React.ComponentType<Props> | FunctionSentinel,
   { allowNotLogin, requestParams, skipLanguageReload = false }: GlobalMetaRequest = {},
-): React.ComponentClass<Props> | undefined {
+): React.ComponentClass<Props, PreState> | undefined {
   if (isFunctionSentinel(Comp)) {
     // 【这条分支只能同步】4 个 share 页用 preall({ type: 'function' }) 当哨兵，
     // 调完紧接着就 new 出页面对象去读 md.global（见 kc/folderShare、kc/shareMobile、
