@@ -1,5 +1,6 @@
 import type { MouseEvent } from 'react';
 import type { ChatMessage } from '../../../redux/types';
+import { referencedEntityId } from './entityId';
 import { Component } from 'react';
 import kc from 'src/api/kc';
 import previewAttachments from 'src/components/previewAttachments/previewAttachments';
@@ -47,7 +48,7 @@ export default class MessageRefer extends Component<MessageReferProps, Record<st
       );
     } else if (card) {
       event.stopPropagation();
-      kc.getNodeDetail({ id: card.entityid }).then(result => {
+      kc.getNodeDetail({ id: referencedEntityId(card) }).then(result => {
         previewAttachments(
           {
             attachments: [result],

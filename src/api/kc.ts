@@ -1,3 +1,9 @@
+import type { KcNodeEndpoint, KcNodeQuery } from './kcTypes';
+
+const getNodeDetail: KcNodeEndpoint = function (args: KcNodeQuery, options: ApiOptions = {}) {
+  return mdyAPI('Kc', 'GetNodeDetail', args, options);
+};
+
 export default {
   /**
    * 获取根目录(共享文件夹)列表
@@ -220,9 +226,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getNodeDetail: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Kc', 'GetNodeDetail', args, options);
-  },
+  getNodeDetail,
   /**
    * 添加节点
    * @param {Object} args 请求参数

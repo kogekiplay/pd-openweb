@@ -1,0 +1,15 @@
+# 引用消息/知识库节点的真实来源消费合同（2026-10-23）
+
+固定main基线a0e8195751875314f82f869f7ab5ef16eff1c1cf，协作快照495ccba47f7e61435b8b27b0f8314cb1eea4e861。源71789a92c0e55d2328d6de19407fdaa8a8b4aac9（MessageRefer）和14ef361164a4574392b1739340ed8c34dc734152（KcFileMessage）各只有一个变更路径，已逐完整路径/源码审查，固定快照与提交原文相同，类型擦除后完整模块与main基线Babel相同。接收必须带下述独立来源纠正和真实行为修复，不能把旧msgid!/user!/card DTO断言、msg!/card!当证明。
+
+MessageRefer直接复用唯一ChatMessage.refer；引用根/user/msgdetail/files四处开放索引移除，额外runtime元数据仍在原对象，无克隆/删除。实际addMessage本地摘要无msgid，MessageRefer→Message容器→MessageView.goto及gotoMessageId状态都如实接受ChatMessage.id的string|number|undefined，原GetMessageById对缺id的既有fallback不变，不强转/伪造身份。DOM滚动中的旧断言、FileMessage/ImageMessage自身旧any props未在此称全部完成；本批仅验证它们的实际运行消费，后续仍需独立类型收口。
+
+card仍是原始unknown，组件只在原truthy分支调用有限native属性适配referencedEntityId：Reflect.get(Object(card),'entityid',card)。不把card假称实体DTO，不猜entityid类型；保留对象、Proxy以及primitive ToObject查询/原getter receiver和异常，直接结果unknown原样传SDK的id。该等价性由实际旧/新组件的Boolean/Number/String/Symbol原型getter/Proxy反例验证，不用宽索引/unknown双跳。updateFileMessage采用已有sessionPropertyKey保留缺会话id的原'undefined'键语义，移除父级id as string和动作字典非空断言；实际nil行为修复另列。
+
+Kc.getNodeDetail接通唯一KcNodeQuery/KcNodeDetail/KcNodeReply与InboxEndpoint模式，普通JSON异步返回原可abort请求；其它sync/opaque模式unknown，完整args/options/default/name/length/原返回保持。参数id保留引用卡片未验证值为unknown，其余按实际调用及SDK登记id/path/actionType/versionId/isOldest/worksheetId。原节点已读字段有限，无开放值索引；raw root保留false/null/undefined，未读viewType保持unknown，未造后端enum。ChatMessage.kcFile、分享ShareNode/ShareRootInfo共用该来源，避免复制同形模型；节点原额外元数据仍原引用进入预览。其它KC端点和service.assignHashFunc等旧any未冒充已完成。
+
+完整模块合同阶段相对独立行为副本：13个模块中10个Babel字节相同；SDK精确还原同名同体函数位置、Refer精确回填一次原native属性读、actions精确回填一次原可缺会话键索引后，其余整个模块AST相同。新增native helper另验确切Reflect/Object/receiver AST与真实运行。行为阶段有明确8个类成员＋1个动作函数，前后摘要记录；未笼统声称运行体全相同。
+
+初始共享来源收紧曾新增分享TS2375、预览viewType TS2339，沿实际消费补共同viewType unknown、共享ShareNode；随后ShareRootInfo引用遗漏的2条TS2304也真实失败并修为同源别名。所有原raw/tuple失败保留，比较通过才另一步push，不改baseline/tsconfig/门禁口径。仅移除两个已清零组件的strict-debt条目。
+
+公开真实SDK/预览wrapper、Props、MessageView实际方法/状态、动作key、ShareNode及native helper做正负/非any/有限键探针；自身与传递程序存量/实际退出码分别记录。全仓raw、最终完整SHA、必要现有规格/tools/正式门禁、正常main同步与正式构建/完整候选/逐文件摘要/回滚材料在 /Users/kogeki/dev/HAP-工作记录/20261023-message-refer-kc/。新包未部署，全仓持续目标active，不以两个组件清零或候选冻结作总完成。

@@ -1,3 +1,4 @@
+import { sessionPropertyKey } from '../utils/sessionPropertyKey';
 import _ from 'lodash';
 import type { AppDispatch, GetState } from 'src/redux/types';
 import type {
@@ -1330,7 +1331,7 @@ export const updateMessage = (message: ChatMessageReceiptWire) => (dispatch: App
 export const updateFileMessage = (newMessage: ChatMessage, to: string | undefined) => (dispatch: AppDispatch, getState: GetState) => {
   const { messages } = getState().chat;
   const { id } = newMessage;
-  const currentMessage = messages[to];
+  const currentMessage = messages[sessionPropertyKey(to)];
   if (currentMessage === undefined) return;
   const newCurrentMessage = currentMessage.map(item => {
     if (item && item.id === id) {
