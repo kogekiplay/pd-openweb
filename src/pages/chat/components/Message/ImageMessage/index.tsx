@@ -1,5 +1,7 @@
 import type { ChatMessage, ChatSession } from '../../../redux/types';
 import { Component } from 'react';
+import { shallowEqual } from 'react-redux';
+import { setImageSource } from './imageSource';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
@@ -8,7 +10,6 @@ import previewAttachments from 'src/components/previewAttachments/previewAttachm
 import Config from 'src/pages/chat/utils/config';
 import * as utils from '../../../utils/';
 import FileMessage from '../FileMessage';
-import { hasAttachmentData } from '../attachment';
 import { handleMessageFilePreview } from '../MessageToolbar';
 import './index.less';
 
@@ -19,11 +20,12 @@ export interface ImageMessageProps {
 }
 export interface ImageMessageState {
   loading: boolean;
-  previewUrl: string;
+  previewUrl: string | undefined;
   isError: boolean;
 }
 export default class ImageMessage extends Component<ImageMessageProps, ImageMessageState> {
   declare _isMounted: boolean | undefined;
+  private imageVersion = 0;
 
   constructor(props: ImageMessageProps) {
     super(props);
@@ -36,12 +38,16 @@ export default class ImageMessage extends Component<ImageMessageProps, ImageMess
   override componentDidMount() {
     const { session, message, messageLength } = this.props;
     const files = message.msg?.files;
-    if (!hasAttachmentData(files)) return;
-    const previewUrl = String(message.kcFile ? files.url : _.get(files, 'thumbs.web_1') || files.url);
+    if (files === null || files === undefined) {
+      this.imageVersion += 1;
+      return;
+    }
+    const previewUrl = message.kcFile ? files.url : _.get(files, 'thumbs.web_1') || files.url;
     this._isMounted = true;
+    const version = ++this.imageVersion;
     this.handleLoadImage(previewUrl)
       .then(() => {
-        if (!this._isMounted) {
+        if (!this._isMounted || version !== this.imageVersion) {
           return;
         }
 
@@ -56,30 +62,37 @@ export default class ImageMessage extends Component<ImageMessageProps, ImageMess
         );
       })
       .catch(() => {
+        if (!this._isMounted || version !== this.imageVersion) return;
         this.setState({ isError: true });
       });
   }
+  override componentDidUpdate(prevProps: ImageMessageProps) {
+    if (!shallowEqual(prevProps, this.props)) {
+      this.setState({ loading: false, isError: false });
+      this.componentDidMount();
+    }
+  }
   override componentWillUnmount() {
     this._isMounted = false;
+    this.imageVersion += 1;
   }
-  handleLoadImage(url: string) {
+  handleLoadImage(url: string | undefined) {
     return new Promise((resolve, reject) => {
       const image = new Image();
       image.onload = resolve;
       image.onerror = reject;
-      image.src = url;
+      setImageSource(image, url);
     });
   }
   handleMessageFilePreview() {
     const { message, session } = this.props;
     const files = message.msg?.files;
-    if (!hasAttachmentData(files)) return;
 
     if (session.accountId && !session.isContact) {
       return;
     }
 
-    if (files.isEmotion) {
+    if (files?.isEmotion) {
       return;
     } else if (message.kcFile) {
       previewAttachments(
@@ -91,6 +104,7 @@ export default class ImageMessage extends Component<ImageMessageProps, ImageMess
         {},
       );
     } else {
+      if (files === null || files === undefined) return;
       handleMessageFilePreview.call(this);
     }
   }
@@ -99,7 +113,7 @@ export default class ImageMessage extends Component<ImageMessageProps, ImageMess
     const { message, session } = this.props;
     const files = message.msg?.files;
 
-    if (isError || !hasAttachmentData(files)) {
+    if (isError || files === null || files === undefined) {
       return <FileMessage message={message} session={session} />;
     }
 

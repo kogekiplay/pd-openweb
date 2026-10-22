@@ -772,7 +772,9 @@ export interface ChatMessageFiles {
   /** 附件 id 标记（`!files.id || files.aid`） */
   aid?: unknown;
   /** 缩略图集（`thumbs.web_1` 等） */
-  thumbs?: { [key: string]: unknown } | undefined;
+  thumbs?: { web_1?: string | undefined; [key: string]: unknown } | undefined;
+  /** Lodash get(files, 'thumbs.web_1') 优先读取同名完整键，再尝试嵌套路径。 */
+  'thumbs.web_1'?: string | undefined;
   /** 其余按消息种类扩展的附件字段 */
   [key: string]: unknown;
 }

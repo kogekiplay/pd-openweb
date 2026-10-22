@@ -1,4 +1,3 @@
-import type { ChatMessageFiles } from '../../redux/types';
-// 历史消息和知识中心加载占位可能只有展示字段，不要求 aid、id 或 URL。
-export const hasAttachmentData = (files: unknown): files is ChatMessageFiles =>
+// This checks presence/non-empty object only; it does not validate an attachment DTO.
+export const hasAttachmentData = (files: unknown): boolean =>
   !!files && typeof files === 'object' && !Array.isArray(files) && Object.keys(files).length > 0;

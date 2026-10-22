@@ -1,11 +1,17 @@
-# FileMessage/ImageMessage finite attachment合同（2026-10-23）
+# FileMessage / ImageMessage 有限合同与兼容修正（2026-10-23）
 
-固定main基线3d8b7a60315cee3a817fd00f1ff41b3050267339。FileMessage和ImageMessage的真实父级是Message容器，真实附件来源是ChatMessage.msg.files/kcFile、MessageToolbar的getImageContext/previewAttachments、上传进度回调和会话滚动。两组件原props/state及回调参数为any，严格模式各2条。没有复制另一个附件DTO，直接复用ChatMessage/ChatSession/ChatMessageFiles及已有hasAttachmentData判定。
+本页替换 f80af3379dde7054e77f49ec7a658d67e8247ebb 中不准确的交付说明。该中间版本已普通同步，但未部署；不能用其355项通过结果证明原 KC 预览兼容，因为原引用/KC规格的对象同引用断言被改成渲染检查，掩盖了空 files 的 KC 预览回退。原规格现从 3d8b7a60315cee3a817fd00f1ff41b3050267339 整文件逐字节恢复，保留所有强断言，产品实现承担修正。
 
-FileMessage公开props为真实message/session，state保留progress/cancel/cancelShow；上传id允许实际文件id string/number，progress接受DOM/上传器可能给的string/number后仍Number转换，uploader stop/remove/start及window callback identity/清理顺序保持。缺文件走现有“附件信息缺失”展示，普通文件预览仍交真实MessageToolbar。
+真实来源/消费为 Message 容器、ChatMessage.msg.files / kcFile、Redux、MessageToolbar、previewAttachments、上传器回调和会话滚动。File/Image 共用 ChatMessage / ChatSession / ChatMessageFiles；公开 props/state 为有限字段，不复制 DTO。File 的上传 id 支持实际 string/number，progress 接受原始 unknown 后执行原生 Number，保持 valueOf、Symbol 失败和 stop/remove/start 顺序、window 回调同引用清理。
 
-ImageMessage公开props为真实message/session/可缺messageLength，state为loading/previewUrl/isError；真实图片加载使用URL字符串化保持WebIDL ToString语义，缺files不创建Image请求而回退真实FileMessage，KC文件仍把同一kcFile对象交previewAttachments，非联系人保护和unmount标记保持。scrollEnd在有messageLength时使用原比较，缺项不伪造长度。
+hasAttachmentData 只判非空对象，返回 boolean；没有验证附件各字段，因此不得声明 raw is ChatMessageFiles。File 的三处本地 !files 检查是原函数 !!files 条件已蕴含的纯检查，不额外读取属性。Image 不用对象键数量拒绝有效的非枚举 URL getter 或空 KC 占位；只有 nullish files 回退真实 FileMessage。KC 预览仍传同一 node，联系人/表情保护保持。
 
-真实完整边界前后6项通过：空附件/父级引用、上传callback/primitive progress/取消序列、普通文件预览请求参数和引用、Image缺附件回退、真实Image加载/滚动/unmount、KC preview同对象/非联系人保护。宿主的Image、SDK/DOM/preview和UI叶子受控，无网络/业务/会话写入；基础源码的Image缺files旧失败日志保留，候选行为修复按实际UI安全分支验证。
+图片源保持原始值，包括 undefined；不在 new Image 和原生 src setter 之前执行 String。setImageSource 是只有 src: unknown 的有限原生写入视图，函数体仅 image.src = source；接收实际 HTMLImageElement，让宿主自行转换或抛错，不做断言、Reflect.set 或预转换。previewUrl 明确为 string | undefined。thumbs.web_1 嵌套字段和 Lodash 优先消费的同名完整键均为可缺 URL 字段，保留原 _.get 调用、完整键优先级、getter 读取顺序、receiver 和同步异常。原有未知元数据索引未扩大，不用其放行已消费 URL。
 
-差异审计仅FileMessage的constructor/handleUploadProgress与ImageMessage的constructor/componentDidMount/handleLoadImage/render及attachment type predicate；其它成员/语句完整AST相同。全仓Counter绑定最终SHA，strict-debt只移除两条已清零文件，不改配置、门禁、超时、并发、断言或隔离。未部署。
+行为修复明确单列：卸载后的成功/失败回执不写 state；props 改变时重新加载并按请求代次丢弃旧回执；新请求清除旧错误状态；files 变为 nullish 时使旧回执失效。状态自身改变不触发重复加载。正常 URL、滚动条件和实际预览路径由完整产品模块规格验证。
+
+隔离证据目录：/Users/kogeki/dev/HAP-工作记录/20261023-file-image-correction。正常兼容检查在 3d8 固定源码与修正候选各完整7项；KC原强规格7项恢复且通过；f80 的 KC空占位、原始URL、非枚举getter、卸载、换图、失败重试、缺项共7类反例均实际退出1，修正候选7项通过。宿主 Image / DOM / SDK / UI叶子受控，无真实业务或会话写入。规格等待 main 完成再结束进程，原30秒上限和并发4不改；原四项后提前退出0的两次不完整试跑保留且不算完成。
+
+公开正负/非any探针直接导入实际导出：自身0，传递程序25239条存量，编译实际退出1；旧类型谓词探针出现 TS2578，证明旧 guard 错误地暴露未知字段。完整9模块Babel字节相同，File整模块仅三处等价本地检查；Image精确7成员变化、其余模块/成员相同，原生写入适配体精确核验。初次候选 raw strict 新增2条被阻止，补完整键有限合同后49052/Chat318保持，逐(文件,错误码)新增0；原失败与命令/退出码保留。
+
+本页不把隔离目录的基线SHA当改动源码身份。最终提交、完整输入文件摘要、直接正式 strict、普通pre-push、release、冻结产物和现网只读核验绑定在证据目录的最终机器回执及共享当前状态。未部署产物不能称上线；全仓正式 strict 仍未达标，总目标 active。

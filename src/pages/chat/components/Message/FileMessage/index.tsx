@@ -36,7 +36,7 @@ export default class FileMessage extends Component<FileMessageProps, FileMessage
     const { message } = this.props;
     const files = message.msg?.files;
 
-    if (!message.isPrepare || !hasAttachmentData(files) || !files.id || files.aid) return;
+    if (!message.isPrepare || !files || !hasAttachmentData(files) || !files.id || files.aid) return;
 
     this.uploadFileId = files.id;
     window[`chatBeforeUpload${files.id}`] = this.handleBeforeUpload;
@@ -48,7 +48,7 @@ export default class FileMessage extends Component<FileMessageProps, FileMessage
   handleBeforeUpload = (uploader: FileMessage['uploader']) => {
     this.uploader = uploader;
   };
-  handleUploadProgress = (progress: number | string) => {
+  handleUploadProgress = (progress: unknown) => {
     this.setState({
       progress: Number(progress),
       cancelShow: true,
@@ -73,7 +73,7 @@ export default class FileMessage extends Component<FileMessageProps, FileMessage
     const { message } = this.props;
     const files = message.msg?.files;
 
-    if (!message.isPrepare || !hasAttachmentData(files) || !files.id) return;
+    if (!message.isPrepare || !files || !hasAttachmentData(files) || !files.id) return;
 
     if (this.uploader) {
       this.uploader.stop();
@@ -118,7 +118,7 @@ export default class FileMessage extends Component<FileMessageProps, FileMessage
     const { message } = this.props;
     const files = message.msg?.files;
 
-    if (!hasAttachmentData(files)) {
+    if (!files || !hasAttachmentData(files)) {
       return (
         <div className="Message-file" aria-disabled={true}>
           <div className="Message-fileIcon">
