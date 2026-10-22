@@ -53,6 +53,9 @@ export interface MobileInviteState {
   showDialogSettingInviteRules?: boolean | undefined;
 }
 
+/** encrypt's actual primitive result has the same native property-key text. */
+const encryptedKey = (value: string | false): string => String(value);
+
 function markInvitedRows(rows: MobileInviteState['searchData'], item: AddressBookAccountLookupRow): MobileInviteState['searchData'] {
   if (rows === null || rows === undefined) return rows;
   return rows.map(i => i === null || i === undefined ? i : i.accountId === item.accountId ? { ...i, disabled: true } : i);
@@ -113,7 +116,7 @@ export default class MobileOrEmailInvite extends Component<MobileInviteProps, Mo
       }
     };
 
-    new captcha(throttled);
+    Reflect.construct(captcha, [throttled]);
   };
 
   override componentWillUnmount() {
@@ -150,7 +153,7 @@ export default class MobileOrEmailInvite extends Component<MobileInviteProps, Mo
     })
       .then(result => {
         inviteFailedDialog({
-          inviteTotal: _.isObject(accounts) ? Object.keys(accounts).length : accounts.length,
+          inviteTotal: _.isObject(accounts) ? Object.keys(accounts).length : accounts['length'],
           projectId,
           result,
         });
@@ -180,7 +183,7 @@ export default class MobileOrEmailInvite extends Component<MobileInviteProps, Mo
     if (this.state.loading) return;
     this.setState({ loading: true });
 
-    this.invite({ [encrypt(this.getValue())]: '' }, () => {
+    this.invite({ [encryptedKey(encrypt(this.getValue()))]: '' }, () => {
       this.setState({
         searchData: markInvitedRows(this.state.searchData, item),
       });
@@ -210,8 +213,9 @@ export default class MobileOrEmailInvite extends Component<MobileInviteProps, Mo
     let accountObj: InvitationAccounts = {};
 
     for (var i = 0, length = list.length; i < length; i++) {
-      if (list[i] && list[i].phone) {
-        accountObj[encrypt(list[i].phone)] = '';
+      const accountIndex = i;
+      if (list[accountIndex] && list[accountIndex].phone) {
+        accountObj[encryptedKey(encrypt(list[accountIndex].phone))] = '';
       }
     }
 

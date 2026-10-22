@@ -1,3 +1,12 @@
+import type { InvitationUserEndpoint, InvitationUserParams, InvitationAccountInfoEndpoint, InvitationAccountInfoParams } from './invitationTypes';
+
+const getInviteAccountInfo: InvitationAccountInfoEndpoint = function (args: InvitationAccountInfoParams, options: ApiOptions = {}) {
+  return mdyAPI('Invitation', 'GetInviteAccountInfo', args, options);
+};
+const inviteUser: InvitationUserEndpoint = function (args: InvitationUserParams, options: ApiOptions = {}) {
+  return mdyAPI('Invitation', 'InviteUser', args, options);
+};
+
 export default {
   /**
    * 根据邀请账号生成账户信息
@@ -6,9 +15,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getInviteAccountInfo: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Invitation', 'GetInviteAccountInfo', args, options);
-  },
+  getInviteAccountInfo,
   /**
    * 邀请用户加入某个模块
    * @param {Object} args 请求参数
@@ -20,9 +27,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  inviteUser: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Invitation', 'InviteUser', args, options);
-  },
+  inviteUser,
   /**
    * 获取通用邀请链接
    * @param {Object} args 请求参数

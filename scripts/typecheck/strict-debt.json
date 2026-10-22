@@ -224,7 +224,6 @@
     "src/components/addFriends/AddressBookInvite.tsx",
     "src/components/addFriends/DetailList.tsx",
     "src/components/addFriends/InviteFailedDialog.tsx",
-    "src/components/addFriends/MobileOrEmailInvite.tsx",
     "src/components/addFriends/PublicLink.tsx",
     "src/components/addFriends/index.tsx",
     "src/components/autoTextarea/autoTextarea.ts",

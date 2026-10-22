@@ -1,3 +1,4 @@
+import type { AddressBookAccountLookupEndpoint, AddressBookAccountLookupParams } from './addressBookTypes';
 import type { AddressBookChatKeywordEndpoint, AddressBookChatKeywordParams } from './addressBookTypes';
 import type { AddressBookSearchDeptEndpoint, AddressBookSearchDeptParams } from './addressBookTypes';
 import type { AddressBookContactsEndpoint, AddressBookContactsParams, AddressBookPageQueryParams, AddressBookNewFriendsEndpoint, AddressBookRecommendsEndpoint } from './addressBookTypes';
@@ -22,6 +23,10 @@ const getAllChatAddressbookByKeywords: AddressBookChatKeywordEndpoint = function
   return mdyAPI('AddressBook', 'GetAllChatAddressbookByKeywords', args, options);
 };
 
+const getAccountByAccount: AddressBookAccountLookupEndpoint = function (args: AddressBookAccountLookupParams, options: ApiOptions = {}) {
+  return mdyAPI('AddressBook', 'GetAccountByAccount', args, options);
+};
+
 export default {
   /**
    * 根据账号查找用户
@@ -34,9 +39,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  getAccountByAccount: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('AddressBook', 'GetAccountByAccount', args, options);
-  },
+  getAccountByAccount,
   /**
    * 获取加我为好友，我还没有同意的人的列表
    * @param {Object} args 请求参数
