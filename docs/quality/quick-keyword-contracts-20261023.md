@@ -1,0 +1,13 @@
+# 快速用户选择器的关键词SDK与真实解码合同（2026-10-23）
+
+固定main基线812b6840d4b4f556657f9e45466854972aef08d9，协作快照495ccba47f7e61435b8b27b0f8314cb1eea4e861。只部分提取源229f8b067acdddbbad2f55618119c634fcd560be的getUserAddressbookByKeywords同名同体端点及参数布局，排除整个文件、原规格、复制的已验证用户模型、required list和ApiResultOf metadata兼容桥。入参同时保留SDK注释已登记的pageIndex/pageSize/dataRange，未使用且无枚举依据的dataRange保持unknown，不因唯一当前调用点未传就禁止合法字段。raw SDK list仍unknown，root可null/undefined，必须经现有userObject/decodeUsers后才得到QuickUser[]，不能用校验后类型倒推网络原回执保证。
+
+SDK沿用唯一InboxEndpoint普通JSON异步/其它opaque模式重载顺序。真正调用方quickSelectUser/util.ts为现有wrapAjax指定真实单参数tuple及普通请求返回泛型，保留实际函数引用与name，不新包lambda、不重排重载、不修改wrapAjax运行体。公开QuickKeywordRequest直接取实际包装返回，非自造测试签名。
+
+QuickUser/UserStatus移除两个公开string索引，仅保留实际decoder验证和UI消费的有限字段；额外raw元数据仍在原对象上保留，不复制/删除。移除索引暴露kc/createRoot读取SelectUser.account，初始raw strict实际新增TS2551且逐tuple比较失败，原日志保留；沿真实消费仅登记account?:unknown（该旧流程只无转换比较），不恢复索引、不猜字符串/伪造身份、不改知识库业务行为。GeneralSelect旧规格的opaque测试字段只在测试数据返回交集中明确声明，值/运行体/断言全部相同，初始tools失败保留。RangeOptions/其它部门和群模型的开放字段仍需独立审查，本批不称整个选择器所有合同已完成。
+
+同份完整运行规格前后各7项：完整SDK ABI/键序/模式/args/options/原返回；实际worksheet.wrapAjax按原name缓存与取消同一request/abort receiver/异常；实际SDK→util→decoder的list/accountId/fullname/status/icon getter顺序及原数组/行/符号/元数据引用；missing/nil/非法/sparse payload原decoder TypeError；真实UserSelector→Comps.UserList行按钮→onSelect/selectCb/onClose与同一选择结果引用；完整已有错误重试/旧回执/取消/卸载路径；兄弟对话框decoder保留真实account携带值而不开放全部索引。SDK/hooks/DOM/展示叶子受控，实际SDK/包装/decoder/选择业务模块完整执行，无真实会话或业务写入，不称浏览器或生产验收。旧selection规格仍原样承担其它门户/范围分支覆盖，未降低断言。
+
+纯类型/引用改动审计覆盖12完整模块：11个comments:false Babel字节相同；SDK仅同名同体函数精确搬出对象，回填后整个模块AST相同。包括实际wrapAjax、quick util/types/decoder/selector/Comps、对话框types/decoder/旧规格及受影响kc/createRoot，未改运行行为。新hooks宿主初始Node不支持参数属性的失败保留，修正普通字段/赋值；不更改产品运行时代码绕过验证。
+
+公开真实SDK、包装返回、decoder输出、选择回调及兄弟模型做正负/非any/有限键约束，raw list不能未经验证map。自身诊断与传递程序存量及实际退出码分别记录。最终完整SHA、逐tuple无新增、tools/现有规格/正式门禁、普通main同步、构建/候选清单摘要及回滚材料见 /Users/kogeki/dev/HAP-工作记录/20261023-quick-select-keyword/。baseline/debt/tsconfig、30秒/并发4和known-failure均不放宽。未部署，全仓持续目标active。

@@ -123,3 +123,18 @@ export interface AddressBookAccountLookupParams {
   captchaType?: number | undefined;
 }
 export type AddressBookAccountLookupEndpoint = InboxEndpoint<AddressBookAccountLookupParams, AddressBookAccountLookupResult>;
+
+/** Original lookup payload is validated by quickSelectUser; no raw row is promised to be a decoded QuickUser. */
+export interface AddressBookKeywordSearchParams {
+  keywords?: string | undefined;
+  filterAccountIds?: (string | undefined)[] | undefined;
+  projectId?: string | null | undefined;
+  currentProjectId?: string | null | undefined;
+  /** Endpoint-declared paging fields; quick selector currently omits them. */
+  pageIndex?: number | undefined;
+  pageSize?: number | undefined;
+  /** The generator documents this field without a concrete enum; do not invent one. */
+  dataRange?: unknown;
+}
+export interface AddressBookKeywordSearchResult { list?: unknown; }
+export type AddressBookKeywordSearchEndpoint = InboxEndpoint<AddressBookKeywordSearchParams, AddressBookKeywordSearchResult | null | undefined>;

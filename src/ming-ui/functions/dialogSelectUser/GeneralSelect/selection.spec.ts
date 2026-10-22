@@ -210,7 +210,7 @@ const moduleAbi: SelectorModule = load('index.tsx') as SelectorModule;
 const tick = async () => {
   for (let i = 0; i < 6; i++) await Promise.resolve();
 };
-const user = (accountId: string): SelectUser => ({
+const user = (accountId: string): SelectUser & { opaque: { token: string } } => ({
   accountId,
   fullname: accountId,
   avatar: 'avatar',

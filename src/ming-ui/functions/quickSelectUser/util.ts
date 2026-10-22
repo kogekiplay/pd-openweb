@@ -1,3 +1,4 @@
+import type { AddressBookKeywordSearchParams, AddressBookKeywordSearchResult, AddressBookRequest } from 'src/api/addressBookTypes';
 import _ from 'lodash';
 import addressBookController from 'src/api/addressBook';
 import externalPortalCotroller from 'src/api/externalPortal';
@@ -8,8 +9,11 @@ import type { AccountsOptions, GetUsersOptions, QuickUser, UsersRequest } from '
 
 const getUsersByApp = wrapAjax(externalPortalCotroller.getUsersByApp);
 const getProjectContactUserListByApp = wrapAjax(userController.getProjectContactUserListByApp);
-const getUserAddressbookByKeywords = wrapAjax(addressBookController.getUserAddressbookByKeywords);
+const getUserAddressbookByKeywords = wrapAjax<[AddressBookKeywordSearchParams], AddressBookRequest<AddressBookKeywordSearchResult | null | undefined>>(addressBookController.getUserAddressbookByKeywords);
 const getOftenMetionedUser = wrapAjax(userController.getOftenMetionedUser);
+
+/** Actual default-mode request selected by this consumer, before decoding. */
+export type QuickKeywordRequest = ReturnType<typeof getUserAddressbookByKeywords>;
 
 export function getAccounts({
   list,

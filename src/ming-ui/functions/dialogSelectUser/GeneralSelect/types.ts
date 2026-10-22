@@ -4,6 +4,8 @@ import type { QuickUser } from '../../quickSelectUser/types';
 export type ChooseMode = 'user' | 'department' | 'group' | 'resigned';
 /** Fields displayed by the dialog; other server member metadata remains unknown. */
 export interface SelectUser extends QuickUser {
+  /** Legacy kc/createRoot compares this carried field without validation or conversion. */
+  account?: unknown;
   companyName?: string | undefined;
   departmentInfo?: { departmentId?: string | undefined; departmentName?: string | undefined } | null | undefined;
 }

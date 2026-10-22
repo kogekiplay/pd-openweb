@@ -9,9 +9,8 @@ export interface UserStatus {
   beginTime?: string | undefined;
   endTime?: string | undefined;
   durationOption?: number | undefined;
-  [metadata: string]: unknown;
 }
-/** Actual displayed/selected fields; other member metadata stays unknown. */
+/** Actual validated/displayed fields. Extra runtime metadata is retained by reference, without an open public index. */
 export interface QuickUser {
   accountId: string;
   fullname?: string | undefined;
@@ -24,7 +23,6 @@ export interface QuickUser {
   job?: string | undefined;
   department?: string | undefined;
   onStatusOption?: UserStatus | undefined;
-  [metadata: string]: unknown;
 }
 export type SelectedQuickUser = Pick<QuickUser, 'accountId' | 'avatar' | 'fullname' | 'job'>;
 export type SelectUsers = (users: SelectedQuickUser[]) => void;
