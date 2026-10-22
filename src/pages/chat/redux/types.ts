@@ -1011,10 +1011,10 @@ export interface ChatReferMessageState {
 
 /**
  * `gotoMessage` 切片：会话 id → 要定位到的消息 id。
- * 生产方传 `messageId`，故值是 id 字符串而非消息对象。
+ * 生产方是搜索消息回调，值保持真实 ChatMessage.id（string/number/缺项），不转换为消息对象或字符串。
  */
 export interface ChatGotoMessageState {
-  [sessionId: string]: string | undefined;
+  [sessionId: string]: ChatMessage['id'];
 }
 
 /**

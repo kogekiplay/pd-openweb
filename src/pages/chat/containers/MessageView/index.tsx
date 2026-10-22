@@ -20,6 +20,7 @@ import * as utils from '../../utils';
 import * as ajax from '../../utils/ajax';
 import config from '../../utils/config';
 import Constant from '../../utils/constant';
+import { sessionPropertyKey } from '../../utils/sessionPropertyKey';
 import { addGroupMembers } from '../../utils/group';
 import Message from '../Message';
 import './index.less';
@@ -135,13 +136,12 @@ class MessageView extends Component<MessageViewProps, MessageViewState> {
   override componentDidUpdate(prevProps: MessageViewProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { session, sessionList, currentSession, gotoMessage } = this.props;
-      // 擦除标记：真实会话必有 id（容器按 session.id 渲染）；缺 id 时行为与基线一致。
-    const gotoMessageId = gotoMessage[session.id as string]; // 右侧点击了搜索消息
+      const gotoMessageId = gotoMessage[sessionPropertyKey(session.id)]; // 右侧点击了搜索消息
 
       // 右侧点击了搜索消息
       if (gotoMessageId) {
         this.handleGotoMessage(gotoMessageId);
-        prevProps.dispatch(actions.removeGotoMessage(session.id as string));
+        prevProps.dispatch(actions.removeGotoMessage(session.id));
       } // 打开聊天框时，有10条以上的未读消息
 
       // 打开聊天框时，有10条以上的未读消息

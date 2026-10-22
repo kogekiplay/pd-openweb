@@ -871,7 +871,7 @@ export const resetGroupName = (groupId: string, name: string) => (dispatch: AppD
  * @param {*} id
  * @param {*} name
  */
-export const resetGroupIsPost = (groupId: string, projectId: string) => (dispatch: AppDispatch, getState: GetState) => {
+export const resetGroupIsPost = (groupId: string | undefined, projectId: string) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList, sessionList } = getState().chat;
   const newCurrentSessionList = currentSessionList.map(item => {
     if (item.id === groupId) {
@@ -924,7 +924,7 @@ export const updateGroupAvatar = (groupId: string, avatar: string) => (dispatch:
  * @param {*} groupId
  * @param {*} about
  */
-export const updateGroupAbout = (groupId: string, about: string) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateGroupAbout = (groupId: string | undefined, about: string) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList } = getState().chat;
   const newCurrentSessionList = currentSessionList.map(item => {
     if (item.id === groupId) {
@@ -1895,7 +1895,7 @@ export const removeReferMessage = (id: string) => {
  * @param {*} id
  * @param {*} messageId
  */
-export const setGotoMessage = (id: string, messageId: string) => {
+export const setGotoMessage = (id: string | undefined, messageId: ChatMessage['id']) => {
   return {
     type: 'SET_GOTO_MESSAGE',
     id,
@@ -1907,7 +1907,7 @@ export const setGotoMessage = (id: string, messageId: string) => {
  * 删除指定的消息
  * @param {*} id
  */
-export const removeGotoMessage = (id: string) => {
+export const removeGotoMessage = (id: string | undefined) => {
   return {
     type: 'REMOVE_GOTO_MESSAGE',
     id,

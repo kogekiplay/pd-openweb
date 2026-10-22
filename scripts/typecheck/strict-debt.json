@@ -1515,7 +1515,6 @@
     "src/pages/chat/containers/ChatList/Toolbar/index.tsx",
     "src/pages/chat/containers/ChatList/index.tsx",
     "src/pages/chat/containers/ChatPanelHeader/index.tsx",
-    "src/pages/chat/containers/ChatPanelSessionInfo/index.tsx",
     "src/pages/chat/containers/FavoriteDrawer/index.tsx",
     "src/pages/chat/containers/MingoDrawer/index.tsx",
     "src/pages/chat/containers/SessionListDrawer/CreateGroup.tsx",

@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { sessionPropertyKey } from '../utils/sessionPropertyKey';
 import type { Reducer } from 'redux';
 import * as utils from '../utils/';
 import type { ChatState } from './types';
@@ -102,8 +103,8 @@ export type ChatAction =
   | { type: 'SET_REFER_MESSAGE'; id: string; message: ChatMessage }
   | { type: 'REMOVE_REFER_MESSAGE'; id: string }
   /* ── 定位消息 ── */
-  | { type: 'SET_GOTO_MESSAGE'; id: string; messageId: string }
-  | { type: 'REMOVE_GOTO_MESSAGE'; id: string }
+  | { type: 'SET_GOTO_MESSAGE'; id: string | undefined; messageId: ChatMessage['id'] }
+  | { type: 'REMOVE_GOTO_MESSAGE'; id: string | undefined }
   /* ── 底部未读 ── */
   | { type: 'SET_BOTTOM_UNREAD_MESSAGE'; id: string; message: ChatMessage }
   | { type: 'ADD_BOTTOM_UNREAD_MESSAGE'; id: string; message: ChatMessage }
@@ -294,10 +295,10 @@ const referMessage = (state: ChatReferMessageState = {}, action: ChatAction): Ch
 const gotoMessage = (state: ChatGotoMessageState = {}, action: ChatAction): ChatGotoMessageState => {
   switch (action.type) {
     case 'SET_GOTO_MESSAGE':
-      return Object.assign({}, state, { [action.id]: action.messageId });
+      return Object.assign({}, state, { [sessionPropertyKey(action.id)]: action.messageId });
     case 'REMOVE_GOTO_MESSAGE':
       // 【现有副作用，保留】先 delete 原 state 再复制。
-      delete state[action.id];
+      delete state[sessionPropertyKey(action.id)];
       return Object.assign({}, state);
     default:
       return state;

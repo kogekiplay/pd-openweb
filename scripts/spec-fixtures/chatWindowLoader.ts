@@ -13,19 +13,20 @@ interface Subject {
 }
 type Constructor = new (props: Data) => Subject;
 interface Call { controller: string; action: string; args: Data; options: Data; }
-function makeFixture() {
+function makeFixture(options: { uiLeaves?: readonly string[] } = {}) {
+  const leaves = new Map<string, unknown>();
   const cache = new Map<string, Data>();
   const calls: Call[] = [], trace: string[] = [], dispatched: Data[] = [];
   const handlers = new Map<string, (...args: unknown[]) => void>();
   const listeners = new Map<string, () => void>();
   const storage = new Map<string, string>(), opened: unknown[][] = [];
   const contacts: unknown[] = [], children: Promise<unknown>[] = [];
-  const md = { global: { Account: { accountId: 'self', isPortal: false, messageListShowType: 0 } } };
+  const md = { global: { Account: { accountId: 'self', isPortal: false, messageListShowType: 0, projects: [] }, SysSettings: { forbidSuites: [] } } };
   const localStorage = { getItem: (key: string) => storage.get(key) ?? null, removeItem: (key: string) => { trace.push('remove:' + key); storage.delete(key); } };
   Reflect.set(globalThis, 'md', md); Reflect.set(globalThis, 'localStorage', localStorage);
   Reflect.set(globalThis, '_l', (text: string) => text);
   Reflect.set(globalThis, 'safeLocalStorageSetItem', (key: string, value: string) => { trace.push('store:' + key); storage.set(key, value); });
-  Reflect.set(globalThis, 'window', { md, localStorage, innerHeight: 900, screen: { availHeight: 1000, availWidth: 1400 }, open: (...args: unknown[]) => { opened.push(args); }, addEventListener: (name: string, callback: () => void) => { trace.push('listen:' + name); listeners.set(name, callback); } });
+  Reflect.set(globalThis, 'window', { md, localStorage, innerHeight: 900, platformENV: { isLocal: true }, screen: { availHeight: 1000, availWidth: 1400 }, open: (...args: unknown[]) => { opened.push(args); }, addEventListener: (name: string, callback: () => void) => { trace.push('listen:' + name); listeners.set(name, callback); } });
   Reflect.set(globalThis, 'document', { getElementById: () => ({ id: 'app' }) });
   Reflect.set(globalThis, 'location', { search: '' });
   Reflect.set(globalThis, 'IM', { socket: { on: (name: string, callback: (...args: unknown[]) => void) => { trace.push('on:' + name); handlers.set(name, callback); } } });
@@ -53,6 +54,10 @@ function makeFixture() {
       if (name === 'src/redux/configureStore') return {};
       if (name === 'src/router/navigateTo') return { navigateToLogin: () => { trace.push('login'); } };
       if (name === 'react-dom/client') return { createRoot: (container: unknown) => { if (!container) throw new TypeError('Missing root'); return { render: () => { trace.push('root'); } }; } };
+      if (name === 'ming-ui') return { ScrollView: Leaf, Icon: Leaf };
+      if (name === 'ming-ui/functions') return { mdNotification: {} };
+      if (name === 'styled-components') return { div: () => Leaf };
+      if (name === 'ming-ui/components/ErrorBoundary') return { wrap: (Type: unknown) => Type };
       if (name.startsWith('ming-ui/')) return Leaf;
       if (name === '../ChatPanelSession') return Leaf;
       if (name === 'src/components/emotion/emotion') return {};
@@ -62,6 +67,11 @@ function makeFixture() {
       if (/^(src\/pages\/chat\/)?(\.\.\/)*utils\/socket$/.test(name) || name === './socket') return contact;
       const base = name.startsWith('src/') ? name : name.startsWith('.') ? path.posix.normalize(path.posix.join(path.posix.dirname(file), name)) : undefined;
       if (base) {
+        if (options.uiLeaves?.includes(base)) {
+          if (!leaves.has(base)) leaves.set(base, Object.assign(() => null, { fixturePath: base }));
+          return leaves.get(base);
+        }
+        if (base === 'src/pages/chat/utils/group' && options.uiLeaves) return { addGroupMembers: () => { throw new Error('Unexpected group mutation'); } };
         const found = ['', '.ts', '.tsx', '/index.ts', '/index.tsx'].map(ext => base + ext).find(p => fs.existsSync(path.join(harness.ROOT, p)) && fs.statSync(path.join(harness.ROOT, p)).isFile());
         if (found) return load(found);
       }

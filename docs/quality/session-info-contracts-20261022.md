@@ -1,0 +1,13 @@
+# 会话信息列与消息定位合同（2026-10-22）
+
+基线c529284a3b2e02733528ddf9ecff48e9474203e6，固定协作2f381e371378f9a048835957c6b8042b9c1d3895。仅提取ChatPanelSessionInfo的props/state、PanelType和first声明；该路径源提交ea1dc27b55cac51f5f1d390b9838160fa19eb47d的旧两方法提取规格没有采用。去掉协作拟稿的SessionUser宽索引和ID字符串断言，保留lead真实ChatSessionLookup成员视图与可缺账号ID传播。当前完整文件按路径审查，不等于整笔提交或全补丁。
+
+Info own props来自真实ChatPanelSession owner的session/searchText/isOpenFile/infoVisible；connect字段和dispatch有限，state仅五种panelType/boolean，first是已显示缓存。保留componentDidUpdate的浅比较、first和展开/搜索/文件有序写入。goto消息ID直接从真实搜索行进入Info→setGotoMessage→Redux→MessageView；值保持ChatMessage.id的字符串/数字/缺项，groupId与sessionId缺项也如实传播到实际动作，不补造ID，不用as string。公告值来自真实textarea blur，群转换projectId沿原回调。
+
+Redux会话属性键通过sessionPropertyKey仅将undefined映射到其原有属性名拼写，Action.id仍为原值；其它值继续原生ToPropertyKey。初稿String(id)在真实Symbol键反例失败，日志behavior-coercion-counterexample及实际退出1保留，未进入main。最终实际原始/对象Symbol、getter、缺项/自有undefined、原生失败、删除旧state再克隆等前后通过；不以伪造PropertyKey断言掩盖缺项。数字0定位仍保留原falsy分支，不擅改业务。
+
+10项完整产品边界检查在基线与候选通过：真实外层wrapper/owner、Info完整类、搜索消息行、Announcement、API包装、action/reducer和MessageView均执行；同级UI/DOM/socket/bootstrap/SDK宿主为受控叶子，不操作真实会话或服务。React更新测试记录延迟setState，不把同步合并误当生命周期批处理；保留重叠输入下原patch顺序。最初ErrorBoundary宿主、connect memo对象、双层父wrapper和JQuery动画叶子夹具失败完整留存，没有删断言换绿。原窗口10项规格在扩展后的共享夹具也通过。
+
+完整Babel8模块相同（含Info、父级、actions及实际公告/搜索生产模块），reducer与MessageView仅精确反转新增属性键函数调用及导入后全文相同。公开产品导出正负、非any和有限键探针自身0诊断；传递程序存量和实际退出1另记，不冒称全程序零诊断。审查副本全仓strict49428→49410，Chat474→456，逐(文件,错误码)新增0。新属性键函数是实际生产消费代码，纳入严格检查。
+
+完整证据、实际命令/退出码和固定源码绑定：/Users/kogeki/dev/HAP-工作记录/20261022-session-info-contracts/。最终SHA、棘轮收紧、正常main同步、正式构建与冻结材料以该目录最终证据为准。未部署生产；协作Members/Panel当前dirty仅保护不读取或整合。

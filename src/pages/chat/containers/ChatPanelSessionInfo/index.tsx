@@ -3,8 +3,9 @@ import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import { ScrollView } from 'ming-ui';
-import type { RootState } from 'src/redux/types';
+import type { AppDispatch, RootState } from 'src/redux/types';
 import type { ChatSessionLookup } from 'src/api/chatTypes';
+import type { ChatMessage, ChatSession } from '../../redux/types';
 import Announcement from '../../components/Announcement';
 import DiscussionAnnouncement from '../../components/DiscussionAnnouncement';
 import Feeds from '../../components/Feeds';
@@ -16,8 +17,28 @@ import SearchPanel from '../../components/SearchPanel';
 import * as actions from '../../redux/actions';
 import * as utils from '../../utils';
 
-class ChatPanelSessionInfo extends Component<any, any> {
-  constructor(props) {
+export type PanelType = '' | 'members' | 'feeds' | 'files' | 'search';
+
+/** connect 注入 + 容器（`ChatPanelSession`）传入 */
+export interface ChatPanelSessionInfoProps {
+  dispatch: AppDispatch;
+  currentSession: ChatSession;
+  currentSessionList: ChatSession[];
+  isWindow: boolean;
+  session: ChatSession;
+  searchText: string;
+  isOpenFile: boolean;
+  infoVisible: boolean;
+}
+
+export interface ChatPanelSessionInfoState {
+  panelType: PanelType;
+  panelVisible: boolean;
+}
+
+class ChatPanelSessionInfo extends Component<ChatPanelSessionInfoProps, ChatPanelSessionInfoState> {
+  declare first: boolean;
+  constructor(props: ChatPanelSessionInfoProps) {
     super(props);
     this.state = {
       panelType: '',
@@ -26,7 +47,7 @@ class ChatPanelSessionInfo extends Component<any, any> {
     this.first = this.props.infoVisible;
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: ChatPanelSessionInfoProps) {
     if (!shallowEqual(prevProps, this.props)) {
       // 展开和收起
       if (this.props.infoVisible) {
@@ -77,7 +98,7 @@ class ChatPanelSessionInfo extends Component<any, any> {
       }
     }
   }
-  handleSetPanelVisible(panelType, panelVisible) {
+  handleSetPanelVisible(panelType: PanelType, panelVisible: boolean) {
     if (!panelVisible) {
       panelType = '';
     }
@@ -87,7 +108,7 @@ class ChatPanelSessionInfo extends Component<any, any> {
       panelVisible,
     });
   }
-  handleGotoMessage(message) {
+  handleGotoMessage(message: Pick<ChatMessage, 'id'>) {
     const { id } = message;
     const { session } = this.props;
     this.props.dispatch(actions.setGotoMessage(session.id, id));
@@ -118,7 +139,7 @@ class ChatPanelSessionInfo extends Component<any, any> {
           {session.isPost && shouldRenderSessionInfo && (
             <Announcement
               session={session}
-              updateGroupAbout={value => {
+              updateGroupAbout={(value: string) => {
                 this.props.dispatch(actions.updateGroupAbout(session.groupId, value));
               }}
             />
