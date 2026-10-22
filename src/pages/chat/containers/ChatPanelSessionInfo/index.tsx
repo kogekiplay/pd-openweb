@@ -156,7 +156,7 @@ class ChatPanelSessionInfo extends Component<ChatPanelSessionInfoProps, ChatPane
           {!session.isPost && shouldRenderSessionInfo && (
             <DiscussionAnnouncement
               session={session}
-              onChangeIsPost={(projectId: string) => {
+              onChangeIsPost={(projectId: string | undefined) => {
                 this.props.dispatch(actions.resetGroupIsPost(session.groupId, projectId));
               }}
             />

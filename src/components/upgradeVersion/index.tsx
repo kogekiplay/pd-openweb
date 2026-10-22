@@ -97,8 +97,8 @@ export function buriedUpgradeVersionDialog(
 }
 
 // 验证网络是否到期异步
-export const expireDialogAsync = function (projectId: string) {
-  return new Promise((resolve, reject) => {
+export const expireDialogAsync = function (projectId: string | undefined) {
+  return new Promise<void>((resolve, reject) => {
     // 个人
     if (!projectId) {
       resolve();

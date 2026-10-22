@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { Dialog, Dropdown } from 'ming-ui';
 import groupAjax from 'src/api/group';
 import { expireDialogAsync } from 'src/components/upgradeVersion';
+import type { ChatSession } from '../../redux/types';
+import type { BootstrapProject } from 'src/common/bootstrapMetadata';
 
 const Box = styled.div`
   padding: var(--space-3);
@@ -17,13 +19,20 @@ const Box = styled.div`
   }
 `;
 
-export default ({ session, onChangeIsPost }) => {
+export interface DiscussionAnnouncementProps {
+  /** 讨论组会话（读 groupId） */
+  session: ChatSession;
+  /** 转换成功后回传新项目 id（父级 dispatch resetGroupIsPost） */
+  onChangeIsPost: (projectId: string | undefined) => void;
+}
+
+export default ({ session, onChangeIsPost }: DiscussionAnnouncementProps) => {
   const { groupId } = session;
   const [visible, setVisible] = useState(false);
-  const [orgId, setOrgId] = useState('');
+  const [orgId, setOrgId] = useState<string | undefined>('');
   const [isDisabled, setIsDisabled] = useState(false);
 
-  const checkProject = id => {
+  const checkProject = (id: string | undefined) => {
     expireDialogAsync(id)
       .then(() => {
         setIsDisabled(false);
@@ -79,8 +88,8 @@ export default ({ session, onChangeIsPost }) => {
                 isAppendToBody
                 className="w100"
                 value={orgId}
-                data={_.get(md, 'global.Account.projects', []).map(l => ({ value: l.projectId, text: l.companyName }))}
-                onChange={id => {
+                data={_.get(md, 'global.Account.projects', []).map((l: BootstrapProject) => ({ value: l.projectId, text: l.companyName }))}
+                onChange={(id: string | undefined) => {
                   checkProject(id);
                   setOrgId(id);
                 }}

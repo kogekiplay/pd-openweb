@@ -1,4 +1,9 @@
 import { Fragment, useCallback, useEffect } from 'react';
+import type { GroupSettingOptions, GroupSettingProps } from './types';
+import type { ChatSession } from 'src/pages/chat/redux/types';
+
+/** The active about editor shares the same finite text/admin fields as the chat session view. */
+export type GroupSettingAboutFields = Pick<ChatSession, 'about' | 'isAdmin'>;
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -212,11 +217,11 @@ const UserDialogContent = styled.div`
   }
 `;
 
-function SettingGroup(props) {
+function SettingGroup(props: GroupSettingProps) {
   const { visible, groupID, isApprove = false, onClose, success = () => {} } = props;
 
   let moreUserLoading = false;
-  const [groupInfo, setState] = useSetState({
+  const initialState = {
     loading: true,
     userDialogVisible: isApprove,
     aboutDialogVisible: false,
@@ -229,7 +234,8 @@ function SettingGroup(props) {
     covertVisible: false,
     covertOkDisabled: false,
     qrLoading: true,
-  });
+  };
+  const [groupInfo, setState] = useSetState<typeof initialState & GroupSettingAboutFields>(initialState);
 
   const debouncedSearch = useCallback(
     _.debounce(keywords => {
@@ -1090,6 +1096,6 @@ function SettingGroup(props) {
   );
 }
 
-export default function settingGroup(props) {
+export default function settingGroup(props: GroupSettingOptions) {
   functionWrap(SettingGroup, props);
 }

@@ -64,19 +64,7 @@ export interface AddressBookClosePayload extends AddressBookCallbackPayload {
 }
 
 /** Group/settingGroup 真实 success 回调中本地址簿接收的字段。 */
-export interface AddressBookSettingResult {
-  groupId?: string | undefined;
-  groupID?: string | undefined;
-  accountId?: string | undefined;
-  avatar?: string | undefined;
-  groupAvatar?: string | undefined;
-  groupName?: string | undefined;
-  accounts?: unknown[] | undefined;
-  isVerified?: boolean | undefined;
-  mapDepartmentId?: string | undefined;
-  mapDepartmentName?: string | undefined;
-  isApproval?: boolean | undefined;
-}
+export type AddressBookSettingResult = import('src/pages/Group/settingGroup/types').GroupSettingResult;
 
 /** 本地群信息补丁：计算字段与 VERIFY/APPROVE 原样展开字段。 */
 export type AddressBookGroupPatch = Partial<AddressBookGroupDetail> & AddressBookSettingResult;

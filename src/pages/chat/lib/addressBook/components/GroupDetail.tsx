@@ -30,9 +30,8 @@ export default class GroupDetail extends React.Component<GroupDetailProps> {
     } = this.props as { group: AddressBookGroupDetail; groupStatus?: number; updateGroupModel: GroupDetailProps['updateGroupModel'] };
     settingGroup({
       groupID: groupId,
-      success: (type: string, groupInfo: AddressBookSettingResult) => {
-        if (
-          ![
+      success: (type: string | undefined, groupInfo: AddressBookSettingResult) => {
+        const acceptedTypes: readonly (string | undefined)[] = [
             'UPDATE_AVATAR',
             'RENAME',
             'ADD_MEMBERS',
@@ -42,9 +41,8 @@ export default class GroupDetail extends React.Component<GroupDetailProps> {
             'CLOSE_GROUP',
             'DELETE',
             'EXIT_GROUP',
-          ].includes(type)
-        )
-          return;
+          ];
+        if (!acceptedTypes.includes(type)) return;
 
         let newInfo: AddressBookGroupPatch = {};
 

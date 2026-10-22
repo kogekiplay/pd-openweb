@@ -519,7 +519,7 @@ export const cardDisposeName = card => {
  * 链接转化,将字符串中的链接转化为成a 标签
  * @param {*} str
  */
-export const toLink = str => {
+export const toLink = (str: string): string => {
   // url前面加一个空格
   // str = str.replace(/(http|https|ftp):\/\//ig, ' $1://');
   const urlReg = /((http|https|ftp):\/\/|w{1,3}\.)[^\s|<|\u4E00-\u9FA5]+/gi;
@@ -539,7 +539,7 @@ export const toLink = str => {
  * 标签转化
  * @param {*} msg
  */
-export const tagConvert = msg => {
+export const tagConvert = (msg: string): string => {
   return msg.replace(/</g, '&lt').replace(/>/g, '&gt;');
 };
 
@@ -837,6 +837,6 @@ export const getToolbarConfig = () => {
   };
 };
 
-export const convertGroupAbout = value => {
+export const convertGroupAbout = (value: string | undefined): string => {
   return value ? toLink(tagConvert(value)).replace(/\r\n|\n/gi, '<br/>') : _l('暂无群公告');
 };

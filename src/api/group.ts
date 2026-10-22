@@ -1,3 +1,13 @@
+import type { GroupAboutEndpoint, GroupAboutParams, GroupToPostEndpoint, GroupToPostParams } from './groupTypes';
+
+const updateGroupAbout: GroupAboutEndpoint = function (args: GroupAboutParams, options: ApiOptions = {}) {
+  return mdyAPI('Group', 'UpdateGroupAbout', args, options);
+};
+
+const updateGroupToPost: GroupToPostEndpoint = function (args: GroupToPostParams, options: ApiOptions = {}) {
+  return mdyAPI('Group', 'UpdateGroupToPost', args, options);
+};
+
 export default {
   /**
    * 群组通用邀请，搜索
@@ -300,9 +310,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateGroupAbout: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Group', 'UpdateGroupAbout', args, options);
-  },
+  updateGroupAbout,
   /**
    * 修改群审批
    * @param {Object} args 请求参数
@@ -336,9 +344,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  updateGroupToPost: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('Group', 'UpdateGroupToPost', args, options);
-  },
+  updateGroupToPost,
   /**
    * 修改官方群
    * @param {Object} args 请求参数

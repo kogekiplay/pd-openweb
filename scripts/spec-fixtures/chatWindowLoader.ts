@@ -13,7 +13,7 @@ interface Subject {
 }
 type Constructor = new (props: Data) => Subject;
 interface Call { controller: string; action: string; args: Data; options: Data; }
-function makeFixture(options: { uiLeaves?: readonly string[] } = {}) {
+function makeFixture(options: { uiLeaves?: readonly string[]; moduleOverride?: (file: string, request: string) => unknown } = {}) {
   const leaves = new Map<string, unknown>();
   const cache = new Map<string, Data>();
   const calls: Call[] = [], trace: string[] = [], dispatched: Data[] = [];
@@ -48,6 +48,8 @@ function makeFixture(options: { uiLeaves?: readonly string[] } = {}) {
     if (!transformed?.code) throw new Error('Missing compiled module ' + file);
     const module = { exports: {} as Data }; cache.set(file, module.exports);
     const localRequire = (name: string): unknown => {
+      const override = options.moduleOverride?.(file, name);
+      if (override !== undefined) return override;
       if (/\.(less|css|html)$/.test(name)) return '';
       if (name === 'src/common/preall') return (Type: unknown) => Type;
       if (name === 'src/socket') return { socketInit: () => { trace.push('socketInit'); } };

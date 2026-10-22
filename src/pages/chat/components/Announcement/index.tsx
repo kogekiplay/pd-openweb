@@ -4,10 +4,22 @@ import cx from 'classnames';
 import Textarea from 'ming-ui/components/Textarea';
 import GroupController from 'src/api/group';
 import * as utils from '../../utils';
+import type { ChatSession } from '../../redux/types';
 import './index.less';
 
-export default class Announcement extends Component<any, any> {
-  constructor(props) {
+export interface AnnouncementProps {
+  session: ChatSession;
+  /** 保存成功后把新公告回传父级（同步会话信息）；文本框值恒为 string */
+  updateGroupAbout: (about: string) => void;
+}
+
+export interface AnnouncementState {
+  value: ChatSession['about'];
+  compile: boolean;
+}
+
+export default class Announcement extends Component<AnnouncementProps, AnnouncementState> {
+  constructor(props: AnnouncementProps) {
     super(props);
     const { about } = this.props.session;
     this.state = {
@@ -16,7 +28,7 @@ export default class Announcement extends Component<any, any> {
     };
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: AnnouncementProps) {
     if (!shallowEqual(prevProps, this.props)) {
       const { session } = this.props;
 
@@ -27,7 +39,7 @@ export default class Announcement extends Component<any, any> {
       }
     }
   }
-  handleChange(value) {
+  handleChange(value: string) {
     this.setState({
       value,
     });
@@ -37,7 +49,7 @@ export default class Announcement extends Component<any, any> {
       compile: true,
     });
   }
-  handleBlur(event) {
+  handleBlur(event: { target: { value: string } }) {
     const { groupId } = this.props.session;
     const { value } = event.target;
     GroupController.updateGroupAbout({

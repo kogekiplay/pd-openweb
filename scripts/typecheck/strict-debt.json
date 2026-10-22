@@ -1474,8 +1474,6 @@
     "src/pages/certification/components/SelectCertification.tsx",
     "src/pages/certification/index.tsx",
     "src/pages/certification/utils.ts",
-    "src/pages/chat/components/Announcement/index.tsx",
-    "src/pages/chat/components/DiscussionAnnouncement/index.tsx",
     "src/pages/chat/components/Files/Panel.tsx",
     "src/pages/chat/components/Files/index.tsx",
     "src/pages/chat/components/KeyboardShortcuts/index.tsx",

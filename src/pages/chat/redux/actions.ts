@@ -840,7 +840,7 @@ export const removeCurrentInbox = (id: string | undefined) => {
  * @param {*} id
  * @param {*} name
  */
-export const resetGroupName = (groupId: string, name: string) => (dispatch: AppDispatch, getState: GetState) => {
+export const resetGroupName = (groupId: string | undefined, name: string | undefined) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList, sessionList } = getState().chat;
   const newCurrentSessionList = currentSessionList.map(item => {
     if (item.id === groupId) {
@@ -871,7 +871,7 @@ export const resetGroupName = (groupId: string, name: string) => (dispatch: AppD
  * @param {*} id
  * @param {*} name
  */
-export const resetGroupIsPost = (groupId: string | undefined, projectId: string) => (dispatch: AppDispatch, getState: GetState) => {
+export const resetGroupIsPost = (groupId: string | undefined, projectId: string | undefined) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList, sessionList } = getState().chat;
   const newCurrentSessionList = currentSessionList.map(item => {
     if (item.id === groupId) {
@@ -904,7 +904,7 @@ export const resetGroupIsPost = (groupId: string | undefined, projectId: string)
  * @param {*} groupId
  * @param {*} name
  */
-export const updateGroupAvatar = (groupId: string, avatar: string) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateGroupAvatar = (groupId: string | undefined, avatar: string | undefined) => (dispatch: AppDispatch, getState: GetState) => {
   const { sessionList } = getState().chat;
   const newSessionList = sessionList.map(item => {
     if (item.value === groupId) {
@@ -924,7 +924,7 @@ export const updateGroupAvatar = (groupId: string, avatar: string) => (dispatch:
  * @param {*} groupId
  * @param {*} about
  */
-export const updateGroupAbout = (groupId: string | undefined, about: string) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateGroupAbout = (groupId: string | undefined, about: string | undefined) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList } = getState().chat;
   const newCurrentSessionList = currentSessionList.map(item => {
     if (item.id === groupId) {
@@ -945,7 +945,7 @@ export const updateGroupAbout = (groupId: string | undefined, about: string) => 
  * @param {*} isPushNotice
  */
 export const updateGroupPushNotice =
-  (groupId: string | undefined, isPushNotice: boolean) => (dispatch: AppDispatch, getState: GetState) => {
+  (groupId: string | undefined, isPushNotice: boolean | undefined) => (dispatch: AppDispatch, getState: GetState) => {
     const { currentSessionList, sessionList } = getState().chat;
     const newCurrentSessionList = currentSessionList.map(item => {
       if (item.id === groupId) {
@@ -998,7 +998,7 @@ export const updateForbIdInvite =
  * @param {*} groupId
  * @param {*} isVerified
  */
-export const updateVerify = (groupId: string, isVerified: boolean) => (dispatch: AppDispatch, getState: GetState) => {
+export const updateVerify = (groupId: string | undefined, isVerified: boolean | undefined) => (dispatch: AppDispatch, getState: GetState) => {
   const { currentSessionList } = getState().chat;
   const newCurrentSessionList = currentSessionList.map(item => {
     if (item.id === groupId) {
