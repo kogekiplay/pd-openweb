@@ -347,7 +347,10 @@ export function SelectGroupTrigger(props) {
   }, [value]);
 
   const getGroupInfo = (groupId: string) => {
-    groupAjax.getGroupInfo({ groupId }).then(res => setValue([{ id: groupId, value: res.name }]));
+    groupAjax.getGroupInfo({ groupId }).then(res => {
+      if (res === null || res === undefined) return;
+      return setValue([{ id: groupId, value: res.name }]);
+    });
   };
 
   const onChange = (selected, item) => {
