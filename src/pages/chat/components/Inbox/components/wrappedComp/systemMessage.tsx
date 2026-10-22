@@ -125,7 +125,7 @@ export default class SystemMessage extends PureComponent<SystemMessageProps, Sys
           evt.stopPropagation();
           const { type, gid } = getRequest(href.slice(href.indexOf('?')));
 
-          if (type === 'group' && gid) {
+          if (type === 'group' && typeof gid === 'string' && gid) {
             import('src/pages/Group/settingGroup').then(func => {
               func.default({
                 groupID: gid,
