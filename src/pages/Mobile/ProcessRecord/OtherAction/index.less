@@ -1,17 +1,30 @@
 .otherActionModal {
+  --other-action-bottom-inset: max(16px, env(safe-area-inset-bottom, 0px));
   max-height: 95%;
   overflow-y: auto;
   width: 100%;
   background: var(--color-background-primary);
+  &.mobileModal .adm-popup-body-position-bottom {
+    box-sizing: border-box;
+    max-height: 95vh;
+    max-height: 95dvh;
+    padding-bottom: var(--other-action-bottom-inset) !important;
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+  }
   &.backFlowNodeModal .adm-popup-body {
     border-radius: 12px 12px 0 0;
   }
 }
 .otherActionWrapper {
-  max-height: 100vh;
-  min-height: 200px;
+  max-height: calc(95vh - var(--other-action-bottom-inset));
+  max-height: calc(95dvh - var(--other-action-bottom-inset));
+  min-height: min(200px, calc(95vh - var(--other-action-bottom-inset)));
+  min-height: min(200px, calc(95dvh - var(--other-action-bottom-inset)));
   .otherActionContent {
+    min-height: 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
   }
   .am-textarea-item,
   .itemWrap {
@@ -63,6 +76,7 @@
   }
   .actionBtnWrapper {
     height: 50px;
+    flex-shrink: 0;
     align-items: center;
   }
   .actionBtn {
