@@ -11,3 +11,7 @@
 本批完整证据目录 `/Users/kogeki/dev/HAP-工作记录/20261023-pagination-edges`，以最终完整源码SHA、tracked输入摘要和实际raw strict逐(file,code)、普通pre-push/release、assets/publish/freeze退出记录为准；不预先宣称门禁或生产部署通过。规格30秒/并发4及断言/隔离/配置不变，baseline和strict-debt不放宽。
 
 基线511b2785482c718843b93c274fcdc74d85d182bd为打印发布文档HEAD，实际现网仍e44248f83f819e933e2528859cf16db781b585e9。本批不混入主树11项Retry或隔离Map候选，全部原dirty与dnd摘要保护。产品变化后重新正式构建并冻结本批候选；生产发布需另核真实前置状态、空间和完整回滚材料，旧包不冒充新源码，未部署不称上线。全仓strict与持续总目标保持active。
+
+## 生产发布补记
+
+用户明确授权“现在部署”后，2026-10-23T13:16:13.865525+08:00已部署本候选a855ccf40b2d222b61a6caddfdd00c1c7acbd73f。完整live/quick、公网资源、浏览器按钮/跳页及边界验收通过；发布详情见production-pagination-20261023.md。最新main另有Retry/Map3129候选未部署，产物版本不重标。
