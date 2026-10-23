@@ -1,39 +1,62 @@
 import { Component } from 'react';
+import type { ChatMessage } from '../../../redux/types';
 import LoadDiv from 'ming-ui/components/LoadDiv';
 import './index.less';
 
 export interface MessageRetryState {
-  status: string | false;
+  status: 'loading' | 'error' | false;
 }
 
-export default class MessageRetry extends Component<any, MessageRetryState> {
+export interface MessageRetryProps {
+  message: ChatMessage;
+  onRetry: () => void | Promise<void>;
+}
+export default class MessageRetry extends Component<MessageRetryProps, MessageRetryState> {
+  private mounted = false;
+  private retryVersion = 0;
   declare loadingTime: NodeJS.Timeout | undefined;
   declare errorTime: NodeJS.Timeout | undefined;
   declare retry: HTMLDivElement | null | undefined;
 
-  constructor(props) {
+  constructor(props: MessageRetryProps) {
     super(props);
     this.state = {
       status: false, // 'loading' & 'error'
     };
   }
   override componentDidMount() {
+    this.mounted = true;
     this.setStatus();
   }
+  override componentDidUpdate(previous: MessageRetryProps) {
+    if (previous.message.waitingId !== this.props.message.waitingId) {
+      this.retryVersion += 1;
+      this.setState({ status: false });
+      this.setStatus();
+    }
+  }
   override componentWillUnmount() {
+    this.mounted = false;
+    this.retryVersion += 1;
+    this.clearStatusTimers();
+  }
+  clearStatusTimers() {
     this.loadingTime && clearTimeout(this.loadingTime);
     this.errorTime && clearTimeout(this.errorTime);
   }
   setStatus() {
+    this.clearStatusTimers();
     const { message } = this.props;
 
     if (message.waitingId) {
       this.loadingTime = setTimeout(() => {
+        if (!this.mounted) return;
         this.setState({
           status: 'loading',
         });
       }, 200);
       this.errorTime = setTimeout(() => {
+        if (!this.mounted) return;
         const { status } = this.state;
 
         if (status === 'loading') {
@@ -46,7 +69,15 @@ export default class MessageRetry extends Component<any, MessageRetryState> {
   }
   handleRetry() {
     this.setStatus();
-    this.props.onRetry();
+    const version = ++this.retryVersion;
+    const request = this.props.onRetry();
+    if (request) {
+      request.catch(() => {
+        if (!this.mounted || version !== this.retryVersion) return;
+        this.clearStatusTimers();
+        this.setState({ status: 'error' });
+      });
+    }
   }
   override render() {
     const { status } = this.state;

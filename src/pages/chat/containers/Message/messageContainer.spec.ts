@@ -15,6 +15,7 @@ import type { SpecHarness } from '../../../../../scripts/spec-harness';
 
 const assert: typeof import('node:assert/strict') = require('node:assert/strict');
 const harness: SpecHarness = require('../../../../../scripts/spec-harness.ts');
+const { present } = require('../../utils/present.ts') as typeof import('../../utils/present');
 
 interface BabelNode {
   type: string;
@@ -51,6 +52,7 @@ function extract(): (
   mdStub: { global: { Account: { accountId: string } } },
   utilsStub: { highlightReferMessage: (id: string) => void },
   constantStub: { SESSIONTYPE_GROUP: number; SESSIONTYPE_USER: number },
+  presence: typeof present,
 ) => (props: Record<string, unknown>, dispatch: (action: unknown) => void) => Record<string, (...args: unknown[]) => unknown> {
   const source = harness.readSource(TARGET);
   const ast = harness.parser.parse(source, { sourceType: 'module', plugins: ['jsx'] }) as unknown as {
@@ -94,6 +96,7 @@ function extract(): (
     'md',
     'utils',
     'Constant',
+    'present',
     `${code}\nreturn (props, dispatch) => new __cls(props, dispatch);`,
   ) as (
     socketStub: SocketStub,
@@ -101,6 +104,7 @@ function extract(): (
     mdStub: { global: { Account: { accountId: string } } },
     utilsStub: { highlightReferMessage: (id: string) => void },
     constantStub: { SESSIONTYPE_GROUP: number; SESSIONTYPE_USER: number },
+    presence: typeof present,
   ) => (props: Record<string, unknown>, dispatch: (action: unknown) => void) => Record<string, (...args: unknown[]) => unknown>;
 }
 
@@ -142,10 +146,11 @@ function buildInstance(
       },
       sendShake: (type: number, param: Record<string, unknown>) => {
         env.socket.shakeCalls.push({ type, param });
+        return Promise.resolve(undefined);
       },
     },
   };
-  const factory = env.create(socketStub as unknown as SocketStub, env.actions, env.md, { highlightReferMessage: () => {} }, { SESSIONTYPE_GROUP: 1, SESSIONTYPE_USER: 2 });
+  const factory = env.create(socketStub as unknown as SocketStub, env.actions, env.md, { highlightReferMessage: () => {} }, { SESSIONTYPE_GROUP: 1, SESSIONTYPE_USER: 2 }, present);
   return factory(props, (action) => {
     const typed = action as { type: string; args?: unknown[] } | undefined;
     env.dispatched.push({ action: typed?.type ?? 'unknown', args: typed?.args ?? [] });
@@ -206,7 +211,11 @@ check('handleRetry：重发草稿并派发 updateMessage（含 to/引用/视频�
   await new Promise((resolve) => setTimeout(resolve, 0));
   assert.deepEqual(env.socket.sendCalls.length, 1);
   assert.equal(env.socket.sendCalls[0]!.type, 1, '群聊 type');
-  assert.equal(env.socket.sendCalls[0]!.param, sendMsg, '原草稿对象透传');
+  assert.notEqual(env.socket.sendCalls[0]!.param, sendMsg, '传输副本保护原草稿');
+  assert.deepEqual(env.socket.sendCalls[0]!.param, sendMsg, '副本内容一致');
+  assert.deepEqual(sendMsg, { waitingid: 'w1', referMessage: { msg: '引用' }, video: { url: 'v' } }, '原草稿保持不变');
+  assert.equal(env.socket.sendCalls[0]!.param['referMessage'], sendMsg.referMessage, '嵌套引用保持');
+  assert.equal(env.socket.sendCalls[0]!.param['video'], sendMsg.video, '视频引用保持');
   const actions = env.dispatched.map((item) => item.action);
   assert.deepEqual(actions, ['updateMessage']);
   const payload = env.dispatched[0]!.args[0] as Record<string, unknown>;

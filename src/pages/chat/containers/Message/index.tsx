@@ -23,10 +23,11 @@ import * as socket from '../../utils/socket';
 import type {
   ChatMessage,
   ChatMessagesState,
-  ChatOutboundDraft,
   ChatSession,
 } from '../../redux/types';
 import type { ChatWithdrawPayload } from '../../utils/socket';
+import { present } from '../../utils/present';
+import { sessionPropertyKey } from '../../utils/sessionPropertyKey';
 import './index.less';
 
 export interface MessageContainerProps {
@@ -106,29 +107,30 @@ class Message extends Component<MessageContainerProps, MessageContainerState> {
     this.props.dispatch(actions.setReferMessage(currentSession.value, message));
     utils.highlightReferMessage(currentSession.value);
   }
-  handleRetry() {
+  handleRetry(): Promise<void> {
     const { message, session } = this.props;
     const messageType = session.isGroup ? Constant.SESSIONTYPE_GROUP : Constant.SESSIONTYPE_USER;
     const { sendMsg } = message;
-    // 擦除标记：重发只发生在有出站草稿的预发送消息上（原 any 直接传）。
-    socket.Message.send(messageType, sendMsg as ChatOutboundDraft).then(result => {
-      const { atParam } = sendMsg as ChatOutboundDraft;
+    const draft = present(sendMsg, 'atParam');
+    // The socket strips atParam from its transport object. Keep the stored draft intact for subsequent retries.
+    const { atParam } = draft;
+    return socket.Message.send(messageType, Object.assign({}, draft)).then(result => {
       this.props.dispatch(
         actions.updateMessage({
-          to: session.id as string,
-          referMessage: (sendMsg as ChatOutboundDraft).referMessage,
-          video: (sendMsg as ChatOutboundDraft & { video?: unknown }).video,
-          // 服务器原始 ack 按原顺序展开（缺 to 保留注入值；自有 to 覆盖，含显式 undefined）。
+          to: session.id,
+          referMessage: draft.referMessage,
+          video: draft.video,
+          // Raw own ack fields still overwrite defaults, including explicit undefined and getters.
           ...result,
         }),
       );
-      // 包含 at 消息
       if (atParam) {
-        socket.Message.sendShake(Constant.SESSIONTYPE_GROUP, {
+        return socket.Message.sendShake(Constant.SESSIONTYPE_GROUP, {
           ...atParam,
           messageId: result.id,
-        });
+        }).then(() => {});
       }
+      return undefined;
     });
   }
   renderMessageContent() {
@@ -142,7 +144,7 @@ class Message extends Component<MessageContainerProps, MessageContainerState> {
           <ImageMessage
             message={message}
             session={session}
-            messageLength={_.get(messages[session.id as string], 'length')}
+            messageLength={_.get(messages[sessionPropertyKey(session.id)], 'length')}
           />
         );
       case Constant.MSGTYPE_FILE:

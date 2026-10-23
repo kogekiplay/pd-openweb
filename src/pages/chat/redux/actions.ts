@@ -1263,36 +1263,34 @@ export const removeMessages = (id: string | undefined) => {
 export const updateMessage = (message: ChatMessageReceiptWire) => (dispatch: AppDispatch, getState: GetState) => {
   const { messages } = getState().chat;
   const { to, waitingid, socket } = message;
-  // 擦除标记：`to` 类型上可为 undefined（原始 ack 显式覆盖）；原实现直接 `messages[to]`，
-  // JS 属性键语义下 undefined 会变成键 "undefined"，这里保留完全相同的索引行为。
-  const currentMessage = messages[to as string] || [];
+  const currentMessage = messages[sessionPropertyKey(to)] || [];
   const newCurrentMessage = currentMessage
-    .filter(item => item)
+    .filter((item): item is ChatMessage => !!item)
     .map(item => {
-      if (item!.waitingId === waitingid) {
+      if (item.waitingId === waitingid) {
         // item 是 chat.messages 里的对象（store 里的）：先拷一份再改，嵌套的 msg 也一样，
         // 否则 dev 下发消息收到回执时会被 RTK 的不可变检查拦下（生产得到的结果值与原先相同）
-        item = { ...item, msg: item!.msg && { ...item!.msg } };
+        item = { ...item, msg: item.msg && { ...item.msg } };
         item.id = message.id;
         // 替换成服务器的时间
-        if (socket && socket!.time) {
-          item.timestamp = utils.formatMsgDate(dateConvertToUserZone(socket!.time));
+        if (socket && socket.time) {
+          item.timestamp = utils.formatMsgDate(dateConvertToUserZone(socket.time));
         }
 
         // 引用消息
         if (item.refer) {
           const { referMessage } = message;
           item.refer = {
-            msgid: referMessage!.id,
-            msg: referMessage!.msg!.con,
-            msgdetail: socket!.refer!.msgdetail,
-            type: referMessage!.type,
-            time: referMessage!.time,
-            iswd: referMessage!.iswd,
+            msgid: present(referMessage, 'id').id,
+            msg: present(present(referMessage, 'msg').msg, 'con').con,
+            msgdetail: present(present(socket, 'refer').refer, 'msgdetail').msgdetail,
+            type: present(referMessage, 'id').type,
+            time: present(referMessage, 'id').time,
+            iswd: present(referMessage, 'id').iswd,
             user: {
-              account_id: referMessage!.fromAccount!.id,
-              full_name: referMessage!.fromAccount!.name,
-              avatar: referMessage!.fromAccount!.logo,
+              account_id: present(present(referMessage, 'fromAccount').fromAccount, 'id').id,
+              full_name: present(present(referMessage, 'fromAccount').fromAccount, 'id').name,
+              avatar: present(present(referMessage, 'fromAccount').fromAccount, 'id').logo,
             },
           };
           // item.refer = message.refer;
@@ -1306,8 +1304,8 @@ export const updateMessage = (message: ChatMessageReceiptWire) => (dispatch: App
         }
 
         // 图片消息，替换 url
-        if (socket && socket!.msg!.files) {
-          item.msg!.files = socket!.msg!.files;
+        if (socket && present(socket.msg, 'files').files) {
+          present(item.msg, 'files').files = present(socket.msg, 'files').files;
         }
       }
 

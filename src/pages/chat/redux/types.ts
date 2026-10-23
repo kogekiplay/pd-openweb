@@ -296,15 +296,10 @@ export interface ChatOutboundDraft {
    */
   refer?: { msgid?: string | number | undefined; [key: string]: unknown } | undefined;
   /* ── 以下为 `addMessage` **实际读取**的出站字段（逐处取证） ── */
-  /** 引用消息的完整对象：读 `referMessage.msg.con` / `.type` / `.fromAccount.name` */
-  referMessage?:
-    | {
-        msg?: { con?: string | undefined; [key: string]: unknown } | undefined;
-        type?: number | undefined;
-        fromAccount?: { name?: string | undefined; [key: string]: unknown } | undefined;
-        [key: string]: unknown;
-      }
-    | undefined;
+  /** The same raw reference metadata is consumed by addMessage and receipt normalization. */
+  referMessage?: ChatMessageReceiptWire['referMessage'];
+  /** Retry forwards this extension unchanged before raw ack spread; no shape is interpreted here. */
+  video?: unknown;
   /** 卡片消息体：`message.card = newMessage.card` */
   card?: ChatMessage['card'];
   /** 图片/文件附件：`newMessage.file.url` 会被赋值、`message.msg.files = newMessage.file` */
