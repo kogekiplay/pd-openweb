@@ -8,4 +8,4 @@
 
 printCacheCompatibility.spec.ts执行五个实际生产函数/批量菜单handler、真实webCache API薄封装及打印页实际getParamFn；仅网络/window/UI依赖受控。验证后端键格式、独立键、payload/rowIds、URL中的同一键、命名空间读取后推进getWorksheet，以及缓存写失败不导航。旧版本和旧读取分别运行并保留真实失败。未用生产记录触发打印或增加打印次数，不能把隔离规格称为实际打印机验收。
 
-正式门禁、固定最终源码SHA/raw strict逐tuple、main同步、构建候选清单、部署前置/后置、可回滚切换和公网校验证据均保存在本批工作目录，各阶段以实际退出码和终态记录为准。本文不预先宣称已部署。总目标保持active。
+正式门禁、固定最终源码SHA/raw strict逐tuple、main同步、构建候选清单、部署前置/后置、可回滚切换和公网校验证据均保存在本批工作目录，各阶段以实际退出码和终态记录为准。上海时间2026-10-23T10:59:42.738938+08:00已部署e44248f83f819e933e2528859cf16db781b585e9，live/quick完整清单和公网资源核验通过，完整记录见production-print-cache-20261023.md。总目标保持active。
