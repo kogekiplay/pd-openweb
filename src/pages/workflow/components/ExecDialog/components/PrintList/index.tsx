@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from 'react';
 import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
 import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 import { Icon, MenuItem } from 'ming-ui';
 import webCacheAjax from 'src/api/webCache';
 import sheetAjax from 'src/api/worksheet';
@@ -88,7 +89,7 @@ const templatePrint = async (props, item) => {
     allowDownloadPermission: parseInt(entityName),
     allowEditAfterPrint: allowEditAfterPrint,
   };
-  const printKey = Math.random().toString(36).substring(2);
+  const printKey = uuidv4();
 
   try {
     await webCacheAjax.add({

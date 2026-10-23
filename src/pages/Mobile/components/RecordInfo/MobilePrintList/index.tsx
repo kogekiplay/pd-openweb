@@ -2,6 +2,7 @@ import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 import { Icon, PopupWrapper } from 'ming-ui';
 import webCacheAjax from 'src/api/webCache';
 import worksheetAjax from 'src/api/worksheet';
@@ -53,7 +54,7 @@ const MAX_SYSTEM_PRINT_COUNT = 50;
 const noop = () => {};
 
 const createPrintKey = async printData => {
-  const printKey = Math.random().toString(36).substring(2);
+  const printKey = uuidv4();
 
   await webCacheAjax.add({
     key: `${printKey}`,

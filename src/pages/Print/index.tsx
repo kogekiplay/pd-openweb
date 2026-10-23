@@ -155,7 +155,7 @@ class PrintForm extends React.Component<any, any> {
       const { params = {} } = this.state;
       const { key } = params;
 
-      webCacheAjax.get({ key }).then(res => {
+      webCacheAjax.get({ key, moduleType: 1 }).then(res => {
         if (res.data) {
           const data = safeParse(res.data) || {};
           const { appDetail, worksheetInfo, shareShortUrls, shareUrl, ...cacheParams } = data;

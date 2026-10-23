@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import _, { noop } from 'lodash';
 import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 import { Icon, LoadDiv, Menu, MenuItem } from 'ming-ui';
 import webCacheAjax from 'src/api/webCache';
 import worksheetAjax from 'src/api/worksheet';
@@ -392,7 +393,7 @@ export default function PrintList(props) {
                   allowDownloadPermission: template.allowDownloadPermission,
                   allowEditAfterPrint: template.allowEditAfterPrint,
                 };
-                let printKey = Math.random().toString(36).substring(2);
+                let printKey = uuidv4();
 
                 try {
                   await webCacheAjax.add({

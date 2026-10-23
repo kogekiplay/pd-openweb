@@ -5,6 +5,7 @@ import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 import { Icon, MenuItem } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import webCacheAjax from 'src/api/webCache';
@@ -116,7 +117,7 @@ export async function handleSystemPrintRecord({
     shareUrl,
     printer: md.global.Account.fullname,
   };
-  let printKey = Math.random().toString(36).substring(2);
+  let printKey = uuidv4();
 
   try {
     await webCacheAjax.add({
@@ -236,7 +237,7 @@ export async function handleTemplateRecordPrint({
       worksheetInfo,
       printer: md.global.Account.fullname,
     };
-    let printKey = Math.random().toString(36).substring(2);
+    let printKey = uuidv4();
 
     try {
       await webCacheAjax.add({
