@@ -13,7 +13,7 @@ interface Subject {
 }
 type Constructor = new (props: Data) => Subject;
 interface Call { controller: string; action: string; args: Data; options: Data; }
-function makeFixture(options: { uiLeaves?: readonly string[]; realGroupHelpers?: boolean; moduleOverride?: (file: string, request: string) => unknown; sdkOverride?: (call: Call) => { value: unknown } | undefined } = {}) {
+function makeFixture(options: { uiLeaves?: readonly string[]; realGroupHelpers?: boolean; dynamicImports?: boolean; moduleOverride?: (file: string, request: string) => unknown; sdkOverride?: (call: Call) => { value: unknown } | undefined } = {}) {
   const leaves = new Map<string, unknown>();
   const cache = new Map<string, Data>();
   const calls: Call[] = [], trace: string[] = [], dispatched: Data[] = [];
@@ -46,7 +46,7 @@ function makeFixture(options: { uiLeaves?: readonly string[]; realGroupHelpers?:
   };
   function load(file: string): Data {
     if (cache.has(file)) return cache.get(file)!;
-    const transformed = harness.transformFileSync(path.join(harness.ROOT, file));
+    const transformed = harness.transformFileSync(path.join(harness.ROOT, file), options.dynamicImports ? { plugins: ['@babel/plugin-transform-modules-commonjs', '@babel/plugin-transform-dynamic-import'] } : undefined);
     if (!transformed?.code) throw new Error('Missing compiled module ' + file);
     const module = { exports: {} as Data }; cache.set(file, module.exports);
     const localRequire = (name: string): unknown => {

@@ -1,5 +1,9 @@
 import c2c from 'copy-to-clipboard';
 
+type LibraryCopyOptions = NonNullable<Parameters<typeof c2c>[1]>;
+/** Own undefined values still override the wrapper defaults; keep their distinction from missing keys. */
+export type CopyOptions = { [K in keyof LibraryCopyOptions]?: LibraryCopyOptions[K] | undefined };
+
 /**
  * copy-to-clipboard 的包装层，唯一作用是把 v4 默认关掉的 window.prompt 兜底打开。
  *
@@ -13,9 +17,12 @@ import c2c from 'copy-to-clipboard';
  * 另外两个实测结论，说明为什么这里不需要额外处理：
  *   - v4 返回 Promise（v3 返回布尔），但 100 处调用没有一处用返回值，所以无影响；
  *     这里原样返回，方便将来有人需要 await。
- *   - 该 Promise **永远 resolve、不会 reject**（成功 true / 失败 false），
- *     所以不存在「100 处都没 catch 导致 unhandledRejection」的风险。
+ *   - 常见复制失败走原有 fallback 并 resolve false；宿主 prompt 自身抛错时，
+ *     原 Promise 仍会 reject，包装层不吞掉该异常。
  */
-export default function copy(text: string, options: Parameters<typeof c2c>[1] = {}) {
-  return c2c(text, { fallbackToPrompt: true, ...options });
+export default function copy(text: unknown, options: CopyOptions = {}) {
+  // Model the actual foreign ABI without eager String() or changing the asynchronous failure path.
+  const rawClipboard: { copy(text: unknown, options?: CopyOptions): ReturnType<typeof c2c> } = { copy: c2c };
+  const invoke = rawClipboard.copy;
+  return invoke(text, { fallbackToPrompt: true, ...options });
 }

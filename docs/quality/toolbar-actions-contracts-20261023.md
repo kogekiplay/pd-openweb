@@ -1,0 +1,17 @@
+# MessageToolbar 动作及真实回调合同（2026-10-23）
+
+基线c45580022ccb51c912ffcf49db57f6a8d78e871d。沿真实Message父级→Toolbar→分享/复制/@TA入口，以及引用/撤回→实际socket adapter/actions/reducer，闭合工具栏剩余29条诊断。父级props/callbacks复用ChatMessage/ChatSession；isDuplicated如实允许undefined，不再双跳断言成boolean。工具栏初始化空state，满足React元素的实际对象状态契约，不新增业务状态字段；配置/按钮键有限，无Component<any>或宽索引。
+
+公开分享输入从既有有限配置字段派生，允许普通附件真实数字id、显式undefined及不解释的原节点；返回值为opaque unknown UI句柄，不把旧内部dialog状态宣称为已验证DTO。构造器运行体及MentionsInput运行体整模块Babel相同，FolderShare真实生产点的宽params声明改为同一公开输入，不改值/顺序。普通/知识来源共用派生的有限消费视图，原node引用、元数据、字段插入顺序、previewUrl和viewUrl区别保持；不复制第二份业务Node，不提前String化、不兜造URL。保留既有知识ext裸值/带点值的不同分支，不静默规范化它们。私有分享UI其它状态和方法仍属存量债务，不称整个共享组件已严格化。
+
+URI编码和split原生调用保留undefined、getter receiver与原生失败。存储路径保持原加法：两项均undefined为NaN，有一项为文本时按原表达式拼接，不把NaN改成“undefinedundefined”。present仅检查已声明值的非nullish存在性，未知输入仍返回unknown，不能当DTO验证；缺项仍由原生操作抛TypeError类别，非空路径不新增字段读取/克隆，自定义getter异常保持同一对象。原生错误文案/栈不作为不变保证。
+
+复制包装层按实际安装的copy-to-clipboard代码建模：原值交异步clipboard/DOM/prompt宿主，返回原Promise<boolean>；配置的自有undefined仍覆盖默认值，与缺键区分。保留callee无绑定调用、参数读取顺序及fallback覆盖，未提前调用String。修正旧“永远resolve”注释：宿主prompt抛错仍可使原Promise拒绝，不吞异常。未操作真实系统剪贴板。
+
+MentionsInput外部插入协议与实际安装函数共享有限MentionInsertion，支持单个/数组。工具栏移除不实DOM断言：缺元素/尚未增强时安全结束，缺发送者不制造@对象；已存在getter/方法保持原receiver，自定义异常及非函数方法的原生TypeError保留。实际Message父级引用和撤回保留可缺原始id与action自有undefined，只在字典索引处用既有sessionPropertyKey复现原生键语义。移除to/value及SET_MESSAGE索引的不实string断言。撤回跳过类型合同已允许的显式undefined消息行，不压缩原数组、不跨空行推导下一条；其它缺body/非法底部列表的原生失败保持。
+
+固定证据：/Users/kogeki/dev/HAP-工作记录/20261023-toolbar-actions-contracts。正常基线/候选各完整10项，含真实父级/回调、真实socket adapter、Redux同引用、真实分享工厂/构造器、实际剪贴板库、提及receiver、原生加法及撤回重复getter/LHS-RHS赋值顺序和部分失败。UI弹窗bootstrap、DOM、socket/clipboard宿主受控，无真实分享/会话/权限/业务/网络写入。3类旧失败均实际退出1，修正3项通过；测试工厂/动态import与模板路由/不可变props问题的原日志保留，没有削弱原断言。规格保持main完成后退出，不改30秒或并发4。
+
+8完整产品模块Babel字节相同；Toolbar精确6成员、撤回action1函数、reducer3函数、复制包装1函数及3个有限原生操作模块逐一读完整差异，其余语句/成员AST同。公开正负/非any探针自身0；协作固定495ccba47f7e61435b8b27b0f8314cb1eea4e861的4个实际导出约束失败TS2344，按路径/最后提交/摘要记录，不等于整笔审查或接收。未采用源宽索引/不实断言，本批无新增源路径/提交接收。
+
+初次候选的React state/FolderShare配置及clipboard ABI新增错误均拦下并修正，保留失败。当前隔离全仓raw49033→48987，Chat299→270，逐(文件,错误码)无新增，工具栏29→0；strict-debt只精确移除该已清零文件。最终源码SHA、完整输入摘要、清洁提交直接strict、普通pre-push、正式release和完整冻结候选/回滚材料绑定于本目录最终回执。未部署包不称上线；其它全仓合同及正式strict仍未完成，总目标active。

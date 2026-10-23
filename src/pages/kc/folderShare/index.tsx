@@ -1,3 +1,4 @@
+import type { ShareAttachmentInput } from 'src/components/shareAttachment/shareAttachment';
 import { renderToString } from 'react-dom/server';
 import doT from 'dot';
 import _ from 'lodash';
@@ -252,7 +253,7 @@ const shareFolderMethods = defineMethods<ShareFolderFields>()({
 
         var attachment = SF.rootNode;
         import('src/components/shareAttachment/shareAttachment').then(share => {
-          var params: Record<string, any> = {
+          var params: ShareAttachmentInput = {
             attachmentType: 2,
             isKcFolder: true,
           };

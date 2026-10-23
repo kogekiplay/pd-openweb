@@ -1,4 +1,5 @@
 import { sessionPropertyKey } from '../utils/sessionPropertyKey';
+import { present } from '../utils/present';
 import _ from 'lodash';
 import type { AppDispatch, GetState } from 'src/redux/types';
 import type {
@@ -1358,43 +1359,29 @@ export const updateFileMessage = (newMessage: ChatMessage, to: string | undefine
  * 因此这里按**实际读取**建模，不臆造更多字段。
  */
 export const updateWithdrawMessage = (
-  id: string,
+  id: string | undefined,
   newMessage: { id?: string | number | undefined; msg: { con?: string | undefined; [key: string]: unknown } },
 ) => (dispatch: AppDispatch, getState: GetState) => {
   const { messages, referMessage, bottomUnreadMessage } = getState().chat;
   const { id: messageId, msg } = newMessage;
-  const currentMessage = messages[id];
-  const bottomUnread = bottomUnreadMessage[id] || [];
+  const key = sessionPropertyKey(id);
+  const currentMessage = messages[key];
+  const bottomUnread = bottomUnreadMessage[key] || [];
 
   if (!currentMessage) {
     return;
   }
 
   currentMessage.forEach((item, index) => {
-    if (item!.id == messageId) {
-      const nextMessage = currentMessage[index + 1];
-      item!.iswd = true;
-      if (item!.from === md.global.Account.accountId && !item!.msg!.oldCon) {
-        item!.msg!.oldCon = item!.msg!.con;
-      }
-
-      item!.msg!.con = msg.con;
-      if (nextMessage) {
-        nextMessage.isDuplicated = false;
-      }
-    }
-
-    // 引用的消息被撤回了
-    if (item!.refer && item!.refer.msgid == messageId) {
-      item!.refer.iswd = true;
-    }
-  });
-
-  bottomUnread.forEach((item, index) => {
+    if (!item) return;
     if (item.id == messageId) {
-      const nextMessage = bottomUnread[index + 1];
+      const nextMessage = currentMessage[index + 1];
       item.iswd = true;
-      item.msg!.con = msg.con;
+      if (item.from === md.global.Account.accountId && !present(item.msg, 'oldCon').oldCon) {
+        present(item.msg, 'oldCon').oldCon = present(item.msg, 'con').con;
+      }
+
+      present(item.msg, 'con').con = msg.con;
       if (nextMessage) {
         nextMessage.isDuplicated = false;
       }
@@ -1406,7 +1393,23 @@ export const updateWithdrawMessage = (
     }
   });
 
-  if (referMessage[id] && referMessage[id].id == messageId) {
+  bottomUnread.forEach((item, index) => {
+    if (item.id == messageId) {
+      const nextMessage = bottomUnread[index + 1];
+      item.iswd = true;
+      present(item.msg, 'con').con = msg.con;
+      if (nextMessage) {
+        nextMessage.isDuplicated = false;
+      }
+    }
+
+    // 引用的消息被撤回了
+    if (item.refer && item.refer.msgid == messageId) {
+      item.refer.iswd = true;
+    }
+  });
+
+  if (referMessage[key] && referMessage[key].id == messageId) {
     dispatch(removeReferMessage(id));
   }
 
@@ -1835,7 +1838,7 @@ export const newWithdrawGroupMessage = (message: { gid: string; id?: string | nu
  * 【有限声明依据】唯一调用点 `Message` 组件里传的是组件 props 的 `message`，
  * 即当前列表里的一条 `ChatMessage`；与 `ChatAction` 里 `SET_REFER_MESSAGE.message` 同型。
  */
-export const setReferMessage = (id: string, message: ChatMessage) => {
+export const setReferMessage = (id: string | undefined, message: ChatMessage) => {
   return {
     type: 'SET_REFER_MESSAGE',
     id,
@@ -1883,7 +1886,7 @@ export const removeBottomUnreadMessage = (id: string) => {
  * 删除引用消息
  * @param {*} id
  */
-export const removeReferMessage = (id: string) => {
+export const removeReferMessage = (id: string | undefined) => {
   return {
     type: 'REMOVE_REFER_MESSAGE',
     id,

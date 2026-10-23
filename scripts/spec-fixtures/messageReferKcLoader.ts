@@ -6,10 +6,11 @@ type Data=Record<string,unknown>;
 export interface Subject {props:Data;state:Data;render():unknown;renderUserMessage():unknown;renderMessageContent():unknown;handleGotoMessage(value:unknown):void;handlePreview(event:unknown):void;getNodeDetail():void;format(value?:unknown):Data;componentDidMount():void;componentDidUpdate(props:Data):void;componentWillUnmount?():void;handleBeforeUpload?(uploader:unknown):void;handleStopFile?():void;handleMessageFilePreview():void;_isMounted?:boolean;}
 type Constructor=new(props:Data)=>Subject;
 function pending(){let resolve!:(value:unknown)=>void,reject!:(reason:unknown)=>void;const children:Promise<unknown>[]=[],aborted:unknown[]=[];const request=Object.assign(new Promise<unknown>((yes,no)=>{resolve=yes;reject=no;}),{abort(this:unknown){aborted.push(this);}});const then=request.then.bind(request);Object.defineProperty(request,'then',{value:(...args:Parameters<typeof then>)=>{const p=then(...args);children.push(p);void p.catch(()=>{});return p;}});return{request,children,aborted,resolve,reject};}
-function makeMessageChain(){
+function makeMessageChain(options:{dynamicImports?:boolean;moduleOverride?:(file:string,request:string)=>unknown}={}){
  const requests:Array<ReturnType<typeof pending>>=[],previews:unknown[][]=[],patches:Array<{item:Subject;patch:Data}>=[],domCalls:unknown[][]=[];let core:Data={},project:Data={},custom:{value:unknown}|undefined,failure:unknown;
  const common=new Proxy({},{get(_target,key){return Reflect.get(core,key);}}),projectView=new Proxy({},{get(_target,key){return Reflect.get(project,key);}});const Leaf=()=>null,prefix='src/pages/chat/components/Message/';
- const f=makeFixture({uiLeaves:['AudioMessage','CardMessage','WorksheetFileMessage','MapMessage','TextMessage','SystemMessage','MessageRetry'].map(n=>prefix+n),moduleOverride(_file:string,name:string){
+ const f=makeFixture({dynamicImports:options.dynamicImports,uiLeaves:['AudioMessage','CardMessage','WorksheetFileMessage','MapMessage','TextMessage','SystemMessage','MessageRetry'].map(n=>prefix+n),moduleOverride(_file:string,name:string){
+  const override=options.moduleOverride?.(_file,name);if(override!==undefined)return override;
   if(/\.(png|jpe?g|svg|gif|webp)$/.test(name))return name;
   if(name==='src/utils/common')return common;
   if(name==='src/utils/project')return projectView;

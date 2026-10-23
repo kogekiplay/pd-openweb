@@ -1478,7 +1478,6 @@
     "src/pages/chat/components/Message/CardMessage/index.tsx",
     "src/pages/chat/components/Message/MapMessage/index.tsx",
     "src/pages/chat/components/Message/MessageRetry/index.tsx",
-    "src/pages/chat/components/Message/MessageToolbar/index.tsx",
     "src/pages/chat/components/Message/SystemMessage/index.tsx",
     "src/pages/chat/components/Message/TextMessage/index.tsx",
     "src/pages/chat/components/Message/WorksheetFileMessage/index.tsx",

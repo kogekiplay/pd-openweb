@@ -364,6 +364,19 @@ interface ShareAttachmentOptions {
   priviteBucketUrl?: string;
 }
 
+/** The public configuration is assembled incrementally and may carry opaque source nodes.
+ * Internal dialog state/methods remain a separate legacy view; the public factory returns an opaque UI handle. */
+export type ShareAttachmentInput = {
+  [K in keyof ShareAttachmentOptions]?: K extends 'id'
+    ? string | number | undefined
+    : K extends 'node'
+      ? unknown
+      : K extends 'qiniuPath'
+        ? string | number | undefined
+        : ShareAttachmentOptions[K] | undefined;
+} & { attachmentType: number };
+export type ShareAttachmentCallbacks = ShareAttachmentFields['callbacks'];
+
 interface ShareAttachmentFields {
   options: ShareAttachmentOptions;
   callbacks: {
@@ -1601,6 +1614,6 @@ const shareAttachmentMethods = defineMethods<ShareAttachmentFields>()({
 ShareAttachment.prototype = shareAttachmentMethods;
 type ShareAttachmentInstance = ShareAttachmentFields & typeof shareAttachmentMethods;
 
-export default function (options, callbacks?) {
+export default function (options: ShareAttachmentInput, callbacks?: ShareAttachmentCallbacks): unknown {
   return new ShareAttachment(options, callbacks);
 }

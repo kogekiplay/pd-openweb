@@ -100,8 +100,8 @@ export type ChatAction =
   | { type: 'REMOVE_MESSAGES'; id: string | undefined }
   | { type: 'UPDATE_MESSAGE'; result: ChatMessagesState }
   /* ── 引用消息 ── */
-  | { type: 'SET_REFER_MESSAGE'; id: string; message: ChatMessage }
-  | { type: 'REMOVE_REFER_MESSAGE'; id: string }
+  | { type: 'SET_REFER_MESSAGE'; id: string | undefined; message: ChatMessage }
+  | { type: 'REMOVE_REFER_MESSAGE'; id: string | undefined }
   /* ── 定位消息 ── */
   | { type: 'SET_GOTO_MESSAGE'; id: string | undefined; messageId: ChatMessage['id'] }
   | { type: 'REMOVE_GOTO_MESSAGE'; id: string | undefined }
@@ -113,7 +113,7 @@ export type ChatAction =
   // `bottomUnread = (bottomUnreadMessage)[id] || []` 直接作为 `message` 派发（`actions.ts` 的 `addPageMessage`），
   // reducer 也是把整个 `action.message` 存进该键 —— 故这里是 `ChatMessage[]`。
   // （与 SET/ADD 不同：那两者的 `message` 是单条，reducer 会包成 `[message]` / 追加。）
-  | { type: 'UPDATE_BOTTOM_UNREAD_MESSAGE'; id: string; message: ChatMessage[] }
+  | { type: 'UPDATE_BOTTOM_UNREAD_MESSAGE'; id: string | undefined; message: ChatMessage[] }
   /* ── 开关 / socket ── */
   | { type: 'UPDATE_IS_WINDOW'; result: boolean }
   | { type: 'UPDATE_SHOW_ADD_RESSBOOK'; result: boolean }
@@ -224,9 +224,8 @@ const currentInboxList = (state: ChatSession[] = [], action: ChatAction): ChatSe
 const messages = (state: ChatMessagesState = {}, action: ChatAction): ChatMessagesState => {
   switch (action.type) {
     case 'SET_MESSAGE':
-      // 擦除标记：id 类型上可为 undefined（原始 ack 显式/ getter 覆盖；见 ChatAction 注释）。
-      // 原实现直接 `[action.id]`，JS 计算属性键语义下 undefined 会变成键 "undefined"，这里保留同样行为。
-      return Object.assign({}, state, { [action.id as string]: action.result });
+      // Keep the raw optional ID on the action; only the computed map key follows native property-key semantics.
+      return Object.assign({}, state, { [sessionPropertyKey(action.id)]: action.result });
     case 'ADD_MESSAGE':
       // 原实现 `(state[id] || []).concat([result])`：缺键时以空数组起步（**这是原有行为，保留**）
       return Object.assign({}, state, {
@@ -277,10 +276,10 @@ const messages = (state: ChatMessagesState = {}, action: ChatAction): ChatMessag
 const referMessage = (state: ChatReferMessageState = {}, action: ChatAction): ChatReferMessageState => {
   switch (action.type) {
     case 'SET_REFER_MESSAGE':
-      return Object.assign({}, state, { [action.id]: action.message });
+      return Object.assign({}, state, { [sessionPropertyKey(action.id)]: action.message });
     case 'REMOVE_REFER_MESSAGE':
       // 【现有副作用，保留】同 REMOVE_MESSAGES：先 delete 原 state 再复制。
-      delete state[action.id];
+      delete state[sessionPropertyKey(action.id)];
       return Object.assign({}, state);
     default:
       return state;
@@ -349,7 +348,7 @@ const bottomUnreadMessage = (
       delete state[action.id];
       return Object.assign({}, state);
     case 'UPDATE_BOTTOM_UNREAD_MESSAGE':
-      return Object.assign({}, state, { [action.id]: action.message });
+      return Object.assign({}, state, { [sessionPropertyKey(action.id)]: action.message });
     default:
       return state;
   }

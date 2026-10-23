@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
+import type { MentionInsertion } from './insertion';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -44,7 +45,7 @@ export interface MentionsInputElement extends HTMLTextAreaElement {
   restore?: (callback: (restored: any) => void) => void;
   clearStore?: () => void;
   getMentions?: (callback: (...args: any[]) => void) => void;
-  addMention?: (user: any) => void;
+  addMention?: (user: MentionInsertion) => void;
   destroy?: () => void;
   updateValue?: (...args: any[]) => void;
   /** 带 @ 语法标记的原文，与 value（纯文本）并存 */
@@ -245,7 +246,7 @@ const MentionsInput = props => {
       callback && callback(getMentionsCollection());
     };
 
-    input.addMention = user => {
+    input.addMention = (user: MentionInsertion) => {
       mentionState.current.currentType = '@';
       handleAddMention(user);
     };

@@ -14,7 +14,11 @@ import * as ajax from '../../../utils/ajax';
 import Constant from '../../../utils/constant';
 import { hasAttachmentData } from '../attachment';
 import './index.less';
-import type { MentionsInputElement } from 'src/components/MentionsInput';
+import { tryAddMention } from 'src/components/MentionsInput/insertion';
+import type { ShareAttachmentInput } from 'src/components/shareAttachment/shareAttachment';
+import type { MessageShareView } from './attachmentActions';
+import { encodeAttachmentName, storagePath, shareImageSource } from './attachmentActions';
+import { present } from '../../../utils/present';
 
 const confirm = Dialog.confirm;
 
@@ -124,16 +128,39 @@ export const handleMessageFilePreview = function (this: MessageFilePreviewHost) 
     });
 };
 
-export default class MessageToolbar extends Component<any, any> {
-  constructor(props) {
+export interface MessageToolbarProps {
+  message: ChatMessage;
+  session: ChatSession;
+  moreVisible?: boolean | undefined;
+  isDuplicated: boolean | undefined;
+  onAddReferMessage: () => void;
+  onWithdrawMessage: () => void;
+  onSetMessageMoreVisible: (visible: boolean) => void;
+}
+export interface MessageToolbarConfig {
+  reference?: boolean | undefined;
+  download?: boolean | undefined;
+  share?: boolean | undefined;
+  copy?: boolean | undefined;
+  withdraw?: boolean | undefined;
+}
+export interface ToolbarBtnConfig {
+  name: string;
+  icon: string;
+  className?: string | undefined;
+  fn: () => void;
+}
+export default class MessageToolbar extends Component<MessageToolbarProps, {}> {
+  constructor(props: MessageToolbarProps) {
     super(props);
+    this.state = {};
   }
-  getToolbarConfig() {
+  getToolbarConfig(): MessageToolbarConfig {
     const { message, session } = this.props;
     const { isMine, type } = message;
     const { isAdmin } = session;
     const isWithdraw = isMine || isAdmin;
-    let toolbarConfig = {};
+    let toolbarConfig: MessageToolbarConfig = {};
 
     if (type === Constant.MSGTYPE_TEXT) {
       // 文字类型
@@ -145,7 +172,7 @@ export default class MessageToolbar extends Component<any, any> {
     } else if (type === Constant.MSGTYPE_PIC || type === Constant.MSGTYPE_FILE || type === Constant.MSGTYPE_APP_VIDEO) {
       const files = message.msg?.files;
 
-      if (!hasAttachmentData(files)) {
+      if (!files || !hasAttachmentData(files)) {
         return { reference: !!message.msg, withdraw: isWithdraw };
       }
 
@@ -164,7 +191,7 @@ export default class MessageToolbar extends Component<any, any> {
         };
       }
     } else if (type === Constant.MSGTYPE_CARD) {
-      if (message.card.md === 'kcfile') {
+      if (present(message.card, 'md').md === 'kcfile') {
         // 知识卡片
         toolbarConfig = {
           reference: true,
@@ -200,9 +227,9 @@ export default class MessageToolbar extends Component<any, any> {
     } else {
       if (!hasAttachmentData(message.msg?.files)) return;
 
-      const { key, name } = message.msg.files;
+      const { key, name } = present(present(message.msg, 'files').files, 'key');
       downloadUrl =
-        `${md.global.Config.AjaxApiUrl}file/downChatFile?key=` + key + '&attname=' + encodeURIComponent(name);
+        `${md.global.Config.AjaxApiUrl}file/downChatFile?key=` + key + '&attname=' + encodeAttachmentName(name);
     }
 
     if (downloadUrl) {
@@ -218,52 +245,54 @@ export default class MessageToolbar extends Component<any, any> {
     const { kcFile } = message;
 
     let attachmentType = 0;
-    let attachment = null;
+    let attachment: MessageShareView | null | undefined = null;
 
     this.props.onSetMessageMoreVisible(false);
 
     if (message.card) {
       attachmentType = 2;
-      attachment = kcFile;
       if (!kcFile || !kcFile.downloadUrl) {
         alert(_l('您权限不足，无法下载或保存。请联系文件夹管理员或文件上传者'), 3);
         return;
       }
+      attachment = kcFile;
     } else {
       if (!hasAttachmentData(message.msg?.files)) return;
 
-      const { files } = message.msg;
+      const { files: rawFiles } = present(message.msg, 'files');
+      const files = present(rawFiles, 'name');
       attachmentType = 0;
       attachment = {
         name: RegExpValidator.getNameOfFileName(files.name),
         ext: `.${RegExpValidator.getExtOfFileName(files.name)}`,
         size: files.size,
-        path: files.url ? files.url : window.config.FilePath + files.key,
+        path: files.url ? files.url : storagePath(window.config.FilePath, files.key),
         id: files.id,
       };
     }
 
     import('src/components/shareAttachment/shareAttachment').then(share => {
-      const params = {
+      const current = present(attachment, 'ext');
+      const params: ShareAttachmentInput = {
         attachmentType,
       };
-      const isPicture = RegExpValidator.fileIsPicture(attachment.ext);
+      const isPicture = RegExpValidator.fileIsPicture(current.ext);
 
       if (attachmentType == 2) {
-        params.id = attachment.id;
-        params.name = attachment.name;
-        params.ext = '.' + attachment.ext;
-        params.size = attachment.size;
-        params.imgSrc = isPicture ? `${attachment.previewUrl.split('imageView2')[0]}imageView2/2/w/490` : undefined;
-        params.node = attachment;
+        params.id = current.id;
+        params.name = current.name;
+        params.ext = '.' + current.ext;
+        params.size = current.size;
+        params.imgSrc = isPicture ? shareImageSource(current.previewUrl) : undefined;
+        params.node = current;
       } else {
-        params.id = attachment.id;
-        params.name = attachment.name;
-        params.ext = attachment.ext;
-        params.size = attachment.size || 0;
-        params.imgSrc = isPicture ? `${attachment.path.split('imageView2')[0]}imageView2/2/w/490` : undefined;
-        params.qiniuPath = attachment.path;
-        params.node = attachment;
+        params.id = current.id;
+        params.name = current.name;
+        params.ext = current.ext;
+        params.size = current.size || 0;
+        params.imgSrc = isPicture ? shareImageSource(current.path) : undefined;
+        params.qiniuPath = current.path;
+        params.node = current;
       }
 
       share.default(params, {
@@ -308,6 +337,7 @@ export default class MessageToolbar extends Component<any, any> {
   handleAddAtUser = () => {
     const { message, session } = this.props;
     const { fromAccount } = message;
+    if (!fromAccount) return;
     const textarea = $(`#ChatPanel-${session.id}`).find('.ChatPanel-Textarea .Textarea');
     const at = {
       id: fromAccount.id,
@@ -318,16 +348,16 @@ export default class MessageToolbar extends Component<any, any> {
     };
     setTimeout(() => {
       textarea.focus();
-      (textarea.get(0) as MentionsInputElement).addMention(at);
+      tryAddMention(textarea.get(0), at);
     }, 0);
   };
   handleCopyText() {
     const { message } = this.props;
-    copy(message.msg.con);
+    copy(present(message.msg, 'con').con);
     alert(_l('复制成功'));
     this.props.onSetMessageMoreVisible(false);
   }
-  renderBtn(toolbarConfig) {
+  renderBtn(toolbarConfig: ToolbarBtnConfig) {
     return (
       <div className="Message-toolbarItem" onClick={toolbarConfig.fn}>
         <Tooltip title={toolbarConfig.name}>

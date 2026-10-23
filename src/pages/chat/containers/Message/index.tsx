@@ -92,11 +92,10 @@ class Message extends Component<MessageContainerProps, MessageContainerState> {
 
     socket.Message.sendWithdrawMessgae(type, param).then(result => {
       const { socket: newMessage } = result;
-      // 擦除标记：撤回回执的 to 是会话 id（原 any 直接传）。
-      this.props.dispatch(actions.updateWithdrawMessage(to as string, newMessage));
+      this.props.dispatch(actions.updateWithdrawMessage(to, newMessage));
       this.props.dispatch(
         actions.updateSessionList({
-          id: to as string,
+          id: to,
           addMsg: newMessage.msg.con,
         }),
       );
@@ -104,8 +103,7 @@ class Message extends Component<MessageContainerProps, MessageContainerState> {
   }
   handleAddReferMessage() {
     const { currentSession, message } = this.props;
-    // 擦除标记：当前会话必有 value（原 any 直接传）。
-    this.props.dispatch(actions.setReferMessage(currentSession.value as string, message));
+    this.props.dispatch(actions.setReferMessage(currentSession.value, message));
     utils.highlightReferMessage(currentSession.value);
   }
   handleRetry() {
@@ -179,8 +177,7 @@ class Message extends Component<MessageContainerProps, MessageContainerState> {
     const { moreVisible } = this.state;
     const { message, nextMessage, session } = this.props;
     const { fromAccount = {}, timestamp, isMine, unreadLine, isMineMessage } = message;
-    // 擦除标记： 在类型上是 boolean|undefined，真实消费方按真假值用（原 any 直接传）。
-    const isDuplicated: boolean = (message.isDuplicated && message.from === nextMessage.from) as unknown as boolean;
+    const isDuplicated = message.isDuplicated && message.from === nextMessage.from;
 
     return (
       <div data-isminemessage={isMineMessage || false}>

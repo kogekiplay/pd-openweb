@@ -23,6 +23,8 @@ export interface KcNodeDetail {
   /** Preview forwards this server token without interpreting it here. */
   viewType?: unknown;
   downloadUrl?: string | undefined;
+  /** Knowledge-node sharing reads this separate preview source; it is not a viewUrl fallback. */
+  previewUrl?: string | undefined;
   rootInfo?: { project?: { companyDisplayName?: string | undefined } | undefined; owner?: { fullname?: string | undefined } | undefined } | undefined;
   canChangeSharable?: boolean | undefined;
   canChangeEditable?: boolean | undefined;
