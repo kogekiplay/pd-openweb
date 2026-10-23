@@ -169,6 +169,19 @@ const BarPage = styled.span`
     color: var(--color-text-disabled);
     cursor: default;
   }
+  &.pageEdge {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    &:disabled {
+      color: var(--color-text-disabled);
+    }
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+  }
 `;
 
 const BarJump = styled.div`
@@ -319,6 +332,7 @@ export default class Pagination extends React.Component<any, PaginationState> {
     const total = this.pageNum;
     const canPrev = pageIndex > 1;
     const canNext = abnormalMode ? true : pageIndex < total;
+    const canLast = !abnormalMode && Number.isFinite(total) && pageIndex < total;
 
     return (
       <BarCon className={className}>
@@ -338,11 +352,24 @@ export default class Pagination extends React.Component<any, PaginationState> {
         )}
 
         <BarPages>
+          <BarPage
+            as="button"
+            type="button"
+            className={cx('pageEdge', { disabled: !canPrev })}
+            disabled={!canPrev}
+            aria-label={_l('首页')}
+            title={_l('首页')}
+            onClick={canPrev ? () => changePageIndex(1) : undefined}
+          >
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M7 4 3 8l4 4M12 4 8 8l4 4" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
+          </BarPage>
           <BarPage className={cx({ disabled: !canPrev })} onClick={canPrev ? onPrev : undefined}>
             <i className="icon icon-arrow-left-border" />
           </BarPage>
 
-          {/* 计数异常时总页数不可信，只给上一页/下一页 */}
+          {/* 计数异常时总页数不可信，隐藏数字页码并禁用末页按钮 */}
           {!abnormalMode &&
             this.pageWindow.map((p, i) =>
               p === 'dot' ? (
@@ -362,6 +389,19 @@ export default class Pagination extends React.Component<any, PaginationState> {
 
           <BarPage className={cx({ disabled: !canNext })} onClick={canNext ? onNext : undefined}>
             <i className="icon icon-arrow-right-border" />
+          </BarPage>
+          <BarPage
+            as="button"
+            type="button"
+            className={cx('pageEdge', { disabled: !canLast })}
+            disabled={!canLast}
+            aria-label={_l('末页')}
+            title={_l('末页')}
+            onClick={canLast ? () => changePageIndex(total) : undefined}
+          >
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="m4 4 4 4-4 4m5-8 4 4-4 4" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
           </BarPage>
         </BarPages>
 
