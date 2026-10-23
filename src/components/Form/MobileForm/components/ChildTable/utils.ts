@@ -1,3 +1,4 @@
+import type { ChildSDKCondition as SDKCondition } from 'src/utils/subListStoreTypes';
 import _ from 'lodash';
 import DataFormat from 'src/components/Form/core/DataFormat';
 import type { FormConditionRule } from 'src/components/Form/core/formUtils/types';
@@ -19,22 +20,7 @@ interface ChildColumn {
   controlName?: string | undefined;
   width?: number | undefined;
 }
-interface SDKCondition extends Record<string, unknown> {
-  controlId?: string | null | undefined;
-  dataType?: number | null | undefined;
-  spliceType?: number | null | undefined;
-  filterType?: number | null | undefined;
-  dateRange?: number | null | undefined;
-  dateRangeType?: number | null | undefined;
-  maxValue?: string | number | null | undefined;
-  minValue?: string | number | null | undefined;
-  isDynamicsource?: boolean | null | undefined;
-  dynamicSource?: unknown[] | null | undefined;
-  value?: unknown;
-  values?: unknown[] | null | undefined;
-  isGroup?: boolean | null | undefined;
-  groupFilters?: SDKCondition[] | null | undefined;
-}
+
 type ErrorResult = Record<string, string | undefined>;
 const { DATE_TIME_RANGE: dateTimeRangeMessage, ...controlErrorMessages } = FORM_ERROR_TYPE_TEXT;
 const errorMessages: Readonly<Partial<Record<string, string | ((control: FormControl) => string | undefined)>>> =

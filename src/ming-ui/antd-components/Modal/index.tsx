@@ -1,4 +1,5 @@
-import { Fragment, type ReactNode } from 'react';
+import { Fragment, useMemo, type ReactNode } from 'react';
+import { wrapStaticMethod } from './staticActions';
 import { Modal as AntdModal, type ModalProps as AntdModalProps } from 'antd';
 
 export interface ModalProps extends AntdModalProps {
@@ -61,12 +62,31 @@ function Modal({
     />
   );
 }
+type NativeHookAPI = ReturnType<typeof AntdModal.useModal>[0];
+type GuardedHookAPI = { [K in keyof NativeHookAPI]: ReturnType<typeof wrapStaticMethod<ReturnType<NativeHookAPI[K]>>> };
+const guardedHookApis = new WeakMap<NativeHookAPI, GuardedHookAPI>();
+function useModal() {
+  const [api, holder] = AntdModal.useModal();
+  const guarded = useMemo<GuardedHookAPI>(() => {
+    const existing = guardedHookApis.get(api); if (existing) return existing;
+    const result = Object.assign(api, {
+      confirm: wrapStaticMethod(api.confirm),
+      info: wrapStaticMethod(api.info),
+      warning: wrapStaticMethod(api.warning),
+      error: wrapStaticMethod(api.error),
+      success: wrapStaticMethod(api.success),
+    });
+    guardedHookApis.set(api, result);
+    return result;
+  }, [api]);
+  return [guarded, holder] as const;
+}
 export default Object.assign(Modal, {
-  confirm: AntdModal.confirm,
-  info: AntdModal.info,
-  warning: AntdModal.warning,
-  error: AntdModal.error,
-  success: AntdModal.success,
+  confirm: wrapStaticMethod(AntdModal.confirm),
+  info: wrapStaticMethod(AntdModal.info),
+  warning: wrapStaticMethod(AntdModal.warning),
+  error: wrapStaticMethod(AntdModal.error),
+  success: wrapStaticMethod(AntdModal.success),
   destroyAll: AntdModal.destroyAll,
-  useModal: AntdModal.useModal,
+  useModal,
 });

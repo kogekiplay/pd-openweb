@@ -7,6 +7,17 @@ import { requireFileToken } from 'src/utils/commonRequestBoundary';
 import RegExpValidator from 'src/utils/expression';
 
 let vditorPromise;
+const CODE_HIGHLIGHT_MARK = 'data-md-code-highlight';
+
+/** 编辑器预览的代码高亮配置（已合并 vditor 默认值），只读展示复用同一份以保持一致 */
+export const CODE_HIGHLIGHT_OPTIONS = {
+  enable: true,
+  defaultLang: '',
+  style: 'monokai',
+  lineNumber: true,
+};
+
+const getVditorCdn = () => `${window.__customSubPath__}/staticfiles`;
 
 function loadVditor() {
   if (!vditorPromise) {
@@ -16,6 +27,27 @@ function loadVditor() {
   }
 
   return vditorPromise;
+}
+
+/**
+ * 用编辑器同一套 highlight.js 配置（含行号）高亮容器内的代码块，供 Markdown 只读展示使用。
+ * vditor 的 highlightRender 会重复处理已高亮的代码块（行号会叠加），这里逐个 pre 调用并打标记，每块只处理一次。
+ */
+export function renderCodeHighlight(element: HTMLElement | null | undefined): void {
+  if (!element) return;
+
+  const pres = Array.from(element.querySelectorAll('pre')).filter(
+    pre => !pre.hasAttribute(CODE_HIGHLIGHT_MARK) && pre.querySelector(':scope > code'),
+  );
+
+  if (!pres.length) return;
+
+  pres.forEach(pre => pre.setAttribute(CODE_HIGHLIGHT_MARK, ''));
+  loadVditor().then((Vditor: typeof import('@mdfe/vditor').default) => {
+    pres.forEach(pre => {
+      if (pre.isConnected) Vditor.highlightRender(CODE_HIGHLIGHT_OPTIONS, pre, getVditorCdn());
+    });
+  });
 }
 
 const TOOLBAR = [
@@ -165,6 +197,8 @@ function MdMarkdown(props) {
     bucket,
     worksheetId,
     hideToolbar = false,
+    indentCodeBlock = true,
+    uploadHandler,
     registerRef = () => {},
     handleFocus,
     handleChange = () => {},
@@ -285,7 +319,7 @@ function MdMarkdown(props) {
         mode,
         ...(isFullScreen ? { height: '100%' } : { minHeight }),
         ...(window.themeMode === 'dark' ? { theme: 'dark' } : {}),
-        cdn: `${window.__customSubPath__}/staticfiles`,
+        cdn: getVditorCdn(),
         placeholder,
         toolbar: TOOLBAR,
         toolbarConfig: {
@@ -295,12 +329,11 @@ function MdMarkdown(props) {
         preview: {
           delay: 0,
           actions: [],
-          hljs: {
-            style: 'monokai',
-            lineNumber: true,
-          },
+          hljs: { ...CODE_HIGHLIGHT_OPTIONS },
           math: {
-            inlineDigit: true,
+            // $ 后紧跟数字不作为行内公式：否则「预算 $100 和 $200」会被解析成公式，正文被吃掉；
+            // $x+1$ 这类正常公式不受影响，正文渲染（renderPostMarkdown）也使用同一取值
+            inlineDigit: false,
             macros: {
               bf: '{\\boldsymbol f}',
               bu: '{\\boldsymbol u}',
@@ -316,9 +349,17 @@ function MdMarkdown(props) {
         },
         upload: {
           accept: 'image/*',
-          handler: customUpload,
+          // 调用方可接管：动态发布框把图片交给附件上传，而不是插入 Markdown 图片
+          handler: uploadHandler || customUpload,
         },
         after() {
+          // 正文没有 front matter 这回事：开着的话「--- 开头」会把整段内容吞成 YAML 代码块，
+          // 而 --- 正是工具栏分隔线按钮产生的内容。Vditor 未开放该选项，只能拿实例上的 lute 关掉；
+          // 必须赶在 setValue 之前，否则初始内容仍按 front matter 解析。
+          // 正文渲染（renderPostMarkdown 的 createLute）取值与此一致
+          vditor.vditor?.lute?.SetYamlFrontMatter(false);
+          // 调用方可关闭缩进代码块（行首 4 个空格不当代码），同样要在 setValue 之前设置
+          if (!indentCodeBlock) vditor.vditor?.lute?.SetIndentCodeBlock(false);
           vditor.setValue(latestDataRef.current);
           vditorInstance.current = vditor;
           registerRef(vditor);
@@ -362,6 +403,7 @@ MdMarkdown.propTypes = {
   data: PropTypes.string,
   disabled: PropTypes.bool,
   hideToolbar: PropTypes.bool,
+  indentCodeBlock: PropTypes.bool, // false: 行首缩进不识别为代码块
   /**
    * 编辑模式：所见即所得（wysiwyg）、即时渲染（ir）、分屏预览（sv）
    */

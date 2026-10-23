@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { Skeleton } from 'antd-mobile';
 import styled from 'styled-components';
 import RecordCard from './index';
 
-const RecordCardIOWrap = styled.div`
-  ${({ colNum }) =>
+const RecordCardIOWrap = styled.div<{ $colNum: number }>`
+  ${({ $colNum: colNum }) =>
     colNum > 1
       ? `
         margin: 0 5px;
@@ -26,51 +26,82 @@ const RecordCardIOWrap = styled.div`
 `;
 
 const SkeletonWrap = styled.div`
+  box-sizing: border-box;
+  overflow: hidden;
   padding: 10px var(--space-3);
   margin-bottom: 10px;
   border: 1px solid var(--color-background-card);
   background-color: var(--color-background-primary);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
-  height: ${props => props.realCardHeight}px;
+  height: calc(100% - 10px);
 `;
+
+type NativeObserverOptions = NonNullable<Parameters<typeof useInView>[0]>;
+type ObserverOptions = Omit<NativeObserverOptions, 'root'> & { root?: NativeObserverOptions['root'] | undefined };
+/** Installed useInView destructures root and treats omitted/own undefined identically.
+ * Retain the original own key and argument object; only bridge the exact-optional declaration gap. */
+function useViewportObserver(options: ObserverOptions): ReturnType<typeof useInView> {
+  return Reflect.apply(useInView, undefined, [options]);
+}
 
 const RecordCardIO = props => {
   const { viewRootEl, colNum, ...rest } = props;
-  const recordCardRef = useRef<RecordCard | null>(null);
-  const [observerEnabled, setObserverEnabled] = useState(false);
+  const recordCardRef = useRef<HTMLDivElement | null>(null);
+  const observerEnabled = viewRootEl instanceof Element;
 
   const skeletonHeight = props.view?.displayControls?.length * 30 || 200;
 
   const [realCardHeight, setRealCardHeight] = useState(skeletonHeight);
-  const [skeletonRows, setSkeletonRows] = useState(Math.floor(skeletonHeight / 40));
+  const skeletonRows = Math.floor(realCardHeight / 40);
+  // Android 微信聚焦输入框时会调整可视区域，扩大观察区避免来源卡片被误回收并连带关闭弹层。
+  const [rootMargin] = useState(() => (window.isAndroid && window.isWeiXin ? `${window.innerHeight}px 0px` : '100px'));
 
-  const { ref, inView } = useInView({
+  const { ref, inView } = useViewportObserver({
     root: observerEnabled ? viewRootEl : undefined,
-    rootMargin: '100px',
+    rootMargin,
     threshold: 0,
     skip: !observerEnabled,
   });
+  const setCardRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      recordCardRef.current = node;
+      ref(node);
+    },
+    [ref],
+  );
   const shouldRender = observerEnabled ? inView : false;
   useEffect(() => {
-    if (viewRootEl instanceof Element) {
-      setObserverEnabled(true);
+    const element = recordCardRef.current;
+    if (!shouldRender || !element) return undefined;
+
+    // 记录完整占位（含操作按钮、边框和底部间距），避免离屏回收时列表高度突变。
+    // 异步图片、字段及按钮更新也可能改变卡片高度。
+    if (typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver(([entry]) => {
+        if (entry && entry.contentRect.height > 0) {
+          setRealCardHeight(entry.contentRect.height);
+        }
+      });
+      observer.observe(element);
+      return () => observer.disconnect();
     }
-  }, [viewRootEl]);
-  useEffect(() => {
-    if (shouldRender && recordCardRef?.current?.cardWrap) {
-      const height = recordCardRef.current.cardWrap.getBoundingClientRect()?.height;
-      setRealCardHeight(height);
-      setSkeletonRows(Math.floor(height / 40));
-    }
+
+    const frame = requestAnimationFrame(() => setRealCardHeight(element.getBoundingClientRect().height));
+    return () => cancelAnimationFrame(frame);
   }, [shouldRender]);
 
   return (
-    <RecordCardIOWrap className="recordCardIOWrap overflowHidden" ref={observerEnabled ? ref : null} colNum={colNum}>
+    <RecordCardIOWrap
+      className="recordCardIOWrap overflowHidden"
+      ref={setCardRef}
+      $colNum={colNum}
+      style={shouldRender ? undefined : { height: realCardHeight }}
+    >
       {shouldRender ? (
-        <RecordCard ref={recordCardRef} {...rest} />
+        <RecordCard {...rest} />
       ) : (
-        <SkeletonWrap realCardHeight={realCardHeight}>
+        <SkeletonWrap>
           <Skeleton.Paragraph className="recordCardSkeleton" lineCount={skeletonRows} />
         </SkeletonWrap>
       )}

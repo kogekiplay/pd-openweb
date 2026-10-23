@@ -11,7 +11,7 @@ export default function Relation({ data, onChange }) {
         <Dropdown
           border
           value={data.enumDefault}
-          data={RELATION_OPTIONS.filter(item => (item.isHide ? item.isHide() : true))}
+          data={RELATION_OPTIONS.filter(item => (item.isHide ? item.isHide(md.global.SysSettings.forbidSuites) : true))}
           onChange={value => onChange({ enumDefault: value })}
         />
       </SettingItem>

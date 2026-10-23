@@ -6,10 +6,13 @@ import type {
   ChildTableStore,
   FieldStoreControl,
   FieldStoreMasterData,
+  FieldStoreWorksheet,
 } from 'src/utils/subListStoreTypes';
 
 export type ChildTableRefresh = (options?: { needResetControls?: boolean; isRefresh?: boolean }) => unknown;
 export interface ChildTableControl extends FieldStoreControl {
+  /** Opaque validation hook forwarded to the detail component; this layer does not invoke it. */
+  submitChildTableCheckData?: unknown;
   setLoadingInfo?: ((key: string, loading: boolean) => void) | undefined;
   /** The dialog carries both the child data source and its owning worksheet. */
   worksheetId?: string | undefined;
@@ -28,6 +31,7 @@ export interface ChildTableProps {
   addRefreshEvents?: ((name: string, refresh: ChildTableRefresh | undefined) => void) | undefined;
   masterData?: (FieldStoreMasterData & { controlId?: string | undefined }) | undefined;
   worksheetId?: string | undefined;
+  worksheetInfo?: FieldStoreWorksheet | undefined;
   appId?: string | undefined;
   projectId?: string | undefined;
   viewId?: string | undefined;

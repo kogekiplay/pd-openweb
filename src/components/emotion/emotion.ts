@@ -21,7 +21,7 @@ import './emotion.css';
  * 这里查一下清单：没素材就返回 false，**保留原始 emoji 字符**交给系统字体画，
  * 新一点的系统上根本看不出差别。实测这么处理的有 45 个（🙂‍↔️ 🫩 🫪 🫯 等）。
  */
-const TWEMOJI_OPTIONS = {
+export const TWEMOJI_OPTIONS = {
   base: '/staticfiles/images/emotion/twemoji/',
   folder: 'svg',
   ext: '.svg',
@@ -30,7 +30,7 @@ const TWEMOJI_OPTIONS = {
     TWEMOJI_ASSET_CODES.has(icon) ? `/staticfiles/images/emotion/twemoji/svg/${icon}.svg` : false,
 } as const;
 
-const isRetina = !!(window.devicePixelRatio && window.devicePixelRatio > 1);
+export const isRetina = !!(window.devicePixelRatio && window.devicePixelRatio > 1);
 
 function insertImageToEditor(container, elemstr) {
   var selection = window.getSelection ? window.getSelection() : document.selection;

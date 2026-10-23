@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useSetState } from 'react-use';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -17,18 +16,11 @@ export default function PromptMessage(props) {
     visible: true,
   });
 
-  useEffect(() => {
-    setState({
-      message: actionData.message || '',
-      advancedSetting: actionData.advancedSetting || { alerttype: '1' },
-    });
-  }, []);
-
   const isDisabled = _.isEmpty(safeParse(message));
 
   return (
     <Dialog
-      width={480}
+      width={600}
       visible={visible}
       okDisabled={isDisabled}
       className="SearchWorksheetDialog"
@@ -43,12 +35,12 @@ export default function PromptMessage(props) {
       <CustomActionWrap>
         <SettingItem className="mTop0">
           <div className="settingItemTitle">{_l('提示类型')}</div>
-          <div className="flexCenter">
-            {ALERT_TYPE_OPTIONS.map((item, index) => {
+          <div className="flexCenter promptMessageTypes">
+            {ALERT_TYPE_OPTIONS.map(item => {
               return (
                 <div
-                  key={index}
-                  className={cx('alertContent mRight10', { active: item.value === advancedSetting.alerttype })}
+                  key={item.value}
+                  className={cx('alertContent', { active: item.value === advancedSetting.alerttype })}
                   onClick={() => {
                     setState({ advancedSetting: { ...advancedSetting, alerttype: item.value } });
                   }}
@@ -65,7 +57,6 @@ export default function PromptMessage(props) {
             {_l('消息内容')}
             <span className="Red">*</span>
           </div>
-          <div className="textTertiary mBottom8">{_l('最多显示50个字符')}</div>
           <DynamicDefaultValue
             {...props}
             data={{

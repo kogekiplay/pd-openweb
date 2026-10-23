@@ -1115,7 +1115,7 @@ class ChildTable extends React.Component<any, any> {
   };
 
   handleImport = ({ replace = false } = {}) => {
-    const { control, masterData, rows, addRows } = this.props;
+    const { appId, control, masterData, rows, addRows } = this.props;
     const { projectId } = this.worksheetInfo;
     const controls: FormControl[] = this.getShowColumns();
 
@@ -1125,6 +1125,7 @@ class ChildTable extends React.Component<any, any> {
     }
 
     importFileToChildTable({
+      appId,
       projectId,
       maxCount: this.settings.maxCount,
       worksheetId: masterData.worksheetId,

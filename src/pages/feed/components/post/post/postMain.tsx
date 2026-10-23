@@ -141,7 +141,12 @@ class PostMain extends React.Component<any, any> {
                 <span key={1}> : </span>
               </span>
             ) : undefined}
-            <PostMessage postItem={postItem} keywords={this.props.keywords} inline={this.props.inlineMessage} />
+            <PostMessage
+              postItem={postItem}
+              keywords={this.props.keywords}
+              inline={this.props.inlineMessage}
+              plainText={!!postItem.commentID}
+            />
           </div>
           {this.state.isFullHeight ? undefined : (
             <a className={cx('Hand showMore', { hide: this.state.isFullHeight })} onClick={this.showMore}>

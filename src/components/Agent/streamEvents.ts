@@ -6,6 +6,7 @@ import { parse as parsePartial } from 'partial-json';
 import { readField, stringValue, summarizeUnknown } from './agentService';
 import { BUILD_STEPS } from './buildSteps';
 import type { AgentStreamEvent, ChatMessage } from './types';
+import { resolveAgentErrorMessage } from './errorMessages';
 import { carveWorkParts } from './workParts';
 
 const TOOL_EVENTS = ['tool-call', 'tool-result', 'subagent-tool-call', 'subagent-tool-result'];
@@ -88,7 +89,7 @@ interface StreamData extends UnknownRecord {
 interface StreamEvent {
   eventName: string;
   receivedAt: number;
-  payload: { data: StreamData; delta?: string; errorMessage?: string; agentName?: string };
+  payload: { data: StreamData; delta?: string; errorCode?: unknown; errorMessage?: string; agentName?: string };
 }
 type PartMutator = (part: StreamPart) => StreamPart;
 interface EventBus {
@@ -195,7 +196,7 @@ function describeAsReasoning(event: StreamEvent): string {
   }
 
   if (event.eventName === 'error') {
-    return event.payload.errorMessage || _l('执行失败');
+    return resolveAgentErrorMessage(event.payload.errorCode, event.payload.errorMessage, _l('执行失败'));
   }
 
   return '';

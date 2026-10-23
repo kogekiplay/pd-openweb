@@ -727,7 +727,7 @@ export default class UploadTemplateSheet extends React.Component<any, any> {
         popup={() => {
           return (
             <Menu style={{ left: 'initial', right: 0, width: 180 }}>
-              {(md.global.Config.EnableDocEdit === false || popupVisible === 'Xlsx'
+              {(!md.global.Config.EnableDocEdit || popupVisible === 'Xlsx'
                 ? OPTIONS.slice(0, 1)
                 : OPTIONS
               ).map((item, index) => (

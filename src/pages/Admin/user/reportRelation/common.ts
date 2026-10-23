@@ -54,7 +54,7 @@ export function selectUser({
       filterFriend: true,
       filterOthers: true,
       filterOtherProject: true,
-      filterResigned: false,
+      filterResigned: true,
       hideResignedTab: true,
       unique: !!unique,
       showTabs: ['structureUsers'],

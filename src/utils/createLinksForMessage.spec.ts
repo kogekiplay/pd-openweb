@@ -69,7 +69,8 @@ function load(relative: string): Modules {
     moduleLike.exports,
     (name: string): unknown => {
       if (name === 'lodash' || name === '@twemoji/api') return require(name);
-      if (name === './common' || name === 'src/utils/common') return common;
+      if (name === './common' || name === 'src/utils/common' || name === 'src/utils/core/string' || name === 'src/utils/platform/navigation/path') return common;
+      if (name.startsWith('src/components/emotion/') || name.startsWith('src/components/comment/utils/')) return load(name);
       if (name === './messageLinkTypes') return load('src/utils/messageLinkTypes.ts');
       if (name === 'src/components/comment/config') return load('src/components/comment/config.ts');
       if (name === 'src/components/emotion/emotion') return load('src/components/emotion/emotion.ts');

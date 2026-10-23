@@ -1,3 +1,10 @@
+import type { MentionDraftData, MentionsInputElement } from 'src/components/MentionsInput';
+import type { GroupSelectionValue } from 'src/ming-ui/functions/quickSelectGroup/types';
+import type { FeedAttachment, FeedPost } from '../../types';
+import type { AppDispatch } from 'src/redux/types';
+import PostMarkdownEditor, { type PostMarkdownEditorHandle } from 'src/components/comment/PostMarkdownEditor';
+import { toSyntaxMessage } from 'src/components/comment/utils/markdownMessageSyntax';
+import { getDraftMarkdown } from './draft';
 import React from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
@@ -15,17 +22,35 @@ import './updater.css';
 /**
  * 动态发布器
  */
-class Updater extends React.Component<any, any> {
+export interface UpdaterProps {
+  projectId?: string | null | undefined;
+  groupId?: string | null | undefined;
+  defaultGroup?: string | undefined;
+  dispatch: AppDispatch;
+}
+interface UpdaterState {
+  kcAttachmentData: FeedAttachment[];
+  temporaryData: FeedAttachment[];
+  isUploadComplete: boolean;
+  shareGroup: GroupSelectionValue;
+  markdownValue: string;
+  editorExpanded: boolean;
+}
+class Updater extends React.Component<UpdaterProps, UpdaterState> {
   declare postBtn: HTMLInputElement | null | undefined;
   declare faceBtn: HTMLAnchorElement | null | undefined;
   declare linkBtn: HTMLInputElement | null | undefined;
+
+  declare MyUpdater: typeof MyUpdater | null;
+  declare markdownEditor: PostMarkdownEditorHandle | null | undefined;
+  declare uploadFilesRef: Pick<UploadFiles, 'addFiles'> | null | undefined;
 
   static override propTypes = {
     defaultGroup: PropTypes.string,
     projectId: PropTypes.string,
   };
 
-  constructor(props) {
+  constructor(props: UpdaterProps) {
     super(props);
     this.MyUpdater = null;
 
@@ -34,8 +59,55 @@ class Updater extends React.Component<any, any> {
       temporaryData: [],
       isUploadComplete: true,
       shareGroup: {},
+      markdownValue: '',
+      editorExpanded: false,
     };
   }
+
+  syncMarkdownToTextarea = (markdownValue: string) => {
+    const textarea = document.querySelector<MentionsInputElement>('textarea#textarea_Updater');
+    if (!textarea) return;
+    textarea.value = toSyntaxMessage(markdownValue);
+    textarea.classList.remove('textTertiary');
+  };
+
+  handleEditorUploadFiles = (files: File[]) => {
+    if (!files || !files.length) return;
+    this.handleOpen([]);
+    this.uploadFilesRef?.addFiles(files);
+  };
+
+  handleEditorFocus = () => {
+    if (!this.state.editorExpanded) this.setState({ editorExpanded: true });
+    $('#myupdaterOP').slideDown(function (this: HTMLElement) {
+      $(this).attr('style', 'display: block');
+    });
+  };
+
+  storeDraft = (markdownValue: string) => {
+    const textarea = document.querySelector<MentionsInputElement>('textarea#textarea_Updater');
+    if (!textarea || !_.isFunction(textarea.store)) return;
+    if (!_.trim(markdownValue)) { textarea.clearStore?.(); return; }
+    textarea.store({ text: markdownValue, messageText: toSyntaxMessage(markdownValue), mentionsCollection: [], markdownValue });
+  };
+
+  handleRestoreDraft = (draft?: MentionDraftData) => {
+    const markdownValue = getDraftMarkdown(draft);
+    const textarea = document.querySelector<MentionsInputElement>('textarea#textarea_Updater');
+    if (!this._isMounted) return;
+    textarea?.reset?.();
+    this.syncMarkdownToTextarea(markdownValue);
+    this.setState({ markdownValue });
+  };
+
+  handleMarkdownChange = (markdownValue: string) => {
+    this.syncMarkdownToTextarea(markdownValue);
+    this.storeDraft(markdownValue);
+  };
+
+  handleCollapse = () => {
+    if (this._isMounted && this.state.editorExpanded) this.setState({ editorExpanded: false });
+  };
 
   clearFilesData = () => {
     this.setState({
@@ -62,16 +134,20 @@ class Updater extends React.Component<any, any> {
       },
       projectId: comp.props.projectId,
       group: { groupId: comp.props.groupId, isJoin: true },
+      onRestoreDraft: this.handleRestoreDraft,
+      onCollapse: this.handleCollapse,
     });
     this.initEmotion();
     $('#hidden_UpdaterType').val('0');
   }
 
-  override shouldComponentUpdate(nextProps, nextState) {
+  override shouldComponentUpdate(nextProps: UpdaterProps, nextState: UpdaterState) {
     if (
       nextState.temporaryData.length !== this.state.temporaryData.length ||
       nextState.kcAttachmentData.length !== this.state.kcAttachmentData.length ||
-      nextState.shareGroup !== this.state.shareGroup
+      nextState.shareGroup !== this.state.shareGroup ||
+      nextState.markdownValue !== this.state.markdownValue ||
+      nextState.editorExpanded !== this.state.editorExpanded
     ) {
       return true;
     }
@@ -82,6 +158,8 @@ class Updater extends React.Component<any, any> {
         clearFilesData: this.clearFilesData.bind(this),
         projectId: nextProps.projectId,
         group: { groupId: nextProps.groupId },
+        onRestoreDraft: this.handleRestoreDraft,
+        onCollapse: this.handleCollapse,
       });
     }
 
@@ -100,7 +178,7 @@ class Updater extends React.Component<any, any> {
       return;
     }
 
-    const addPost = postItem => this.props.dispatch(addSuccess(postItem));
+    const addPost = (postItem: FeedPost) => this.props.dispatch(addSuccess(postItem));
     const resultData = {
       attachmentData: this.state.temporaryData,
       kcAttachmentData: this.state.kcAttachmentData,
@@ -118,41 +196,26 @@ class Updater extends React.Component<any, any> {
       return;
     }
 
-    MyUpdater.PostUpdater(resultData, this.postBtn, result => {
+    MyUpdater.PostUpdater(resultData, this.postBtn, (result: { post: FeedPost }) => {
       addPost(result.post);
       this.setState({
         kcAttachmentData: [],
         temporaryData: [],
         isUploadComplete: true,
         shareGroup: {},
+        markdownValue: '',
       });
+      this.markdownEditor?.setValue('');
       $('body').click(); // 发布器收起
     });
   };
 
   initEmotion = () => {
-    new Emotion(this.faceBtn, {
-      input: '#textarea_Updater',
-      placement: 'right bottom',
-      mdBear: false,
-      relatedLeftSpace: 22,
-      onSelect: () => {
-        // $() 默认给 JQuery<HTMLElement>，[0] 就只有 HTMLElement，没有 .value。
-        // 这个 id 指向的是 <textarea>（tpl 里就是），把元素类型显式写出来即可 ——
-        // 不是断言，是把选择器已经确定的事实告诉类型系统。
-        const textBox = $<HTMLTextAreaElement>('#textarea_Updater')[0];
-
-        if (
-          textBox.value === _l('知会工作是一种美德') + '...' ||
-          textBox.value === _l('上传附件') + '...' ||
-          textBox.value === _l('分享网站') + '...' ||
-          textBox.value === _l('分享网站') + '...' ||
-          textBox.value === _l('请输入投票问题') + '...'
-        ) {
-          textBox.value = '';
-        }
-      },
-    });
+    // Existing picker uses (name, src, text); an empty target lets the editor own insertion.
+    Reflect.construct(Emotion, [this.faceBtn, {
+      input: '', placement: 'right bottom', mdBear: false, relatedLeftSpace: 22,
+      onSelect: (name?: string, _src?: string | null, text?: string) => this.markdownEditor?.insertText(text || name || ''),
+    }]);
   };
 
   viewLink = () => {
@@ -164,18 +227,18 @@ class Updater extends React.Component<any, any> {
   };
 
   handleMouseover = () => {
-    $(this.faceBtn).addClass('icon-smilingFace');
+    $(this.faceBtn ?? []).addClass('icon-smilingFace');
   };
 
   handleMouseout = () => {
-    $(this.faceBtn).removeClass('icon-smilingFace');
+    $(this.faceBtn ?? []).removeClass('icon-smilingFace');
   };
 
   textareaFocus = () => {
     $('#textarea_Updater').focus();
   };
 
-  handleOpen = () => {
+  handleOpen: (files?: readonly unknown[]) => void = () => {
     const $Attachment_updater = $('[targetdiv="#Attachment_updater"]');
 
     if (!$Attachment_updater.hasClass('colorPrimary')) {
@@ -183,7 +246,7 @@ class Updater extends React.Component<any, any> {
     }
   };
 
-  handleUploadComplete = bool => {
+  handleUploadComplete = (bool: boolean) => {
     this.setState({
       isUploadComplete: bool,
     });
@@ -197,14 +260,14 @@ class Updater extends React.Component<any, any> {
     ) {
       $('#textarea_Updater').val(
         this.state.temporaryData.length
-          ? this.state.temporaryData[0].originalFileName
-          : this.state.kcAttachmentData[0].originalFileName,
+          ? this.state.temporaryData[0]!.originalFileName ?? ''
+          : this.state.kcAttachmentData[0]!.originalFileName ?? '',
       );
       $('#textarea_Updater').focus();
     }
   };
 
-  handleSelectGroup = value => this.setState({ shareGroup: value });
+  handleSelectGroup = (value: GroupSelectionValue) => this.setState({ shareGroup: value });
 
   override render() {
     const { shareGroup } = this.state;
@@ -217,7 +280,18 @@ class Updater extends React.Component<any, any> {
           <div className="myUpdateItem borderColorPrimary">
             <div className="myUpdateItem_Content" id="myUpdateItem_Content" style={{ position: 'relative' }}>
               <div id="msgContainer" className="msgContainer">
-                <textarea id="textarea_Updater" style={{ height: '24px' }} className="TextArea textTertiary Block" />
+                <div style={{ display: 'none' }}>
+                  <textarea id="textarea_Updater" style={{ height: '24px' }} className="TextArea textTertiary Block" />
+                </div>
+                <PostMarkdownEditor
+                  ref={editor => { this.markdownEditor = editor; }}
+                  value={this.state.markdownValue}
+                  placeholder={_l('知会工作是一种美德') + '...'}
+                  minHeight={24} focusedMinHeight={80} expanded={this.state.editorExpanded}
+                  projectId={this.props.projectId}
+                  onChange={this.handleMarkdownChange} onFocus={this.handleEditorFocus} onBlur={this.storeDraft}
+                  onUploadFiles={this.handleEditorUploadFiles} onSubmit={this.post}
+                />
               </div>
               <div className="Hidden" id="myupdaterOP">
                 <div className="faceArea">
@@ -263,6 +337,7 @@ class Updater extends React.Component<any, any> {
 
                   <div id="Attachment_updater" className="middleContent mBottom5 Hidden">
                     <UploadFiles
+                      manualRef={(instance: UploadFiles | null) => { this.uploadFilesRef = instance; }}
                       dropPasteElement="myUpdateItem_Content"
                       onDropPasting={() => {
                         this.textareaFocus();
@@ -271,13 +346,13 @@ class Updater extends React.Component<any, any> {
                       arrowLeft={4}
                       temporaryData={this.state.temporaryData}
                       kcAttachmentData={this.state.kcAttachmentData}
-                      onTemporaryDataUpdate={result => {
+                      onTemporaryDataUpdate={(result: FeedAttachment[]) => {
                         (this.handleOpen(result), this.setState({ temporaryData: result }));
                       }}
-                      onKcAttachmentDataUpdate={result => {
+                      onKcAttachmentDataUpdate={(result: FeedAttachment[]) => {
                         this.setState({ kcAttachmentData: result });
                       }}
-                      onUploadComplete={bool => {
+                      onUploadComplete={(bool: boolean) => {
                         this.handleUploadComplete(bool);
                       }}
                     />

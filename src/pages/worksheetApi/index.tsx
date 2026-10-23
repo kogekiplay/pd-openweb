@@ -194,10 +194,7 @@ export class WorksheetApi extends Component<WorksheetApiProps, ApiWorksheetState
   }
 
   get hideDataPipeline() {
-    return (
-      _.get(md, 'global.SysSettings.hideDataPipeline') ||
-      ((window.platformENV.isOverseas || window.platformENV.isLocal) && !_.get(md, 'global.Config.EnableDataPipeline'))
-    );
+    return _.get(md, 'global.SysSettings.hideDataPipeline') || !_.get(md, 'global.Config.EnableDataPipeline');
   }
 
   getAppInfo(): Promise<void> {

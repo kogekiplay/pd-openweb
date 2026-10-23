@@ -8,7 +8,7 @@ export const getBatchMax = ({
   businessType: number;
   limitRowTotal?: number | undefined;
 }) => {
-  if (businessType === 1) return md.global.SysSettings.fileUploadLimitSize || 4 * 1024;
+  if (businessType === 1) return md.global.SysSettings.fileUploadLimitSize;
   if (businessType !== 2) return undefined;
   return (window.platformENV.isLocal || window.platformENV.isOverseas) && limitRowTotal ? limitRowTotal * 10 : 1000;
 };
@@ -63,14 +63,11 @@ export const getLimitSizeInfo = ({
   businessType: number;
   limitRowTotal?: number | undefined;
 }) => {
-  const limitSize = md.global.SysSettings.fileUploadLimitSize || 4 * 1024;
+  const limitSize = md.global.SysSettings.fileUploadLimitSize;
 
   switch (businessType) {
     case 1:
-      return _l(
-        '系统支持的附件大小上限为 %0，可设置组织下允许的附件大小上限',
-        `${window.platformENV.isOverseas || window.platformENV.isLocal ? limitSize + 'M' : '4G'}`,
-      );
+      return _l('系统支持的附件大小上限为 %0，可设置组织下允许的附件大小上限', `${limitSize}M`);
     case 2:
       return limitRowTotal || !(window.platformENV.isLocal || window.platformENV.isOverseas)
         ? _l(

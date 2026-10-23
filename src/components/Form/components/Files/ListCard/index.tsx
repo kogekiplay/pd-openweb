@@ -96,7 +96,7 @@ const ListCard = props => {
           icon={<Icon icon="share" className="Font17 pRight5" />}
           onClick={e => {
             e.stopPropagation();
-            handleShare(data, isDownload);
+            handleShare(data, isDownload, props.attachmentContext);
             setDropdownVisible(false);
           }}
         >

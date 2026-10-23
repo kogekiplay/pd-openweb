@@ -1,3 +1,7 @@
+import type { AttachmentContext } from 'src/utils/attachmentContextTypes';
+import type { ControlAdvancedSetting } from 'src/utils/controlTypes';
+import type { ChildTableProps } from 'src/pages/worksheet/components/ChildTable/publicTypes';
+import type { AttachmentRequestContext } from 'src/utils/attachmentContextTypes';
 import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
@@ -22,7 +26,24 @@ import { getCurrentPos } from '../../../core/mapUtils';
 import { isOpenPermit } from '../../tools/utils';
 import './index.less';
 
-export default class Widgets extends Component<any, any> {
+export interface MobileAttachmentProps extends Omit<FormControl, 'value' | 'advancedSetting' | 'from' | 'onChange'>,
+  Pick<AttachmentContext, 'instanceId' | 'workId' | 'worksheetId' | 'recordId' | 'isDraft'> {
+  value?: string | null | undefined;
+  advancedSetting: ControlAdvancedSetting;
+  from?: number | undefined;
+  flag?: unknown;
+  appId?: string | undefined;
+  projectId?: string | undefined;
+  viewId?: string | undefined;
+  viewIdForPermit?: string | undefined;
+  formData: FormControl[];
+  masterData?: ChildTableProps['masterData'];
+  sheetSwitchPermit?: HapApi.MD.Entity.Worksheet.SwitchPermitModel[] | undefined;
+  customButton?: { btnId?: string | undefined; btnWorksheetId?: string | undefined; btnRowId?: string | undefined } | undefined;
+  otherSheetControlType?: number | undefined;
+  onChange(value: string): void;
+}
+export default class Widgets extends Component<MobileAttachmentProps, any> {
   declare _isUnmounted: boolean;
 
   static override propTypes = {
@@ -39,6 +60,13 @@ export default class Widgets extends Component<any, any> {
     controlId: PropTypes.string,
     controlName: PropTypes.string,
     isDraft: PropTypes.bool,
+    masterData: PropTypes.shape({
+      worksheetId: PropTypes.string,
+      recordId: PropTypes.string,
+      controlId: PropTypes.string,
+    }),
+    instanceId: PropTypes.string,
+    workId: PropTypes.string,
     formData: PropTypes.array,
     enumDefault: PropTypes.number,
     enumDefault2: PropTypes.number,
@@ -49,7 +77,7 @@ export default class Widgets extends Component<any, any> {
     onChange: PropTypes.func,
   };
 
-  constructor(props) {
+  constructor(props: MobileAttachmentProps) {
     super(props);
     const showtype = _.get(props, 'advancedSetting.showtype') || '1';
     this.state = {
@@ -130,7 +158,7 @@ export default class Widgets extends Component<any, any> {
   }
 
   loadAttachments(props?) {
-    const { value, worksheetId, recordId, controlId, isDraft } = props || this.props;
+    const { value, worksheetId, recordId, controlId, isDraft, masterData, instanceId, workId } = props || this.props;
     let fileIds = [];
 
     try {
@@ -140,15 +168,27 @@ export default class Widgets extends Component<any, any> {
       this.setState({ loading: false, value: '' });
     }
 
-    const args = { fileIds, worksheetId, rowId: recordId, controlId };
+    const args: AttachmentRequestContext & { fileIds: string[] } = {
+      callSource: instanceId || workId ? 2 : 1,
+      fileIds,
+      worksheetId,
+      rowId: recordId,
+      controlId,
+      masterWorksheetId: _.get(masterData, 'worksheetId'),
+      masterRowId: _.get(masterData, 'recordId'),
+      masterControlId: _.get(masterData, 'controlId'),
+      instanceId,
+      workId,
+    };
 
     if (window.shareState && window.shareState.shareId) {
       args.shareId = window.shareState.shareId;
-      args.type = window.shareState.isPublicRecord
-        ? 3
-        : _.get(window, 'shareState.isPublicForm') || _.get(window, 'shareState.isPublicForm')
-          ? 11
-          : 14;
+      args.type =
+        window.shareState.isPublicRecord || window.shareState.isPublicView || window.shareState.isPublicPage
+          ? 3
+          : window.shareState.isPublicForm || window.shareState.isPublicQuery
+            ? 11
+            : 14;
     }
 
     if (isDraft) {
@@ -629,6 +669,8 @@ export default class Widgets extends Component<any, any> {
     const coverType = advancedSetting.covertype || '0';
 
     const filesProps = {
+      instanceId: this.props.instanceId,
+      workId: this.props.workId,
       recordBaseInfo: {
         worksheetId,
         recordId,
@@ -683,7 +725,7 @@ export default class Widgets extends Component<any, any> {
     };
 
     const h5Watermark = (_.get(advancedSetting, 'h5watermark') || '').split('$').filter(v => !!v);
-    const watermark = h5Watermark.length ? h5Watermark : JSON.parse(advancedSetting.watermark || null) || [];
+    const watermark = h5Watermark.length ? h5Watermark : Reflect.apply(JSON.parse, JSON, [advancedSetting.watermark || null]) || [];
     const watermarkNeedLocation = _.findIndex(watermark || [], v => v === 'xy' || v === 'address') > -1;
 
     return (

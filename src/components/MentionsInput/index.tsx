@@ -1,3 +1,29 @@
+import type { EditorMentionAdapter } from 'src/components/comment/PostMarkdownEditor/editorMentionAdapter';
+import type { MentionTarget } from './insertion';
+import useFunctionWrapComponent from 'ming-ui/hooks/useFunctionWrapComponent';
+export interface MentionSelectionTarget extends MentionTarget { value?: string | undefined; }
+export type MentionSelection = MentionSelectionTarget | MentionSelectionTarget[];
+export interface MentionSelectionContext { query?: string | undefined; triggerChar?: string | null | undefined; }
+export interface MentionsInputHookProps {
+  input: HTMLTextAreaElement | EditorMentionAdapter;
+  onClose(): void;
+  projectId?: string | null | undefined;
+  sourceType?: number | undefined;
+  cacheKey?: string | undefined;
+  submitBtn?: string | undefined;
+  showCategory?: boolean | undefined;
+  isAtAll?: boolean | undefined;
+  isAddressBookSelect?: boolean | undefined;
+  searchType?: number | undefined;
+  defaultMaxHeight?: number | undefined;
+  popupAlignOffset?: number[] | undefined;
+  popupAlignPoints?: string[] | undefined;
+  getPopupContainer?: (() => HTMLElement) | undefined;
+  getPopupMaxHeight?: (() => number) | undefined;
+  initCallback?: (() => void) | undefined;
+  onSelected?: ((name: string | undefined) => void) | undefined;
+  onMentionSelected?: ((mention: MentionSelection, context: MentionSelectionContext) => void) | undefined;
+}
 import { Fragment, useEffect, useRef, useState } from 'react';
 import type { MentionInsertion } from './insertion';
 import Trigger from '@rc-component/trigger';
@@ -34,15 +60,22 @@ import './index.less';
  * 【为什么方法都是可选的】调用方普遍写成 `if (_.isFunction(el.reset))` 再调，
  * 因为元素不一定经过 initMentionsInput 增强（比如组件还没挂载）。可选如实反映了这点。
  */
+/** Owned local draft fields written by MentionsInput.store and the Markdown updater. */
+export interface MentionDraftData {
+  text?: string | undefined;
+  messageText?: string | undefined;
+  mentionsCollection?: Array<MentionSelectionTarget | null | undefined> | undefined;
+  markdownValue?: string | undefined;
+}
 export interface MentionsInputElement extends HTMLTextAreaElement {
   /** 取值；回调式，拿到 (text, messageText, mentionsCollection) */
   val?: (callback: (...args: any[]) => void) => void;
   setValue?: (text: string, messageText?: string, mentionsCollection?: any[]) => void;
   reset?: () => void;
   /** 把当前草稿写进 localStorage */
-  store?: () => void;
+  store?: (draft?: MentionDraftData) => void;
   /** 从 localStorage 恢复草稿；回调参数为 false 表示没有可恢复的内容 */
-  restore?: (callback: (restored: any) => void) => void;
+  restore?: (callback: (restored: boolean, draft?: MentionDraftData) => void) => void;
   clearStore?: () => void;
   getMentions?: (callback: (...args: any[]) => void) => void;
   addMention?: (user: MentionInsertion) => void;
@@ -100,6 +133,7 @@ const MentionsInput = props => {
     defaultMaxHeight,
     getAtData,
     initCallback,
+    onMentionSelected,
   } = props;
   const [triggerPopupVisible, setTriggerPopupVisible] = useState(false);
   const [results, setResults] = useState({});
@@ -124,7 +158,7 @@ const MentionsInput = props => {
   const mentionState = useRef({
     isAt: false,
     ...initialMentionPosition,
-    currentType: null,
+    currentType: null as string | null,
     currentDataQuery: null,
     promiseObj: null,
     requestId: 0,
@@ -203,18 +237,20 @@ const MentionsInput = props => {
       localStorage.removeItem(key);
     };
 
-    input.store = () => {
-      if (!input.value) {
+    // draft 可选：由调用方给出要缓存的内容（如 Markdown 编辑器需连同源码一起保存），缺省取输入框当前值
+    input.store = (draft?: MentionDraftData) => {
+      var data = draft || {
+        text: input.value,
+        messageText: input.messageText,
+        mentionsCollection: getMentionsCollection(),
+      };
+
+      if (!data.text) {
         input.clearStore();
         return;
       }
 
       var key = 'mentionsInputCache_' + md.global.Account.accountId + '_' + (props.cacheKey || '');
-      var data = {
-        text: input.value,
-        messageText: input.messageText,
-        mentionsCollection: getMentionsCollection(),
-      };
       safeLocalStorageSetItem(key, JSON.stringify(data));
     };
 
@@ -306,6 +342,21 @@ const MentionsInput = props => {
   const handleAddMention = mention => {
     const state = mentionState.current;
     const currentType = state.currentType;
+
+    // 由调用方接管插入：contenteditable 编辑器无法按字符偏移改写 value，
+    // 由它自己删除触发词并以自身格式插入（如 Markdown 的链接语法）
+    if (_.isFunction(onMentionSelected)) {
+      const query = state.currentDataQuery || '';
+
+      state.isAt = false;
+      state.atPos = 0;
+      state.currentDataQuery = '';
+      state.currentType = '';
+      onMentionSelected(mention, { query, triggerChar: currentType });
+      updateTriggerPopupVisible(false);
+      return;
+    }
+
     var currentMessage = input.value;
     var position = Number(getCaretPosition(input));
 
@@ -977,6 +1028,10 @@ const MentionsInput = props => {
     </Trigger>
   );
 };
+
+export function useMentionsInput() {
+  return useFunctionWrapComponent<MentionsInputHookProps>(MentionsInput);
+}
 
 export default function initMentionsInput(props) {
   functionWrap(MentionsInput, props);

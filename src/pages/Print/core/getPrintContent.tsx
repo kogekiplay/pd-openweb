@@ -9,6 +9,7 @@ import { parseDataSource } from 'src/pages/widgetConfig/util';
 import { getAdvanceSetting } from 'src/pages/widgetConfig/util/setting';
 import { getSwitchItemNames, getTitleTextFromRelateControl, renderText as renderCellText } from 'src/utils/control';
 import RegExpValidator from 'src/utils/expression';
+import { getCheckAndOther } from 'src/utils/domain/control/value';
 import { USER_CONTROLS } from './config';
 import STYLE_PRINT from './exportWordPrintTemCssString';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
@@ -692,17 +693,11 @@ const getPrintContent = (item, sourceControlType?, valueItem?) => {
       if (!printOption || (type === 10 && _.get(item, ['advancedSetting', 'checktype']) === '1')) {
         return renderCellText(dataItem) || placeholderMode;
       } else {
-        let selectedKeys = [];
-
-        try {
-          selectedKeys = JSON.parse(dataItem.value);
-        } catch (err) {
-          console.log(err);
-        }
+        const { checkIds: selectedKeys, otherValue } = getCheckAndOther(dataItem.value);
 
         return dataItem.options
           .filter(l => !l.isDeleted)
-          .map((o, index) => {
+          .map((o, _index) => {
             let str = '';
             if (type === 10 && o.hide && !selectedKeys.includes(o.key)) return placeholderMode;
 
@@ -713,9 +708,10 @@ const getPrintContent = (item, sourceControlType?, valueItem?) => {
             }
 
             return (
-              <span key={index} className="InlineBlock pTop0 pBottom0" style={{ marginRight: 14 }}>
+              <span key={o.key} className="InlineBlock pTop0 pBottom0" style={{ marginRight: 14 }}>
                 <b className="InlineBlock TxtTop TxtCenter">{str}</b>
                 {o.value}
+                {o.key === 'other' && otherValue ? `（${otherValue}）` : ''}
               </span>
             );
           });

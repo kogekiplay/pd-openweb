@@ -1,3 +1,4 @@
+import type { AttachmentContext, AttachmentRequestContext } from 'src/utils/attachmentContextTypes';
 import type { KcNodeDetail } from 'src/api/kcTypes';
 import { createRoot } from 'react-dom/client';
 import copy from 'src/utils/copyToClipboard';
@@ -336,6 +337,7 @@ export interface ShareNode extends KcNodeDetail {
 /** 调用方给的参数（7 个调用方都是动态 import 后 share.default(options, callbacks)），
  *  加上构造函数补的默认值和运行中写回来的字段。 */
 interface ShareAttachmentOptions {
+  attachmentContext?: AttachmentContext | undefined;
   /** 见 enum.ts ATTACHMENT_TYPE */
   attachmentType: number;
   /** 知识节点 id / 附件 fileID / 工作表 id；七牛附件没有 */
@@ -569,10 +571,52 @@ const shareAttachmentMethods = defineMethods<ShareAttachmentFields>()({
   fetchBaseData: function (callback) {
     var SA = this;
     switch (SA.options.attachmentType) {
-      case ATTACHMENT_TYPE.COMMON:
-        AttachmentController.shareAttachmentByPost({
-          fileId: SA.options.id,
-        })
+      case ATTACHMENT_TYPE.COMMON: {
+        const {
+          callSource,
+          worksheetId,
+          recordId,
+          controlId,
+          masterWorksheetId,
+          masterRecordId,
+          masterControlId,
+          instanceId,
+          workId,
+          isDraft,
+          from,
+        } = SA.options.attachmentContext || {};
+        const args: AttachmentRequestContext & { fileId?: string | undefined } = { fileId: SA.options.id };
+
+        if (worksheetId || callSource || instanceId || workId) {
+          Object.assign(args, {
+            callSource: callSource || (instanceId || workId ? 2 : 1),
+            worksheetId,
+            rowId: recordId,
+            controlId,
+            masterWorksheetId,
+            masterRowId: masterRecordId,
+            masterControlId,
+            instanceId,
+            workId,
+          });
+
+          const shareState = window.shareState;
+
+          if (shareState && shareState.shareId) {
+            args.type =
+              shareState.isPublicRecord || shareState.isPublicView || shareState.isPublicPage
+                ? 3
+                : shareState.isPublicForm || shareState.isPublicQuery
+                  ? 11
+                  : 14;
+          }
+
+          if (isDraft || from === 21) {
+            args.type = 21;
+          }
+        }
+
+        AttachmentController.shareAttachmentByPost(args)
           .then(function (data) {
             SA.options.node = data;
             if (callback && typeof callback === 'function') {
@@ -583,6 +627,8 @@ const shareAttachmentMethods = defineMethods<ShareAttachmentFields>()({
             console.log(err);
           });
         break;
+      }
+
       case ATTACHMENT_TYPE.KC:
         KcController.getNodeDetail({
           id: SA.options.id,

@@ -380,6 +380,12 @@ function getStreamFailureError(error: unknown, shouldPickSingleMingoPlanError?: 
     if (singleMingoPlanError) return singleMingoPlanError;
   }
 
+  const body = readField(error, 'data') || {};
+  const errorCode = stringValue(readField(body, 'errorCode')) || '';
+  const message = stringValue(readField(body, 'errorMessage'));
+  if (errorCode || message) {
+    return { errorCode, message: message || asFailure(error).message || _l('Agent 请求失败') };
+  }
   return { errorCode: '', message: asFailure(error).message || _l('Agent 请求失败') };
 }
 

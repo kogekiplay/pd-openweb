@@ -20,7 +20,7 @@ export default function QuotaCell({
   const { app = {}, user = {}, size, entityId, appItem, createTime, _isDraft } = data;
   const limitSize =
     businessType === 1
-      ? md.global.SysSettings.fileUploadLimitSize || 4 * 1024
+      ? md.global.SysSettings.fileUploadLimitSize
       : businessType === 2
         ? window.platformENV.isLocal || window.platformENV.isOverseas
           ? (limitRowTotal || 0) * 10

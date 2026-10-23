@@ -62,7 +62,7 @@ export default class extends React.Component<ChildTableProps, ChildTableWrapperS
     super(props);
     this.state = { retrying: false };
     this.unmounted = false;
-    const { worksheetId, recordId, masterData } = props;
+    const { worksheetId, recordId, masterData, worksheetInfo } = props;
     const existingStore = props.control.store;
     if (existingStore) {
       if (!isChildTableStore(existingStore)) throw new TypeError('Expected a child table store');
@@ -74,6 +74,7 @@ export default class extends React.Component<ChildTableProps, ChildTableWrapperS
         recordId,
         masterData,
         DataFormat,
+        worksheetInfo,
       });
     }
     void this.store.init().catch((error: unknown) => console.error(error));

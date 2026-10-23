@@ -2,12 +2,14 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import _ from 'lodash';
 import styled from 'styled-components';
-import { Button, Dialog, Textarea } from 'ming-ui';
+import { Button, Dialog } from 'ming-ui';
 import { SelectGroupTrigger } from 'ming-ui/functions/quickSelectGroup';
-import type { MentionsInputElement } from 'src/components/MentionsInput';
+import PostMarkdownEditor from 'src/components/comment/PostMarkdownEditor';
+import { fromStoredMessage, toSyntaxMessage } from 'src/components/comment/utils/markdownMessageSyntax';
+import type { FeedAttachment, FeedEditRequest, FeedPost, FeedScope } from '../../../types';
+import type { GroupSelectionValue } from 'src/ming-ui/functions/quickSelectGroup/types';
+import type { AppDispatch } from 'src/redux/types';
 import UploadFiles from 'src/components/UploadFiles';
-import { htmlDecodeReg } from 'src/utils/common';
-import createLinksForMessage from 'src/utils/createLinksForMessage';
 import RegExpValidator from 'src/utils/expression';
 import { edit } from '../../../redux/postActions';
 
@@ -16,11 +18,25 @@ const FooterWrap = styled.div`
   align-items: center;
 `;
 
-export default class EditPostDialog extends React.Component<any, any> {
-  // initMentionsInput 往这个 textarea 上挂了 val / reset / destroy 等方法
-  declare textarea: MentionsInputElement | null | undefined;
+export interface EditPostDialogProps {
+  postItem: FeedPost;
+  dispose(): void;
+  editPost(args: FeedEditRequest, success: () => void, failure: () => void): void;
+}
+interface EditPostDialogState {
+  visible: boolean;
+  kcAttachmentData: FeedAttachment[];
+  temporaryData: FeedAttachment[];
+  isUploadComplete: boolean;
+  submitting: boolean;
+  showUploads: boolean;
+  markdownValue: string;
+  scope: FeedScope | undefined;
+}
+export default class EditPostDialog extends React.Component<EditPostDialogProps, EditPostDialogState> {
+  declare uploadFilesRef: Pick<UploadFiles, 'addFiles'> | null | undefined;
 
-  static show(postItem, dispatch) {
+  static show(postItem: FeedPost, dispatch: AppDispatch) {
     const div = document.createElement('div');
 
     document.body.appendChild(div);
@@ -35,23 +51,25 @@ export default class EditPostDialog extends React.Component<any, any> {
     };
 
     root.render(
-      <EditPostDialog postItem={postItem} dispose={() => dispose()} editPost={(...args) => dispatch(edit(...args))} />,
+      <EditPostDialog postItem={postItem} dispose={() => dispose()} editPost={(args, success, failure) => dispatch(edit(args, success, failure))} />,
     );
   }
 
-  override state = {
+  override state: EditPostDialogState = {
     visible: true,
     kcAttachmentData: [],
     temporaryData: [],
     isUploadComplete: true,
     submitting: false,
+    showUploads: false,
+    markdownValue: fromStoredMessage(this.props.postItem.message, this.props.postItem),
     scope: {
       shareProjectIds: _.map(this.props.postItem.scope.shareProjects, p => p.projectId),
       shareGroupIds: _.map(this.props.postItem.scope.shareGroups, g => g.groupId),
     },
   };
 
-  constructor(props) {
+  constructor(props: EditPostDialogProps) {
     super(props);
     const { postItem } = props;
 
@@ -65,10 +83,7 @@ export default class EditPostDialog extends React.Component<any, any> {
       });
     }
   }
-  override componentDidMount() {
-    this.setContent(this.props.postItem);
-  }
-  formatAttachment(attachment) {
+  formatAttachment(attachment: FeedAttachment): FeedAttachment {
     if (attachment.twice) {
       attachment = _.assign({}, attachment.twice, attachment);
       delete attachment.twice;
@@ -96,48 +111,8 @@ export default class EditPostDialog extends React.Component<any, any> {
 
     return attachment;
   }
-  setContent(postItem) {
-    import('src/components/MentionsInput').then(data => {
-      const MentionsInput = data.default;
-      const message = htmlDecodeReg(
-        createLinksForMessage(_.assign({ noLink: true, doNotEscapeHTML: true }, postItem))
-          .replace(/<br>/g, '\n')
-          .replace(/<[^>]+>/g, ''),
-      );
-      const messageMentions = createLinksForMessage(
-        _.assign({ noLink: true, doNotEscapeHTML: true }, postItem, {
-          message: postItem.message
-            .replace('/[aid]([0-9a-zA-Z-]*\\|?.*)[/aid]/', 'user:$1')
-            .replace('/[gid]([0-9a-zA-Z-]*\\|?.*)[/gid]/', 'group:$1'),
-        }),
-      )
-        .replace(/<br>/g, '\n')
-        .replace(/<[^>]+>/g, '');
-      const mentionsCollection = _.map(postItem.rUserList, account => ({
-        id: account.aid,
-        fullname: account.name,
-        type: 'user',
-      })).concat(
-        _.map(postItem.rGroupList, group => ({
-          id: group.groupID,
-          value: group.groupName,
-          type: 'group',
-        })),
-      );
-
-      const textarea = this.textarea;
-
-      MentionsInput({
-        input: textarea,
-        showCategory: true,
-        initCallback: () => {
-          textarea.setValue(message, messageMentions, mentionsCollection);
-        },
-      });
-    });
-  }
-
   submit() {
+    if (this.state.submitting) return;
     if (!this.state.isUploadComplete) {
       alert(_l('文件上传中，请稍等'), 3);
       return;
@@ -146,9 +121,7 @@ export default class EditPostDialog extends React.Component<any, any> {
     const { scope } = this.state;
     const { postItem } = this.props;
     const { postID } = postItem;
-    const $textarea = $(this.textarea);
-    $textarea.get(0).val(data => {
-      const postMsg = data;
+    const submitPost = (postMsg: string) => {
 
       if (!postMsg || !(postMsg || '').trim()) {
         alert(_l('发表内容不能为空'), 3);
@@ -182,7 +155,6 @@ export default class EditPostDialog extends React.Component<any, any> {
               : undefined,
         },
         () => {
-          $textarea.get(0).reset();
           this.setState({ visible: false }, () => {
             this.props.dispose();
           });
@@ -192,10 +164,21 @@ export default class EditPostDialog extends React.Component<any, any> {
         },
       );
       return undefined;
-    });
+    };
+    submitPost(toSyntaxMessage(this.state.markdownValue));
   }
 
-  handleChangeGroup = value => {
+  handleEditorUploadFiles = (files: File[]) => {
+    if (!files || !files.length) return;
+    const provider = this.uploadFilesRef;
+    if (provider) { provider.addFiles(files); return; }
+    // Plain text posts have no initial file provider. Mount it before handing over the original native batch.
+    this.setState({ showUploads: true, isUploadComplete: false }, () => {
+      this.uploadFilesRef?.addFiles(files);
+    });
+  };
+
+  handleChangeGroup = (value: GroupSelectionValue) => {
     this.setState({
       scope:
         !value.isMe &&
@@ -242,16 +225,18 @@ export default class EditPostDialog extends React.Component<any, any> {
         }
         onCancel={() => this.props.dispose()}
       >
-        <Textarea
-          id="textarea_Updater_Edit"
-          className="textarea_Updater_Edit"
-          maxHeight={220}
-          manualRef={textarea => {
-            this.textarea = textarea;
-          }}
+        <PostMarkdownEditor
+          value={this.state.markdownValue}
+          minHeight={120}
+          maxHeight={320}
+          projectId={postItem.projectIds?.[0]}
+          onChange={markdownValue => this.setState({ markdownValue })}
+          onUploadFiles={this.handleEditorUploadFiles}
+          onSubmit={() => this.submit()}
         />
-        {(postItem.postType == 2 || postItem.postType == 3 || postItem.postType == 9) && (
+        {(this.state.showUploads || postItem.postType == 2 || postItem.postType == 3 || postItem.postType == 9) && (
           <UploadFiles
+            manualRef={(instance: UploadFiles | null) => { this.uploadFilesRef = instance; }}
             dropPasteElement="textarea_Updater_Edit"
             className="mTop10"
             isUpload
@@ -259,13 +244,13 @@ export default class EditPostDialog extends React.Component<any, any> {
             column={4}
             temporaryData={this.state.temporaryData}
             kcAttachmentData={this.state.kcAttachmentData}
-            onTemporaryDataUpdate={result => {
+            onTemporaryDataUpdate={(result: FeedAttachment[]) => {
               this.setState({ temporaryData: result });
             }}
-            onKcAttachmentDataUpdate={result => {
+            onKcAttachmentDataUpdate={(result: FeedAttachment[]) => {
               this.setState({ kcAttachmentData: result });
             }}
-            onUploadComplete={bool => {
+            onUploadComplete={(bool: boolean) => {
               this.setState({ isUploadComplete: bool });
             }}
           />

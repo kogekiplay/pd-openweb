@@ -32,6 +32,15 @@ class CompactionTests(unittest.TestCase):
         (stage / 'phase.json').write_text(json.dumps(dict(phase='completed')))
         (stage / 'rollback.sh').write_text('# preserve rollback script')
         with tarfile.open(stage / 'frontend.tar.gz', 'w:gz') as package:
+            if fault in ['directories', 'duplicate-directory', 'unlisted-directory']:
+                for directory in ['files', 'dist']:
+                    package.add(stage / directory, arcname=directory, recursive=False)
+            if fault == 'duplicate-directory':
+                package.add(stage / 'files', arcname='files', recursive=False)
+            if fault == 'unlisted-directory':
+                member = tarfile.TarInfo('files/not-in-manifest')
+                member.type = tarfile.DIRTYPE
+                package.addfile(member)
             for name in ['files/index.html', 'dist/chunk.js', 'artifact.json', 'candidate-sha256.txt', 'deploy.py']:
                 if fault == 'missing' and name == 'dist/chunk.js':
                     continue
@@ -213,6 +222,32 @@ class CompactionTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertFalse((stage / 'files').exists())
             self.assertEqual((stage / 'deploy.py').read_text(), '# later operator edit\n')
+
+    def test_manifest_ancestor_directories_and_real_recovery(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary).resolve()
+            stage, current = self.fixture(root, 'directories')
+            archive_sha = COMPACT.file_digest(stage / 'frontend.tar.gz')
+            self.run_compact(root, stage, current, reviewed_sha=COMPACT.file_digest(stage / 'deploy.py'))
+            record = json.loads((stage / 'staging-compaction.json').read_text())
+            self.assertEqual(record['phase'], 'compacted')
+            self.assertEqual(record['metadataRecovery']['filesRecovered'], 2)
+            self.assertFalse((stage / 'files').exists())
+            self.assertEqual(COMPACT.file_digest(stage / 'frontend.tar.gz'), archive_sha)
+            subprocess.run(['sh', str(stage / 'restore-staging.sh')], check=True, stdout=subprocess.PIPE)
+            self.assertEqual((stage / 'files/index.html').read_text(), 'revision=' + 'a' * 40)
+            self.assertEqual((stage / 'dist/chunk.js').read_text(), 'candidate javascript')
+
+    def test_duplicate_or_unlisted_directories_preserve_original_trees(self):
+        for fault in ['duplicate-directory', 'unlisted-directory']:
+            with self.subTest(fault=fault), tempfile.TemporaryDirectory() as temporary:
+                root = pathlib.Path(temporary).resolve()
+                stage, current = self.fixture(root, fault)
+                with self.assertRaises(ValueError):
+                    self.run_compact(root, stage, current, reviewed_sha=COMPACT.file_digest(stage / 'deploy.py'))
+                self.assertTrue((stage / 'files/index.html').is_file())
+                self.assertTrue((stage / 'dist/chunk.js').is_file())
+                self.assertFalse((stage / 'restore-staging.sh').exists())
 
 
 if __name__ == '__main__':

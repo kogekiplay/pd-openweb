@@ -1,4 +1,6 @@
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import type { AttachmentContext } from 'src/utils/attachmentContextTypes';
+import type { ControlAdvancedSetting } from 'src/utils/controlTypes';
+import { forwardRef, useContext, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -18,6 +20,7 @@ import { controlState } from 'src/utils/control';
 import type { AttachmentValue } from 'src/utils/controlTypes';
 import RegExpValidator from 'src/utils/expression';
 import { addBehaviorLog, compatibleMDJS } from 'src/utils/project';
+import RecordInfoContext from 'worksheet/common/recordInfo/RecordInfoContext';
 import { FROM } from './enum';
 
 const Con = styled.div`
@@ -288,6 +291,31 @@ function parseValue(valueStr = '[]') {
   return value;
 }
 
+interface CellPreviewFile extends AttachmentValue {
+  origin: { url?: string | undefined };
+}
+export interface CellAttachmentPreviewOptions extends AttachmentContext {
+  attachments: CellPreviewFile[];
+  index: number;
+  sheetSwitchPermit?: HapApi.MD.Entity.Worksheet.SwitchPermitModel[] | undefined;
+  viewId?: string | undefined;
+  disableDownload?: boolean | undefined;
+  handleOpenControlAttachmentInNewTab?: ((fileId?: string, options?: { openAsPopup?: boolean }) => void) | undefined;
+  fileId?: string | undefined;
+  advancedSetting: ControlAdvancedSetting;
+  allowEdit?: boolean | undefined;
+  onlyEditSelf?: boolean | undefined;
+  projectId?: string | undefined;
+  sourceControlId?: string | undefined;
+}
+/** Keep the original one extension getter read and native missing-method failure; no false nonnull extension claim. */
+function nativeAttachmentExtension(attachment: CellPreviewFile): string {
+  const extension = attachment.ext;
+  const read: { get(target: unknown, key: string, receiver: unknown): unknown } = Reflect;
+  const slice: { apply(target: unknown, receiver: unknown, args: unknown[]): string } = Reflect;
+  return slice.apply(read.get(extension === undefined ? extension : Object(extension), 'slice', extension), extension, [1]);
+}
+
 function previewAttachment({
   attachments,
   index,
@@ -308,7 +336,9 @@ function previewAttachment({
   masterRecordId,
   masterControlId,
   sourceControlId,
-}) {
+  instanceId,
+  workId,
+}: CellAttachmentPreviewOptions) {
   const recordAttachmentSwitch = isOpenPermit(permitList.recordAttachmentSwitch, sheetSwitchPermit, viewId);
   let hideFunctions = ['editFileName', 'saveToKnowlege'];
   const allowDownload = advancedSetting.allowdownload || '1';
@@ -324,7 +354,7 @@ function previewAttachment({
       return Object.assign({}, attachment, {
         previewAttachmentType: 'QINIU',
         path: attachment.origin.url || attachment.previewUrl,
-        ext: attachment.ext.slice(1),
+        ext: nativeAttachmentExtension(attachment),
         name: attachment.originalFilename || _l('图片'),
       });
     }
@@ -353,7 +383,8 @@ function previewAttachment({
           hideFunctions: hideFunctions,
           disableNoPeimission: true,
           worksheetId,
-          fileId: attachments[index].fileID,
+          // index is captured from this private parsed array's render/map operation; keep native failure if violated.
+          fileId: attachments[index]!.fileID,
           recordId,
           controlId,
           from,
@@ -364,6 +395,8 @@ function previewAttachment({
           masterRecordId,
           masterControlId,
           sourceControlId,
+          instanceId,
+          workId,
         },
         {
           openControlAttachmentInNewTab: handleOpenControlAttachmentInNewTab,
@@ -389,6 +422,8 @@ function HoverPreviewPanel(props) {
     masterData,
     from,
     projectId,
+    instanceId,
+    workId,
   } = props;
   const { originalFilename, ext = '', filesize } = attachment;
   const { controlId, advancedSetting, sourceControlId } = cell;
@@ -512,10 +547,14 @@ function HoverPreviewPanel(props) {
                     refId: attachment.refId,
                     worksheetId,
                     rowId: recordId,
-                    controlId: _.get(masterData, 'controlId') || controlId,
+                    controlId,
                     parentWorksheetId: _.get(masterData, 'worksheetId'),
                     parentRowId: _.get(masterData, 'recordId'),
+                    masterControlId: _.get(masterData, 'controlId'),
                     sourceControlId: sourceControlId,
+                    instanceId,
+                    workId,
+                    from,
                   })
                 }
               ></i>
@@ -594,6 +633,8 @@ function Attachment(props) {
     onUpdate,
     deleteLocalAttachment,
     projectId,
+    instanceId,
+    workId,
   } = props;
   const { appId, recordId, worksheetId, from, masterData = () => {} } = cellInfo;
   const { attachment } = props;
@@ -682,6 +723,8 @@ function Attachment(props) {
         masterRecordId: _.get(currentMasterData, 'recordId'),
         masterControlId: _.get(currentMasterData, 'controlId'),
         sourceControlId: cell.sourceControlId,
+        instanceId,
+        workId,
       });
     }, 300);
   };
@@ -735,6 +778,8 @@ function Attachment(props) {
           deleteLocalAttachment={deleteLocalAttachment}
           from={from}
           projectId={projectId}
+          instanceId={instanceId}
+          workId={workId}
         />
       }
       getPopupContainer={() => document.body}
@@ -808,6 +853,7 @@ function CellAttachments(props, sourceRef) {
   } = props;
   let { editable } = props;
   const { value, strDefault = '', advancedSetting = {}, enumDefault } = cell;
+  const { recordBaseInfo } = useContext(RecordInfoContext) || props;
   const showShape =
     {
       4: 'rect',
@@ -947,6 +993,8 @@ function CellAttachments(props, sourceRef) {
       sheetSwitchPermit={sheetSwitchPermit}
       viewId={viewId}
       projectId={projectId}
+      instanceId={_.get(recordBaseInfo, 'instanceId')}
+      workId={_.get(recordBaseInfo, 'workId')}
       onUpdate={valueStr => {
         setAttachments(parseValue(valueStr));
       }}

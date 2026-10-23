@@ -1,10 +1,12 @@
+import type { ShareAttachmentInput } from 'src/components/shareAttachment/shareAttachment';
+import type { AttachmentContext } from 'src/utils/attachmentContextTypes';
 import _ from 'lodash';
 import qs from 'query-string';
 import { getFileExtends } from 'src/components/UploadFiles/utils';
 import { downloadFile, pathCompletion } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 
-export const handleShare = (data, isDownload) => {
+export const handleShare = (data, isDownload, attachmentContext?: AttachmentContext) => {
   if (!md.global.Account.accountId) {
     window.open(pathCompletion(`/login?ReturnUrl=${location.href}`));
     return;
@@ -52,8 +54,9 @@ export const handleShare = (data, isDownload) => {
   }
 
   import('src/components/shareAttachment/shareAttachment').then(share => {
-    const params = {
+    const params: ShareAttachmentInput = {
       attachmentType,
+      attachmentContext,
     };
     const isPicture = RegExpValidator.fileIsPicture('.' + attachment.ext.slice(attachment.ext.indexOf('.') + 1));
     params.id = attachment.id;

@@ -1,3 +1,4 @@
+import type { AttachmentContext } from 'src/utils/attachmentContextTypes';
 import React from 'react';
 import { shallowEqual } from 'react-redux';
 import _ from 'lodash';
@@ -54,6 +55,8 @@ export interface RowDetailProps {
 }
 
 export default class RowDetail extends React.Component<RowDetailProps, RowDetailState> {
+  static override contextType = RecordInfoContext;
+  declare context: { recordBaseInfo?: Pick<AttachmentContext, 'instanceId' | 'workId'> | undefined } | undefined;
   static override propTypes = {
     widgetStyle: PropTypes.shape({}),
     ignoreLock: PropTypes.bool,
@@ -224,6 +227,7 @@ export default class RowDetail extends React.Component<RowDetailProps, RowDetail
       <RecordInfoContext.Provider
         value={{
           recordBaseInfo: {
+            ..._.pick(_.get(this.context, 'recordBaseInfo'), ['instanceId', 'workId']),
             appId,
             worksheetId,
             recordId: data.rowid,

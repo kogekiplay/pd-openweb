@@ -6,9 +6,10 @@ import { ALL_SYS } from 'src/pages/widgetConfig/config/widget';
 import { getWidgetTypeName } from 'src/utils/app';
 import { getMimeTypeByExt } from 'src/utils/common';
 import { FAST_GPT_CONFIG } from 'src/utils/enum';
+import { resolveAgentErrorMessage } from 'src/components/Agent/errorMessages';
 
-// 流式错误事件 → { errorMsg, sourceData }：优先取后端真实错误信息（兼容 ErrorMessage / errorMessage 大小写，
-// 与新版 Agent 的归一逻辑一致），取不到再退回「模型调用失败」。
+// 流式错误事件 → { errorMsg, sourceData }：已知错误码取前端文案，其次后端真实错误信息（兼容 ErrorCode / errorCode、
+// ErrorMessage / errorMessage 大小写，与新版 Agent 的归一逻辑一致），都取不到再退回「模型调用失败」。
 // error 为 useChat 透传的 message（旧 OpenAI 风格错误信息在 .message），eventData 为原始错误事件文本。
 /**
  * 流式对话出错时的统一错误形状。resolveStreamError 产出，各 bot 用 useState 持有，
@@ -36,7 +37,12 @@ export function resolveStreamError(error?: string, eventData?: string): StreamEr
   const data = safeParse(eventData, 'object') || {};
 
   return {
-    errorMsg: data.ErrorMessage || data.errorMessage || error || _l('模型调用失败'),
+    // 已知 Agent 错误码换成前端文案（后端 errorMessage 未做多语言），未收录的码仍取后端原文
+    errorMsg: resolveAgentErrorMessage(
+      data.ErrorCode || data.errorCode,
+      data.ErrorMessage || data.errorMessage || error,
+      _l('模型调用失败'),
+    ),
     sourceData: eventData,
   };
 }

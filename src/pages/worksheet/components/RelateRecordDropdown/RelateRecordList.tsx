@@ -15,6 +15,7 @@ import ChildTableContext from '../ChildTable/ChildTableContext';
 import ReacordItem from './RecordItem';
 
 export default class RelateRecordList extends React.PureComponent<any, any> {
+  declare requestId: number | undefined;
   static override contextType = ChildTableContext;
   static override propTypes = {
     from: PropTypes.number,
@@ -277,9 +278,14 @@ export default class RelateRecordList extends React.PureComponent<any, any> {
       getFilterRowsPromise = publicWorksheetAjax.getRelationRows;
     }
 
+    // 只处理最后一次请求的结果：被取消或已过期的请求不能复位 loading，否则会先闪出「无匹配结果」
+    const requestId = (this.requestId = (this.requestId || 0) + 1);
+
     this.searchAjax = getFilterRowsPromise(args);
     this.searchAjax
       .then(res => {
+        if (requestId !== this.requestId) return;
+
         if (res.resultCode === 1) {
           let ignoreRowIdsForChildTable = [];
 
@@ -339,6 +345,8 @@ export default class RelateRecordList extends React.PureComponent<any, any> {
         }
       })
       .catch(err => {
+        if (requestId !== this.requestId) return;
+
         this.setState({ loading: false, error: err.errorCode === 300016 ? err.errorCode : err.errorMessage });
       });
   }
@@ -358,6 +366,7 @@ export default class RelateRecordList extends React.PureComponent<any, any> {
         keyWords: value.trim(),
         pageIndex: 1,
         records: [],
+        loading: true,
       },
       this.loadRecord,
     );

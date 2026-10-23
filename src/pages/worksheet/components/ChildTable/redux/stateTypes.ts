@@ -1,4 +1,5 @@
 import type {
+  ChildFilterCondition,
   CellErrors,
   ChildPagination,
   ChildTableBase,
@@ -6,7 +7,6 @@ import type {
   FieldStoreRecord,
 } from '../../../../../utils/subListStoreTypes';
 import type { TreeExpansionAction } from '../../../common/TreeTableHelper/types';
-import type { WorksheetFilterCondition } from '../../../types';
 
 export type ChildRowsAction =
   | {
@@ -52,7 +52,7 @@ export type ChildSortAction =
   | { type: 'UPDATE_SORT_CONFIG'; sortConfig: FieldSortConfig | null }
   | { type: 'RESET' | 'LOAD_ROWS' | 'CLEAR_AND_SET_ROWS' };
 export type ChildFilterAction =
-  { type: 'UPDATE_FILTER_CONTROLS'; filterControls?: WorksheetFilterCondition[] | undefined } | { type: 'RESET' };
+  { type: 'UPDATE_FILTER_CONTROLS'; filterControls?: ChildFilterCondition[] | null | undefined } | { type: 'RESET' };
 export type ChildChangesAction = { type: string };
 
 export type ChildTableAction =

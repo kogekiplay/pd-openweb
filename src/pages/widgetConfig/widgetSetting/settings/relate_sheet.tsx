@@ -1,3 +1,4 @@
+import { rememberSubListWorksheet } from 'src/pages/widgetConfig/util/subListWorksheetCache';
 import { sortSettings } from '../../util/advancedSettingBoundary';
 import { useEffect, useRef } from 'react';
 import { useSetState } from 'react-use';
@@ -185,7 +186,7 @@ export default function RelateSheet(props) {
               dataSource,
               data: {
                 loading,
-                sheetInfo: worksheetInfo,
+                sheetInfo: rememberSubListWorksheet(worksheetInfo),
                 views,
                 controls,
               },
@@ -201,7 +202,7 @@ export default function RelateSheet(props) {
       // 缓存一份接口数据使用
       window.subListSheetConfig[controlId] = {
         loading,
-        sheetInfo: worksheetInfo,
+        sheetInfo: rememberSubListWorksheet(worksheetInfo),
         views,
         controls,
       };
@@ -612,7 +613,7 @@ export default function RelateSheet(props) {
               relationSheetConfig: {
                 controls,
                 views,
-                sheetInfo: worksheetInfo,
+                sheetInfo: rememberSubListWorksheet(worksheetInfo),
               },
               relationSheetLoading: loading,
               subscribeRelationSheetConfig: callback => {

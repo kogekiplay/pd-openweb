@@ -73,7 +73,7 @@ class Clock extends Date {
 function instance(
   version = 'current',
   provided = {},
-  options: { featureType?: string | number; docEdit?: boolean; subPath?: string; search?: string } = {},
+  options: { featureType?: string | number; docEdit?: boolean | undefined; subPath?: string; search?: string } = {},
 ) {
   const sources = version === 'old' ? old : current,
     events = [],
@@ -89,7 +89,7 @@ function instance(
   );
   const md = feature.md;
   md.global.Account.accountId = 'account';
-  md.global.Config = { ...(md.global.Config || {}), EnableDocEdit: options.docEdit };
+  md.global.Config = { ...(md.global.Config || {}), EnableDocEdit: Object.hasOwn(options, 'docEdit') ? options.docEdit : true };
   md.global.FileStoreConfig = { documentHost: 'https://doc.invalid', uploadHost: 'https://up.invalid' };
   md.global.SysSettings = { fileUploadLimitSize: 100 };
   const win = { ...feature.win, md, subPath: options.subPath || '', open: url => events.push(['open', url]) },

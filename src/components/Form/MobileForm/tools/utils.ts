@@ -307,7 +307,17 @@ export const formatSwitches = switches => {
   });
 };
 
-export const isOpenPermit = (type: number, list = [], viewId: string) => {
+const nativeProperty: { get(target: unknown, key: string, receiver: unknown): unknown } = Reflect;
+const nativeArrayCall: { apply(target: unknown, receiver: unknown, args: unknown[]): boolean } = Reflect;
+/** Array methods/length are native boundaries: keep original receiver, undefined failure and separate reads. */
+function includesNativeView(array: string[] | undefined, view: string): boolean {
+  return nativeArrayCall.apply(nativeProperty.get(array, 'includes', array), array, [view]);
+}
+function nativeArrayLength(array: string[] | undefined): number {
+  return Reflect.apply(Reflect.get, Reflect, [array, 'length', array]);
+}
+
+export const isOpenPermit = (type: number, list: HapApi.MD.Entity.Worksheet.SwitchPermitModel[] = [], viewId: string) => {
   if (Array.isArray(list)) {
     list = list.length > 0 ? formatSwitches(list) : list;
     let data = list.find(o => o.type === type);
@@ -324,7 +334,7 @@ export const isOpenPermit = (type: number, list = [], viewId: string) => {
     }
 
     // data.viewIds.length <= 0 所有视图
-    return !!data.state && (data.viewIds.includes(viewId) || data.viewIds.length <= 0);
+    return !!data.state && (includesNativeView(data.viewIds, viewId) || nativeArrayLength(data.viewIds) <= 0);
   }
 
   return false;

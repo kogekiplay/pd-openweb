@@ -125,8 +125,8 @@ export default class AdminEntryPoint extends PureComponent<any, any> {
       const subMenuArray = _.flatten<FeatureMenu>(menuList.map(item => item.subMenuList));
 
       const result = _.uniq(keys).filter(key => {
+        if (key === 'aggregationTable' && !md.global.Config.EnableDataPipeline) return undefined;
         if (window.platformENV.isOverseas || window.platformENV.isLocal) {
-          if (key === 'aggregationTable' && !md.global.Config.EnableDataPipeline) return undefined;
           if (key === 'billinfo' && !window.platformENV.isPlatform) return undefined;
           if (key === 'weixin' && md.global.SysSettings.hideWeixin) return undefined;
           if (key === 'platformintegration' && allPlatformsHidden()) return undefined;

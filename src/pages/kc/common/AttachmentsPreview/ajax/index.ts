@@ -25,7 +25,7 @@ const rejectErr = function (ajaxPromise) {
   });
 };
 
-export function getKcNodeDetail(nodeId, worksheetId: string) {
+export function getKcNodeDetail(nodeId, worksheetId?: string) {
   return kcAjax.getNodeDetail({ id: nodeId, actionType: 14, worksheetId });
 }
 

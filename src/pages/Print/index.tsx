@@ -392,7 +392,7 @@ class PrintForm extends React.Component<any, any> {
           info,
         };
 
-        _printData.shareType = printId ? (res.shareType ?? 0) : 1;
+        _printData.shareType = printId ? (res.shareType ?? 0) : md.global.Account.isPortal ? 0 : 1;
 
         if (!printId) {
           _printData.qrCode = false;
@@ -766,7 +766,7 @@ class PrintForm extends React.Component<any, any> {
             editLoading: editLoading,
             cauUseWpsPreview: fileTypeNum !== 5,
             userWps: useWps,
-            showEdit: !isBatch && canEditFile && md.global.Config.EnableDocEdit !== false,
+            showEdit: !isBatch && canEditFile && md.global.Config.EnableDocEdit,
             changePreview: type => this.setState({ useWps: type === 'wps' }),
             clickEdit: this.onEdit,
           }}
@@ -789,9 +789,7 @@ class PrintForm extends React.Component<any, any> {
             $('.iframeDiv').show();
           }}
           src={
-            !window.platformENV.isOverseas &&
-            !window.platformENV.isLocal &&
-            (useWps || fileTypeNum === 5 || md.global.Config.EnableWpsDocPreview)
+            window.platformENV.isHap && (useWps || fileTypeNum === 5 || md.global.Config.EnableWpsDocPreview)
               ? `${md.global.Config.WpsDocPreviewUrl}/print?url=${encodeURIComponent(this.state.ajaxUrlStr)}&attname=${
                   printData.name
                 }.${fileTypeNum === 5 ? 'xlsx' : 'docx'}`

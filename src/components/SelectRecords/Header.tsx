@@ -131,7 +131,10 @@ export default function Header(props: SelectRecordsHeaderProps) {
               setKeyword(value);
               onSearch(value);
             }}
-            onKeyDown={onKeyDown}
+            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+              event.stopPropagation();
+              if (onKeyDown !== undefined) onKeyDown(event);
+            }}
           />
           {keyword && (
             <span

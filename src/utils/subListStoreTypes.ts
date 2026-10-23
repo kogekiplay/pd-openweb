@@ -40,6 +40,24 @@ export interface FieldStoreControl extends FormControl {
 export interface FieldStoreMasterData extends MasterData {
   recordId?: string | undefined;
 }
+export interface ChildSDKCondition extends Record<string, unknown> {
+  controlId?: string | null | undefined;
+  dataType?: number | null | undefined;
+  spliceType?: number | null | undefined;
+  filterType?: number | null | undefined;
+  dateRange?: number | null | undefined;
+  dateRangeType?: number | null | undefined;
+  maxValue?: string | number | null | undefined;
+  minValue?: string | number | null | undefined;
+  isDynamicsource?: boolean | null | undefined;
+  dynamicSource?: unknown[] | null | undefined;
+  value?: unknown;
+  values?: unknown[] | null | undefined;
+  isGroup?: boolean | null | undefined;
+  groupFilters?: ChildSDKCondition[] | null | undefined;
+}
+export type ChildFilterCondition = WorksheetFilterCondition | ChildSDKCondition;
+
 export interface ChildTableBase {
   initializationError?: string | undefined;
   rowLoadError?: string | undefined;
@@ -89,7 +107,7 @@ export interface ChildTableState {
   pagination: ChildPagination;
   realCount: number | null;
   sortConfig: FieldSortConfig | null;
-  filterControls: WorksheetFilterCondition[];
+  filterControls: ChildFilterCondition[];
 }
 export interface RelateRecordBase {
   from?: number | undefined;

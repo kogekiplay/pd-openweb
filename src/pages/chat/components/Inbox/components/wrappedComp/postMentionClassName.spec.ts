@@ -11,6 +11,8 @@ interface Subject {
   render(): import('react').ReactElement;
   renderAccessory(): import('react').ReactElement | null | undefined;
 }
+const actualSyntax: Record<string, unknown> = require('../../../../../../../scripts/spec-message-syntax.ts').loadMessageSyntaxSpec();
+
 const cache = new Map<string, Data>();
 Reflect.set(globalThis, '_l', (text: string) => text);
 function Shell(props: { children?: import('react').ReactNode }) { return props.children; }
@@ -21,6 +23,7 @@ function load(file: string): Data {
   const module = { exports: {} as Data }; cache.set(file, module.exports);
   const localRequire = (name: string): unknown => {
     if (name === 'src/utils/common') return { pathCompletion: (value: unknown) => value, htmlEncodeReg: (value: unknown) => value, browserIsMobile: () => false };
+    if (name === 'src/components/comment/utils/markdownMessageSyntax') return actualSyntax;
     if (name === 'src/utils/createLinksForMessage') return (args: { message: string }) => args.message;
     if (name === '../baseComponent/messageContent') return Shell;
     if (name === '../../constants' || name === './constants') return load('src/pages/chat/components/Inbox/constants.ts');

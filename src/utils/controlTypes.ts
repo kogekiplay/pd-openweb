@@ -65,6 +65,8 @@ export interface ControlAdvancedSetting {
   /** 子表：允许编辑 */
   allowedit?: string | undefined;
   allowlink?: string | undefined;
+  /** Attachment settings store this download switch as the same 0/1 string as upload/edit. */
+  allowdownload?: string | undefined;
   /** 子表：允许单条添加 */
   allowsingle?: string | undefined;
   allowtime?: string | undefined;

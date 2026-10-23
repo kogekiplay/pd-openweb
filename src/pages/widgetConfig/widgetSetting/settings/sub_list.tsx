@@ -1,3 +1,4 @@
+import { rememberSubListWorksheet } from 'src/pages/widgetConfig/util/subListWorksheetCache';
 import { sortSettings } from '../../util/advancedSettingBoundary';
 import { Fragment, useEffect, useState } from 'react';
 import { useSetState } from 'react-use';
@@ -155,7 +156,7 @@ export default function SubListSetting(props) {
               status: true,
               mode,
               saveIndex,
-              sheetInfo: res,
+              sheetInfo: rememberSubListWorksheet(res),
             },
           };
           getQueryConfigs(res);
@@ -238,7 +239,7 @@ export default function SubListSetting(props) {
           status: true,
           mode,
           saveIndex: status.saveIndex,
-          sheetInfo: res,
+          sheetInfo: rememberSubListWorksheet(res),
         };
         setMode(mode);
         let oriShowControls = isEmpty(showControls)

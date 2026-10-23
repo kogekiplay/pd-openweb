@@ -128,7 +128,7 @@ const stubs: Record<string, unknown> = {
   'src/components/OptionChip': { OptionChip: 'option-chip' },
   uuid: { v4: () => 'fixed-id' },
 };
-function load<Model>(filename: string): Model {
+function load<Model>(filename: string, environment: Record<string, unknown> = {}): Model {
   const compiled = transformFileSync(filename, { plugins: ['@babel/plugin-transform-modules-commonjs'] });
   const moduleLike: { exports: unknown } = { exports: {} };
   new Function('module', 'exports', 'require', '_l', 'safeParse', 'document', 'md', 'window', compiled.code)(
@@ -136,6 +136,7 @@ function load<Model>(filename: string): Model {
     moduleLike.exports,
     (name: string) => {
       if (Object.hasOwn(stubs, name)) return stubs[name];
+      if (name === 'src/pages/widgetConfig/util/subListWorksheetCache') return load(path.resolve(__dirname, '../../../util/subListWorksheetCache.ts'), environment);
       throw new Error(`Unexpected input dependency ${name}`);
     },
     (text: string, ...args: unknown[]) =>
@@ -143,7 +144,7 @@ function load<Model>(filename: string): Model {
     parse,
     { body: {}, querySelector: () => null },
     { global: { FileStoreConfig: { pictureHost: '/picture' } } },
-    {},
+    environment,
   );
   return moduleLike.exports as Model;
 }

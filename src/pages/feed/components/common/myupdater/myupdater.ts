@@ -4,14 +4,37 @@ import 'src/components/autoTextarea/autoTextarea';
 import MentionsInput from 'src/components/MentionsInput';
 import LinkView from '../../linkView/linkView';
 import VoteUpdater from '../../voteUpdater/voteUpdater';
-import type { MentionsInputElement } from 'src/components/MentionsInput';
+import type { MentionDraftData, MentionsInputElement } from 'src/components/MentionsInput';
+import type { FeedAttachment } from '../../../types';
+import type { FeedLinkPreview } from '../../linkView/types';
 
 let langUploadFiles = _l('上传附件') + '...';
 let langShareLink = _l('分享网站') + '...';
 let langVoteQuestion = _l('请输入投票问题') + '...';
 
-const MyUpdater = {
-  options: {
+export interface MyUpdaterSettings {
+  clearFilesData(): void;
+  projectId?: string | null | undefined;
+  group?: { groupId?: string | null | undefined; isJoin?: boolean | undefined } | undefined;
+  onRestoreDraft?: ((draft?: MentionDraftData) => void) | undefined;
+  onCollapse?: (() => void) | undefined;
+}
+interface MyUpdaterOptions {
+  thumbImgs: string;
+  linkViewData: FeedLinkPreview | null;
+  updaterInputAreaFocus: boolean;
+  attachmentData: FeedAttachment[];
+  kcAttachmentData: FeedAttachment[];
+  uploadObj: { clearAttachment(): void } | null;
+  projectId: string | null | undefined;
+  group?: MyUpdaterSettings['group'];
+  clearFilesData?: MyUpdaterSettings['clearFilesData'] | undefined;
+  onRestoreDraft?: MyUpdaterSettings['onRestoreDraft'];
+  onCollapse?: MyUpdaterSettings['onCollapse'];
+}
+// Optional before Init; keep native invocation/receiver and failure instead of inventing a default callback.
+const nativeCall: { apply(target: unknown, receiver: unknown, args: unknown[]): unknown } = Reflect;
+const updaterOptions: MyUpdaterOptions = {
     thumbImgs: '',
     linkViewData: null, // 链接预览数据
     updaterInputAreaFocus: false,
@@ -19,11 +42,13 @@ const MyUpdater = {
     kcAttachmentData: [],
     uploadObj: null,
     projectId: '',
-  },
+  };
+const MyUpdater = {
+  options: updaterOptions,
 
   addPost: false,
 
-  Init: function (settings) {
+  Init: function (settings: MyUpdaterSettings) {
     $.extend(this.options, settings);
 
     this.BindEvent();
@@ -77,7 +102,8 @@ const MyUpdater = {
         }
 
         MyUpdater.ResetUpdaterDiv();
-        MyUpdater.options.clearFilesData();
+        const resetOptions = MyUpdater.options;
+        nativeCall.apply(resetOptions.clearFilesData, resetOptions, []);
 
         if (targetDivID == '#Attachment_updater') {
           $('#hidden_UpdaterType').val('9');
@@ -235,10 +261,14 @@ const MyUpdater = {
       showCategory: true,
       cacheKey: 'updatertext',
       initCallback: () => {
-        textareaUpdaterEl.restore(success => {
+        textareaUpdaterEl.restore((success, data) => {
           if (success) {
             $textareaUpdater.removeClass('textTertiary');
             $('#myupdaterOP').show();
+            // 正文由 Markdown 编辑器承载，草稿需交回编辑器显示
+            if (typeof MyUpdater.options.onRestoreDraft === 'function') {
+              MyUpdater.options.onRestoreDraft(data);
+            }
           } else {
             $textareaUpdater.val(_l('知会工作是一种美德') + '...').addClass('textTertiary');
           }
@@ -276,6 +306,9 @@ const MyUpdater = {
           // });
           updateTextareaHeight(24);
           $('#myupdaterOP').slideUp();
+          if (typeof MyUpdater.options.onCollapse === 'function') {
+            MyUpdater.options.onCollapse();
+          }
         }
       }
     });
@@ -394,13 +427,14 @@ const MyUpdater = {
 
     LinkView($('#Link_updater .updaterLinkView'), {
       viewUrl: linkUrl,
-      callback: function (data) {
+      callback: function (data: FeedLinkPreview) {
+        let preview: FeedLinkPreview | null = data;
         if (data.errorCode != '1') {
           alert(_l('链接提取失败'), 2);
-          data = null;
+          preview = null;
         }
 
-        MyUpdater.options.linkViewData = data;
+        MyUpdater.options.linkViewData = preview;
         $el.val(_l('预览')).prop('disabled', false).removeClass('Disabled');
         $btnShare.prop('disabled', false).removeClass('Disabled');
       },

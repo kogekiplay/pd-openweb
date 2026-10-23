@@ -3,7 +3,7 @@ import cx from 'classnames';
 import { Dialog } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ajaxRequest from 'src/api/taskCenter';
-import pathCompletion from 'src/utils/common';
+import { pathCompletion } from 'src/utils/common';
 import './less/printTask.less';
 
 export default class PrintTask extends Component<any, any> {

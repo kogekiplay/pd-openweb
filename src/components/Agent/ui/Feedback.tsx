@@ -6,6 +6,7 @@ import useFunctionWrapComponent from 'ming-ui/hooks/useFunctionWrapComponent';
 import agentAjax from 'src/api/agent';
 import { browserIsMobile } from 'src/utils/common';
 import { isUnauthorizedError } from 'src/utils/services/request/error';
+import { getAgentFeedbackErrorMessage } from '../errorMessages';
 
 interface Props {
   traceId: string;
@@ -32,10 +33,7 @@ export function withFeedbackDisplayParams(url: string): string {
 }
 function errorText(error?: unknown): string {
   const code = record(record(error)?.['data'])?.['errorCode'];
-  if (code === 'feedback_form_not_found') return _l('反馈入口暂未开放');
-  if (code === 'trace_not_found' || code === 'invalid_request') return _l('当前请求暂不可反馈');
-  if (code === 'feedback_form_invalid') return _l('反馈服务暂不可用，请稍后重试');
-  return _l('打开反馈页面失败，请稍后重试');
+  return getAgentFeedbackErrorMessage(code);
 }
 export function AgentFeedback({ traceId, projectId, onClose }: Props) {
   const frameRef = useRef<HTMLIFrameElement>(null);

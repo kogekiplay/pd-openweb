@@ -160,9 +160,10 @@ export default class PageTableCon extends Component<any, any> {
        style.width，React 每次渲染都警告「NaN is an invalid value for the width css style property」。
        换成 undefined 而不是按 150 补齐：原先的 NaN 对 antd 是假值、不开横向滚动，表格按自然宽度排；
        补成真数字会强制表格宽度、可能凭空冒出横向滚动条，那是可见的布局变化。undefined 同样是假值，布局不变。
-       另：传 width: 'fit-content' 的两个调用方（pay/Merchant、pay/Invoice）在这里走的是字符串拼接，
-       得到 "150fit-content" 这种坏值 —— React 不警告但同样无效，没在这次一并改。 */
-    const scrollWidth = Number.isNaN(sumWidth) ? undefined : sumWidth;
+       自适应列由 max-content 计算总宽度。 */
+    const scrollWidth = columns.some((item: { width?: string | number | undefined }) => item.width === 'fit-content')
+      ? 'max-content'
+      : Number.isNaN(sumWidth) ? undefined : sumWidth;
 
     /* 【默认 rowKey：按下标】24 个调用方里只有 2 个经 tableSetting 传了 rowKey，其余数据也没有 key 字段，
        于是 antd 生成的每一行都没有 key —— React 在 tbody 上报「Each child in a list should have a unique key」，
@@ -201,7 +202,7 @@ export default class PageTableCon extends Component<any, any> {
                 // 必须写在 {...tableSetting} 之前：调用方经 tableSetting 传的 rowKey（如 'id'）要能覆盖它
                 rowKey={defaultRowKey}
                 {...tableSetting}
-                columns={columns.map(item => ({
+                columns={columns.map((item: { minWidth?: number | string | undefined; width?: number | string | undefined }) => ({
                   ...item,
                   onCell: () => {
                     const cellStyle = {

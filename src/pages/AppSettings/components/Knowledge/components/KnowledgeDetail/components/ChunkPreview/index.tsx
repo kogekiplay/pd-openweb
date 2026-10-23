@@ -20,6 +20,16 @@ import EnhanceInfo from '../../../EnhanceInfo';
 import MarkdownPreview from '../../../MarkdownPreview';
 import './index.less';
 
+interface ChunkHeader {
+  attachment?: unknown;
+  rowId?: string | undefined;
+  type?: string | undefined;
+  doclingParsed?: boolean | undefined;
+  rowTitle?: string | undefined;
+  controlName?: string | undefined;
+  size?: number | undefined;
+}
+
 const CHUNK_LIST_PAGE_SIZE = 50;
 const CHUNK_DETAIL_PAGE_SIZE = 20;
 
@@ -39,7 +49,7 @@ const ChunkPreview = props => {
   const [sideBarTotal, setSideBarTotal] = useState(0);
   const [currentSideBarItem, setCurrentSideBarItem] = useState({});
   const [chunkDetailList, setChunkDetailList] = useState([]);
-  const [chunkHeader, setChunkHeader] = useState({});
+  const [chunkHeader, setChunkHeader] = useState<ChunkHeader>({});
   const [chunkDetailLoading, setChunkDetailLoading] = useState(false);
   const [chunkDetailTotal, setChunkDetailTotal] = useState(0);
   const [chunkDetailPageIndex, setChunkDetailPageIndex] = useState(1);
@@ -182,6 +192,9 @@ const ChunkPreview = props => {
       if (!attachment) return;
       previewAttachments({
         index: 0,
+        ...(chunkHeader.type === ATTACHMENT_TYPE.RECORD_ATTACHMENT
+          ? { callSource: 3, worksheetId: worksheet.workSheetId, recordId: chunkHeader.rowId }
+          : {}),
         callFrom: 'player',
         attachments: [attachment],
         hideFunctions: ['editFileName'],

@@ -539,4 +539,3 @@ type ShareFolderInstance = ShareFolderFields & typeof shareFolderMethods;
 
 preall({ type: 'function' }, { allowNotLogin: true });
 window.hello = new ShareFolder();
-md.global.Config.disableKf5 = true;

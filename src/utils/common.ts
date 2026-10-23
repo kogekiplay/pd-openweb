@@ -741,13 +741,7 @@ export const formatFileSize = (
 };
 
 export const downloadFile = (url: string): string => {
-  if (window.isDingTalk) {
-    const [, search] = decodeURIComponent(url).split('?');
-    const { validation } = qs.parse(search ?? '');
-    return addToken(url, validation ? true : false);
-  } else {
-    return addToken(url, md.global.Config.HttpOnly || window.self !== window.top ? false : true);
-  }
+  return addToken(url, md.global.Config.HttpOnly || window.self !== window.top ? false : true);
 };
 
 /**
@@ -822,7 +816,12 @@ export const getDefaultThemeMode = () => {
  * @param  {string} str url中 ? 之后的部分，可以包含 ?
  * @return {object}
  */
-export const getRequest = (str?: string) => {
+type RequestQuery = ReturnType<typeof qs.parse> & {
+  ReturnUrl?: ReturnType<typeof qs.parse>[string] | undefined;
+  returnUrl?: ReturnType<typeof qs.parse>[string] | undefined;
+  returnURL?: ReturnType<typeof qs.parse>[string] | undefined;
+};
+export const getRequest = (str?: string): RequestQuery => {
   str = str || location.search;
   str = str
     .replace(/^\?/, '')

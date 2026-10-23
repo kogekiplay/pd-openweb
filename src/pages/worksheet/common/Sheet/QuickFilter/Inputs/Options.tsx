@@ -6,7 +6,19 @@ import Checkbox from 'src/components/Form/DesktopForm/widgets/Checkbox';
 import Dropdown from 'src/components/Form/DesktopForm/widgets/Dropdown';
 import Option from './StyledOption';
 
-const Con = styled.div`
+const EmptyOptionContainer = styled.div`
+  .isEmpty,
+  .isEmpty .customRadioItem,
+  .isEmpty .icon-close {
+    color: var(--color-text-primary) !important;
+  }
+`;
+function renderOptionsPopup(menu: import('react').ReactNode) {
+  return <EmptyOptionContainer>{menu}</EmptyOptionContainer>;
+}
+const QUICK_FILTER_SELECT_PROPS = { popupRender: renderOptionsPopup };
+
+const Con = styled(EmptyOptionContainer)`
   position: relative;
   display: flex;
   align-items: center;
@@ -190,6 +202,7 @@ export default function Options(props) {
           }}
           default={undefined}
           dropdownClassName="scrollInTable withIsEmpty"
+          selectProps={QUICK_FILTER_SELECT_PROPS}
           value={JSON.stringify(values)}
           onChange={newValue => {
             handleChange({ values: safeParse(newValue) });
@@ -213,6 +226,7 @@ export default function Options(props) {
           fromFilter
           isFocus
           dropdownClassName="scrollInTable withIsEmpty"
+          selectProps={QUICK_FILTER_SELECT_PROPS}
           value={JSON.stringify(values)}
           onChange={newValue => {
             let parsedValue = JSON.parse(newValue);

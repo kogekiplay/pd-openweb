@@ -24,7 +24,6 @@ export const socketInit = () => {
       query:
         (!window.platformENV.isOverseas && !window.platformENV.isLocal) ||
         window.top !== window.self ||
-        md.global.Config.IsMultiMds2 ||
         location.href.indexOf('localhost') > -1
           ? { pss_id: getPssId() }
           : {}, // 非私有部署 或 Iframe 或 mds2 多域名 下，走 Url 参数

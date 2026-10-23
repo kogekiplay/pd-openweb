@@ -1,3 +1,4 @@
+import type { ChildFilterCondition } from 'src/utils/subListStoreTypes';
 import { saveAs } from 'file-saver';
 import _, { find, get, includes, isFunction, isString, omit, pick } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
@@ -8,7 +9,6 @@ import type DataFormatClass from 'src/components/Form/core/DataFormat';
 import { runtimeValue } from 'src/components/Form/core/formUtils/valueBoundary';
 import type { MasterData, RuleFilterItem } from 'src/components/Form/core/types';
 import type { TreeExpansionOptions, TreeMap } from 'src/pages/worksheet/common/TreeTableHelper';
-import type { WorksheetFilterCondition } from 'src/pages/worksheet/types';
 import { postWithToken } from 'src/utils/common';
 import { decodeDownloadBlob } from 'src/utils/commonRequestBoundary';
 import type { ControlValue, FormControl, RecordRow } from 'src/utils/controlTypes';
@@ -216,7 +216,7 @@ export const clearAndSetRows = (
 export const setOriginRows = (rows: FieldStoreRecord[]): ChildRowsAction => ({ type: 'LOAD_ROWS', rows });
 
 export const setFilterControls =
-  (filterControls: WorksheetFilterCondition[], { skipRealCount }: { skipRealCount?: boolean } = {}) =>
+  (filterControls: ChildFilterCondition[] | null | undefined, { skipRealCount }: { skipRealCount?: boolean } = {}) =>
   (dispatch: ChildTableDispatch, getState: ChildTableGetState) => {
     const { rows = [], realCount, filterControls: prevFilterControls = [] } = getState();
 

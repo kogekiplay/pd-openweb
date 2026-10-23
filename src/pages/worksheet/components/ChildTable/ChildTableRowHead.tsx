@@ -168,13 +168,8 @@ export default function RowHead(props: RowHeadProps) {
 
   if (rowIndex === -1) {
     return showCheckbox ? (
-      <div className={cx(className, 'noRightBorder')} style={style}>
-        <span
-          className="rowIndex TxtCenter InlineBlock"
-          style={{
-            width: 44,
-          }}
-        >
+      <Con as="div" className={cx(className, 'noRightBorder showCheckbox')} style={style}>
+        <span className="rowIndex">
           <Checkbox
             size="small"
             clearselected={!isSelectAll && !!selectedRowIds.length}
@@ -185,7 +180,7 @@ export default function RowHead(props: RowHeadProps) {
             }}
           />
         </span>
-      </div>
+      </Con>
     ) : (
       <div className={cx(className, 'noRightBorder')} style={style}>
         {changeSheetLayoutVisible && (

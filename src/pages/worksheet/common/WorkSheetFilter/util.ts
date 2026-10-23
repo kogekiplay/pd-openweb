@@ -1232,6 +1232,7 @@ export function getFilter({
         currentTimeForSecond,
         ignoreFilterControl: relateControl.ignoreFilterControl,
         abortFilterWhenEmpty,
+        ignoreEmptyRule,
       });
     }
   }
@@ -1282,6 +1283,7 @@ export function fillConditionValue({
   currentTimeForSecond,
   ignoreFilterControl = false,
   abortFilterWhenEmpty = false,
+  ignoreEmptyRule = false,
 }: {
   condition: FilterWireItem;
   formData: FilterFormControl[];
@@ -1290,6 +1292,7 @@ export function fillConditionValue({
   currentTimeForSecond?: moment.MomentInput | boolean | undefined;
   ignoreFilterControl?: boolean | undefined;
   abortFilterWhenEmpty?: boolean | undefined;
+  ignoreEmptyRule?: boolean | undefined;
 }): FilterWireItem | false | undefined {
   const { dataType, controlId } = condition;
   const dynamicSource = condition.dynamicSource?.[0];
@@ -1310,6 +1313,7 @@ export function fillConditionValue({
 
   if ((cid === 'current-rowid' || cid === 'rowid') && !_.includes(['fastFilter', 'navGroup'], rcid)) {
     if (!relateControl.recordId) {
+      if (ignoreEmptyRule) return condition;
       return undefined;
     }
 

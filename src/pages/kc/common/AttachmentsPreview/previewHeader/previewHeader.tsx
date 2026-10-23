@@ -1,3 +1,7 @@
+import type { DownloadAttachmentArgs } from 'src/pages/worksheet/controllers/record';
+const nativeInvoke: { apply(target: unknown, receiver: unknown, args: unknown[]): unknown } = Reflect;
+import type { AttachmentContext } from 'src/utils/attachmentContextTypes';
+import type { ShareAttachmentInput, ShareNode } from 'src/components/shareAttachment/shareAttachment';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -19,9 +23,67 @@ import * as previewUtil from '../constant/util';
 import CommonHeader from './CommonHeader';
 import 'rc-trigger/assets/index.css';
 
-class PreviewHeader extends React.Component<any, any> {
+export interface PreviewSourceNode extends ShareNode {
+  fileId?: string | undefined;
+  path?: string | undefined;
+  originalFilename?: string | undefined;
+  filesize?: number | undefined;
+}
+export interface HeaderAttachment {
+  name?: string | undefined;
+  ext: string;
+  /** The source forwards the raw view mode and only compares it to known numeric modes here. */
+  previewType: unknown;
+  previewAttachmentType: string | undefined;
+  viewUrl?: string | undefined;
+  sourceNode: PreviewSourceNode;
+  originNode?: PreviewSourceNode | undefined;
+}
+export type PreviewDownloadLog = Pick<DownloadAttachmentArgs, 'rowId' | 'parentWorksheetId' | 'parentRowId' | 'controlId'>;
+export interface PreviewHeaderExtra extends AttachmentContext {
+  mdReplaceAttachment?: ((attachment: unknown) => void) | undefined;
+  openControlAttachmentInNewTab?: ((fileId?: string, options?: unknown) => void) | undefined;
+  deleteFunction?: unknown;
+  logExtend?: PreviewDownloadLog | undefined;
+}
+export interface PreviewHeaderProps {
+  attachment: HeaderAttachment;
+  attachmentContext?: AttachmentContext | undefined;
+  extra: PreviewHeaderExtra;
+  originAttachments: unknown[];
+  index: number;
+  /** Reducer carries false/true and opaque native/API failures; only the status equality is interpreted here. */
+  error: unknown;
+  hideFunctions?: string[] | undefined;
+  fromType?: number | undefined;
+  previewService?: string | undefined;
+  wpsEditUrl?: string | undefined;
+  projectId?: string | undefined;
+  isDraft?: boolean | undefined;
+  allowEdit?: boolean | undefined;
+  className?: string | undefined;
+  logExtend?: PreviewDownloadLog | undefined;
+  onClose?: (() => void) | undefined;
+  showSwitchHtmlPreview?: boolean | undefined;
+  clickSwitchHtmlPreview?: (() => void) | undefined;
+  performRemoveItems?: ((item: unknown) => void) | undefined;
+  performUpdateItem(item: PreviewSourceNode): void;
+  renameFile(value: string): void;
+  saveToKnowlwdge(type: unknown): void;
+  replaceAttachment(item: unknown, index: number, source: string): void;
+  updateAllowDownload(): void;
+  changePreviewService(service: string): void;
+}
+function nativePreviewErrorStatus(error: unknown): unknown {
+  const property: { get(target: unknown, key: string, receiver: unknown): unknown } = Reflect;
+  // Native property access boxes primitives but throws on null/undefined; preserve receiver and getter failure.
+  return property.get(error === null || error === undefined ? error : Object(error), 'status', error);
+}
+
+class PreviewHeader extends React.Component<PreviewHeaderProps, { attachment: HeaderAttachment }> {
   static override propTypes = {
     attachment: PropTypes.object,
+    attachmentContext: PropTypes.object,
     onClose: PropTypes.func,
     renameFile: PropTypes.func,
     saveToKnowlwdge: PropTypes.func,
@@ -39,7 +101,7 @@ class PreviewHeader extends React.Component<any, any> {
     clickSwitchHtmlPreview: PropTypes.func,
   };
 
-  constructor(props) {
+  constructor(props: PreviewHeaderProps) {
     super(props);
     this.state = {
       attachment: props.attachment,
@@ -50,12 +112,13 @@ class PreviewHeader extends React.Component<any, any> {
     this.props.changePreviewService('original');
   }
 
-  handleShareNode = attachment => {
+  handleShareNode = (attachment: HeaderAttachment) => {
     const attachmentType =
       attachment.previewAttachmentType === 'KC' ? 2 : attachment.previewAttachmentType === 'QINIU' ? 0 : 1;
     import('src/components/shareAttachment/shareAttachment').then(share => {
-      const params = {
+      const params: ShareAttachmentInput = {
         attachmentType,
+        attachmentContext: { ...this.props.extra, ...this.props.attachmentContext },
       };
       const sourceNode = attachment.sourceNode;
       const isPicture = attachment.previewType === PREVIEW_TYPE.PICTURE;
@@ -133,7 +196,7 @@ class PreviewHeader extends React.Component<any, any> {
       clickSwitchHtmlPreview,
     } = this.props;
     const { name, ext } = attachment;
-    const deleted = error.status === LOADED_STATUS.DELETED;
+    const deleted = nativePreviewErrorStatus(error) === LOADED_STATUS.DELETED;
     const downloadUrl = previewUtil.getDownloadUrl(attachment, {
       ...extra,
       logExtend: this.props.logExtend,
@@ -203,7 +266,7 @@ class PreviewHeader extends React.Component<any, any> {
               this.props.onClose();
               window.open(wpsEditUrl);
             } else {
-              location.href = wpsEditUrl;
+              location.href = String(wpsEditUrl);
             }
           },
         }}
@@ -253,11 +316,11 @@ class PreviewHeader extends React.Component<any, any> {
           )
         }
         clickOpenNewPage={() => {
-          extra.openControlAttachmentInNewTab(
+          nativeInvoke.apply(extra.openControlAttachmentInNewTab, extra, [
             (attachment.originNode || attachment.sourceNode).fileID ||
               (attachment.originNode || attachment.sourceNode).fileId,
             this.props,
-          );
+          ]);
         }}
         showSwitchHtmlPreview={showSwitchHtmlPreview}
         clickSwitchHtmlPreview={clickSwitchHtmlPreview}

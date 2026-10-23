@@ -33,6 +33,7 @@ const common = {
 };
 const translate = (value: string) => value;
 Reflect.set(globalThis, '_l', translate);
+Reflect.set(globalThis, 'window', { devicePixelRatio: 1, getCurrentLang: () => 'zh-Hans' });
 Reflect.set(globalThis, '$', { extend: (_deep: boolean, target: Data, source: Data) => lodash.merge(target, source) });
 Reflect.set(globalThis, 'md', { global: { Account: { accountId: 'self', isPortal: false } } });
 function load(file: string): Data {
@@ -44,6 +45,13 @@ function load(file: string): Data {
   cache.set(file, module.exports);
   const localRequire = (name: string): unknown => {
     if (name === 'src/utils/common' || name.endsWith('/common') && file === 'src/utils/createLinksForMessage.ts') return common;
+    if (name === 'src/utils/core/string' || name === 'src/utils/platform/navigation/path') return common;
+    if (name.endsWith('.css') || name.endsWith('.less')) return {};
+    if (name.startsWith('src/components/comment/utils/') || name === 'src/components/emotion/parseEmotion' || name === 'src/utils/core/sanitizeHtml') {
+      const actual = ['.ts', '.tsx', ''].map(ext => name + ext).find(target => fs.existsSync(path.join(harness.ROOT, target)));
+      if (!actual) throw new Error('Missing actual message dependency ' + name);
+      return load(actual);
+    }
     if (name === 'src/utils/project') return { dateConvertToUserZone: (x: unknown) => x, addBehaviorLog: () => {} };
     if (name === 'src/utils/createLinksForMessage') return load('src/utils/createLinksForMessage.ts');
     if (name === 'src/components/comment/config') return load('src/components/comment/config.ts');

@@ -1,3 +1,4 @@
+import type { ChildFilterCondition } from 'src/utils/subListStoreTypes';
 import { combineReducers } from 'redux';
 import type { UnknownAction } from '@reduxjs/toolkit';
 import _, { includes, uniq } from 'lodash';
@@ -269,9 +270,9 @@ function sortConfig(state: FieldSortConfig | null = null, action: ChildTableActi
 }
 
 function filterControls(
-  state: import('src/pages/worksheet/types').WorksheetFilterCondition[] = [],
+  state: ChildFilterCondition[] = [],
   action: ChildTableAction,
-): import('src/pages/worksheet/types').WorksheetFilterCondition[] {
+): ChildFilterCondition[] {
   switch (action.type) {
     case 'UPDATE_FILTER_CONTROLS':
       return action.filterControls || [];

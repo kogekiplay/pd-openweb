@@ -43,6 +43,13 @@ const errorCode = {
   50004: _l('系统错误'),
 };
 
+export interface UploadFilesRegistration {
+  manualRef?: ((instance: UploadFiles) => void) | null | undefined;
+}
+/** Real registration operation, preserving callback property getter and its original props receiver. */
+export function registerUploadFiles(props: UploadFilesRegistration, instance: UploadFiles): void {
+  props.manualRef?.(instance);
+}
 export default class UploadFiles extends Component<any, any> {
   declare id: string;
   declare _uploading: boolean | undefined;
@@ -137,6 +144,7 @@ export default class UploadFiles extends Component<any, any> {
      * 文件退拽上传的区域和黏贴的区域
      */
     dropPasteElement: PropTypes.string,
+    manualRef: PropTypes.func,
     /**
      * 文件退拽上传的区域和黏贴的区域 触发回调函数
      */
@@ -155,7 +163,7 @@ export default class UploadFiles extends Component<any, any> {
      */
     headerRightElement: PropTypes.element,
     /**
-     * 文件总大小上限（单位 MB），默认 4G
+     * 文件总大小上限（单位 MB），默认使用系统配置
      */
     maxTotalSize: PropTypes.number,
   };
@@ -203,6 +211,9 @@ export default class UploadFiles extends Component<any, any> {
   override componentDidMount() {
     const { temporaryData, kcAttachmentData } = this.state;
     const { isInitCall } = this.props;
+
+    // 组件由 withOpeners 包裹，ref 拿不到实例，按项目约定用 manualRef 回传
+    registerUploadFiles(this.props, this);
 
     if (isInitCall) {
       this.props.onTemporaryDataUpdate(temporaryData);
@@ -336,12 +347,17 @@ export default class UploadFiles extends Component<any, any> {
       return undefined;
     });
   }
+  /** 供调用方把外部拿到的文件（如编辑器里粘贴的图片）加入待上传队列 */
+  addFiles = (files?: File[] | FileList | null): void => {
+    if (files && files.length && this.qiniuUploadRef?.uploader) {
+      this.qiniuUploadRef.uploader.addFile(files);
+    }
+  };
+
   async openPcCameraDialog() {
     const cameraProps = {
       onOk: files => {
-        if (files && files.length && this.qiniuUploadRef?.uploader) {
-          this.qiniuUploadRef.uploader.addFile(files);
-        }
+        this.addFiles(files);
       },
     };
 

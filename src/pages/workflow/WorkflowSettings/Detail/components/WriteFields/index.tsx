@@ -98,6 +98,7 @@ export default class WriteFields extends Component<any, any> {
       formProperties.forEach(item => {
         if (!checked) {
           item.property = 4;
+          item.showCard = 0;
         } else if (item.property === 4) {
           item.property = 1;
         }
@@ -195,6 +196,14 @@ export default class WriteFields extends Component<any, any> {
       formProperties.forEach(o => {
         if (o.sectionId === item.id && (!this.isDisabled(o) || _.includes([1, 4], value))) {
           o[key] = value;
+        }
+      });
+    }
+
+    if (key === 'property' && value === 4) {
+      formProperties.forEach(o => {
+        if (o.property === 4) {
+          o.showCard = 0;
         }
       });
     }
@@ -569,7 +578,7 @@ export default class WriteFields extends Component<any, any> {
                   {_l('列权限')}
                 </div>
                 {this.renderContent({
-                  data: selectItem.subFormProperties.filter(o => _.includes(selectItem.showControls, o.id)),
+                  data: selectItem.subFormProperties.filter((o: { id?: string | undefined }) => _.includes(selectItem.showControls, o.id)),
                   isChildTable: true,
                 })}
               </Fragment>

@@ -1,3 +1,6 @@
+import type { ChildTableState } from 'src/utils/subListStoreTypes';
+import type { ChildTableDispatch } from 'src/pages/worksheet/components/ChildTable/redux/types';
+import type { MobileChildTableProps } from 'src/pages/worksheet/components/ChildTable/publicTypes';
 import React, { Fragment } from 'react';
 import { flushSync } from 'react-dom';
 import { shallowEqual } from 'react-redux';
@@ -115,8 +118,22 @@ const MAX_COUNT = 1000;
 const DEFAULT_TABLE_PAGE_SIZE = 20;
 const EXPAND_TABLE_PAGE_SIZE = 200;
 
-class ChildTable extends React.Component<any, any> {
+type MobileChildTableConsumerProps = Omit<MobileChildTableProps, 'masterData'> & {
+  // React class defaultProps supplies the object whenever the caller omits it or passes undefined.
+  masterData: NonNullable<MobileChildTableProps['masterData']>;
+} & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
+function testNativeRowId(pattern: RegExp, value: string | undefined): boolean {
+  // Native RegExp accepts undefined (ToString) and preserves failures; do not invent a row-id fallback.
+  return Reflect.apply(pattern.test, pattern, [value]);
+}
+
+class ChildTable extends React.Component<MobileChildTableConsumerProps, any> {
   // 原来是 typeof AbortController !== 'undefined' && new AbortController()：支持的浏览器（Chrome 103 起）都有 AbortController
+  declare controls: FormControl[];
+  declare requestPool: ReturnType<typeof createRequestPool>;
+  declare dataFormatCacheMap: Map<string, DataFormat>;
+  declare rowsLoading: Record<string, boolean>;
+  declare deleteConformAction: ReturnType<typeof ActionSheet.show> | null;
   declare abortController: AbortController;
   declare viewportResizeTimer: NodeJS.Timeout | null;
   declare expandPaginationFrame: number | null;
@@ -294,10 +311,10 @@ class ChildTable extends React.Component<any, any> {
     this.dataFormatCacheMap.clear();
     this.removeViewportResizeListener();
     clearTimeout(this.viewportResizeTimer);
-    window.cancelAnimationFrame && window.cancelAnimationFrame(this.expandPaginationFrame);
+    window.cancelAnimationFrame && Reflect.apply(window.cancelAnimationFrame, window, [this.expandPaginationFrame]);
   }
 
-  searchRef = React.createRef();
+  searchRef = React.createRef<SearchInput>();
 
   addViewportResizeListener = () => {
     window.addEventListener('resize', this.handleViewportResize);
@@ -328,7 +345,7 @@ class ChildTable extends React.Component<any, any> {
     const { updatePagination = () => {} } = this.props;
 
     if (window.cancelAnimationFrame && this.expandPaginationFrame) {
-      window.cancelAnimationFrame(this.expandPaginationFrame);
+      Reflect.apply(window.cancelAnimationFrame, window, [this.expandPaginationFrame]);
       this.expandPaginationFrame = null;
     }
 
@@ -355,7 +372,7 @@ class ChildTable extends React.Component<any, any> {
     const parsedSettings = parseAdvancedSetting(control.advancedSetting);
     let { min, max, rownum, enablelimit } = parsedSettings;
     let minCount;
-    let maxCount = _.get(window, 'shareState.isPublicForm') ? 200 : MAX_COUNT;
+    let maxCount: number | undefined = _.get(window, 'shareState.isPublicForm') ? 200 : MAX_COUNT;
 
     if (enablelimit) {
       minCount = min;
@@ -368,7 +385,7 @@ class ChildTable extends React.Component<any, any> {
   get useUserPermission() {
     const { control } = this.props;
     const [isHiddenOtherViewRecord] = (control.strDefault || '000').split('');
-    return !!+isHiddenOtherViewRecord;
+    return !!Number(isHiddenOtherViewRecord);
   }
 
   get searchConfig() {
@@ -579,7 +596,7 @@ class ChildTable extends React.Component<any, any> {
     updatePagination({ pageIndex: 1, pageSize: showExpand ? EXPAND_TABLE_PAGE_SIZE : DEFAULT_TABLE_PAGE_SIZE });
     this.loadRows(nextProps, { needResetControls, isRefresh: true });
     if (get(this, 'searchRef.current.clear')) {
-      this.searchRef.current.clear();
+      this.searchRef.current!.clear();
     }
 
     this.dataFormatCacheMap.clear();
@@ -624,7 +641,7 @@ class ChildTable extends React.Component<any, any> {
           },
           () => {
             if (get(this, 'searchRef.current.clear')) {
-              this.searchRef.current.clear();
+              this.searchRef.current!.clear();
             }
 
             this.loadRows(undefined, { needResetControls: false });
@@ -687,7 +704,7 @@ class ChildTable extends React.Component<any, any> {
   copyRow = row => {
     const { maxCount } = this.settings;
     const { rows, control = {} } = this.props;
-    const isExceed = filterEmptyChildTableRows(rows).length >= maxCount;
+    const isExceed = filterEmptyChildTableRows(rows).length >= Number(maxCount);
     const parsedSettings = parseAdvancedSetting(control.advancedSetting);
     let { enablelimit } = parsedSettings;
 
@@ -830,7 +847,7 @@ class ChildTable extends React.Component<any, any> {
     const disabled = !controlPermission.editable || control.disabled;
     let { allowadd } = parseAdvancedSetting(control.advancedSetting);
     const filteredRows = filterEmptyChildTableRows(rows);
-    const disabledNew = filteredRows.length >= maxCount || disabled || !allowadd;
+    const disabledNew = filteredRows.length >= Number(maxCount) || disabled || !allowadd;
 
     if (disabledNew) {
       return;
@@ -877,12 +894,12 @@ class ChildTable extends React.Component<any, any> {
       onOk: selectedRecords => {
         const rowsLength = filterEmptyChildTableRows(rows).length;
 
-        if (rowsLength + selectedRecords.length > this.settings.maxCount) {
+        if (rowsLength + selectedRecords.length > Number(this.settings.maxCount)) {
           alert(_l('最多输入%0条记录，超出的记录不写入', this.settings.maxCount), 3);
         }
 
         addRows(
-          selectedRecords.slice(0, this.settings.maxCount - rowsLength).map(selectedRecord => {
+          selectedRecords.slice(0, Number(this.settings.maxCount) - rowsLength).map(selectedRecord => {
             const row = this.rowUpdate({
               row: this.newRow(),
               controlId: relateRecordControl.controlId,
@@ -1101,7 +1118,7 @@ class ChildTable extends React.Component<any, any> {
           <div className="valignWrapper flexRow confirm mTop24">
             <Button
               className="flex mRight6 bold textSecondary flex ellipsis Font13"
-              onClick={() => this.deleteConformAction.close()}
+              onClick={() => this.deleteConformAction!.close()}
             >
               {_l('取消')}
             </Button>
@@ -1109,7 +1126,7 @@ class ChildTable extends React.Component<any, any> {
               className="flex mLeft6 bold flex ellipsis Font13"
               color="danger"
               onClick={() => {
-                this.deleteConformAction.close();
+                this.deleteConformAction!.close();
                 deleteRow(rowid);
                 callback();
               }}
@@ -1176,6 +1193,7 @@ class ChildTable extends React.Component<any, any> {
       pagination = {},
       updatePagination = () => {},
     } = this.props;
+    const mobileApprovalRecordInfo = _.pick(this.props.base, ['instanceId', 'workId']);
     const { projectId, rules } = this.worksheetInfo;
     const { searchConfig } = this;
     let {
@@ -1191,7 +1209,7 @@ class ChildTable extends React.Component<any, any> {
     } = parseAdvancedSetting(control.advancedSetting);
 
     const { useUserPermission } = this;
-    let allowadd = parseAdvancedSetting(control.advancedSetting).allowadd;
+    let allowadd: boolean | undefined = parseAdvancedSetting(control.advancedSetting).allowadd;
     allowadd = allowadd && (useUserPermission ? this.worksheetInfo.allowAdd : true);
     const { maxCount } = this.settings;
     const {
@@ -1228,7 +1246,7 @@ class ChildTable extends React.Component<any, any> {
     const disabled = !controlPermission.editable || control.disabled;
     const noColumns = !controls.length;
     const columns = this.getShowColumns();
-    const isExceed = filterEmptyChildTableRows(originRows).length >= maxCount;
+    const isExceed = filterEmptyChildTableRows(originRows).length >= Number(maxCount);
     const disabledNew = noColumns || disabled || !allowadd;
 
     if (!columns.length) {
@@ -1360,6 +1378,7 @@ class ChildTable extends React.Component<any, any> {
         {!showExpand && renderOperateComp()}
         {!loading && (
           <Component
+            mobileApprovalRecordInfo={mobileApprovalRecordInfo}
             sheetSwitchPermit={sheetSwitchPermit}
             allowcancel={allowcancel}
             allowadd={allowadd}
@@ -1450,11 +1469,12 @@ class ChildTable extends React.Component<any, any> {
 
         {recordVisible && (
           <RowDetailMobile
+            mobileApprovalRecordInfo={mobileApprovalRecordInfo}
             widgetStyle={this.worksheetInfo.advancedSetting}
             isEditCurrentRow={isEditCurrentRow}
             masterData={masterData}
             isWorkflow
-            ignoreLock={/^(temp|default|empty)/.test((currentRow || {}).rowid)}
+            ignoreLock={testNativeRowId(/^(temp|default|empty)/, (currentRow || {}).rowid)}
             visible
             aglinBottom={!!recordId}
             from={from === FROM.DRAFT ? 3 : from}
@@ -1475,11 +1495,11 @@ class ChildTable extends React.Component<any, any> {
                 _l('创建%0', control.controlName)
               )
             }
-            disabled={disabled || (!/^temp/.test((currentRow || {}).rowid) && !allowedit)}
+            disabled={disabled || (!testNativeRowId(/^temp/, (currentRow || {}).rowid) && !allowedit)}
             isExceed={isExceed}
             mobileIsEdit={mobileIsEdit}
             allowDelete={
-              /^temp/.test((currentRow || {}).rowid) ||
+              testNativeRowId(/^temp/, (currentRow || {}).rowid) ||
               (allowcancel && (useUserPermission && !!recordId ? _.get(currentRow, 'allowdelete') : true))
             }
             allowCopy={allowadd && allowCopy && isEditCurrentRow && !disabled}
@@ -1551,7 +1571,7 @@ class ChildTable extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: ChildTableState) => ({
   baseLoading: state.baseLoading,
   base: state.base,
   rows: state.rows,
@@ -1561,7 +1581,7 @@ const mapStateToProps = state => ({
   filterControls: state.filterControls,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch: ChildTableDispatch) => ({
   loadRows: bindActionCreators(actions.loadRows, dispatch),
   initRows: bindActionCreators(actions.initRows, dispatch),
   addRow: bindActionCreators(actions.addRow, dispatch),

@@ -518,6 +518,14 @@ async function run() {
     });
     assert.deepEqual(results[0], results[1]);
   });
+  await check('7.5.2 requires an explicit enabled document-edit flag; missing and false remain disabled', () => {
+    for (const docEdit of [undefined, false]) {
+      const s = mounted('current', { fileType: 'Word', roleType: 2, templateId: 'template' }, { featureType: '1', docEdit });
+      assert.equal(s.instance.renderEditFileBtn(), null);
+    }
+    const enabled = mounted('current', { fileType: 'Word', roleType: 2, templateId: 'template' }, { featureType: '1', docEdit: true });
+    assert.notEqual(enabled.instance.renderEditFileBtn(), null);
+  });
   summarized = true;
   console.log(`EditPrint full historical flow: ${checks - failed}/${checks}`);
   if (failed) process.exitCode = 1;

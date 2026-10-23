@@ -1,10 +1,21 @@
-import { AT_ALL_TEXT } from 'src/components/comment/config';
-import Emotion from 'src/components/emotion/emotion';
-import { htmlEncodeReg, pathCompletion } from './common';
+import parseEmotion from 'src/components/emotion/parseEmotion';
+import { htmlEncodeReg } from 'src/utils/core/string';
+import {
+  buildAnswerLinkHtml,
+  buildAtAllHtml,
+  buildCalendarLinkHtml,
+  buildCategoryLinkHtml,
+  buildDocVersionLinkHtml,
+  buildFolderLinkHtml,
+  buildGroupLinkHtml,
+  buildTaskLinkHtml,
+  buildUserLinkHtml,
+  createCustomTagRegExp,
+  findCategoryName,
+} from 'src/components/comment/utils/messageTokens';
 import { decodeMessageArgs } from './messageLinkTypes';
 import type {
   MessageArgs,
-  MessageCategory,
   MessageCustomTag,
   MessagePlainReplacement,
   MessageTagReplacement,
@@ -53,25 +64,19 @@ export default (input: MessageArgs): string => {
     replaceHtmlFunc?: MessageTagReplacement,
     filterCustom?: boolean,
   ) {
-    let startTag: string, endTag: string;
+    let startTag: string;
 
     if (!message) return message;
     if (typeof tagName === 'string') {
       startTag = '[' + tagName + ']';
-      endTag = '[/' + tagName + ']';
-    } else {
+    } else if (Array.isArray(tagName)) {
       startTag = tagName[0];
-      endTag = tagName[1];
+    } else {
+      return message;
     }
 
     if (message.indexOf(startTag) > -1) {
-      const customRegExp = new RegExp(
-        '(' +
-          startTag.replace(/[-[\]{}()*+?.\\^$|]/g, '\\$&') +
-          ')([0-9a-zA-Z-]*\\|?.*?)' +
-          endTag.replace(/[-[\]{}()*+?.\\^$|]/g, '\\$&'),
-        'gi',
-      );
+      const customRegExp = createCustomTagRegExp(tagName);
 
       if (filterCustom) {
         message = message.replace(customRegExp, '');
@@ -94,8 +99,7 @@ export default (input: MessageArgs): string => {
     return message;
   };
 
-  const sourceText: unknown = Reflect.get(AT_ALL_TEXT, String(sourceType));
-  message = message.replace(/\[all\]atAll\[\/all\]/gi, '<a>@' + String(sourceText) + '</a>');
+  message = message.replace(/\[all\]atAll\[\/all\]/gi, buildAtAllHtml(sourceType));
 
   if (rUserList && rUserList.length > 0) {
     for (j = 0; j < rUserList.length; j++) {
@@ -105,16 +109,7 @@ export default (input: MessageArgs): string => {
       let aid = rUser.aid || rUser.accountId;
 
       if (name) {
-        if (noLink) {
-          replaceStr += ' @' + name + ' ';
-        } else {
-          if (md.global.Account.isPortal || (aid || '').indexOf('a#') > -1) {
-            // 外部门户
-            replaceStr += ' <a>@' + name + '</a> ';
-          } else {
-            replaceStr += ` <a data-accountid="${aid}" target="_blank" href="${pathCompletion('/user_' + aid, { hasDomain: false })}">@${name}</a> `;
-          }
-        }
+        replaceStr += noLink ? ' @' + name + ' ' : ` ${buildUserLinkHtml(rUser)} `;
       }
 
       let userRegExp = new RegExp('\\[aid]' + aid + '\\[/aid]', 'gi');
@@ -127,17 +122,9 @@ export default (input: MessageArgs): string => {
       let rGroup = rGroupList[j];
       if (!rGroup) throw new TypeError('Invalid group mention');
       replaceStr = '';
+
       if (rGroup.groupName) {
-        if (noLink) {
-          replaceStr += '@' + htmlEncodeReg(rGroup.groupName);
-        } else {
-          if (rGroup.isDelete) {
-            replaceStr +=
-              ' <span class="textDisabled" title="群组已删除">@' + htmlEncodeReg(rGroup.groupName) + '</span> ';
-          } else {
-            replaceStr += ` <a target="_blank" data-groupid="${rGroup.groupID}" href="${pathCompletion('/group/groupValidate?gID=' + rGroup.groupID, { hasDomain: false })}">@${htmlEncodeReg(rGroup.groupName)}</a> `;
-          }
-        }
+        replaceStr += noLink ? '@' + htmlEncodeReg(rGroup.groupName) : ` ${buildGroupLinkHtml(rGroup)} `;
       }
 
       let groupRegExp = new RegExp('\\[gid]' + rGroup.groupID + '\\[/gid]', 'gi');
@@ -156,77 +143,35 @@ export default (input: MessageArgs): string => {
   };
 
   // 话题
-  let findCategory = function (id: string): MessageCategory | undefined {
-    if (categories) {
-      for (let i = 0, l = categories.length; i < l; i++) {
-        const category = categories[i];
-        if (category?.catID === id) {
-          return category;
-        }
-      }
-    }
-    return undefined;
-  };
-
   message = replaceMessageCustomTag(
     message,
     'cid',
     getReplaceHtmlFunc(
-      function (id: string, _name: string) {
-        const category = findCategory(id);
-        const categoryName = category ? category.catName : _l('未知话题');
-        return `<a target="_blank" href="${pathCompletion('/feed?catId=' + id, { hasDomain: false })}">#${htmlEncodeReg(categoryName)}#</a>`;
+      function (id: string) {
+        return buildCategoryLinkHtml(id, findCategoryName(categories, id));
       },
       function (id: string) {
-        const category = findCategory(id);
-        const categoryName = category ? category.catName : _l('未知话题');
-        return '#' + htmlEncodeReg(categoryName) + '#';
+        return '#' + htmlEncodeReg(findCategoryName(categories, id)) + '#';
       },
     ),
   );
   // 任务
-  message = replaceMessageCustomTag(
-    message,
-    'tid',
-    getReplaceHtmlFunc(function (id: string, name: string) {
-      return `<a target="_blank" href="${pathCompletion('/apps/task/task_' + id, { hasDomain: false })}">${htmlEncodeReg(name)}</a>`;
-    }),
-  );
+  message = replaceMessageCustomTag(message, 'tid', getReplaceHtmlFunc(buildTaskLinkHtml));
   // 项目
-  message = replaceMessageCustomTag(
-    message,
-    'fid',
-    getReplaceHtmlFunc(function (id: string, name: string) {
-      return `<a target="_blank" href="${pathCompletion('/apps/task/folder_' + id, { hasDomain: false })}">${htmlEncodeReg(name)}</a>`;
-    }),
-  );
+  message = replaceMessageCustomTag(message, 'fid', getReplaceHtmlFunc(buildFolderLinkHtml));
   // 日程
-  message = replaceMessageCustomTag(
-    message,
-    ['[CALENDAR]', '[CALENDAR]'],
-    getReplaceHtmlFunc(function (id: string, name: string) {
-      return `<a target="_blank" href="${pathCompletion('/apps/calendar/detail_' + id, { hasDomain: false })}">${htmlEncodeReg(name)}</a>`;
-    }),
-  );
+  message = replaceMessageCustomTag(message, ['[CALENDAR]', '[CALENDAR]'], getReplaceHtmlFunc(buildCalendarLinkHtml));
   // 问答中心
-  message = replaceMessageCustomTag(
-    message,
-    ['[STARTANSWER]', '[ENDANSWER]'],
-    getReplaceHtmlFunc(function (id: string, name: string) {
-      return `<a target="_blank" href="${pathCompletion('/feeddetail?itemID=' + id, { hasDomain: false })}">${htmlEncodeReg(name)}</a>`;
-    }),
-  );
+  message = replaceMessageCustomTag(message, ['[STARTANSWER]', '[ENDANSWER]'], getReplaceHtmlFunc(buildAnswerLinkHtml));
   // 文档版本
   message = replaceMessageCustomTag(
     message,
     ['[docversion]', '[docversion]'],
-    getReplaceHtmlFunc(function (id: string, name: string) {
-      return `<a href="${pathCompletion('/feeddetail?itemID=' + id, { hasDomain: false })}" target="_blank">${htmlEncodeReg(name.split('|')[0]) || _l('文件')}</a>`;
-    }),
+    getReplaceHtmlFunc(buildDocVersionLinkHtml),
   );
 
   if ((typeof filterFace === 'undefined' || !filterFace) && !noLink) {
-    const parsed: unknown = Emotion.parse(message);
+    const parsed: unknown = parseEmotion(message);
     if (typeof parsed !== 'string') throw new TypeError('Invalid parsed emotion message');
     message = parsed;
   }

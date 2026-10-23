@@ -78,6 +78,7 @@ export default function generateStore(
     workId,
     initRowIsCreate,
     DataFormat,
+    worksheetInfo: presetWorksheetInfo,
   }: {
     from?: number | undefined;
     relationWorksheetId?: string | undefined;
@@ -89,6 +90,7 @@ export default function generateStore(
     workId?: string | undefined;
     initRowIsCreate?: boolean | undefined;
     DataFormat?: typeof DataFormatClass | undefined;
+    worksheetInfo?: FieldStoreWorksheet | undefined;
     appId?: string | undefined;
     isCharge?: boolean | undefined;
   } = {},
@@ -178,7 +180,7 @@ export default function generateStore(
       let { max, treeLayerControlId } = parseAdvancedSetting(control.advancedSetting);
 
       if (!controls) {
-        worksheetInfo = await loadWorksheetInfo(
+        worksheetInfo = presetWorksheetInfo || (await loadWorksheetInfo(
           control.dataSource ||
             (() => {
               throw new TypeError('Missing child worksheet');
@@ -190,7 +192,7 @@ export default function generateStore(
             instanceId,
             workId,
           },
-        );
+        ));
         if (worksheetInfo.resultCode !== 1 || !worksheetInfo.template?.controls)
           throw new Error('Child worksheet request failed');
         // await new Promise(resolve => setTimeout(resolve, 5000)); // TEST: 测试子表未加载完成时的提交问题

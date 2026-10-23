@@ -74,7 +74,7 @@ export default function Footer() {
     });
   };
 
-  const showRight = window.platformENV.isPlatform && _.get(md, 'global.Config.IsCobranding');
+  const showRight = _.get(md, 'global.Config.IsCobranding');
   return (
     (window.platformENV.isOverseas || window.platformENV.isLocal) &&
     (links.length > 0 || showRight) && (

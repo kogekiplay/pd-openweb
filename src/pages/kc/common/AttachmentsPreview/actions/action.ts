@@ -1,3 +1,4 @@
+import type { AttachmentContext, AttachmentRequestContext } from 'src/utils/attachmentContextTypes';
 import _, { isEmpty } from 'lodash';
 import kcService from '../../../api/service';
 import attachmentAjax from 'src/api/attachment';
@@ -16,6 +17,11 @@ import ACTION_TYPES from '../constant/actionTypes';
 import { EXT_TYPE_DIC, LOADED_STATUS, PREVIEW_TYPE } from '../constant/enum';
 import { canPreviewHtml, getHtmlPreviewUrl, isHtmlPreviewExt, splitFileName } from '../constant/util';
 import type { AttachmentsPreviewDispatch, AttachmentsPreviewGetState } from '../types';
+
+
+interface AttachmentLoadContext extends AttachmentContext {
+  disableNoPeimission?: boolean | undefined;
+}
 
 function addViewCount(attachment) {
   if (
@@ -46,8 +52,8 @@ class AttachmentError {
   }
 }
 
-function loadAttachment(attachment, options: Record<string, any> = {}) {
-  return new Promise(resolve => {
+function loadAttachment(attachment, options: AttachmentLoadContext = {}) {
+  return new Promise((resolve, reject) => {
     if (!attachment) attachment = {};
     let { previewAttachmentType, previewType } = attachment;
     const { refId } = attachment.sourceNode || {};
@@ -120,28 +126,39 @@ function loadAttachment(attachment, options: Record<string, any> = {}) {
     } else if (previewAttachmentType === 'COMMON_ID' || (attachment.ext || '').toLocaleLowerCase() === 'pdf') {
       // 在其他场景中访问PDF
       const { fileId, fileID } = attachment.sourceNode;
-      const args = {
+      const args: AttachmentRequestContext & { fileId?: string | undefined } = {
         fileId: fileId || fileID,
-        rowId: options.recordId,
-        controlId: options.controlId,
       };
 
-      if (window.shareState && window.shareState.shareId) {
-        args.type =
-          _.get(window, 'shareState.isPublicRecord') ||
-          _.get(window, 'shareState.isPublicView') ||
-          _.get(window, 'shareState.isPublicPage')
-            ? 3
-            : _.get(window, 'shareState.isPublicQuery') || _.get(window, 'shareState.isPublicForm')
-              ? 11
-              : 14;
+      if (options.worksheetId || options.callSource || options.instanceId || options.workId) {
+        Object.assign(args, {
+          callSource: options.callSource || (options.instanceId || options.workId ? 2 : 1),
+          worksheetId: options.worksheetId,
+          rowId: options.recordId,
+          controlId: options.controlId,
+          masterWorksheetId: options.masterWorksheetId,
+          masterRowId: options.masterRecordId,
+          masterControlId: options.masterControlId,
+          instanceId: options.instanceId,
+          workId: options.workId,
+        });
+
+        const shareState = window.shareState;
+
+        if (shareState && shareState.shareId) {
+          args.type =
+            shareState.isPublicRecord || shareState.isPublicView || shareState.isPublicPage
+              ? 3
+              : shareState.isPublicForm || shareState.isPublicQuery
+                ? 11
+                : 14;
+        }
+
+        if (options.isDraft || options.from === 21) {
+          args.type = 21;
+        }
       }
 
-      if (options.from === 21) {
-        args.type = 21;
-      }
-
-      args.worksheetId = options.worksheetId;
       attachmentPromise = attachmentAjax.getAttachmentDetail(args).then(data => {
         if (!data) {
           throw new AttachmentError({
@@ -168,7 +185,7 @@ function loadAttachment(attachment, options: Record<string, any> = {}) {
     }
 
     Promise.all([attachmentPromise])
-      .then(([newAttachment]) => {
+      .then(([newAttachment]): void | Promise<void> => {
         const htmlPreviewUrl =
           canPreviewHtml() && isHtmlPreviewExt(newAttachment.ext) ? getHtmlPreviewUrl(newAttachment) : '';
 
@@ -189,7 +206,7 @@ function loadAttachment(attachment, options: Record<string, any> = {}) {
           if (htmlPreviewUrl) {
             resolve(newAttachment);
           } else if (previewType === PREVIEW_TYPE.IFRAME) {
-            ajax
+            return ajax
               .fetchViewUrl(attachment)
               .then(fetchedAttachment => {
                 resolve(fetchedAttachment);
@@ -214,9 +231,7 @@ function loadAttachment(attachment, options: Record<string, any> = {}) {
         }
       })
       .catch(err => {
-        throw new AttachmentError({
-          text: err,
-        });
+        reject(err instanceof AttachmentError ? err : new AttachmentError({ text: err?.message || err }));
       });
   });
 }
@@ -388,6 +403,7 @@ export function init(options, extra) {
     currentAttachment = attachments[index];
     dispatch({
       type: 'FILE_PREVIEW_INIT',
+      options,
       index,
       attachments,
       showThumbnail,
@@ -490,7 +506,7 @@ function changeIndexThunk(
   extra = {},
 ) {
   const state = getState();
-  const options = { ...(state.extra || {}), ...extra };
+  const options = { ...(state.extra || {}), ...(state.options || {}), ...extra };
 
   if (flag && flag === 'prev') {
     index = state.index - 1;

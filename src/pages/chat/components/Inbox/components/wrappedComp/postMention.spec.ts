@@ -24,6 +24,8 @@ interface BabelNode {
   [key: string]: unknown;
 }
 
+const actualSyntax: Record<string, unknown> = require('../../../../../../../scripts/spec-message-syntax.ts').loadMessageSyntaxSpec();
+
 const TARGET = 'src/pages/chat/components/Inbox/components/wrappedComp/postMention.tsx';
 
 interface TopicItem {
@@ -51,6 +53,7 @@ interface InboxItem {
 function extract(): (
   links: (args: Record<string, unknown>) => string,
   translate: (key: string) => string,
+  strip: unknown,
 ) => (props: InboxItem) => Record<string, (arg?: unknown) => Record<string, unknown> | undefined> {
   const source = harness.readSource(TARGET);
   const ast = harness.parser.parse(source, { sourceType: 'module', plugins: ['jsx'] }) as unknown as {
@@ -91,10 +94,12 @@ function extract(): (
   return new Function(
     'createLinksForMessage',
     '_l',
+    'stripMarkdownForMessage',
     `${code}\nreturn (props) => new __cls(props);`,
   ) as (
     links: (args: Record<string, unknown>) => string,
     translate: (key: string) => string,
+  strip: unknown,
   ) => (props: InboxItem) => Record<string, (arg?: unknown) => Record<string, unknown> | undefined>;
 }
 
@@ -104,6 +109,7 @@ function make(item: InboxItem): Record<string, (arg?: unknown) => Record<string,
   const create = factory(
     (args) => `LINK(${String(args.message)})`,
     (key) => `[${key}]`,
+    actualSyntax['stripMarkdownForMessage'],
   );
   return create(item);
 }

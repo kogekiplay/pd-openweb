@@ -2,11 +2,13 @@ import React from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
-import filterXSS from 'xss';
+import filterXSS, { safeAttrValue } from 'xss';
 import { Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { renderText } from 'src/utils/control';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import { addSubPathOfRoute } from 'src/utils/platform/navigation/path';
+import type { SafeAttrValueHandler } from 'xss';
 import {
   EDIT_TYPE_TEXT,
   FILTER_FIELD_BY_ATTR,
@@ -18,6 +20,13 @@ import {
 } from './enum.js';
 
 const reg = new RegExp('<[^<>]+>', 'g');
+const WORKFLOW_LOG_HTML_OPTIONS: { safeAttrValue: SafeAttrValueHandler } = {
+  safeAttrValue: (tag, name, value, cssFilter) => {
+    const attributeValue = tag === 'a' && name === 'href' && /^\/(?!\/)/.test(value) ? addSubPathOfRoute(value) : value;
+
+    return safeAttrValue(tag, name, attributeValue, cssFilter);
+  },
+};
 
 export function assembleListData(data) {
   let _resArr = [];
@@ -373,7 +382,7 @@ export const renderTitleAvatar = (data, isMobile: boolean) => {
         {isMobile ? (
           <span className="textPrimary breakAll">{_fullName.replace(reg, '')}</span>
         ) : (
-          <span dangerouslySetInnerHTML={{ __html: filterXSS(_fullName) }}></span>
+          <span dangerouslySetInnerHTML={{ __html: filterXSS(_fullName, WORKFLOW_LOG_HTML_OPTIONS) }}></span>
         )}
       </span>
     ) : null;

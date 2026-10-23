@@ -570,6 +570,4 @@ Object.assign(MobileSharePreview.prototype, mobileSharePreviewMethods);
 type MobileShareMethods = typeof mobileSharePreviewMethods;
 interface MobileSharePreview extends MobileSharePreviewFields, MobileShareMethods {}
 
-md.global.Config.disableKf5 = true;
-
 export default MobileSharePreview;

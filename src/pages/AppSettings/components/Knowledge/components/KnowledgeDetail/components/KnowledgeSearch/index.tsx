@@ -4,7 +4,7 @@ import knowledgeAjax from '../../../../api/knowledge';
 import attachmentAjax from 'src/api/attachment';
 import { openRecordInfo } from 'worksheet/common/recordInfo';
 import previewAttachments from 'src/components/previewAttachments/previewAttachments';
-import { ATTACHMENT_TYPE_ENUM, CHUNK_TYPE_TEXT, SEARCH_MODE } from '../../../../core/config';
+import { ATTACHMENT_TYPE, ATTACHMENT_TYPE_ENUM, CHUNK_TYPE_TEXT, SEARCH_MODE } from '../../../../core/config';
 import { useEsc } from '../../../../core/hooks';
 import { useLinkTargetBlank } from '../../../../core/hooks';
 import EnhanceInfo from '../../../EnhanceInfo';
@@ -47,19 +47,23 @@ const KnowledgeSearch = ({ knowledgeDetail, onClose }) => {
       });
   };
 
-  const handlePreviewAttachment = async ({ fileId, rowId, worksheet }: { rowId?: string; [key: string]: any }) => {
+  const handlePreviewAttachment = async ({ fileId, rowId, worksheet, type }: { fileId?: string | undefined; rowId?: string | undefined; worksheet: { workSheetId?: string | undefined }; type?: string | undefined }) => {
     if (!fileId) return;
 
     const data = await attachmentAjax.getAttachmentDetail({
       fileId,
-      worksheetId: worksheet.workSheetId,
-      rowId,
+      ...(type === ATTACHMENT_TYPE.RECORD_ATTACHMENT
+        ? { callSource: 3, worksheetId: worksheet.workSheetId, rowId }
+        : {}),
     });
 
     if (data) {
       setActiveEsc(false);
       previewAttachments({
         index: 0,
+        ...(type === ATTACHMENT_TYPE.RECORD_ATTACHMENT
+          ? { callSource: 3, worksheetId: worksheet.workSheetId, recordId: rowId }
+          : {}),
         callFrom: 'player',
         attachments: [data],
         hideFunctions: ['editFileName'],
@@ -149,7 +153,7 @@ const KnowledgeSearch = ({ knowledgeDetail, onClose }) => {
                                         <span
                                           className="attachmentTitle"
                                           onClick={() =>
-                                            handlePreviewAttachment({ fileId: attachmentId, rowId, worksheet })
+                                            handlePreviewAttachment({ fileId: attachmentId, rowId, worksheet, type })
                                           }
                                         >
                                           {attachmentName}

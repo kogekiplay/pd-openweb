@@ -142,24 +142,22 @@ const TagWrapper = styled.div`
   max-width: 100%;
 `;
 
+interface ExternalLinkInfo {
+  name?: string | undefined;
+  urlTemplate?: string | undefined;
+  pcDisplay?: boolean | undefined;
+  webMobileDisplay?: boolean | undefined;
+  appDisplay?: boolean | undefined;
+}
 export default function ExternalLinkDialog(props) {
   const { isEdit, onCancel, projectId, createAppFromEmpty, record, onAppChange } = props;
   const [popupVisible, setPopupVisible] = useState(false);
-  const [appInfo, setAppInfo] = useSetState(
+  const [appInfo, setAppInfo] = useSetState<ExternalLinkInfo>(
     isEdit ? _.omit(record, ['id']) : { pcDisplay: false, webMobileDisplay: true, appDisplay: true },
   );
   const tagTextAreaRef = useRef<any>(undefined);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (record && record.urlTemplate) {
-      tagTextAreaRef.current.setValue(record.urlTemplate);
-    }
-
-    if (inputRef && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
+  useEffect(() => { inputRef.current?.focus(); }, []);
 
   const onSave = () => {
     if (!appInfo.name) {
@@ -227,6 +225,7 @@ export default function ExternalLinkDialog(props) {
             <div className="flexRow">
               <CustomTagTextarea
                 className="flex"
+                defaultValue={appInfo.urlTemplate}
                 placeholder={_l('输入完整链接，以http://或https://开头')}
                 renderTag={tag => {
                   const tagName = _.get(

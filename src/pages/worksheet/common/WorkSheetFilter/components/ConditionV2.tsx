@@ -18,9 +18,10 @@ import {
   CONTROL_FILTER_WHITELIST,
   FILTER_CONDITION_TYPE,
   getControlSelectType,
+  getFilterTypeLabel,
   valueTypeOptions,
 } from '../enum';
-import { getConditionOverrideValue, getFilterTypes } from '../util';
+import { getConditionOverrideValue, getFilterTypes, getTypeKey } from '../util';
 import renderConditionValue from './contents';
 
 // 为空 不为空  在范围内 不在范围内
@@ -398,6 +399,9 @@ export default class Condition extends Component<ConditionProps, ConditionV2Stat
                     data={conditionFilterTypes}
                     isAppendToBody
                     hiddenValue={hiddenValue}
+                    renderTitle={selected =>
+                      selected?.text ?? (getFilterTypeLabel(getTypeKey(control.type), condition.type, control) || _l('请选择'))
+                    }
                     menuStyle={{ width: 'auto', minWidth: '100px' }}
                     onChange={this.changeConditionType}
                   />

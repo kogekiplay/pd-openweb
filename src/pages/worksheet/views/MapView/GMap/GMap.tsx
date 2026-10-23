@@ -1,15 +1,38 @@
+/// <reference types="google.maps" />
+import type { CSSProperties } from 'react';
+import type { GoogleMapProps as NativeGoogleMapProps } from '@react-google-maps/api';
+import type { parseRecord } from '../utils';
+type NativeMap = Parameters<NonNullable<NativeGoogleMapProps['onLoad']>>[0];
+type MapInstance = NativeMap & { geocoder?: google.maps.Geocoder | undefined };
+export interface GoogleMapHandle {
+  moveCenter(center?: number[]): void;
+  zoomByStep(step: number): void;
+  getAddress(lng: number, lat: number, callback: (address: string | null) => void): void;
+}
+export interface GMapProps {
+  zoom: number;
+  center?: number[] | undefined;
+  markers?: Array<ReturnType<typeof parseRecord>> | undefined;
+  markOptions?: { mapViewState?: { searchData?: { rowid?: string | undefined } | undefined } | undefined } | undefined;
+  setCenter(center: number[]): void;
+  setOriginalCenter(center: number[]): void;
+  getLatLngOnClick?: ((point: { left: number; top: number; lnglat: { lng: number; lat: number } }) => void) | undefined;
+  isCurrentPosition?: boolean | undefined;
+  resetAddRecordBtn?: (() => void) | undefined;
+  onZoomChange?: ((zoom: number | undefined) => void) | undefined;
+}
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import _ from 'lodash';
 import { Gmap, GmapOverlayView } from 'ming-ui/components/amap/components/GoogleMap';
 import PinMarker from '../components/PinMarker';
 
-const wrapperStyle = {
+const wrapperStyle: CSSProperties = {
   width: '100%',
   height: '100%',
   position: 'relative',
 };
 
-const GMap = forwardRef((props, ref) => {
+const GMap = forwardRef<GoogleMapHandle, GMapProps>((props, ref) => {
   const {
     zoom,
     center = [150.644, -34.397],
@@ -22,24 +45,33 @@ const GMap = forwardRef((props, ref) => {
     resetAddRecordBtn = () => {},
     onZoomChange,
   } = props;
-  const mapRef = useRef(null);
+  const mapRef = useRef<MapInstance | null>(null);
   const isLockRef = useRef(false);
   const isZoomingRef = useRef(false);
 
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const handleMapClick = e => {
-    const lat = e.latLng.lat();
-    const lng = e.latLng.lng();
-    console.log('111', e);
-    getLatLngOnClick({ left: e.pixel.x, top: e.pixel.y, lnglat: { lng, lat } });
+  const handleMapClick = (event: google.maps.MapMouseEvent) => {
+    if (!getLatLngOnClick || !event.latLng || !mapRef.current) return;
+    const bounds = mapRef.current.getDiv().getBoundingClientRect();
+    const domEvent = event.domEvent;
+    let point: { clientX: number; clientY: number } | undefined;
+    if ('clientX' in domEvent && 'clientY' in domEvent && typeof domEvent.clientX === 'number' && typeof domEvent.clientY === 'number') {
+      point = { clientX: domEvent.clientX, clientY: domEvent.clientY };
+    } else if ('changedTouches' in domEvent) {
+      point = domEvent.changedTouches[0];
+    }
+    if (!point) return;
+    getLatLngOnClick({ left: point.clientX - bounds.left, top: point.clientY - bounds.top,
+      lnglat: { lng: event.latLng.lng(), lat: event.latLng.lat() } });
   };
 
-  const getAddress = (lng, lat, callback) => {
+  const getAddress = (lng: number, lat: number, callback: (address: string | null) => void) => {
     if (mapRef.current) {
-      mapRef.current.geocoder.geocode({ location: { lng, lat } }, (results, status) => {
-        if (status === 'OK' && results.length) {
-          const address = results[0].formatted_address;
+      // onMapLoad creates the private geocoder before any owner can call this handle.
+      mapRef.current.geocoder!.geocode({ location: { lng, lat } }, (results, status) => {
+        if (status === 'OK' && results!.length) {
+          const address = results![0]!.formatted_address;
 
           callback(address);
         } else {
@@ -52,16 +84,16 @@ const GMap = forwardRef((props, ref) => {
   };
 
   useImperativeHandle(ref, () => ({
-    moveCenter: center => {
+    moveCenter: (center?: number[]) => {
       if (mapRef.current && center?.length === 2) {
-        mapRef.current.panTo({ lng: center[0], lat: center[1] });
-        setCenter({ lng: center[0], lat: center[1] });
+        Reflect.apply(mapRef.current.panTo, mapRef.current, [{ lng: center[0], lat: center[1] }]);
+        setCenter(center.slice());
       }
     },
     zoomByStep: step => {
       if (mapRef.current) {
         const currentZoom = mapRef.current.getZoom();
-        mapRef.current.setZoom(currentZoom + step);
+        mapRef.current.setZoom(Number(currentZoom) + step);
       }
     },
     getAddress,
@@ -93,25 +125,26 @@ const GMap = forwardRef((props, ref) => {
   useEffect(() => {
     if (!isLoaded) return undefined;
 
-    const dargStartListener = mapRef.current.addListener('dragstart', () => {
+    // isLoaded is set only after the private map ref is assigned. Preserve native failure if that lifecycle is violated.
+    const dargStartListener = mapRef.current!.addListener('dragstart', () => {
       resetAddRecordBtn();
     });
 
-    const dragEndListener = mapRef.current.addListener('dragend', () => {
-      const c = mapRef.current.getCenter();
-      setCenter([c.lng(), c.lat()]);
+    const dragEndListener = mapRef.current!.addListener('dragend', () => {
+      const c = mapRef.current!.getCenter();
+      setCenter([c!.lng(), c!.lat()]);
     });
 
-    const zoomChangeListener = mapRef.current.addListener('zoom_changed', () => {
+    const zoomChangeListener = mapRef.current!.addListener('zoom_changed', () => {
       if (isZoomingRef.current) return;
 
       isZoomingRef.current = true;
       resetAddRecordBtn();
     });
 
-    const idleListener = mapRef.current.addListener('idle', () => {
+    const idleListener = mapRef.current!.addListener('idle', () => {
       if (isZoomingRef.current && onZoomChange) {
-        onZoomChange(mapRef.current.getZoom());
+        onZoomChange(mapRef.current!.getZoom());
       }
 
       isZoomingRef.current = false;
@@ -136,7 +169,7 @@ const GMap = forwardRef((props, ref) => {
         mapTypeControl: false,
         streetViewControl: false,
       }}
-      onMapLoad={mapInstance => {
+      onMapLoad={(mapInstance: NativeMap) => {
         mapRef.current = mapInstance;
         setIsLoaded(true);
         if (mapRef.current && !mapRef.current.geocoder) {

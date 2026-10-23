@@ -8,7 +8,6 @@ import { isOpenPermit } from 'src/pages/FormSet/util.js';
 import { putControlByOrder, replaceHalfWithSizeControls } from 'src/pages/widgetConfig/util';
 import { getDateToEn } from 'src/pages/widgetConfig/util/setting';
 import { getTranslateInfo } from 'src/utils/app';
-import { pathCompletion } from 'src/utils/common';
 import RegExpValidator from 'src/utils/expression';
 import { dateConvertToUserZone } from 'src/utils/project';
 import {
@@ -121,9 +120,9 @@ export default class Con extends React.Component<any, any> {
     }
 
     // 对内分享链接
-    const url = pathCompletion(`/app/${appId}/${worksheetId}/${viewId || ''}/row/${rowId || rowIdForQr}`);
-    // 门户站内链接可能为相对路径，二维码使用当前页面域名补齐。
-    this.setState({ shareUrl: md.global.Account.isPortal ? new URL(url, window.location.origin).href : url });
+    let baseUrl = `${md.global.Config.WebUrl}app/${appId}/${worksheetId}`;
+    if (viewId) baseUrl += `/${viewId}`;
+    this.setState({ shareUrl: `${baseUrl}/row/${rowId || rowIdForQr}` });
   };
 
   getPlaceholderMode = () => {

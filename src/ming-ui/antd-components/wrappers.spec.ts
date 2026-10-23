@@ -61,6 +61,7 @@ function load(name: keyof Wrappers): Wrappers[typeof name] {
   new Function('require', 'module', 'exports', code)(
     (request: string) => {
       if (request === 'antd') return antd;
+      if (request === './staticActions') return require(path.join(__dirname, 'Modal/staticActions.ts'));
       if (request.endsWith('.less')) return {};
       return require(request);
     },
@@ -235,8 +236,14 @@ const decoratedTree = decoratedFooter('Native', controls) as Element;
 assert.deepEqual((decoratedTree.props['children'] as Node[])[1], ['Native', controls]);
 assert.equal(footerReceiver, undefined);
 assert.equal(wrappers.Modal({ footer: null, footerLeftElement: 'Left' }).props['footer'], null);
-for (const key of ['confirm', 'info', 'warning', 'error', 'success', 'destroyAll', 'useModal'] as const)
-  assert.equal(wrappers.Modal[key], Modal[key]);
+assert.equal(wrappers.Modal['destroyAll'], Modal.destroyAll);
+for (const key of ['confirm', 'info', 'warning', 'error', 'success', 'useModal'] as const) {
+  const wrapped = wrappers.Modal[key];
+  assert.equal(typeof wrapped, 'function');
+  if (typeof wrapped !== 'function') throw new TypeError('Missing actual guarded modal method ' + key);
+  assert.notEqual(wrapped, Modal[key], '7.5.2 action methods require their actual execution-lock adapter');
+  assert.equal(wrapped.length, Modal[key].length, 'Native static/hook reflection arity is preserved');
+}
 
 const button = wrappers.Button.render(
   {

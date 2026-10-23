@@ -1,4 +1,12 @@
-import { createRoot } from 'react-dom/client';
+import { createRoot, type Root } from 'react-dom/client';
+import createThemedRoot from 'src/common/theme/createRootWithAntdConfig';
+import CreateFeedContent, { type CreateFeedContentHandle } from './CreateFeedContent';
+import type { ConfirmClose } from 'ming-ui/components/Dialog/types';
+import type { FeedAttachment, FeedPost, FeedScope } from '../../types';
+import type { FeedLinkPreview } from '../linkView/types';
+import type { MentionDraftData } from 'src/components/MentionsInput';
+import type { GroupSelectionValue } from 'src/ming-ui/functions/quickSelectGroup/types';
+import { toSyntaxMessage } from 'src/components/comment/utils/markdownMessageSyntax';
 import doT from 'dot';
 import _ from 'lodash';
 import Dialog from 'ming-ui/components/Dialog';
@@ -20,9 +28,93 @@ var langUploadFiles = _l('上传附件');
 var langShareLink = _l('分享网站') + '...';
 var langVoteQuestion = _l('请输入投票问题') + '...';
 
-export default function (options) {
-  var MDUpdater = {
-    options: {
+interface CreatorOptionsState {
+  postType: { post: number; link: number; vote: number; attachment: number };
+  defaultPostType: string | number;
+  showType: string[];
+  showToFeed: boolean;
+  knowledge: boolean;
+  appId: string | undefined;
+  uploadObj: unknown;
+  isUploadComplete: boolean;
+  attachmentData: FeedAttachment[];
+  kcAttachmentData: FeedAttachment[];
+  defaultAttachmentData: FeedAttachment[];
+  defaultKcAttachmentData: FeedAttachment[];
+  linkViewData: FeedLinkPreview | null;
+  selectGroupOptions: { maxHeight?: number | undefined; isAll?: boolean | undefined; isMe?: boolean | undefined; defaultValue?: string | undefined; projectId?: string | null | undefined };
+  callback: ((post: FeedPost) => unknown) | null | undefined;
+  createShare: boolean;
+  scope: FeedScope | undefined;
+  postMsg?: string | undefined;
+  filesRender?: boolean | undefined;
+}
+export type CreateFeedOptions = Partial<CreatorOptionsState>;
+interface CreatorWireFields {
+  // Native jQuery form carrier; validation/serialization remains at the existing API boundary.
+  postType: string | number | string[] | undefined;
+  postMsg: string;
+  showType?: number | undefined;
+  linkUrl?: string | undefined;
+  linkTitle?: string | undefined;
+  linkDesc?: string | undefined;
+  linkThumb?: string | undefined;
+  attachments?: string | undefined;
+  knowledgeAttach?: string | undefined;
+  voteOptions?: string | undefined;
+  voteOptionFiles?: string | undefined;
+  voteLastTime?: string | undefined;
+  voteLastHour?: string | number | string[] | undefined;
+  voteAvailableNumber?: number | undefined;
+  voteAnonymous?: boolean | undefined;
+  voteVisble?: boolean | undefined;
+  appId?: string | undefined;
+  scope?: {
+    radioProjectIds?: string[] | '' | undefined;
+    shareGroupIds?: string[] | undefined;
+    shareProjectIds?: Array<string | null | undefined> | undefined;
+  } | undefined;
+}
+
+interface CreatorUi {
+  editor?: CreateFeedContentHandle | undefined;
+  editorRoot?: ReturnType<typeof createThemedRoot> | undefined;
+  uploadRoot?: Root | undefined;
+  groupRoot?: Root | undefined;
+  uploader?: Pick<UploadFiles, 'addFiles'> | undefined;
+  close?: ConfirmClose | undefined;
+  textarea?: MentionsInputElement | undefined;
+  initTimer?: ReturnType<typeof setTimeout> | undefined;
+  focusTimer?: ReturnType<typeof setTimeout> | undefined;
+  disposed: boolean;
+  posting: boolean;
+  posted: boolean;
+  pendingFiles: File[][];
+  draft?: MentionDraftData | undefined;
+  hasDraft: boolean;
+}
+export default function (options?: CreateFeedOptions) {
+  const ui: CreatorUi = { disposed: false, posting: false, posted: false, pendingFiles: [], hasDraft: false };
+  const isPlaceholder = (value: string) => [langUploadFiles, langShareLink, langVoteQuestion, _l('知会工作是一种美德') + '...'].includes(value);
+  const getPlaceholder = () => {
+    const type = Number($('#MDUpdater_hidden_UpdaterType').val());
+    return type === 9 ? langUploadFiles : type === 1 ? langShareLink : type === 7 ? langVoteQuestion : _l('知会工作是一种美德') + '...';
+  };
+  function disposeCreator(posted = false) {
+    if (ui.disposed) return;
+    ui.disposed = true;
+    try { if (!posted) ui.editor?.storeDraft(); }
+    finally {
+      clearTimeout(ui.initTimer); clearTimeout(ui.focusTimer);
+      const editorRoot = ui.editorRoot, uploadRoot = ui.uploadRoot, groupRoot = ui.groupRoot;
+      ui.editorRoot = undefined; ui.uploadRoot = undefined; ui.groupRoot = undefined; ui.editor = undefined; ui.uploader = undefined;
+      ui.pendingFiles.length = 0;
+      queueMicrotask(() => { try { editorRoot?.unmount(); } finally { try { uploadRoot?.unmount(); } finally { groupRoot?.unmount(); } } });
+      ui.textarea?.destroy?.();
+    }
+  }
+
+  const initialOptions: CreatorOptionsState = {
       postType: {
         post: 0,
         link: 1,
@@ -50,7 +142,9 @@ export default function (options) {
       callback: null,
       createShare: true,
       scope: undefined,
-    },
+    };
+  var MDUpdater = {
+    options: initialOptions,
     handleOpen() {
       let $Attachment_updater = $('[targetdiv="#MDUpdater_Attachment_updater"]');
 
@@ -59,7 +153,7 @@ export default function (options) {
         MDUpdater.options.filesRender = true;
       }
     },
-    handleUploadComplete(bool) {
+    handleUploadComplete(bool: boolean) {
       MDUpdater.options.isUploadComplete = bool;
       let $textarea = $('#MDUpdater_textarea_Updater');
       let value = $textarea.val();
@@ -71,30 +165,36 @@ export default function (options) {
       ) {
         $textarea.val(
           MDUpdater.options.attachmentData.length
-            ? MDUpdater.options.attachmentData[0].originalFileName
-            : MDUpdater.options.kcAttachmentData[0].originalFileName,
+            ? MDUpdater.options.attachmentData[0]!.originalFileName ?? ''
+            : MDUpdater.options.kcAttachmentData[0]!.originalFileName ?? '',
         );
         $textarea.focus();
       }
     },
     render() {
-      const root = createRoot(document.querySelector('#MDUpdater_Attachment_updater'));
+      const host = document.getElementById('MDUpdater_Attachment_updater');
+      if (!host || ui.disposed) return;
+      const root = ui.uploadRoot || (ui.uploadRoot = createRoot(host));
 
       root.render(
         <UploadFiles
+          manualRef={(instance: UploadFiles | null) => {
+            ui.uploader = instance || undefined;
+            if (instance && !ui.disposed) { const batches = ui.pendingFiles.splice(0); batches.forEach(batch => instance.addFiles(batch)); }
+          }}
           dropPasteElement="MDUpdater_textarea_Updater"
           onDropPasting={() => this.handleOpen()}
           arrowLeft={4}
           isInitCall={true}
           temporaryData={MDUpdater.options.attachmentData}
           kcAttachmentData={MDUpdater.options.kcAttachmentData}
-          onTemporaryDataUpdate={result => {
+          onTemporaryDataUpdate={(result: FeedAttachment[]) => {
             MDUpdater.options.attachmentData = result;
           }}
-          onKcAttachmentDataUpdate={result => {
+          onKcAttachmentDataUpdate={(result: FeedAttachment[]) => {
             MDUpdater.options.kcAttachmentData = result;
           }}
-          onUploadComplete={bool => {
+          onUploadComplete={(bool: boolean) => {
             this.handleUploadComplete(bool);
             if (bool && MDUpdater.options.filesRender) {
               MDUpdater.options.filesRender = undefined;
@@ -120,7 +220,7 @@ export default function (options) {
         this.render();
       }
     },
-    resetUpdater: function (options?, clearCallback?) {
+    resetUpdater: function (options?: CreateFeedOptions | null, clearCallback?: boolean) {
       if (!options) {
         options = {};
       }
@@ -169,10 +269,12 @@ export default function (options) {
       $('#mdUpdateCloseContainer').hide();
     },
     // 发布动态
-    postUpdater: function (obj) {
+    postUpdater: function (obj: HTMLElement | undefined) {
+      if (ui.disposed || ui.posting) return;
       var $mdUpdaterTextareaUpdater = $('#MDUpdater_textarea_Updater');
-      var mdUpdaterTextareaUpdaterEl = $mdUpdaterTextareaUpdater.get(0) as MentionsInputElement;
-      var handlePost = data => {
+      const mdUpdaterTextareaUpdaterEl = document.querySelector<MentionsInputElement>('textarea#MDUpdater_textarea_Updater');
+      if (!mdUpdaterTextareaUpdaterEl) return;
+      var handlePost = (data?: string) => {
         var postMsg = data || '';
         if (
           !postMsg.trim() ||
@@ -190,7 +292,7 @@ export default function (options) {
 
         var postType = $('#MDUpdater_hidden_UpdaterType').val();
         var isToFeed = $('#isToFeed').prop('checked');
-        var rData: Record<string, any> = { postType: postType, postMsg: postMsg };
+        var rData: CreatorWireFields = { postType: postType, postMsg: postMsg };
         // 不在动态更新显示
         if (!isToFeed) {
           rData.showType = 1;
@@ -278,7 +380,8 @@ export default function (options) {
         }
 
         // 知识门户
-        $(obj).attr('disabled', 'disabled').addClass('Disabled');
+        ui.posting = true;
+        $(obj ?? []).attr('disabled', 'disabled').addClass('Disabled');
 
         postAjax
           .addPost(rData)
@@ -288,43 +391,41 @@ export default function (options) {
               return undefined;
             }
 
-            if (MDUpdater.options.createShare) {
-              if (window.location.pathname.indexOf('/feed') > -1) {
-                alert(_l('发布成功'));
-                return false;
-              }
-
-              createShare({
-                linkURL: pathCompletion('/feeddetail?itemID=' + result.post.postID),
-                content: _l('动态创建成功'),
+            ui.posted = true;
+            const isFeedPage = MDUpdater.options.createShare && window.location.pathname.indexOf('/feed') > -1;
+            if (isFeedPage) alert(_l('发布成功'));
+            else {
+              if (MDUpdater.options.createShare) createShare({
+                linkURL: pathCompletion('/feeddetail?itemID=' + result.post.postID), content: _l('动态创建成功'),
               });
+              if (MDUpdater.options.callback) MDUpdater.options.callback(result.post);
+              else alert(_l('分享成功'));
             }
 
-            if (MDUpdater.options.callback) {
-              MDUpdater.options.callback(result.post);
-            } else {
-              alert(_l('分享成功'));
-            }
-
+            if (ui.disposed) return undefined;
             $mdUpdaterTextareaUpdater.val('');
 
             if (_.isFunction(mdUpdaterTextareaUpdaterEl.reset)) {
               mdUpdaterTextareaUpdaterEl.reset();
-              mdUpdaterTextareaUpdaterEl.clearStore();
+              mdUpdaterTextareaUpdaterEl.clearStore?.();
             }
 
+            ui.editor?.resetMarkdown();
             MDUpdater.resetUpdater(null, true);
             MDUpdater.renderSelectGroup(MDUpdater.options.selectGroupOptions);
             return undefined;
           })
           .finally(function () {
-            $(obj).removeAttr('disabled').removeClass('Disabled');
-            $('.easyDialogBoxMDUpdater')[0] && $('.easyDialogBoxMDUpdater').parent().remove();
+            ui.posting = false;
+            if (!ui.disposed) $(obj ?? []).removeAttr('disabled').removeClass('Disabled');
+            if (ui.posted && !ui.disposed) { disposeCreator(true); ui.close?.(false); }
           });
         return undefined;
       };
 
-      if (_.isFunction(mdUpdaterTextareaUpdaterEl.val)) {
+      const markdown = ui.editor?.getMarkdownState();
+      if (markdown?.isMarkdown) handlePost(toSyntaxMessage(markdown.value));
+      else if (_.isFunction(mdUpdaterTextareaUpdaterEl.val)) {
         mdUpdaterTextareaUpdaterEl.val(handlePost);
       } else {
         handlePost(mdUpdaterTextareaUpdaterEl.value);
@@ -337,31 +438,58 @@ export default function (options) {
     // TypeError: $(...).dialogSelectGroup is not a function。
     // 而 dialogChooseGroup 本身也【没有任何调用点】，所以它是一段不可达的坏代码。
     // 是给 `$` 标上真实类型之后 TS2339 报出来的。
-    showUpdaterDivForDocCenter: function (options) {
+    showUpdaterDivForDocCenter: function (options?: CreateFeedOptions | null) {
       if (options) {
         $.extend(MDUpdater.options, options);
       }
 
-      Dialog.confirm({
+      ui.close = Dialog.confirm({
+        onCancel: () => disposeCreator(false),
         dialogClasses: 'easyDialogBoxMDUpdater',
         width: 640,
         noFooter: true,
         children: <div dangerouslySetInnerHTML={{ __html: doT.template(tpl)() }}></div>,
       });
 
-      setTimeout(() => {
+      ui.initTimer = setTimeout(() => {
+        if (ui.disposed) return;
         if (MDUpdater.options.postMsg) {
           $('#MDUpdater_textarea_Updater').val(MDUpdater.options.postMsg);
         }
 
         MDUpdater.bindEvent();
+        MDUpdater.renderEditor();
       }, 200);
+    },
+    renderEditor() {
+      const textarea = document.querySelector<MentionsInputElement>('textarea#MDUpdater_textarea_Updater');
+      const host = document.getElementById('MDUpdater_markdownEditor');
+      const target = document.querySelector<HTMLElement>('.MDUpdater .msgExpandDiv');
+      const plain = document.getElementById('MDUpdater_plainText');
+      const face = document.querySelector<HTMLElement>('.MDUpdater .msgExpandDiv .faceBtn');
+      if (!textarea || !host || !target || !plain || ui.disposed) return;
+      ui.textarea = textarea;
+      const root = ui.editorRoot || (ui.editorRoot = createThemedRoot(host));
+      root.render(<CreateFeedContent textarea={textarea} modeButtonContainer={target} initialValue={MDUpdater.options.postMsg || ''}
+        projectId={MDUpdater.options.selectGroupOptions.projectId}
+        getPlaceholder={getPlaceholder} isPlaceholder={isPlaceholder}
+        onModeChange={markdown => { plain.style.display = markdown ? 'none' : ''; if (face) face.style.display = markdown ? 'none' : ''; }}
+        onPost={() => MDUpdater.postUpdater(document.getElementById('MDUpdater_button_Share') || undefined)}
+        onUploadFiles={files => {
+          if (!files.length || ui.disposed) return;
+          MDUpdater.handleOpen();
+          if (ui.uploader) ui.uploader.addFiles(files);
+          else { ui.pendingFiles.push(files); MDUpdater.render(); }
+        }}
+        ref={controller => {
+          ui.editor = controller || undefined;
+          if (controller && ui.hasDraft) { ui.hasDraft = false; controller.restoreDraft(ui.draft); }
+        }} />);
     },
     bindEvent: function () {
       MDUpdater.bindUploadEvent();
-
-      setTimeout(function () {
-        $<HTMLTextAreaElement>('#MDUpdater_textarea_Updater')[0].focus();
+      ui.focusTimer = setTimeout(function () {
+        if (!ui.disposed) document.querySelector<HTMLTextAreaElement>('textarea#MDUpdater_textarea_Updater')?.focus();
       }, 10);
 
       // 分享范围
@@ -381,7 +509,9 @@ export default function (options) {
       }
 
       var $mdUpdaterTextareaUpdater = $('#MDUpdater_textarea_Updater');
-      var mdUpdaterTextareaUpdaterEl = $mdUpdaterTextareaUpdater.get(0) as MentionsInputElement;
+      const mdUpdaterTextareaUpdaterEl = document.querySelector<MentionsInputElement>('textarea#MDUpdater_textarea_Updater');
+      if (!mdUpdaterTextareaUpdaterEl) return;
+      ui.textarea = mdUpdaterTextareaUpdaterEl;
 
       $mdUpdaterTextareaUpdater
         .focus(function () {
@@ -422,8 +552,10 @@ export default function (options) {
         reset: false,
         initCallback: () => {
           if (!MDUpdater.options.postMsg) {
-            mdUpdaterTextareaUpdaterEl.restore(success => {
+            mdUpdaterTextareaUpdaterEl.restore?.((success, draft) => {
               if (success) {
+                ui.draft = draft; ui.hasDraft = true;
+                if (ui.editor) { ui.hasDraft = false; ui.editor.restoreDraft(draft); }
                 $mdUpdaterTextareaUpdater.removeClass('textTertiary');
                 $('#myupdaterOP').show();
               } else {
@@ -565,7 +697,8 @@ export default function (options) {
           $('#MDUpdater_hidden_UpdaterType').val(MDUpdater.options.postType.post);
         }
 
-        $(targetDivID).show(0, function () {});
+        ui.editor?.refreshPlaceholder();
+        $(targetDivID ?? '').show(0, function () {});
         // 关闭按钮
         if (targetDivID != '#MDUpdater_Video_updater') $('#mdUpdateCloseContainer').show();
       });
@@ -575,13 +708,14 @@ export default function (options) {
         MDUpdater.showUploadPageForVideoCenter("[targetdiv='#MDUpdater_Video_updater']");
       }
 
-      new Emotion('div.MDUpdater .faceBtn', {
+      Reflect.construct(Emotion, ['div.MDUpdater .faceBtn', {
         input: '#MDUpdater_textarea_Updater',
         placement: 'right bottom',
         mdBear: false,
         relatedLeftSpace: 22,
         onSelect: function () {
-          var textBox = $<HTMLTextAreaElement>('#MDUpdater_textarea_Updater')[0];
+          const textBox = ui.textarea;
+          if (!textBox || ui.disposed) return;
           if (
             textBox.value === _l('知会工作是一种美德') + '...' ||
             textBox.value === langUploadFiles ||
@@ -591,7 +725,7 @@ export default function (options) {
             textBox.value = '';
           }
         },
-      });
+      }]);
 
       // 链接预览
       $('#MDUpdater_Link_updater .linkBtn').on('click', function (this: HTMLElement) {
@@ -609,13 +743,14 @@ export default function (options) {
 
         LinkView($('#MDUpdater_Link_updater .updaterLinkView'), {
           viewUrl: linkUrl,
-          callback: function (data) {
+          callback: function (data: FeedLinkPreview) {
+            let preview: FeedLinkPreview | null = data;
             if (data.errorCode != '1') {
               alert(_l('链接提取失败'), 3);
-              data = null;
+              preview = null;
             }
 
-            MDUpdater.options.linkViewData = data;
+            MDUpdater.options.linkViewData = preview;
             $el.val(_l('预览')).prop('disabled', false).removeClass('Disabled');
             $btnShare.prop('disabled', false).removeClass('Disabled');
           },
@@ -642,7 +777,7 @@ export default function (options) {
           .removeClass('textPlaceholder');
       }
     },
-    renderSelectGroup: options => {
+    renderSelectGroup: (options: CreatorOptionsState['selectGroupOptions']) => {
       if (options.defaultValue) {
         MDUpdater.options.scope = {
           shareGroupIds: [options.defaultValue],
@@ -655,7 +790,7 @@ export default function (options) {
 
       if (!ele) return;
 
-      const root = createRoot(ele);
+      const root = ui.groupRoot || (ui.groupRoot = createRoot(ele));
 
       root.render(
         <SelectGroupTrigger
@@ -667,7 +802,7 @@ export default function (options) {
                 }
               : undefined
           }
-          onChange={value => {
+          onChange={(value: GroupSelectionValue) => {
             MDUpdater.options.scope =
               !value.isMe &&
               !(value.shareGroupIds || []).length &&
@@ -702,7 +837,7 @@ export default function (options) {
         'toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no';
       window.open(url, '_blank', features);
     },
-    showUploadPageForVideoCenter: function (element) {
+    showUploadPageForVideoCenter: function (element: string) {
       $(element).click(function () {
         MDUpdater.showVideoUpload();
       });

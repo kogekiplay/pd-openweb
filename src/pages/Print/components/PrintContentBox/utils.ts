@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import moment from 'moment';
 import sheetAjax from 'src/api/worksheet';
 import instance from 'src/pages/workflow/api/instanceVersion';
 import processAjax from 'src/pages/workflow/api/processVersion';
@@ -6,9 +7,48 @@ import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import { getTranslateInfo } from 'src/utils/app';
 import { renderText as renderCellText } from 'src/utils/control';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
+import { getDatePickerConfigs, getShowFormat } from 'src/utils/domain/control/date';
+import { getAppTimeZone } from 'src/utils/platform/runtime/config';
+import { dateAppZoneToServerZone, dateConvertToServerZone } from 'src/utils/platform/runtime/timeZone';
+import type { FormControl } from 'src/utils/controlTypes';
 import { fromType, typeForCon } from '../../core/config';
 
 const getPrintClientId = params => _.get(params, 'clientId') || window.clientId || sessionStorage.getItem('clientId');
+
+// 打印接口返回的是按控件展示格式化后的字符串，需先严格解析，避免无效日期进入筛选条件。
+const normalizePrintFilterDateValues = (formData: FormControl[] | undefined, appId: string) =>
+  _.map(formData, control => {
+    if (!control || !([15, 16] as readonly (number | undefined)[]).includes(control.type) || !_.isString(control.value) || !control.value) {
+      return control;
+    }
+
+    const { formatMode } = getDatePickerConfigs(control);
+    const formats = _.uniq([getShowFormat(control), formatMode].filter(Boolean));
+    const parsedValue = moment(control.value, formats, true);
+
+    if (!parsedValue.isValid()) {
+      return { ...control, value: '' };
+    }
+
+    if (control.type === 16) {
+      // 按控件时区设置换算为服务端时区值，再由 getFilter 按应用时区生成关联筛选值。
+      const appTimeZone = getAppTimeZone(appId);
+      const convertToServerZone =
+        control.advancedSetting?.timezonetype === '1'
+          ? (value: string) => dateAppZoneToServerZone(value, appTimeZone)
+          : dateConvertToServerZone;
+
+      return {
+        ...control,
+        value: convertToServerZone(parsedValue.format('YYYY-MM-DD HH:mm:ss')),
+      };
+    }
+
+    return {
+      ...control,
+      value: parsedValue.format(formatMode),
+    };
+  });
 
 export const getAttributeName = (receiveControls, rowValue) => {
   const { controlValues = [] } = rowValue;
@@ -164,8 +204,9 @@ export const getAllRelationRows = ({ params, relationControls, controlProcessedM
     const filtersMap = rowIds.reduce((acc, rowId: string) => {
       const filters = getFilter({
         control: { ...control, recordId: rowId },
-        formData: controlProcessedMap[rowId],
+        formData: normalizePrintFilterDateValues(controlProcessedMap[rowId], params.appId),
         filterKey: 'resultfilters',
+        appId: params.appId,
       });
 
       // emptyRule = 3 且动态值为空时，getFilter 返回 false，对应行不发请求

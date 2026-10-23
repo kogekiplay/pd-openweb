@@ -120,14 +120,26 @@ def verify_candidate(root, deployment_metadata_sha256=None):
     archive_stat = archive_identity(archive)
     archive_sha = file_digest(archive)
     seen = set()
+    seen_directories = set()
+    expected_directories = {
+        str(parent) for name in expected for parent in pathlib.PurePosixPath(name).parents
+        if str(parent) != '.'
+    }
     metadata = {'artifact.json', 'candidate-sha256.txt', 'deploy.py'}
     archived_metadata = {}
     with tarfile.open(archive, 'r:gz') as package:
         for member in package:
             safe_name(member.name)
-            if not member.isfile() or member.name in seen:
+            if member.name in seen:
                 raise ValueError('Non-file or duplicate archive entry')
             seen.add(member.name)
+            if member.isdir():
+                if member.name not in expected_directories:
+                    raise ValueError('Unexpected archive directory: ' + member.name)
+                seen_directories.add(member.name)
+                continue
+            if not member.isfile():
+                raise ValueError('Non-file or duplicate archive entry')
             stream = package.extractfile(member)
             if stream is None:
                 raise ValueError('Unreadable archive member')
@@ -143,7 +155,7 @@ def verify_candidate(root, deployment_metadata_sha256=None):
                         raise ValueError('Archive metadata mismatch: ' + member.name)
             else:
                 raise ValueError('Unexpected archive member: ' + member.name)
-    if seen != set(expected) | metadata:
+    if seen - seen_directories != set(expected) | metadata:
         raise ValueError('Recovery archive is incomplete')
     before = inventory(root)
     if set(before) != set(expected):

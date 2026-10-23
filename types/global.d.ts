@@ -418,7 +418,7 @@ declare var IM: any; // 站内即时通讯 SDK，宿主提供（eslint.config.js
 declare var HWH5: any; // 华为 WeLink 容器 JSAPI，宿主容器注入（eslint.config.js 登记）
 declare var WeixinJSBridge: any; // 微信 webview 注入（eslint.config.js 登记）
 declare var TencentCaptcha: any; // 腾讯验证码 SDK，外链 script（eslint.config.js 登记）
-declare var google: any; // Google 地图/登录 SDK，外链 script（eslint.config.js 登记）
+// Google Maps global is declared by the installed official @types/google.maps, referenced by its actual consumers.
 declare var ActiveXObject: any; // 旧版 IE 宿主对象；TS 只在 lib.scripthost.d.ts 提供，默认 lib 不含（eslint.config.js 登记）
 
 interface Window {

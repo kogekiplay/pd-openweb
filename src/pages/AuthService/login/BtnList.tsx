@@ -1,10 +1,30 @@
 import React from 'react';
 import _ from 'lodash';
+import qs from 'query-string';
 import { Icon } from 'ming-ui';
 import { getRequest, pathCompletion } from 'src/utils/common';
 import googleIcon from './img/google.svg';
 import microsoftIcon from './img/microsoft.png';
 import { getWorkWeiXinCorpInfoByApp } from './util';
+
+const handleSsoClick = (event: React.MouseEvent<HTMLAnchorElement>, ssoUrl: string | null | undefined) => {
+  if (event.type === 'auxclick' && event.button !== 1) return;
+  event.preventDefault();
+  if (!ssoUrl) return;
+  const request = getRequest();
+  const returnUrl = request.ReturnUrl || request.returnUrl || request.returnURL;
+  // 认证回调还会解码一次，保护回跳地址内部的百分号编码。
+  const url =
+    typeof returnUrl === 'string' && returnUrl
+      ? qs.stringifyUrl({ url: ssoUrl, query: { ReturnUrl: returnUrl.replace(/%/g, '%25') } })
+      : ssoUrl;
+
+  if (event.button === 1 || event.ctrlKey || event.metaKey || event.shiftKey) {
+    window.open(url, '_blank', 'noopener');
+  } else {
+    location.assign(url);
+  }
+};
 
 const integrationInto: Record<string, { iconClassName: string; text: string }> = {
   1: { iconClassName: 'dingIcon', text: _l('钉钉登录') },
@@ -71,8 +91,15 @@ export default function (props) {
 
   // sso
   const renderSsoBtn = () => {
+    const ssoUrl = isMobile ? ssoAppUrl : ssoWebUrl;
+
     return (
-      <a href={isMobile ? ssoAppUrl : ssoWebUrl} className="flexRow alignItemsCenter">
+      <a
+        href={ssoUrl}
+        className="flexRow alignItemsCenter"
+        onClick={event => handleSsoClick(event, ssoUrl)}
+        onAuxClick={event => handleSsoClick(event, ssoUrl)}
+      >
         {ssoIconUrl ? (
           <span className="btnIcon mRight5 textSecondary" style={{ backgroundImage: `url(${ssoIconUrl})` }}></span>
         ) : (
@@ -166,9 +193,17 @@ export default function (props) {
             </a>
           )}
           {!_.isEmpty(googleSsoSet) &&
-            googleSsoSet.map((o, index) => {
+            googleSsoSet.map(o => {
+              const ssoUrl = isMobile ? o.h5IndexUrl : o.webIndexUrl;
+
               return (
-                <a key={index} href={isMobile ? o.h5IndexUrl : o.webIndexUrl} className="w100 flexRow alignItemsCenter">
+                <a
+                  key={o.tpType}
+                  href={ssoUrl}
+                  className="w100 flexRow alignItemsCenter"
+                  onClick={event => handleSsoClick(event, ssoUrl)}
+                  onAuxClick={event => handleSsoClick(event, ssoUrl)}
+                >
                   {o.tpType === 13 ? (
                     <React.Fragment>
                       <img src={googleIcon} width="20px" className="mRight8" />

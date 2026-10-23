@@ -64,6 +64,15 @@ function extra(state = {}, action: ReduxAction) {
   }
 }
 
+function options(state = {}, action: ReduxAction<{ options?: object | null | undefined }>) {
+  switch (action.type) {
+    case 'FILE_PREVIEW_INIT':
+      return action.options || {};
+    default:
+      return state;
+  }
+}
+
 function loading(state = true, action: ReduxAction) {
   switch (action.type) {
     case 'FILE_PREVIEW_LOAD_FILE_SUCESS':
@@ -179,6 +188,7 @@ export default combineReducers({
   index,
   loading,
   extra,
+  options,
   error,
   showThumbnail,
   showAttInfo,

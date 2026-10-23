@@ -171,11 +171,31 @@ assert.throws(() => helpers.encrypt(Symbol('not text')), /Symbol/);
 window.isDingTalk = true;
 assert.equal(
   helpers.downloadFile('https://example.test/file'),
-  'https://example.test/file?md_pss_id=session',
-  'A URL without query parameters remains downloadable in DingTalk',
+  'https://example.test/file',
+  '7.5.2 uses the shared readable-cookie authentication policy in a top-level DingTalk page',
 );
 assert.equal(
   helpers.downloadFile('https://example.test/file?validation=yes'),
   'https://example.test/file?validation=yes',
 );
+const originalDingTalk = window.isDingTalk;
+const frame = {};
+for (const configuration of [
+  { dingTalk: true, httpOnly: false, iframe: false, expected: 'https://example.test/file' },
+  { dingTalk: false, httpOnly: false, iframe: false, expected: 'https://example.test/file' },
+  { dingTalk: true, httpOnly: true, iframe: false, expected: 'https://example.test/file?md_pss_id=session' },
+  { dingTalk: false, httpOnly: true, iframe: false, expected: 'https://example.test/file?md_pss_id=session' },
+  { dingTalk: true, httpOnly: false, iframe: true, expected: 'https://example.test/file?md_pss_id=session' },
+  { dingTalk: false, httpOnly: false, iframe: true, expected: 'https://example.test/file?md_pss_id=session' },
+]) {
+  window.isDingTalk = configuration.dingTalk;
+  Reflect.set(window.md.global.Config, 'HttpOnly', configuration.httpOnly);
+  Reflect.set(window, 'self', frame);
+  Reflect.set(window, 'top', configuration.iframe ? {} : frame);
+  assert.equal(helpers.downloadFile('https://example.test/file'), configuration.expected);
+}
+window.isDingTalk = originalDingTalk;
+Reflect.deleteProperty(window.md.global.Config, 'HttpOnly');
+Reflect.deleteProperty(window, 'self');
+Reflect.deleteProperty(window, 'top');
 console.log('Actual common routing, HTML, user-agent, dates, URI encryption and download protocols passed');

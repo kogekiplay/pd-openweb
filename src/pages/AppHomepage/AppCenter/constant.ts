@@ -21,7 +21,7 @@ export const LINK_PARA_FIELDS = [
   },
 ];
 
-export const PUBLISH_CONFIG_OPTIONS = [
+export const PUBLISH_CONFIG_OPTIONS: Array<{ key: 'pcDisplay' | 'webMobileDisplay' | 'appDisplay'; text: string }> = [
   { key: 'pcDisplay', text: _l('PC端') },
   { key: 'webMobileDisplay', text: _l('Web移动端') },
   { key: 'appDisplay', text: _l('APP') },

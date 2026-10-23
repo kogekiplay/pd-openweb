@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useLayoutEffect,
+  useMemo,
   useReducer,
   useRef,
 } from 'react';
@@ -64,6 +65,15 @@ const Entrance = React.forwardRef<EntranceRef, EntranceProps>((componentProps, r
   const initialProps: EntranceProps = {};
   const props: EntranceProps = _.defaults(initialProps, componentProps, commonDefaultProps);
   const recordInfoContext = useContext(RecordInfoContext);
+  const workflowInstanceId = _.get(recordInfoContext, 'recordBaseInfo.instanceId');
+  const workflowWorkId = _.get(recordInfoContext, 'recordBaseInfo.workId');
+  const originalControlProps = props.controlProps;
+  const controlProps = useMemo(() => {
+    if (isMobile || !(workflowInstanceId || workflowWorkId)) return originalControlProps;
+
+    // Flow identifiers belong to controls; preserve the form event isolation instanceId.
+    return { ...originalControlProps, instanceId: workflowInstanceId, workId: workflowWorkId };
+  }, [originalControlProps, workflowInstanceId, workflowWorkId]);
   const dataFormat = useRef<DataFormat | null>(null);
   const abortController = useRef(new AbortController());
   const controlRefs = useRef({});
@@ -608,6 +618,7 @@ const Entrance = React.forwardRef<EntranceRef, EntranceProps>((componentProps, r
             {...props}
             {...state}
             {...widgetEventProps}
+            controlProps={controlProps}
             controlRefs={controlRefs}
             dataFormat={dataFormat}
             checkControlUnique={checkControlUnique}

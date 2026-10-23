@@ -1,3 +1,4 @@
+import type { AttachmentContext, AttachmentRequestContext } from 'src/utils/attachmentContextTypes';
 import _ from 'lodash';
 import qs from 'query-string';
 import attachmentAjax from 'src/api/attachment';
@@ -12,6 +13,29 @@ import { handleRecordError } from 'src/utils/record';
 import { updateRecord } from '../common/recordInfo/crtl';
 import type { FormControl } from 'src/utils/controlTypes';
 
+export interface DownloadAttachmentArgs {
+  fileId?: string | undefined;
+  refId?: string | undefined;
+  worksheetId?: string | undefined;
+  rowId?: string | undefined;
+  controlId?: string | undefined;
+  parentWorksheetId?: string | undefined;
+  parentRowId?: string | undefined;
+  sourceControlId?: string | undefined;
+  masterControlId?: string | undefined;
+  instanceId?: string | undefined;
+  workId?: string | undefined;
+  from?: number | undefined;
+}
+export interface OpenControlAttachmentOptions extends Pick<AttachmentContext, 'worksheetId' | 'recordId' | 'controlId' | 'instanceId' | 'workId'> {
+  appId?: string | undefined;
+  projectId?: string | undefined;
+  viewId?: string | undefined;
+  fileId?: string | undefined;
+  getType?: string | number | undefined;
+  openAsPopup?: boolean | undefined;
+}
+
 export async function downloadAttachmentById({
   fileId,
   refId,
@@ -21,7 +45,11 @@ export async function downloadAttachmentById({
   parentWorksheetId,
   parentRowId,
   sourceControlId,
-}) {
+  masterControlId,
+  instanceId,
+  workId,
+  from,
+}: DownloadAttachmentArgs) {
   try {
     if (!fileId && !refId) {
       throw new Error();
@@ -36,16 +64,38 @@ export async function downloadAttachmentById({
         worksheetId,
       });
     } else {
-      data = await attachmentAjax.getAttachmentDetail({
+      const args: AttachmentRequestContext & { fileId?: string | undefined } = {
         fileId,
+        callSource: instanceId || workId ? 2 : 1,
         worksheetId,
         rowId,
         controlId,
-      });
+        masterWorksheetId: parentWorksheetId,
+        masterRowId: parentRowId,
+        masterControlId,
+        instanceId,
+        workId,
+      };
+      const shareState = window.shareState;
+
+      if (shareState && shareState.shareId) {
+        args.type =
+          shareState.isPublicRecord || shareState.isPublicView || shareState.isPublicPage
+            ? 3
+            : shareState.isPublicForm || shareState.isPublicQuery
+              ? 11
+              : 14;
+      }
+
+      if (from === 21) {
+        args.type = 21;
+      }
+
+      data = await attachmentAjax.getAttachmentDetail(args);
     }
 
     const logExtend = qs.stringify({
-      controlId: sourceControlId || controlId,
+      controlId: sourceControlId || masterControlId || controlId,
       rowId,
       parentWorksheetId,
       parentRowId,
@@ -386,7 +436,7 @@ export async function openControlAttachmentInNewTab({
   openAsPopup,
   instanceId,
   workId,
-}) {
+}: OpenControlAttachmentOptions) {
   if (!controlId || !fileId || !recordId || !worksheetId) {
     console.error('参数不全');
     return;

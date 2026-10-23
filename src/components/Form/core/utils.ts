@@ -4,7 +4,7 @@ import { RELATE_RECORD_SHOW_TYPE, RELATION_SEARCH_SHOW_TYPE } from 'worksheet/co
 import { getStrBytesLength } from 'src/pages/Role/PortalCon/tabCon/util-pure.js';
 import { ALL_SYS } from 'src/pages/widgetConfig/config/widget';
 import { isCustomWidget, isOldSheetList, isTabSheetList, supportDisplayRow } from 'src/pages/widgetConfig/util';
-import { browserIsMobile, getStringBytes, pathCompletion } from 'src/utils/common';
+import { browserIsMobile, getStringBytes } from 'src/utils/common';
 import { checkCellIsEmpty, controlState } from 'src/utils/control';
 import type {
   AttachmentValue,
@@ -633,14 +633,14 @@ interface CodeInfo {
 
 const getCodeUrl = ({ appId, worksheetId, viewId, recordId }: CodeInfo) => {
   if (recordId) {
-    let baseUrl = `/app/${appId}/${worksheetId}`;
+    let baseUrl = `${md.global.Config.WebUrl}app/${appId}/${worksheetId}`;
 
     if (viewId) {
       baseUrl += `/${viewId}`;
     }
 
     baseUrl += `/row/${recordId}`;
-    return pathCompletion(baseUrl);
+    return baseUrl;
   } else {
     return getNewRecordPageUrl({ appId, worksheetId, viewId });
   }
