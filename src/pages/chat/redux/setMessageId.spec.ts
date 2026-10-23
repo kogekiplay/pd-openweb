@@ -17,6 +17,7 @@ import type { SpecHarness } from '../../../../scripts/spec-harness';
 
 const assert: typeof import('node:assert/strict') = require('node:assert/strict');
 const harness: SpecHarness = require('../../../../scripts/spec-harness.ts');
+const { sessionPropertyKey } = require('../utils/sessionPropertyKey.ts') as typeof import('../utils/sessionPropertyKey');
 
 interface BabelNode {
   type: string;
@@ -44,6 +45,7 @@ function extractMessagesSlice(): (
   utilsStub: unknown,
   constant: unknown,
   requireStub: (name: string) => unknown,
+  propertyKey: typeof sessionPropertyKey,
 ) => MessagesSlice {
   const source = harness.readSource(TARGET);
   const ast = harness.parser.parse(source, { sourceType: 'module', plugins: ['jsx'] }) as unknown as {
@@ -81,12 +83,14 @@ function extractMessagesSlice(): (
     'utils',
     'Constant',
     'require',
+    'sessionPropertyKey',
     `${code}\nreturn messages;`,
   ) as (
     lodash: unknown,
     utilsStub: unknown,
     constant: unknown,
     requireStub: (name: string) => unknown,
+    propertyKey: typeof sessionPropertyKey,
   ) => MessagesSlice;
 }
 
@@ -99,6 +103,7 @@ function makeSlice(): MessagesSlice {
     (name: string) => {
       throw new Error(`抽取片段里出现了未预期的依赖：${name}`);
     },
+    sessionPropertyKey,
   );
 }
 
