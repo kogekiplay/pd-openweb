@@ -18,13 +18,13 @@ interface ContrastInput {
   today?: boolean;
 }
 
-interface DynamicFilter {
-  startType?: number;
-  startCount?: number;
-  startUnit?: number;
-  endType?: number;
-  endCount?: number;
-  endUnit?: number;
+export interface DynamicFilter {
+  startType?: number | undefined;
+  startCount?: number | string | undefined;
+  startUnit?: number | undefined;
+  endType?: number | undefined;
+  endCount?: number | string | undefined;
+  endUnit?: number | undefined;
 }
 
 interface TimeOption {

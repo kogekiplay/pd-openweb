@@ -19,6 +19,7 @@ import {
   timeTypes,
   unitTypes,
 } from 'statistics/common/timeUtils';
+import type { DynamicFilter } from 'statistics/common/timeUtils';
 import * as actions from 'statistics/redux/actions';
 import FilterConfig from 'worksheet/common/WorkSheetFilter/common/FilterConfig';
 import { formatValuesOfOriginConditions } from 'worksheet/common/WorkSheetFilter/util';
@@ -330,7 +331,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
     const { dynamicFilter } = this.state;
     const unitValues = [1, 3, 4];
 
-    const changeDynamicFilter = data => {
+    const changeDynamicFilter = (data: Partial<DynamicFilter>) => {
       this.setState(
         {
           dynamicFilter: { ...dynamicFilter, ...data },
@@ -343,7 +344,7 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
       <Fragment>
         <div className="flexRow valignWrapper mTop20">
           <div className="mRight15">{_l('从')}</div>
-          <Select
+          <Select<number>
             className="chartSelect flex"
             value={dynamicFilter.startType}
             suffixIcon={<Icon icon="expand_more" className="textTertiary Font20" />}
@@ -364,14 +365,14 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
               <Input
                 className="chartInput flex mLeft10 mRight10"
                 value={dynamicFilter.startCount}
-                onChange={() => {
+                onChange={event => {
                   const value = event.target.value;
                   changeDynamicFilter({
                     startCount: formatNumberFromInput(value).replace('-', ''),
                   });
                 }}
               />
-              <Select
+              <Select<number>
                 className="chartSelect flex"
                 value={dynamicFilter.startUnit}
                 suffixIcon={<Icon icon="expand_more" className="textTertiary Font20" />}
@@ -392,14 +393,14 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
         </div>
         <div className="flexRow valignWrapper mTop10">
           <div className="mRight15">{_l('至')}</div>
-          <Select
+          <Select<number>
             className="chartSelect flex"
             value={dynamicFilter.endType}
             suffixIcon={<Icon icon="expand_more" className="textTertiary Font20" />}
             onChange={value => {
               changeDynamicFilter({
                 endType: value,
-                startUnit: unitValues.includes(value) ? value : dynamicFilter.startUnit,
+                endUnit: unitValues.includes(value) ? value : dynamicFilter.endUnit,
               });
             }}
           >
@@ -414,14 +415,14 @@ let DecoratedComponent = class DecoratedComponent extends Component<any, any> {
               <Input
                 className="chartInput flex mLeft10 mRight10"
                 value={dynamicFilter.endCount}
-                onChange={() => {
+                onChange={event => {
                   const value = event.target.value;
                   changeDynamicFilter({
                     endCount: formatNumberFromInput(value).replace('-', ''),
                   });
                 }}
               />
-              <Select
+              <Select<number>
                 className="chartSelect flex"
                 value={dynamicFilter.endUnit}
                 suffixIcon={<Icon icon="expand_more" className="textTertiary Font20" />}

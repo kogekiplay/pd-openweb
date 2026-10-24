@@ -15,6 +15,7 @@ import {
   timeTypes,
   unitTypes,
 } from 'statistics/common/timeUtils';
+import type { DynamicFilter } from 'statistics/common/timeUtils';
 import { DatePicker } from 'src/ming-ui/components/mdAntPickers';
 import { formatNumberFromInput } from 'src/utils/control';
 
@@ -214,7 +215,7 @@ export default class TimeModal extends Component<any, any> {
     const { dynamicFilter } = this.state;
     const unitValues = [1, 3, 4];
 
-    const changeDynamicFilter = data => {
+    const changeDynamicFilter = (data: Partial<DynamicFilter>) => {
       this.setState({
         dynamicFilter: {
           ...dynamicFilter,
@@ -227,7 +228,7 @@ export default class TimeModal extends Component<any, any> {
       <Fragment>
         <div className="flexRow valignWrapper mTop20">
           <div className="mRight15">{_l('从')}</div>
-          <Select
+          <Select<number>
             className="chartSelect flex"
             value={dynamicFilter.startType}
             suffixIcon={<Icon icon="expand_more" className="textTertiary Font20" />}
@@ -258,7 +259,7 @@ export default class TimeModal extends Component<any, any> {
                   changeDynamicFilter({ startCount: value ? Number(value) : 0 });
                 }}
               />
-              <Select
+              <Select<number>
                 className="chartSelect flex"
                 value={dynamicFilter.startUnit}
                 suffixIcon={<Icon icon="expand_more" className="textTertiary Font20" />}
@@ -277,7 +278,7 @@ export default class TimeModal extends Component<any, any> {
         </div>
         <div className="flexRow valignWrapper mTop10">
           <div className="mRight15">{_l('至')}</div>
-          <Select
+          <Select<number>
             className="chartSelect flex"
             value={dynamicFilter.endType}
             suffixIcon={<Icon icon="expand_more" className="textTertiary Font20" />}
@@ -305,10 +306,10 @@ export default class TimeModal extends Component<any, any> {
                 }}
                 onBlur={event => {
                   const value = event.target.value;
-                  changeDynamicFilter({ startCount: value ? Number(value) : 0 });
+                  changeDynamicFilter({ endCount: value ? Number(value) : 0 });
                 }}
               />
-              <Select
+              <Select<number>
                 className="chartSelect flex"
                 value={dynamicFilter.endUnit}
                 suffixIcon={<Icon icon="expand_more" className="textTertiary Font20" />}
