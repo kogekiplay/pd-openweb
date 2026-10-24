@@ -20,7 +20,16 @@ import { formatNumberFromInput } from 'src/utils/control';
 
 const { RangePicker } = DatePicker;
 
-const newDropdownScopeData = _.cloneDeep(dropdownScopeData.filter(data => ![18, 19].includes(data.value)));
+export type TimeScopeOption = (typeof dropdownScopeData)[number] | (typeof pastAndFutureData)[number];
+export type TimeScopeValue = TimeScopeOption['value'];
+export interface TimeScopeUpdate {
+  rangeType: TimeScopeValue;
+  rangeValue?: number | string | null;
+}
+
+const newDropdownScopeData: TimeScopeOption[] = _.cloneDeep(
+  dropdownScopeData.filter(data => ![18, 19].includes(data.value)),
+);
 
 newDropdownScopeData.splice(18, 0, ...pastAndFutureData);
 
@@ -119,7 +128,7 @@ export default class TimeModal extends Component<any, any> {
         <div className="Font13 mTop20">{_l('范围')}</div>
         <div className="flexRow valignWrapper mTop5">
           <div className="flex Relative">
-            <Select
+            <Select<TimeScopeValue>
               className="chartSelect w100"
               value={
                 [18, 19].includes(rangeType)
@@ -130,7 +139,7 @@ export default class TimeModal extends Component<any, any> {
               }
               suffixIcon={<Icon icon="expand_more" className="textTertiary Font20" />}
               onChange={value => {
-                const data = { rangeType: value };
+                const data: TimeScopeUpdate = { rangeType: value };
 
                 if (_.isString(value)) {
                   const [rangeType, rangeValue] = value.split('-');
