@@ -207,7 +207,7 @@ function MdMarkdown(props) {
   const [isFocus, setFocus] = useState(false);
   const vditorRef = useRef<HTMLDivElement | null>(null);
   const vditorInstance = useRef(null);
-  const destroyedRef = useRef(false);
+  const latestDisabledRef = useRef<boolean>(disabled);
   const latestDataRef = useRef(data);
 
   useEffect(() => {
@@ -215,16 +215,18 @@ function MdMarkdown(props) {
   }, [data]);
 
   useEffect(() => {
-    destroyedRef.current = false;
-    createEditor();
+    // Each effect owns its cancellation state, including a pending native SDK initialization.
+    let disposed = false;
+    createEditor(() => disposed);
     return () => {
-      destroyedRef.current = true;
+      disposed = true;
       vditorInstance.current && vditorInstance.current.destroy();
       vditorInstance.current = null;
     };
   }, []);
 
   useEffect(() => {
+    latestDisabledRef.current = disabled;
     if (vditorInstance.current) {
       if (disabled) {
         vditorInstance.current.disabled();
@@ -309,11 +311,11 @@ function MdMarkdown(props) {
     });
   };
 
-  const createEditor = () => {
+  const createEditor = (isDisposed: () => boolean) => {
     if (!vditorRef.current) return;
 
     loadVditor().then(Vditor => {
-      if (destroyedRef.current || !vditorRef.current) return;
+      if (isDisposed() || !vditorRef.current) return;
 
       const vditor = new Vditor(vditorRef.current, {
         mode,
@@ -353,6 +355,12 @@ function MdMarkdown(props) {
           handler: uploadHandler || customUpload,
         },
         after() {
+          // Vditor registers listeners only after its language/Lute assets arrive. A pending
+          // constructor cannot be destroyed early; release it here without reviving its owner.
+          if (isDisposed()) {
+            vditor.destroy();
+            return;
+          }
           // 正文没有 front matter 这回事：开着的话「--- 开头」会把整段内容吞成 YAML 代码块，
           // 而 --- 正是工具栏分隔线按钮产生的内容。Vditor 未开放该选项，只能拿实例上的 lute 关掉；
           // 必须赶在 setValue 之前，否则初始内容仍按 front matter 解析。
@@ -365,7 +373,7 @@ function MdMarkdown(props) {
           registerRef(vditor);
 
           if (vditorInstance.current) {
-            if (disabled) vditorInstance.current.disabled();
+            if (latestDisabledRef.current) vditorInstance.current.disabled();
           }
         },
         input(val) {
