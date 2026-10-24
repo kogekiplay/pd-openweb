@@ -1,4 +1,4 @@
-export const dateOptions = [
+export const dateOptions: { label: string; value: HapApi.MD.BasicService.Duration_Option }[] = [
   {
     label: _l('30分钟'),
     value: 5,

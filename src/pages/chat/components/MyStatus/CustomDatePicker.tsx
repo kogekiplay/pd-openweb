@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import type { ComponentProps, ComponentType } from 'react';
 import { Select } from 'antd';
 import en_US from 'antd/es/date-picker/locale/en_US';
 import ja_JP from 'antd/es/date-picker/locale/ja_JP';
@@ -14,6 +15,25 @@ import { formatDateShow } from './util';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
+
+type DurationOption = HapApi.MD.BasicService.Duration_Option;
+type StatusOption = HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption;
+
+export type CustomDateChange =
+  | { startDate: moment.Moment; endDate: moment.Moment; fixedValue?: never }
+  | { startDate?: never; endDate?: never; fixedValue: DurationOption };
+
+export type CustomDatePickerProps = Pick<StatusOption, 'beginTime' | 'endTime'> & {
+  durationOption?: StatusOption['durationOption'] | undefined;
+  changeDate?: ((change: CustomDateChange) => void) | undefined;
+};
+
+// The installed rc Portal accepts a temporarily null container and uses its
+// default container until the ref is mounted. Keep that runtime contract while
+// retaining the real Moment picker types for values, events and disabled times.
+export type StatusRangePickerProps = Omit<ComponentProps<(typeof DatePicker)['RangePicker']>, 'getPopupContainer'> & {
+  getPopupContainer?: ((node: HTMLElement) => HTMLElement | null) | undefined;
+};
 
 const RangePickerWrap = styled.div`
   height: 36px;
@@ -43,7 +63,7 @@ const PopupWrap = styled.div`
 `;
 
 // 自定义RangePicker包装器，确保样式只作用于当前组件
-const StyledRangePicker = styled(RangePicker)`
+const StyledRangePicker: ComponentType<StatusRangePickerProps> = styled(RangePicker)`
   &.ant-picker {
     width: 100%;
   }
@@ -59,9 +79,9 @@ const range = (start: number, end: number) => {
   return result;
 };
 
-export default function CustomDatePicker(props) {
+export default function CustomDatePicker(props: CustomDatePickerProps) {
   const { beginTime, endTime, changeDate = () => {} } = props;
-  const [fixedValue, setFixedValue] = useState(props.durationOption || 10);
+  const [fixedValue, setFixedValue] = useState<DurationOption>(props.durationOption || 10);
   const [popupVisible, setPopupVisible] = useState(false);
   const [rangePickerVisible, setRangePickerVisible] = useState(true);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -70,10 +90,10 @@ export default function CustomDatePicker(props) {
     endDate: endTime ? moment(endTime) : null,
   });
   const lang = getCurrentLangCode();
-  const datePickerLocale = { 0: zh_CN, 1: en_US, 2: ja_JP, 3: zh_TW }[lang] || en_US;
-  const $ref = useRef(null);
+  const datePickerLocale = lang === 0 ? zh_CN : lang === 2 ? ja_JP : lang === 3 ? zh_TW : en_US;
+  const $ref = useRef<HTMLDivElement | null>(null);
 
-  const onOk = date => {
+  const onOk: NonNullable<StatusRangePickerProps['onOk']> = date => {
     if (date && date.length && date[0] && date[1]) {
       // 验证结束时间必须大于开始时间
       if (date[1].isAfter(date[0])) {
@@ -90,7 +110,9 @@ export default function CustomDatePicker(props) {
   };
 
   // 处理时间选择
-  const handleTimeSelect = value => {
+  const handleTimeSelect = (value: DurationOption | string) => {
+    // The custom date label is a display value, not a duration option.
+    if (typeof value !== 'number') return;
     if (value === 1000) {
       // 选择"自定义时间"时，显示自定义时间选择器
       setFixedValue(value);
@@ -146,7 +168,12 @@ export default function CustomDatePicker(props) {
               }}
               format="YYYY-MM-DD HH:mm"
               getPopupContainer={() => $ref.current}
-              onChange={([start, end]) => {
+              onChange={date => {
+                if (date === null) {
+                  setDateInfo({ startDate: null, endDate: null });
+                  return;
+                }
+                const [start, end] = date;
                 // 验证结束时间不能小于开始时间
                 if (start && end && end.isBefore(start)) {
                   // 如果结束时间小于开始时间，清空结束时间
@@ -186,7 +213,7 @@ export default function CustomDatePicker(props) {
 
   // 固定时间模式
   return (
-    <Select
+    <Select<DurationOption | string>
       className="w100"
       value={
         fixedValue === 1000 && startDate && endDate

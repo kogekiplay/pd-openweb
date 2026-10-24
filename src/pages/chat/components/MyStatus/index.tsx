@@ -10,6 +10,7 @@ import Emotion from 'src/components/emotion/emotion';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
 import { dateOptions, defaultStatusInfo } from './config';
 import CustomDatePicker from './CustomDatePicker';
+import type { CustomDateChange } from './CustomDatePicker';
 import PersonalStatus from './PersonalStatus';
 
 const DialogWrap = styled(Dialog)`
@@ -354,13 +355,14 @@ export default function MyStatus() {
                       <div className="formItemInput">
                         <CustomDatePicker
                           {...item}
-                          changeDate={({ startDate, endDate, fixedValue }) => {
+                          changeDate={({ startDate, endDate, fixedValue }: CustomDateChange) => {
                             const copyList = _.cloneDeep(statusList);
-                            const obj = copyList[index] || {};
+                            const obj: Partial<HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption> =
+                              copyList[index] || {};
                             copyList[index] = {
                               ...obj,
                               durationOption: fixedValue || obj.durationOption,
-                              beginTime: startDate ? startDate.format('YYYY-MM-DD HH:mm:ss') : obj.startDate,
+                              beginTime: startDate ? startDate.format('YYYY-MM-DD HH:mm:ss') : obj.beginTime,
                               endTime: endDate ? endDate.format('YYYY-MM-DD HH:mm:ss') : obj.endTime,
                             };
                             setStatusList(copyList);

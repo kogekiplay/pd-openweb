@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-export const formatDateShow = date => {
+export const formatDateShow = (date?: moment.MomentInput) => {
   const hm = moment(date).format('HH:mm');
   const hideHm = hm === '00:00' || hm === '23:59'; // 时间为00:00或23:59时，不显示时分
 
