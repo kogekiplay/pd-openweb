@@ -12,9 +12,9 @@ export interface SettingFilter extends Record<string, unknown> {
   isDynamicsource?: boolean | undefined;
   conditionGroupType?: string | number | undefined;
   filterType?: number | undefined;
-  values?: string[] | undefined;
-  dynamicSource?: DefaultSource[] | undefined;
-  groupFilters?: SettingFilter[] | undefined;
+  values?: Array<string | null> | null | undefined;
+  dynamicSource?: DefaultSource[] | null | undefined;
+  groupFilters?: SettingFilter[] | null | undefined;
 }
 export interface EventFilter extends Record<string, unknown> {
   valueType?: string | undefined;
@@ -156,7 +156,8 @@ const strings = (value: unknown): value is string[] =>
 function source(value: unknown): value is DefaultSource {
   return (
     widgetObject(value) &&
-    ['cid', 'rcid', 'staticValue'].every(k => text(value[k])) &&
+    ['cid', 'rcid'].every(k => text(value[k])) &&
+    (text(value['staticValue']) || num(value['staticValue'])) &&
     num(value['type']) &&
     bool(value['isAsync'])
   );
@@ -174,9 +175,12 @@ function filter(value: unknown): value is SettingFilter {
     bool(value['isDynamicsource']) &&
     (text(value['conditionGroupType']) || num(value['conditionGroupType'])) &&
     ['dataType', 'spliceType', 'filterType', 'type'].every(k => num(value[k])) &&
-    (value['values'] === undefined || strings(value['values'])) &&
-    optionalArray(value['dynamicSource'], source) &&
-    optionalArray(value['groupFilters'], filter)
+    (value['values'] == null ||
+      strings(value['values']) ||
+      ([19, 23, 24, 26, 27, 29, 35, 48].some(type => type === value['dataType']) &&
+        arrayOf(value['values'], (item): item is string | null => item === null || typeof item === 'string'))) &&
+    (value['dynamicSource'] === null || optionalArray(value['dynamicSource'], source)) &&
+    (value['groupFilters'] === null || optionalArray(value['groupFilters'], filter))
   );
 }
 
