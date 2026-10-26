@@ -1,13 +1,55 @@
 import type { InboxEndpoint } from './inboxTypes';
-import type { UserStatus } from 'src/ming-ui/functions/quickSelectUser/types';
+import type {
+  AccountsPersonalStatusParams,
+  AddOrUpdateStatusResponse,
+  PersonalStatusIdentity,
+  PersonalStatusResponse,
+  PersonalStatusWriteParams,
+} from './personalStyleTypes';
 
-// Reuse the existing ordinary-JSON/opaque-mode overloads. Only the default
-// asynchronous envelope mode resolves the backend's Boolean result.
-const cancelPersonalStatus: InboxEndpoint<Pick<UserStatus, 'statusId'>, boolean> = function (
-  args: Pick<UserStatus, 'statusId'>,
+// Reuse the existing ordinary-JSON/opaque-mode overloads. Alternate SDK modes
+// keep their actual opaque return instead of claiming a JSON payload promise.
+const getAccountsPersonalStatus: InboxEndpoint<
+  AccountsPersonalStatusParams,
+  HapApi.MD.Web.Ajax.ResultModel.Personals.PeronsalStatusModelList
+> = function (args: AccountsPersonalStatusParams, options: ApiOptions = {}) {
+  return mdyAPI('PersonalStyle', 'GetAccountsPersonalStatus', args, options);
+};
+
+// This action consumes no request fields; callers pass an object unchanged.
+const getPersonalStatus: InboxEndpoint<object, PersonalStatusResponse> = function (
+  args: object,
+  options: ApiOptions = {},
+) {
+  return mdyAPI('PersonalStyle', 'GetPersonalStatus', args, options);
+};
+
+const setPersonalStatus: InboxEndpoint<PersonalStatusWriteParams, boolean> = function (
+  args: PersonalStatusWriteParams,
+  options: ApiOptions = {},
+) {
+  return mdyAPI('PersonalStyle', 'SetPersonalStatus', args, options);
+};
+
+const cancelPersonalStatus: InboxEndpoint<PersonalStatusIdentity, boolean> = function (
+  args: PersonalStatusIdentity,
   options: ApiOptions = {},
 ) {
   return mdyAPI('PersonalStyle', 'CancelPersonalStatus', args, options);
+};
+
+const deletePersonalStatus: InboxEndpoint<PersonalStatusIdentity, boolean> = function (
+  args: PersonalStatusIdentity,
+  options: ApiOptions = {},
+) {
+  return mdyAPI('PersonalStyle', 'DeletePersonalStatus', args, options);
+};
+
+const addOrUpdateStatus: InboxEndpoint<PersonalStatusWriteParams, AddOrUpdateStatusResponse> = function (
+  args: PersonalStatusWriteParams,
+  options: ApiOptions = {},
+) {
+  return mdyAPI('PersonalStyle', 'AddOrUpdateStatus', args, options);
 };
 
 export default {
@@ -17,27 +59,17 @@ export default {
    * @param {array} args.accountIds
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
-   * @returns {Promise<Boolean, ErrorModel>}
+   * @returns Ordinary JSON mode returns the documented payload; alternate SDK modes remain opaque.
    **/
-  getAccountsPersonalStatus: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Personals.PeronsalStatusModelList> {
-    return mdyAPI('PersonalStyle', 'GetAccountsPersonalStatus', args, options);
-  },
+  getAccountsPersonalStatus,
   /**
    * 获取账户一览信息
    * @param {Object} args 请求参数
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
-   * @returns {Promise<Boolean, ErrorModel>}
+   * @returns Ordinary JSON mode returns the documented payload; alternate SDK modes remain opaque.
    **/
-  getPersonalStatus: function (
-    args: ApiArgs,
-    options: ApiOptions = {},
-  ): ApiResultOf<HapApi.MD.Web.Ajax.ResultModel.Personals.PeronsalStatusModel> {
-    return mdyAPI('PersonalStyle', 'GetPersonalStatus', args, options);
-  },
+  getPersonalStatus,
   /**
    * 设置 个人状态为 当前状态/预约
    * @param {Object} args 请求参数
@@ -49,18 +81,16 @@ export default {
    * @param {} args.durationOption
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
-   * @returns {Promise<Boolean, ErrorModel>}
+   * @returns Ordinary JSON mode returns the documented payload; alternate SDK modes remain opaque.
    **/
-  setPersonalStatus: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('PersonalStyle', 'SetPersonalStatus', args, options);
-  },
+  setPersonalStatus,
   /**
    * 取消设置 当前状态
    * @param {Object} args 请求参数
    * @param {string} args.statusId Id
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
-   * @returns {Promise<Boolean, ErrorModel>}
+   * @returns Ordinary JSON mode returns the documented payload; alternate SDK modes remain opaque.
    **/
   cancelPersonalStatus,
   /**
@@ -69,11 +99,9 @@ export default {
    * @param {string} args.statusId Id
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
-   * @returns {Promise<Boolean, ErrorModel>}
+   * @returns Ordinary JSON mode returns the documented payload; alternate SDK modes remain opaque.
    **/
-  deletePersonalStatus: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('PersonalStyle', 'DeletePersonalStatus', args, options);
-  },
+  deletePersonalStatus,
   /**
    * 添加或更新的 个人 单个状态
    * @param {Object} args 请求参数
@@ -85,9 +113,7 @@ export default {
    * @param {} args.durationOption
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
-   * @returns {Promise<Boolean, ErrorModel>}
+   * @returns Ordinary JSON mode returns the documented payload; alternate SDK modes remain opaque.
    **/
-  addOrUpdateStatus: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('PersonalStyle', 'AddOrUpdateStatus', args, options);
-  },
+  addOrUpdateStatus,
 };

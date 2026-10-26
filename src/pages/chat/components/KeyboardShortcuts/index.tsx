@@ -76,7 +76,18 @@ const DialogWrap = styled(Dialog)`
   }
 `;
 
-export default function KeyboardShortcuts(props) {
+/**
+ * 弹窗入口的唯一真实来源：`dialogKeyboardShortcuts()` 经 ming-ui `functionWrap` 挂载。
+ * FunctionWrap 注入（src/ming-ui/components/FunctionWrap.tsx:88-100）：
+ * - visible：未自定义 visibleName 时恒为 true；
+ * - onClose：恒为函数（destroy + 调用方 onClose），组件把它作为 Dialog onCancel 传入。
+ */
+export interface KeyboardShortcutsProps {
+  visible: boolean;
+  onClose?: (() => unknown) | undefined;
+}
+
+export default function KeyboardShortcuts(props: KeyboardShortcutsProps) {
   const { visible, onClose = () => {} } = props;
   const [activeSection, setActiveSection] = useState(0);
   const [shortcutsData, setShortcutsData] = useState([]);
@@ -183,4 +194,5 @@ export default function KeyboardShortcuts(props) {
   );
 }
 
-export const dialogKeyboardShortcuts = (props?) => functionWrap(KeyboardShortcuts, { ...props });
+export const dialogKeyboardShortcuts = (props?: Partial<KeyboardShortcutsProps>) =>
+  functionWrap(KeyboardShortcuts, { ...props });

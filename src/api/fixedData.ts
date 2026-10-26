@@ -1,3 +1,5 @@
+import type { LoadHostKeysQuery } from './fixedDataTypes';
+
 export default {
   /**
    * 加载省份信息
@@ -145,9 +147,9 @@ export default {
    * @param {Object} args 请求参数
    * @param {Object} options 配置参数
    * @param {Boolean} options.silent 是否禁止错误弹层
-   * @returns {Promise<Boolean, ErrorModel>}
+   * @returns SDK 原始结果；普通 JSON 数据来自动态配置，完整响应合同仍待核实。
    **/
-  loadHostKeys: function (args: ApiArgs, options: ApiOptions = {}) {
+  loadHostKeys: function (args: LoadHostKeysQuery, options: ApiOptions = {}) {
     options.ajaxOptions = Object.assign({}, options.ajaxOptions, { type: 'GET' });
     return mdyAPI('FixedData', 'LoadHostKeys', args, options);
   },

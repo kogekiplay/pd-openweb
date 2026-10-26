@@ -6,10 +6,12 @@ import moment from 'moment';
 import filterXss from 'xss';
 import { Icon, Input } from 'ming-ui';
 import personalStyleApi from 'src/api/personalStyle';
+import type { InboxRequest } from 'src/api/inboxTypes';
 import MobileDatePicker from 'src/ming-ui/components/MobileDatePicker';
 import { dateOptions, defaultStatusInfo } from 'src/pages/chat/components/MyStatus/config';
 import PersonalStatus from 'src/pages/chat/components/MyStatus/PersonalStatus';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
+import { present } from 'src/pages/chat/utils/present';
 import './index.less';
 
 export default function MobileMyStatus() {
@@ -40,13 +42,14 @@ export default function MobileMyStatus() {
     updatedDateOption: false,
   });
   const unsetStatus = _.isEmpty(onStatusOption);
-  let promise: ApiResult | null = null;
+  let promise: InboxRequest<boolean> | null = null;
 
   // 获取状态
   const getStatus = () => {
     personalStyleApi
       .getPersonalStatus({})
-      .then(res => {
+      .then(response => {
+        const res = present(response, 'statusOptions');
         // 默认状态 请假---明天 生病---明天 会议中---一小时 外出---一小时
         const options = (res.statusOptions || []).map(item => {
           if (defaultStatusInfo[item.statusId]) {

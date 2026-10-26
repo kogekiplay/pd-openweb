@@ -6,8 +6,10 @@ import styled from 'styled-components';
 import filterXss from 'xss';
 import { Button, Dialog, Icon, Input } from 'ming-ui';
 import personalStyleApi from 'src/api/personalStyle';
+import type { AddOrUpdateStatusResponse } from 'src/api/personalStyleTypes';
 import Emotion from 'src/components/emotion/emotion';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
+import { present } from 'src/pages/chat/utils/present';
 import { dateOptions, defaultStatusInfo } from './config';
 import CustomDatePicker from './CustomDatePicker';
 import type { CustomDateChange } from './CustomDatePicker';
@@ -133,7 +135,8 @@ export default function MyStatus() {
   const getStatus = () => {
     personalStyleApi
       .getPersonalStatus({})
-      .then(res => {
+      .then(response => {
+        const res = present(response, 'statusOptions');
         // 默认状态 请假---明天 生病---明天 会议中---一小时 外出---一小时
         const options = (res.statusOptions || []).map(item => {
           if (defaultStatusInfo[item.statusId]) {
@@ -216,7 +219,9 @@ export default function MyStatus() {
       durationOption: currentStatus.durationOption,
     };
 
-    const updateRes = isNew ? await personalStyleApi.addOrUpdateStatus(params) : {};
+    const updateRes: Pick<AddOrUpdateStatusResponse, 'statusId'> = isNew
+      ? await personalStyleApi.addOrUpdateStatus(params)
+      : {};
     const { statusId } = updateRes;
 
     if (statusId) {
