@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Fragment } from 'react';
+import type { MouseEvent, MouseEventHandler } from 'react';
+import type { UserStatus } from 'src/ming-ui/functions/quickSelectUser/types';
 import { Button, Popup } from 'antd-mobile';
 import _ from 'lodash';
 import moment from 'moment';
@@ -68,22 +70,34 @@ const EmojiWrap = styled.span`
   }
 `;
 
-export default function PersonalStatus(props) {
+export interface PersonalStatusProps {
+  className?: string | undefined;
+  onlyEmoji?: boolean | undefined;
+  showCancel?: boolean | undefined;
+  onStatusOption?: UserStatus | undefined;
+  accountId?: string | undefined;
+  isMobile?: boolean | undefined;
+  isSetting?: boolean | undefined;
+  onClick?: MouseEventHandler<HTMLDivElement> | undefined;
+  onCancel?: (() => void) | undefined;
+}
+
+export default function PersonalStatus(props: PersonalStatusProps) {
   const { className, onlyEmoji, showCancel, onStatusOption = {}, isMobile, isSetting, onClick = () => {} } = props;
-  const { statusId, icon, remark, beginTime, endTime, durationOption } = onStatusOption;
+  const { statusId, icon = '', remark, beginTime, endTime, durationOption } = onStatusOption;
   const accountId = props.accountId || onStatusOption.accountId;
   const isSelf = accountId === _.get(md, 'global.Account.accountId');
   const started = moment(beginTime).isBefore(moment());
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
   // 取消状态二次确认
-  const handleConfirmCancel = e => {
+  const handleConfirmCancel = (e: MouseEvent<HTMLElement>) => {
     e.stopPropagation();
     setShowCancelConfirm(true);
   };
 
   // 取消状态
-  const onCancel = e => {
+  const onCancel = (e: MouseEvent<HTMLElement>) => {
     e.stopPropagation();
     personalStyleApi.cancelPersonalStatus({ statusId }).then(res => {
       if (res) {

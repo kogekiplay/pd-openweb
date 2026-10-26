@@ -1,3 +1,15 @@
+import type { InboxEndpoint } from './inboxTypes';
+import type { UserStatus } from 'src/ming-ui/functions/quickSelectUser/types';
+
+// Reuse the existing ordinary-JSON/opaque-mode overloads. Only the default
+// asynchronous envelope mode resolves the backend's Boolean result.
+const cancelPersonalStatus: InboxEndpoint<Pick<UserStatus, 'statusId'>, boolean> = function (
+  args: Pick<UserStatus, 'statusId'>,
+  options: ApiOptions = {},
+) {
+  return mdyAPI('PersonalStyle', 'CancelPersonalStatus', args, options);
+};
+
 export default {
   /**
    * 获取 多个用户的 生效状态信息（用户 未设置 状态 不返回）
@@ -50,9 +62,7 @@ export default {
    * @param {Boolean} options.silent 是否禁止错误弹层
    * @returns {Promise<Boolean, ErrorModel>}
    **/
-  cancelPersonalStatus: function (args: ApiArgs, options: ApiOptions = {}) {
-    return mdyAPI('PersonalStyle', 'CancelPersonalStatus', args, options);
-  },
+  cancelPersonalStatus,
   /**
    * 删除 个人状态
    * @param {Object} args 请求参数
