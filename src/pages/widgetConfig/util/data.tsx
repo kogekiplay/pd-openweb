@@ -287,8 +287,8 @@ export function dealCascaderId(data: FormControl) {
  */
 interface FilterCondition {
   dataType?: number | undefined;
-  values?: string[] | undefined;
-  dynamicSource?: { rcid?: string | undefined }[] | undefined;
+  values?: Array<string | null> | null | undefined;
+  dynamicSource?: { rcid?: string | undefined }[] | null | undefined;
   [key: string]: unknown;
 }
 
@@ -305,13 +305,12 @@ export function handleCondition(condition: FilterCondition, isRelate?: boolean |
       ...condition,
       values: condition.values.map(value => {
         try {
-          const da = JSON.parse(value);
-
-          if (typeof da === 'object') {
-            return da.id;
-          } else {
-            return value;
-          }
+          // JSON.parse performs native ToString for the legacy null placeholder.
+          const json: { parse(value: string | null): unknown } = JSON;
+          const parsed = json.parse(value);
+          // Only a real string identifier can replace the serialized selection.
+          // Missing/non-string IDs must not create undefined -> persisted null.
+          return widgetObject(parsed) && typeof parsed['id'] === 'string' ? parsed['id'] : value;
         } catch (e) {
           console.log(e);
           return value;
