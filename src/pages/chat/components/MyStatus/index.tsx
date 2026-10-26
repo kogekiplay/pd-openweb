@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
+import type { SyntheticEvent } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -14,6 +15,13 @@ import { dateOptions, defaultStatusInfo } from './config';
 import CustomDatePicker from './CustomDatePicker';
 import type { CustomDateChange } from './CustomDatePicker';
 import PersonalStatus from './PersonalStatus';
+
+export type PersonalStatusDraft = {
+  [K in keyof HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption]?:
+    HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption[K] | undefined;
+};
+export type PersonalStatusDraftList = PersonalStatusDraft[] & { undefined?: PersonalStatusDraft | undefined };
+export type StatusDeleteEvent = Pick<SyntheticEvent, 'stopPropagation'>;
 
 const DialogWrap = styled(Dialog)`
   background-color: var(--color-background-card) !important;
@@ -99,11 +107,12 @@ export default function MyStatus() {
     statusOptions?: HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption[] | undefined;
   }>({});
   const [visible, setVisible] = useState(false);
-  const [statusList, setStatusList] = useState([]);
+  const [statusList, setStatusList] = useState<PersonalStatusDraftList>([]);
   const [currentIndex, setCurrentIndex] = useState<number | undefined>();
-  const currentStatus = statusList[currentIndex] || {};
+  // An absent selection reads the native array property named "undefined".
+  const currentStatus: PersonalStatusDraft = statusList[currentIndex === undefined ? 'undefined' : currentIndex] || {};
   const { statusOptions } = data;
-  const emotionRefs = useRef([]);
+  const emotionRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   const initEmotion = () => {
     emotionRefs.current.forEach((ref, refIndex) => {
@@ -118,7 +127,7 @@ export default function MyStatus() {
           history: false,
           hideClassic: true,
           placement: 'left bottom',
-          onSelect: (name: string, _value, emotionText) => {
+          onSelect: (name: string, _value: string | null, emotionText?: string) => {
             setCurrentIndex(refIndex);
             setStatusList(prevList => {
               const copyList = _.cloneDeep(prevList);
@@ -159,7 +168,7 @@ export default function MyStatus() {
   // 添加状态
   const addStatus = () => {
     const copyList = _.cloneDeep(statusList);
-    const status = {
+    const status: PersonalStatusDraft = {
       statusId: 'new_id',
       remark: _l('请勿打扰'),
       icon: '📃',
@@ -173,7 +182,7 @@ export default function MyStatus() {
   };
 
   // 删除状态
-  const deleteStatus = (e, statusId) => {
+  const deleteStatus = (e: StatusDeleteEvent, statusId: PersonalStatusDraft['statusId']) => {
     e.stopPropagation();
     Dialog.confirm({
       title: _l('确认删除此状态？'),
@@ -209,7 +218,7 @@ export default function MyStatus() {
       return;
     }
 
-    const originalStatus = _.find(statusOptions, v => v.statusId === currentStatus.statusId) || {};
+    const originalStatus: PersonalStatusDraft = _.find(statusOptions, v => v.statusId === currentStatus.statusId) || {};
     const params = {
       statusId: isNew ? '' : currentStatus.statusId,
       icon: currentStatus.icon,
@@ -362,7 +371,7 @@ export default function MyStatus() {
                           {...item}
                           changeDate={({ startDate, endDate, fixedValue }: CustomDateChange) => {
                             const copyList = _.cloneDeep(statusList);
-                            const obj: Partial<HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption> =
+                            const obj: PersonalStatusDraft =
                               copyList[index] || {};
                             copyList[index] = {
                               ...obj,

@@ -1,13 +1,21 @@
 import { Component } from 'react';
+import type { ChatMessage, ChatSession } from '../../../redux/types';
 import cx from 'classnames';
 import _ from 'lodash';
 import { addFriendConfirm } from 'ming-ui/functions';
 import addFriends from 'src/components/addFriends';
 import Constant from '../../../utils/constant';
+import { present } from '../../../utils/present';
 import './index.less';
 
-export default class SystemMessage extends Component<any, any> {
-  constructor(props) {
+/** 唯一渲染点：containers/Message 的 `sysType || iswd` 分支只传 message 与 session。 */
+export interface SystemMessageProps {
+  message: ChatMessage;
+  session: ChatSession;
+}
+
+export default class SystemMessage extends Component<SystemMessageProps, {}> {
+  constructor(props: SystemMessageProps) {
     super(props);
   }
   addFriend() {
@@ -22,6 +30,8 @@ export default class SystemMessage extends Component<any, any> {
       friendVisible: false,
     });
   }
+  // 事件 target 的真实类型（EventTarget 上的 tagName/classList）在 React 类型里无法不加断言闭环，
+  // 保留隐式 any 作为本切片未闭环债务（不引入 as/instanceof 伪装）。
   handleClick(event) {
     const { target } = event;
 
@@ -34,12 +44,13 @@ export default class SystemMessage extends Component<any, any> {
     const { message, session } = this.props;
     const textarea = $(`#ChatPanel-${session.id}`).find('.ChatPanel-Textarea .Textarea');
     const currentValue = textarea.val();
+    // window 上按会话 id 注册的回调由 ChatPanelSession 写入；未注册时为 _.noop（保持原 any 债务）。
     const onChangeChatValue = window[`onChangeChatValue-${session.id}`] || _.noop;
 
     if (currentValue) {
-      onChangeChatValue(`${currentValue} ${message.msg.oldCon}`);
+      onChangeChatValue(`${currentValue} ${present(message.msg, 'oldCon').oldCon}`);
     } else {
-      onChangeChatValue(message.msg.oldCon);
+      onChangeChatValue(present(message.msg, 'oldCon').oldCon);
     }
 
     setTimeout(() => {
@@ -72,7 +83,7 @@ export default class SystemMessage extends Component<any, any> {
           />
         ) : (
           <div onClick={this.handleClick.bind(this)} className="Message-sysType-text">
-            {message.msg.con}
+            {present(message.msg, 'con').con}
           </div>
         )}
         {_.get(message.msg, 'oldCon') && message.type === Constant.MSGTYPE_TEXT && !isFileTransfer && (

@@ -29,7 +29,19 @@ export const dateOptions: { label: string; value: HapApi.MD.BasicService.Duratio
   },
 ];
 
-export const defaultStatusInfo = {
+export type DefaultPersonalStatusId =
+  | 'a0000000-0000-0000-0000-000000000030'
+  | 'a0000000-0000-0000-0000-000000000050'
+  | 'a0000000-0000-0000-0000-000000000059'
+  | 'a0000000-0000-0000-0000-000000000070';
+
+export type DefaultPersonalStatus = {
+  [K in 'statusId' | 'icon' | 'remark' | 'durationOption']-?: NonNullable<
+    HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption[K]
+  >;
+};
+
+export const defaultStatusInfo: Record<DefaultPersonalStatusId, DefaultPersonalStatus> = {
   'a0000000-0000-0000-0000-000000000030': {
     statusId: 'a0000000-0000-0000-0000-000000000030',
     icon: '🏖',
