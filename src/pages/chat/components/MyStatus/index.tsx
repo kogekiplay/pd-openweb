@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
-import type { SyntheticEvent } from 'react';
+import type { SetStateAction, SyntheticEvent } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -22,6 +22,11 @@ export type PersonalStatusDraft = {
 };
 export type PersonalStatusDraftList = PersonalStatusDraft[] & { undefined?: PersonalStatusDraft | undefined };
 export type StatusDeleteEvent = Pick<SyntheticEvent, 'stopPropagation'>;
+// Clearing this state with no argument passes undefined to React's existing dispatch.
+export type PersonalStatusSelection = [
+  index: number | undefined,
+  select: (selection?: SetStateAction<number | undefined>) => void,
+];
 
 const DialogWrap = styled(Dialog)`
   background-color: var(--color-background-card) !important;
@@ -108,7 +113,7 @@ export default function MyStatus() {
   }>({});
   const [visible, setVisible] = useState(false);
   const [statusList, setStatusList] = useState<PersonalStatusDraftList>([]);
-  const [currentIndex, setCurrentIndex] = useState<number | undefined>();
+  const [currentIndex, setCurrentIndex]: PersonalStatusSelection = useState<number | undefined>();
   // An absent selection reads the native array property named "undefined".
   const currentStatus: PersonalStatusDraft = statusList[currentIndex === undefined ? 'undefined' : currentIndex] || {};
   const { statusOptions } = data;
@@ -127,11 +132,11 @@ export default function MyStatus() {
           history: false,
           hideClassic: true,
           placement: 'left bottom',
-          onSelect: (name: string, _value: string | null, emotionText?: string) => {
+          onSelect: (name: string | undefined, _value: string | null, emotionText?: string) => {
             setCurrentIndex(refIndex);
             setStatusList(prevList => {
               const copyList = _.cloneDeep(prevList);
-              copyList[refIndex].icon = emotionText || name;
+              present(copyList[refIndex], 'icon').icon = emotionText || name;
               return copyList;
             });
           },

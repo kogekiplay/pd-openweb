@@ -21,7 +21,16 @@ export const Wrapper = styled.div`
   }
 `;
 
-const EllipsisText = ({ text, icon, className }: { icon?: string; className?: string; [key: string]: any }) => {
+const EllipsisText = ({
+  text,
+  icon,
+  className,
+}: {
+  /** 来自 getIconByType，未知 key 时为 undefined；下面本来就是 `icon && …` 条件渲染，天然接受 undefined。 */
+  icon?: string | undefined;
+  className?: string;
+  [key: string]: any;
+}) => {
   const textRef = useRef<HTMLSpanElement | null>(null);
   const checkedRef = useRef(false);
   const [overflow, setOverflow] = useState(false);

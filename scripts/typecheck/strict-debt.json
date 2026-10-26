@@ -890,7 +890,6 @@
     "src/pages/FormExtend/PublicWorksheetConfig/CountDown.tsx",
     "src/pages/FormExtend/PublicWorksheetConfig/FormPreview.tsx",
     "src/pages/FormExtend/PublicWorksheetConfig/PublicConfig/AbilityExpandSettings.tsx",
-    "src/pages/FormExtend/PublicWorksheetConfig/PublicConfig/CommonFieldDropdown.tsx",
     "src/pages/FormExtend/PublicWorksheetConfig/PublicConfig/DataCollectionSettings.tsx",
     "src/pages/FormExtend/PublicWorksheetConfig/PublicConfig/FillSettings.tsx",
     "src/pages/FormExtend/PublicWorksheetConfig/PublicConfig/ReceiptSettings.tsx",

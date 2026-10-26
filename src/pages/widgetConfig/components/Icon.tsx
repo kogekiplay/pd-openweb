@@ -37,7 +37,12 @@ export default function Icon({
   ...rest
 }: {
   className?: string;
-  icon?: string;
+  /**
+   * getIconByType 的返回是 string | undefined（未知 key 走原 `|| {}` → icon 为 undefined）。
+   * 这里本来就只把它拼进 `icon-${icon}` 模板串（缺省时模板照旧），所以声明成 string | undefined
+   * 如实反映真实入参；不加兜底、不改模板、不动 rest 透传。
+   */
+  icon?: string | undefined;
   [key: string]: any;
 }) {
   return <IconWrap className={cx(`icon-${icon}`, className, { action: rest['onClick'] }, type)} {...rest}></IconWrap>;

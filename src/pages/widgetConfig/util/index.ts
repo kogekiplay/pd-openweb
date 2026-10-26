@@ -307,15 +307,37 @@ export const returnMasterPage = globalSheetInfo => {
   }, 300);
 };
 
-export const getWidgetInfo = type => {
+/**
+ * 控件类型入参的真实域（只做注解，body 原样）：
+ * - number：API 类型号，函数内用 enumWidgetType 反查成 Widget key；
+ * - string：真实存在的调用方会传 Widget key（例如
+ *   src/components/Mingo/modules/CreateWorksheetBot/MingoGeneratedWidgetsSelector.tsx:402 传
+ *   mapWidgetTypeToControlType(...)，其返回值是 'TEXT' | 'NUMBER' | … 或 undefined）；
+ * - undefined：同样来自上述 helper 的 default 分支。
+ * - null：OnlySyncStep 的实际 SyncField.mdType 可缺匹配值；仍按原生字符串键 null 查找。
+ * 未知 key 仍走原来的 `|| {}`（空对象，无兜底值），本注解不改这一点。
+ *
+ * 【索引处唯一改动】undefined 作为 key 时，JS 的 ToPropertyKey 会把它变成字符串 'undefined'，
+ * 所以这里显式写成 `type === undefined ? 'undefined' : type` —— 与原生 `obj[undefined]` 读取
+ * **完全同一个 key**（不是新增 fallback、不是删除 |undefined、不改 unknown-key 的空对象语义）。
+ * 目的只是让索引表达式在类型层面落在有限的 key 域上，运行期取值与原来逐位一致。
+ */
+export const getWidgetInfo = (type: number | string | null | undefined) => {
   if (typeof type === 'number') {
     type = enumWidgetType[type];
   }
 
-  return DEFAULT_CONFIG[type] || {};
+  return DEFAULT_CONFIG[type === undefined ? 'undefined' : type === null ? 'null' : type] || {};
 };
 
-export const getIconByType = type => {
+/**
+ * 真实返回域：DEFAULT_CONFIG 的 47 个条目都带字符串 icon，但未知 key 会走 `|| {}`，
+ * 此时 icon 为 undefined —— 所以返回类型是 string | undefined，不是纯 string。
+ * 第二实参是历史遗留：AST 全量扫的 26 个两参调用点**全部**传 boolean false，实现从不读取它。
+ * 用**变量上的函数类型**承载这个可选旧实参，实现体仍是单形参箭头函数（getIconByType.length 仍为 1），
+ * 不新增实现参数、不加默认实参、不改任何业务取值。
+ */
+export const getIconByType: (type: number | string | null | undefined, legacyIgnored?: boolean) => string | undefined = type => {
   const { icon } = getWidgetInfo(type);
   return icon;
 };

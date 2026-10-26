@@ -80,6 +80,55 @@ function insertImageToEditor(container, elemstr) {
   container.focus();
 }
 
+/** `new Emotion(el, ...)` 的首参真实来源：3 个调用点分别传 HTMLDivElement（MyStatus ref，已判空）、
+ *  HTMLSpanElement（commenter faceBtn）、HTMLAnchorElement（postCommentInput faceBtn），后两者声明带 null | undefined；
+ *  jQuery `$()` 对 null/undefined 返回空集合。另按 `$()` 真实 API 补 selector 字符串与既有 jQuery 对象。 */
+export type EmotionElement = Element | JQuery.Selector | JQuery | null | undefined;
+
+/** 源码两处真实调用：Unicode 分支 2 实参（emotion.ts:387）、经典分支 3 实参（:394）。
+ *  默认实现仍是 0 实参函数（:135-137），arity 不变，仅类型可赋。 */
+export type EmotionSelectHandler = (
+  name: string | undefined,
+  src: string | null,
+  emotionText?: string | undefined,
+) => void;
+
+/** 源码三处真实调用均为 3 实参（:363 / :375 / :418）。 */
+export type EmotionMDBearSelectHandler = (name: string | undefined, src: string, targetEmotionSrc: string) => void;
+
+/** 调用方传给 `new Emotion` 的**真实输入模型**：17 个键来自默认表 `Emotion.options`，
+ *  `popupContainer` 是 commenter 实际传入且 `show()` 里作为 `insertAfter` 目标的额外键。
+ *  注意 `EmotionInstance.options` 仍写 `typeof Emotion.options`，那是旧的 default-only 私有 this 契约，
+ *  不因本类型获得「已解析 options」的保证；两者是**输入 schema** 与**遗留 private this** 的区别。 */
+export interface EmotionOptions {
+  input?: JQuery.Selector | JQuery.htmlString | Element | JQuery | null | undefined;
+  imgPath?: string | undefined;
+  defaultTab?: number | undefined;
+  mdBear?: boolean | undefined;
+  showAru?: boolean | undefined;
+  divEditor?: boolean | undefined;
+  offset?: number | undefined;
+  history?: boolean | undefined;
+  hideClassic?: boolean | undefined;
+  historySize?: number | undefined;
+  autoHide?: boolean | undefined;
+  historyKey?: string | undefined;
+  relatedLeftSpace?: number | undefined;
+  relatedTopSpace?: number | undefined;
+  placement?: string | undefined;
+  onSelect?: EmotionSelectHandler | undefined;
+  onMDBearSelect?: EmotionMDBearSelectHandler | undefined;
+  popupContainer?: JQuery.Selector | JQuery.htmlString | JQuery.TypeOrArray<Node> | JQuery<Node> | null | undefined;
+}
+
+/** 原生普通函数（AST 确认非 async/generator）在 JavaScript 里天然可用 `new` 调用，
+ *  但 TS 对 function declaration 不推断 construct signature；这里只补**可构造性**这一件事，
+ *  运行期零变化（inline 类型断言，不新增变量/包装/原型改动）。
+ *  返回类型取 `object`：函数体没有 return，JS new 对无对象返回的普通函数返回 this；
+ *  外部对实例的读取目前为 0，故不借这次断言认证 instance 形状。 */
+export interface EmotionConstructor {
+  new (el: EmotionElement, options?: EmotionOptions | undefined): object;
+}
 /** 构造函数里用到的字段和方法；方法本身都在下面逐个挂到 Emotion.prototype 上 */
 interface EmotionInstance {
   $el: JQuery;
@@ -136,7 +185,7 @@ Emotion.options = {
     // 当选中表情时触发
   },
   onMDBearSelect: function () {},
-};
+} satisfies EmotionOptions;
 
 Emotion.prototype._init = function _init() {
   this.isOpen = false;
@@ -659,4 +708,4 @@ Emotion.prototype.parse = function (str) {
 
 Emotion.parse = Emotion.prototype.parse;
 
-export default Emotion;
+export default Emotion as typeof Emotion & EmotionConstructor;
