@@ -2,13 +2,29 @@ import { Component } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import { Tooltip } from 'ming-ui/antd-components';
+import type { ChatSession } from '../../redux/types';
 import './index.less';
 
+/**
+ * Minimal source contract: the four props the constructor and shouldComponentUpdate actually read.
+ * item is the shared ChatSession contract (no copied DTO, no "logo/name/id always present").
+ * The class itself intentionally stays Component<any, any>: its body still reads several other
+ * props (onOpenPanel / onContextMenu) and item.refer (unknown) / item.msg (optional) /
+ * item.time (number | string); closing those needs either a producer-side type change or runtime
+ * edits that this task forbids, so they stay open debt instead of a fake full closure.
+ */
+export interface SessionItemProps {
+  item: ChatSession;
+  isActive: boolean;
+  isHover: boolean;
+  visible?: boolean | undefined;
+}
+
 export default class SessionItem extends Component<any, any> {
-  constructor(props) {
+  constructor(props: SessionItemProps) {
     super(props);
   }
-  override shouldComponentUpdate(nextProps) {
+  override shouldComponentUpdate(nextProps: SessionItemProps) {
     const next = {
       isActive: nextProps.isActive,
       isHover: nextProps.isHover,

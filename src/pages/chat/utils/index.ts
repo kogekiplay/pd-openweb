@@ -17,6 +17,25 @@ import type {
 } from '../redux/types';
 
 /**
+ * 本切片按 8ae raw 的 20 条（`combined-raw-v1.log:26395` 起）只消「能 type-only 消的」，
+ * 下面 10 条**有意保留**（未运行验证，按源码读数判断；理由逐条落在对应函数旁）：
+ * - `449` `cardDisposeName(card)`：唯一非空调用点 `ChatPanelSession:341` 传 `card.card`（可缺），
+ *   签 `NonNullable` 会打破 `CardMessage:37` 的调用；签可缺则 `const { md } = card` 变成新诊断。
+ * - `550` `messageContentParser(message)`：唯一调用点传 `present(message.msg,'con').con`（`string | undefined`）；
+ *   签 string 破坏调用方，签 `string | undefined` 破坏 `tagConvert(message)`。
+ * - `566` `formatFileSize` 的 `byteSize` 同时承载 number 与 `toFixed` 的 string（JS 隐式转换域），
+ *   定联合会连带 `byteSize > 1024` 报错 —— 属行为决定。
+ * - `643` `$('…')[0]` 在 noUncheckedIndexedAccess 下可缺；加 guard 会改掉「对 undefined 调 scrollTo」的原生失败。
+ * - `674` `clearInterval(flashTitleInterval)` 的 `null` sentinel（`number | null`）：全仓同形存量家族
+ *   （与已接收 CountDown / socketEvent 同口径，lib 合并重载不含 null）。
+ * - `691` `window.isNewTab()` 在 `types/global.d.ts:708` 是可选成员，不在本文件 scope。
+ * - `751`/`754`/`756` 光标函数读 `el.value`/`el.selectionStart` 与 legacy IE `document.selection`
+ *   （TextRange），需要语言级 legacy DOM 视图；不把 `Document` 整体 cast 成 legacy 形状。
+ * - `808` `isCount(list)`：签 `ChatSession[]` 会让 `[1, 2].includes(session.showBadge)`
+ *   （`showBadge: number | boolean | undefined`）变成新诊断。
+ */
+
+/**
  * 格式化消息时间。
  * 【有限声明依据】调用方传 `dateConvertToUserZone(...)`（字符串）与 `file.time`
  * 等时间值；`moment` 接受 `string | number | undefined`，故按此声明；
@@ -573,7 +592,7 @@ export const formatFileSize = (size = 0) => {
  * 抖动聊天窗口
  * @param {*} id
  */
-export const shake = id => {
+export const shake = (id: string | undefined) => {
   const el = $(`#ChatPanel-${id}`).find('.ChatPanel-sessionList');
   el.addClass('ChatPanel-shake').on(
     'webkitAnimationEnd oAnimationEnd MSAnimationEnd animationend',
@@ -587,7 +606,7 @@ export const shake = id => {
  * 引用消息高亮
  * @param {*} id
  */
-export const highlightReferMessage = id => {
+export const highlightReferMessage = (id: string | undefined) => {
   setTimeout(() => {
     const el = $(`#ChatPanel-${id}`).find('.ChatPanel-MessageRefer');
     highlight(el);
@@ -598,7 +617,7 @@ export const highlightReferMessage = id => {
  * 消息高亮
  * @param {*} id
  */
-export const highlightMessage = id => {
+export const highlightMessage = (id: ChatMessage['id']) => {
   const el = $(`#Message-${id}`).find('.Message-container');
   highlight(el);
 };
@@ -622,7 +641,7 @@ const highlight = (el: JQuery<HTMLElement>) => {
  * @param {*} id
  * @param {*} isBottom
  */
-export const scrollEnd = (id, isBottom = false) => {
+export const scrollEnd = (id: string | undefined, isBottom = false) => {
   const scrollView = window[`scrollView-${id}`];
 
   if (scrollView) {
@@ -667,7 +686,7 @@ export const flashTitle = () => {
 /**
  * 关闭消息提示
  */
-export const removeFlashTitle = (value, sessionList) => {
+export const removeFlashTitle = (value: string | undefined, sessionList: ChatSession[]) => {
   const list = sessionList.filter(session => session.value !== value);
 
   if (!isCount(list)) {
@@ -767,16 +786,18 @@ export const getCursortPosition = el => {
  * 记录光标的位置
  * @param {*} id
  */
-export const recordCursortPosition = id => {
+export const recordCursortPosition = (id: string | undefined) => {
   const el = $(`#ChatPanel-${id} textarea`);
-  window.currentCursortPosition = getCursortPosition(el.get(0));
+  // 字面量 bracket：window 索引签名值是 opaque 的（types/global.d.ts `[key: string]: any`），
+  // 属性式访问违反 noPropertyAccessFromIndexSignature；不改值、不 cast。
+  window['currentCursortPosition'] = getCursortPosition(el.get(0));
 };
 
 /**
  * 获取 inbox 的 value
  * @param {*} type
  */
-export const getInboxId = function (type) {
+export const getInboxId = function (type: number) {
   switch (type * 1) {
     case Constant.SESSIONTYPE_SYSTEM:
       return 'system';

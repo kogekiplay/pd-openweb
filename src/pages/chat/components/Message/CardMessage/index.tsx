@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import type { CSSProperties } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
@@ -14,7 +15,8 @@ import createLinksForMessage from 'src/utils/createLinksForMessage';
 import * as utils from '../../../utils/';
 import './index.less';
 
-const vertical = {
+/** `dangerouslySetInnerHTML` 容器的多行截断样式；键名与取值来自 `csstype` 的 `BoxOrient` 联合。 */
+const vertical: CSSProperties = {
   WebkitBoxOrient: 'vertical',
 };
 
@@ -195,7 +197,15 @@ export default class CardMessage extends Component<any, any> {
         break;
     }
   }
-  renderMember(members, textInfo: string) {
+  /** `members` 的两个真实来源：`TaskCardDetailModel.members`（CardAccountModel[]）与
+   *  `CalendarCardModel.members`（CalendarCardAccountModel[]），两者都提供 `accountId`/`avatar`。 */
+  renderMember(
+    members: Array<
+      | HapApi.MD.Web.Ajax.ResultModel.Chat.CardAccountModel
+      | HapApi.MD.Web.Ajax.ResultModel.Chat.CalendarCardAccountModel
+    >,
+    textInfo: string,
+  ) {
     return (
       <div className="Message-cardItem Message-cardItem-membersItem">
         <span>{`${textInfo}/${_l('成员')}：`}</span>
@@ -212,7 +222,7 @@ export default class CardMessage extends Component<any, any> {
       </div>
     );
   }
-  renderDate(deadline, textInfo: string) {
+  renderDate(deadline: string | undefined, textInfo: string) {
     return (
       <div className="Message-cardItem">
         <span>{`${textInfo}：`}</span>

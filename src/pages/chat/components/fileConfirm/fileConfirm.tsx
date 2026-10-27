@@ -4,12 +4,22 @@ import { formatFileSize, getClassNameByExt } from 'src/utils/common';
 import defineMethods from 'src/utils/defineMethods';
 import RegExpValidator from 'src/utils/expression';
 import './style.less';
+import type { UploaderFile } from 'src/utils/uploader/types';
+
+/**
+ * 本组件（以及公开的 ctor / export / callback 参数）只承诺真实消费到的三个字段。
+ * 【为什么是派生 view 而不是整模型】唯一队列模型 `UploaderFile` 末尾带 `[key: string]: any`
+ * （src/utils/uploader/types.ts:61 的宽索引）—— 直接拿整模型当公开入参/Fields 基类，会把这条
+ * 宽 any 索引带进公开合同；`IsAny<DTO> === false` 也挡不住索引里的 any。
+ * 用 `Pick` **派生**（不手抄三字段 DTO），`getNative()` 的真实返回域（`File`）原样保留。
+ */
+type FileConfirmFile = Pick<UploaderFile, 'name' | 'size' | 'getNative'>;
 
 /** 聊天里发文件前的确认弹层（可改名）。由 SendToolbar 的 recurShowFileConfirm 逐个文件调起：
  *  yesFn 之后弹下一个、全部确认完才 up.start()；noFn 把这个文件移出上传队列再弹下一个。 */
 interface FileConfirmFields {
-  /** plupload 的文件对象（唯一的调用方 SendToolbar 传的是 FilesAdded 里的文件）；图片预览时取 getNative() 拿原生 File */
-  file: { name: string; size: number; getNative: () => Blob };
+  /** 队列文件：只承诺本组件真实读到的 name/size/getNative（派生自唯一模型，见文件头）。 */
+  file: FileConfirmFile;
   callback: { yesFn?: (file: FileConfirmFields['file']) => void; noFn?: (file: FileConfirmFields['file']) => void };
   /** 扩展名（小写、不带点）；文件名里没有点时为 undefined */
   ext?: string;
@@ -28,7 +38,7 @@ interface FileConfirmFields {
   settled: boolean;
 }
 
-function FileConfirm(this: FileConfirmInstance, file, callback) {
+function FileConfirm(this: FileConfirmInstance, file: FileConfirmFile, callback: FileConfirmFields['callback']) {
   var FC = this;
   FC.file = file;
   FC.callback = callback;
@@ -38,7 +48,7 @@ function FileConfirm(this: FileConfirmInstance, file, callback) {
 const fileConfirmMethods = defineMethods<FileConfirmFields>()({
   init: function () {
     var FC = this;
-    var name: string | undefined;
+    var name: string;
     var file = FC.file;
     var fullname = file.name;
     if (fullname.lastIndexOf('.') > -1) {
@@ -223,7 +233,7 @@ const fileConfirmMethods = defineMethods<FileConfirmFields>()({
     var FC = this;
     return FC.dialogEle.$fileName.val() + (FC.ext ? '.' + FC.ext : '');
   },
-  validate: function (str) {
+  validate: function (str: string) {
     const illegalSet = ['\\', '/', ':', '*', '?', '"', '<', '>', '|'];
     const illegalChars = new RegExp(`[${illegalSet.map(c => '\\' + c).join('')}]`, 'g');
 
@@ -239,7 +249,7 @@ const fileConfirmMethods = defineMethods<FileConfirmFields>()({
 FileConfirm.prototype = fileConfirmMethods;
 type FileConfirmInstance = FileConfirmFields & typeof fileConfirmMethods;
 
-export default function (file, callback) {
+export default function (file: FileConfirmFile, callback: FileConfirmFields['callback']) {
   // 原先 return fileConfirm.dialog —— 实例上从来没有 dialog 这个字段，一直返回 undefined；唯一的调用方也不用返回值
   new FileConfirm(file, callback);
 }

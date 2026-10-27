@@ -14,6 +14,7 @@ import { navigateTo } from 'src/router/navigateTo';
 import { emitter } from 'src/utils/common';
 import { addBehaviorLog, getCurrentProject } from 'src/utils/project';
 import * as actions from '../../redux/actions';
+import type { ChatToolbarConfig } from '../../redux/types';
 import { PopoverWrap } from '../ChatList/Avatar/styled';
 
 const Wrap = styled.div``;
@@ -55,6 +56,17 @@ const ArrowWrap = styled.div`
   }
 `;
 
+/**
+ * props：connect 注入 `appId`（`RootState['appPkg'].id`，PageHeader/redux/types.ts AppPkgState）、
+ * `toolbarConfig`（`RootState['chat'].toolbarConfig`，chat/redux/types.ts ChatState）与
+ * `setToolbarConfig`（chat/redux/actions.ts:2089 的真实签名）。
+ */
+export interface AppsProps {
+  appId: string | undefined;
+  toolbarConfig: ChatToolbarConfig;
+  setToolbarConfig: (config: Partial<ChatToolbarConfig>) => void;
+}
+
 const getShowAppsCount = (height: number) => {
   const appHeight = 26;
   const marginBottom = 10;
@@ -86,7 +98,7 @@ const getProjectId = () => {
   return currentProject.projectId || _.get(md.global.Account.projects[0], 'projectId');
 };
 
-const Apps = props => {
+const Apps = (props: AppsProps) => {
   const { appId, toolbarConfig, setToolbarConfig } = props;
   const [loading, setLoading] = useState(true);
   const [apps, setApps] = useState([]);
@@ -94,6 +106,13 @@ const Apps = props => {
   const appsWrap = useRef(null);
   const { commonAppShowType = 1, commonAppOpenType } = toolbarConfig;
 
+  /**
+   * 【保留原隐式 any 债，不假签 item 形状】真实条目来自
+   * `commonAppShowType === 1 ? recentApps : marketApps` 的联合；`marketApps` 在 src/api 层
+   * 没有返回标注（`ApiResult` = `Promise<any>`），所以 `setApps` 收到的仍是 any，state 的
+   * never[] 债也无法诚实消除。**不给 app/state 标未认证模型**（不把 any 认证成 finite）；
+   * 要闭环须先按 Lead 的 producer scope 给 `marketApps` 补 generated 返回（见 REPORT swagger 证据）。
+   */
   const handleOpenApp = app => {
     onAddBehaviorLog(app);
     if (app.createType === 1) {

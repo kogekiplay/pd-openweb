@@ -15,7 +15,35 @@ const Wrap = styled.div`
   }
 `;
 
-export default props => {
+/** 本文件真正读取的 3 个设置键 —— 从**既有 canonical 模型派生**，不手抄 DTO。
+ *  全部 `?` 且显式 `| undefined`：父级 `SettingDrawer/index.tsx:117` 的
+ *  `setAccountSettings({ ..._.pick(data, …), backHomepageWay: … })` 是 live write，
+ *  spread 的来源可 own-undefined（后端模型里这几个键 required，但前端 state 经旧 any 写入，
+ *  不据此断言必有值）。 */
+type BaseAccountSettings = {
+  [K in 'backHomepageWay' | 'isOpenMessageSound' | 'isOpenMessageTwinkle']?:
+    | HapApi.MD.Web.Ajax.ResultModel.Account.AccountSettingModel[K]
+    | undefined;
+};
+
+/** 本文件 `handleSureSettings(...)` 的 5 个调用点实际传的字面量（逐处取证）。 */
+type BaseSettingName = 'timeZone' | 'map' | 'backHomepageWay' | 'isOpenMessageSound' | 'isOpenMessageTwinkle';
+
+/** 父级 `SettingDrawer/index.tsx:125` 的 `otherProps` 展开，加上 `{...props}` 透传。 */
+interface BaseProps {
+  accountSettings: BaseAccountSettings;
+  /** 父级 `index.tsx:93`：`handleChangeAccountSettings = param => { setAccountSettings(…); setToolbarConfig(param); }` */
+  handleChangeAccountSettings: (param: BaseAccountSettings) => void;
+  /** 父级 `index.tsx:68`：`handleSureSettings(settingNum, value, successCallback)`；value 直接透传给
+   *  `editAccountSetting({ settingValue: value })`，本文件 5 个调用点实际传入的都是 number。 */
+  handleSureSettings: (
+    settingName: BaseSettingName,
+    value: number | undefined,
+    successCallback?: (() => void) | undefined,
+  ) => void;
+}
+
+export default (props: BaseProps) => {
   const { accountSettings, handleChangeAccountSettings, handleSureSettings } = props;
   const [loading, setLoading] = useState(true);
   const [currentTimeZone, setCurrentTimeZone] = useState(md.global.Account.timeZone);
@@ -134,7 +162,9 @@ export default props => {
           checkedValue={accountSettings.backHomepageWay}
           onChange={value => {
             handleSureSettings('backHomepageWay', value, () => {
-              window.backHomepageWay = value;
+              // `backHomepageWay` 未登记在 Window 具名键（`types/global.d.ts` 只登了另两个），
+              // 走 `noPropertyAccessFromIndexSignature` 规定的索引访问；与原点访问是同一对象同一键的 [[Set]]。
+              window['backHomepageWay'] = value;
               handleChangeAccountSettings({
                 backHomepageWay: value,
               });
