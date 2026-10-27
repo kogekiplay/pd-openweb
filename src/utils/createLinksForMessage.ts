@@ -42,7 +42,10 @@ function escapeHTML(s: string): string {
  */
 // Missing source text is admitted only so the existing decoder retains its exact TypeError.
 // Valid decoded MessageArgs and every other declared field stay unchanged.
-export type MessageLinkInput = MessageArgs | { message: string | undefined };
+type MessageInputWithMissingText<T> = {
+  [Field in keyof T]: Field extends 'message' ? T[Field] | undefined : T[Field];
+};
+export type MessageLinkInput = MessageInputWithMissingText<MessageArgs>;
 
 export default (input: MessageLinkInput): string => {
   const args = decodeMessageArgs(input);
