@@ -361,7 +361,7 @@ Emotion.prototype._getPosition = function _getPosition() {
  * 设置表情元素的位置
  * @private
  */
-Emotion.prototype._setPosition = function _setPosition(left, top) {
+Emotion.prototype._setPosition = function _setPosition(left: number, top: number) {
   this.$emotion.removeClass('emotion-top emotion-bottom');
   this.$emotion.addClass('emotion-' + this.options.placement.split(' ')[1]);
   var axisX = this.options.placement.split(' ')[0];
@@ -527,7 +527,7 @@ Emotion.prototype.clearHistory = function () {
 /**
  * 显示表情
  */
-Emotion.prototype.show = function show(left, top) {
+Emotion.prototype.show = function show(left?: number, top?: number) {
   var _this = this;
   this.$emotion = this.emotion()
     .on('click', '.emotionItem', $.proxy(this.select, this))

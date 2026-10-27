@@ -40,7 +40,11 @@ function escapeHTML(s: string): string {
  * @param  {boolean} args.filterFace     不显示表情
  * @return {string}                替换后的 html
  */
-export default (input: MessageArgs): string => {
+// Missing source text is admitted only so the existing decoder retains its exact TypeError.
+// Valid decoded MessageArgs and every other declared field stay unchanged.
+export type MessageLinkInput = MessageArgs | { message: string | undefined };
+
+export default (input: MessageLinkInput): string => {
   const args = decodeMessageArgs(input);
   let message = args.message;
 

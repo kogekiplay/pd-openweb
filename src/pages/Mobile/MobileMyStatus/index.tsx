@@ -7,12 +7,30 @@ import filterXss from 'xss';
 import { Icon, Input } from 'ming-ui';
 import personalStyleApi from 'src/api/personalStyle';
 import type { InboxRequest } from 'src/api/inboxTypes';
+import type { PersonalStatusDraft } from 'src/pages/chat/components/MyStatus';
 import MobileDatePicker from 'src/ming-ui/components/MobileDatePicker';
 import { dateOptions, defaultStatusInfo } from 'src/pages/chat/components/MyStatus/config';
 import PersonalStatus from 'src/pages/chat/components/MyStatus/PersonalStatus';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
 import { present } from 'src/pages/chat/utils/present';
 import './index.less';
+
+// Native Date accepts an explicit undefined input and returns an Invalid Date; this view does not promise timestamp validity.
+export type StatusDateConstructor = new (value: string | undefined) => Date;
+
+export interface MobilePersonalStatusState {
+  visible: boolean;
+  loading: boolean;
+  statusList: PersonalStatusDraft[];
+  // The original initial value is an opaque object sentinel; selection later supplies a status ID.
+  currentStatusId: PersonalStatusDraft['statusId'] | object;
+  onStatusOption: PersonalStatusDraft;
+  initialOnStatusOption: PersonalStatusDraft;
+  isEdit: boolean;
+  startDateVisible: boolean;
+  endDateVisible: boolean;
+  updatedDateOption: boolean;
+}
 
 export default function MobileMyStatus() {
   const [
@@ -29,7 +47,7 @@ export default function MobileMyStatus() {
       updatedDateOption,
     },
     setData,
-  ] = useSetState({
+  ] = useSetState<MobilePersonalStatusState>({
     visible: false,
     loading: true,
     statusList: [],
@@ -59,7 +77,7 @@ export default function MobileMyStatus() {
           return item;
         });
         // 没有设置过状态时接口不给 onStatusOption（null 属性不输出），按「全部字段可缺」处理
-        const onStatusOption: Partial<HapApi.MD.Web.Ajax.ResultModel.Personals.PStatusOption> =
+        const onStatusOption: PersonalStatusDraft =
           res.onStatusOption || {};
 
         setData({
@@ -258,12 +276,12 @@ export default function MobileMyStatus() {
                       isOpen={startDateVisible}
                       value={onStatusOption.beginTime ? new Date(onStatusOption.beginTime) : new Date()}
                       min={new Date()}
-                      max={new Date(onStatusOption.endTime)}
+                      max={new (Date as StatusDateConstructor)(onStatusOption.endTime)}
                       onClose={() => setData({ startDateVisible: false })}
                       onCancel={() =>
                         setData({ onStatusOption: { ...onStatusOption, beginTime: initialOnStatusOption.beginTime } })
                       }
-                      onSelect={date => {
+                      onSelect={(date: Date) => {
                         const value = moment(date).format('YYYY-MM-DD HH:mm:ss');
                         setData({ onStatusOption: { ...onStatusOption, beginTime: value }, startDateVisible: false });
                       }}
@@ -288,14 +306,14 @@ export default function MobileMyStatus() {
                     <MobileDatePicker
                       customHeader={_l('结束日期')}
                       precision="minite"
-                      min={new Date(onStatusOption.beginTime)}
+                      min={new (Date as StatusDateConstructor)(onStatusOption.beginTime)}
                       isOpen={endDateVisible}
                       value={onStatusOption.endTime ? new Date(onStatusOption.endTime) : new Date()}
                       onClose={() => setData({ endDateVisible: false })}
                       onCancel={() =>
                         setData({ onStatusOption: { ...onStatusOption, endTime: initialOnStatusOption.endTime } })
                       }
-                      onSelect={date => {
+                      onSelect={(date: Date) => {
                         const value = moment(date).format('YYYY-MM-DD HH:mm:ss');
                         setData({ onStatusOption: { ...onStatusOption, endTime: value }, endDateVisible: false });
                       }}
