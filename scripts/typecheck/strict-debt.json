@@ -1471,7 +1471,6 @@
     "src/pages/certification/index.tsx",
     "src/pages/certification/utils.ts",
     "src/pages/chat/components/KeyboardShortcuts/index.tsx",
-    "src/pages/chat/components/Message/AudioMessage/index.tsx",
     "src/pages/chat/components/Message/CardMessage/index.tsx",
     "src/pages/chat/components/Message/SystemMessage/index.tsx",
     "src/pages/chat/components/Message/WorksheetFileMessage/index.tsx",

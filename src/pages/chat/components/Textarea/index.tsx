@@ -1,12 +1,40 @@
 import { Component } from 'react';
+import type { KeyboardEvent } from 'react';
 import Textarea from 'ming-ui/components/Textarea';
+import type { ChatMessage, ChatSession } from '../../redux/types';
+import { present } from '../../utils/present';
 import { getCaretPosition, setCaretPosition } from 'src/utils/common';
 import * as utils from '../../utils/';
 import config from '../../utils/config';
 import Constant from '../../utils/constant';
 import './index.less';
 
-export default class TextareaBox extends Component<any, any> {
+/** 唯一真实 producer 是 `containers/ChatPanelSession/index.tsx:552-562` 的 `<Textarea …/>`：
+ *  `disabled={!isContact}`、`value`（会话草稿字符串）、`session`、`placeholder`（三目得到 string）、
+ *  `referMessage={referMessage[id]}`（字典取值为 `ChatMessage | undefined`）、以及四个绑定方法。 */
+export interface TextareaBoxProps {
+  value: string;
+  session: ChatSession;
+  /** producer 传 `isContact ? _l(…) : hideChat ? _l(…) : ''`，恒为 string */
+  placeholder?: string | undefined;
+  /** producer 传 `!isContact`（`isContact` 是 `boolean | undefined`） */
+  disabled?: boolean | undefined;
+  /** `ChatReferMessageState[sessionId]` 的真实取值域 */
+  referMessage?: ChatMessage | undefined;
+  /** producer: `handleSendMsg(value?: string)` */
+  onSendMsg: (value?: string | undefined) => void;
+  /** producer: `handleBlur(value: string)` */
+  onBlur: (value: string) => void;
+  /** producer: `handleChange = (value: string) => void` */
+  onChange: (value: string) => void;
+  /** producer: `handleRemoveReferMessage()` */
+  onRemoveReferMessage: () => void;
+}
+
+/** state 仍保持原 `any`（未新增）：`handleChange` 的 `$().val()` 宽重载写入、
+ *  `handleBlur` 的 fallback 都使 `value` 的真实域无法在未改运行时前提下收紧；
+ *  故本片只交付 Props 与已证 events/renderIcon，不claim state 闭环。 */
+export default class TextareaBox extends Component<TextareaBoxProps, any> {
   declare lastHeight: number | undefined;
   declare currentHeight: number | undefined;
   declare isComposing: boolean;
@@ -14,7 +42,7 @@ export default class TextareaBox extends Component<any, any> {
   declare textareaWrapper: HTMLDivElement | null | undefined;
   declare messageRefer: HTMLDivElement | null | undefined;
 
-  constructor(props) {
+  constructor(props: TextareaBoxProps) {
     super(props);
     this.state = {
       value: this.props.value,
@@ -26,7 +54,7 @@ export default class TextareaBox extends Component<any, any> {
     this.compositionEndTime = 0;
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps: TextareaBoxProps, prevState) {
     if (nextProps.value !== prevState.propValue) {
       return {
         value: nextProps.value,
@@ -36,7 +64,7 @@ export default class TextareaBox extends Component<any, any> {
 
     return null;
   }
-  isInputComposing(event) {
+  isInputComposing(event: KeyboardEvent<HTMLTextAreaElement>) {
     return (
       this.isComposing ||
       event.nativeEvent?.isComposing ||
@@ -111,13 +139,13 @@ export default class TextareaBox extends Component<any, any> {
       this.compositionEndTime = 0;
     }
   }
-  handleKeyUp(event) {
+  handleKeyUp(event: KeyboardEvent<HTMLTextAreaElement>) {
     if (event.which === 37 || event.which === 38 || event.which === 39 || event.which === 40) {
       const { session } = this.props;
       utils.recordCursortPosition(session.id);
     }
   }
-  renderIcon(type) {
+  renderIcon(type: number | undefined) {
     if (type === Constant.MSGTYPE_FILE) {
       return <i className="icon-defaultFile" />;
     } else if (type === Constant.MSGTYPE_PIC) {
@@ -128,8 +156,8 @@ export default class TextareaBox extends Component<any, any> {
   }
   renderMessageRefer() {
     const { referMessage } = this.props;
-    const { msg, fromAccount, type } = referMessage;
-    const text = `“ ${fromAccount.name}：${msg.con} ”`;
+    const { msg, fromAccount, type } = present(referMessage, 'msg');
+    const text = `“ ${present(fromAccount, 'name').name}：${present(msg, 'con').con} ”`;
     return (
       <div
         className="ChatPanel-MessageRefer"
@@ -138,7 +166,7 @@ export default class TextareaBox extends Component<any, any> {
         }}
       >
         <div className="text" title={text}>
-          “ {this.renderIcon(type)} {fromAccount.name}：{msg.con} ”
+          “ {this.renderIcon(type)} {present(fromAccount, 'name').name}：{present(msg, 'con').con} ”
         </div>
         <i onClick={this.props.onRemoveReferMessage.bind(this)} className="icon-delete" />
       </div>

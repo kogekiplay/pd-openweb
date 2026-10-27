@@ -1,4 +1,4 @@
-﻿/*
+/*
  var video=new VideoPlayer(param)
  VideoPlayer
  提供方法
@@ -52,7 +52,20 @@ interface MP3PlayerInstance {
   getCurrentTime: (this: MP3PlayerInstance) => number;
 }
 
-function MP3Player(this: MP3PlayerInstance, _options: Partial<MP3PlayerOptions>) {
+export type MP3PlayerInput = {
+  [Field in keyof MP3PlayerOptions]?: MP3PlayerOptions[Field] | undefined;
+};
+
+// These two own methods are assigned by the actual constructor before it returns.
+export type MP3PlayerPlayback = {
+  [Method in 'play' | 'stop']: OmitThisParameter<MP3PlayerInstance[Method]>;
+};
+
+export interface MP3PlayerConstructor {
+  new (options?: MP3PlayerInput): MP3PlayerPlayback;
+}
+
+function MP3Player(this: MP3PlayerInstance, _options?: MP3PlayerInput) {
   const _this = this;
   this.options = $.extend(
     {

@@ -502,6 +502,8 @@ interface Window {
   callFromHelp?: boolean;
   /** 聊天语音播放器的构造函数（mp3player.ts 默认导出，同时挂到 window 上兼容全局访问） */
   MP3Player?: typeof import('src/pages/chat/lib/mp3player/mp3player').default;
+  /** AudioMessage writes the actual playback instance; it is absent before first playback. */
+  chatAudioPlayer?: import('src/pages/chat/lib/mp3player/mp3player').MP3PlayerPlayback | null | undefined;
   /** 表格单元格复制出来的内容，JSON 串（control.ts / CellControls 写入，粘贴时读取） */
   tempCopyForSheetView?: string;
 

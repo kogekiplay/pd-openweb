@@ -10,6 +10,7 @@ import { sysRoleType } from 'src/pages/Role/config.js';
 import { APP_ROLE_TYPE } from 'src/pages/worksheet/constants/enum.js';
 import { getUserRole } from 'src/pages/worksheet/redux/actions/util';
 import type { RootState } from 'src/redux/types';
+import { present } from 'src/pages/chat/utils/present';
 import { pathCompletion } from 'src/utils/common';
 import Back from '../../components/Back';
 import SelectJob from '../../components/SelectJob';
@@ -19,19 +20,53 @@ import noMmberImg from '../img/noMember.png';
 import * as actions from './redux/actions';
 import './index.less';
 
-let modal = null;
+/**
+ * 这个页面自己"选什么"的真实域：constructor 写 'user'；showActionSheet 的三个 onAction 分支
+ * 分别写 'user' / 'job' / 'orgnizeRole'；showActionDepartment 的 onAction 写 'department'。
+ */
+type MemberSelectionType = 'user' | 'department' | 'job' | 'orgnizeRole';
+
+/** 部门选择范围：初始 ''（未选），'current' 仅当前部门，'all' 含当前部门下所有子部门。 */
+type DepartmentSelectionType = '' | 'current' | 'all';
+
+/**
+ * 历史遗留的弹窗句柄：**全仓没有任何赋值**（唯一可能的生产者 openPersonalInfoPopup 已被注释），
+ * 所以只按"它被当作 Dialog 句柄使用"标注成 antd-mobile 的原生返回类型 + null，
+ * 不声称它真的被生产过、也不另捏结构 DTO；保留原来的 `= null` 初始化（运行期与改前一致）。
+ */
+let modal: ReturnType<typeof Dialog.show> | null = null;
+
 export interface MemberListState {
   selectUserVisible: boolean;
   transferAppVisible: boolean;
-  type: string;
-  selectDepartmentType: string;
+  /** 见 MemberSelectionType：所有真实写入点的并集。 */
+  type: MemberSelectionType;
+  /** 见 DepartmentSelectionType：初始 ''，两个 onAction 分支写 'current' / 'all'。 */
+  selectDepartmentType: DepartmentSelectionType;
   selectJobVisible: boolean;
   selectOrgnizedRoleVisible: boolean;
   personalInfoVisible: boolean;
+  /**
+   * 现在只有 null 写入（constructor 与 closePersonalInfoPopup）；
+   * 唯一写 string 的 openPersonalInfoPopup 已被注释（见本文件 359-365 行），
+   * 所以不凭"将来可能"提前放宽成 string。
+   */
   accountId: null;
 }
 
 class MemberList extends Component<any, MemberListState> {
+  /**
+   * ActionSheet.show 的**原生返回句柄**（antd-mobile 的 ReturnType）。
+   * 三个句柄都在对应的 show* 方法里同步赋值，之后才可能被读取；
+   * 但类型上必须允许 undefined（未初始化就是不可读的），所以 unguarded 的 close 读取
+   * 走 present(handler, 'close')：nullish 时仍抛原生 TypeError（**同为原生 TypeError，但文案不同**：
+   * present 走 Reflect.get，得到 `Reflect.get called on non-object`，且 null / undefined 被合并），
+   * 不用 ?.close() 把原来的失败吞掉。这里只声明类型，运行期不产生字段（Babel 连 declare 一起擦除）。
+   */
+  declare actionSheetHandler: ReturnType<typeof ActionSheet.show> | undefined;
+  declare actionDepartmentHandler: ReturnType<typeof ActionSheet.show> | undefined;
+  declare actionUserHandler: ReturnType<typeof ActionSheet.show> | undefined;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -65,7 +100,12 @@ class MemberList extends Component<any, MemberListState> {
     this.actionUserHandler && this.actionUserHandler.close();
   }
 
-  showActionSheet = () => {
+  /**
+   * 历史调用点会传 4 个实参（运行时被忽略，但**仍会被求值**：getter / throw 都保留）。
+   * 这里只用类型吸收这 4 个未解释的 opaque 实参；body 仍是零形参箭头，
+   * 所以 showActionSheet.length 保持 0，也不改任何业务取值。
+   */
+  showActionSheet: (roleId?: unknown, userIds?: unknown, roleType?: unknown, detail?: unknown) => void = () => {
     const { detail } = this.props.memberList;
     const addUser = { name: _l('添加人员'), icon: 'hr_person_add', iconClass: 'Font20' };
     const BUTTONS = detail.projectId
@@ -91,7 +131,7 @@ class MemberList extends Component<any, MemberListState> {
       extra: (
         <div className="flexRow header">
           <span className="Font13">{_l('人员管理')}</span>
-          <div className="closeIcon" onClick={() => this.actionSheetHandler.close()}>
+          <div className="closeIcon" onClick={() => present(this.actionSheetHandler, 'close').close()}>
             <Icon icon="close" />
           </div>
         </div>
@@ -116,7 +156,7 @@ class MemberList extends Component<any, MemberListState> {
           this.setState({ selectOrgnizedRoleVisible: true, type: 'orgnizeRole' });
         }
 
-        this.actionSheetHandler.close();
+        present(this.actionSheetHandler, 'close').close();
       },
     });
   };
@@ -139,7 +179,7 @@ class MemberList extends Component<any, MemberListState> {
               icon="backspace"
               className="mRight10"
               onClick={() => {
-                this.actionDepartmentHandler.close();
+                present(this.actionDepartmentHandler, 'close').close();
                 this.showActionSheet();
               }}
             />
@@ -148,7 +188,7 @@ class MemberList extends Component<any, MemberListState> {
           <div
             className="closeIcon"
             onClick={() => {
-              this.actionDepartmentHandler.close();
+              present(this.actionDepartmentHandler, 'close').close();
               this.showActionSheet();
             }}
           >
@@ -162,7 +202,7 @@ class MemberList extends Component<any, MemberListState> {
           selectUserVisible: true,
           selectDepartmentType: index === 0 ? 'current' : 'all',
         });
-        this.actionDepartmentHandler.close();
+        present(this.actionDepartmentHandler, 'close').close();
       },
     });
   };
@@ -246,7 +286,7 @@ class MemberList extends Component<any, MemberListState> {
       extra: (
         <div className="flexRow header">
           <span className="Font13">{_l('人员管理')}</span>
-          <div className="closeIcon" onClick={() => this.actionUserHandler.close()}>
+          <div className="closeIcon" onClick={() => present(this.actionUserHandler, 'close').close()}>
             <Icon icon="close" />
           </div>
         </div>
@@ -351,7 +391,7 @@ class MemberList extends Component<any, MemberListState> {
           });
         }
 
-        this.actionUserHandler.close();
+        present(this.actionUserHandler, 'close').close();
       },
     });
   };
