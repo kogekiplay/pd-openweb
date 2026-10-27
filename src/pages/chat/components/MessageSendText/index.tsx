@@ -7,8 +7,22 @@ export interface MessageSendTextState {
   type: number;
 }
 
-export default class MessageSendText extends Component<any, MessageSendTextState> {
-  constructor(props) {
+/**
+ * 组件真实入参：唯一 caller 是 `ChatPanelSession/index.tsx:575`
+ * `<MessageSendText value={value} socketState={socketState} onSendMsg={this.handleSendMsg.bind(this)} />`。
+ * - `value` = `ChatPanelSessionState.value: string`（:515 解构 / :72 声明）；本组件只做真值判断
+ *   （:37 `visibility`），缺值语义按原样允许缺省，不补默认值。
+ * - `socketState` = `ChatPanelSessionProps.socketState: number`（:68）；组件内 `= 0` 默认保持。
+ * - `onSendMsg` = `handleSendMsg(value?: string)`（:303）的 bound 形态 → 原样取该域，不另造回调 DTO。
+ */
+export interface MessageSendTextProps {
+  value?: string | undefined;
+  socketState?: number | undefined;
+  onSendMsg: (value?: string) => void;
+}
+
+export default class MessageSendText extends Component<MessageSendTextProps, MessageSendTextState> {
+  constructor(props: MessageSendTextProps) {
     super(props);
     this.state = {
       type: config.inputMode,

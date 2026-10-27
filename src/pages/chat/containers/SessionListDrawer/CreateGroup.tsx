@@ -6,6 +6,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
 import * as actions from 'src/pages/chat/redux/actions';
+import type { ChatRawMessageWire } from '../../redux/types';
 import { createDiscussion } from 'src/pages/chat/utils/group';
 import createGroup from 'src/pages/Group/createGroup/load';
 
@@ -26,7 +27,17 @@ const CreateWrap = styled.div`
   }
 `;
 
-const CreateGroup = props => {
+/**
+ * props：connect 注入 `addUserSession`（`chat/redux/actions.ts:326-328` 真实签名
+ * `(id: string | undefined, msg: ChatRawMessageWire = {}, isOpen = true, cb?) => thunk`）。
+ * 只声明本组件真实调用的前两个入参；
+ * 后面的可选形参保持被忽略（不缩 ID 域、不造 msg DTO）。
+ */
+export interface CreateGroupProps {
+  addUserSession: (id: string | undefined, msg?: ChatRawMessageWire) => void;
+}
+
+const CreateGroup = (props: CreateGroupProps) => {
   const handleAddSession = () => {
     createDiscussion(undefined, (result, isGroup) => {
       if (isGroup) {

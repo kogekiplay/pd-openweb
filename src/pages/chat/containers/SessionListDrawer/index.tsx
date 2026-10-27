@@ -8,6 +8,7 @@ import { BgIconButton, LoadDiv } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import SearchMember from 'src/pages/chat/components/SearchMember';
 import * as actions from 'src/pages/chat/redux/actions';
+import type { ChatToolbarConfig } from 'src/pages/chat/redux/types';
 import * as socket from 'src/pages/chat/utils/socket';
 import type { RootState } from 'src/redux/types';
 import { pathCompletion } from 'src/utils/common';
@@ -29,7 +30,40 @@ const Wrap = styled.div`
   }
 `;
 
-const SessionListDrawer = props => {
+/**
+ * 原生 `Storage.setItem` 的**单一方法 input 视图**（type-only；Babel 发射后无代码；
+ * 本文件局部声明，不 import FavoriteDrawer 的私有类型）：
+ * - key / 返回类型派生自 `typeof localStorage.setItem`
+ *   （lib.dom.d.ts:35958 `(key: string, value: string): void`）；
+ * - 只增加本调用真实传的 boolean 域：WebIDL DOMString 转换在进入 native 前把它
+ *   ToString 成 "true"/"false"；本文件不做 String()、不加包装器/默认值/可选调用。
+ * 运行期仍是原 member call：receiver 仍是 localStorage、storage/方法 getter 各读 1 次、
+ * 两个实参求值顺序、boolean 值本身与 native 转换时机不变；
+ * 不是整体 Storage/DOM/Window 的 DTO 断言。
+ */
+export type NativeStorageSetItemWithBooleanValue = typeof localStorage.setItem & {
+  (key: Parameters<typeof localStorage.setItem>[0], value: boolean): ReturnType<typeof localStorage.setItem>;
+};
+
+/**
+ * props：
+ * - `toolbarConfig` / `socketState`：connect 注入的 `RootState['chat']` 真实切片（canonical
+ *   `ChatToolbarConfig`、socket 状态 number）；
+ * - `setToolbarConfig`：真实 action（`Partial<ChatToolbarConfig>` 入参）；
+ * - `setShowAddressBook`：真实 action（`actions.ts:1933 (isShowAddressBook: boolean) => AppThunk`，
+ *   dispatch 后返回 undefined）；
+ * - `embed`：own prop，保留原 `= false` 默认；真实调用
+ *   `windowChat/Chat.tsx:85 <SessionListDrawer embed={true} />`。
+ */
+export interface SessionListDrawerProps {
+  toolbarConfig: ChatToolbarConfig;
+  socketState: number;
+  setToolbarConfig: (config: Partial<ChatToolbarConfig>) => void;
+  setShowAddressBook: (isShowAddressBook: boolean) => void;
+  embed?: boolean | undefined;
+}
+
+const SessionListDrawer = (props: SessionListDrawerProps) => {
   const { toolbarConfig, setToolbarConfig, embed = false, socketState } = props;
   const { sessionListFixing } = toolbarConfig;
   const [searchValue, setSearchValue] = useState(null);
@@ -57,7 +91,7 @@ const SessionListDrawer = props => {
             }
             onClick={() => {
               setToolbarConfig({ sessionListFixing: !sessionListFixing });
-              localStorage.setItem('sessionListFixing', !sessionListFixing);
+              (localStorage.setItem as NativeStorageSetItemWithBooleanValue)('sessionListFixing', !sessionListFixing);
             }}
           />
         )}

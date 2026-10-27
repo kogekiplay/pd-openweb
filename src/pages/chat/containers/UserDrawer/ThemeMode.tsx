@@ -23,7 +23,21 @@ const Wrap = styled.div`
   }
 `;
 
-const themeModes = [
+/**
+ * picker 的真实值域：直接取既有全局声明 `window.themeMode?: 'light' | 'dark' | 'system'`
+ * （types/global.d.ts:538；router/globalEvents 启动按 localStorage 写入、个人设置切换时改写）。
+ * 注意：picker 含 `system`，而 `CHANGE_THEME_MODE` 事件 payload 只有 `dark`/`light`（下面两个
+ * `if` 分支原样保留）——两个域不混用。
+ */
+export type ThemeModeValue = NonNullable<typeof window.themeMode>;
+
+interface ThemeModeOption {
+  value: ThemeModeValue;
+  name: string;
+  icon: string;
+}
+
+const themeModes: ThemeModeOption[] = [
   {
     value: 'light',
     name: _l('浅色'),
@@ -44,7 +58,7 @@ const themeModes = [
 export default () => {
   const [themeMode, setThemeMode] = useState(localStorage.getItem('themeMode') || getDefaultThemeMode());
 
-  const onChange = value => {
+  const onChange = (value: ThemeModeValue) => {
     setThemeMode(value);
     setBodyThemeMode(value);
     window.themeMode = value;

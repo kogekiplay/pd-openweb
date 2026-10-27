@@ -17,6 +17,16 @@ import { PopoverWrap, Wrap } from '../ChatList/Avatar/styled';
 import renderHelpPopover from './Help';
 import ThemeMode from './ThemeMode';
 
+/**
+ * 本抽屉的真实入参：唯一 caller 是 `ChatList/Avatar/index.tsx:58-63`，传
+ * `onClose` 与 `onChangeSettingDrawerVisible`；组件内部 `onClose()` 8 处，
+ * `onChangeSettingDrawerVisible(true, 'toolbar')`（:195）/ `(true, 'base')`（:205）——navType 只有这两个字面量。
+ */
+export interface UserDrawerProps {
+  onClose: () => void;
+  onChangeSettingDrawerVisible: (visible: boolean, navType: 'toolbar' | 'base') => void;
+}
+
 const renderLanguagePopover = () => {
   return (
     <PopoverWrap>
@@ -46,7 +56,7 @@ const renderLanguagePopover = () => {
   );
 };
 
-const renderProjectsPopover = props => {
+const renderProjectsPopover = (props: Pick<UserDrawerProps, 'onClose'>) => {
   return (
     <PopoverWrap style={{ maxHeight: 600, overflowY: 'auto' }}>
       {_.map(md.global.Account.projects, project => {
@@ -84,7 +94,7 @@ const logout = () => {
   });
 };
 
-export default props => {
+export default (props: UserDrawerProps) => {
   const { onClose, onChangeSettingDrawerVisible } = props;
 
   const { Account } = md.global;

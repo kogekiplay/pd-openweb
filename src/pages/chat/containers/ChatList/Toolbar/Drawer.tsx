@@ -9,7 +9,9 @@ import Favorite from 'src/pages/chat/containers/FavoriteDrawer';
 import Mingo from 'src/pages/chat/containers/MingoDrawer';
 import SessionList from 'src/pages/chat/containers/SessionListDrawer';
 import * as actions from 'src/pages/chat/redux/actions';
+import type { ChatToolbarConfig } from 'src/pages/chat/redux/types';
 import type { RootState } from 'src/redux/types';
+import type { ReactElement } from 'react';
 
 const FixingWrap = styled.div`
   border-left: 2px solid var(--color-border-secondary);
@@ -37,7 +39,41 @@ const DEFAULT_MAX_DRAWER_WIDTH = 800;
 const MIN_DRAWER_WIDTH = 250;
 const getBodyWidth = () => _.get(document.body, 'clientWidth', window.innerWidth || 0);
 
-const ToolbarDrawer = props => {
+
+/** 三个真实抽屉（三处 ToolbarDrawer 调用点写死这些字面量）。 */
+type ToolbarDrawerType = 'mingo' | 'sessionList' | 'favorite';
+
+export interface ToolbarDrawerProps {
+  type: ToolbarDrawerType;
+  /** 来自 Number(localStorage.getItem(...))，恒为 number。 */
+  width: number;
+  fixing: boolean;
+  visible: boolean;
+  onClose: () => void;
+  /**
+   * 唯一的受控注入 slot：组件体里 `cloneElement(props.children, { drawerVisible: visible })`。
+   * 三个真实调用点传的都是 JSX 元素（<Mingo /> / <SessionList /> / <Favorite />）；
+   * `drawerVisible` 可缺，因为它是 clone 注入**之前**的形态，注入值就是真实 boolean 的 visible。
+   * 这不是 wire DTO，也不代表组件整体可以被 any 化。
+   */
+  children: ReactElement<{ drawerVisible?: boolean | undefined }>;
+}
+
+export interface DrawerWrapProps {
+  toolbarConfig: ChatToolbarConfig;
+  setToolbarConfig: (config: Partial<ChatToolbarConfig>) => void;
+}
+
+/**
+ * **单一方法 input 视图**：只放宽 `localStorage.setItem` 这一个方法的 value 入参为 number，
+ * key / return 都从原生签名派生（Parameters / ReturnType），不整体 cast Storage、不做 wrapper。
+ * 调用点仍写 `(localStorage.setItem as View)(…)` —— 括号里的 MemberExpression 仍是引用，
+ * 所以 receiver 仍是 localStorage；number → string 仍由 WebIDL 在 setItem 内部完成。
+ */
+export type NativeSetItemWithNumberValue = typeof localStorage.setItem & {
+  (key: Parameters<typeof localStorage.setItem>[0], value: number): ReturnType<typeof localStorage.setItem>;
+};
+const ToolbarDrawer = (props: ToolbarDrawerProps) => {
   const { type, fixing, visible, width, onClose } = props;
   const [dragMaskVisible, setDragMaskVisible] = useState(false);
   const bodyWidth = getBodyWidth();
@@ -86,10 +122,10 @@ const ToolbarDrawer = props => {
             }}
             min={minDrawerWidht}
             max={maxDrawerWidht}
-            onChange={value => {
+            onChange={(value: number) => {
               setDragLeft(value);
               const width = bodyWidth - value - rightToolbarWidth;
-              localStorage.setItem(`${type}DrawerWidth`, width);
+              (localStorage.setItem as NativeSetItemWithNumberValue)(`${type}DrawerWidth`, width);
               setDragMaskVisible(false);
             }}
           />
@@ -149,7 +185,7 @@ const ToolbarDrawer = props => {
   );
 };
 
-const DrawerWrap = props => {
+const DrawerWrap = (props: DrawerWrapProps) => {
   const { toolbarConfig, setToolbarConfig } = props;
   const { mingoVisible, mingoFixing, sessionListVisible, sessionListFixing, favoriteVisible, favoriteFixing } =
     toolbarConfig;

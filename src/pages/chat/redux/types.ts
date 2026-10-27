@@ -1064,6 +1064,56 @@ export interface ChatToolbarConfig {
   isOpenSearch?: boolean | undefined;
   /** 工具名称显示开关：ChatList/Toolbar 的渲染条件与账号设置都会读写。 */
   isShowToolName?: boolean | undefined;
+  /**
+   * 用户抽屉可见（ChatList/Avatar 的 `open={userDrawerVisible}`）。
+   * 初始 `getToolbarConfig()` **不含**此键，故 optional + 显式 undefined。
+   * 写入方全是字面量 `false`/`true`（Avatar:24/:50/:59、Toolbar:101/:155、Mingo:70）。
+   */
+  userDrawerVisible?: boolean | undefined;
+  /**
+   * 设置抽屉可见（ChatList/Avatar 的 `open={settingDrawerVisible}`）。
+   * 初始 `getToolbarConfig()` **不含**此键，故 optional + 显式 undefined。
+   * 写入方：字面量 `false`（Avatar:25/:80/:87、Toolbar:102/:155、Mingo:71）与
+   * `onChangeSettingDrawerVisible` 的 `visible` 形参（Avatar:60，该形参在父级是隐式 any）。
+   */
+  settingDrawerVisible?: boolean | undefined;
+  /**
+   * 收藏开关（账号设置里的 `isOpenFavorite`）。
+   * 初始 `getToolbarConfig()` **不含**此键，故 optional + 显式 undefined。
+   * 唯一**类型受检**的写入方是 `ChatList/index.tsx:65` 的 `actions.setToolbarConfig({ isOpenFavorite })`，
+   * 其值来自 `md.global.Account.isOpenFavorite`（`types/global.d.ts` 声明为 `boolean`）；
+   * `SettingDrawer/Toolbar.tsx` 里那处写 `!value` 的代码**整段被注释掉**（:78-92），不是活写入点。
+   */
+  isOpenFavorite?: boolean | undefined;
+  /**
+   * 消息总开关（`common.settingOptions.isOpenMessage = 24`）。
+   * 初始 `getToolbarConfig()` **不含**此键，故 optional + 显式 undefined。
+   * 唯一真实写入方：`ChatList/index.tsx:54/:67` 的 `actions.setToolbarConfig({ isOpenMessage })`，
+   * 值来自 `md.global.Account.isOpenMessage`（`types/global.d.ts:71` 与
+   * `AccountSettingModel:1729` **两处都声明为 `boolean`**）。
+   * 本切片内**无读取方**（`SettingDrawer/Toolbar.tsx:37` 读的是父级 `accountSettings`，不是本切片）。
+   */
+  isOpenMessage?: (typeof md.global.Account)['isOpenMessage'] | undefined;
+  /**
+   * 常用应用展示方式。
+   * 初始 `getToolbarConfig()` **不含**此键，故 optional + 显式 undefined。
+   * 唯一**类型受检**的写入方是 `ChatList/index.tsx:73` 的 `actions.setToolbarConfig({…})`，
+   * 其值来自 `md.global.Account.commonAppShowType`（`types/global.d.ts:77`，声明为 **`number`**）。
+   * 【未假称 enum 已闭合】wire 的 canonical 是 `HapApi.MD.Enum.CommonAppShowType = 1 | 2`
+   * （`types/hap-api.d.ts:1261`，`AccountSettingModel:1740` 用的是它），但本切片唯一的全局入口
+   * `md.global.Account` 声明为 `number`；故按**实际 producer 域**派生为 `number | undefined`，
+   * 与同块既有 `messageListShowType?: number | undefined` 的处理一致。
+   */
+  commonAppShowType?: (typeof md.global.Account)['commonAppShowType'] | undefined;
+  /**
+   * 常用应用打开方式。
+   * 初始 `getToolbarConfig()` **不含**此键，故 optional + 显式 undefined。
+   * 唯一**类型受检**的写入方是 `ChatList/index.tsx:74`；值来自
+   * `md.global.Account.commonAppOpenType`（`types/global.d.ts:78`，声明为 **`number`**）。
+   * 同理：canonical wire enum 是 `HapApi.MD.Enum.CommonAppOpenType = 1 | 2`（`hap-api.d.ts:1262`），
+   * 但全局入口未验证为 enum，故不假称闭合，按实际 `number | undefined` 派生。
+   */
+  commonAppOpenType?: (typeof md.global.Account)['commonAppOpenType'] | undefined;
   /** 其余按功能扩展的 UI 开关 */
   [key: string]: unknown;
 }

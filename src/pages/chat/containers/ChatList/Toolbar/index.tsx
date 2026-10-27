@@ -71,7 +71,18 @@ const handleOpenGlobalSearch = () => {
   });
 };
 
-const Toolbar = props => {
+/**
+ * 四个注入 props，全部从 canonical 来源派生：
+ * - toolbarConfig / sessionList / socketState 来自 RootState['chat'] 的真实切片类型
+ *   （reducer 已把 sessionList 定型为 ChatSession[]、socketState 为 number）；
+ * - setToolbarConfig 用 actions 里真实 action creator 的类型（connect + bindActionCreators 注入）。
+ * 不另立 SessionModel，也不手标 reduce 的 count/item —— 它们从 sessionList 的真实元素类型推出。
+ */
+type ToolbarInjectedProps = Pick<RootState['chat'], 'toolbarConfig' | 'sessionList' | 'socketState'> & {
+  setToolbarConfig: typeof actions.setToolbarConfig;
+};
+
+const Toolbar = (props: ToolbarInjectedProps) => {
   const { sessionList, socketState } = props;
   const { toolbarConfig, setToolbarConfig } = props;
   const { ss, ac } = getAppFeaturesVisible();
@@ -169,6 +180,12 @@ const Toolbar = props => {
     </Wrap>
   );
 };
+
+/**
+ * 仅类型导出：把真实 render 函数的 typeof 暴露给**类型层**探针，
+ * 以便从 §Parameters<ToolbarRender>[0]§ 验证四个注入输入（不导出任何运行期值）。
+ */
+export type ToolbarRender = typeof Toolbar;
 
 export default connect(
   (state: RootState) => ({

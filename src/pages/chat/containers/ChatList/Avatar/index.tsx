@@ -9,10 +9,16 @@ import User from 'src/pages/chat/containers/UserDrawer';
 import * as actions from 'src/pages/chat/redux/actions';
 import Avatar from 'src/pages/PageHeader/components/Avatar';
 import type { RootState } from 'src/redux/types';
+import type { UserDrawerProps } from 'src/pages/chat/containers/UserDrawer';
 
 const AvatarSetting = props => {
   const { embed = false, toolbarConfig, setToolbarConfig, closeSessionPanel } = props;
-  const [defaultNavType, setDefaultNavType] = useState(null);
+  /**
+   * 初值仍是 `null`，唯一 writer 是 :61 `setDefaultNavType(navType)`，而 navType 的域来自
+   * UserDrawer 的真实形参 `onChangeSettingDrawerVisible(visible, navType)`（'toolbar' | 'base'）。
+   * 用 Parameters 派生同一域 + 原有 null 初值，不另造 string/enum，也不改 init/body/调用次数。
+   */
+  const [defaultNavType, setDefaultNavType] = useState<Parameters<UserDrawerProps['onChangeSettingDrawerVisible']>[1] | null>(null);
   const { userDrawerVisible, settingDrawerVisible } = toolbarConfig;
   return (
     <Fragment>
