@@ -13,9 +13,22 @@ import ToolbarDrawer from './Toolbar/Drawer';
 import type { AppDispatch } from 'src/redux/types';
 import './index.less';
 
+/**
+ * 真实注入 props：只有两个键，全部来自 canonical 来源。
+ * - dispatch：connect 注入的 AppDispatch（socketEvent 的 .call(this) 也要求 this.props.dispatch 存在，
+ *   SocketEventHost 就是 { props: { dispatch: AppDispatch } }）；
+ * - toolbarConfig：RootState['chat']['toolbarConfig']。
+ * 原来 Component<{ dispatch; [key: string]: any }, any> 的宽索引在这里被替换成有限两键，
+ * 并非"参数投影后仍把类留在 any"。
+ */
+interface ChatProps {
+  dispatch: AppDispatch;
+  toolbarConfig: RootState['chat']['toolbarConfig'];
+}
+
 // connect 包过、会收到 dispatch；socketEvent 里的函数用 .call(this) 调，要求 this.props.dispatch 存在
-class Chat extends Component<{ dispatch: AppDispatch; [key: string]: any }, any> {
-  constructor(props) {
+class Chat extends Component<ChatProps> {
+  constructor(props: ChatProps) {
     super(props);
   }
   override componentDidMount() {
@@ -24,7 +37,8 @@ class Chat extends Component<{ dispatch: AppDispatch; [key: string]: any }, any>
     // 注册事件
     socket.socketInitEvent.call(this);
     // 回复窗口
-    window.reloadChatPanel = _.debounce((id, isGroup) => {
+    // 字面量 bracket 与点访问是同一个 [[Set]]；这里只纠正 opaque index 的语法，不认证 Window 字段含义
+    window['reloadChatPanel'] = _.debounce((id, isGroup) => {
       if (isGroup) {
         this.props.dispatch(actions.addGroupSession(id));
       } else {
@@ -32,7 +46,7 @@ class Chat extends Component<{ dispatch: AppDispatch; [key: string]: any }, any>
       }
     });
     // 更新草稿
-    window.updateChatSessionList = _.debounce((id, value) => {
+    window['updateChatSessionList'] = _.debounce((id, value) => {
       this.props.dispatch(
         actions.updateSessionList({
           id,
@@ -126,6 +140,12 @@ class Chat extends Component<{ dispatch: AppDispatch; [key: string]: any }, any>
     );
   }
 }
+
+/**
+ * 仅类型导出：把真实 **class 构造器** 的 typeof 暴露给类型层探针，
+ * 以便从 ConstructorParameters<ChatListConstructor>[0] 验证实例 props（不导出运行期值）。
+ */
+export type ChatListConstructor = typeof Chat;
 
 export default connect((state: RootState) => {
   const { toolbarConfig } = state.chat;

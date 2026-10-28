@@ -1,5 +1,11 @@
 # 全仓 TypeScript 严格化目标
 
+## 2026-10-28 HAP 7.5.3 上的聊天父级合同
+
+在已部署的 9f1ca10b0 基线上精确复核七路径候选：正式全仓 strict 48,183→48,167，逐文件/错误码新增 0，compiler 实际退出 1（存量债）；Chat 90 条诊断仍需后续处理。39 份实际 Main 公开正负探针自身诊断 0、传递诊断 27,284、TS2578/TS2344 均 0。六个产品文件在真实 production 与 development JSX 两条编译路径比较：4 文件原始字节相同，2 文件仅三个点式/字面量属性拼写不同，受限对称归一后 12/12 相同；新增 Drawer 声明纯 type。
+
+只移除实际完整程序零诊断的 ChatList、Mingo、SettingDrawer 三条 strict-debt，2,947→2,944；Avatar 1、RenderAddressBook 2、FileConfirm 1 条诊断仍保留。有限输入合同不等于整类内部闭环：既有 any、opaque common 查表和 FileConfirm 异步实例字段均未认证。原七 dirty 在受保护工作树逐字节保留，通过隔离树提交；既有 381/C4/30s/隔离失败与正常发布门禁不放宽。完整编译、发射与原始失败收据在工作记录 20261028-seven-contracts-on-753。生产升级与管理端完整性验收属于独立 9f1ca10b0 发布，不能把新合同候选冒称已生产。
+
 ## 2026-10-20 检索加速索引设置
 
 FormIndexSetting/CreateIndex的实际Props/State、字段候选/排序及四个写API合同有限化，102条严格诊断清零；全仓50,577→50,475，逐(文件,错误码)无新增，fast8,400→8,385/2,263keys，debt3,056→3,054，clean1,724/4,778。16组完整历史交互、20个精确非法编译与2项行为变异通过，三完整产品模块Babel字节同基准，281/281正式release/全部门禁/四项编译、runtime与publish通过。源码47024c3313的17,098文件候选已完整冻结，尚未上传/部署；生产仍4dcca，Chat3f6c仍待发送者合同与三个消费者修正。详见index-setting-strict-20261020.md。全仓正式strict仍未完成。

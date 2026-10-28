@@ -7,6 +7,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Tooltip } from 'ming-ui/antd-components';
 import * as actions from 'src/pages/chat/redux/actions';
+import type { ChatToolbarConfig } from 'src/pages/chat/redux/types';
 import type { RootState } from 'src/redux/types';
 import { emitter } from 'src/utils/common';
 import mingoActiveHover from './images/mingo-active-hover.gif';
@@ -35,7 +36,18 @@ const Wrap = styled.div`
   }
 `;
 
-const Mingo = props => {
+/**
+ * props：connect 注入 `toolbarConfig`（`RootState['chat'].toolbarConfig`，canonical `ChatToolbarConfig`，
+ * 已有 `mingoVisible` 等 named bool 槽）与 `setToolbarConfig`
+ * （真实 action，`Partial<ChatToolbarConfig>` 入参）。
+ * 不新增本地 DTO/any，不复制全局类型。
+ */
+export interface ChatListMingoProps {
+  toolbarConfig: ChatToolbarConfig;
+  setToolbarConfig: (config: Partial<ChatToolbarConfig>) => void;
+}
+
+const Mingo = (props: ChatListMingoProps) => {
   const { toolbarConfig, setToolbarConfig } = props;
   const { mingoVisible } = toolbarConfig;
   const { isOpenMingoAI } = toolbarConfig;
@@ -44,7 +56,7 @@ const Mingo = props => {
   const [clickNow, setClickNow] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const wrapRef = useRef(null);
+  const wrapRef = useRef<HTMLDivElement | null>(null);
   // 首次访问引导气泡：提示右下角 mingo 可以搭建应用；点击 mingo 后写 localStorage，不再显示
   const [buildTipVisible, setBuildTipVisible] = useState(() => !localStorage.getItem('mingoBuildTipDismissed'));
   const [buildTipPos, setBuildTipPos] = useState<{ left: number; top: number } | null>(null);
@@ -204,6 +216,12 @@ const Mingo = props => {
     </Fragment>
   );
 };
+
+/**
+ * 公开 render 合同：Mingo 组件本身的函数类型（type-only 导出，不产生运行时代码）。
+ * probe 用它取 `Parameters<…>[0]` 做真实绑定断言，而不是观察组件内部私有 hook/ref。
+ */
+export type ChatListMingoRender = typeof Mingo;
 
 export default connect(
   (state: RootState) => ({

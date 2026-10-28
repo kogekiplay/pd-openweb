@@ -13,7 +13,27 @@ import { getPathWithoutSubPath } from 'src/utils/common';
 
 const LoadableAddressBook = lazy(() => import('src/pages/chat/lib/addressBook'));
 
-const RenderAddressBook = props => {
+/**
+ * bound action 视图：保留真实 action 的 Parameters；
+ * 返回值按 bindActionCreators 的真实形态忽略为 void（参数/返回都从真实 action 派生，
+ * 不手抄 DTO、不新增 any）。
+ */
+type BoundAction<T extends (...args: never[]) => unknown> = (...args: Parameters<T>) => void;
+
+/**
+ * props：`showAddressBook` 来自 `RootState['chat'].showAddressBook`（boolean）；5 个动作全部从
+ * 真实 action 的 `Parameters` 派生（bound 后返回 void），不手抄参数 DTO、不新增 any/宽索引。
+ */
+export interface RenderAddressBookProps {
+  showAddressBook: boolean;
+  setShowAddressBook: BoundAction<typeof actions.setShowAddressBook>;
+  addUserSession: BoundAction<typeof actions.addUserSession>;
+  addGroupSession: BoundAction<typeof actions.addGroupSession>;
+  updateSessionList: BoundAction<typeof actions.updateSessionList>;
+  addSysSession: BoundAction<typeof actions.addSysSession>;
+}
+
+const RenderAddressBook = (props: RenderAddressBookProps) => {
   const { showAddressBook } = props;
 
   useEffect(() => {
@@ -180,6 +200,12 @@ const RenderAddressBook = props => {
     )
   );
 };
+
+/**
+ * 公开 render 合同：组件自身的函数类型（type-only，不产生运行时代码），供 probe 用
+ * `Parameters<…>[0]` 做真实绑定断言。
+ */
+export type RenderAddressBookRender = typeof RenderAddressBook;
 
 export default connect(
   (state: RootState) => ({

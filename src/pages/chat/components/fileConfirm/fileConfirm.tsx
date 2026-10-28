@@ -13,7 +13,7 @@ import type { UploaderFile } from 'src/utils/uploader/types';
  * 宽 any 索引带进公开合同；`IsAny<DTO> === false` 也挡不住索引里的 any。
  * 用 `Pick` **派生**（不手抄三字段 DTO），`getNative()` 的真实返回域（`File`）原样保留。
  */
-type FileConfirmFile = Pick<UploaderFile, 'name' | 'size' | 'getNative'>;
+export type FileConfirmFile = Pick<UploaderFile, 'name' | 'size' | 'getNative'>;
 
 /** 聊天里发文件前的确认弹层（可改名）。由 SendToolbar 的 recurShowFileConfirm 逐个文件调起：
  *  yesFn 之后弹下一个、全部确认完才 up.start()；noFn 把这个文件移出上传队列再弹下一个。 */
@@ -249,7 +249,18 @@ const fileConfirmMethods = defineMethods<FileConfirmFields>()({
 FileConfirm.prototype = fileConfirmMethods;
 type FileConfirmInstance = FileConfirmFields & typeof fileConfirmMethods;
 
+/**
+ * 极窄的原生可构造输入视图：只声明原生 JS 的 `new` 一定返回 object —— 因为调用点把结果丢弃
+ * （见下方 default export）。**不**声明 FileConfirmInstance：$dialog 等字段是 init 异步初始化后
+ * 才存在的，旧 Fields 也不等于构造完成后的完整 DTO，所以这里不认证任何实例字段。
+ * 保留 typeof FileConfirm 原有的 callable 签名，仅以 intersection 补一个 construct 签名。
+ */
+export type NativeConstructibleFileConfirm = typeof FileConfirm & {
+  /** 入参直接从真实函数签名派生，不手抄两参；返回值只承诺原生 new 的 object。 */
+  new (...args: Parameters<typeof FileConfirm>): object;
+};
+
 export default function (file: FileConfirmFile, callback: FileConfirmFields['callback']) {
   // 原先 return fileConfirm.dialog —— 实例上从来没有 dialog 这个字段，一直返回 undefined；唯一的调用方也不用返回值
-  new FileConfirm(file, callback);
+  new (FileConfirm as NativeConstructibleFileConfirm)(file, callback);
 }
