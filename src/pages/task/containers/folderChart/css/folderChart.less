@@ -9,7 +9,7 @@
     background: var(--color-background-primary);
   }
   .folderChartBarLeft {
-    margin-right: var(--space-5);
+    margin-right: 20px;
     flex: 7;
     font-size: 0;
     > div {
@@ -17,7 +17,7 @@
       text-align: center;
       box-sizing: border-box;
       display: inline-block;
-      font-size: var(--font-xs);
+      font-size: 12px;
       color: rgba(0, 0, 0, 0.5);
       height: 60px;
       vertical-align: top;
@@ -45,7 +45,7 @@
       text-align: center;
       box-sizing: border-box;
       display: inline-block;
-      font-size: var(--font-md);
+      font-size: 14px;
       color: rgba(0, 0, 0, 0.5);
       height: 60px;
       vertical-align: top;
@@ -80,7 +80,7 @@
       border-bottom: 3px solid var(--color-white);
       height: 57px;
       line-height: 60px;
-      font-size: var(--font-sm);
+      font-size: 13px;
       cursor: pointer;
       transition: border-color 0.3s ease-in-out;
       box-sizing: initial;
@@ -95,7 +95,7 @@
     color: var(--color-text-secondary);
     li {
       display: inline-block;
-      font-size: var(--font-xs);
+      font-size: 12px;
       padding: 0 10px;
       height: 32px;
       line-height: 32px;
@@ -107,19 +107,19 @@
     }
     li:nth-child(2) {
       border-width: 1px;
-      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+      border-radius: 5px 0 0 5px;
     }
     li:last-child {
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      border-radius: 0 5px 5px 0;
     }
     li.activeClass {
       color: var(--color-white);
     }
     .folderChartTimeTxt {
-      font-size: var(--font-xs);
+      font-size: 12px;
       margin-right: 15px;
     }
-    .ant-picker-range {
+    .hap-picker-range {
       padding-top: 0;
       padding-bottom: 0;
     }
@@ -128,10 +128,10 @@
     margin-top: 15px;
     width: 100%;
     .icon-error1 {
-      font-size: var(--font-lg);
+      font-size: 16px;
       transform: rotate(180deg);
       display: inline-block;
-      color: color-mix(in srgb, var(--color-overlay-ink) 20%, transparent);
+      color: rgba(0, 0, 0, 0.2);
       margin-left: 5px;
       vertical-align: top;
       margin-top: 2px;
@@ -151,7 +151,7 @@
       margin-left: 0;
     }
     .folderChartBoxTitle {
-      font-size: var(--font-sm);
+      font-size: 13px;
       color: var(--color-text-secondary);
       span.overflow_ellipsis {
         max-width: 280px;
@@ -186,17 +186,17 @@
       display: inline-block;
       vertical-align: top;
       margin-right: 10px;
-      margin-top: var(--space-1);
+      margin-top: 4px;
       cursor: pointer;
       color: var(--color-text-disabled);
     }
     .folderChartChargeBtn {
-      font-size: var(--font-xs);
-      border-radius: var(--radius-sm);
+      font-size: 12px;
+      border-radius: 3px;
       border: 1px solid var(--color-text-disabled);
       height: 28px;
       line-height: 28px;
-      padding: 0 10px 0 var(--space-3);
+      padding: 0 10px 0 12px;
       display: inline-block;
       cursor: pointer;
       .icon-arrow-down-border {
@@ -212,7 +212,7 @@
       position: absolute;
       top: 35px;
       right: 0;
-      font-size: var(--font-xs);
+      font-size: 12px;
       z-index: 100;
       .folderChartChargeHead {
         padding: 0 14px;
@@ -264,7 +264,7 @@
       .folderChartChargeOperator {
         color: var(--color-text-secondary);
         text-align: right;
-        margin-top: var(--space-3);
+        margin-top: 12px;
         span {
           display: inline-block;
           cursor: pointer;
@@ -290,7 +290,7 @@
     text-align: center;
     position: relative;
     background-color: rgba(255, 255, 255, 0.5);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     box-sizing: initial;
     .Font17 {
       padding-top: 145px;
@@ -304,7 +304,19 @@
     }
   }
 }
-.folderChartMaxView .mui-dialog-body .folderChartBox {
+.AppTask .folderChartModel,
+.folderChartMaxView .folderChartModel {
+  .g2-tooltip {
+    background-color: var(--color-background-card) !important;
+    box-shadow: var(--shadow-lg) !important;
+    color: var(--color-text-title) !important;
+    .g2-tooltip-title {
+      color: var(--color-text-secondary) !important;
+    }
+  }
+}
+
+.folderChartMaxView .hap-modal-body .folderChartBox {
   margin-top: 0;
   .folderChartBoxModel {
     margin-bottom: 0;
@@ -315,7 +327,7 @@
     height: 550px !important;
   }
   .folderChartBoxTitle {
-    font-size: var(--font-lg);
+    font-size: 16px;
     span {
       vertical-align: top;
       margin-top: 3px;
@@ -327,7 +339,7 @@
   }
   .folderChartMaxHeight {
     height: 460px;
-    margin-top: var(--space-5);
+    margin-top: 20px;
     overflow: hidden;
     overflow-y: auto;
   }

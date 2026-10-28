@@ -91,7 +91,7 @@ export default class Widgets extends Component<any, any> {
       getType: 7,
       status: 1,
       searchType: 1,
-      controlId: window.isPublicWorksheet ? control.controlId : undefined,
+      controlId,
     }).then(result => {
       const row = _.find(result.data, { rowid: rowId });
 

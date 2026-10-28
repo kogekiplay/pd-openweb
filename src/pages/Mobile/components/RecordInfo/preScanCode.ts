@@ -309,6 +309,8 @@ const getRelateData = (control: Record<string, any> = {}, content, extra = {}, w
   const requestParams = {
     appId,
     worksheetId: control.dataSource,
+    relationWorksheetId: worksheetInfo.worksheetId,
+    controlId: control.controlId,
     viewId,
     searchType: 1,
     pageSize: 20,

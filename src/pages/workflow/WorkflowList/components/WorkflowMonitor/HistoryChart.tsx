@@ -130,6 +130,10 @@ export default class HistoryChart extends PureComponent<any, any> {
         offset: -40,
         offsetY: -50,
         domStyles: {
+          'g2-tooltip': {
+            backgroundColor: 'var(--color-background-card)',
+            boxShadow: 'var(--shadow-lg)',
+          },
           'g2-tooltip-list-item': { textAlign: 'left', color: 'var(--color-text-title)' },
           'g2-tooltip-title': { color: 'var(--color-text-secondary)' },
         },
