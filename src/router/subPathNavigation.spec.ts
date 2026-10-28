@@ -154,7 +154,8 @@ files.forEach(file => {
   );
   assert(!source.includes('`${location.search}&sys_lang=${sysDefaultLang}`'));
   assert(source.includes("url.searchParams.set('sys_lang', sysDefaultLang);"));
-  assert(source.includes('location.href = pathCompletion(`${url.pathname}${url.search}`);'));
+  // 7.5.3 replaces the language intermediary so Back cannot recreate the language redirect loop.
+  assert(source.includes('location.replace(pathCompletion(`${url.pathname}${url.search}`));'));
   // Identity switches must cross namespaces; staying in /portal recreates the reload loop.
   assert(source.includes('getPortalIdentityRedirect({'));
   assert(source.includes('location.href = identityRedirect;'));
