@@ -1,61 +1,82 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useDrag, useDrop } from 'react-dnd-latest';
+import { useEffect, useRef, useState } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
 import cx from 'classnames';
 import update from 'immutability-helper';
 import _, { find, flatten, get, head, includes, last, pick, some } from 'lodash';
 import styled from 'styled-components';
-import { withOpeners } from 'ming-ui/hooks/useFunctionWrapComponent';
-import {
-  batchCopyWidgets,
-  batchShiftWidgets,
-  deleteSection,
-  handleAddWidgets,
-} from 'src/pages/widgetConfig/internal/editorData';
-import { handleAdvancedSettingChange } from 'src/utils/domain/control/advancedSetting';
-import { notInsetSectionTab } from 'src/utils/domain/control/capabilities';
-import { SUPPORT_RELATE_SEARCH } from 'src/utils/domain/control/config';
+import type { FormControl } from 'src/utils/controlTypes';
+import { SUPPORT_RELATE_SEARCH } from '../config';
+import { DRAG_ACCEPT, DRAG_DISTANCE, DRAG_ITEMS, DRAG_MODE, WHOLE_SIZE } from '../config/Drag';
 import {
   genWidgetRowAndCol,
   getDefaultSizeByData,
-  isFullLineControl,
   isTabSheetList,
+  notInsetSectionTab,
   putControlByOrder,
   resetWidgets,
-} from 'src/utils/domain/control/editorLayout';
-import { changeWidgetSize, getPathById, WHOLE_SIZE } from 'src/utils/domain/control/layout';
-import { getVerifyInfo } from 'src/utils/domain/control/validation';
-import { DRAG_ACCEPT, DRAG_DISTANCE, DRAG_ITEMS, DRAG_MODE } from '../config/Drag';
-import { useCreateTemplateDialog } from '../util/createTemplate';
+} from '../util';
+import { createTemplateDialog } from '../util/createTemplate';
+import { batchCopyWidgets, batchShiftWidgets, deleteSection, handleAddWidgets } from '../util/data';
 import { batchRemoveItems, insertNewLine, insertToCol, insertToRowEnd, isFullLineDragItem } from '../util/drag';
+import { getVerifyInfo, handleAdvancedSettingChange } from '../util/setting';
+import { changeWidgetSize, getPathById, isFullLineControl } from '../util/widgets';
 import WidgetOperation from './components/WidgetOperation';
 import WidgetDisplay from './widgetDisplay';
+
+/**
+ * 表单设计器里拖拽控件/标签页时携带的 item。
+ * 构造点见下面的 useDrag；canDrop / hover 里读 id、enumType、data。
+ */
+interface WidgetDragItem {
+  type?: string;
+  /** 被拖控件的 controlId */
+  id?: string;
+  /** 在布局二维数组里的位置 */
+  path?: number[];
+  data?: FormControl;
+  widgetType?: number;
+  /** 分段/标签页等结构件用它区分 */
+  enumType?: string;
+}
+
+/** 放下后 drop target 回的结果，end() 里据此决定怎么落位 */
+interface WidgetDropResult {
+  mode?: string;
+  rowIndex?: number;
+  path?: number[];
+  location?: string;
+  sectionId?: string;
+  activePath?: number[];
+  /** 落点是哪一类容器（决定 DRAG_ACCEPT 走哪一档） */
+  displayItemType?: string;
+}
 
 const DisplayItemWrap = styled.div`
   align-self: stretch;
   position: relative;
   box-sizing: border-box;
   list-style: none;
-  ${props => (props.$isTab ? '' : 'padding: 8px 12px;')}
+  ${props => (props.isTab ? '' : 'padding: var(--space-2) var(--space-3);')}
   min-height: 48px;
   cursor: grab;
   transition: box-shadow 0.25s ease-in-out;
   transform: translate3d(0, 0, 0);
-  margin-top: ${props => (props.$row && !props.$isTab ? '2px' : '')};
-  margin-left: ${props => (props.$col ? '4px' : '')};
+  margin-top: ${props => (props.row && !props.isTab ? '2px' : '')};
+  margin-left: ${props => (props.col ? '4px' : '')};
   &.isInvalid {
     background-color: rgba(253, 154, 39, 0.12);
   }
   &.isActive,
   &:hover {
-    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.15);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 15%, transparent);
     background-color: var(--color-background-primary);
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     & > div:nth-child(1) > .operationWrap {
       visibility: visible;
     }
   }
   &.isActive {
-    box-shadow: 0 0 0 2px rgba(33, 150, 243, 1);
+    box-shadow: 0 0 0 2px var(--color-primary);
   }
   &.isBatchActive {
     box-shadow: 0 0 0 2px var(--batch-active-border) !important;
@@ -71,10 +92,10 @@ const DisplayItemWrap = styled.div`
   }
   .drag-top,
   .drag-view_top {
-    top: ${props => (props.$isTab ? '-8px' : '-2px')};
+    top: ${props => (props.isTab ? '-8px' : '-2px')};
   }
   .drag-bottom {
-    bottom: ${props => (props.$isTab ? '-8px' : '-2px')};
+    bottom: ${props => (props.isTab ? '-8px' : '-2px')};
   }
   .horizonDragDir {
     position: absolute;
@@ -90,12 +111,12 @@ const DisplayItemWrap = styled.div`
     right: -2px;
   }
   .verifyInfo {
-    margin-top: 8px;
-    color: var(--color-error);
+    margin-top: var(--space-2);
+    color: var(--color-error-text);
   }
 `;
 
-function DisplayItem(props) {
+export default function DisplayItem(props) {
   const {
     widgets = [],
     activeWidget = {},
@@ -118,7 +139,7 @@ function DisplayItem(props) {
     settingPanelVisible,
     setPanelVisible = () => {},
     styleInfo = {},
-  } = props;
+  }: { allControls: FormControl[]; [key: string]: any } = props;
   const { type, controlId, dataSource, sourceControlId } = data;
   const { titlestorage } = styleInfo.info || {};
   const { worksheetId: globalSheetId } = globalSheetInfo;
@@ -134,7 +155,7 @@ function DisplayItem(props) {
   };
 
   // 判断是否能同级拖拽,
-  const isCanDragSameRow = item => {
+  const isCanDragSameRow = (item: WidgetDragItem) => {
     if (item.type === DRAG_ITEMS.DISPLAY_ITEM) {
       if (item.id === controlId) return false;
 
@@ -153,7 +174,8 @@ function DisplayItem(props) {
     return true;
   };
 
-  const [dragCollectProps, drag] = useDrag({
+  const [dragCollectProps, drag] = useDrag<WidgetDragItem, WidgetDropResult, { isDragging: boolean }>({
+    type: isTab ? (data.type === 52 ? DRAG_ITEMS.DISPLAY_TAB : DRAG_ITEMS.DISPLAY_LIST_TAB) : DRAG_ITEMS.DISPLAY_ITEM,
     item: {
       type: isTab ? (data.type === 52 ? DRAG_ITEMS.DISPLAY_TAB : DRAG_ITEMS.DISPLAY_LIST_TAB) : DRAG_ITEMS.DISPLAY_ITEM,
       id: controlId,
@@ -161,7 +183,7 @@ function DisplayItem(props) {
       data,
       widgetType: data.type,
     },
-    end(item, monitor) {
+    end(_item, monitor) {
       if (!monitor.didDrop()) return;
       const dropResult = monitor.getDropResult();
       if (!dropResult) return;
@@ -221,6 +243,7 @@ function DisplayItem(props) {
 
       // 插入新行
       if (mode === DRAG_MODE.INSERT_NEW_LINE) {
+        if (rowIndex === undefined) return;
         // 标签页表格拖拽到普通控件中，更改showtype
         const formatData =
           isTabSheetList(newData) && dropResult.displayItemType === 'common'
@@ -233,12 +256,14 @@ function DisplayItem(props) {
 
       // 拖到行的末尾
       if (mode === DRAG_MODE.INSERT_TO_ROW_END) {
+        if (rowIndex === undefined) return;
         setWidgets(insertToRowEnd({ widgets, srcItem: newData, srcPath: path, targetIndex: rowIndex }));
         setActiveWidget({ ...newData, size: WHOLE_SIZE / (widgets[rowIndex].length + 1) });
       }
 
       // 行内拖拽
       if (mode === DRAG_MODE.INSERT_TO_COL) {
+        if (!dropPath) return;
         setWidgets(insertToCol({ widgets, dropPath, location, srcPath: path, srcItem: newData }));
         setActiveWidget({ ...newData, size: WHOLE_SIZE / ((widgets[dropPath[0]] || []).length + 1) });
       }
@@ -247,7 +272,7 @@ function DisplayItem(props) {
       return { isDragging: monitor.isDragging() };
     },
   });
-  const [{ isOver }, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop<WidgetDragItem, WidgetDropResult, { isOver: boolean }>({
     accept: DRAG_ACCEPT[displayItemType],
     canDrop(item) {
       // 标签页内不允许标签页、多条列表(旧)、标签页表格等拖拽
@@ -321,7 +346,7 @@ function DisplayItem(props) {
       }
     },
     drop() {
-      if (!location) return;
+      if (!location) return undefined;
       const sectionId = type === 52 && !_.includes(['view_top'], location) ? controlId : data.sectionId || '';
 
       if (includes(['left', 'right'], location)) {
@@ -385,9 +410,22 @@ function DisplayItem(props) {
     return { width: dragLineWidth, left: -(itemLeft - left - 20) };
   };
 
-  const handleOperate = (mode, option = {}) => {
-    const deleteWidgetById = ({ widgets, controlId }) => {
-      // 普通字段与标签页字段分区显示，显示位置不一定对应原始数组位置。
+  // 各 mode 用到的键不同：删除用 widgets/controlId/path，复制看 shiftKey，改宽度给 size
+  const handleOperate = (
+    mode,
+    option: {
+      widgets?: FormControl[][];
+      controlId?: string;
+      path?: number[];
+      /** 按住 shift 复制时走另一条分支 */
+      shiftKey?: boolean;
+      /** 控件宽度（1-12 栅格） */
+      size?: number;
+    } = {},
+  ) => {
+    const deleteWidgetById = ({ widgets, controlId }: { widgets: FormControl[][]; controlId?: string }) => {
+      // 上游 7.5.3：普通字段与标签页字段分区显示，显示位置不一定对应原始数组位置，
+      // 所以改为按 controlId 现算真实路径，而不是沿用调用方传来的展示位置。
       const targetPath = getPathById(widgets, controlId);
       if (targetPath.length !== 2) return widgets;
       const [row, col] = targetPath;
@@ -437,7 +475,7 @@ function DisplayItem(props) {
     }
 
     if (mode === 'template') {
-      props.openCreateTemplateDialog({ ...props, templateControls: [data] });
+      createTemplateDialog({ ...props, templateControls: [data] });
       return;
     }
 
@@ -524,9 +562,9 @@ function DisplayItem(props) {
       ref={$ref}
       id={`widget-${controlId}`}
       style={{ width }}
-      $row={row}
-      $col={col}
-      $isTab={isTab}
+      row={row}
+      col={col}
+      isTab={isTab}
       className={cx({
         isActive,
         isDragging: isDragging || isBatchDrag,
@@ -571,7 +609,3 @@ function DisplayItem(props) {
     </DisplayItemWrap>
   );
 }
-
-export default withOpeners(DisplayItem, {
-  openCreateTemplateDialog: useCreateTemplateDialog,
-});

@@ -717,6 +717,8 @@ async function serve({ done = () => {}, needOpen = true, isProduction: isProduct
             /<script src="\/dist\/pack\/common\.dev\.js"><\/script>/i,
             '<script src="/dist/pack/common.dev.js"></script><script src="/dist/pack/css.dev.js"></script>',
           );
+          // 7.5.3（upstream CI/serve.js）: dev HTML 回放要显式声明 charset，否则中文被按 latin-1 解读。
+          res.setHeader('Content-Type', 'text/html; charset=utf-8');
           res.end(text);
         } catch {
           console.log(`can not find ${pathname}`, path.join(__dirname, '../build', pathname));

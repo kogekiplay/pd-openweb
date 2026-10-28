@@ -275,7 +275,8 @@ export default function Text(props) {
               .filter(_.identity);
             setValueForMultiple(v);
             setIsMultiple(!!newValues.length);
-            handleChange({ values: newValues }, { forceUpdate: true });
+            // 7.5.3（upstream Text.jsx）: 粘贴多值不再强刷，更新时机交给 handleChange 自己决定。
+            handleChange({ values: newValues });
           }}
         />
       )}

@@ -309,8 +309,8 @@ let ChartDialog = class ChartDialog extends Component<any, any> {
                     match: null,
                   });
                   this.props.getReportConfigDetail({
-                    reportId: this.state.reportId,
-                    appId: this.state.worksheetId,
+                    reportId: this.state['reportId'],
+                    appId: this.state['worksheetId'],
                     customPageConfig,
                   });
                   this.setState({

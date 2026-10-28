@@ -1,47 +1,84 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cx from 'classnames';
 import moment from 'moment';
 import styled from 'styled-components';
-import { Button, Modal, Select } from 'ming-ui/antd-components';
+import { Dialog, Dropdown } from 'ming-ui';
 import externalPortalAjax from 'src/api/externalPortal';
 import LoginInfoDialog from 'src/pages/Role/PortalCon/components/LoginInfo';
+import type { RootState } from 'src/redux/types';
 import * as actions from '../redux/actions';
 
 const Wrap = styled.div`
-  padding: 16px 32px 40px;
+  padding: var(--space-4) var(--space-8) 40px;
   .timeTypeDrop {
     width: 180px;
+    height: 36px;
+    background: var(--color-background-primary);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-sm);
+    .ming.Menu.List {
+      top: 36px !important;
+    }
+    .Dropdown--input {
+      display: flex;
+      line-height: 36px;
+      padding: 0 10px !important;
+      .value {
+        flex: 1;
+      }
+      i {
+        &::before {
+          line-height: 36px;
+        }
+      }
+    }
+  }
+  .loginConsole {
+    height: 32px;
+    background: var(--color-primary-solid);
+    border-radius: var(--radius-sm);
+    line-height: 32px;
+    color: var(--color-on-primary);
+    font-size: var(--font-sm);
+    float: right;
+    padding: 0 15px;
+    &:hover {
+      background: var(--color-primary-solid);
+    }
   }
   .registerLine,
   .loginLine {
     height: 300px;
-    margin-top: 24px;
+    margin-top: var(--space-6);
   }
 `;
+let g2plotComponent = null;
 const TIME = [
   {
     value: 0,
-    label: _l('最近 7 天'),
+    text: _l('最近 7 天'),
   },
   {
     value: 1,
-    label: _l('最近一个月'),
+    text: _l('最近一个月'),
   },
   {
     value: 2,
-    label: _l('最近一季度'),
+    text: _l('最近一季度'),
   },
   {
     value: 3,
-    label: _l('最近半年'),
+    text: _l('最近半年'),
   },
   {
     value: 4,
-    label: _l('最近一年'),
+    text: _l('最近一年'),
   },
 ]; //颗粒度：最近7天、最近一个月、最近一季度、最近半年、最近一年
+let LineChartRegisterEl = null;
+let LineChartLoginEl = null;
 
 function Statistics(props) {
   const { appId } = props;
@@ -50,47 +87,39 @@ function Statistics(props) {
   const [dataRegister, setData] = useState([]); //注册量
   //访问量
   const [dataVisits, setDataLogin] = useState([]);
-  const [g2plotComponent, setG2plotComponent] = useState(null);
-  const registerEl = useRef(null);
-  const loginEl = useRef(null);
-  const chartOptions = useMemo(
-    () => ({
-      xField: 'date',
-      yField: 'value',
-      label: { offsetY: 5, position: 'top' },
-      tooltip: {
-        fields: ['date', 'value'],
-        formatter: datum => {
-          return { name: datum.date, value: datum.value };
-        },
-        showTitle: true,
-        title: v => `${moment().format(_l('MM月DD日'))}   ${v}`,
-        showContent: true,
-        domStyles: {
-          'g2-tooltip': {
-            backgroundColor: 'var(--color-background-card)',
-            boxShadow: 'var(--shadow-lg)',
-            color: 'var(--color-text-title)',
-          },
-          'g2-tooltip-list-item': { textAlign: 'left', color: 'var(--color-text-title)' },
-          'g2-tooltip-title': { color: 'var(--color-text-secondary)' },
-        },
+  const registerEl = useRef<HTMLDivElement | null>(null);
+  const loginEl = useRef<HTMLDivElement | null>(null);
+  const prarm = {
+    xField: 'date',
+    yField: 'value',
+    label: { offsetY: 5, position: 'top' },
+    tooltip: {
+      fields: ['date', 'value'],
+      formatter: datum => {
+        return { name: datum.date, value: datum.value };
       },
-      interactions: [{ type: 'marker-active' }],
-    }),
-    [],
-  );
+      showTitle: true,
+      title: v => `${moment().format('MM月DD日')}   ${v}`,
+      showContent: true,
+      domStyles: {
+        // 上游 7.5.3：给 g2 的 tooltip 容器补背景/阴影/文字色，避免沿用默认浅色皮肤
+        'g2-tooltip': {
+          backgroundColor: 'var(--color-background-card)',
+          boxShadow: 'var(--shadow-lg)',
+          color: 'var(--color-text-title)',
+        },
+        'g2-tooltip-list-item': { textAlign: 'left', color: 'var(--color-text-title)' },
+        'g2-tooltip-title': { color: 'var(--color-text-secondary)' },
+      },
+    },
+    interactions: [{ type: 'marker-active' }],
+  };
   useEffect(() => {
-    let isMounted = true;
-
     import('@antv/g2plot').then(data => {
-      if (isMounted) {
-        setG2plotComponent(data);
-      }
+      g2plotComponent = data;
     });
-
-    return () => {
-      isMounted = false;
+    () => {
+      g2plotComponent = null;
     };
   }, []);
   useEffect(() => {
@@ -129,53 +158,49 @@ function Statistics(props) {
         });
         setDataLogin(dataRegister);
       });
-  }, [appId, timeType]);
+  }, [timeType]);
   useEffect(() => {
-    const chartContainer = loginEl.current;
-
-    if (!chartContainer || !g2plotComponent) {
+    const $iframe = loginEl.current;
+    if (!$iframe) return;
+    LineChartLoginEl && LineChartLoginEl.destroy();
+    LineChartLoginEl = null;
+    if (!g2plotComponent) {
       return;
     }
 
     const { Line } = g2plotComponent;
-    const chart = new Line(chartContainer, {
-      ...chartOptions,
+    LineChartLoginEl = new Line(loginEl.current, {
+      ...prarm,
       data: dataRegister,
     });
-    chart.render();
-
-    return () => {
-      chart.destroy();
-    };
-  }, [chartOptions, dataRegister, g2plotComponent]);
+    return LineChartLoginEl.render();
+  }, [timeType, dataRegister]);
 
   useEffect(() => {
-    const chartContainer = registerEl.current;
-
-    if (!chartContainer || !g2plotComponent) {
+    const $iframe = registerEl.current;
+    if (!$iframe) return;
+    LineChartRegisterEl && LineChartRegisterEl.destroy();
+    LineChartRegisterEl = null;
+    if (!g2plotComponent) {
       return;
     }
 
     const { Line } = g2plotComponent;
-    const chart = new Line(chartContainer, {
-      ...chartOptions,
+    LineChartRegisterEl = new Line(registerEl.current, {
+      ...prarm,
       data: dataVisits,
     });
-    chart.render();
-
-    return () => {
-      chart.destroy();
-    };
-  }, [chartOptions, dataVisits, g2plotComponent]);
+    return LineChartRegisterEl.render();
+  }, [timeType, dataVisits]);
 
   return (
     <Wrap>
       <div>
         <span className="textSecondary LineHeight36">{_l('周期')}</span>
-        <Select
-          options={TIME}
+        <Dropdown
+          data={TIME}
           value={timeType}
-          className={cx('flex timeTypeDrop mLeft16')}
+          className={cx('flex InlineBlock timeTypeDrop mLeft16')}
           onChange={newValue => {
             setTimeType(newValue);
           }}
@@ -185,35 +210,35 @@ function Statistics(props) {
       <div className={'flex registerLine'} ref={registerEl}></div>
       <h6 className="mTop80 Font17">
         {_l('用户访问量')}
-        <Button
-          type="primary"
-          style={{ height: 32 }}
-          className="Right"
+        <span
+          className="loginConsole Hand Bold"
           onClick={() => {
             setShow(true);
           }}
         >
-          {_l('日志')}
-        </Button>
+          {_l('登录日志')}
+        </span>
       </h6>
       <div className={'flex loginLine'} ref={loginEl}></div>
       {show && (
-        <Modal
-          width={1120}
-          open={show}
-          title={_l('日志')}
-          mask={{ closable: true }}
-          keyboard
-          onCancel={() => setShow(false)}
+        <Dialog
+          className="loginInfo"
+          width="1000"
+          visible={show}
+          title={_l('登录日志')}
+          footer={null}
+          onCancel={() => {
+            setShow(false);
+          }}
         >
-          <LoginInfoDialog appId={appId} />
-        </Modal>
+          <LoginInfoDialog show={show} appId={appId} />
+        </Dialog>
       )}
     </Wrap>
   );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   portal: state.portal,
 });
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

@@ -214,7 +214,13 @@ export const handleRelateRow = (control: FormControl = {}, content, worksheetInf
  * @param {*} updateData - 更新数据
  * @returns
  */
-const getRelateData = (control: Record<string, any> = {}, content, extra = {}, worksheetInfo = {}, updateData) => {
+const getRelateData = (
+  control: Record<string, any> = {},
+  content,
+  extra = {},
+  worksheetInfo: Pick<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetModel, 'worksheetId'> = {},
+  updateData,
+) => {
   const { controlId, controlName } = control;
   const { scanlink, scancontrol, scancontrolid } = _.get(control, 'advancedSetting') || {};
   const scanControl =
@@ -310,7 +316,7 @@ const getRelateData = (control: Record<string, any> = {}, content, extra = {}, w
     appId,
     worksheetId: control.dataSource,
     relationWorksheetId: worksheetInfo.worksheetId,
-    controlId: control.controlId,
+    controlId: control['controlId'],
     viewId,
     searchType: 1,
     pageSize: 20,

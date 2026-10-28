@@ -246,7 +246,8 @@ const getGlobalMeta = ({
       ) {
         const url = new URL(location.href);
         url.searchParams.set('sys_lang', sysDefaultLang);
-        location.href = pathCompletion(`${url.pathname}${url.search}`);
+        // 7.5.3（upstream entries/preall.js）: 语言初始化替换中转地址，避免返回后再次补语言并跳回当前页面。
+        location.replace(pathCompletion(`${url.pathname}${url.search}`));
       } else {
         setCookie('i18n_langtag', sysDefaultLang);
         window.location.reload();

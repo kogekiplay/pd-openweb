@@ -1,29 +1,35 @@
 import React, { Fragment } from 'react';
+import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Drawer } from 'antd';
+import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon } from 'ming-ui';
-import { Button, Drawer, Popover, Tooltip } from 'ming-ui/antd-components';
-import { isRelateMoreList } from 'src/components/Form/core/formUtils/ruleUtils';
-import { redefineComplexControl } from 'src/utils/domain/control/normalization';
-import { getValueStyle } from 'src/utils/domain/control/style';
+import { Tooltip } from 'ming-ui/antd-components';
+import { redefineComplexControl } from 'worksheet/common/WorkSheetFilter/util';
+import { isRelateMoreList } from 'src/components/Form/core/formUtils/helper';
+import type { RootState } from 'src/redux/types';
+import { getValueStyle } from 'src/utils/control';
+import type { FormControl } from 'src/utils/controlTypes';
 import DrawerFooter from '../DrawerFooter';
 import { checkRuleEnableLimit, filterData, hasRuleChanged, TAB_TYPES } from './config';
 import EditBox from './EditBox';
 import * as actions from './redux/actions/columnRules';
+import * as columnRules from './redux/actions/columnRules';
 import '../../index.less';
 
 const StyleDivWrap = styled.div`
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   text-align: center;
   color: var(--color-text-primary);
   border: 1px solid var(--color-border-primary);
   height: 32px;
   line-height: 32px;
   width: 32px;
-  ${props => props.$styleOptions && `font-size: ${props.$fontSize};${props.$styleOptions.valueStyle}`}
+  ${props => props.styleOptions && `font-size: ${props.fontSize};${props.styleOptions.valueStyle}`}
 `;
 
 const AddRule = styled.div`
@@ -32,14 +38,14 @@ const AddRule = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   color: var(--color-primary);
   cursor: pointer;
   border: 1px solid var(--color-border-primary);
   color: var(--color-primary);
   i {
     color: var(--color-primary);
-    margin-right: 4px;
+    margin-right: var(--space-1);
     font-size: 15px;
   }
   &:hover {
@@ -58,11 +64,11 @@ const RuleStyleWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
     box-sizing: border-box;
     margin-bottom: 10px;
-    padding-left: 8px;
+    padding-left: var(--space-2);
     cursor: pointer;
     &:hover {
       background: var(--color-background-hover);
@@ -71,7 +77,7 @@ const RuleStyleWrapper = styled.div`
       font-weight: bold;
     }
     .filterLabel {
-      font-size: 12px;
+      font-size: var(--font-xs);
       color: var(--color-text-secondary);
     }
     .optionsContent {
@@ -83,7 +89,7 @@ const RuleStyleWrapper = styled.div`
         line-height: 46px;
         text-align: center;
         &:hover {
-          background-color: rgba(22, 119, 255, 0.06);
+          background-color: color-mix(in srgb, var(--color-primary) 6%, transparent);
         }
 
         &:nth-child(1) {
@@ -107,13 +113,13 @@ export const StyleDiv = props => {
   const styleOptions = getValueStyle(data);
   const fontSize = data.advancedSetting.valuesize ? '14px' : '12px';
   return (
-    <StyleDivWrap $styleOptions={styleOptions} $fontSize={fontSize}>
+    <StyleDivWrap styleOptions={styleOptions} fontSize={fontSize}>
       {data.value}
     </StyleDivWrap>
   );
 };
 
-function renderFilterItemTexts(filters = [], disabled = false, worksheetControls = []) {
+function renderFilterItemTexts(filters = [], disabled = false, worksheetControls: FormControl[] = []) {
   if (_.isEmpty(filters)) return '';
   const formatControls = worksheetControls.map(redefineComplexControl);
   let filterItemTexts = filters.map(item => {
@@ -135,7 +141,7 @@ function renderFilterItemTexts(filters = [], disabled = false, worksheetControls
     };
   });
 
-  const renderItemText = (item, index) => {
+  const renderItemText = (item, index: number) => {
     return (
       <span key={index}>
         {index ? (
@@ -164,7 +170,7 @@ function renderFilterItemTexts(filters = [], disabled = false, worksheetControls
     <React.Fragment>
       {filterItemTexts.map((item, index) => {
         return (
-          <span className={cx({ textDisabled: disabled })}>
+          <span key={index} className={cx({ textDisabled: disabled })}>
             {filterItemTexts.length > 1 ? <span className="textTertiary mRight2">(</span> : null}
             {(item.groupFilters || []).map((child, childIdx) => {
               return renderItemText(child, childIdx);
@@ -180,7 +186,7 @@ function renderFilterItemTexts(filters = [], disabled = false, worksheetControls
   );
 }
 
-class WidgetConfigRuleItem extends React.Component {
+class WidgetConfigRuleItem extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
@@ -188,19 +194,19 @@ class WidgetConfigRuleItem extends React.Component {
     };
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.props.clearColumnRules();
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { initGlobalRuleInfo, initWorksheetRuleList } = this.props;
 
     initGlobalRuleInfo(this.props);
     initWorksheetRuleList(this.props);
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+  override componentDidUpdate(prevProps) {
+    if (!shallowEqual(prevProps, this.props)) {
       const { initGlobalRuleInfo, initWorksheetRuleList, ruleList, saveIndex, columnRulesListData, setConfig } =
         this.props;
 
@@ -208,6 +214,7 @@ class WidgetConfigRuleItem extends React.Component {
         initGlobalRuleInfo(this.props);
         initWorksheetRuleList(this.props);
       } else if (!_.isUndefined(ruleList) && columnRulesListData !== prevProps.columnRulesListData) {
+        // 上游 7.5.3：规则列表数据回流时同步进配置，避免只在首次挂载时生效
         setConfig?.({ ruleList: columnRulesListData });
       }
 
@@ -268,47 +275,46 @@ class WidgetConfigRuleItem extends React.Component {
               <Icon icon="copy" className="Font16 Hand" onClick={() => copyControlRules(ruleData)} />
             </span>
           </Tooltip>
-          <Tooltip placement="bottom" title={_l('删除')}>
-            <Popover
-              noPadding
-              open={showDeleteBox === ruleId}
-              onOpenChange={showDeleteBox => {
-                this.setState({ showDeleteBox: showDeleteBox ? ruleId : null });
-              }}
-              trigger="click"
-              mouseEnterDelay={0.1}
-              placement="rightTop"
-              align={{ offset: [-30, 25] }}
-              content={
-                <div className="DropdownDeleteRuleTrigger">
-                  <div className="title">{_l('确定要删除此规则？')}</div>
-                  <div className="deleteGroupBtns">
-                    <Button onClick={() => this.setState({ showDeleteBox: null })}>{_l('取消')}</Button>
-                    <Button
-                      danger
-                      type="primary"
-                      onClick={() => {
-                        deleteControlRules(ruleData);
-                        this.setState({ showDeleteBox: null });
-                      }}
-                    >
-                      {_l('删除')}
-                    </Button>
+          <Trigger
+            popupVisible={showDeleteBox === ruleId}
+            onPopupVisibleChange={showDeleteBox => {
+              this.setState({ showDeleteBox: showDeleteBox ? ruleId : null });
+            }}
+            action={['click']}
+            mouseEnterDelay={0.1}
+            popupAlign={{ points: ['tl', 'tr'], offset: [-30, 25], overflow: { adjustX: 1, adjustY: 2 } }}
+            popup={
+              <div className="DropdownDeleteRuleTrigger">
+                <div className="title">{_l('确定要删除此规则？')}</div>
+                <div className="deleteGroupBtns">
+                  <div className="textTertiary Hand" onClick={() => this.setState({ showDeleteBox: null })}>
+                    {_l('取消')}
+                  </div>
+                  <div
+                    className="deleteBtn"
+                    onClick={() => {
+                      deleteControlRules(ruleData);
+                      this.setState({ showDeleteBox: null });
+                    }}
+                  >
+                    {_l('删除')}
                   </div>
                 </div>
-              }
-            >
+              </div>
+            }
+          >
+            <Tooltip placement="bottom" title={_l('删除')}>
               <span className="iconBox">
                 <Icon icon="trash" className="Font16 Hand" />
               </span>
-            </Popover>
-          </Tooltip>
+            </Tooltip>
+          </Trigger>
         </div>
       </div>
     );
   }
 
-  render() {
+  override render() {
     const {
       columnRulesListData = [],
       addColumnRules,
@@ -320,7 +326,7 @@ class WidgetConfigRuleItem extends React.Component {
     } = this.props;
     const isAdd = (selectRules.ruleId || '').indexOf('-') >= 0;
     const styleRuleList = columnRulesListData.filter(rule => {
-      const controls = _.get(rule, 'ruleItems.0.controls', []);
+      const controls: FormControl[] = _.get(rule, 'ruleItems.0.controls', []);
       return rule.type === TAB_TYPES.STYLE_RULE && _.some(controls, control => control.controlId === data.controlId);
     });
 
@@ -335,7 +341,7 @@ class WidgetConfigRuleItem extends React.Component {
         </RuleStyleWrapper>
         {selectRules.ruleId && (
           <Drawer
-            rootClassName="Absolute widgetColumnRulesDrawer"
+            rootClassName="widgetColumnRulesDrawer"
             size={640}
             title={isAdd ? _l('新建样式规则') : _l('编辑样式规则')}
             placement="right"
@@ -360,12 +366,12 @@ class WidgetConfigRuleItem extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   worksheetControls: state.formSet.worksheetRuleControls,
   selectRules: state.formSet.selectRules,
   columnRulesListData: state.formSet.columnRulesListData,
   activeTab: state.formSet.activeTab,
 });
-const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ ...actions, ...columnRules }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(WidgetConfigRuleItem);
