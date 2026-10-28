@@ -190,10 +190,17 @@ const getDefaultSummaryTypes = (control?: FormControl) => {
   }, {});
 };
 
-/** refresh / loadRows 的第二个参数 */
+/**
+ * `refresh` / `loadRows` 的第二个参数。
+ *
+ * 两个键都显式带 `| undefined`：这两个值**不做任何变换**，只是被当布尔用（`if (needResetControls)`、
+ * `if (isWorkflow && isRefresh)`、`getWorksheet: needResetControls`）。所以「显式传 undefined」与「不写该键」
+ * 在运行期**完全等价**（都绑到 undefined），EOPT 下若拒绝前者就是把一个真实 ABI 输入判成错误。
+ * 纯类型放宽，不改任何默认值 / guard / body。
+ */
 interface RefreshOptions {
-  needResetControls?: boolean;
-  isRefresh?: boolean;
+  needResetControls?: boolean | undefined;
+  isRefresh?: boolean | undefined;
 }
 
 class ChildTable extends React.Component<any, any> {
@@ -698,7 +705,7 @@ class ChildTable extends React.Component<any, any> {
     });
   }
 
-  loadRows(nextProps?, { needResetControls, isRefresh } = {}) {
+  loadRows(nextProps?, { needResetControls, isRefresh }: RefreshOptions = {}) {
     const { control, recordId, masterData, loadRows, from, base = {} } = nextProps || this.props;
     const {
       isTreeTableView,
@@ -764,7 +771,7 @@ class ChildTable extends React.Component<any, any> {
     });
   }
 
-  refresh = (nextProps?, { needResetControls = true } = {}) => {
+  refresh = (nextProps?, { needResetControls = true }: RefreshOptions = {}) => {
     this.setState({
       loading: true,
       keywords: undefined,
@@ -844,7 +851,22 @@ class ChildTable extends React.Component<any, any> {
     );
   }
 
-  newRow = (defaultRow?, { isDefaultValue, isCreate, isQueryWorksheetFill, isImportFromExcel } = {}) => {
+  newRow = (
+    defaultRow?,
+    {
+      isDefaultValue,
+      isCreate,
+      isQueryWorksheetFill,
+      isImportFromExcel,
+    }: {
+      // 四个标记同样「原样透传、不做变换」（转交 `rowUpdate`，其缺省语义见该方法），
+      // 故显式 undefined 与缺键运行期等价 —— 纯类型放宽，不改默认值/guard/body。
+      isDefaultValue?: boolean | undefined;
+      isCreate?: boolean | undefined;
+      isQueryWorksheetFill?: boolean | undefined;
+      isImportFromExcel?: boolean | undefined;
+    } = {},
+  ) => {
     const tempRowId = !isDefaultValue ? `temp-${uuidv4()}` : `default-${uuidv4()}`;
     const row = this.rowUpdate(
       { row: defaultRow, rowId: tempRowId },
@@ -909,10 +931,10 @@ class ChildTable extends React.Component<any, any> {
       isImportFromExcel,
       userTriggerChange = true,
     }: {
-      isCreate?: boolean;
-      isQueryWorksheetFill?: boolean;
-      isImportFromExcel?: boolean;
-      userTriggerChange?: boolean;
+      isCreate?: boolean | undefined;
+      isQueryWorksheetFill?: boolean | undefined;
+      isImportFromExcel?: boolean | undefined;
+      userTriggerChange?: boolean | undefined;
       // 调用方还会把 control 一起铺进来（handleUpdateCell 那条），这里用不到但得收得下
       [key: string]: any;
     } = {},
@@ -1114,7 +1136,8 @@ class ChildTable extends React.Component<any, any> {
     }, 100);
   };
 
-  handleImport = ({ replace = false } = {}) => {
+  /** `replace` 有解构默认值 `= false`：显式 undefined 与缺键都落成 false，运行期等价，故带 `| undefined`。 */
+  handleImport = ({ replace = false }: { replace?: boolean | undefined } = {}) => {
     const { appId, control, masterData, rows, addRows } = this.props;
     const { projectId } = this.worksheetInfo;
     const controls: FormControl[] = this.getShowColumns();

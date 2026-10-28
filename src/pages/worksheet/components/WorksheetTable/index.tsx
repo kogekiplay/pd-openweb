@@ -496,7 +496,7 @@ function WorksheetTable(props, ref) {
     });
   }
 
-  function addHighlightClassOfRow(rowIndex) {
+  function addHighlightClassOfRow(rowIndex: number | string | undefined) {
     const tableDom = tableRef.current && tableRef.current.dom && tableRef.current.dom.current;
 
     if (!tableDom) {
@@ -522,7 +522,7 @@ function WorksheetTable(props, ref) {
     window[`activeRowIndex-${tableId}`] = -10000;
   }
 
-  function focusCell(newIndex, { noTriggerHandFocusCell = false } = {}) {
+  function focusCell(newIndex: number, { noTriggerHandFocusCell = false } = {}) {
     setCache('focusIndex', newIndex > 0 ? newIndex : undefined);
     // 记录当前是否有单元格处于聚焦选中态，供全局 paste 守卫判断（避免选中单元格时粘贴呼出 AI 创建记录）
     window.cellisfocus = newIndex > 0;
@@ -637,7 +637,7 @@ function WorksheetTable(props, ref) {
     }
   }
 
-  function focusRow(rowIndex) {
+  function focusRow(rowIndex: number) {
     const mainCenterEl = document.querySelector(`.sheetViewTable.id-${tableId}-id .main-center`);
     const scrollYEl = document.querySelector(`.sheetViewTable.id-${tableId}-id .scroll-y`);
     if (!mainCenterEl || !scrollYEl) return;
@@ -652,7 +652,7 @@ function WorksheetTable(props, ref) {
     }
   }
 
-  function onHoverColumnChange(columnIndex) {
+  function onHoverColumnChange(columnIndex: string | undefined) {
     if (typeof columnIndex === 'undefined') {
       emitter.emit('TRIGGER_CELL_POPUP_OPERATE_VISIBLE_' + tableId, { visible: false });
     } else {

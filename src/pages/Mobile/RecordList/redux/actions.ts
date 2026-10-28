@@ -5,6 +5,10 @@ import sheetAjax from 'src/api/worksheet';
 import { VIEW_DISPLAY_TYPE } from 'worksheet/constants/enum';
 import { sortDataByCustomItems } from 'worksheet/redux/actions/util';
 import { readBoardGroups } from 'worksheet/redux/reducers/boardViewApi';
+import type {
+  BoardRecordCountDelta,
+  BoardRecordCounts,
+} from 'worksheet/redux/reducers/boardViewTypes';
 import { getBoardItemKey } from 'worksheet/redux/util';
 import {
   getCalendartypeData,
@@ -53,15 +57,16 @@ export function changeBoardViewData(data) {
   };
 }
 
-export function initBoardViewRecordCount(data) {
+export function initBoardViewRecordCount(data: BoardRecordCounts) {
   return { type: 'MOBILE_INIT_BOARD_VIEW_RECORD_COUNT', data };
 }
 
-export function updateBoardViewRecordCount(data) {
+export function updateBoardViewRecordCount(data: BoardRecordCountDelta) {
   return { type: 'MOBILE_UPDATE_BOARD_VIEW_RECORD_COUNT', data };
 }
 
-export function changeBoardViewState(data) {
+/** hasMoreData 来自已存在的布尔计算；kanbanIndex 的请求透传域仍未知，不在本片认证。 */
+export function changeBoardViewState(data: { kanbanIndex: unknown; hasMoreData: boolean }) {
   return { type: 'MOBILE_CHANGE_BOARD_VIEW_STATE', data };
 }
 
