@@ -32,6 +32,8 @@ import {
 } from './utils';
 import './index.less';
 import { UploadError } from 'src/utils/uploader/constants';
+/** 真实上传器类型（`UploaderEventArgs[*][0]` / `UploaderOption.remove_files_callback` 都是它）。 */
+import type { Uploader } from 'src/utils/uploader/types';
 
 const errorCode = {
   40001: _l('鉴权失败'),
@@ -271,7 +273,14 @@ export default class UploadFiles extends Component<any, any> {
     );
   }
 
-  onRemoveAll(uploader) {
+  /**
+   * `uploader` 的真实来源（三处全部是已 typed 的第三方槽）：
+   * - `QiniuUpload` 的 `onAdd` → `UploaderEventArgs['FilesAdded'][0]`；
+   * - `onError` → `UploaderEventArgs['Error'][0]`；
+   * - `options.remove_files_callback` → `(up: Uploader, files: UploaderFile[]) => void`。
+   * body 只用 `uploader.files` 与 `uploader.removeFile(...)`，两者都在 `Uploader` 接口上。
+   */
+  onRemoveAll(uploader: Uploader) {
     uploader.files.forEach(item => {
       //解决removeFile会修改uploader内部队列，导致遍历索引变化，遗漏删除文件问题
       setTimeout(() => {
@@ -282,7 +291,9 @@ export default class UploadFiles extends Component<any, any> {
     this.props.onUploadComplete(true);
   }
 
-  removeErrorFile = (uploader, fileId: string | undefined) => {
+  /** 调用点唯一：`onError={(uploader, error) => _this.removeErrorFile(uploader, error?.file?.id)}`，
+   *  故 `uploader` 同样是 `UploaderEventArgs['Error'][0]`；body 只用 `uploader.removeFile`。 */
+  removeErrorFile = (uploader: Uploader, fileId: string | undefined) => {
     if (fileId && uploader.removeFile) {
       uploader.removeFile({ id: fileId });
     }

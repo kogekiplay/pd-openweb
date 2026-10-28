@@ -145,6 +145,10 @@ const DisplayFieldForNameInfo: Record<number, string> = {
 
 class UserCard extends React.Component<any, any> {
   declare promise: ApiResult | undefined;
+  /** document mousedown 监听器；真实 DOM 事件（原生 MouseEvent） */
+  declare outsideMouseDownHandler: ((event: MouseEvent) => void) | null | undefined;
+  /** 首次打开后保持渲染 popup 的标记 */
+  declare haveOpened: boolean | undefined;
 
   static override propTypes = {
     projectId: PropTypes.string,
@@ -253,7 +257,7 @@ class UserCard extends React.Component<any, any> {
     }
   };
 
-  changePopupVisible = visible => {
+  changePopupVisible = (visible: boolean) => {
     if (visible) {
       this.setState({ visible });
       return;
@@ -268,7 +272,7 @@ class UserCard extends React.Component<any, any> {
     this.setState({ enlargeImageVisible });
   };
 
-  handleEnlargeImageMouseDown = e => {
+  handleEnlargeImageMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
 
     if (this.triggerRef && this.triggerRef.onPopupMouseDown) {
@@ -363,7 +367,7 @@ class UserCard extends React.Component<any, any> {
     const isSecret = !sourceId && !accountId && !groupId;
 
     return (
-      <CardContentBoxWrap className="cardContentBox" onClick={e => e.stopPropagation()}>
+      <CardContentBoxWrap className="cardContentBox" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
         <div className="cardContent">
           {isLoading || (_.isEmpty(data) && !isSecret) ? <LoadDiv /> : this.renderContent()}
         </div>
@@ -607,7 +611,7 @@ class UserCard extends React.Component<any, any> {
         offset: [0, 0],
         overflow: { adjustX: true, adjustY: true },
       },
-      onPopupVisibleChange: visible => {
+      onPopupVisibleChange: (visible: boolean) => {
         if (!visible && enlargeImageVisible) {
           return;
         }

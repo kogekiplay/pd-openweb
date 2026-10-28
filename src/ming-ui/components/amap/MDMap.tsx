@@ -141,7 +141,7 @@ class GDMap extends Component<any, any> {
   };
 
   // 定位
-  setPosition(lng, lat, resetZoom = true) {
+  setPosition(lng: number | string, lat: number | string, resetZoom = true) {
     const { distance } = this.props;
     const { zoom } = this.state;
 
@@ -237,7 +237,7 @@ class GDMap extends Component<any, any> {
     });
   };
 
-  setZoom = type => {
+  setZoom = (type: 'plus' | 'minus') => {
     const { currentLocation = {}, defaultLocation = {}, zoom } = this.state;
 
     if (zoom > 18 || zoom < 3) {
@@ -413,7 +413,7 @@ class GDMap extends Component<any, any> {
         {...this.props}
         customLocation={customLocation}
         currentLocation={currentLocation}
-        setPosition={(lng, lat) => this.setPosition(lng, lat)}
+        setPosition={(lng: string, lat: string) => this.setPosition(lng, lat)}
       />
     );
   }

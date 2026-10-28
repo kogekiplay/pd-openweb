@@ -318,6 +318,8 @@ const Wrapper = styled.div(
 );
 class MyUploadAdapter {
   declare xhr: XMLHttpRequest | undefined;
+  /** 只被赋成 URL 字符串（'' 或 token 拼接结果），见 _sendRequest。 */
+  declare url: string;
 
   declare options: { bucket?: number | undefined };
   declare tokenArgs: TokenRequestArgs;
@@ -427,7 +429,8 @@ class MyUploadAdapter {
   }
 }
 
-const normalizeContent = html => {
+/** 入参接受任意值（非字符串原样返回兜底），所以按 unknown 标注而不是假成 string DTO。 */
+const normalizeContent = (html: unknown) => {
   if (!html || typeof html !== 'string') return html ?? '';
   try {
     return html.replace(/<img([^>]*\s)src=(["'])([^"']*)\2/gi, (match, before, quote, src) => {
