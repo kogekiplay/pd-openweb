@@ -257,7 +257,7 @@ function ExplanDetail(props) {
   };
 
   const prepareHistoryWorkflowMove = (workflowIds: string[], targetResourceId: string) => {
-    if (historyMovePending.current) return;
+    if (historyMovePending.current) return undefined;
 
     historyMovePending.current = true;
     setHistoryMoveSubmitting(true);
@@ -290,7 +290,7 @@ function ExplanDetail(props) {
   };
 
   const submitHistoryWorkflowMove = (checkedConflictIds: string[]) => {
-    if (historyMovePending.current) return;
+    if (historyMovePending.current) return undefined;
 
     const conflictIds = historyConflictDialog.list.map(item => item.id);
     const workflowIds = getHistoryWorkflowMoveIds({
@@ -301,7 +301,7 @@ function ExplanDetail(props) {
 
     if (!workflowIds.length) {
       resetHistoryConflictDialog();
-      return;
+      return undefined;
     }
 
     historyMovePending.current = true;
