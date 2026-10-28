@@ -215,9 +215,9 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
 
   override render() {
     const { currentCompanyName, isExtend, subListVisible, menuGroupKey } = this.state;
-    const { menuList = [], match, location } = this.props;
-    const { params } = match;
+    const { menuList = [], location } = this.props;
     const { pathname } = location;
+    const projectId = getProjectIdFromPath(pathname);
     return (
       <div id="menuList" className={cx(isExtend ? 'extendList' : 'closeList')}>
         <div className="h100 Relative menuContainer">
@@ -225,7 +225,7 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
             <div
               className="companyName Hand"
               onClick={() => {
-                navigateTo(`/admin/home/${params.projectId}`);
+                navigateTo(`/admin/home/${projectId}`);
               }}
             >
               {currentCompanyName}
@@ -254,7 +254,7 @@ let AdminLeftMenu = class AdminLeftMenu extends Component<any, any> {
                   subMenuList = _.filter(
                     subMenuList,
                     ({ featureId, key }) =>
-                      (!featureId || (featureId && getFeatureStatus(params.projectId, featureId))) &&
+                      (!featureId || (featureId && getFeatureStatus(projectId, featureId))) &&
                       !(!window.platformENV.isPlatform && key === 'billinfo'),
                   );
                   return (
