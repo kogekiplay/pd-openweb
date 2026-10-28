@@ -1,5 +1,6 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import Trigger from '@rc-component/trigger';
+import cx from 'classnames';
 import moment from 'moment';
 import styled from 'styled-components';
 import { Button, Icon, LoadDiv, UserName } from 'ming-ui';
@@ -15,6 +16,13 @@ import withRouter from '../../../../../router/withRouter';
 import EditNameDialog from '../component/EditNameDialog';
 import Status from '../component/Status';
 import { COMPUTING_INSTANCE_STATUS } from '../config';
+import {
+  canManageComputingInstance,
+  canViewComputingInstanceHistory,
+  getComputingHistoryPath,
+  isLatestComputingInstanceRequest,
+  shouldShowComputingInstanceWorkflowCount,
+} from '../historyWorkflow';
 import EXCLUSIVE_BIG from '../images/exclusive_big.png';
 import EXCLUSIVE_EXPLAN_IMG from '../images/exclusive_explan.png';
 import EXCLUSIVE_EXPLAN_HUI_IMG from '../images/exclusive_explan_hui.png';
@@ -91,43 +99,62 @@ function ExplanList(props) {
     upgradeVersionDialog: FEATURE_STATUS ? false : true,
   });
 
+  const listRequestIdRef = useRef(0);
+
+  // 上游 7.5.3：列表请求带 requestId，只有"最后一次请求"允许写状态（快速切组织/刷新时防止旧响应覆盖新数据）。
+  const getData = useCallback(() => {
+    const requestId = ++listRequestIdRef.current;
+
+    return Promise.resolve()
+      .then(() => {
+        if (!isLatestComputingInstanceRequest(requestId, listRequestIdRef.current)) return undefined;
+
+        setConfig(currentConfig => ({ ...currentConfig, loading: true }));
+        return projectAjax.getComputingInstances({ projectId });
+      })
+      .then(res => {
+        if (!isLatestComputingInstanceRequest(requestId, listRequestIdRef.current)) return;
+
+        const instances = res || [];
+
+        setConfig(currentConfig => ({
+          ...currentConfig,
+          isInit: instances.length === 0,
+          effectiveCount: instances.filter(l =>
+            [COMPUTING_INSTANCE_STATUS.Creating, COMPUTING_INSTANCE_STATUS.Running].includes(l.status),
+          ).length,
+        }));
+        let list = [];
+        let outDateList = [];
+        instances.forEach(l => {
+          if (l.status < 7) list.push(l);
+          else outDateList.push(l);
+        });
+        setData({
+          list: list,
+          outDateList: outDateList,
+        });
+      })
+      .finally(() => {
+        if (!isLatestComputingInstanceRequest(requestId, listRequestIdRef.current)) return;
+
+        setConfig(currentConfig => ({ ...currentConfig, loading: false }));
+      });
+  }, [projectId]);
+
   useEffect(() => {
     getData();
-  }, [projectId]);
+
+    return () => {
+      listRequestIdRef.current += 1;
+    };
+  }, [getData]);
 
   useEffect(() => {
     if (refresh === -1) return;
 
     getData();
-  }, [refresh]);
-
-  const getData = () => {
-    !config.loading &&
-      setConfig({
-        ...config,
-        loading: true,
-      });
-    projectAjax.getComputingInstances({ projectId }).then(res => {
-      setConfig({
-        ...config,
-        isInit: res && res.length === 0,
-        loading: false,
-        effectiveCount: res.filter(l =>
-          [COMPUTING_INSTANCE_STATUS.Creating, COMPUTING_INSTANCE_STATUS.Running].includes(l.status),
-        ).length,
-      });
-      let list = [];
-      let outDateList = [];
-      res.forEach(l => {
-        if (l.status < 7) list.push(l);
-        else outDateList.push(l);
-      });
-      setData({
-        list: list,
-        outDateList: outDateList,
-      });
-    });
-  };
+  }, [getData, refresh]);
 
   const updateData = param => {
     projectAjax.updateComputingInstance({ projectId, ...param }).then(res => {
@@ -289,10 +316,8 @@ function ExplanList(props) {
               .filter(v => (window.platformENV.isPlatform ? true : v !== COMPUTING_INSTANCE_STATUS.CreationFailed))
               .includes(item.status) && (
               <Fragment>
-                {(![COMPUTING_INSTANCE_STATUS.Destroyed, COMPUTING_INSTANCE_STATUS.DestroyFailed].includes(
-                  item.status,
-                ) ||
-                  item.workflowCount > 0) && (
+                {canManageComputingInstance(item.status) &&
+                  (item.status !== COMPUTING_INSTANCE_STATUS.DestroyFailed || item.workflowCount > 0) && (
                   <span
                     className="manageBtn"
                     onClick={() => {
@@ -311,6 +336,16 @@ function ExplanList(props) {
                     action={['click']}
                     popup={
                       <MoreOperateMenu>
+                        {canViewComputingInstanceHistory(item.status) && (
+                          <li
+                            onClick={() => {
+                              navigateTo(getComputingHistoryPath({ projectId, id: item.id }));
+                              setOperateMenuVisible(-1);
+                            }}
+                          >
+                            {_l('查看')}
+                          </li>
+                        )}
                         {[COMPUTING_INSTANCE_STATUS.Creating, COMPUTING_INSTANCE_STATUS.Running].includes(
                           item.status,
                         ) && (
@@ -402,7 +437,12 @@ function ExplanList(props) {
               )}
             </p>
           </div>
-          <div className="explanCardContentItem">
+          <div
+            className={cx('explanCardContentItem', {
+              // 服务过期后不显示工作流数，与算力实例是否已销毁无关。
+              Visibility: !shouldShowComputingInstanceWorkflowCount(item.remainingDays),
+            })}
+          >
             <p className="label">{_l('工作流数')}</p>
             <p className="value">{item.workflowCount}</p>
           </div>

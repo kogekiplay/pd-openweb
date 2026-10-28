@@ -3,7 +3,7 @@ import { useSetState } from 'react-use';
 import { Input, Select } from 'antd';
 import _ from 'lodash';
 import styled from 'styled-components';
-import { Button, Checkbox, Dialog, Icon, LoadDiv, ScrollView, SvgIcon } from 'ming-ui';
+import { Checkbox, Dialog, Icon, LoadDiv, ScrollView, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import appManagement from 'src/api/appManagement';
 import projectAjax from 'src/api/project';
@@ -13,6 +13,7 @@ import Search from 'src/pages/workflow/components/Search';
 import { START_APP_TYPE } from 'src/pages/workflow/WorkflowList/utils';
 import { navigateTo } from 'src/router/navigateTo';
 import IsAppAdmin from '../../../components/IsAppAdmin';
+import WorkflowConflictDialog from './WorkflowConflictDialog';
 
 const TYPE_LIST = [
   { label: _l('工作表事件'), value: 1 },
@@ -160,47 +161,6 @@ const EmptyWrap = styled.div`
   }
 `;
 
-const CheckedWorkflowWrap = styled.div`
-  height: 100%;
-  .headerCon {
-    border-color: var(--color-border-primary);
-    color: var(--color-text-secondary);
-  }
-  .workflowListWrap .listItem,
-  .headerCon.listItem {
-    padding: var(--space-3) var(--space-6);
-    border-bottom: 1px solid var(--color-border-secondary);
-    display: flex;
-    align-items: center;
-    color: var(--color-text-tertiary);
-    .Checkbox-box {
-      margin-right: var(--space-3);
-    }
-    .columnType,
-    .columnStatus {
-      width: 150px;
-    }
-  }
-  .workflowListWrap .listItem .columnName {
-    display: flex;
-    align-items: center;
-    .workflowInfoWrap {
-      width: 100%;
-    }
-    .iconWrap {
-      align-items: center;
-      border-radius: var(--radius-sm);
-      display: flex;
-      height: 36px;
-      justify-content: center;
-      width: 36px;
-      .icon {
-        font-size: var(--font-3xl);
-      }
-    }
-  }
-`;
-
 const enabledList = [
   { label: _l('全部状态'), value: 0 },
   { label: _l('开启'), value: true },
@@ -234,6 +194,8 @@ function AddWorkflowDialog(props) {
     list: [],
     checked: [],
   });
+  const [submitting, setSubmitting] = useState(false);
+  const requestPending = useRef(false);
 
   const [{ appList, appLoading, appIndex, total }, setApp] = useSetState({
     appList: [],
@@ -321,7 +283,11 @@ function AddWorkflowDialog(props) {
   };
 
   const addWorkflow = ids => {
-    resourceApi
+    if (requestPending.current) return undefined;
+
+    requestPending.current = true;
+    setSubmitting(true);
+    return resourceApi
       .addProcess({
         apkId: appId,
         companyId: projectId,
@@ -333,8 +299,9 @@ function AddWorkflowDialog(props) {
           alert(_l('添加成功'));
           onOk();
           init();
+          return undefined;
         } else {
-          projectAjax
+          return projectAjax
             .getComputingInstances({ projectId, resourceIds: res.map(l => l.resourceId) })
             .then(resourceRes => {
               setCheckedDialog({
@@ -350,11 +317,18 @@ function AddWorkflowDialog(props) {
               });
             });
         }
+      })
+      .finally(() => {
+        requestPending.current = false;
+        setSubmitting(false);
       });
   };
 
   const moveWorkflow = () => {
-    if (checkedDialog.checked.length === 0) return;
+    if (checkedDialog.checked.length === 0 || requestPending.current) return undefined;
+
+    requestPending.current = true;
+    setSubmitting(true);
 
     let list = checkedDialog.list.filter(l => checkedDialog.checked.includes(l.id));
     let listResourceIds = _.uniq(list.map(l => l.resourceId));
@@ -369,11 +343,16 @@ function AddWorkflowDialog(props) {
         });
       }),
     );
-    promiseList.then(() => {
-      alert(_l('移动成功'));
-      init();
-      onOk();
-    });
+    return promiseList
+      .then(() => {
+        alert(_l('移动成功'));
+        init();
+        onOk();
+      })
+      .finally(() => {
+        requestPending.current = false;
+        setSubmitting(false);
+      });
   };
 
   const renderList = list => {
@@ -423,55 +402,6 @@ function AddWorkflowDialog(props) {
           );
         })}
         {loading && <LoadDiv className="mTop15" size="small" />}
-      </ScrollView>
-    );
-  };
-
-  const renderCheckedList = list => {
-    if (!list || list.length === 0) return null;
-
-    return (
-      <ScrollView className="flex workflowListWrap">
-        {list.map(item => {
-          return (
-            <div className="listItem" key={`checkedWorkflowList-${item.id}`}>
-              <div className="columnCheckbox">
-                <Checkbox
-                  value={item.id}
-                  text={null}
-                  checked={checkedDialog.checked.includes(item.id)}
-                  onClick={(checkd, id) => {
-                    let _value = checkd
-                      ? checkedDialog.checked.filter(l => l !== id)
-                      : checkedDialog.checked.concat(id);
-                    setCheckedDialog({
-                      ...checkedDialog,
-                      checked: _value,
-                    });
-                  }}
-                />
-              </div>
-              <div className="columnName flex">
-                <IsAppAdmin
-                  className="alignItemsCenter workflowInfoWrap"
-                  appId={item.app.id}
-                  appName={item.process.name}
-                  defaultIcon={
-                    (START_APP_TYPE[item.process.child ? 'subprocess' : item.process.startAppType] || {}).iconName
-                  }
-                  iconColor={
-                    (START_APP_TYPE[item.process.child ? 'subprocess' : item.process.startAppType] || {}).iconColor
-                  }
-                  createType={2}
-                />
-              </div>
-              <div className="columnType">
-                {(START_APP_TYPE[item.process.child ? 'subprocess' : item.process.startAppType] || {}).text}
-              </div>
-              <div className="columnStatus textPrimary">{item.name}</div>
-            </div>
-          );
-        })}
       </ScrollView>
     );
   };
@@ -645,57 +575,19 @@ function AddWorkflowDialog(props) {
           </div>
         </AddWorkflowDialogContentWrap>
       </Dialog>
-      <Dialog
-        className="checkedWorkflowDialog"
-        dialogClasses="addWorkflowDialogContainer"
+      <WorkflowConflictDialog
         visible={checkedDialog.visible}
-        width={740}
-        title={<span className="Font17 bold">{_l('检测到工作流已存在其他专属算力中，是否移动？')}</span>}
-        footer={
-          <div>
-            <Button type="ghostgray" onClick={moveWorkflow}>
-              {`${_l('移动')}(${checkedDialog.checked.length})`}
-            </Button>
-            <Button
-              onClick={() => {
-                init();
-                onOk();
-              }}
-            >
-              {_l('不移动')}
-            </Button>
-          </div>
-        }
-        onOk={() => {}}
-        onCancel={() => {
+        list={checkedDialog.list}
+        totalCount={value.length}
+        checked={checkedDialog.checked}
+        submitting={submitting}
+        onCheckedChange={checked => setCheckedDialog({ ...checkedDialog, checked })}
+        onMove={moveWorkflow}
+        onNotMove={() => {
           init();
           onOk();
         }}
-      >
-        <CheckedWorkflowWrap>
-          <div className="headerCon listItem mTop8">
-            <div className="columnCheckbox">
-              <Checkbox
-                checked={
-                  checkedDialog.checked.length !== 0 && checkedDialog.list.length === checkedDialog.checked.length
-                }
-                text={null}
-                value={checkedDialog.list.map(l => l.id)}
-                onClick={(_checkd, value) => {
-                  setCheckedDialog({
-                    ...checkedDialog,
-                    checked: value,
-                  });
-                }}
-              />
-            </div>
-            <div className="columnName flex">{_l('工流程名称')}</div>
-            <div className="columnType">{_l('类型')}</div>
-            <div className="columnStatus">{_l('所属算力服务')}</div>
-          </div>
-          {renderCheckedList(checkedDialog.list)}
-        </CheckedWorkflowWrap>
-      </Dialog>
+      />
     </Fragment>
   );
 }

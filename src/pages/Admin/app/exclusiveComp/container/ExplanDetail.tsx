@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { ConfigProvider, Empty, Select, Table } from 'antd';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
@@ -16,9 +16,22 @@ import { navigateTo } from 'src/router/navigateTo';
 import withRouter from '../../../../../router/withRouter';
 import IsAppAdmin from '../../../components/IsAppAdmin';
 import PaginationWrap from '../../../components/PaginationWrap';
+import { alertIfNotUnauthorized } from 'src/utils/services/request/error';
 import AddWorkflowDialog from '../component/AddWorkflowDialog';
+import HistoryWorkflowTable from '../component/HistoryWorkflowTable';
 import MoveWorkflowDialog from '../component/MoveWorkflowDialog';
+import WorkflowConflictDialog from '../component/WorkflowConflictDialog';
 import { COMPUTING_INSTANCE_STATUS, TYPE_LIST } from '../config';
+import {
+  canShowComputingInstanceHistory,
+  checkHistoryWorkflowConflicts,
+  getAllHistoryWorkflowIds,
+  getHistoryWorkflowMoveIds,
+  getHistoryWorkflowRequestParams,
+  isHistoryComputingRoute,
+  normalizeHistoryWorkflowResult,
+} from '../historyWorkflow';
+import type { ComputingInstanceSnapshot, HistoryWorkflowConflict, HistoryWorkflowItem } from '../historyWorkflow';
 import '../index.less';
 
 const ActionOpWrap = styled.ul`
@@ -47,9 +60,11 @@ const renderEmpty = () => {
 };
 
 function ExplanDetail(props) {
-  const { projectId, id, history } = props;
+  const { projectId, id, history, location } = props;
+  /** 历史模式由 URL 的 ?mode=history 决定（与官方 3da 的入口一致）。 */
+  const isHistoryMode = isHistoryComputingRoute(location?.search);
 
-  const [workflowData, setWorkflowData] = useState({
+  const [workflowData, setWorkflowData] = useState<{ count: number; list: HistoryWorkflowItem[] }>({
     count: 0,
     list: [],
   });
@@ -62,17 +77,38 @@ function ExplanDetail(props) {
   });
   const [actionOp, setActionOp] = useState(-1);
   const [selectKeys, setSelectKeys] = useState([]);
-  const [moveWorkflowDialog, setMoveWorkflowDialog] = useState({
+  const [moveWorkflowDialog, setMoveWorkflowDialog] = useState<{
+    visible: boolean;
+    ids: string[];
+    isHistory?: boolean;
+  }>({
     visible: false,
     ids: [],
   });
   const [addWorkflowDialog, setAddWorkflowDialog] = useState({
     visible: false,
   });
-  const [explanInfo, setExplanInfo] = useState(undefined);
+  const [explanInfo, setExplanInfo] = useState<ComputingInstanceSnapshot | undefined>(undefined);
   const [loading, setLoading] = useState(true);
+  const [historyConflictDialog, setHistoryConflictDialog] = useState<{
+    visible: boolean;
+    list: HistoryWorkflowConflict[];
+    checked: string[];
+    workflowIds: string[];
+    targetResourceId: string;
+  }>({ visible: false, list: [], checked: [], workflowIds: [], targetResourceId: '' });
+  const [historyIdsLoading, setHistoryIdsLoading] = useState(false);
+  const [historyMoveSubmitting, setHistoryMoveSubmitting] = useState(false);
+  const historyMovePending = useRef(false);
+  const historyWorkflowCount = (explanInfo || {}).workflowCount || 0;
+  const showHistoryInfo = canShowComputingInstanceHistory(isHistoryMode, explanInfo);
+  const showHistoryWorkflowActions = showHistoryInfo && historyWorkflowCount > 0;
+  const historyWorkflowActionDisabled =
+    historyIdsLoading || historyMoveSubmitting || historyConflictDialog.visible;
 
   useState(() => {
+    // 历史模式下实例快照来自历史工作流接口的 instance 字段，不再单独取详情。
+    if (isHistoryMode) return;
     projectAjax
       .getComputingInstanceDetail({
         projectId: projectId,
@@ -88,8 +124,25 @@ function ExplanDetail(props) {
     getProcessList();
   }, [filters.search, filters.pageIndex, filters.apkId, filters.workflowType]);
 
-  const getProcessList = (resourceId?) => {
+  const getProcessList = (resourceId?: string) => {
     setLoading(true);
+
+    if (isHistoryMode) {
+      projectAjax
+        .getComputingInstanceHistoryWorkflows(
+          getHistoryWorkflowRequestParams({ projectId, id, filters, pageSize: PAGE_SIZE }),
+        )
+        .then(normalizeHistoryWorkflowResult)
+        .then(result => {
+          setLoading(false);
+          setWorkflowData({ list: result.list, count: result.count });
+          if (result.instance) {
+            setExplanInfo(result.instance);
+          }
+        });
+      return;
+    }
+
     let _resourceId = resourceId || (explanInfo || {}).resourceId;
     if (!_resourceId) return;
     let promiseList = Promise.all([
@@ -139,23 +192,131 @@ function ExplanDetail(props) {
       });
   };
 
-  const removeWorkflow = (ids, targetResourceId?) => {
-    if (!ids || ids.length === 0) return;
+  const removeWorkflow = (
+    ids: string[],
+    targetResourceId?: string,
+    options: { showSuccess?: boolean } = {},
+  ): Promise<boolean> => {
+    if (!ids || ids.length === 0) return Promise.resolve(false);
 
-    resourceApi
-      .moveProcess({
-        moveToResourceId: targetResourceId || '',
-        processIds: ids,
-        resourceId: (explanInfo || {}).resourceId,
-        companyId: projectId,
+    const { showSuccess = true } = options;
+    const request = isHistoryMode
+      ? projectAjax.moveComputingInstanceHistoryWorkflows({
+          projectId,
+          id,
+          targetResourceId,
+          workflowIds: ids,
+        })
+      : resourceApi.moveProcess({
+          moveToResourceId: targetResourceId || '',
+          processIds: ids,
+          resourceId: (explanInfo || {}).resourceId,
+          companyId: projectId,
+        });
+
+    return request.then((res: boolean) => {
+      if (res) {
+        if (showSuccess) alert(_l('移动成功'));
+
+        getProcessList();
+      } else {
+        alert(_l('移动失败'), 2);
+      }
+
+      return res;
+    });
+  };
+
+  const openHistoryWorkflowDialog = () => {
+    if (historyIdsLoading || historyMoveSubmitting || historyConflictDialog.visible) return;
+
+    setHistoryIdsLoading(true);
+    getAllHistoryWorkflowIds({
+      request: params => projectAjax.getComputingInstanceHistoryWorkflows(params),
+      projectId,
+      id,
+    })
+      .then(workflowIds => {
+        if (!workflowIds.length) {
+          alert(_l('暂无可添加的历史工作流'), 3);
+          return;
+        }
+
+        setMoveWorkflowDialog({
+          visible: true,
+          ids: workflowIds,
+          isHistory: true,
+        });
       })
+      .catch((requestError: unknown) => alertIfNotUnauthorized(requestError, _l('获取历史工作流失败'), 2))
+      .finally(() => setHistoryIdsLoading(false));
+  };
+
+  const resetHistoryConflictDialog = () => {
+    setHistoryConflictDialog({ visible: false, list: [], checked: [], workflowIds: [], targetResourceId: '' });
+  };
+
+  const prepareHistoryWorkflowMove = (workflowIds: string[], targetResourceId: string) => {
+    if (historyMovePending.current) return;
+
+    historyMovePending.current = true;
+    setHistoryMoveSubmitting(true);
+    return checkHistoryWorkflowConflicts({
+      request: params => projectAjax.checkMoveComputingInstanceHistoryWorkflows(params),
+      projectId,
+      id,
+      targetResourceId,
+      workflowIds,
+    })
+      .then(conflicts => {
+        if (!conflicts.length) {
+          return removeWorkflow(workflowIds, targetResourceId);
+        }
+
+        setHistoryConflictDialog({
+          visible: true,
+          list: conflicts,
+          checked: conflicts.map(item => item.id),
+          workflowIds,
+          targetResourceId,
+        });
+        return undefined;
+      })
+      .catch((requestError: unknown) => alertIfNotUnauthorized(requestError, _l('检查工作流冲突失败'), 2))
+      .finally(() => {
+        historyMovePending.current = false;
+        setHistoryMoveSubmitting(false);
+      });
+  };
+
+  const submitHistoryWorkflowMove = (checkedConflictIds: string[]) => {
+    if (historyMovePending.current) return;
+
+    const conflictIds = historyConflictDialog.list.map(item => item.id);
+    const workflowIds = getHistoryWorkflowMoveIds({
+      workflowIds: historyConflictDialog.workflowIds,
+      conflictIds,
+      checkedConflictIds,
+    });
+
+    if (!workflowIds.length) {
+      resetHistoryConflictDialog();
+      return;
+    }
+
+    historyMovePending.current = true;
+    setHistoryMoveSubmitting(true);
+    return removeWorkflow(workflowIds, historyConflictDialog.targetResourceId, {
+      showSuccess: checkedConflictIds.length > 0,
+    })
       .then(res => {
         if (res) {
-          alert(_l('移动成功'));
-          getProcessList();
-        } else {
-          alert(_l('移动失败'), 2);
+          resetHistoryConflictDialog();
         }
+      })
+      .finally(() => {
+        historyMovePending.current = false;
+        setHistoryMoveSubmitting(false);
       });
   };
 
@@ -278,6 +439,32 @@ function ExplanDetail(props) {
         )}
       </div>
       <div className="explanDetailContent flex">
+        {showHistoryInfo && explanInfo && (
+          <div className="historyWorkflowNotice flexRow alignItemsCenter">
+            <Icon icon="info_outline" className="Font18 mRight10" />
+            <span className="bold">
+              {_l(
+                '本专属算力已于 %0 到期',
+                explanInfo.expirationDatetime
+                  ? moment(explanInfo.expirationDatetime).format(_l('YYYY-MM-DD'))
+                  : '_',
+              )}
+              {showHistoryWorkflowActions &&
+                _l('，以下 %0 条工作流为到期前的历史记录，已自动释放。', historyWorkflowCount)}
+            </span>
+            {showHistoryWorkflowActions && (
+              <Fragment>
+                <span className="flex" />
+                <span
+                  className={cx('addHistoryWorkflow', { disabled: historyWorkflowActionDisabled })}
+                  onClick={openHistoryWorkflowDialog}
+                >
+                  {_l('添加到其他算力')}
+                </span>
+              </Fragment>
+            )}
+          </div>
+        )}
         <div className="actionCon flexRow">
           <Select
             className="selectItem"
@@ -327,55 +514,63 @@ function ExplanDetail(props) {
             }, 500)}
           />
           <div className="flex"></div>
-          <span
-            className={cx('actionBtn mRight20', { disabled: selectKeys.length === 0 })}
-            onClick={() => {
-              if (selectKeys.length === 0) return;
-              setMoveWorkflowDialog({
-                ...workflowData,
-                visible: true,
-                ids: selectKeys,
-              });
-            }}
-          >
-            {_l('移动到')}
-          </span>
-          <span
-            className={cx('actionBtn mRight20', { disabled: selectKeys.length === 0 })}
-            onClick={() => {
-              if (selectKeys.length === 0) return;
-              Confirm({
-                className: '',
-                title: selectKeys.length === 1 ? _l('移出工作流') : _l('移出%0个工作流', selectKeys.length),
-                okText: _l('移出'),
-                buttonType: 'danger',
-                cancelText: _l('取消'),
-                onOk: () => {
-                  removeWorkflow(selectKeys);
-                },
-              });
-            }}
-          >
-            {_l('移出')}
-          </span>
-          <Button
-            type="primary"
-            icon="add"
-            className="addBtn"
-            size="small"
-            disabled={explanInfo && explanInfo.status !== COMPUTING_INSTANCE_STATUS.Running}
-            onClick={() => {
-              setAddWorkflowDialog({
-                visible: true,
-              });
-            }}
-          >
-            {_l('工作流')}
-          </Button>
+          {!isHistoryMode && (
+            <Fragment>
+              <span
+                className={cx('actionBtn mRight20', { disabled: selectKeys.length === 0 })}
+                onClick={() => {
+                  if (selectKeys.length === 0) return;
+                  setMoveWorkflowDialog({
+                    ...workflowData,
+                    visible: true,
+                    ids: selectKeys,
+                  });
+                }}
+              >
+                {_l('移动到')}
+              </span>
+              <span
+                className={cx('actionBtn mRight20', { disabled: selectKeys.length === 0 })}
+                onClick={() => {
+                  if (selectKeys.length === 0) return;
+                  Confirm({
+                    className: '',
+                    title: selectKeys.length === 1 ? _l('移出工作流') : _l('移出%0个工作流', selectKeys.length),
+                    okText: _l('移出'),
+                    buttonType: 'danger',
+                    cancelText: _l('取消'),
+                    onOk: () => {
+                      removeWorkflow(selectKeys);
+                    },
+                  });
+                }}
+              >
+                {_l('移出')}
+              </span>
+              <Button
+                type="primary"
+                icon="add"
+                className="addBtn"
+                size="small"
+                disabled={explanInfo && explanInfo.status !== COMPUTING_INSTANCE_STATUS.Running}
+                onClick={() => {
+                  setAddWorkflowDialog({
+                    visible: true,
+                  });
+                }}
+              >
+                {_l('工作流')}
+              </Button>
+            </Fragment>
+          )}
+
         </div>
         <div className="listCon flex">
-          <ConfigProvider renderEmpty={renderEmpty}>
-            <Table
+          {isHistoryMode ? (
+            <HistoryWorkflowTable loading={loading} list={workflowData.list} projectId={projectId} />
+          ) : (
+            <ConfigProvider renderEmpty={renderEmpty}>
+              <Table
               loading={loading}
               className="workflowTable"
               rowClassName="workflowTableTitleRow"
@@ -388,9 +583,10 @@ function ExplanDetail(props) {
               columns={COLUMNS}
               dataSource={workflowData.list}
               rowKey={record => record.id}
-              pagination={false}
-            />
-          </ConfigProvider>
+                pagination={false}
+              />
+            </ConfigProvider>
+          )}
         </div>
         <PaginationWrap
           total={workflowData.count}
@@ -409,12 +605,23 @@ function ExplanDetail(props) {
           visible={moveWorkflowDialog.visible}
           projectId={projectId}
           sourceResourceId={explanInfo.resourceId}
-          onOk={value => {
+          title={
+            moveWorkflowDialog.isHistory
+              ? _l('将 %0 个历史工作流添加到其他专属算力', moveWorkflowDialog.ids.length)
+              : undefined
+          }
+          okText={moveWorkflowDialog.isHistory ? _l('确认') : undefined}
+          onOk={(value: string) => {
+            const { isHistory, ids: workflowIds = [] } = moveWorkflowDialog;
             setMoveWorkflowDialog({
-              ...moveWorkflowDialog,
               visible: false,
+              ids: [],
             });
-            removeWorkflow(moveWorkflowDialog.ids, value);
+            if (isHistory) {
+              prepareHistoryWorkflowMove(workflowIds, value);
+            } else {
+              removeWorkflow(workflowIds, value);
+            }
           }}
           onCancel={() => {
             setMoveWorkflowDialog({
@@ -442,6 +649,19 @@ function ExplanDetail(props) {
           }}
         />
       )}
+      <WorkflowConflictDialog
+        visible={historyConflictDialog.visible}
+        list={historyConflictDialog.list}
+        totalCount={historyConflictDialog.workflowIds.length}
+        checked={historyConflictDialog.checked}
+        submitting={historyMoveSubmitting}
+        onCheckedChange={checked => setHistoryConflictDialog({ ...historyConflictDialog, checked })}
+        onMove={() => {
+          if (!historyConflictDialog.checked.length) return;
+          submitHistoryWorkflowMove(historyConflictDialog.checked);
+        }}
+        onNotMove={() => submitHistoryWorkflowMove([])}
+      />
     </Fragment>
   );
 }

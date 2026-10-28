@@ -3330,6 +3330,12 @@ declare namespace HapApi.MD.Web.Ajax.ResultModel.Project {
     onlyManagerCreateApp?: boolean | undefined;
     /** （swagger 里没有，真实响应里有） */
     onlyManagerDeleteApp?: boolean | undefined;
+    /** Mingo AI 应用搭建功能开关，旧组织配置可能未提供。 */
+    mingoAppBuild?: boolean | undefined;
+    /** Mingo AI 数据查询与分析功能开关，旧组织配置可能未提供。 */
+    mingoDataQueryAndAnalysis?: boolean | undefined;
+    /** Mingo AI 其他功能开关，旧组织配置可能未提供。 */
+    mingoAppOthers?: boolean | undefined;
   }
   /** 获取自定义颜色response */
   interface GetColorSettingsResponse {

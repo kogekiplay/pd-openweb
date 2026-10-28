@@ -5,6 +5,7 @@ import cx from 'classnames';
 import _ from 'lodash';
 import { Icon, Input, LoadDiv, RadioGroup, Support } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import { parseFullNumberInput } from 'ming-ui/components/PhoneNumberInput/DialCodeSelect/utils';
 import { createIntlTelInput } from 'ming-ui/components/PhoneNumberInput/util';
 import { dialogSelectUser } from 'ming-ui/functions';
 import importUserController from 'src/api/importUser';
@@ -21,6 +22,8 @@ import './index.less';
 export default class AddUser extends Component<any, any> {
   declare mobile: HTMLInputElement | null | undefined;
   declare autonomously: HTMLInputElement | null | undefined;
+  // 真实首 200ms（切到手机邀请后）iti 尚未创建：如实声明 undefined，不用非空断言掩盖。
+  declare iti: ReturnType<typeof createIntlTelInput> | undefined;
   declare baseFormInfo: BaseFormInfo | null | undefined;
 
   constructor(props) {
@@ -478,12 +481,26 @@ export default class AddUser extends Component<any, any> {
                 this.clearError('mobile');
               }}
               onInput={e => {
-                const val = e.currentTarget.value.replace(/ +/g, '');
+                let val = e.currentTarget.value.replace(/ +/g, '');
+
+                if (val.startsWith('+')) {
+                  // 粘贴/输入完整国际号码：仅当 iti 已 ready 且仍挂在当前 DOM 上时，
+                  // 才剥成体号并 setNumber 同步区号；否则保留完整 +区号值，
+                  // 让后续 createIntlTelInput 从 + 号解析国别
+                  // （避免切手机邀请后 200ms 初始化窗口丢国别、默认落 CN）。
+                  const parsedNumber = parseFullNumberInput({ inputValue: val });
+
+                  if (parsedNumber && this.iti && this.iti.element === this.mobile) {
+                    val = parsedNumber.numberValue;
+                    this.iti.setNumber(parsedNumber.e164);
+                  }
+                }
+
                 this.changeFormInfo(val, 'mobile');
               }}
-              onBlur={e => {
+              onBlur={() => {
                 this.setState({ showMask: true });
-                this.checkedUser({ val: e.target.value, type: 'mobile' });
+                this.checkedUser({ val: this.state['mobile'], type: 'mobile' });
               }}
             />
             {errors['mobile'] && !!checkForm['mobile'](mobile, this.iti) && (

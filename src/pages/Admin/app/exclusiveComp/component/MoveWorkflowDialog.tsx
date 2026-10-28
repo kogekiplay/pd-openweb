@@ -30,7 +30,17 @@ const ContentWrap = styled.ul`
 `;
 
 function MoveWorkflowDialog(props) {
-  const { visible = false, onOk, onCancel, projectId, sourceResourceId } = props;
+  // 上游 7.5.3（MoveWorkflowDialog.jsx:29-38）：title/okText 只有解构默认（仅 undefined 生效），
+  // 没有 isHistory prop；历史模式的文案由调用方（ExplanDetail）显式传 title/okText。
+  const {
+    visible = false,
+    onOk,
+    onCancel,
+    projectId,
+    sourceResourceId,
+    title = _l('移动到'),
+    okText = _l('移动'),
+  } = props;
 
   const [select, setSelect] = useState(undefined);
   const [list, setList] = useState([]);
@@ -39,18 +49,19 @@ function MoveWorkflowDialog(props) {
     if (!visible || !projectId) return;
 
     projectAjax.getComputingInstances({ projectId }).then(res => {
-      setList(res.filter(l => l.resourceId !== sourceResourceId && l.status === 2));
+      setList((res || []).filter(l => l.resourceId !== sourceResourceId && l.status === 2));
     });
-  }, [visible]);
+  }, [projectId, sourceResourceId, visible]);
 
   return (
     <MoveWorkflowDialogWrap
       className="moveWorkflowDialog"
       visible={visible}
       width={600}
-      title={<span className="Font17 bold">{_l('移动到')}</span>}
-      okText={_l('移动')}
-      okDisabled={list.length === 0}
+      title={<span className="Font17 bold">{title}</span>}
+      okText={okText}
+      cancelText={_l('取消')}
+      okDisabled={list.length === 0 || !select}
       onOk={() => {
         let _select = select;
         onOk(_select);

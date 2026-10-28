@@ -26,4 +26,24 @@
 
 .orgManagementContent.roleAuth {
   padding-top: var(--space-4) !important;
+  display: flex;
+  flex-direction: column;
+
+  /* 「全员默认功能」入口卡片（上游 7.5.3 新增），占固定高度、不参与列表滚动。 */
+  .defaultFeatureCard {
+    flex-shrink: 0;
+    min-height: 72px;
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3) var(--space-4);
+    margin-bottom: var(--space-4);
+    box-sizing: border-box;
+  }
+
+  /* 加卡片后列表要让出空间，否则列表内容会被挤出可视区。 */
+  > .roleAuthTable {
+    flex: 1;
+    min-height: 0;
+    height: auto;
+  }
 }

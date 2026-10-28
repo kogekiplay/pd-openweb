@@ -7,6 +7,7 @@ import roleApi from 'src/api/role';
 import Config from '../../config';
 import ApplyRole from './applyForRole';
 import CreateEditRole from './createEditRole';
+import DefaultFeatureDrawer from './DefaultFeatureDrawer';
 import RoleList from './roleList';
 import './index.less';
 
@@ -16,6 +17,8 @@ interface RoleAuthState {
   applyCount: number;
   showApplyForRole: boolean;
   showCreateRole: boolean;
+  /** 「全员默认功能」抽屉（上游 7.5.3 新增入口）。 */
+  showDefaultFeatureDrawer: boolean;
 }
 
 export default class RoleAuth extends React.Component<any, RoleAuthState> {
@@ -27,6 +30,7 @@ export default class RoleAuth extends React.Component<any, RoleAuthState> {
       applyCount: 0,
       showApplyForRole: false,
       showCreateRole: false,
+      showDefaultFeatureDrawer: false,
     };
     Config.setPageTitle(_l('组织 - 管理员'));
   }
@@ -130,7 +134,8 @@ export default class RoleAuth extends React.Component<any, RoleAuthState> {
   }
 
   override render() {
-    const { isSuperAdmin } = this.state;
+    const { isSuperAdmin, showDefaultFeatureDrawer } = this.state;
+    const projectId = _.get(this.props, 'match.params.projectId');
 
     return (
       <div className="orgManagementWrap">
@@ -144,14 +149,36 @@ export default class RoleAuth extends React.Component<any, RoleAuthState> {
           )}
         </div>
         <div className="orgManagementContent roleAuth">
+          {isSuperAdmin && (
+            <div className="defaultFeatureCard flexRow alignItemsCenter">
+              <div className="flex">
+                <div className="bold mBottom6 Font15">{_l('全员默认功能')}</div>
+                <div className="textTertiary">
+                  {_l('配置全员默认拥有的功能权限。关闭后，该功能将仅对特定【权限组】的授权成员开放。')}
+                </div>
+              </div>
+              <span
+                className="colorPrimary hoverColorPrimaryDark bold Font14 pointer mLeft24"
+                onClick={() => this.setState({ showDefaultFeatureDrawer: true })}
+              >
+                {_l('设置')}
+              </span>
+            </div>
+          )}
           <RoleList
-            projectId={_.get(this.props, 'match.params.projectId')}
+            projectId={projectId}
             authority={this.props.authority}
             manualRef={comp => {
               this.roleList = comp;
             }}
           />
         </div>
+        {showDefaultFeatureDrawer && (
+          <DefaultFeatureDrawer
+            projectId={projectId}
+            onClose={() => this.setState({ showDefaultFeatureDrawer: false })}
+          />
+        )}
       </div>
     );
   }
