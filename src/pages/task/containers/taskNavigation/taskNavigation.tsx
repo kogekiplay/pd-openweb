@@ -12,7 +12,7 @@ import { LoadDiv, UserHead } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import ajaxRequest from 'src/api/taskCenter';
 import { expireDialogAsync } from 'src/components/upgradeVersion';
-import type { RootState } from 'src/redux/types';
+import type { AppDispatch, RootState } from 'src/redux/types';
 import { navigateTo } from 'src/router/navigateTo';
 import CopyFolder from '../../components/copyFolder/copyFolder';
 import FolderTemplate from '../../components/folderTemplate/folderTemplate';
@@ -378,8 +378,17 @@ export interface TaskNavigationState {
   isAdmin: boolean;
 }
 
-class TaskNavigation extends Component<any, TaskNavigationState> {
-  constructor(props) {
+/**
+ * 注入到本组件的真实 props（**全部由现有代码派生，不手抄字段**）：
+ * - `connect((state: RootState) => state.task)`（文件末行）→ 注入的 stateProps **就是整个 `state.task` slice**；
+ * - 唯一调用点 `taskCenter.tsx:321` 是 `<TaskNavigation />`，**不传任何 ownProps**；
+ * - `connect` 未传 mapDispatch → 额外注入 `dispatch`（类型取 `src/redux/types` 的 `AppDispatch`）。
+ * 因此 `RootState['task'] & { dispatch }` 是这组件的完整 props，而不是猜出来的 DTO。
+ */
+type TaskNavigationProps = RootState['task'] & { dispatch: AppDispatch };
+
+class TaskNavigation extends Component<TaskNavigationProps, TaskNavigationState> {
+  constructor(props: TaskNavigationProps) {
     super(props);
     this.state = {
       showFolderTemplate: false,
@@ -402,7 +411,7 @@ class TaskNavigation extends Component<any, TaskNavigationState> {
     this.bindTaskNavAllEvents();
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: TaskNavigationProps) {
     if (!shallowEqual(prevProps, this.props)) {
       if (this.props.taskConfig.filterUserId !== prevProps.taskConfig.filterUserId) {
         setTimeout(() => {

@@ -45,6 +45,11 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
   declare submitType: string;
   declare ignoreUpdateRelationCount: boolean | undefined;
   declare recordEditLock: RecordEditLock | undefined;
+  /** 草稿/提交动作，取值只来自 handleTriggerSave 的 4 个真实调用点（'save' | 'submit'） */
+  /** ActionSheet.show 的真实返回句柄（只有 close） */
+  declare confirmHandler: ReturnType<typeof ActionSheet.show> | null;
+  /** ChatCount 组件实例 ref（唯一挂载点 ref={this.chatCountRef}） */
+  declare chatCountRef: React.RefObject<ChatCount | null>;
 
   constructor(props) {
     super(props);
@@ -80,7 +85,7 @@ let RecordInfo = class RecordInfo extends Component<any, any> {
     this.debounceRefresh = _.debounce(this.refreshEvent, 1000);
     this.draftType = 'save'; // save: 保存  submit: 提交,
 
-    this.chatCountRef = createRef();
+    this.chatCountRef = createRef<ChatCount>();
   }
 
   get isPublicShare() {

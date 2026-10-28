@@ -36,7 +36,7 @@ interface SelectSendToFields {
   options: { el: string; type: number };
   /** 选中一项后回调，参数是列表里那一项的原始数据 */
   callback: (selected: ApiPayload) => void;
-  fetch: (params: { keywords: string; size: number; projectId?: string }) => Promise<ApiPayload>;
+  fetch: (params: { keywords: string; size: number; projectId?: string | undefined }) => Promise<ApiPayload>;
   /** 列表项展示用的字段名：value 是标题字段，headUrl 是头像字段（只有聊天有） */
   formatTpl: { value: string; headUrl?: string };
   create: () => Promise<ApiPayload>;
@@ -52,14 +52,18 @@ interface SelectSendToFields {
   isHoverList?: boolean;
   keywordsCache?: string;
   /** 第一次展开时拉到的列表，用来判断「再次展开要不要重新拉」 */
-  defaultListData?: ApiPayload[];
+  defaultListData?: ApiPayload[] | undefined;
   listData?: ApiPayload[];
   listTplData?: { value?: string; headUrl?: string }[];
   selectedData?: ApiPayload;
 }
 
 // 目的地选择列表组件
-function SelectSendTo(this: SelectSendToInstance, options: SelectSendToFields['options'], callback) {
+function SelectSendTo(
+  this: SelectSendToInstance,
+  options: SelectSendToFields['options'],
+  callback: SelectSendToFields['callback'],
+) {
   this.options = options;
   this.callback = callback;
   if (this.options.type === SEND_TO_TYPE.TASK) {
@@ -269,7 +273,7 @@ const selectSendToMethods = defineMethods<SelectSendToFields>()({
       },
     );
   },
-  select: function (key) {
+  select: function (key: number) {
     var ST = this;
     var html;
     var selectedItem = ST.listTplData[key];
@@ -291,7 +295,7 @@ const selectSendToMethods = defineMethods<SelectSendToFields>()({
     ST.elements.$selected.html(html);
     ST.hideList();
   },
-  formatDataTplData: function (data) {
+  formatDataTplData: function (data: ApiPayload[]) {
     var ST = this;
     var formatTpl = ST.formatTpl;
     return data.map(function (item) {
@@ -964,7 +968,7 @@ const shareAttachmentMethods = defineMethods<ShareAttachmentFields>()({
         alert(_l('已经复制到粘贴板，你可以使用Ctrl+V 贴到需要的地方'));
       });
   },
-  initSelectSendTo: function (type, callback) {
+  initSelectSendTo: function (type: number, callback: SelectSendToFields['callback']) {
     window.selectSendTo = new SelectSendTo(
       {
         el: '#selectSendTo',
