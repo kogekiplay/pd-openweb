@@ -10,6 +10,7 @@ import postAjax from 'src/api/post';
 import PostDetails from 'src/pages/feed/components/post/postDetails/postDetails';
 import TaskDetail from 'src/pages/task/containers/taskDetail/taskDetail';
 import RecordInfoWrapper from 'src/pages/worksheet/common/recordInfo/RecordInfoWrapper.jsx';
+import type { ChatMessage } from 'src/pages/chat/redux/types';
 import { htmlDecodeReg } from 'src/utils/common';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
 import * as utils from '../../../utils/';
@@ -19,6 +20,19 @@ import './index.less';
 const vertical: CSSProperties = {
   WebkitBoxOrient: 'vertical',
 };
+
+/**
+ * 消息卡实体 = canonical `ChatMessage['card']` 的 `NonNullable`。**不复制字段、不新增 wire 键。**
+ *
+ * 之所以可以去掉 `undefined`：唯一渲染点 `containers/Message/index.tsx:154-163` 在渲染本组件之前
+ * 已经 `const card = message.card; if (card === null || card === undefined) return undefined;`，
+ * 即**调用方已保证非空**；`render()` 里 `const { extra = {}, entityid } = card;` 依赖的正是同一保证
+ * （原实现同样如此，否则解构会抛）。所以这里**不加守卫、不改原 throw 行为**，只是把既有保证写进类型。
+ *
+ * 边界：`extra` 仍是 canonical 的 `unknown`，`[key: string]: unknown` 仍是开放索引 ——
+ * 本文件**不认证** `extra` / `refer` 的 wire 形状。
+ */
+type MessageCard = NonNullable<ChatMessage['card']>;
 
 export default class CardMessage extends Component<any, any> {
   constructor(props) {
@@ -108,7 +122,7 @@ export default class CardMessage extends Component<any, any> {
       },
     );
   }
-  handleOpenCardMessage(card) {
+  handleOpenCardMessage(card: MessageCard) {
     const { md, url } = card;
 
     if (md == '' || md == 'url' || md == 'kcfolder' || md === 'worksheet') {
@@ -265,7 +279,9 @@ export default class CardMessage extends Component<any, any> {
       ></div>
     );
   }
-  renderCardContent(title: string) {
+  /** `title` 在 canonical 卡实体上是 `title?: string | undefined`（见 `ChatMessage['card']`）。
+   *  渲染处只做模板插值（`ReactNode` 接受 `undefined`），故按真实域声明，**不做兜底字符串**。 */
+  renderCardContent(title: string | undefined) {
     return <div className="Message-cardItem">{title}</div>;
   }
   renderVote() {
@@ -313,12 +329,12 @@ export default class CardMessage extends Component<any, any> {
       </div>
     );
   }
-  renderCardHeader(card) {
+  renderCardHeader(card: MessageCard) {
     const { md } = card;
     const { cardDetails } = this.state;
     const { commentCount, attachments, entityName } = cardDetails;
     const disposeName = utils.cardDisposeName(card);
-    let name = '';
+    let name: string | undefined = '';
 
     if (md === 'task' || md === 'calendar' || md === 'worksheet') {
       name = `${disposeName.name}: ${card.title}`;
@@ -345,7 +361,7 @@ export default class CardMessage extends Component<any, any> {
       </div>
     );
   }
-  renderCardBody(card) {
+  renderCardBody(card: MessageCard) {
     const { md, title } = card;
     const { cardDetails } = this.state;
 

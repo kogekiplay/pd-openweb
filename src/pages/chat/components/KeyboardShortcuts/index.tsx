@@ -77,6 +77,24 @@ const DialogWrap = styled(Dialog)`
 `;
 
 /**
+ * HotKeys.json 响应是服务端 dynamic（src/api/fixedDataTypes.ts 记录：无 swagger operation、无 DTO），
+ * 下面只是**本组件真实消费到的字段视图**：未读取的键不声明、不裁剪、运行时原样保留。
+ * 字段类型来自既有消费代码本身（`split(' ')` ⇒ string；渲染为文本 ⇒ string|undefined）。
+ */
+interface HostKeyShortcut {
+  action?: string | undefined;
+  'shortcut-mac'?: string | undefined;
+  'shortcut-win'?: string | undefined;
+}
+
+interface HostKeySection {
+  section?: string | undefined;
+  description?: string | undefined;
+  shortcuts?: HostKeyShortcut[] | undefined;
+  children?: HostKeySection[] | undefined;
+}
+
+/**
  * 弹窗入口的唯一真实来源：`dialogKeyboardShortcuts()` 经 ming-ui `functionWrap` 挂载。
  * FunctionWrap 注入（src/ming-ui/components/FunctionWrap.tsx:88-100）：
  * - visible：未自定义 visibleName 时恒为 true；
@@ -109,7 +127,7 @@ export default function KeyboardShortcuts(props: KeyboardShortcutsProps) {
   const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
   const shortcutKey = isMac ? 'shortcut-mac' : 'shortcut-win';
 
-  const renderShortcut = shortcut => {
+  const renderShortcut = (shortcut: HostKeyShortcut) => {
     if (!shortcut[shortcutKey]) return null;
     return shortcut[shortcutKey].split(' ').map((v, index: number) => (
       <span key={index} className="shortcutKey">
@@ -118,7 +136,7 @@ export default function KeyboardShortcuts(props: KeyboardShortcutsProps) {
     ));
   };
 
-  const renderShortcutsList = shortcuts => {
+  const renderShortcutsList = (shortcuts?: HostKeyShortcut[]) => {
     if (!shortcuts || shortcuts.length === 0) return null;
 
     return shortcuts.map((shortcut, index: number) => (
@@ -129,7 +147,7 @@ export default function KeyboardShortcuts(props: KeyboardShortcutsProps) {
     ));
   };
 
-  const renderContent = (data, level = 0) => {
+  const renderContent = (data?: HostKeySection, level = 0) => {
     if (!data) return null;
 
     return (

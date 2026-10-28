@@ -54,7 +54,12 @@ export default class TextareaBox extends Component<TextareaBoxProps, any> {
     this.compositionEndTime = 0;
   }
 
-  static getDerivedStateFromProps(nextProps: TextareaBoxProps, prevState) {
+  static getDerivedStateFromProps(
+    nextProps: TextareaBoxProps,
+    // 本函数真实只读 prevState.propValue；其两个 writer（constructor:49、本函数:61）都从 TextareaBoxProps['value'] 写入。
+    // 只声明这一个稳定 slot，不认证整个 state（jQuery.val 仍 opaque，value 仍是旧 any）。
+    prevState: { propValue: TextareaBoxProps['value'] },
+  ) {
     if (nextProps.value !== prevState.propValue) {
       return {
         value: nextProps.value,
