@@ -27,7 +27,9 @@ export const initialState = {
 function updateAppOfState(state, appId: string, update = data => data) {
   ['apps', 'markedApps', 'externalApps', 'aloneApps', 'activeGroupApps', 'recentApps', 'ownedApps'].forEach(key => {
     if (state[key]) {
-      state[key] = state[key].map(app => (app.id === appId ? update(app) : app));
+      state[key] = state[key].map((app: HapApi.MD.Web.Ajax.ResultModel.App.AppBaseDto) =>
+        app.id === appId ? update(app) : app,
+      );
     }
   });
   return state;
@@ -45,7 +47,7 @@ function deleteAppOfState(state, appId: string) {
     'ownedApps',
   ].forEach(key => {
     if (state[key]) {
-      state[key] = state[key].filter(app => app.id !== appId);
+      state[key] = state[key].filter((app: HapApi.MD.Web.Ajax.ResultModel.App.AppBaseDto) => app.id !== appId);
     }
   });
   ['groups', 'markedGroup'].forEach(key => {
@@ -66,7 +68,9 @@ function deleteAppOfState(state, appId: string) {
 function updateGroupOfState(state, groupId: string, update = data => data) {
   ['groups', 'markedGroup'].forEach(key => {
     if (state[key]) {
-      state[key] = state[key].map(group => (group.id === groupId ? update(group) : group));
+      state[key] = state[key].map((group: HapApi.MD.Web.Ajax.ResultModel.App.AppGroupDto) =>
+        group.id === groupId ? update(group) : group,
+      );
     }
   });
   return state;
@@ -370,13 +374,18 @@ function handleDashboardOrAppResponse(
   }
 
   let groups = [...(data.projectGroups || []), ...(data.personalGroups || [])];
-  const markedGroup = (data.markedGroupIds || []).map(id => _.find(groups, { id })).filter(_.identity);
-  groups = groups.map(g => ({ ...g, isMarked: !!_.find(markedGroup, { id: g.id }) }));
+  const markedGroup = (data.markedGroupIds || [])
+    .map((id: string) => _.find(groups, { id }))
+    .filter(_.identity);
+  groups = groups.map((g: HapApi.MD.Web.Ajax.ResultModel.App.AppGroupDto) => ({
+    ...g,
+    isMarked: !!_.find(markedGroup, { id: g.id }),
+  }));
   const recentApps = (data.recentAppIds || [])
-    .map(item => {
-      return (data.apps || []).filter(app => app.id === item)[0];
+    .map((item: string | null) => {
+      return (data.apps || []).filter((app: HapApi.MD.Web.Ajax.ResultModel.App.AppBaseDto) => app.id === item)[0];
     })
-    .filter(item => !!item);
+    .filter((item: HapApi.MD.Web.Ajax.ResultModel.App.AppBaseDto | undefined) => !!item);
   dispatch({
     type: 'UPDATE_VALUES',
     values: {

@@ -181,8 +181,8 @@ export function focusUpdater() {
  * 加载置顶动态
  * @param  {string} projectId 网络 id, 全部为 null, 其他协作群等没非网络的情况下为空字符串
  */
-export function loadTop(projectId?) {
-  return dispatch => {
+export function loadTop(projectId?: string | null) {
+  return (dispatch: AppDispatch) => {
     dispatch({ type: 'POST_LOAD_TOP_START' });
     if (projectId === '') {
       // 其他协作群组
@@ -297,8 +297,8 @@ export function filter(inputOptions) {
   };
 }
 
-export function getPostDetail(postId, knowledgeId?, projectId?: string | undefined) {
-  return dispatch => {
+export function getPostDetail(postId: string, knowledgeId?: string | undefined, projectId?: string | undefined) {
+  return (dispatch: AppDispatch) => {
     dispatch({ type: 'POST_GET_POST_DETAIL_START', postId });
     postAjax.getPostDetail({ postId, knowledgeId, projectId }).then(
       postItem => {
@@ -327,8 +327,8 @@ export function addSuccess(postItem, toPostWall = true) {
   };
 }
 
-export function remove(postId) {
-  return dispatch => {
+export function remove(postId: string) {
+  return (dispatch: AppDispatch) => {
     dispatch({ type: 'POST_REMOVE_START', postId });
     postAjax
       .removePost({
@@ -563,7 +563,7 @@ export function addComment(args, successCallback, failCallback) {
   };
 }
 
-export function removeComment(postID, commentID) {
+export function removeComment(postID: string, commentID: string) {
   return (dispatch: AppDispatch, getState: GetState) => {
     dispatch({ type: 'POST_REMOVE_COMMENT_START' });
     postAjax
@@ -595,7 +595,7 @@ export function removeComment(postID, commentID) {
   };
 }
 
-export function loadMoreComments(postId) {
+export function loadMoreComments(postId: string) {
   return (dispatch: AppDispatch, getState: GetState) => {
     dispatch({ type: 'POST_LOAD_MORE_COMMENTS_START' });
     postAjax
@@ -622,7 +622,7 @@ export function loadMoreComments(postId) {
 }
 
 export function edit(args, successCallback, failCallback) {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({ type: 'POST_EDIT_START', args });
     postAjax
       .editPost(args)

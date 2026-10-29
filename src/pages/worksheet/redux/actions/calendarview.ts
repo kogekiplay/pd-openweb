@@ -245,7 +245,7 @@ const dataResort = obj => {
   return newArr;
 };
 
-export function changeCalendarTime(start, end) {
+export function changeCalendarTime(start: string, end: string) {
   return dispatch => {
     dispatch({ type: 'CHANGE_CALENDAR_VIEW_START', data: start });
     dispatch({ type: 'CHANGE_CALENDAR_VIEW_END', data: end });
@@ -585,7 +585,7 @@ export function getEventList({
   };
 }
 
-export function searchKeys(keyWords) {
+export function searchKeys(keyWords: string) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { calendarview } = getState().sheet;
     const { calenderEventList = {} } = calendarview;
@@ -599,7 +599,7 @@ export function searchKeys(keyWords) {
   };
 }
 
-export function searchEventArgs(keyWords, pageIndex: number) {
+export function searchEventArgs(keyWords: string, pageIndex: number) {
   return dispatch => {
     const typeEvent = readInitType();
     dispatch({ type: 'CHANGE_CALENDAR_LOADING', data: true });
@@ -607,7 +607,7 @@ export function searchEventArgs(keyWords, pageIndex: number) {
   };
 }
 
-export function updateEventList(pageIndex: number, isUp) {
+export function updateEventList(pageIndex: number, isUp: boolean) {
   return (dispatch: AppDispatch, getState: GetState) => {
     const { calendarview } = getState().sheet;
     const { calenderEventList = {} } = calendarview;
@@ -652,7 +652,7 @@ export function refreshEventList() {
 }
 
 //当前新增表单
-export function updateCalendarEventIsAdd(data) {
+export function updateCalendarEventIsAdd(data: boolean) {
   return dispatch => {
     dispatch({
       type: 'CALENDAR_EVENT_IS_ADD',

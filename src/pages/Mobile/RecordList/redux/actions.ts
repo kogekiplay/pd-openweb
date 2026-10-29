@@ -969,7 +969,7 @@ const getBoardViewPara = (sheet = {}) => {
 };
 
 // 获取看板下一页分组
-export const loadBoardViewNextGroup = ({ callback = _.noop }) => {
+export const loadBoardViewNextGroup = ({ callback = _.noop }: { callback?: (() => void) | undefined }) => {
   return (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().mobile;
     const { boardView } = sheet;
@@ -1005,7 +1005,7 @@ export const loadBoardViewNextGroup = ({ callback = _.noop }) => {
 
 // 获取看板单个分组下的数据（滚动加载）
 export const loadBoardViewGroupItemData =
-  ({ pageIndex = 1, kanbanKey }, callback = _.noop) =>
+  ({ pageIndex = 1, kanbanKey }, callback: () => void = _.noop) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().mobile;
     const { boardView } = sheet;
