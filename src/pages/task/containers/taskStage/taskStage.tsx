@@ -67,7 +67,7 @@ class TaskStage extends Component<any, TaskStageState> {
     this.props.emitter.addListener('UPDATE_TASK_CHARGE', this.renderChargeHeaderAvatar.bind(this));
   }
 
-  override componentDidUpdate(prevProps) {
+  override componentDidUpdate(prevProps: Pick<RootState['task'], 'taskConfig'>) {
     if (!shallowEqual(prevProps, this.props)) {
       // 减少proejctId不同的而发生的请求
       const nextConfig = Object.assign({}, this.props.taskConfig);

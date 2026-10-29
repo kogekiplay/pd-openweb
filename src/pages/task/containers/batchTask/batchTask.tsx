@@ -179,8 +179,10 @@ interface TaskMember {
 interface BatchAuthTask {
   TaskID: string;
   status: boolean;
-  TaskName?: string;
-  avatar?: string;
+  /** producer 一律写 `attr('title')`（jQuery 返回 string | undefined），故必须显式允许 undefined */
+  TaskName?: string | undefined;
+  /** producer 写 `attr('src')` 或 md.global.Account.avatar，同样可能是 undefined */
+  avatar?: string | undefined;
   [key: string]: any;
 }
 
