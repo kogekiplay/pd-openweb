@@ -2465,7 +2465,27 @@ export default function ChatPanel({
 // plan 阶段：消息含 plan-card 时启用重排——text → ThinkingSummary(reasoning) → plan-card → error
 // tool / route part 直接隐藏（plan agent 的 load_skill 噪声），无 reasoning 时不渲染"已思考"
 // 其它阶段（build / 普通对话）维持流式 part 原序渲染
-function renderPlanLayout({ message, parts, streamingLast, reasoningInProgress, onRetry, bus, activeVersionLabel }) {
+/** 唯一调用点是本文件 MessageRow（2586 行）：message/parts 来自 messages: ChatMessage[]（533 行 useState<ChatMessage[]>），
+ *  其余字段来自 MessageRow 的 props；onRetry 的真实签名是 retryAssistant(assistantId: string, promptText?: string): void（1624 行）。 */
+interface PlanLayoutParams {
+  message: ChatMessage;
+  parts: ChatMessagePart[];
+  streamingLast: boolean;
+  reasoningInProgress: boolean | undefined;
+  onRetry: (assistantId: string, promptText?: string) => void;
+  bus: AgentBus;
+  activeVersionLabel: string;
+}
+
+function renderPlanLayout({
+  message,
+  parts,
+  streamingLast,
+  reasoningInProgress,
+  onRetry,
+  bus,
+  activeVersionLabel,
+}: PlanLayoutParams) {
   const textParts = parts.filter(p => p.kind === 'text');
   const reasoningParts = parts.filter(p => p.kind === 'reasoning');
   const planParts = parts.filter(p => p.kind === 'plan-card');

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { IconChevronDown, IconChevronRight } from './icons';
 import { MarkdownText } from './MarkdownText';
+import type { ChatMessagePart } from '../types';
 import { colors, spacing } from './tokens';
 
 const Root = styled.section`
@@ -118,13 +119,20 @@ function formatDuration(ms: number) {
 }
 
 // 仅聚合 reasoning part；items 为空时整块不渲染（模型没产出推理 → 无"思考中/已思考"提示）
-export function ThinkingSummary({ items = [], streaming = false, defaultOpen = false }) {
+/** 复用消息片段模型；显式 undefined 沿用已有解构默认值。 */
+export interface ThinkingSummaryProps {
+  items?: ChatMessagePart[] | undefined;
+  streaming?: boolean | undefined;
+  defaultOpen?: boolean | undefined;
+}
+
+export function ThinkingSummary({ items = [], streaming = false, defaultOpen = false }: ThinkingSummaryProps) {
   const [open, setOpen] = useState(streaming || defaultOpen);
   const [now, setNow] = useState(() => Date.now());
   const startTs = items.length ? Math.min(...items.map(p => p.ts || now)) : now;
   const endTs = streaming ? now : items.reduce((acc, p) => Math.max(acc, p.ts || 0), startTs);
   const prevStreamingRef = useRef(streaming);
-  const contentRef = useRef(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!streaming) return undefined;
