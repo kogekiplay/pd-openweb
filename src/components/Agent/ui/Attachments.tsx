@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import type { ChatAttachment } from '../types';
 import { IconClose, IconFile } from './icons';
 import { colors, radii, spacing, transitions, typography } from './tokens';
 
@@ -112,7 +113,7 @@ const RemoveButton = styled.button`
   }
 `;
 
-function getStatusLabel(item) {
+function getStatusLabel(item: ChatAttachment) {
   switch (item.status) {
     case 'uploading':
       return item.progress != null ? _l('上传中 %0%', item.progress) : _l('上传中');
@@ -127,7 +128,22 @@ function getStatusLabel(item) {
   }
 }
 
-export function Attachments({ items, variant = 'inline', align = 'left', removable = false, onRemove, className }: { className?: string; [key: string]: any }) {
+export function Attachments({
+  items,
+  variant = 'inline',
+  align = 'left',
+  removable = false,
+  onRemove,
+  className,
+}: {
+  items: ChatAttachment[];
+  onRemove?: ((id: string) => void) | undefined;
+  removable?: boolean | undefined;
+  variant?: string | undefined;
+  align?: string | undefined;
+  className?: string;
+  [key: string]: any;
+}) {
   if (!items.length) return null;
 
   return (

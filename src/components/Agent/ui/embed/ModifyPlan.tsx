@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { MouseEventHandler } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Dialog, Icon } from 'ming-ui';
@@ -52,7 +53,13 @@ const Chip = styled.div`
   }
 `;
 
-export function ModifyPlanChip({ count, onClick }) {
+export function ModifyPlanChip({
+  count,
+  onClick,
+}: {
+  count: number;
+  onClick: MouseEventHandler<HTMLDivElement>;
+}) {
   return (
     <Chip onClick={onClick}>
       <Icon className="bookIcon" icon="book" />

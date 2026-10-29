@@ -205,6 +205,11 @@ interface BatchTaskModule {
     authTask: BatchAuthTask[];
     [key: string]: any;
   };
+  initEvent: () => void;
+  loadTask: () => void;
+  renderSelectTags: () => void;
+  updateUserNotice: () => void;
+  getAllTaskIds: () => unknown[];
   [key: string]: any;
 }
 
@@ -542,7 +547,8 @@ BatchTask.renderSelectTags = () => {
 };
 
 BatchTask.getAllTaskIds = function () {
-  const allTaskIds = [];
+  // 元素来自 $(el).data('taskid')：jQuery 会按 getData 把纯数字/true/false/JSON 转成非字符串，故只能用 unknown
+  const allTaskIds: unknown[] = [];
   $.map($('.selectTask').toArray(), (_this: HTMLElement) => {
     allTaskIds.push($(_this).data('taskid'));
   });
@@ -1002,7 +1008,8 @@ BatchTask.builAuthTask = function (data, args, type, title: string) {
     const $selectTasks = $('#taskList .selectTask');
     let $item;
     let taskId;
-    const authObj = [];
+    // 三键视图：TaskName/avatar 复用既有 BatchAuthTask 的具名声明；TaskID 的 wire 值域不可证（同 jQuery data 反证）
+    const authObj: (Pick<BatchAuthTask, 'TaskName' | 'avatar'> & { TaskID: unknown })[] = [];
     let avatar;
 
     $.each($selectTasks, (_i, item) => {

@@ -3,7 +3,7 @@ import { SvgIcon } from 'ming-ui';
 import { colors, radii, spacing } from './tokens';
 
 // plan 产出的 appIcon 是 HAP customIcon 字体类（sys_ 前缀），按 URL 渲染 SVG。
-const customIconUrl = fileName => `https://fp1.mingdaoyun.cn/customIcon/${fileName}.svg`;
+const customIconUrl = (fileName: string) => `https://fp1.mingdaoyun.cn/customIcon/${fileName}.svg`;
 
 const flow = keyframes`
   0% { background-position: 0% 50%; }
@@ -28,14 +28,14 @@ const Card = styled.div`
   ${baseBorder}
 
   /* 可点击（带 onClick）时 hover 显示手型，提示卡片可选中 */
-  ${({ $clickable }) =>
+  ${({ $clickable }: { $clickable: boolean }) =>
     $clickable &&
     css`
       cursor: pointer;
     `}
 
   /* 方案生成全过程（撰写总览 / 生成详情 / 保存版本）外框都跑流动动画，仅 committed 完成后停 */
-  ${({ $status }) =>
+  ${({ $status }: { $status: string }) =>
     $status !== 'committed' &&
     css`
       border: 1px solid transparent;
@@ -49,7 +49,7 @@ const Card = styled.div`
     `}
 
   /* 选中态仅在生成完成后体现（生成中由动画外框接管） */
-  ${({ $selected, $status }) =>
+  ${({ $selected, $status }: { $selected: boolean; $status: string }) =>
     $selected &&
     $status === 'committed' &&
     css`
