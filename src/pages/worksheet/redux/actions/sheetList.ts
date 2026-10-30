@@ -50,7 +50,7 @@ export const formatLeftSectionDetail = data => {
 let getAppSectionDetailRequest: ApiResultOf<HapApi.MD.Entity.Apk.AppSectionDomainModel> | undefined;
 
 export function getSheetList(args) {
-  return function (dispatch) {
+  return function (dispatch: AppDispatch) {
     dispatch({ type: 'SHEET_LIST_UPDATE_LOADING', loading: true });
     dispatch({ type: 'SHEET_LIST', data: [] });
     if (getAppSectionDetailRequest) {
@@ -119,8 +119,9 @@ export function refreshSheetList() {
   };
 }
 
-export function getAllAppSectionDetail(appId: string, callBack) {
-  return function (dispatch) {
+/** caller：LeftAppGroup/index.tsx:461 `getAllAppSectionDetail(appId, () => {…})`，回调零参。 */
+export function getAllAppSectionDetail(appId: string, callBack: () => void) {
+  return function (dispatch: AppDispatch) {
     homeAppApi
       .getApp({
         appId,
@@ -246,8 +247,9 @@ export function updateSheetIconColor(iconColor) {
   };
 }
 
-export function updateSheetListIsUnfold(visible) {
-  return function (dispatch) {
+/** caller：WorkSheetLeft.tsx:162 `updateSheetListIsUnfold(!isUnfold)`。 */
+export function updateSheetListIsUnfold(visible: boolean) {
+  return function (dispatch: AppDispatch) {
     if (visible) {
       dispatch({ type: 'SHEET_LIST_UPDATE_IS_UNFOLD', isUnfold: true });
     } else {
@@ -257,7 +259,7 @@ export function updateSheetListIsUnfold(visible) {
 }
 
 export function updateAppItemInfo(_id, type, name: string) {
-  return function (dispatch) {
+  return function (dispatch: AppDispatch) {
     if (type) {
       dispatch(updatePageInfo({ pageName: name }));
     } else {

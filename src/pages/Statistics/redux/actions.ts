@@ -22,7 +22,7 @@ import { fillValueMap, mergeReportData } from '../common/reportDataUtils';
 import { filterTimeParticleSizeDropdownData } from '../common/timeUtils';
 
 export const changeBase = data => {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({
       type: 'CHANGE_STATISTICS_BASE',
       data: data,
@@ -618,7 +618,7 @@ export const getWorksheetInfo = (worksheetId: string) => {
 };
 
 export const changeFilterItem = data => {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({
       type: 'CHANGE_STATISTICS_FILTER_ITEM',
       data,
@@ -643,7 +643,7 @@ export const changeCurrentReport = (data, isRequest: boolean) => {
 };
 
 export const closeCurrentReport = () => {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({
       type: 'CHANGE_STATISTICS_CURRENT_REPORT',
       data: {},
@@ -652,7 +652,7 @@ export const closeCurrentReport = () => {
 };
 
 export const changeSheetId = activeSheetId => {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({
       type: 'CHANGE_STATISTICS_DETAIL_LOADING',
       data: true,
@@ -1792,7 +1792,7 @@ export const destroy = () => {
     worksheetFilterByIdRequest.abort();
   }
 
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({
       type: 'CHANGE_STATISTICS_RESET',
       data: null,

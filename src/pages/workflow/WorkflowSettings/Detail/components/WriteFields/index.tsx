@@ -89,7 +89,7 @@ export default class WriteFields extends Component<any, any> {
   /**
    * 全选操作
    */
-  updateAllSettings({ key, checked }: { key: string; checked: string | boolean }) {
+  updateAllSettings({ key, checked }: { key: 'LOOK' | 'EDIT' | 'REQUIRED' | 'DECRYPT'; checked: string | boolean }) {
     const { data, updateSource } = this.props;
     const { showTableControls, selectItem } = this.state;
     const formProperties = _.cloneDeep(showTableControls ? selectItem.subFormProperties : data);
@@ -151,7 +151,7 @@ export default class WriteFields extends Component<any, any> {
     }
   }
 
-  onChange(item, value: number | string, key = 'property') {
+  onChange(item, value: number | string, key: 'property' | 'isdecrypt' = 'property') {
     const { data, updateSource } = this.props;
     const { showTableControls, selectItem } = this.state;
     const formProperties = _.cloneDeep(showTableControls ? selectItem.subFormProperties : data);
@@ -344,7 +344,7 @@ export default class WriteFields extends Component<any, any> {
   /**
    * 渲染字段
    */
-  renderField(data, showCard, isChildTable, isSubData?: boolean | undefined) {
+  renderField(data, showCard: boolean, isChildTable: boolean, isSubData?: boolean | undefined) {
     const { hideTypes, selectNodeType } = this.props;
     const { foldIds, keywords } = this.state;
 
@@ -353,7 +353,7 @@ export default class WriteFields extends Component<any, any> {
         item => (item.name || '').toLocaleLowerCase().indexOf(keywords.trim().toLocaleLowerCase()) > -1 || isChildTable,
       )
       .filter(item => !item.sectionId || isChildTable || !!isSubData)
-      .map((item, i) => {
+      .map((item, i: number) => {
         return (
           <Fragment key={i}>
             <li className={cx('flexRow', { mLeft30: isSubData })}>
