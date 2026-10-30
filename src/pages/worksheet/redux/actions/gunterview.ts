@@ -288,19 +288,19 @@ export const updateGroupingVisible = data => {
 };
 
 export const updateGroupingScroll = scroll => {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({ type: 'CHANGE_GUNTER_GROUPING_SCROLL', data: scroll });
   };
 };
 
 export const updateChartScroll = scroll => {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({ type: 'CHANGE_GUNTER_CHART_SCROLL', data: scroll });
   };
 };
 
 export const destroyGunterView = () => {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({ type: 'CHANGE_GUNTER_PERIOD_TYPE', data: null });
     dispatch({ type: 'CHANGE_GUNTER_PERIOD_LIST', data: [] });
     dispatch({ type: 'CHANGE_GUNTER_PERIOD_PARENT_LIST', data: [] });
@@ -800,7 +800,7 @@ export const updateRecordTime = (row, start, end) => {
 };
 
 export const updateRecordDragTime = (row, start, end, value) => {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     const dragStartTime = row.dragStartTime
       ? moment(row.dragStartTime).add(value, 'd').format('YYYY-MM-DD')
       : moment(start).add(value, 'd').format('YYYY-MM-DD');

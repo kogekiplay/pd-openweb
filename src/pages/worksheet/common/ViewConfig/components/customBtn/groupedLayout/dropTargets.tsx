@@ -3,17 +3,35 @@ import { useDragLayer, useDrop } from 'react-dnd';
 import cx from 'classnames';
 import { type CustomBtnDragItem, ITEM_TYPE, ITEM_TYPE_GROUP } from './constants';
 
+/** 命中高亮用的落点描述。两种形状由 createBoundaryPlacement / createInsidePlacement 产出，
+ *  消费点按 kind 收窄（applyActivePlacement、SegmentBlockDropTarget 的 drop）。 */
+type DropPlacement =
+  | { kind: 'boundary'; layoutId: string; itemType: CustomBtnDragItem['type']; insertBefore: number }
+  | { kind: 'inside'; layoutId: string; itemType: CustomBtnDragItem['type']; segmentIndex: number; gapIndex: number };
+
+/** activeGap 的真实生产值：dropTargets 里 setActiveGap({ segmentIndex, gapIndex }) 或 null */
+type ActiveGap = { segmentIndex: number; gapIndex: number };
+
 function getActiveDropPlacement(activeDropPlacementRef, item: CustomBtnDragItem) {
   const placement = activeDropPlacementRef.current;
 
   return placement && placement.layoutId === item.layoutId && placement.itemType === item.type ? placement : null;
 }
 
-function createBoundaryPlacement(layoutId, itemType: string, insertBefore) {
+function createBoundaryPlacement(
+  layoutId: string,
+  itemType: CustomBtnDragItem['type'],
+  insertBefore: number,
+): DropPlacement {
   return { kind: 'boundary', layoutId, itemType, insertBefore };
 }
 
-function createInsidePlacement(layoutId, itemType: string, segmentIndex, gapIndex) {
+function createInsidePlacement(
+  layoutId: string,
+  itemType: CustomBtnDragItem['type'],
+  segmentIndex: number,
+  gapIndex: number,
+): DropPlacement {
   return { kind: 'inside', layoutId, itemType, segmentIndex, gapIndex };
 }
 
@@ -98,13 +116,29 @@ export function SegmentBoundaryGap({
   );
 }
 
-export function DropGap({ segmentIndex, gapIndex, activeGap }) {
+export function DropGap({
+  segmentIndex,
+  gapIndex,
+  activeGap,
+}: {
+  segmentIndex: number;
+  gapIndex: number;
+  activeGap: ActiveGap | null;
+}) {
   const active = activeGap && activeGap.segmentIndex === segmentIndex && activeGap.gapIndex === gapIndex;
   return <div className={cx('customBtnGroupedDropGap', { isActive: active })} />;
 }
 
 /** 空分组用：不占布局高度，仅在拖入自定义动作时启用命中，避免「空白占位条」 */
-function FlowlessDropGap({ segmentIndex, gapIndex, activeGap }) {
+function FlowlessDropGap({
+  segmentIndex,
+  gapIndex,
+  activeGap,
+}: {
+  segmentIndex: number;
+  gapIndex: number;
+  activeGap: ActiveGap | null;
+}) {
   const isDraggingLayoutItem = useDragLayer(monitor => monitor.isDragging() && monitor.getItemType() === ITEM_TYPE);
   const active = activeGap && activeGap.segmentIndex === segmentIndex && activeGap.gapIndex === gapIndex;
   const isHitVisible = isDraggingLayoutItem || active;
@@ -127,7 +161,7 @@ export function EmptyGroupDropTarget({
   setActiveButtonInsert,
   activeGap,
 }) {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   const getPlacement = monitor => {
     const node = ref.current;
@@ -231,7 +265,7 @@ export function SegmentBlockDropTarget({
   onDropButtonToBoundary,
   children,
 }) {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const getHoverPlacement = useCallback(
     (itemType, clientOffset) => {
       if (!ref.current || !clientOffset) {

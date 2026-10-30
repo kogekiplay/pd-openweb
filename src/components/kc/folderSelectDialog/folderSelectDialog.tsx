@@ -87,6 +87,15 @@ interface FolderSelectFields {
   getNodesListAjax?: ApiResult;
 }
 
+/** 公开选项：调用方传给 `select()` 的子集，复用既有 settings 形状，只去掉由 select 内部 Promise 注入的 resolve/reject。
+ *  可选字段带 `| undefined`：与 `$.extend` 的真实语义一致（显式 undefined 与缺项等价），EOPT 下不得判为错误。 */
+type FolderSelectPublicOptions = {
+  [K in keyof Omit<FolderSelectFields['settings'], 'resolve' | 'reject'>]?:
+    | Omit<FolderSelectFields['settings'], 'resolve' | 'reject'>[K]
+    | undefined;
+};
+
+// select() 在创建实例前注入 Promise 回调；构造参数的完整类型仍待补齐。
 var FolderSelect = function (this: FolderSelectInstance, param) {
   var dafaults = {
     dialogTitle: _l('选择文件'), //弹层title
@@ -1425,7 +1434,7 @@ const folderSelectMethods = defineMethods<FolderSelectFields>()({
 $.extend(FolderSelect.prototype, folderSelectMethods);
 type FolderSelectInstance = FolderSelectFields & typeof folderSelectMethods;
 
-function select(param) {
+function select(param: FolderSelectPublicOptions) {
   return new Promise((resolve, reject) => {
     param = $.extend({ resolve, reject }, param);
     /**
