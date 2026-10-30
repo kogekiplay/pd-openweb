@@ -885,7 +885,7 @@ const folderSelectMethods = defineMethods<FolderSelectFields>()({
             var pathItmeTpl = doT.template(
               '<span class="levelBar">/</span><span class="levelName childNode ellipsis colorPrimary {{!it.flex}}" title="{{!it.name}}">{{!it.name}}</span>',
             );
-            positionArr.forEach(function (part, i) {
+            positionArr.forEach(function (part, i: number) {
               if (i > 1) {
                 if (i > positionArr.length - 4) {
                   var href = positionArr.slice(0, i + 1).join('/');
@@ -953,7 +953,7 @@ const folderSelectMethods = defineMethods<FolderSelectFields>()({
 
         // 添加 title (tips)
         let html = '';
-        $folderPath.children().each(function (_i, el) {
+        $folderPath.children().each(function (_i: number, el) {
           el = $(el);
           html += el.attr('title') ? el.attr('title') : $(el).html();
         });

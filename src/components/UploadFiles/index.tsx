@@ -59,6 +59,11 @@ export default class UploadFiles extends Component<any, any> {
   declare nativeFile: HTMLDivElement | null | undefined;
   declare uploadFilesWrapper: HTMLDivElement | null | undefined;
   declare filesWrapper: HTMLDivElement | null | undefined;
+  /** 真实上传器实例：写入点只有 :207(null) 与 onBeforeUpload 的 :920；读点 :378-381 调
+   *  stop() / removeFile({id}) / start() —— 三个方法都在 src/utils/uploader/types 的 Uploader 上（本文件已 import）。 */
+  declare currentFile: Uploader | null;
+  /** 校验不通过的文件：写入点 :209(空数组) 与 :906 push({ id, info })；info 来自 UploaderFile.getNative(): File。 */
+  declare errorFiles: { id: string; info: File }[];
 
   static override contextType = RecordInfoContext;
   static override propTypes = {
