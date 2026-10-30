@@ -119,7 +119,7 @@ function parseRecord(value: unknown): Record<string, any> | null {
 
 function pickArtifactReferenceFrom(
   source: unknown,
-  { allowId = false, fallback = {} }: { allowId?: boolean; fallback?: any } = {},
+  { allowId = false, fallback = {} }: { allowId?: boolean | undefined; fallback?: any } = {},
 ): any {
   if (Array.isArray(source)) {
     for (let i = source.length - 1; i >= 0; i -= 1) {
@@ -150,7 +150,7 @@ function pickArtifactReferenceFrom(
 // fallback 里只取 name / appName / versionLabel 补进结果
 function pickArtifactReferenceFromText(
   text: string,
-  fallback: { name?: string; appName?: string; versionLabel?: string } = {},
+  fallback: { name?: string | undefined; appName?: string; versionLabel?: string | undefined } = {},
 ) {
   if (!text) return null;
   const artifactId = text.match(/art-[a-z0-9-]+/i)?.[0];
