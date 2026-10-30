@@ -523,15 +523,15 @@ export const sortRows = ({ control, isAsc }: { control: FormControl; isAsc?: boo
 };
 
 interface ExportSheetOptions {
-  worksheetId?: string;
-  rowId?: string;
-  controlId?: string;
+  worksheetId?: string | undefined;
+  rowId?: string | undefined;
+  controlId?: string | undefined;
   clientId?: string;
-  fileName?: string;
+  fileName?: string | undefined;
   /** 导出时带上的筛选条件，形状与视图筛选一致 */
-  filterControls?: RuleFilterItem[];
+  filterControls?: RuleFilterItem[] | undefined;
   /** 导出结束时回调；失败时把错误对象传进来（见下面 catch 分支） */
-  onDownload?: (error?: unknown) => void;
+  onDownload?: ((error?: unknown) => void) | undefined;
 }
 
 export const exportSheet = ({
