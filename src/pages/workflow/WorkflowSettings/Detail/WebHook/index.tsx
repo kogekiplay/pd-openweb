@@ -817,7 +817,7 @@ export default class WebHook extends Component<any, any> {
       title: _l('从 JSON 导入响应示例'),
       description: <GenerateJSONBox id="generateJSON">{data.json}</GenerateJSONBox>,
       onOk: () => {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
           const json = document.getElementById('generateJSON').value.trim();
 
           if (!json.trim() || checkJSON(json)) {

@@ -95,7 +95,8 @@ const generateJSON = (data, updateSource) => {
     description: <GenerateJSONBox id="generateJSON" />,
     okText: _l('导入'),
     onOk: () => {
-      return new Promise((resolve, reject) => {
+      // 唯一 resolve 路径是 0 参 resolve()（reject(true) 属错误路径，reject 本就收任意 reason）⇒ 无载荷完成。
+      return new Promise<void>((resolve, reject) => {
         const json = document.getElementById('generateJSON').value.trim();
 
         if (checkJSON(json)) {

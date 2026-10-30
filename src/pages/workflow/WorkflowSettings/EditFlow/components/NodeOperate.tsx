@@ -210,7 +210,7 @@ export default class NodeOperate extends Component<any, NodeOperateState> {
       ),
       okText: _l('保存'),
       onOk: () => {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
           const alias = document.getElementById('processNodeAlias').value.trim();
           const desc = document.getElementById('workflowNodeNotes').value.trim();
 

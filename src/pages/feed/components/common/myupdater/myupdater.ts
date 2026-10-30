@@ -569,7 +569,7 @@ const MyUpdater = {
           .reduce(function (a, b) {
             return a + b;
           }, 0);
-        let flowValidPromise = new Promise((resolve, reject) => {
+        let flowValidPromise = new Promise<void>((resolve, reject) => {
           kcAjax
             .getUsage()
             .then(function (result) {

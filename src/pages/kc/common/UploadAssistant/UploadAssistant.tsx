@@ -173,7 +173,8 @@ class UploadAssistant extends React.Component<any, any> {
         },
         FilesAdded(up, files) {
           function testFolder(nativeFile: File) {
-            return new Promise((resolve, reject) => {
+            // 两条 resolve 路径（onload / 非可疑文件）都是 0 参 resolve()，唯一消费者只 .catch()，不读值 ⇒ 显式 <void>。
+            return new Promise<void>((resolve, reject) => {
               if (nativeFile && nativeFile.size % 4096 == 0 && nativeFile.size <= 102400) {
                 const reader = new FileReader();
 

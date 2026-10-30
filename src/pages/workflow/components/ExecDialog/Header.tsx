@@ -315,7 +315,7 @@ export default class Header extends Component<any, any> {
         />
       ),
       onOk: () => {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
           if (!this.password || !this.password.trim()) {
             alert(_l('请输入密码'), 3);
             return;
