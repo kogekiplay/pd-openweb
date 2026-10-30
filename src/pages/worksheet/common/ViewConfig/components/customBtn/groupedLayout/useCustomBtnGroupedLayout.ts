@@ -13,6 +13,7 @@ import {
   removeGroupSegment,
   segmentsFromView,
 } from './layoutUtils';
+import type { ActiveGap, DropPlacement } from './dropPlacementTypes';
 
 export default function useCustomBtnGroupedLayout({
   btnData,
@@ -24,19 +25,21 @@ export default function useCustomBtnGroupedLayout({
   const btnFingerprint = useMemo(() => (btnData || []).map(b => b.btnId).join(','), [btnData]);
   const iconDraftRef = useRef({});
   const segmentsRef = useRef([]);
-  const activeDropPlacementRef = useRef(null);
+  /** 落点 ref：写入形状见 dropPlacementTypes.DropPlacement（createBoundary/InsidePlacement 产出、clear 时置 null）。 */
+  const activeDropPlacementRef = useRef<DropPlacement | null>(null);
   const onSaveLayoutRef = useRef(onSaveLayout);
   onSaveLayoutRef.current = onSaveLayout;
 
   const [segments, setSegments] = useState(() =>
     segmentsFromView(btnData, safeParse(flatBtnOrderJson, 'array'), safeParse(btnGroupsJson, 'array')),
   );
-  const [activeGap, setActiveGap] = useState(null);
-  const [activeGroupInsert, setActiveGroupInsert] = useState(null);
-  const [activeButtonInsert, setActiveButtonInsert] = useState(null);
+  /** 三者的真实写入值域：activeGap = ActiveGap | null；两个 insert = number | null（写入 placement.insertBefore 或 null）。 */
+  const [activeGap, setActiveGap] = useState<ActiveGap | null>(null);
+  const [activeGroupInsert, setActiveGroupInsert] = useState<number | null>(null);
+  const [activeButtonInsert, setActiveButtonInsert] = useState<number | null>(null);
   const [collapsedGroupIds, setCollapsedGroupIds] = useState(() => new Set());
   const [openMoreKey, setOpenMoreKey] = useState(null);
-  const setActiveDropPlacement = useCallback(placement => {
+  const setActiveDropPlacement = useCallback((placement: DropPlacement | null) => {
     activeDropPlacementRef.current = placement;
   }, []);
   const clearActiveDropPlacement = useCallback(() => {

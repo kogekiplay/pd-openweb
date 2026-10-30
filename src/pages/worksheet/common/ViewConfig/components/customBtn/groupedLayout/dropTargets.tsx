@@ -3,15 +3,9 @@ import { useDragLayer, useDrop } from 'react-dnd';
 import cx from 'classnames';
 import { type CustomBtnDragItem, ITEM_TYPE, ITEM_TYPE_GROUP } from './constants';
 
-/** 命中高亮用的落点描述。两种形状由 createBoundaryPlacement / createInsidePlacement 产出，
- *  消费点按 kind 收窄（applyActivePlacement、SegmentBlockDropTarget 的 drop）。 */
-type DropPlacement =
-  | { kind: 'boundary'; layoutId: string; itemType: CustomBtnDragItem['type']; insertBefore: number }
-  | { kind: 'inside'; layoutId: string; itemType: CustomBtnDragItem['type']; segmentIndex: number; gapIndex: number };
+import type { ActiveGap, DropPlacement } from './dropPlacementTypes';
 
-/** activeGap 的真实生产值：dropTargets 里 setActiveGap({ segmentIndex, gapIndex }) 或 null */
-type ActiveGap = { segmentIndex: number; gapIndex: number };
-
+/** 从 ref 里取出与当前拖拽项匹配的落点；形状不匹配一律返回 null（不做断言）。 */
 function getActiveDropPlacement(activeDropPlacementRef, item: CustomBtnDragItem) {
   const placement = activeDropPlacementRef.current;
 

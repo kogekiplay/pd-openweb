@@ -53,7 +53,7 @@ export function getParamsFromUrl() {
   return recurTime ? { calendarId, recurTime } : { calendarId };
 }
 
-export function getCalendarDetail(calnedarId, recurTime) {
+export function getCalendarDetail(calnedarId: typeof Config.calendarId, recurTime: typeof Config.recurTime) {
   return new Promise<{ type: 'SUCCESS'; data: ApiPayload }>((resolve, reject) => {
     AjaxRequest.getCalendarDetail2({
       calendarID: calnedarId,
