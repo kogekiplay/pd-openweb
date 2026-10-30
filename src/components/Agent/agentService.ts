@@ -700,18 +700,18 @@ function parseSseBlock(block: string) {
  */
 export interface AgentStreamRequest {
   sessionId?: string;
-  message?: string;
-  agentName?: string;
-  projectId?: string;
+  message?: string | undefined;
+  agentName?: string | undefined;
+  projectId?: string | undefined;
   /** 是否强制重新路由 agent；钉住 agent 时为 false */
   forceReroute?: boolean;
   forceRefresh?: boolean;
-  attachments?: ChatAttachmentRequest[];
+  attachments?: ChatAttachmentRequest[] | undefined;
   /** 搭建上下文（plan 派生字段 + 对话上下文）。键随场景变，交给后端原样使用 */
-  context?: Record<string, unknown>;
-  artifactId?: string;
+  context?: Record<string, unknown> | undefined;
+  artifactId?: string | undefined;
   /** 基于哪个版本继续改 */
-  basedOnVersionId?: string;
+  basedOnVersionId?: string | undefined;
   /** 计划漂移 / 重建确认弹层的回执：哪一步、选了什么 */
   confirmation?: { stepId?: string; action?: string };
   captchaTicket?: string;

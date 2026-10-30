@@ -105,9 +105,9 @@ export interface ChatMessagePart {
   kind: ChatPartKind;
   /** 片段产生时刻，用于排序与 meta 行展示 */
   ts?: number;
-  text?: string;
+  text?: string | undefined;
   /** kind = 'embed' 时的后缀标识与解析后的数据 */
-  suffix?: string;
+  suffix?: string | undefined;
   data?: unknown;
 
   id?: string;
