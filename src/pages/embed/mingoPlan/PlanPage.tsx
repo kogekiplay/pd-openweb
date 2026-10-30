@@ -19,6 +19,7 @@ import {
   peekAnonHandoff,
 } from 'src/components/Agent/anonymous';
 import { FILE_ENTRIES, SIDEBAR_ITEMS } from 'src/components/Agent/AppBuilder/fileRegistry';
+import type { AgentBus } from 'src/components/Agent/agentEventBus';
 import Header from 'src/pages/mingo/common/Header';
 import MingoBuilderEmptyState, { useMingoAppBuilderVisible } from 'src/pages/mingo/common/MingoBuilderEmptyState';
 import { browserIsMobile, getCurrentSubPath, getRequest, pathCompletion } from 'src/utils/common';
@@ -166,7 +167,7 @@ function getPlanAppMeta(content: string) {
   };
 }
 
-async function loadHistoryPlanArtifactFiles({ artifactId, versionId, bus } = {}) {
+async function loadHistoryPlanArtifactFiles({ artifactId, versionId, bus }: { artifactId?: string | undefined; versionId?: string | undefined; bus?: AgentBus } = {}) {
   if (!artifactId || !versionId || !bus) return false;
 
   let urlByPath = null;
