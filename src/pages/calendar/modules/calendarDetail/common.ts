@@ -30,7 +30,7 @@ export const Config: {
    * 日历那条路不带参数（就是刷新一下）；日程列表那条路会带上重新拉取列表需要的上下文
    *（起止时间 + 是不是第一页 + 当前滚动位置）。
    */
-  saveCallback?: (listContext?: { start?: string; end?: string; isFirst?: boolean; scrollTop?: number }) => void;
+  saveCallback?: (listContext?: { start?: string; end?: string; isFirst?: boolean; scrollTop?: number | undefined }) => void;
   deleteCallback?: () => void;
   handleClose?: () => void;
 } = {};
@@ -577,7 +577,7 @@ export const editCalendar = (calendar, isEdit: boolean, { originStartTime, origi
     };
 
     if (members.length > 1) {
-      afterRefreshOp(function (reInvite, directRun) {
+      afterRefreshOp(function (reInvite: boolean, directRun: boolean) {
         recurCalendarUpdate(
           {
             operatorTitle: _l('您确定编辑日程吗'),
@@ -611,7 +611,7 @@ export const editCalendar = (calendar, isEdit: boolean, { originStartTime, origi
 export const updateRemind = calendar => {
   const { id, remindTime, remindType } = calendar;
 
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     AjaxRequest.updateMemberRemind({
       remindTime,
       remindType,
@@ -630,7 +630,7 @@ export const updateRemind = calendar => {
 export const updateRemindVoice = calendar => {
   const { id, voiceRemind } = calendar;
 
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     AjaxRequest.updateVoiceRemind({
       voiceRemind,
       calendarID: id,
@@ -650,7 +650,7 @@ export const updateRemindVoice = calendar => {
  * @param { object } calendar
  */
 export const deleteCalendar = function ({ id, recurTime, originRecur, isChildCalendar }) {
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     const deleteCalendarFun = function (isAllCalendar) {
       AjaxRequest.deleteCalendar({
         calendarID: id,
@@ -772,7 +772,7 @@ export const removeWxMember = function (thirdId, { id, recurTime, originRecur, i
  * @param { bool } isPrivate | 是否是私密日程
  */
 export const updatePrivate = function (calendarId, isPrivate: boolean) {
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     AjaxRequest.updateCalendarIsPrivate({
       calendarID: calendarId,
       isPrivate,

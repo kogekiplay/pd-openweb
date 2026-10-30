@@ -431,7 +431,7 @@ const folderSelectMethods = defineMethods<FolderSelectFields>()({
           $folderContent
             .find('.folderUrl .positionUrl span.flex')
             .prevAll()
-            .each(function (_i, v) {
+            .each(function (this: HTMLElement, _i: number, v: HTMLElement) {
               prevWidth += $(v).width();
             });
           $positionUrl.css({ 'margin-left': '-' + prevWidth + 'px' });

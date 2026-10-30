@@ -141,7 +141,7 @@ export const updateBase = base => (dispatch: AppDispatch, getState: GetState) =>
   dispatch({ type: 'MOBILE_UPDATE_BASE', base });
 };
 
-export const loadWorksheet = noNeedGetApp => (dispatch: AppDispatch, getState: GetState) => {
+export const loadWorksheet = (noNeedGetApp?: unknown) => (dispatch: AppDispatch, getState: GetState) => {
   const { base, appDetail, filterControls = [] } = getState().mobile;
   const appId = base.type === 'single' ? base.singleAppId : base.appId;
   const { filters } = getState().sheet;
@@ -1005,7 +1005,9 @@ export const loadBoardViewNextGroup = ({ callback = _.noop }: { callback?: (() =
 
 // 获取看板单个分组下的数据（滚动加载）
 export const loadBoardViewGroupItemData =
-  ({ pageIndex = 1, kanbanKey }, callback: () => void = _.noop) =>
+  /** 选项袋复用**同文件既有 canonical**：唯一调用方 `getSingleBoardGroup`（下方 `:1058`）对同一形状已声明
+   *  `{ pageIndex?: number; kanbanKey?: string }` 并原样转发；`kanbanKey` 因此可证为 `string`。 */
+  ({ pageIndex = 1, kanbanKey }: { pageIndex?: number | undefined; kanbanKey?: string | undefined }, callback: () => void = _.noop) =>
   (dispatch: AppDispatch, getState: GetState) => {
     const sheet = getState().mobile;
     const { boardView } = sheet;

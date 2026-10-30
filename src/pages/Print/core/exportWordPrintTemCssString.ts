@@ -1,3 +1,51 @@
+import type { CSSProperties } from 'react';
+
+/** 固定打印样式组按 React CSSProperties 检查，并保留具体属性与 CSS 字面量类型。 */
+export type PrintStyleKey =
+  | 'tag'
+  | 'p'
+  | 'img'
+  | 'TxtLeft'
+  | 'flexRow'
+  | 'clear'
+  | 'Font15'
+  | 'mBottom10'
+  | 'table'
+  | 'companyName'
+  | 'titleContent'
+  | 'reqTitle'
+  | 'createBy_h6'
+  | 'sysBox_span'
+  | 'sysBox1_span'
+  | 'sysBox2_span'
+  | 'sysBox3_span'
+  | 'sysBox_span_common'
+  | 'listControls'
+  | 'controlDiv'
+  | 'splitLine_title'
+  | 'controlDiv_span'
+  | 'controlDiv_span_value'
+  | 'controlDiv_span_title'
+  | 'relationsTitle'
+  | 'pRelations'
+  | 'relations_Ul_Li'
+  | 'relations_Ul_Li_Current'
+  | 'relationsList_listCon_h5'
+  | 'relationsListLi_title'
+  | 'relationsListLi_value'
+  | 'worksTable_workPersons_th'
+  | 'worksTable_workPersons_td'
+  | 'worksTable_workPersons_infoSignature'
+  | 'signatureContentWrapper'
+  | 'relationPrintTable'
+  | 'relationPrintTable_Tr_Td'
+  | 'relationPrintTable_Tr_Th'
+  | 'fromName'
+  | 'sysField';
+
+/** 有限键 mapped 形状：每个样式组都必须是合法的 React CSSProperties。 */
+type PrintStyleSheet = { [K in PrintStyleKey]: CSSProperties };
+
 export default {
   tag: {
     fontSize: 13,
@@ -261,4 +309,4 @@ export default {
     padding: 0,
     lineHeight: 1.5,
   },
-};
+} satisfies PrintStyleSheet;
