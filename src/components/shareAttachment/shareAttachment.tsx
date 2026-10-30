@@ -1168,7 +1168,7 @@ const shareAttachmentMethods = defineMethods<ShareAttachmentFields>()({
           var position = result.node.position;
           var positionArr = position.split('/');
           var isOmit = false;
-          positionArr.forEach(function (part, i) {
+          positionArr.forEach(function (part, i: number) {
             if (i > 1) {
               if (i > positionArr.length - 4) {
                 var partStr = part;
@@ -1501,7 +1501,7 @@ const shareAttachmentMethods = defineMethods<ShareAttachmentFields>()({
       }
     }
   },
-  formatQiniuPath: function (qiniuUrl) {
+  formatQiniuPath: function (qiniuUrl: string) {
     var SA = this;
     var url = SA.parseUrl(qiniuUrl);
     var key = url.pathname.slice(1);
@@ -1515,7 +1515,7 @@ const shareAttachmentMethods = defineMethods<ShareAttachmentFields>()({
       filePath: key.replace(fullName, ''),
     };
   },
-  parseUrl: function (url) {
+  parseUrl: function (url: string) {
     var a = document.createElement('a');
     a.href = url;
     return {
@@ -1649,14 +1649,14 @@ const shareAttachmentMethods = defineMethods<ShareAttachmentFields>()({
         alert(_l('修改失败'), 3);
       });
   },
-  cutString(str, length, suffix) {
+  cutString(str: string, length: number, suffix?: string) {
     if (str.length > length) {
       str = str.substr(0, length) + (suffix || '...');
     }
 
     return str;
   },
-  getExt: function (ext) {
+  getExt: function (ext: string) {
     return !ext ? '' : ext[0] === '.' ? ext.slice(1) : ext;
   },
 });

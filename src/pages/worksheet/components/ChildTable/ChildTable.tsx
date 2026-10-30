@@ -73,6 +73,7 @@ import RowHead from './ChildTableRowHead';
 import ChildTableSummaryCell from './ChildTableSummaryCell';
 import MobileTable from './MobileTable';
 import * as actions from './redux/actions';
+import type { ChildTableDispatch, ChildTableState } from 'src/utils/subListStoreTypes';
 import RowDetailMobile from './RowDetailMobileModal';
 import RowDetail from './RowDetailModal';
 
@@ -2884,7 +2885,7 @@ class ChildTable extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: ChildTableState) => ({
   baseLoading: state.baseLoading,
   base: state.base,
   treeTableViewData: state.treeTableViewData,
@@ -2897,7 +2898,7 @@ const mapStateToProps = state => ({
   changes: state.changes,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch: ChildTableDispatch) => ({
   loadRows: bindActionCreators(actions.loadRows, dispatch),
   setOriginRows: bindActionCreators(actions.setOriginRows, dispatch),
   resetRows: bindActionCreators(actions.resetRows, dispatch),
