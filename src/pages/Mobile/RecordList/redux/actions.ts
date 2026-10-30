@@ -734,7 +734,7 @@ export const updateQuickFilter =
   };
 
 export function updateQuickFilterWithDefault(filter = []) {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({
       type: 'UPDATE_QUICK_FILTER_WITH_DEFAULT',
       filter: filter.map(condition => ({
@@ -1043,7 +1043,7 @@ export const loadBoardViewGroupItemData =
   };
 
 export const initBoardViewData = () => {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch(
       fetchSheetRows({
         kanbanIndex: 1,
@@ -1057,7 +1057,7 @@ export const getSingleBoardGroup = (
   { pageIndex = 1, kanbanKey }: { pageIndex?: number | undefined; kanbanKey?: string | undefined } = {},
   callback?: () => void,
 ) => {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch(
       loadBoardViewGroupItemData(
         {
@@ -1071,7 +1071,7 @@ export const getSingleBoardGroup = (
 };
 
 export function updateBoardViewRecord(data) {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({ type: 'MOBILE_UPDATE_BOARD_VIEW_RECORD', data });
     if (data.target) {
       let targetKey = getBoardItemKey(data.target);
@@ -1086,7 +1086,7 @@ export function updateBoardViewRecord(data) {
 export const updateMultiSelectBoard = data => ({ type: 'MOBILE_UPDATE_MULTI_SELECT_BOARD', data });
 
 export function addBoardViewRecord(data) {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     const { item, key } = data;
     dispatch({ type: 'MOBILE_ADD_BOARD_VIEW_RECORD', data: { item, key } });
     dispatch(updateBoardViewRecordCount([key, 1]));
@@ -1094,14 +1094,14 @@ export function addBoardViewRecord(data) {
 }
 
 export function delBoardViewRecord(data) {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({ type: 'MOBILE_DEL_BOARD_VIEW_RECORD_COUNT', data });
     dispatch(updateBoardViewRecordCount([data.key, -1]));
   };
 }
 
 export const initCalendarViewData = searchArgs => {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     if (searchArgs.beginTime) {
       searchArgs.beginTime = dateConvertToUserZone(searchArgs.beginTime);
     }
@@ -1316,13 +1316,13 @@ export const getNotScheduledEventList = ({
 };
 
 export const resetCalendarNotScheduled = () => {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({ type: 'MOBILE_RESET_CALENDAR_NOT_SCHEDULED' });
   };
 };
 
 export const deleteCalendarNotScheduled = (rowid: string) => {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({ type: 'MOBILE_DELETE_CALENDAR_NOT_SCHEDULED', rowid });
   };
 };
@@ -1349,7 +1349,7 @@ export function loadCustomButtons(
   { appId, worksheetId }: { appId?: string; worksheetId?: string; [key: string]: any },
   cb = () => {},
 ) {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     if (!worksheetId || _.get(window, 'shareState.isPublicView') || _.get(window, 'shareState.isPublicPage')) {
       return;
     }
@@ -1374,7 +1374,7 @@ export function loadCustomButtons(
 }
 
 export function handleLoadOperateButtons({ worksheetInfo }) {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     const actionColumn = flatten(
       worksheetInfo.views.map(v => safeParse(get(v, 'advancedSetting.actioncolumn'), 'array')),
     );
@@ -1416,7 +1416,7 @@ export function onDeleteSuccess({ rowId }: { rowId?: string; [key: string]: any 
 }
 
 export function addMobileNewRecord({ view }) {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     if (String(view.viewType) === VIEW_DISPLAY_TYPE.board) {
       dispatch(initBoardViewData());
     }
@@ -1433,7 +1433,7 @@ export function updateButtonsCheckStatus(
     btnIds?: Array<string | undefined>;
   } = {},
 ) {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({ type: 'MOBILE_UPDATE_BUTTONS_CHECK_STATUS', buttonsCheckStatus, rowIds, btnIds });
   };
 }

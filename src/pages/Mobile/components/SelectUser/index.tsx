@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { Icon, LoadDiv, MobilePersonalInfo, MobileSearch, PopupWrapper, ScrollView, Switch } from 'ming-ui';
 import functionWrap from 'ming-ui/components/FunctionWrap';
 import departmentAjax from 'src/api/department';
+import type { DepartmentTreeNode } from 'src/api/departmentTypes';
 import externalPortalAjax from 'src/api/externalPortal';
 import personalStyleAjax from 'src/api/personalStyle';
 import userAjax from 'src/api/user';
@@ -338,7 +339,7 @@ export default class SelectUser extends Component<any, any> {
         });
       });
   };
-  getTreeData = (list, departmentId, subDepartments) => {
+  getTreeData = (list, departmentId: DepartmentTreeNode['departmentId'], subDepartments) => {
     return list.map(item => {
       if (item.departmentId === departmentId) {
         return { ...item, subDepartments };
@@ -351,11 +352,11 @@ export default class SelectUser extends Component<any, any> {
       return item;
     });
   };
-  getChildren = (data = [], currentId) => {
+  getChildren = (data = [], currentId: DepartmentTreeNode['departmentId']) => {
     let arr = [];
     let result = [];
 
-    const func = (data, id) => {
+    const func = (data, id: DepartmentTreeNode['departmentId']) => {
       data.find(item => {
         if (item.subDepartments && item.subDepartments.length) {
           func(item.subDepartments, id);

@@ -142,7 +142,7 @@ export const fetchExternal = () => {
 };
 
 export const updataEditable = (data: boolean) => {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({ type: 'CHANGE_CALENDAR_EDITABLE', data: data });
   };
 };
@@ -246,7 +246,7 @@ const dataResort = obj => {
 };
 
 export function changeCalendarTime(start: string, end: string) {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({ type: 'CHANGE_CALENDAR_VIEW_START', data: start });
     dispatch({ type: 'CHANGE_CALENDAR_VIEW_END', data: end });
   };
@@ -324,7 +324,7 @@ export function getCalendarData() {
 
 // 获取已排期
 export const getEventScheduledData = (type: string) => {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     if (type === 'eventScheduled') {
       // 早于今天的第一页数据
       dispatch(
@@ -600,7 +600,7 @@ export function searchKeys(keyWords: string) {
 }
 
 export function searchEventArgs(keyWords: string, pageIndex: number) {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     const typeEvent = readInitType();
     dispatch({ type: 'CHANGE_CALENDAR_LOADING', data: true });
     dispatch(getEventList({ pageIndex, typeEvent, keyWords }));
@@ -639,7 +639,7 @@ export function deleteEventList(rowid: string) {
 }
 
 export function refreshEventList() {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     const typeEvent = readInitType();
     dispatch({
       type: 'CHANGE_CALENDAR_CLEAR',
@@ -653,7 +653,7 @@ export function refreshEventList() {
 
 //当前新增表单
 export function updateCalendarEventIsAdd(data: boolean) {
-  return dispatch => {
+  return (dispatch: AppDispatch) => {
     dispatch({
       type: 'CALENDAR_EVENT_IS_ADD',
       data: data,
