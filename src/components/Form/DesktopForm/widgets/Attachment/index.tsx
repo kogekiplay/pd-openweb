@@ -394,7 +394,7 @@ export default class Widgets extends Component<any, any> {
       knowledgeAtts = value.knowledgeAtts;
     }
 
-    new Promise(resolve => {
+    new Promise<void>(resolve => {
       temporaryAttachments.length && this.filesChanged(attachments.concat(temporaryAttachments), 'attachments');
       resolve();
     }).then(() => {

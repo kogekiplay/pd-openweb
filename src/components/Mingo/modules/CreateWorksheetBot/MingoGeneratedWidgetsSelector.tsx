@@ -646,7 +646,8 @@ export default function MingoGeneratedWidgetsSelector({
                         .filter(Boolean);
 
                       if (!isEmpty(needUpdateWidgets)) {
-                        await new Promise(resolve => {
+                        // 全部 resolve 路径都只有 0 参 resolve()，且外层只是 await（不取值）⇒ 无载荷完成，显式 <void>。
+                        await new Promise<void>(resolve => {
                           emitter.emit('WIDGET_CONFIG_UPDATE_WIDGETS_ATTRIBUTE', { needUpdateWidgets }, () =>
                             resolve(),
                           );

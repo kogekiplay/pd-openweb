@@ -87,7 +87,7 @@ export default function captcha(
         </Fragment>
       ),
       onOk: () => {
-        return new Promise(function (reslove, reject) {
+        return new Promise<void>(function (reslove, reject) {
           const value = String($('.captchaInput').val() ?? '').trim();
 
           if (!value) {

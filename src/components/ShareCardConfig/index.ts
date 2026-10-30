@@ -7,7 +7,7 @@ import type { FormControl } from 'src/utils/controlTypes';
 // 微信脚本加载
 const loadWeiXinScript = () => {
   if (window.wx) return Promise.resolve();
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     loadScript('https://res.wx.qq.com/open/js/jweixin-1.6.0.js', err => {
       if (err) {
         reject();
@@ -76,7 +76,7 @@ const initShareConfig = async props => {
             wx.onMenuShareAppMessage(info);
           }
         });
-        wx.error(function (res) {
+        wx.error(function (res: unknown) {
           console.log('设置失败:', res);
         });
       }

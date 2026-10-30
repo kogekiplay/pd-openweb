@@ -224,7 +224,7 @@ export default class DepDropDown extends Component<any, any> {
         // 那样会凭空多出一个搜索框。将来要放开搜索，把 filterTreeNode 放进 showSearch 对象即可。
         suffixIcon={<Icon icon="arrow-down-border Font14" />}
         loadData={({ value }) =>
-          new Promise(resolve => {
+          new Promise<void>(resolve => {
             this.loadData(value);
             resolve();
           })

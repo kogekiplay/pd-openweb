@@ -219,7 +219,7 @@ class DepartmentTree extends React.Component<any, any> {
   loadDataFn = (node: any = {}, isMore?: boolean) => {
     const { projectId } = this.props;
     const props = node || {};
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       if (props.subDepartments && !isMore) {
         resolve();
         return;
