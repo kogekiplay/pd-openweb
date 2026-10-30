@@ -431,8 +431,8 @@ export interface ChatPanelRuntime {
   initialPlanArtifact?: ChatPanelArg;
   /** 覆盖历史产物文件的加载逻辑，参数形状见 PlanPage 的 loadHistoryPlanArtifactFiles */
   loadCommittedArtifactFiles?: (params: {
-    artifactId?: string;
-    versionId?: string;
+    artifactId?: string | undefined;
+    versionId?: string | undefined;
     bus?: ChatPanelArg;
     /** 跳过缓存强制重新拉取 */
     force?: boolean;
@@ -455,7 +455,7 @@ export interface ChatPanelRuntime {
 /** submitPrompt / streamAgentResponse 的单次覆盖项，只对本次请求生效 */
 interface SubmitOptions {
   /** 单次覆盖目标 agent，不污染下一次 */
-  agentName?: string;
+  agentName?: string | undefined;
   onSubmitStart?: () => void;
   [key: string]: any;
 }
@@ -690,7 +690,12 @@ export default function ChatPanel({
     versionId,
     versionLabel,
     name,
-  }: { artifactId?: string; versionId?: string; versionLabel?: string; name?: string } = {}) {
+  }: {
+    artifactId?: string | undefined;
+    versionId?: string | undefined;
+    versionLabel?: string | undefined;
+    name?: string | undefined;
+  } = {}) {
     if (!disableAppBuilder && !isMobile && autoOpenInitialBuilderRef.current && artifactId && versionId) {
       autoOpenInitialBuilderRef.current = false;
       bus.emit('builder:open', {

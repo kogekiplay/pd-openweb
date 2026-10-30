@@ -372,14 +372,16 @@ export default class UploadFiles extends Component<any, any> {
 
   async openPcCameraDialog() {
     const cameraProps = {
-      onOk: files => {
+      // 生产者是 PcUpload.tsx:203 `useState<File[]>([])` + :308 `props.onOk(photoList)` ⇒ 实参恒为 File[]。
+      onOk: (files: File[]) => {
         this.addFiles(files);
       },
     };
 
     openPcCamera(cameraProps);
   }
-  removeUploadingFile = id => {
+  // 唯一调用点 File.tsx:973 `removeUploadingFile(base.id)`，base.id 来自 UploaderFile.id（string）。
+  removeUploadingFile = (id: string) => {
     if (this.currentFile) {
       this.currentFile.stop();
       this.currentFile.removeFile({ id });
