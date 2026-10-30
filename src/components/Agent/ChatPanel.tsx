@@ -582,7 +582,11 @@ export default function ChatPanel({
   const startedPathsRef = useRef(new Set());
   // 当前查看/选中的版本 + 已知最新版本 label：继续对话时若查看的不是最新版本，
   // 就带 artifactId + basedOnVersionId 让后端基于该旧版本 fork（LOCKED）；在最新版本上则走 AUTO。
-  const selectedVerRef = useRef<{ artifactId?: string; versionId?: string; versionLabel?: string } | null>(null);
+  const selectedVerRef = useRef<{
+    artifactId?: string;
+    versionId?: string;
+    versionLabel?: string | undefined;
+  } | null>(null);
   const latestVerLabelRef = useRef('');
   // build 成功收尾标记：completed 事件（带 worksheetContext 的 build 轮）置 true，
   // 由发起方在本轮 stream await 结束后消费——追加调用 app-build-summary 流式生成搭建总结。

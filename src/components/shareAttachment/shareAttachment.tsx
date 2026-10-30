@@ -333,7 +333,9 @@ export interface ShareNode extends KcNodeDetail {
   fileName?: string;
   fileExt?: string;
   filePath?: string;
-  fileSize?: number;
+  /** 生产者 formatQiniuPath 会给出 fileSize: number | undefined，且 :1048/:1107 直接写入 SA.options.size
+   *  （number | undefined）；EOPT 下必须显式带上 undefined。 */
+  fileSize?: number | undefined;
   serverName?: string;
   key?: string;
 }
@@ -553,7 +555,9 @@ const shareAttachmentMethods = defineMethods<ShareAttachmentFields>()({
   },
   updateWorkshhetShareUrl(type = 1, callback) {
     var SA = this;
-    const args: { worksheetId: string; appId: string; viewId: string; objectType: number; rowId?: string } = {
+    // rowId 的写入源 SA.options.rowId 是 string | undefined（:565），EOPT 下要显式带 undefined；
+    // 消费方 WorksheetController.getWorksheetShareUrl(args: ApiArgs) 是宽松索引签名，不受影响。
+    const args: { worksheetId: string; appId: string; viewId: string; objectType: number; rowId?: string | undefined } = {
       worksheetId: SA.options.id,
       appId: SA.options.appId,
       viewId: SA.options.viewId,

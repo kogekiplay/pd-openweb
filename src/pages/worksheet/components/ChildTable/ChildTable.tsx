@@ -2625,7 +2625,7 @@ class ChildTable extends React.Component<any, any> {
                 onUpdateRules={newRules => {
                   updateBase({ worksheetInfo: { ...this.worksheetInfo, rules: newRules } });
                 }}
-                onCellClick={(_, row, rowIndex, columnIndex, { isSpace } = {}) => {
+                onCellClick={(_, row, rowIndex: number, columnIndex: number, { isSpace } = {}) => {
                   const isSimpleMode = get(control, 'advancedSetting.sheettype') === '0';
                   const isEmptyRow = String(get(row, 'rowid') || '').startsWith('empty');
 
