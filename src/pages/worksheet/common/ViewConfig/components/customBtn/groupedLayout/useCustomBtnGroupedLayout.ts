@@ -38,7 +38,9 @@ export default function useCustomBtnGroupedLayout({
   const [activeGroupInsert, setActiveGroupInsert] = useState<number | null>(null);
   const [activeButtonInsert, setActiveButtonInsert] = useState<number | null>(null);
   const [collapsedGroupIds, setCollapsedGroupIds] = useState(() => new Set());
-  const [openMoreKey, setOpenMoreKey] = useState(null);
+  /** 真实值域：moreKey 字符串（`btn:${btnId}` / `group:${segmentIndex}` 等）或 null（关闭）。
+   *  由 getNextOpenMoreKey 的返回值决定，见 constants.ts。 */
+  const [openMoreKey, setOpenMoreKey] = useState<string | null>(null);
   const setActiveDropPlacement = useCallback((placement: DropPlacement | null) => {
     activeDropPlacementRef.current = placement;
   }, []);

@@ -28,7 +28,8 @@ export default function GroupHeader({
 }) {
   const [editing, setEditing] = useState(false);
   const [draftName, setDraftName] = useState(name);
-  const headerRef = useRef(null);
+  /** 挂载点是下面的 <div ref={attachHeaderRef} className="customBtnGroupedGroupHeader …">。 */
+  const headerRef = useRef<HTMLDivElement | null>(null);
   const titleToggleTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [{ isDragging }, drag, dragPreview] = useDrag({
     type: ITEM_TYPE_GROUP,
@@ -36,7 +37,9 @@ export default function GroupHeader({
     // 同样在拖拽开始时调用，返回值即拖拽 item，所以把原来的对象原样 return 回去。
     item: () => {
       const el = headerRef.current;
-      const block = el?.closest('.customBtnGroupedBlock');
+      // 该 class 的渲染点：index.tsx:176 `<div className={cx('customBtnGroupedBlock', …)}>`
+      // ⇒ 命中元素必然是 HTMLDivElement，故这里给出类型实参（closest 默认返回 Element，没有 offsetWidth）。
+      const block = el?.closest<HTMLDivElement>('.customBtnGroupedBlock');
       const w = block?.offsetWidth || el?.offsetWidth || 320;
       const headerH = el?.offsetHeight || 44;
       window.MD_DRAG_ITEM = {
@@ -76,7 +79,7 @@ export default function GroupHeader({
   }, [name]);
 
   const handleDropdownVisibleChange = (visible: boolean) => {
-    setOpenMoreKey(prev => getNextOpenMoreKey(prev, visible, moreKey));
+    setOpenMoreKey((prev: string | null) => getNextOpenMoreKey(prev, visible, moreKey));
   };
 
   const moreMenu = (

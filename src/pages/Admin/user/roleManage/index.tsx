@@ -293,7 +293,7 @@ class RoleManage extends Component<any, any> {
     const { match, searchValue } = this.props;
     const { params = {} } = match;
 
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       const expandedKeys = this.state.expandedKeys;
       const isExpand = this.state.expandedKeys.includes(treeNode.key);
 

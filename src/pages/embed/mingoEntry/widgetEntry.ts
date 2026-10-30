@@ -152,7 +152,7 @@ function loadLocaleScript(lang: string, options = {}) {
 
   if (localePromises[currentLang]) return localePromises[currentLang];
 
-  localePromises[currentLang] = new Promise(resolve => {
+  localePromises[currentLang] = new Promise<void>(resolve => {
     const src = getLocaleScriptUrl(currentLang, options);
     const existing = document.querySelector(`script[data-mingo-entry-locale="${currentLang}"]`);
     const hostTranslations = window.translations;
@@ -224,7 +224,7 @@ function readJson(response: Response) {
     .then(data => ({ response, data }));
 }
 
-function stripHtml(value) {
+function stripHtml(value: unknown) {
   const div = document.createElement('div');
 
   div.innerHTML = String(value || '');

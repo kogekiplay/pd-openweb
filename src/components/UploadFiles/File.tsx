@@ -1,4 +1,5 @@
 import { Component, Fragment } from 'react';
+import type { CSSProperties, SyntheticEvent } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -16,9 +17,11 @@ import { downloadFile, formatFileSize, getClassNameByExt, pathCompletion } from 
 import RegExpValidator from 'src/utils/expression';
 import { formatTime, getFileExtends, isDocument } from './utils';
 
+/** 用 `satisfies` 校验并**保留字面量类型**：`WebkitBoxOrient` 在 `CSSProperties` 里是受限枚举，
+ *  裸 `const` 会把值放宽成 `string`，导致 8 处 `style={vertical}` 报 TS2322。此处不改值、不改用法。 */
 const vertical = {
   WebkitBoxOrient: 'vertical',
-};
+} satisfies Pick<CSSProperties, 'WebkitBoxOrient'>;
 
 export interface FileComponentState {
   isEdit: boolean;
@@ -54,7 +57,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
     };
     this.deleteFn = null;
   }
-  handleEdit = event => {
+  handleEdit = (event: Pick<SyntheticEvent, 'stopPropagation'>) => {
     event.stopPropagation();
     let { isEdit } = this.state;
     setTimeout(
@@ -87,7 +90,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
       this.handleEdit(event);
     }
   };
-  handleDownload = (event, isDownload: boolean, url: string) => {
+  handleDownload = (event: Pick<SyntheticEvent, 'stopPropagation'>, isDownload: boolean, url: string) => {
     event.stopPropagation();
     if (!isDownload) {
       alert(_l('您权限不足，无法下载，请联系管理员或文件上传者'), 3);
@@ -95,7 +98,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
       window.open(downloadFile(url));
     }
   };
-  handleOpenNewPage = event => {
+  handleOpenNewPage = (event: Pick<SyntheticEvent, 'stopPropagation'>) => {
     const { handleOpenControlAttachmentInNewTab } = this.props;
     event.stopPropagation();
     this.setState({
@@ -103,7 +106,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
     });
     handleOpenControlAttachmentInNewTab();
   };
-  handleShare = (event, isDownload: boolean) => {
+  handleShare = (event: Pick<SyntheticEvent, 'stopPropagation'>, isDownload: boolean) => {
     event.stopPropagation();
 
     if (!md.global.Account.accountId) {

@@ -16,7 +16,7 @@ function ActionItemRow({ btn, editBtn, deleteBtn, handleCopy, toggleEnable, disa
   const moreKey = `btn:${btnId}`;
 
   const handleDropdownVisibleChange = (visible: boolean) => {
-    setOpenMoreKey(prev => getNextOpenMoreKey(prev, visible, moreKey));
+    setOpenMoreKey((prev: string | null) => getNextOpenMoreKey(prev, visible, moreKey));
   };
 
   const moreMenu = (
@@ -130,7 +130,8 @@ export function DraggableBtnRow({
   openMoreKey,
   setOpenMoreKey,
 }) {
-  const rowRef = useRef(null);
+  /** 挂载点是下面的 <div ref={attachRowRef}>，因此就是 HTMLDivElement（不是 Element）。 */
+  const rowRef = useRef<HTMLDivElement | null>(null);
   const [{ isDragging }, drag, dragPreview] = useDrag({
     type: ITEM_TYPE,
     // v11 的 begin 只有副作用、不返回值，v16 里等价物是函数形式的 item：
