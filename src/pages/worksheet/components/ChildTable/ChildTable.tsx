@@ -1903,7 +1903,7 @@ class ChildTable extends React.Component<any, any> {
                     viewId={control.viewId}
                     projectId={projectId}
                     worksheetId={control.dataSource}
-                    columns={columns.map((c, idx) => ({ ...c, controlPermissions: '111', row: idx, col: 0 }))}
+                    columns={columns.map((c, idx: number) => ({ ...c, controlPermissions: '111', row: idx, col: 0 }))}
                     filterResigned={false}
                     showSavedFilters={false}
                     readOnly={dirty}
@@ -2594,7 +2594,7 @@ class ChildTable extends React.Component<any, any> {
                   });
                 }}
                 addNewRow={this.handleAddRowByLine}
-                onFocusCell={(row, cellIndex) => {
+                onFocusCell={(row, cellIndex: number) => {
                   if (disabledNew || isExceed) {
                     return;
                   }

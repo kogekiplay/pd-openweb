@@ -867,7 +867,7 @@ class TaskStage extends Component<any, TaskStageState> {
   /**
    * 在此后添加阶段
    */
-  addStageToNext($el) {
+  addStageToNext($el: JQuery<HTMLElement>) {
     $('.listStageDownOperator').hide();
     $('.listStage .addNewStage').addClass('Hidden');
 
@@ -884,7 +884,7 @@ class TaskStage extends Component<any, TaskStageState> {
   /**
    * 删除阶段
    */
-  delStage($li) {
+  delStage($li: JQuery<HTMLElement>) {
     if ($('#taskList .listStage .singleStage').length === 1) {
       alert(_l('看板最少存在一个'), 3);
       return;
@@ -1576,7 +1576,7 @@ class TaskStage extends Component<any, TaskStageState> {
   /**
    * 修改任务阶段
    */
-  updateTaskStage($li) {
+  updateTaskStage($li: JQuery<HTMLElement>) {
     const taskId = $li.data('taskid');
     const stageId = $li.closest('li.singleStage').data('stageid');
 
@@ -1614,7 +1614,7 @@ class TaskStage extends Component<any, TaskStageState> {
   /**
    * 添加阶段负责人
    */
-  addStageCharge($li, $el) {
+  addStageCharge($li: JQuery<HTMLElement>, $el) {
     const chargeId = $li.data('chargeid');
 
     const callback = user => {
@@ -1640,7 +1640,7 @@ class TaskStage extends Component<any, TaskStageState> {
   /**
    * 设置阶段负责人
    */
-  setStageOwner($li, ownerId = '', avatar = '') {
+  setStageOwner($li: JQuery<HTMLElement>, ownerId = '', avatar = '') {
     ajaxRequest
       .setStageOwner({
         folderID: this.props.taskConfig.folderId,
@@ -1665,7 +1665,7 @@ class TaskStage extends Component<any, TaskStageState> {
   /**
    * 创建
    */
-  addNewTaskEnter($el, isEnter?) {
+  addNewTaskEnter($el, isEnter?: boolean) {
     const $parent = $el.parent();
     const taskName = $parent.find('.teaStageName').val().trim();
 
@@ -1727,7 +1727,7 @@ class TaskStage extends Component<any, TaskStageState> {
   /**
    * 快速创建任务回调
    */
-  quickCreateTaskCallback = (result, $listStageContent) => {
+  quickCreateTaskCallback = (result, $listStageContent?: JQuery<HTMLElement>) => {
     const source = {
       formatTaskTime,
       returnCustonValue,

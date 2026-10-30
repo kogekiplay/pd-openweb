@@ -410,14 +410,14 @@ export interface ChatPanelRuntime {
   enableHumanSupport?: boolean;
   onAnonSessionInvalid?: () => void;
   /** 固定使用的 agent，不让用户切换 */
-  agentName?: string;
-  initialSessionId?: string;
+  agentName?: string | undefined;
+  initialSessionId?: string | undefined;
   /** 点「开始搭建」时回调，参数见 ChatPanel 内 onRequestBuild({ isSingleMingoPlan }) 的调用点 */
   onRequestBuild?: (payload: { isSingleMingoPlan?: boolean }) => void;
   /** 接管重试按钮；返回真表示已被接管，ChatPanel 不再自己重试 */
   onRetryIntercept?: () => boolean | void;
   enableMention?: boolean;
-  projectId?: string;
+  projectId?: string | undefined;
   requireMobileOverviewBuildConfirm?: boolean;
   autoFocus?: boolean;
   forceEnableVoice?: boolean;
