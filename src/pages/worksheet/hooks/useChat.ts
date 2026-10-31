@@ -11,6 +11,20 @@ interface FetchOptions {
   agentParams?: { message?: string | undefined } | undefined;
 }
 
+interface ChatSendOptions {
+  images?: string[] | undefined;
+  media?: unknown[] | undefined;
+  fileIds?: string[] | undefined;
+  fromMessageId?: string | undefined;
+  messageOptions?: Record<string, unknown> | undefined;
+  allowEmpty?: boolean | undefined;
+  originMessageForRegenerate?: { media?: unknown[] | undefined; fileIds?: string[] | undefined } | undefined;
+  useFileContentFormat?: boolean | undefined;
+  attachments?:
+    | { type?: string | undefined; url?: string | undefined; name?: string | undefined; size?: number | undefined }[]
+    | undefined;
+}
+
 function useChat({
   sendImageUrlsWithImage = false,
   messageProps = {},
@@ -322,7 +336,7 @@ function useChat({
       originMessageForRegenerate,
       useFileContentFormat = false,
       attachments,
-    } = {},
+    }: ChatSendOptions = {},
   ) => {
     if (!content.trim() && !isEmpty(images) && !allowEmpty && !isEmpty(fileIds)) return;
 
