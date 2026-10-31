@@ -70,7 +70,7 @@ export function changeBoardViewState(data: { kanbanIndex: unknown; hasMoreData: 
   return { type: 'MOBILE_CHANGE_BOARD_VIEW_STATE', data };
 }
 
-function fireWhenViewLoaded(view: any = {}, { controls = [] }: { controls?: FormControl[] } = {}) {
+function fireWhenViewLoaded(view: any = {}, { controls = [] }: { controls?: FormControl[] | undefined } = {}) {
   return (dispatch: AppDispatch) => {
     if (_.includes([1, 7, 21], view.viewType)) {
       dispatch(PcFireWhenViewLoaded(view, controls));

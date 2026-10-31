@@ -35,7 +35,7 @@ const renderFieldLabel = (text: string) => (
   </div>
 );
 
-function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onCancel = () => {} }: { projectId?: string; [key: string]: any }) {
+function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onCancel = () => {} }: { projectId?: string | undefined; [key: string]: any }) {
   const [activeTab, setActiveTab] = useState('MCP');
   const [configType, setConfigType] = useState('personal');
   const [personalTokens, setPersonalTokens] = useState(initialPersonalTokens || []);

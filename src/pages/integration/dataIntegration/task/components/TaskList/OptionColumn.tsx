@@ -58,7 +58,7 @@ export default function OptionColumn({
   setTaskList,
   onRefreshComponents,
 }: {
-  projectId?: string;
+  projectId?: string | undefined;
   [key: string]: any;
 }) {
   const [visible, setVisible] = useState(false);

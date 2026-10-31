@@ -875,7 +875,7 @@ export async function fillRowRelationRows(
   return filledControl;
 }
 
-export async function handleRowData(props: { rowId?: string; worksheetId?: string; columns: FormControl[] }) {
+export async function handleRowData(props: { rowId?: string; worksheetId?: string | undefined; columns: FormControl[] }) {
   const { rowId, worksheetId, columns } = props;
   const RE_CREATE_ERROR: { [resultCode: number]: string } = {
     4: _l('记录不存在，请刷新视图'),
