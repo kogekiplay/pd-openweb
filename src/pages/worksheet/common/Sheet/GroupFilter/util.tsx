@@ -270,7 +270,7 @@ export const prepareRequestParams = (
     viewId,
     rowId,
     appId,
-  }: { worksheetId?: string; viewId?: string; rowId?: string; appId?: string; [key: string]: any },
+  }: { worksheetId?: string | undefined; viewId?: string | undefined; rowId?: string | undefined; appId?: string; [key: string]: any },
   view,
   source,
   controls,

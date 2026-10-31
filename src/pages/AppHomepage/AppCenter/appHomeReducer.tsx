@@ -89,7 +89,7 @@ interface AppHomeAction {
   values?: ControlValue;
   data?: ControlValue;
   id?: string;
-  appId?: string;
+  appId?: string | undefined;
   newAppId?: string;
   groupId?: string;
   groupType?: string;

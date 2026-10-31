@@ -32,7 +32,7 @@ export interface SelectedCountryData {
 /** 下拉面板的尺寸参数，_positionPanel() 算完展开给 DialCodePanel。初值是 {}，所以全是可选。 */
 interface DialCodePanelLayout {
   panelWidth?: number;
-  maxPanelHeight?: number;
+  maxPanelHeight?: number | undefined;
   hideIndexBar?: boolean;
 }
 

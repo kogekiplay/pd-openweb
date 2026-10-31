@@ -322,9 +322,9 @@ function GroupFilter(props) {
       rowId,
       cb,
     }: {
-      worksheetId?: string;
-      viewId?: string;
-      rowId?: string;
+      worksheetId?: string | undefined;
+      viewId?: string | undefined;
+      rowId?: string | undefined;
       [key: string]: any;
     }) => {
       const { isOpenGroup, view, source, controls, base } = latestValues.current;
@@ -362,7 +362,7 @@ function GroupFilter(props) {
   };
 
   //发起API请求
-  const makeApiRequest = useCallback(({ rowId, params }: { rowId?: string; [key: string]: any }) => {
+  const makeApiRequest = useCallback(({ rowId, params }: { rowId?: string | undefined; [key: string]: any }) => {
     const { source, view, worksheetInfo } = latestValues.current;
     const isArea = AREA.includes(source.type);
     const { navshow, navlayer } = getAdvanceSetting(view);
@@ -423,9 +423,9 @@ function GroupFilter(props) {
       rowId,
       cb,
     }: {
-      worksheetId?: string;
-      viewId?: string;
-      rowId?: string;
+      worksheetId?: string | undefined;
+      viewId?: string | undefined;
+      rowId?: string | undefined;
       [key: string]: any;
     }) => {
       const { source, view, navGroupData } = latestValues.current;
@@ -528,7 +528,7 @@ function GroupFilter(props) {
 
   //更新当前的navGroupData
   const updateNavGroupData = (
-    { filterData, data, rowId, cb }: { rowId?: string; [key: string]: any },
+    { filterData, data, rowId, cb }: { rowId?: string | undefined; [key: string]: any },
     notUpdate?: boolean | undefined,
   ) => {
     if (rowId && !searchRef.current.value) {
