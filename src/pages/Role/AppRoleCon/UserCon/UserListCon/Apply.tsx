@@ -186,7 +186,7 @@ function Apply(props) {
     );
   };
 
-  const dialogRefuse = ({ appId, ids }: { appId?: string; [key: string]: any }) => {
+  const dialogRefuse = ({ appId, ids }: { appId?: string | undefined; [key: string]: any }) => {
     Dialog.confirm({
       title: _l('拒绝'),
       closable: false,

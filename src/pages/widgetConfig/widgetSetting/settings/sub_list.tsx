@@ -167,7 +167,7 @@ export default function SubListSetting(props) {
     }
   }, [status.saveIndex]);
 
-  const getQueryConfigs = ({ isWorksheetQuery, worksheetId }: { worksheetId?: string; [key: string]: any }) => {
+  const getQueryConfigs = ({ isWorksheetQuery, worksheetId }: { worksheetId?: string | undefined; [key: string]: any }) => {
     if (isWorksheetQuery) {
       worksheetAjax.getQueryBySheetId({ worksheetId }).then(res => {
         const formatSearchData = formatSearchConfigs(res);

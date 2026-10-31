@@ -18,7 +18,7 @@ interface EditShareScopeFields {
     postID: string;
     scope: { shareGroups: { groupId: string }[]; shareProjects: { projectId: string }[] };
     /** 选择器当前的选择；什么都没选时是 undefined */
-    scopeValue?: { shareGroupIds?: string[]; shareProjectIds?: string[]; radioProjectIds?: string[] };
+    scopeValue?: { shareGroupIds?: string[]; shareProjectIds?: string[]; radioProjectIds?: string[] } | undefined;
   };
   /** 保存成功后回调，参数是接口返回的新范围 */
   callback?: (scope: ApiPayload) => void;

@@ -1219,7 +1219,7 @@ export default class Condition extends Component<any, any> {
     i: number;
     j: number;
     second?: boolean;
-    isSingle?: boolean;
+    isSingle?: boolean | undefined;
   }) => {
     const data = _.cloneDeep(this.props.data);
     const { updateSource } = this.props;

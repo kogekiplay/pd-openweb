@@ -102,7 +102,7 @@ class TaskControl extends Component<any, any> {
   /**
    * 更新字段数据
    */
-  updateFieldsData = ({ controlId, isBlur }: { controlId?: string; [key: string]: any }) => {
+  updateFieldsData = ({ controlId, isBlur }: { controlId?: string | undefined; [key: string]: any }) => {
     if (!controlId || !this.fields) return;
 
     const errorItems = this.fields.state.errorItems || [];

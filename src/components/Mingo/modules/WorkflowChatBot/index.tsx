@@ -194,14 +194,14 @@ export function formatMessage(message: RawChatMessage) {
 
   // 逐个字段拼出来，键在下面几行才补齐，所以先把形状写出来
   const result: {
-    id?: string;
-    instanceId?: string;
-    workId?: string;
+    id?: string | undefined;
+    instanceId?: string | undefined;
+    workId?: string | undefined;
     role?: string;
     content?: string;
     media?: unknown;
-    hasSubmit?: boolean;
-    modelMessageId?: string;
+    hasSubmit?: boolean | undefined;
+    modelMessageId?: string | undefined;
     price?: number;
   } = {};
   result.id = get(message, 'metadata.id');

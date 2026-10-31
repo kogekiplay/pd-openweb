@@ -505,7 +505,7 @@ interface Window {
   /** AudioMessage writes the actual playback instance; it is absent before first playback. */
   chatAudioPlayer?: import('src/pages/chat/lib/mp3player/mp3player').MP3PlayerPlayback | null | undefined;
   /** 表格单元格复制出来的内容，JSON 串（control.ts / CellControls 写入，粘贴时读取） */
-  tempCopyForSheetView?: string;
+  tempCopyForSheetView?: string | undefined;
 
   // ---- 第二批（2026-09-23 傍晚）----
   /**
@@ -592,7 +592,7 @@ interface Window {
   /** 为 true 时应用页头的应用导航浮层不弹出（角色页、Chatbot、工作表头的某些操作期间写 true） */
   disabledSideButton?: boolean;
   /** 公开表单的分享 id（PublicWorksheet 写入） */
-  publicWorksheetShareId?: string;
+  publicWorksheetShareId?: string | undefined;
   /** 工作表左侧分组 mousedown 的时间戳，按住移动超过 50ms 才算拖拽；松开清成 null */
   dragNow?: number | null;
   /** 单元格编辑器正在失焦保存：子表弹窗的提交要等它 1 秒 */

@@ -26,7 +26,7 @@ interface EditFolderFields {
     projectId: string;
     projectName: string;
     /** 选择器当前的公开范围（SelectGroupTrigger 回调给的对象三个数组总是齐的），没选时是 undefined */
-    scope?: { shareGroupIds: string[]; shareProjectIds: string[]; radioProjectIds?: string[] };
+    scope?: { shareGroupIds: string[]; shareProjectIds: string[]; radioProjectIds?: string[] } | undefined;
   };
 }
 
