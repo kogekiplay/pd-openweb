@@ -243,7 +243,7 @@ function ViewRow({ name, viewCount, actionCount }: { name?: string; [key: string
 }
 
 // 可收起的循环块：标题（模块名）前导折叠箭头，可点击收起/展开自身子项列表，默认展开。
-function CollapsibleLoop({ title, count, children }: { title?: string; [key: string]: any }) {
+function CollapsibleLoop({ title, count, children }: { title?: string | undefined; [key: string]: any }) {
   const [open, setOpen] = useState(true);
 
   return (

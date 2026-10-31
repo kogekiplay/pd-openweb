@@ -105,7 +105,7 @@ export default function SessionHistory({
   onDeleted = () => {},
   onClose = () => {},
 }: {
-  currentSessionId?: string;
+  currentSessionId?: string | undefined;
   agentName?: string;
   enableShare?: boolean;
   onSelect?: (session: AgentSession) => void;

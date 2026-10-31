@@ -464,7 +464,7 @@ export class CreateActions {
       value: keywords,
     });
   }
-  loadDashboardInfo({ projectId, noCache }: { projectId?: string; [key: string]: any }) {
+  loadDashboardInfo({ projectId, noCache }: { projectId?: string | undefined; [key: string]: any }) {
     this.dispatch({
       type: 'UPDATE_DASHBOARD_LOADING',
       value: true,
@@ -552,7 +552,7 @@ export class CreateActions {
       }
     });
   }
-  loadOwnedApps({ projectId }: { projectId?: string; [key: string]: any }) {
+  loadOwnedApps({ projectId }: { projectId?: string | undefined; [key: string]: any }) {
     this.dispatch({
       type: 'UPDATE_APPS_LOADING',
       value: true,
@@ -568,7 +568,7 @@ export class CreateActions {
       });
     });
   }
-  loadGroup({ activeGroupId, activeGroupType, projectId }: { projectId?: string; [key: string]: any }) {
+  loadGroup({ activeGroupId, activeGroupType, projectId }: { projectId?: string | undefined; [key: string]: any }) {
     safeLocalStorageSetItem(
       `latest_group_${md.global.Account.accountId}`,
       JSON.stringify({

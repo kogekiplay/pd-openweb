@@ -136,8 +136,8 @@ export const parseDialCode = ({
   defaultCountry,
   currentCode,
 }: {
-  value?: string;
-  defaultCountry?: string;
+  value?: string | undefined;
+  defaultCountry?: string | undefined;
   currentCode?: string;
 }): string => {
   const defaultCode = getDefaultCode(defaultCountry);
