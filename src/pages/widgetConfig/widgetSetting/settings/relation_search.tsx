@@ -133,7 +133,11 @@ export default function RelationSearch(props) {
 
   const [sortVisible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [{ worksheetInfo = {}, views = [], controls = [] }, setData] = useSetState({
+  const [{ worksheetInfo = {}, views = [], controls = [] }, setData] = useSetState<{
+    worksheetInfo: Partial<HapApi.MD.Web.Ajax.ResultModel.Worksheet.WorksheetModel>;
+    views: HapApi.MD.Entity.Worksheet.WorksheetViewEntity[] | undefined;
+    controls: FormControl[];
+  }>({
     worksheetInfo: {},
     views: [],
     controls: [],

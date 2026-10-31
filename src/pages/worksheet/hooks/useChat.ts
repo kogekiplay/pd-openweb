@@ -13,8 +13,8 @@ interface FetchOptions {
 
 interface ChatSendOptions {
   images?: string[] | undefined;
-  media?: unknown[] | undefined;
-  fileIds?: string[] | undefined;
+  media?: string | unknown[] | undefined;
+  fileIds?: string | string[] | undefined;
   fromMessageId?: string | undefined;
   messageOptions?: Record<string, unknown> | undefined;
   allowEmpty?: boolean | undefined;
