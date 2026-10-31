@@ -565,7 +565,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
       navigateTo(`/app/${appId}/${groupId}/${firstSheetId}/${firstViewId}`);
     }
   };
-  renderMenu = ({ type, icon, text, action, ...rest }: { icon?: string; [key: string]: any }) => {
+  renderMenu = ({ type, icon, text, action, ...rest }: { icon?: string | undefined; [key: string]: any }) => {
     const { data } = this.state;
     const { projectId, isPassword, permissionType, license } = data;
 
@@ -654,7 +654,7 @@ let AppInfo = class AppInfo extends Component<any, any> {
       ...rest,
     });
   };
-  renderMenuHtml = ({ type, icon, text, action, ...rest }: { icon?: string; [key: string]: any }) => {
+  renderMenuHtml = ({ type, icon, text, action, ...rest }: { icon?: string | undefined; [key: string]: any }) => {
     const { appId } = this.ids;
     const { projectId, sourceType, permissionType, isPassword, isLock, license = {} } = this.state.data;
     const featureType = getFeatureStatus(projectId, rest.featureId);

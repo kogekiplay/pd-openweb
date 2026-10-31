@@ -21,7 +21,7 @@ const displayValue = value => {
   return dealValue;
 };
 
-export default function InputValue({ type, value, className, onChange, onBlur, placeholder }: { className?: string; placeholder?: string; [key: string]: any }) {
+export default function InputValue({ type, value, className, onChange, onBlur, placeholder }: { className?: string; placeholder?: string | undefined; [key: string]: any }) {
   const [isEditing, setEditing] = useState(false);
 
   const parseValue = (value: string) => {

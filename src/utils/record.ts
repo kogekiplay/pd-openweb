@@ -225,7 +225,7 @@ export function formatRecordToRelateRecord(
     deletedIds?: string[];
     needFullUpdate?: boolean;
     count?: number;
-    isFromDefault?: boolean;
+    isFromDefault?: boolean | undefined;
   } = {},
 ): RelatedRecordRow[] {
   if (!_.isArray(records)) {

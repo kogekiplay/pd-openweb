@@ -94,7 +94,7 @@ export const goToPrevStep = (dispatch, state) => {
   dispatch({ type: 'UPDATE_ACTIVE_STEP', step: prevStep });
 };
 
-export const addSelectedField = (dispatch, { worksheetId, control }: { worksheetId?: string; [key: string]: any }) => {
+export const addSelectedField = (dispatch, { worksheetId, control }: { worksheetId?: string | undefined; [key: string]: any }) => {
   if (!worksheetId || !control?.controlId) return;
 
   dispatch({
@@ -104,7 +104,7 @@ export const addSelectedField = (dispatch, { worksheetId, control }: { worksheet
   });
 };
 
-export const removeSelectedField = (dispatch, { worksheetId, control }: { worksheetId?: string; [key: string]: any }) => {
+export const removeSelectedField = (dispatch, { worksheetId, control }: { worksheetId?: string | undefined; [key: string]: any }) => {
   if (!worksheetId || !control?.controlId) return;
 
   dispatch({
@@ -114,7 +114,7 @@ export const removeSelectedField = (dispatch, { worksheetId, control }: { worksh
   });
 };
 
-export const setFilterConditions = (dispatch, { worksheetId, filterConditions }: { worksheetId?: string; [key: string]: any }) => {
+export const setFilterConditions = (dispatch, { worksheetId, filterConditions }: { worksheetId?: string | undefined; [key: string]: any }) => {
   if (!worksheetId) return;
 
   dispatch({
@@ -124,7 +124,7 @@ export const setFilterConditions = (dispatch, { worksheetId, filterConditions }:
   });
 };
 
-export const setWorksheetEnhance = (dispatch, { worksheetId }: { worksheetId?: string; [key: string]: any }) => {
+export const setWorksheetEnhance = (dispatch, { worksheetId }: { worksheetId?: string | undefined; [key: string]: any }) => {
   if (!worksheetId) return;
 
   dispatch({
@@ -133,7 +133,7 @@ export const setWorksheetEnhance = (dispatch, { worksheetId }: { worksheetId?: s
   });
 };
 
-export const setAttachmentParseEnhanced = (dispatch, { worksheetId }: { worksheetId?: string; [key: string]: any }) => {
+export const setAttachmentParseEnhanced = (dispatch, { worksheetId }: { worksheetId?: string | undefined; [key: string]: any }) => {
   if (!worksheetId) return;
 
   dispatch({
@@ -142,7 +142,7 @@ export const setAttachmentParseEnhanced = (dispatch, { worksheetId }: { workshee
   });
 };
 
-export const setWorksheetDiscuss = (dispatch, { worksheetId }: { worksheetId?: string; [key: string]: any }) => {
+export const setWorksheetDiscuss = (dispatch, { worksheetId }: { worksheetId?: string | undefined; [key: string]: any }) => {
   if (!worksheetId) return;
 
   dispatch({
@@ -165,7 +165,7 @@ export const setKnowledgeDesc = (dispatch, { desc }) => {
   });
 };
 
-export const generateKnowledgeBasePlan = async (dispatch, { appId, allWorksheetList }: { appId?: string; [key: string]: any }) => {
+export const generateKnowledgeBasePlan = async (dispatch, { appId, allWorksheetList }: { appId?: string | undefined; [key: string]: any }) => {
   if (md.global.SysSettings.hideAIBasicFun) {
     dispatch({ type: 'SET_AI_LOADING', loading: false });
     dispatch({ type: 'SET_KNOWLEDGE_RECOMMEND_SCHEMES', list: [] });
