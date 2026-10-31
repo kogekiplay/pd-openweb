@@ -401,7 +401,7 @@ export const supportDisplayRow = item => {
 };
 
 // 关联记录、关联查询须过滤的字段
-export const getFilterRelateControls = ({ controls = [], showControls = [], data = {} }) => {
+export const getFilterRelateControls = ({ controls = [], showControls = [], data = {} }: { controls?: FormControl[]; showControls?: string[]; data?: FormControl }) => {
   const filterIds = [
     WIDGETS_TO_API_TYPE_ENUM.SPLIT_LINE,
     WIDGETS_TO_API_TYPE_ENUM.OCR,
