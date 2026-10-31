@@ -167,7 +167,7 @@ export default function WidgetVerify(props) {
               size="small"
               checked={checkrange === '1'}
               onClick={(checked: boolean) => {
-                let tempData = { checkrange: checked ? '0' : '1' };
+                let tempData: { checkrange: string; min?: string; max?: string } = { checkrange: checked ? '0' : '1' };
 
                 if (type === 6 && checked) {
                   tempData.min = '';
