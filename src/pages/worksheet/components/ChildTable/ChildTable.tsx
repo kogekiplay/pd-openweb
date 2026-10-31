@@ -2625,12 +2625,15 @@ class ChildTable extends React.Component<any, any> {
                 onUpdateRules={newRules => {
                   updateBase({ worksheetInfo: { ...this.worksheetInfo, rules: newRules } });
                 }}
-                onCellClick={(_, row, rowIndex: number, columnIndex: number, { isSpace } = {}) => {
+                onCellClick={(_, row, _rowIndex?: number, _columnIndex?: number, { isSpace } = {}) => {
                   const isSimpleMode = get(control, 'advancedSetting.sheettype') === '0';
                   const isEmptyRow = String(get(row, 'rowid') || '').startsWith('empty');
 
                   if ((isSpace || isSimpleMode) && allowOpenRecord && !isEmptyRow) {
-                    this.openDetail(layoutDirection === 'vertical' ? columnIndex - 1 : rowIndex);
+                    const rowId = get(row, 'rowid');
+                    const index = findIndex(tableData, { rowid: rowId });
+                    if (!Number.isInteger(index) || index < 0) return;
+                    this.openDetail(index);
                   }
                 }}
                 tableFooter={tableFooter}
