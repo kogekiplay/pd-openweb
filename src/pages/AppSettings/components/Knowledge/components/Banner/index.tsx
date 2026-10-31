@@ -78,7 +78,7 @@ const Banner = ({
   action,
   className,
 }: {
-  icon?: string;
+  icon?: string | undefined;
   className?: string;
   [key: string]: any;
 }) => {
