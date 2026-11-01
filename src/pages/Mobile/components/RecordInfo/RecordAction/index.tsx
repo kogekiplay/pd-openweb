@@ -795,7 +795,7 @@ class RecordAction extends Component<any, any> {
         visible={recordActionVisible}
         onClose={hideRecordActionVisible}
         onMaskClick={hideRecordActionVisible}
-        style={changeActionSheetModalIndex ? { '--z-index': 10001 } : {}}
+        style={changeActionSheetModalIndex ? { '--z-index': '10001' } : {}}
       >
         <div className="popupWrapper">
           <div className="popupHeaderBox header">

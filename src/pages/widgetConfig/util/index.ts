@@ -106,8 +106,8 @@ export const getDefaultSizeByData = data => {
 };
 
 // 根据标签页归类
-export const putControlBySection = controls => {
-  let result = [];
+export const putControlBySection = <T extends FormControl>(controls: T[]) => {
+  let result: Array<Omit<T, 'sectionId' | 'relationControls'> & Pick<FormControl, 'relationControls'> & { sectionId: string }> = [];
 
   controls.forEach(item => {
     if (item.type === 52) {
@@ -468,12 +468,12 @@ export const getBoundRowByTab = widgets => {
 };
 
 //将widgets分成普通和标签页，分别单独渲染
-export const getSectionWidgets = widgets => {
+export const getSectionWidgets = <T extends FormControl>(widgets: T[][]) => {
   // 新建的没有row、col,重设一遍，防止重排出错
   const dealRowAndCol = genWidgetRowAndCol(widgets);
   const flattenWidgets = putControlBySection(flatten(dealRowAndCol));
-  let commonWidgets = [];
-  let tabWidgets = [];
+  let commonWidgets: typeof flattenWidgets = [];
+  let tabWidgets: typeof flattenWidgets = [];
 
   flattenWidgets.forEach(i => {
     if (fixedBottomWidgets(i)) {

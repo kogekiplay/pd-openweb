@@ -609,7 +609,7 @@ export default class Label extends Component<any, LabelState> {
 
               return (
                 <Tag
-                  color={isExist ? undefined : 'error'}
+                  {...(isExist ? {} : { color: 'error' })}
                   onMouseDown={onPreventMouseDown}
                   closable={closable}
                   onClose={onClose}

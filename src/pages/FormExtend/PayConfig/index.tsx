@@ -664,14 +664,11 @@ export default class PayConfig extends Component<any, any> {
                   <Select
                     className="w100 merchantList"
                     classNames={{ popup: { root: "merchantDropDown" } }}
-                    mode={isMultipleMerchant ? 'multiple' : undefined}
+                    {...(isMultipleMerchant ? { mode: 'multiple' } : {})}
                     value={mchId}
                     optionLabelProp="label"
-                    showSearch={
-                      // 同上：showSearch 传对象等于开启搜索，所以只在 multiple（本来就默认
-                      // 开搜索）时传，单选商户保持原来没有搜索框的样子。
-                      isMultipleMerchant ? { optionFilterProp: 'label' } : undefined
-                    }
+                    // showSearch 传对象等于开启搜索，只在多选商户时传入。
+                    {...(isMultipleMerchant ? { showSearch: { optionFilterProp: 'label' } } : {})}
                     suffixIcon={<i className="icon icon-arrow-down-border textTertiary" />}
                     onChange={value => this.setState({ mchId: _.isArray(value) ? value : [value] })}
                     tagRender={props => {

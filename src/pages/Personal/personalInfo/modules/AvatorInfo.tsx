@@ -289,7 +289,7 @@ export default class AvatarEditor extends Component<any, any> {
               height={editorSize}
               imageWidth={src ? editorImageWidth : editorSize}
               exportAsSquare
-              exportSize={isMobile ? undefined : 400}
+              {...(isMobile ? {} : { exportSize: 400 })}
               cropRadius={editorCropRadius}
               minCropRadius={minCropRadius}
               onCrop={this.onCrop}

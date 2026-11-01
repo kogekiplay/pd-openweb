@@ -444,7 +444,7 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
                   classNames={{ popup: { root: "connectAiSelectDropdown" } }}
                   placeholder={_l('选择应用')}
                   notFoundContent={_l('暂无数据')}
-                  value={selectedAppId || undefined}
+                  {...(selectedAppId ? { value: selectedAppId } : {})}
                   showSearch={{ optionFilterProp: "label" }}
                   options={apps.map(item => ({ label: item.name, value: item.id }))}
                   onChange={setSelectedAppId}
@@ -457,7 +457,7 @@ function ConnectAiDialog({ visible, projectId, initialPersonalTokens = null, onC
                       classNames={{ popup: { root: "connectAiSelectDropdown" } }}
                       placeholder={_l('选择授权密钥')}
                       notFoundContent={_l('暂无数据')}
-                      value={selectedAuthId || undefined}
+                      {...(selectedAuthId ? { value: selectedAuthId } : {})}
                       options={authKeys.map(item => ({ label: item.name, value: item.id }))}
                       onChange={setSelectedAuthId}
                       popupRender={menu => (

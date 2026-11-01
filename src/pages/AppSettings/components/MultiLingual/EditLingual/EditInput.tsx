@@ -31,10 +31,10 @@ export default function (props: EditInputProps) {
 
   return (
     <Component
-      className={className}
-      style={style}
-      disabled={disabled}
-      value={name}
+      {...(className === undefined ? {} : { className: className })}
+      {...(style === undefined ? {} : { style: style })}
+      {...(disabled === undefined ? {} : { disabled: disabled })}
+      {...(name === undefined ? {} : { value: name })}
       onChange={event => setName(event.target.value)}
       onBlur={handleChangeName}
       onKeyDown={event => {
