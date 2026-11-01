@@ -3,7 +3,8 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Dropdown, Input, Radio } from 'ming-ui';
 import { ALLOW_EDIT_TYPES } from '../../enum';
-import CommonFieldDropdown from './CommonFieldDropdown';
+import CommonFieldDropdown, { toCommonFieldDropdownControl } from './CommonFieldDropdown';
+import type { FormControl } from 'src/utils/controlTypes';
 import CommonSwitch from './CommonSwitch';
 import SectionTitle from './SectionTitle';
 
@@ -72,9 +73,9 @@ export default function AbilityExpandSettings(props) {
                 <p className="mBottom8 mTop16">{_l('自动填充')}</p>
                 <CommonFieldDropdown
                   controls={originalControls
-                    .filter(item => _.find(controls, c => c.controlId === item.controlId))
-                    .map(item => {
-                      return _.pick(item, ['controlId', 'controlName', 'type']);
+                    .filter((item: FormControl) => _.find(controls, (c: FormControl) => c.controlId === item.controlId))
+                    .map((item: FormControl) => {
+                      return toCommonFieldDropdownControl(_.pick(item, ['controlId', 'controlName', 'type']));
                     })}
                   extendSourceId={extendSourceId}
                   weChatSetting={weChatSetting}

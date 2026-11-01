@@ -11,16 +11,28 @@ import type { PublicWorksheetSettings } from '../redux/types';
 /**
  * 只声明这个组件真正读取的三个控件字段，全部从唯一模型 `FormControl` 派生，不另立 DTO：
  * - `controlName` **必须存在**：组件直接 `.toLocaleLowerCase()`，缺项就是原生 TypeError，
- *   不兜底成空串、不加可选链。收紧它的依据是组件的真实读取方式，而不是"调用方一定给"——
+ *   搜索器保持直接读取；调用方的名称适配器建立非 null 字符串（允许空串）的前置条件。
  *   两个真实调用方用的是 `_.pick(item, ['controlId','controlName','type'])`，lodash 无类型、
- *   返回 `any`，**调用点并没有在类型上保证这个字段存在**（调用方的真实缺口，本切片只记录、
- *   不改调用方；仓库里另有多处 `control.controlName || ''` 兜底，说明运行期确实可能缺失）。
+ *   返回 `any`；它们现在在 pick 之后经过本文件的适配器补齐 nullish 名称，再进入这个边界。
+ *   仓库里另有多处 `control.controlName || ''` 兜底，说明运行期确实可能缺失。
+ * - 两个真实调用方在 lodash.pick 之后立即调用 `toCommonFieldDropdownControl`，
+ *   因此把缺失/null 名称规范为仅用于搜索的空字符串，再把满足本边界的控件传入。
  * - `controlId` / `type` 保持 `FormControl` 的可选性：它们只进 `_.includes` 比较、
  *   Dropdown 项 value 与 getIconByType，缺项不会抛原生错误，无依据收紧。
  */
 export type CommonFieldDropdownControl = Pick<FormControl, 'controlId' | 'type'> & {
   controlName: NonNullable<FormControl['controlName']>;
 };
+
+type CommonFieldDropdownSource = Pick<FormControl, 'controlId' | 'type'> & {
+  controlName?: FormControl['controlName'] | null;
+};
+
+const hasControlName = (control: CommonFieldDropdownSource): control is CommonFieldDropdownControl =>
+  control.controlName != null;
+
+export const toCommonFieldDropdownControl = (control: CommonFieldDropdownSource): CommonFieldDropdownControl =>
+  hasControlName(control) ? control : { ...control, controlName: '' };
 
 /**
  * 真实消费面（两处调用：AbilityExpandSettings 自动填充、FillSettings 本地缓存）：
@@ -31,7 +43,7 @@ export type CommonFieldDropdownControl = Pick<FormControl, 'controlId' | 'type'>
  * 所以 V = `string | number`（已证事实；不改 `value={selectedCount}` 的业务语义）。
  * 运行期 Dropdown 只会把"选中项的 value"或清除时的 `undefined` 交给回调，因此消费方实际拿到的
  * 是 controlId 或 undefined；number 成员只反映 V 的实例化结果，不另立第二套值模型。
- * `getIconByType(item.type, false)` 的多传实参（该函数只声明 1 个形参）继续保留为原失败。
+ * `getIconByType` 的函数类型接受旧 boolean 实参，实现仍为单形参；这里保留原调用。
  */
 export interface CommonFieldDropdownProps {
   controls: CommonFieldDropdownControl[];

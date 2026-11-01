@@ -4,7 +4,8 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, Dropdown, Icon, Input, PriceTip, RichText } from 'ming-ui';
 import SmsSignSet from 'src/components/SmsSignSet';
-import CommonFieldDropdown from './CommonFieldDropdown';
+import CommonFieldDropdown, { toCommonFieldDropdownControl } from './CommonFieldDropdown';
+import type { FormControl } from 'src/utils/controlTypes';
 import CommonSwitch from './CommonSwitch';
 import SectionTitle from './SectionTitle';
 
@@ -67,8 +68,8 @@ export default function FillSettings(props) {
 
   const getMobileControls = () => {
     return originalControls
-      .filter(i => i.type === 3)
-      .map(({ controlName: text, controlId: value }) => ({ value, text }));
+      .filter((i: FormControl) => i.type === 3)
+      .map(({ controlName: text, controlId: value }: FormControl) => ({ value, text }));
   };
 
   const isMobileControlDelete = () => {
@@ -253,9 +254,9 @@ export default function FillSettings(props) {
               <div className="commonMargin">
                 <CommonFieldDropdown
                   controls={originalControls
-                    .filter(item => _.find(controls, c => c.controlId === item.controlId) && item.type !== 29) //本地缓存 不支持关联记录字段填充
-                    .map(item => {
-                      return _.pick(item, ['controlId', 'controlName', 'type']);
+                    .filter((item: FormControl) => _.find(controls, (c: FormControl) => c.controlId === item.controlId) && item.type !== 29) //本地缓存 不支持关联记录字段填充
+                    .map((item: FormControl) => {
+                      return toCommonFieldDropdownControl(_.pick(item, ['controlId', 'controlName', 'type']));
                     })}
                   extendSourceId={extendSourceId}
                   weChatSetting={weChatSetting}
