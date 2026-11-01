@@ -16,6 +16,8 @@ import { getAllSourceList, getNodeInfo, getSourceIndex, isHasChange } from '../u
 import emptyImg from './img/empty.png';
 import Table from './Table';
 
+type PreviewRows = NonNullable<Awaited<ReturnType<typeof sheetAjax.getFilterRows>>['data']>;
+
 const getNumFetch = async (worksheetId: string) => {
   return sheetAjax.getFilterRowsTotalNum({
     worksheetId,
@@ -31,6 +33,7 @@ function Preview(props) {
   const ajaxPromisePublish = useRef<ApiResult | null>(null);
   const ajaxPromiseStatus = useRef<ApiResult | null>(null);
   const { projectId, appId, onChangePreview } = props;
+  const initialData: PreviewRows = [];
   const [
     {
       flowData,
@@ -56,7 +59,7 @@ function Preview(props) {
     setState,
   ] = useSetState({
     flowData: props.flowData,
-    data: [],
+    data: initialData,
     controls: [],
     loading: false,
     previewRunning: false,
@@ -482,7 +485,7 @@ function Preview(props) {
     request.then(res => {
       setState({
         worksheetId,
-        data: _.get(res, 'data'),
+        data: _.get(res, 'data') ?? [],
         count: res.count,
         pageSize: pS,
         pageIndex: pI,
