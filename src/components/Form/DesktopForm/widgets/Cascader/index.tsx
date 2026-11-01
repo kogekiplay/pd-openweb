@@ -37,7 +37,6 @@ export default function CascaderWidget(props) {
     popupClassName,
     popupPlacement,
     popupAlign,
-    treePopupAlign,
     controlId,
     value,
     onChange,
@@ -528,7 +527,6 @@ export default function CascaderWidget(props) {
       <TreeSelect
         className="w100 customAntSelect customTreeSelect"
         classNames={{ popup: { root: cx('customTreeSelectDropdown', popupClassName, `treeSelect_${controlId}`) } }}
-        dropdownPopupAlign={treePopupAlign}
         ref={treeSelectCompRef}
         disabled={disabled}
         {...(isShowMultiple
@@ -546,7 +544,6 @@ export default function CascaderWidget(props) {
         value={
           _.isEmpty(widgetValue) ? [] : widgetValue.map(item => ({ value: item.sid, label: item.name || _l('未命名') }))
         }
-        selectable={!+anylevel}
         notFoundContent={
           <div className="textTertiary pLeft12 pBottom5">
             {isError !== false ? (
