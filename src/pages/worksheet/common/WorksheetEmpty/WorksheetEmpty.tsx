@@ -104,7 +104,7 @@ class WorksheetEmpty extends Component<any, WorksheetEmptyState> {
               </span>
               <div className="line"></div>
               <Trigger
-                popupVisible={visible}
+                {...(visible === undefined ? {} : { popupVisible: visible })}
                 onPopupVisibleChange={visible => this.setState({ visible })}
                 popupPlacement="bottom"
                 popupAlign={{ points: ['tl', 'bl'], offset: [-116, 0] }}

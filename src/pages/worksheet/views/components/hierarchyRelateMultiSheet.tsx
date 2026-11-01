@@ -10,6 +10,9 @@ import type { FormControl } from 'src/utils/controlTypes';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import VerifyDel from './VerifyDel';
 
+const optionalPlacement = (placement: string | undefined): Record<string, unknown> =>
+  placement === undefined ? {} : { placement };
+
 const ControlsWrap = styled.div`
   .grade {
     margin-right: 30px;
@@ -305,7 +308,7 @@ export default function HierarchyRelateMultiSheet({ worksheetInfo, viewControls,
         classNames={{ root: 'addHierarchyRelate' }}
         trigger={['click']}
         popupRender={() => renderRelate()}
-        placement={getPlacement()}
+        {...optionalPlacement(getPlacement())}
       >
         <div className={'addRelate'} ref={addRelateRef} onClick={getAvailableControls}>
           <i className="icon-add"></i>
