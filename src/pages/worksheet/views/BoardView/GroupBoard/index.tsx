@@ -100,7 +100,7 @@ const GroupBoard = props => {
     return groupByOptionKey(viewData, view, control, groupOptions);
   }, [viewData, view, controlId, groupOptions]);
 
-  const [openKeys, setOpenKeys] = useState([]);
+  const [openKeys, setOpenKeys] = useState<ReturnType<typeof getGroupOpenKeys>>([]);
   const [viewportClientW, setViewportClientW] = useState(500);
   const [viewport, setViewport] = useState(null);
 

@@ -1,10 +1,11 @@
 import React from 'react';
+import _ from 'lodash';
 import { updateViewAdvancedSetting } from 'src/pages/worksheet/common/ViewConfig/util.js';
 import { setSysWorkflowTimeControlFormat } from 'src/pages/worksheet/views/CalendarView/util.js';
 import type { FormControl } from 'src/utils/controlTypes';
 import DropDownSet from './DropDownSet';
 
-const GUNTER_GROUP_CONTROL_TYPES = [9, 11, 26, 27, 28, 48];
+const GUNTER_GROUP_CONTROL_TYPES: Array<FormControl['type']> = [9, 11, 26, 27, 28, 48];
 
 export function isGunterGroupControl(item: FormControl = {}) {
   return (
@@ -45,7 +46,7 @@ export default function Group(props) {
   );
   const invalidValueText = getGunterGroupControlInvalidText(viewControl, worksheetControls, controlList);
 
-  const getViewControlType = value => {
+  const getViewControlType = (value: FormControl['controlId']) => {
     const data = worksheetControls.find((o: FormControl) => o.controlId === value) || {};
     return data.type === 30 ? data.sourceControlType : data.type;
   };
@@ -54,13 +55,13 @@ export default function Group(props) {
     <React.Fragment>
       <DropDownSet
         {...props}
-        handleChange={value => {
+        handleChange={(value: FormControl['controlId']) => {
           updateCurrentView({
             ...view,
             appId,
             viewControl: value,
             advancedSetting: updateViewAdvancedSetting(view, {
-              navshow: [26, 27, 48].includes(getViewControlType(value)) ? '1' : '0',
+              navshow: _.includes([26, 27, 48], getViewControlType(value)) ? '1' : '0',
               navfilters: JSON.stringify([]),
               navsorts: '',
               customitems: '',

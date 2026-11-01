@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { getAdvanceSetting, renderText } from 'src/utils/control';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { ControlOption, FormControl } from 'src/utils/controlTypes';
 
 // 特殊字段map关系
 const extraFieldGenerators = {
@@ -193,15 +193,20 @@ export const groupByOptionKey = (viewData, view, control, options) => {
   return { groupViewData, secondGroupTotal };
 };
 
-export const getGroupOpenKeys = (options, view, groupViewData, control) => {
+export const getGroupOpenKeys = <T extends { key: ControlOption['key'] | number }>(
+  options: readonly T[],
+  view: Pick<FormControl, 'advancedSetting'> | undefined,
+  groupViewData: object,
+  control: Pick<FormControl, 'type'>,
+) => {
   const { groupopen = '2', groupshow } = getAdvanceSetting(view);
   const { type } = control;
-  let openKeys = [];
+  let openKeys: Array<T['key'] | undefined> = [];
 
   switch (groupopen) {
     case '1':
       // 如果二级分组字段为选项、等级，且 groupshow = 1（有数据的项），展开第一项需要判断有数据的第一项
-      if (groupshow === '1' && [9, 11, 28].includes(type)) {
+      if (groupshow === '1' && _.includes([9, 11, 28], type)) {
         let curKey = _.get(
           _.find(options, item => _.has(groupViewData, item.key)),
           'key',
@@ -343,19 +348,22 @@ export const getGroupOptions = (viewData, view, control, otherParams = {}) => {
 };
 
 // 处理options，用于【移动到】相关参数
-export const parseGroupsByOptions = (type, options) => {
-  let parseOptions = [];
+export const parseGroupsByOptions = <T extends { key: unknown; value?: unknown; combination?: unknown }>(
+  type: FormControl['type'],
+  options: T[],
+) => {
+  let parseOptions: Array<T | { key: T['key']; name: T['value'] | T['combination'] }> = [];
 
   switch (type) {
     case 9:
     case 11:
     case 28:
-      parseOptions = options.map(item => ({ key: item.key, name: item.value }));
+      parseOptions = options.map((item): { key: T['key']; name: T['value'] } => ({ key: item.key, name: item.value }));
       break;
     case 26:
     case 27:
     case 48:
-      parseOptions = options.map(item => ({ key: item.key, name: item.combination }));
+      parseOptions = options.map((item): { key: T['key']; name: T['combination'] } => ({ key: item.key, name: item.combination }));
       break;
     case 29:
       parseOptions = options;
