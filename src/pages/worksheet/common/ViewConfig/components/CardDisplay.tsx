@@ -21,13 +21,23 @@ const isVisible = (control: FormControl) => {
 const excludeTitleControls = (controls: FormControl[]) => controls.filter((item: FormControl) => item.attribute !== 1);
 
 // 默认取标题控件 和 前三个控件
-const getDefaultShowControls = controls => {
-  return controls.slice(0, 2).map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId);
+const getDefaultShowControls = (controls: FormControl[]) => {
+  return controls.slice(0, 2).map(({ controlId }: FormControl) => controlId);
+};
+
+type CardWorksheetInfo = Awaited<ReturnType<typeof worksheetAjax.getWorksheetInfo>>;
+type CardDisplayInfo = {
+  sheetInfo?: CardWorksheetInfo;
+  controls: FormControl[];
+  availableControls: ReturnType<typeof excludeTitleControls>;
+  coverColumns: FormControl[];
+  showControls?: ReturnType<typeof getDefaultShowControls>;
+  controlsSorts?: Array<FormControl['controlId']>;
 };
 
 export default function CardDisplay(props) {
   const { visible, worksheetId, showControls, handleDisplayChange, advancedSetting } = props;
-  const [{ controls, coverColumns }, setInfo] = useState({
+  const [{ controls, coverColumns }, setInfo] = useState<CardDisplayInfo>({
     controls: [],
     availableControls: [],
     coverColumns: [],
@@ -35,7 +45,7 @@ export default function CardDisplay(props) {
   useEffect(() => {
     if (!worksheetId) return;
     worksheetAjax.getWorksheetInfo({ worksheetId, getTemplate: true }).then(data => {
-      const controls: FormControl[] = _.get(data, ['template', 'controls']);
+      const controls: FormControl[] = _.get(data, ['template', 'controls']) ?? [];
       const excludedTitle = excludeTitleControls(controls);
       const defaultShowControls = getDefaultShowControls(excludedTitle);
       const coverColumns = controls.filter((l: FormControl) => isVisible(l)).filter(c => !!c.controlName);
@@ -44,7 +54,7 @@ export default function CardDisplay(props) {
         controls,
         availableControls: excludedTitle,
         showControls: defaultShowControls,
-        controlsSorts: excludedTitle.map(({ controlId }: { controlId?: string; [key: string]: any }) => controlId),
+        controlsSorts: excludedTitle.map(({ controlId }: FormControl) => controlId),
         coverColumns: coverColumns,
       });
     });
