@@ -167,7 +167,16 @@ const enabledList = [
   { label: _l('关闭'), value: false },
 ];
 
-const renderEmpty = (appId: string) => {
+type ProjectAppsResult = Awaited<ReturnType<typeof appManagement.getAppsForProject>>;
+type ProjectApps = NonNullable<ProjectAppsResult['apps']>;
+type ProjectAppsState = {
+  appList: ProjectApps;
+  appLoading: boolean;
+  appIndex: number;
+  total: ProjectAppsResult['total'];
+};
+
+const renderEmpty = (appId: ProjectApps[number]['appId']) => {
   return (
     <EmptyWrap>
       <span className="iconCon icon-department Font48"></span>
@@ -181,7 +190,7 @@ function AddWorkflowDialog(props) {
 
   const [value, setValue] = useState([]);
   const [searchApp, setSearchApp] = useState('');
-  const [appId, setAppId] = useState(undefined);
+  const [appId, setAppId] = useState<ProjectApps[number]['appId']>(undefined);
   const [workflowList, setWorkflowList] = useState([]);
   const [filters, setFilters] = useState({
     workflowType: 1, // 类型
@@ -197,7 +206,7 @@ function AddWorkflowDialog(props) {
   const [submitting, setSubmitting] = useState(false);
   const requestPending = useRef(false);
 
-  const [{ appList, appLoading, appIndex, total }, setApp] = useSetState({
+  const [{ appList, appLoading, appIndex, total }, setApp] = useSetState<ProjectAppsState>({
     appList: [],
     appLoading: false,
     appIndex: 1,
@@ -236,8 +245,9 @@ function AddWorkflowDialog(props) {
         keyword: searchText,
       })
       .then(({ apps, total }) => {
+        const nextApps = apps ?? [];
         setApp({
-          appList: _pageIndex > 1 ? appList.concat(apps) : apps,
+          appList: _pageIndex > 1 ? appList.concat(nextApps) : nextApps,
           appLoading: false,
           appIndex: _pageIndex + 1,
           total,
@@ -486,7 +496,7 @@ function AddWorkflowDialog(props) {
             }}
           >
             {appList
-              .filter(l => l.appName.toLowerCase().indexOf(searchApp ? searchApp.toLowerCase() : '') > -1)
+              .filter(l => (l.appName ?? '').toLowerCase().indexOf(searchApp ? searchApp.toLowerCase() : '') > -1)
               .map((item, index) => {
                 return (
                   <Select.Option key={index} value={item.appId}>
