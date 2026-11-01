@@ -13,12 +13,16 @@ interface FetchOptions {
 
 interface ChatSendOptions {
   images?: string[] | undefined;
-  media?: string | unknown[] | undefined;
-  fileIds?: string | string[] | undefined;
+  /** Raw arrays for the current send; prior message fields may already be serialized below. */
+  media?: unknown[] | undefined;
+  fileIds?: string[] | undefined;
   fromMessageId?: string | undefined;
   messageOptions?: Record<string, unknown> | undefined;
   allowEmpty?: boolean | undefined;
-  originMessageForRegenerate?: { media?: unknown[] | undefined; fileIds?: string[] | undefined } | undefined;
+  originMessageForRegenerate?:
+    | { media?: string | unknown[] | undefined; fileIds?: string | string[] | undefined }
+    | null
+    | undefined;
   useFileContentFormat?: boolean | undefined;
   attachments?:
     | { type?: string | undefined; url?: string | undefined; name?: string | undefined; size?: number | undefined }[]

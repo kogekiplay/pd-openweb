@@ -36,7 +36,7 @@ interface TaskApiResult {
 interface TaskLike {
   taskID?: string;
   taskName?: string;
-  status?: number;
+  status?: number | undefined;
   [key: string]: any;
 }
 

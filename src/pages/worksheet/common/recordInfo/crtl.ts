@@ -654,7 +654,7 @@ export function updateRecordOwner({
 }: {
   worksheetId?: string;
   recordId?: string;
-  accountId?: string;
+  accountId?: string | undefined;
 }) {
   return new Promise<{ account: OwnerAccount; record: RecordRow }>((resolve, reject) => {
     worksheetAjax

@@ -83,8 +83,8 @@ export const getWorksheetShareUrl = ({
   recordId,
   viewId,
 }: {
-  appId?: string;
-  worksheetId?: string;
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
   recordId?: string;
   viewId?: string;
   [key: string]: any;

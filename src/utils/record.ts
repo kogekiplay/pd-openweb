@@ -761,10 +761,10 @@ export async function getRecordLandUrl({
   viewId,
   recordId,
 }: {
-  appId?: string;
-  worksheetId?: string;
-  viewId?: string;
-  recordId?: string;
+  appId?: string | undefined;
+  worksheetId?: string | undefined;
+  viewId?: string | undefined;
+  recordId?: string | undefined;
 }) {
   if (md.global.Account.isPortal) {
     appId = md.global.Account.appId;
