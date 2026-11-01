@@ -77,7 +77,7 @@ export default function (Comp, props: Record<string, any> = {}) {
   const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
 
   root.render(
-    <ConfigProvider theme={primaryColor ? antdTheme(primaryColor) : undefined}>
+    <ConfigProvider {...(primaryColor ? { theme: antdTheme(primaryColor) } : {})}>
       <StyleSheetManager shouldForwardProp={shouldForwardProp}>
         <Comp
           {...(props.visibleName ? { [props.visibleName]: true } : { visible: true })}

@@ -77,7 +77,7 @@ const PopupWrapper = ({
   return (
     <Popup
       visible={visible}
-      onMaskClick={onClose}
+      {...(onClose ? { onMaskClick: onClose } : {})}
       className={`mobileModal mobilePopup ${className}`}
       bodyClassName={`popupWrapperBody ${bodyClassName}`}
       bodyStyle={bodyStyle}

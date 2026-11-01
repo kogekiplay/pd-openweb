@@ -27,6 +27,15 @@ const WRITE_MODE_OPTIONS = [
   { text: _l('覆盖'), value: 2 },
 ];
 
+type AttachmentImportSetting = {
+  matchControlId: FormControl['controlId'] | null;
+  separator: (typeof SEPARATOR_OPTIONS)[number]['value'] | null | undefined;
+  attachmentControlId: FormControl['controlId'];
+  writeMode: (typeof WRITE_MODE_OPTIONS)[number]['value'] | undefined;
+  createWhenNoMatch: boolean;
+  triggerWorkflow: boolean;
+};
+
 const getFiledOptions = controls => {
   const controlOptions = controls
     .filter(({ controlId }: { controlId?: string; [key: string]: any }) => ![...NORMAL_SYSTEM_FIELDS_SORT, ...WORKFLOW_SYSTEM_FIELDS_SORT].includes(controlId))
@@ -53,7 +62,7 @@ function ImportAttachments(props) {
   const { matchFieldOptions, writeFieldOptions } = getFiledOptions(controls);
 
   const [step, setStep] = useState(1);
-  const [setting, setSetting] = useSetState({
+  const [setting, setSetting] = useSetState<AttachmentImportSetting>({
     matchControlId: null,
     separator: null,
     attachmentControlId: writeFieldOptions[0]?.value,
