@@ -1,9 +1,11 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
+import type { ReactNode } from 'react';
 import { QiniuUpload } from 'ming-ui';
-import type { MobileFileLike } from 'src/pages/worksheet/types';
+import type { Uploader, UploaderEventArgs, UploaderFile, UploadedFileResponse, UploadErrorInfo, UploaderMimeType } from 'src/utils/uploader/types';
 
 // 只读这几个字段；传进来的可能是上传队列里的文件（它的 status 是数字，和 MobileFileLike 的字符串状态不是一回事）
-const formatUploadFile = (file: Pick<MobileFileLike, 'id' | 'size' | 'type' | 'name' | 'url'> = {}, status = 'added') => ({
+type UploadQueueFile = Partial<Pick<UploaderFile, 'id' | 'size' | 'type' | 'name' | 'url'>>;
+const formatUploadFile = (file: UploadQueueFile = {}, status = 'added') => ({
   id: file.id,
   size: file.size,
   type: file.type,
@@ -15,6 +17,20 @@ const formatUploadFile = (file: Pick<MobileFileLike, 'id' | 'size' | 'type' | 'n
     url: file.url,
   },
 });
+
+type UploadFilesProps = {
+  onAdd?: ((...args: UploaderEventArgs['FilesAdded']) => void) | undefined;
+  onUploaded?: ((up: Uploader, file: UploaderFile, response: UploadedFileResponse) => void) | undefined;
+  onUploadProgress?: ((...args: UploaderEventArgs['UploadProgress']) => void) | undefined;
+  maxFilesLength?: number | undefined;
+  existingFiles?: readonly unknown[] | undefined;
+  children?: ReactNode;
+  setFiles?: ((files: ReturnType<typeof formatUploadFile>[]) => void) | undefined;
+  onError?: ((file: UploadErrorInfo['file']) => void) | undefined;
+  removeFile?: ((file: UploaderFile) => void) | undefined;
+  allowMultiSelection?: boolean | undefined;
+  allowMimeTypes?: UploaderMimeType[] | undefined;
+};
 
 function UploadFiles(
   {
@@ -29,7 +45,7 @@ function UploadFiles(
     onUploadProgress = () => {},
     allowMultiSelection = true,
     allowMimeTypes = [{ title: 'image', extensions: 'jpg,jpeg,png,heic' }],
-  },
+  }: UploadFilesProps,
   ref,
 ) {
   const uploaderRef = useRef<QiniuUpload | null>(null);

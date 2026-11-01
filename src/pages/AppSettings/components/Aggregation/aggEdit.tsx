@@ -12,7 +12,9 @@ import { getFeatureStatus } from 'src/utils/project';
 
 export default function AggregationEdit(props) {
   const { appId, aggTableId } = _.get(props, 'match.params');
-  const [{ loading, projectId, name }, setState] = useSetState({
+  const [{ loading, projectId, name }, setState] = useSetState<
+    Pick<Awaited<ReturnType<typeof homeAppApi.getApp>>, 'projectId' | 'name'> & { loading: boolean }
+  >({
     loading: true,
     projectId: '',
     name: '',

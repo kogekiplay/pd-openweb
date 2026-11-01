@@ -173,7 +173,7 @@ export function getCodeContent({
   controls,
 }: PrintLabelConfig & {
   row?: RecordRow;
-  urls?: CodeUrlSource;
+  urls?: CodeUrlSource | undefined;
   index?: number;
   controls?: FormControl[];
 }) {
