@@ -103,6 +103,11 @@ export default function MobileMyStatus() {
   // 设置/修改状态
   const handleSettingStatus = () => {
     const options = isEdit ? onStatusOption : _.find(statusList, v => v.statusId === currentStatusId);
+    if (!options) {
+      alert(_l('请选择状态'), 3);
+      return;
+    }
+
     const params = {
       statusId: options.statusId,
       beginTime: options.durationOption === 1000 ? options.beginTime : initialOnStatusOption.beginTime,
