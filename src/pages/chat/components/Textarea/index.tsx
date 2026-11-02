@@ -31,10 +31,13 @@ export interface TextareaBoxProps {
   onRemoveReferMessage: () => void;
 }
 
-/** state 仍保持原 `any`（未新增）：`handleChange` 的 `$().val()` 宽重载写入、
- *  `handleBlur` 的 fallback 都使 `value` 的真实域无法在未改运行时前提下收紧；
- *  故本片只交付 Props 与已证 events/renderIcon，不claim state 闭环。 */
-export default class TextareaBox extends Component<TextareaBoxProps, any> {
+/** Both slots start from the string draft prop; DOM fallback only accepts text. */
+export interface TextareaBoxState {
+  value: TextareaBoxProps['value'];
+  propValue: TextareaBoxProps['value'];
+}
+
+export default class TextareaBox extends Component<TextareaBoxProps, TextareaBoxState> {
   declare lastHeight: number | undefined;
   declare currentHeight: number | undefined;
   declare isComposing: boolean;
@@ -56,9 +59,8 @@ export default class TextareaBox extends Component<TextareaBoxProps, any> {
 
   static getDerivedStateFromProps(
     nextProps: TextareaBoxProps,
-    // 本函数真实只读 prevState.propValue；其两个 writer（constructor:49、本函数:61）都从 TextareaBoxProps['value'] 写入。
-    // 只声明这一个稳定 slot，不认证整个 state（jQuery.val 仍 opaque，value 仍是旧 any）。
-    prevState: { propValue: TextareaBoxProps['value'] },
+    // This update reads only the prop snapshot, not the editable draft.
+    prevState: Pick<TextareaBoxState, 'propValue'>,
   ) {
     if (nextProps.value !== prevState.propValue) {
       return {
@@ -123,14 +125,22 @@ export default class TextareaBox extends Component<TextareaBoxProps, any> {
     }
     return undefined;
   }
+  getTextareaWrapper(): JQuery<HTMLDivElement> {
+    return this.textareaWrapper ? $(this.textareaWrapper) : $<HTMLDivElement>();
+  }
+  getTextareaValue(): string {
+    const value = this.getTextareaWrapper().find('textarea').val();
+    // A missing field or a nontext value hook must not replace the string draft.
+    return typeof value === 'string' ? value : this.state.value;
+  }
   handleBlur() {
     const { value } = this.state;
-    this.props.onBlur(value || $(this.textareaWrapper).find('textarea').val());
+    this.props.onBlur(value || this.getTextareaValue());
   }
-  handleChange(value) {
+  handleChange(value?: string) {
     const { session } = this.props;
-    const height = $(this.textareaWrapper).height();
-    const nextValue = value === undefined ? $(this.textareaWrapper).find('textarea').val() : value;
+    const height = this.getTextareaWrapper().height();
+    const nextValue = value === undefined ? this.getTextareaValue() : value;
     this.currentHeight = height;
     if (this.lastHeight !== this.currentHeight) {
       this.lastHeight = height;
