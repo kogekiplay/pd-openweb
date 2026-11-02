@@ -108,7 +108,7 @@ export interface KeyboardShortcutsProps {
 export default function KeyboardShortcuts(props: KeyboardShortcutsProps) {
   const { visible, onClose = () => {} } = props;
   const [activeSection, setActiveSection] = useState(0);
-  const [shortcutsData, setShortcutsData] = useState([]);
+  const [shortcutsData, setShortcutsData] = useState<HostKeySection[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -168,7 +168,9 @@ export default function KeyboardShortcuts(props: KeyboardShortcutsProps) {
     );
   };
 
-  const renderSection = (section, sectionIndex: number) => {
+  const renderSection = (section: HostKeySection | undefined, sectionIndex: number) => {
+    if (!section) return null;
+
     return (
       <div key={sectionIndex} className="shortcutSection">
         <div className="Font18 bold mTop18 mBottom8">{section.section}</div>
