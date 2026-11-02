@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import type { MouseEvent } from 'react';
 import _ from 'lodash';
 import { bool, func, number, oneOfType, shape, string } from 'prop-types';
 import styled from 'styled-components';
@@ -300,7 +301,7 @@ export default function Steps(props) {
         onClick={
           disabled
             ? _.noop
-            : e => {
+            : (e: MouseEvent<HTMLElement>) => {
                 e.stopPropagation();
                 e.preventDefault();
               }
@@ -321,7 +322,7 @@ export default function Steps(props) {
           <PortraitScaleBox
             total={scaleTotal}
             disabled={disabled}
-            onClick={e => {
+            onClick={(e: MouseEvent<HTMLElement>) => {
               if (disabled) return;
               const { top, height } = barRef.current.getBoundingClientRect();
               const index = Math.ceil((e.clientY - top) / (height / (filterOptions.length - 1)));
@@ -358,7 +359,7 @@ export default function Steps(props) {
                         onClick={
                           disabled
                             ? _.noop
-                            : e => {
+                            : (e: MouseEvent<HTMLElement>) => {
                                 e.stopPropagation();
                                 setCurrentValue(getCurrent(option.key));
                                 onChange(option.key);
@@ -403,7 +404,7 @@ export default function Steps(props) {
       onClick={
         disabled
           ? _.noop
-          : e => {
+          : (e: MouseEvent<HTMLElement>) => {
               e.stopPropagation();
               e.preventDefault();
             }
@@ -445,7 +446,7 @@ export default function Steps(props) {
           total={scaleTotal}
           disabled={disabled}
           isMobile={isMobile}
-          onClick={e => {
+          onClick={(e: MouseEvent<HTMLElement>) => {
             if (disabled) return;
             const { left, width } = barRef.current.getBoundingClientRect();
             const index = Math.ceil((e.clientX - left) / (width / (filterOptions.length - 1)));
@@ -481,7 +482,7 @@ export default function Steps(props) {
                       onClick={
                         disabled
                           ? _.noop
-                          : e => {
+                          : (e: MouseEvent<HTMLElement>) => {
                               e.stopPropagation();
                               setCurrentValue(getCurrent(option.key));
                               onChange(option.key);

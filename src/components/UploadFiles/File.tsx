@@ -171,7 +171,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
       });
     });
   };
-  handleSaveToKc = (event, isDownload: boolean) => {
+  handleSaveToKc = (event: Pick<SyntheticEvent, 'stopPropagation'>, isDownload: boolean) => {
     event.stopPropagation();
 
     if (!md.global.Account.accountId) {
@@ -261,7 +261,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
       },
     });
   };
-  handleOpenMenu = event => {
+  handleOpenMenu = (event: Pick<SyntheticEvent, 'stopPropagation'>) => {
     event.stopPropagation();
     this.setState({ menuVisible: true });
   };
@@ -271,12 +271,12 @@ export default class FileComponent extends Component<any, FileComponentState> {
     });
     this.deleteFn = fn;
   }
-  handleDelete = event => {
+  handleDelete = (event: Pick<SyntheticEvent, 'stopPropagation' | 'nativeEvent'>) => {
     event.stopPropagation();
     this.deleteFn && this.deleteFn();
     this.handleCancel(event);
   };
-  handleCancel = event => {
+  handleCancel = (event: Pick<SyntheticEvent, 'stopPropagation' | 'nativeEvent'>) => {
     event.stopPropagation();
     event.nativeEvent.stopImmediatePropagation();
     this.setState({
@@ -388,7 +388,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
       colorPrimary: !isPicture,
     });
 
-    let handleOpen = (event, isEdit?) => {
+    let handleOpen = (event: Pick<SyntheticEvent, 'stopPropagation'>, isEdit?: boolean) => {
       event.stopPropagation();
       if (!isEdit) {
         isKc
@@ -557,7 +557,7 @@ export default class FileComponent extends Component<any, FileComponentState> {
       colorPrimary: !isPicture,
     });
 
-    let handleOpen = (event, isEdit: boolean) => {
+    let handleOpen = (event: Pick<SyntheticEvent, 'stopPropagation'>, isEdit: boolean) => {
       event.stopPropagation();
       if (!isEdit) {
         this.props.onPreview(fileResponse.fileID, index, event);

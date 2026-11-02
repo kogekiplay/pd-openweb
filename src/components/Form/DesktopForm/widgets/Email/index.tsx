@@ -1,4 +1,5 @@
 import { Fragment, memo, useCallback, useEffect, useRef, useState } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -66,14 +67,14 @@ const Email = props => {
     }, []),
   );
 
-  const handleFocus = event => {
+  const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
     setOriginValue(event.target.value.trim());
     if (_.isFunction(triggerCustomEvent)) {
       triggerCustomEvent(ADD_EVENT_ENUM.FOCUS);
     }
   };
 
-  const onChangeDebounced = _.debounce(event => {
+  const onChangeDebounced = _.debounce((event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     onChange(value);
   }, 300);
@@ -91,7 +92,7 @@ const Email = props => {
     }
   }, [disabled]);
 
-  const handleBlur = event => {
+  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
     if (event.target.value.trim() !== originValue) {
       onChange(event.target.value.trim());
     }

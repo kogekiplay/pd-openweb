@@ -1,4 +1,5 @@
 import { memo, useEffect, useRef, useState } from 'react';
+import type { FocusEvent } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -62,7 +63,7 @@ const NumberComp = props => {
     }
   }, []);
 
-  const onFocus = e => {
+  const onFocus = (e: FocusEvent<HTMLInputElement>) => {
     setIsFocused(true);
     setOriginValue(e.target.value.trim());
     setInputDraft({ value: `${e.target.value ?? ''}`, flag, hasInput: false });

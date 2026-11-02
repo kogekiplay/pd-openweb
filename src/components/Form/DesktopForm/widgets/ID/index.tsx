@@ -1,4 +1,5 @@
 import { Fragment, memo, useCallback, useEffect, useRef, useState } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -70,14 +71,14 @@ const IDWidget = props => {
     }
   }, [isEditing]);
 
-  const handleFocus = event => {
+  const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
     setOriginValue(event.target.value.trim());
     if (_.isFunction(triggerCustomEvent)) {
       triggerCustomEvent(ADD_EVENT_ENUM.FOCUS);
     }
   };
 
-  const handleBlur = event => {
+  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
     const newVal = formatValue(event.target.value.trim());
 
     if (newVal !== originValue) {
@@ -88,7 +89,7 @@ const IDWidget = props => {
     onBlur(originValue);
   };
 
-  const handleChange = _.debounce(event => {
+  const handleChange = _.debounce((event: ChangeEvent<HTMLInputElement>) => {
     const currentValue = formatValue(event.target.value);
     onChange(currentValue);
   }, 300);

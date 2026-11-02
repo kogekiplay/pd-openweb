@@ -1,4 +1,5 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import type { FocusEvent } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -128,7 +129,7 @@ const Text = props => {
     }
   }, [isEditing]);
 
-  const handleFocus = e => {
+  const handleFocus = (e: FocusEvent<HTMLTextAreaElement>) => {
     // 只读不激活输入框
     if (disabled) return;
 
@@ -197,7 +198,7 @@ const Text = props => {
     }
   };
 
-  const handleTextareaBlur = event => {
+  const handleTextareaBlur = (event: FocusEvent<HTMLTextAreaElement>) => {
     const trimValue = event.target.value.trim();
 
     if (trimValue !== value) {

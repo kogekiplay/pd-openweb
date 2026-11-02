@@ -1,4 +1,5 @@
 import { Component, Fragment } from 'react';
+import type { ChangeEvent, KeyboardEvent } from 'react';
 import styled from 'styled-components';
 import { Button, Dialog, VerifyPasswordInput } from 'ming-ui';
 import FunctionWrap from 'ming-ui/components/FunctionWrap';
@@ -91,7 +92,7 @@ export default class ValidateInfoCon extends Component<any, any> {
     }
   }
 
-  changeValue = (e, filed: string) => {
+  changeValue = (e: ChangeEvent<HTMLInputElement>, filed: string) => {
     let val = e.target.value;
     this.setState({ [filed]: ['verifyCode', 'mobile'].includes(filed) ? val.replace(/[^\d]/g, '') : val.trim() });
   };
@@ -329,7 +330,7 @@ export default class ValidateInfoCon extends Component<any, any> {
                   className="inputBox txtEmail w100"
                   maxLength={64}
                   value={email}
-                  onChange={e => this.changeValue(e, 'email')}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => this.changeValue(e, 'email')}
                 />
               </MobileInputWrap>
             ) : (
@@ -343,7 +344,7 @@ export default class ValidateInfoCon extends Component<any, any> {
                   placeholder={_l('请输入手机号')}
                   className="inputBox txtMobilePhone w100 box-sizing"
                   maxLength={64}
-                  onChange={e => this.changeValue(e, 'mobile')}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => this.changeValue(e, 'mobile')}
                 />
               </MobileInputWrap>
             )}
@@ -359,8 +360,8 @@ export default class ValidateInfoCon extends Component<any, any> {
                   className="mRight15 inputBox txtVerifyCode flex"
                   maxLength={6}
                   value={verifyCode}
-                  onChange={e => this.changeValue(e, 'verifyCode')}
-                  onKeyUp={e => {
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => this.changeValue(e, 'verifyCode')}
+                  onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
                     if (e.keyCode === 13) {
                       this.sendChangeAccountVerifyCode();
                     }

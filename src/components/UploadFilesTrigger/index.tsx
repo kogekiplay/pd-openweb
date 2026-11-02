@@ -51,29 +51,29 @@ export default class UploadFilesTrigger extends Component<any, any> {
       }
     }
   }
-  show = e => {
+  show = (e: Pick<JQuery.Event, 'preventDefault'>) => {
     e.preventDefault();
     const $el = $(`#UploadFilesTriggerPanel${this.id}`);
     $el.addClass('drag');
   };
-  hide = e => {
+  hide = (e: Pick<JQuery.Event, 'preventDefault'>) => {
     e.preventDefault();
     const $el = $(`#UploadFilesTriggerPanel${this.id}`);
     $el.removeClass('drag');
   };
-  dragenter = e => {
+  dragenter = (e: Pick<JQuery.TriggeredEvent<unknown, unknown, unknown, unknown>, 'preventDefault' | 'target'>) => {
     this.lastenter = e.target;
     this.show(e);
   };
-  dragleave = e => {
+  dragleave = (e: Pick<JQuery.TriggeredEvent<unknown, unknown, unknown, unknown>, 'preventDefault' | 'target'>) => {
     if (this.lastenter === e.target) {
       this.hide(e);
     }
   };
-  drop = e => {
+  drop = (e: Pick<JQuery.Event, 'preventDefault'>) => {
     this.hide(e);
   };
-  dragover = e => {
+  dragover = (e: Pick<JQuery.Event, 'preventDefault'>) => {
     this.show(e);
     return false;
   };

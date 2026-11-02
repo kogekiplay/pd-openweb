@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import type { ChangeEvent } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -180,7 +181,7 @@ function ConnectDataBase(props) {
           label={_l('实例名称')}
           isRequired={true}
           error={errors.includes('name')}
-          onChange={e => handleChangeData({ name: e.target.value })}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeData({ name: e.target.value })}
           onFocus={() => clearError('name')}
         />
         {addressList.map((item, index) => (
@@ -192,7 +193,7 @@ function ConnectDataBase(props) {
               label={_l('数据库地址')}
               isRequired={true}
               error={errors.includes(`host${index}`)}
-              onChange={e => updateAddressPost({ ...item, host: e.target.value }, index)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => updateAddressPost({ ...item, host: e.target.value }, index)}
               onFocus={() => clearError(`host${index}`)}
               tips={_l('支持单机与副本集，副本集请输入多个数据库地址和端口，且包含主节点')}
               hideLabel={index !== 0}
@@ -206,7 +207,7 @@ function ConnectDataBase(props) {
               // disabled={id && numberOfApp > 0}
               isRequired={true}
               error={errors.includes(`port${index}`)}
-              onChange={e => {
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 const value = Number(e.target.value);
                 updateAddressPost(
                   {
@@ -249,7 +250,7 @@ function ConnectDataBase(props) {
           label={_l('账号')}
           isRequired={true}
           error={errors.includes('account')}
-          onChange={e => handleChangeData({ account: e.target.value })}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeData({ account: e.target.value })}
           onFocus={() => clearError('account')}
         />
         <TextInput
@@ -258,7 +259,7 @@ function ConnectDataBase(props) {
           label={_l('密码')}
           isRequired={true}
           error={errors.includes('password')}
-          onChange={e => handleChangeData({ password: e.target.value })}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeData({ password: e.target.value })}
           onFocus={() => {
             clearError('password');
             if (id) {
@@ -278,14 +279,14 @@ function ConnectDataBase(props) {
           label={_l('数据库名称')}
           isRequired={true}
           error={errors.includes('dbName')}
-          onChange={e => handleChangeData({ dbName: e.target.value })}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeData({ dbName: e.target.value })}
         />
         <TextInput
           className="mBottom16 textInput"
           value={data.other}
           label={_l('其他连接串参数')}
           isRequired={false}
-          onChange={e => handleChangeData({ other: e.target.value })}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeData({ other: e.target.value })}
         />
         <div className="Font14 mBottom4 valignWrapper">
           {_l('新增应用')}
