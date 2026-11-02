@@ -296,17 +296,8 @@ export const stateInit = function (this: SocketEventHost) {
     IM.socket.on('reconnect_failed', reconnectFailedFn);
   };
 
-  /**
-   * 断线重连定时器句柄（**保持原声明与原调用**）。
-   * 【存量债务】终点配置下 `clearTimeout` 的合并重载里没有接受 `null` 的一支
-   * （实报：Argument of type 'Timeout | null' is not assignable to parameter of type 'number | undefined'），
-   * 所以 `clearTimeout(reconnectTime)` 仍是本文件唯一剩下的一条 TS2769。
-   * 这是全仓同类真实存量：baseline 里同一条报错共 69 处，已接收的
-   * `FormExtend/PublicWorksheetConfig/CountDown.tsx` 就是按同一口径保全的（保留 null sentinel + 原调用）。
-   * 去掉它必须先决定"没有活定时器"用 null 还是 undefined 表达（改 sentinel / 加 guard / 断言
-   * 都会动运行时行为或擦类型），属行为决定，不在本类型切片内。
-   */
-  let reconnectTime: NodeJS.Timeout | null = null;
+  // Match the timer producer in the active environment; undefined means no timer has been scheduled.
+  let reconnectTime: ReturnType<typeof setTimeout> | undefined;
 
   window.addEventListener('online', () => {
     if (!IM.socket.connected) {
