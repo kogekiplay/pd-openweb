@@ -4,6 +4,7 @@ import Textarea from 'ming-ui/components/Textarea';
 import type { ChatMessage, ChatSession } from '../../redux/types';
 import { present } from '../../utils/present';
 import { getCaretPosition, setCaretPosition } from 'src/utils/common';
+import { isCaretControl } from 'src/utils/caretBoundary';
 import * as utils from '../../utils/';
 import config from '../../utils/config';
 import Constant from '../../utils/constant';
@@ -86,7 +87,7 @@ export default class TextareaBox extends Component<TextareaBoxProps, TextareaBox
     this.compositionEndTime = Date.now();
     this.isComposing = false;
   }
-  handleKeyDown(event) {
+  handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
     if (event.which === 13) {
       if (this.isInputComposing(event)) return undefined;
 
@@ -105,14 +106,18 @@ export default class TextareaBox extends Component<TextareaBoxProps, TextareaBox
 
         event.preventDefault();
       } else {
-        const pos = Number(getCaretPosition(event.target));
+        const target = event.target;
+        if (!isCaretControl(target) || (isEnter && !target.setSelectionRange && !target.createTextRange)) {
+          return undefined;
+        }
+        const pos = Number(getCaretPosition(target));
         const start = value.slice(0, pos);
         const end = value.slice(pos);
         const nextValue = isEnter ? start + '\r\n' + end : start + end;
 
         if (isEnter) {
           this.setState({ value: nextValue }, () => {
-            setCaretPosition(event.target, pos + 1);
+            setCaretPosition(target, pos + 1);
           });
           this.props.onChange(nextValue);
           event.preventDefault();
