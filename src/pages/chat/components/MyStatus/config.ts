@@ -67,3 +67,6 @@ export const defaultStatusInfo: Record<DefaultPersonalStatusId, DefaultPersonalS
     durationOption: 10,
   },
 };
+
+export const isDefaultStatusId = (statusId: string | undefined): statusId is DefaultPersonalStatusId =>
+  statusId != null && Object.prototype.hasOwnProperty.call(defaultStatusInfo, statusId);

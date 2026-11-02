@@ -11,7 +11,7 @@ import type { AddOrUpdateStatusResponse } from 'src/api/personalStyleTypes';
 import Emotion from 'src/components/emotion/emotion';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
 import { present } from 'src/pages/chat/utils/present';
-import { dateOptions, defaultStatusInfo } from './config';
+import { dateOptions, defaultStatusInfo, isDefaultStatusId } from './config';
 import CustomDatePicker from './CustomDatePicker';
 import type { CustomDateChange } from './CustomDatePicker';
 import PersonalStatus from './PersonalStatus';
@@ -153,7 +153,7 @@ export default function MyStatus() {
         const res = present(response, 'statusOptions');
         // 默认状态 请假---明天 生病---明天 会议中---一小时 外出---一小时
         const options = (res.statusOptions || []).map(item => {
-          if (defaultStatusInfo[item.statusId]) {
+          if (isDefaultStatusId(item.statusId)) {
             return { ...item, ...defaultStatusInfo[item.statusId] };
           }
 
@@ -336,7 +336,7 @@ export default function MyStatus() {
                 >
                   <div
                     className={cx('emojiWrap flexRow alignItemsCenter Relative', {
-                      transparentBg: defaultStatusInfo[item.statusId],
+                      transparentBg: isDefaultStatusId(item.statusId) ? defaultStatusInfo[item.statusId] : undefined,
                     })}
                     ref={el => {
                       !isDefaultStatus ? (emotionRefs.current[index] = el) : null;

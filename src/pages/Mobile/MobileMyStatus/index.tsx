@@ -9,7 +9,7 @@ import personalStyleApi from 'src/api/personalStyle';
 import type { InboxRequest } from 'src/api/inboxTypes';
 import type { PersonalStatusDraft } from 'src/pages/chat/components/MyStatus';
 import MobileDatePicker from 'src/ming-ui/components/MobileDatePicker';
-import { dateOptions, defaultStatusInfo } from 'src/pages/chat/components/MyStatus/config';
+import { dateOptions, defaultStatusInfo, isDefaultStatusId } from 'src/pages/chat/components/MyStatus/config';
 import PersonalStatus from 'src/pages/chat/components/MyStatus/PersonalStatus';
 import createLinksForMessage from 'src/utils/createLinksForMessage';
 import { present } from 'src/pages/chat/utils/present';
@@ -70,7 +70,7 @@ export default function MobileMyStatus() {
         const res = present(response, 'statusOptions');
         // 默认状态 请假---明天 生病---明天 会议中---一小时 外出---一小时
         const options = (res.statusOptions || []).map(item => {
-          if (defaultStatusInfo[item.statusId]) {
+          if (isDefaultStatusId(item.statusId)) {
             return { ...item, ...defaultStatusInfo[item.statusId] };
           }
 
