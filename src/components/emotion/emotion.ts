@@ -32,7 +32,7 @@ export const TWEMOJI_OPTIONS = {
 
 export const isRetina = !!(window.devicePixelRatio && window.devicePixelRatio > 1);
 
-function insertImageToEditor(container, elemstr) {
+function insertImageToEditor(container, elemstr: string) {
   var selection = window.getSelection ? window.getSelection() : document.selection;
   var range = selection.createRange ? selection.createRange() : selection.getRangeAt(0);
   if (window.lastEditRange) {
@@ -133,11 +133,11 @@ export interface EmotionConstructor {
 interface EmotionInstance {
   $el: JQuery;
   options: typeof Emotion.options;
-  getDefaultTab(options: typeof Emotion.options): number;
+  getDefaultTab(options: typeof Emotion.options): 0 | 1;
   _init(): void;
 }
 
-function Emotion(this: EmotionInstance, el, options) {
+function Emotion(this: EmotionInstance, el, options?: EmotionOptions) {
   this.$el = $(el);
 
   // 当最近表情为空时，将默认显示默认表情，否则将显示最近表情
@@ -157,7 +157,8 @@ function Emotion(this: EmotionInstance, el, options) {
  * @param options
  * @returns {number}
  */
-Emotion.prototype.getDefaultTab = function getDefaultTab(options) {
+// Constructor path only: jQuery.extend skips undefined and keeps the default history key.
+Emotion.prototype.getDefaultTab = function getDefaultTab(options: typeof Emotion.options): 0 | 1 {
   if (!window.localStorage || !window.localStorage[options.historyKey]) {
     return 1;
   }
@@ -494,7 +495,7 @@ Emotion.prototype.select = function select(event) {
  * @param emotionStr
  * @private
  */
-Emotion.prototype._storeHistory = function _storeHistory(emotionStr) {
+Emotion.prototype._storeHistory = function _storeHistory(emotionStr: string) {
   if (window.localStorage) {
     if (!window.localStorage[this.options.historyKey]) {
       window.localStorage[this.options.historyKey] = JSON.stringify([emotionStr]);
