@@ -1,4 +1,5 @@
 import { Component, Fragment } from 'react';
+import type { ChangeEvent, MouseEvent } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Divider, Select } from 'antd';
 import Trigger from '@rc-component/trigger';
@@ -167,7 +168,7 @@ export default class BaseFormInfo extends Component<any, any> {
   };
 
   // 添加部门
-  dialogSelectDeptFn = (e, selectedDepartment) => {
+  dialogSelectDeptFn = (e: MouseEvent<HTMLElement>, selectedDepartment) => {
     const { useMultiJobs, departmentJobInfos } = this.state;
 
     quickSelectDept(e.target, {
@@ -216,7 +217,7 @@ export default class BaseFormInfo extends Component<any, any> {
   };
 
   //添加角色
-  dialogSelectRoleFn = e => {
+  dialogSelectRoleFn = (e: MouseEvent<HTMLElement>) => {
     const { projectId } = this.props;
 
     quickSelectRole(e.target, {
@@ -756,13 +757,13 @@ export default class BaseFormInfo extends Component<any, any> {
           value={jobNumber}
           disabled={typeCursor === 2}
           placeholder=""
-          onChange={e => this.changeFormInfo(e, 'jobNumber')}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => this.changeFormInfo(e, 'jobNumber')}
         />
         <TextInput
           label={_l('工作电话')}
           value={contactPhone}
           disabled={typeCursor === 2}
-          onChange={e => this.changeFormInfo(e, 'contactPhone')}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => this.changeFormInfo(e, 'contactPhone')}
           maxLength="32"
         />
       </Fragment>

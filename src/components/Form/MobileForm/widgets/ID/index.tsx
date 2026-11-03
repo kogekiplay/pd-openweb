@@ -1,4 +1,5 @@
 import { memo, useEffect, useRef, useState } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -41,7 +42,7 @@ const IDWidget = props => {
     return showMaskValue && value ? dealMaskValue({ ...props, value }) : value || hint;
   };
 
-  const onFocus = event => {
+  const onFocus = (event: FocusEvent<HTMLInputElement>) => {
     setOriginValue(event.target.value.trim());
     setIsEditing(true);
 
@@ -50,7 +51,7 @@ const IDWidget = props => {
     }
   };
 
-  const onBlur = event => {
+  const onBlur = (event: FocusEvent<HTMLInputElement>) => {
     const trimValue = formatValue(event.target.value.trim());
 
     debouncedOnChange.cancel();
@@ -75,7 +76,7 @@ const IDWidget = props => {
     }, 300),
   ).current;
 
-  const handleInputChange = event => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const val = formatValue(event.target.value);
     setCurrentValue(val);
     debouncedOnChange(props, val);

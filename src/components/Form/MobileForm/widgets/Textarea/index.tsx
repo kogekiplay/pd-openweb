@@ -1,4 +1,5 @@
 import { Fragment, memo, useEffect, useRef, useState } from 'react';
+import type { FocusEvent } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -100,7 +101,7 @@ const Textarea = props => {
   const showClear = isEditing && !!currentValue;
   const fieldSize = FIELD_SIZE_OPTIONS[advancedSetting.valuesize || '0'];
 
-  const onFocus = event => {
+  const onFocus = (event: FocusEvent<HTMLTextAreaElement>) => {
     setOriginValue(event.target.value.trim());
     setIsEditing(true);
 
@@ -109,7 +110,7 @@ const Textarea = props => {
     }
   };
 
-  const onBlur = event => {
+  const onBlur = (event: FocusEvent<HTMLTextAreaElement>) => {
     const trimValue = event.target.value.trim();
 
     if (trimValue !== value) {

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import type { SyntheticEvent } from 'react';
 import { useSetState } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import _ from 'lodash';
@@ -117,7 +118,7 @@ function Option(props: OptionProps) {
           <MenuWrap>
             <MenuItemWrap
               icon={<Icon icon="knowledge-log" className="Font17 mLeft5" />}
-              onClick={e => {
+              onClick={(e: Pick<SyntheticEvent, 'stopPropagation'>) => {
                 setState({ popupVisible: false });
                 onLog();
                 e.stopPropagation();
@@ -127,7 +128,7 @@ function Option(props: OptionProps) {
             </MenuItemWrap>
             <MenuItemWrap
               icon={<Icon icon="refresh" className="Font17 mLeft5" />}
-              onClick={e => {
+              onClick={(e: Pick<SyntheticEvent, 'stopPropagation'>) => {
                 setState({ popupVisible: false });
                 e.stopPropagation();
                 refreshToken();
@@ -137,7 +138,7 @@ function Option(props: OptionProps) {
             </MenuItemWrap>
             <MenuItemWrap
               icon={<Icon icon="edit" className="Font17 mLeft5" />}
-              onClick={e => {
+              onClick={(e: Pick<SyntheticEvent, 'stopPropagation'>) => {
                 e.stopPropagation();
                 setState({ popupVisible: false });
                 onReName();
@@ -148,7 +149,7 @@ function Option(props: OptionProps) {
 
             <RedMenuItemWrap
               icon={<Icon icon="trash" className="Font17 mLeft5" />}
-              onClick={e => {
+              onClick={(e: Pick<SyntheticEvent, 'stopPropagation'>) => {
                 e.stopPropagation();
                 setState({ popupVisible: false });
                 onDel();
@@ -162,7 +163,7 @@ function Option(props: OptionProps) {
         <MoreOperate
           className="moreOperate mTop3"
           style={popupVisible ? { display: 'inline-block' } : {}}
-          onClick={e => {
+          onClick={(e: Pick<SyntheticEvent, 'stopPropagation'>) => {
             e.stopPropagation();
           }}
         >

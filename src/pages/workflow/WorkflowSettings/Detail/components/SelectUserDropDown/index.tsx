@@ -1,4 +1,5 @@
 import { Component, Fragment } from 'react';
+import type { KeyboardEvent, SyntheticEvent } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import _ from 'lodash';
@@ -124,7 +125,7 @@ export default class SelectUserDropDown extends Component<any, any> {
   /**
    * 添加手机号码和邮箱地址
    */
-  addTelAndEmail = evt => {
+  addTelAndEmail = (evt: KeyboardEvent<HTMLInputElement>) => {
     const { unique, updateSource, specialType } = this.props;
     const txt = evt.currentTarget.value.trim();
     const accounts = _.cloneDeep(this.props.accounts) || [];
@@ -158,7 +159,7 @@ export default class SelectUserDropDown extends Component<any, any> {
   /**
    * 添加普通成员
    */
-  addMembers = evt => {
+  addMembers = (evt: Pick<SyntheticEvent, 'stopPropagation'>) => {
     const accounts = _.cloneDeep(this.props.accounts) || [];
     const { companyId, unique, updateSource, onClose } = this.props;
 
@@ -194,7 +195,7 @@ export default class SelectUserDropDown extends Component<any, any> {
   /**
    * 添加部门
    */
-  addDepartment = evt => {
+  addDepartment = (evt: Pick<SyntheticEvent, 'stopPropagation'>) => {
     const accounts = _.cloneDeep(this.props.accounts) || [];
     const { companyId, unique, updateSource, onClose, isIncludeSubDepartment = false } = this.props;
 
@@ -235,7 +236,7 @@ export default class SelectUserDropDown extends Component<any, any> {
   /**
    * 添加组织角色
    */
-  addOrgRole = e => {
+  addOrgRole = (e: Pick<SyntheticEvent, 'stopPropagation'>) => {
     const { companyId, unique, onClose } = this.props;
 
     e.stopPropagation();
@@ -251,7 +252,7 @@ export default class SelectUserDropDown extends Component<any, any> {
   /**
    * 添加职位
    */
-  addJob = evt => {
+  addJob = (evt: Pick<SyntheticEvent, 'stopPropagation'>) => {
     const accounts = _.cloneDeep(this.props.accounts) || [];
     const { companyId, unique, updateSource, onClose } = this.props;
 

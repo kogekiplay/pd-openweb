@@ -1,4 +1,5 @@
 ﻿import React from 'react';
+import type { SyntheticEvent } from 'react';
 import { useSetState } from 'react-use';
 import Trigger from '@rc-component/trigger';
 import { Dialog, Icon } from 'ming-ui';
@@ -82,7 +83,7 @@ function ConnectOptionMenu(props) {
             {showPublish && (
               <MenuItemWrap
                 icon={<Icon icon="publish" className="Font17 mLeft5" />}
-                onClick={e => {
+                onClick={(e: Pick<SyntheticEvent, 'stopPropagation'>) => {
                   e.stopPropagation();
                   setState({ popupVisible: false });
                   publishDialog({
@@ -99,7 +100,7 @@ function ConnectOptionMenu(props) {
             {showUpgrade && (
               <MenuItemWrap
                 icon={<Icon icon="upload_file" className="Font17 mLeft5" />}
-                onClick={e => {
+                onClick={(e: Pick<SyntheticEvent, 'stopPropagation'>) => {
                   e.stopPropagation();
                   setState({ popupVisible: false });
                   upgradeDialog({
@@ -118,7 +119,7 @@ function ConnectOptionMenu(props) {
             {showExport && (
               <MenuItemWrap
                 icon={<Icon icon="cloud_download" className="Font17 mLeft5" />}
-                onClick={e => {
+                onClick={(e: Pick<SyntheticEvent, 'stopPropagation'>) => {
                   e.stopPropagation();
                   setState({ popupVisible: false });
                   exportDialog({
@@ -134,7 +135,7 @@ function ConnectOptionMenu(props) {
             {showCopy && (
               <MenuItemWrap
                 icon={<Icon icon="copy" className="Font17 mLeft5" />}
-                onClick={e => {
+                onClick={(e: Pick<SyntheticEvent, 'stopPropagation'>) => {
                   e.stopPropagation();
                   setState({ popupVisible: false });
 
@@ -153,7 +154,7 @@ function ConnectOptionMenu(props) {
             {/* 删除连接 */}
             <RedMenuItemWrap
               icon={<Icon icon="trash" className="Font17 mLeft5" />}
-              onClick={e => {
+              onClick={(e: Pick<SyntheticEvent, 'stopPropagation'>) => {
                 e.stopPropagation();
                 setState({ popupVisible: false });
 

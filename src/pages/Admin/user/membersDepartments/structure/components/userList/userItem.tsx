@@ -134,7 +134,7 @@ class UserItem extends Component<any, any> {
   sendNotice(type: number) {
     const { projectId, accountId } = this.props;
 
-    return event => {
+    return (event: Pick<React.SyntheticEvent, 'stopPropagation'>) => {
       event.stopPropagation();
 
       if (!accountId) {
@@ -154,7 +154,7 @@ class UserItem extends Component<any, any> {
     };
   }
 
-  clickEvent = e => {
+  clickEvent = (e: Pick<React.SyntheticEvent, 'stopPropagation'>) => {
     e.stopPropagation();
     this.setState({ optListVisible: !this.state.optListVisible });
   };
@@ -175,7 +175,7 @@ class UserItem extends Component<any, any> {
   };
 
   // 重新审批
-  handleApprovalClick = e => {
+  handleApprovalClick = (e: Pick<React.SyntheticEvent, 'stopPropagation'>) => {
     this.clickEvent(e);
     this.props.clickRow();
   };
@@ -251,7 +251,7 @@ class UserItem extends Component<any, any> {
   };
 
   // 重新邀请
-  inviteAgain = e => {
+  inviteAgain = (e: Pick<React.SyntheticEvent, 'stopPropagation'>) => {
     const { user = {} } = this.props;
 
     this.clickEvent(e);

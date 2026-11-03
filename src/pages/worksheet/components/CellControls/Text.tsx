@@ -242,7 +242,7 @@ export default class Text extends React.Component<any, any> {
     }, time || 100);
   };
 
-  handleEdit = e => {
+  handleEdit = (e: Pick<React.SyntheticEvent, 'stopPropagation'>) => {
     const { updateEditingStatus } = this.props;
     e.stopPropagation();
     updateEditingStatus(true, this.focus);
@@ -434,7 +434,7 @@ export default class Text extends React.Component<any, any> {
     }
   };
 
-  handleKeydown(e) {
+  handleKeydown(e: Pick<React.KeyboardEvent, 'keyCode' | 'stopPropagation' | 'preventDefault'> & Partial<Pick<React.KeyboardEvent, 'key' | 'ctrlKey' | 'metaKey'>>) {
     const { tableId, cell, updateEditingStatus } = this.props;
 
     if (e.keyCode === 27) {
@@ -476,7 +476,7 @@ export default class Text extends React.Component<any, any> {
     }
   }
 
-  handleUnMask = e => {
+  handleUnMask = (e: Pick<React.SyntheticEvent, 'stopPropagation' | 'preventDefault'>) => {
     if (!this.masked || window.shareState.shareId) {
       return;
     }
@@ -545,7 +545,7 @@ export default class Text extends React.Component<any, any> {
         width: style.width,
         height: style.height,
       },
-      onClick: e => e.stopPropagation(),
+      onClick: (e: Pick<React.SyntheticEvent, 'stopPropagation'>) => e.stopPropagation(),
       onKeyDown: this.handleKeydown,
     };
 
@@ -694,7 +694,7 @@ export default class Text extends React.Component<any, any> {
                     <Linkify
                       properties={{
                         target: '_blank',
-                        onClick: e => {
+                        onClick: (e: Pick<React.SyntheticEvent, 'stopPropagation'>) => {
                           e.stopPropagation();
                         },
                       }}

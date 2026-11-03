@@ -1,4 +1,5 @@
 import { Component, createRef, Fragment } from 'react';
+import type { MouseEvent as ReactMouseEvent } from 'react';
 import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -68,6 +69,7 @@ const getLastWorkEndTime = (time, dayOff) => {
 let RowBlock = class RowBlock extends Component<any, any> {
   declare isScroll: boolean;
   declare timer: NodeJS.Timeout | null;
+  declare documentDragListeners: { onMouseMove: (event: globalThis.MouseEvent) => void; onMouseUp: () => void } | null | undefined;
 
   constructor(props) {
     super(props);
@@ -106,7 +108,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     clearInterval(this.timer);
   }
 
-  setDocumentDragListeners = (onMouseMove, onMouseUp: () => void) => {
+  setDocumentDragListeners = (onMouseMove: (event: globalThis.MouseEvent) => void, onMouseUp: () => void) => {
     this.removeDocumentDragListeners();
     this.documentDragListeners = { onMouseMove, onMouseUp };
     document.addEventListener('mousemove', onMouseMove);
@@ -436,7 +438,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     let { left } = $(this.$ref.current).position();
     let x = event.clientX - left;
 
-    const handleMouseMove = event => {
+    const handleMouseMove = (event: globalThis.MouseEvent) => {
       if (this.getIsSurpassBoundary(event.clientX)) return;
 
       if (this.isScroll) {
@@ -474,7 +476,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
 
     this.setDocumentDragListeners(handleMouseMove, handleMouseUp);
   };
-  handleMouseDownStart = event => {
+  handleMouseDownStart = (event: Pick<ReactMouseEvent, 'stopPropagation' | 'clientX'>) => {
     setRecordDragging(true);
     event.stopPropagation();
     const { viewConfig } = this.props;
@@ -484,7 +486,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     const x = event.clientX;
     let changValue: null | number = null;
 
-    const handleMouseMove = event => {
+    const handleMouseMove = (event: globalThis.MouseEvent) => {
       const originalLeft = event.clientX - (x - left);
       const newLeft = isHours ? originalLeft : this.formatRemainder(originalLeft);
       const newWidth = width + (x - event.clientX) + (originalLeft - newLeft);
@@ -522,7 +524,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
 
     this.setDocumentDragListeners(handleMouseMove, handleMouseUp);
   };
-  handleMouseDownEnd = event => {
+  handleMouseDownEnd = (event: Pick<ReactMouseEvent, 'stopPropagation' | 'clientX'>) => {
     setRecordDragging(true);
     event.stopPropagation();
     const { viewConfig } = this.props;
@@ -532,7 +534,7 @@ let RowBlock = class RowBlock extends Component<any, any> {
     const { width } = this.props.style;
     let changValue: null | number = null;
 
-    const handleMouseMove = event => {
+    const handleMouseMove = (event: globalThis.MouseEvent) => {
       const originalLeft = event.clientX - x + width;
       const newWidth = isHours ? originalLeft : this.formatRemainder(originalLeft);
 

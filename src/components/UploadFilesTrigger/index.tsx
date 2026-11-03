@@ -28,6 +28,7 @@ const builtinPlacements = {
 
 export default class UploadFilesTrigger extends Component<any, any> {
   declare textarea: HTMLTextAreaElement | null | undefined;
+  declare lastenter: unknown;
 
   constructor(props) {
     super(props);
