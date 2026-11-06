@@ -4,8 +4,8 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { Dialog, FunctionWrap } from 'ming-ui';
 import appManagementAjax from 'src/api/appManagement.js';
-import { navigateTo } from 'src/router/navigateTo';
-import { addBehaviorLog } from 'src/utils/project';
+import { pathCompletion } from 'src/utils/platform/navigation/path';
+import { addBehaviorLog } from 'src/utils/services/project';
 
 const DialogCom = styled(Dialog)`
   .checkAdminDialog {
@@ -35,7 +35,7 @@ function CheckIsAppAdminCon(props) {
         }
 
         addBehaviorLog('app', appId); // 浏览应用埋点
-        navigateTo(`/app/${appId}`);
+        window.open(pathCompletion(`/app/${appId}`), '_blank');
       } else {
         setLoading(false);
       }
@@ -57,7 +57,7 @@ function CheckIsAppAdminCon(props) {
           }
 
           addBehaviorLog('app', appId); // 浏览应用埋点
-          navigateTo(`/app/${appId}`);
+          window.open(pathCompletion(`/app/${appId}`), '_blank');
         }
       });
   };

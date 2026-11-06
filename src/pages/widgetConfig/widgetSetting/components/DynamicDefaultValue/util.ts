@@ -236,26 +236,28 @@ export interface DynamicControlFilter {
   controls?: FormControl[] | undefined;
   isCurrent?: boolean | undefined;
   from?: string | number | undefined;
+  isDefaultValue?: boolean | undefined;
 }
 export const getControls = ({
   data = {},
   controls = [],
   isCurrent,
   from,
+  isDefaultValue = false,
 }: DynamicControlFilter): DynamicAvailableControl[] => {
   const { type, enumDefault, dataSource, advancedSetting: { usertype } = {} } = data;
   const filters: Partial<Record<number, DynamicFilter>> = FILTER;
   const filterFn = type === undefined ? undefined : filters[type];
 
   if (
+    isDefaultValue ||
     _.includes(
       [
         DYNAMIC_FROM_MODE.SEARCH_PARAMS,
         DYNAMIC_FROM_MODE.USER_CONFIG,
         DYNAMIC_FROM_MODE.ORG_CONFIG,
         DYNAMIC_FROM_MODE.DEPART_CONFIG,
-        // The historical DYNAMIC_VALUE property is absent; its undefined value also matched the default mode.
-        undefined,
+
         DYNAMIC_FROM_MODE.RULES,
         DYNAMIC_FROM_MODE.CUSTOM_EVENT,
       ],

@@ -2089,6 +2089,6 @@ export const setSocketState = (state: number) => {
 export const setToolbarConfig = (config: Partial<ChatToolbarConfig>) => {
   return {
     type: 'SET_TOOLBAR_CONFIG',
-    result: config,
+    result: md.global.SysSettings.hideAIBasicFun ? { ...config, mingoVisible: false } : config,
   } satisfies ChatAction;
 };

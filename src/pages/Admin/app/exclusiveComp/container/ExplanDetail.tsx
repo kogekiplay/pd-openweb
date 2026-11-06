@@ -12,7 +12,7 @@ import projectAjax from 'src/api/project';
 import resourceApi from 'src/pages/workflow/api/resource';
 import Search from 'src/pages/workflow/components/Search';
 import { START_APP_TYPE } from 'src/pages/workflow/WorkflowList/utils';
-import { navigateTo } from 'src/router/navigateTo';
+import { pathCompletion } from 'src/utils/common';
 import withRouter from '../../../../../router/withRouter';
 import IsAppAdmin from '../../../components/IsAppAdmin';
 import PaginationWrap from '../../../components/PaginationWrap';
@@ -340,7 +340,7 @@ function ExplanDetail(props) {
               }
               createType={2}
               ckeckSuccessCb={() => {
-                navigateTo(`/workflowedit/${value}`);
+                window.open(pathCompletion(`/workflowedit/${value}`), '_blank');
               }}
             />
           </div>

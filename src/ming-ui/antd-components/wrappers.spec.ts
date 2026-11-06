@@ -53,6 +53,10 @@ const Input = Object.assign(stub('Input'), {
   OTP: stub('OTP'),
 });
 const antd = { Tooltip, Modal, Button, Input };
+// This fixture tests wrapper props; color observer lifecycle has its own real-source spec.
+const { ConfigContext } = require('antd/lib/config-provider');
+const { composeRef } = require('@rc-component/util/lib/ref');
+const colorMixCalls: unknown[] = [];
 function load(name: keyof Wrappers): Wrappers[typeof name] {
   const moduleLike: { exports: { default?: Wrappers[typeof name] } } = { exports: {} };
   const code = transformFileSync(path.join(__dirname, name, 'index.tsx'), {
@@ -61,6 +65,16 @@ function load(name: keyof Wrappers): Wrappers[typeof name] {
   new Function('require', 'module', 'exports', code)(
     (request: string) => {
       if (request === 'antd') return antd;
+      if (request === 'antd/es/config-provider') return { ConfigContext };
+      if (name === 'Button' && request === 'react') return {
+        ...React,
+        useMemo: (factory: () => unknown) => factory(),
+        useContext: () => ({ getPrefixCls: (suffix?: string) => suffix ? 'ant-' + suffix : 'ant' }),
+      };
+      if (request === 'ming-ui/hooks/useColorMix') return (mixes: unknown, forwardedRef: Ref) => {
+        colorMixCalls.push(mixes);
+        return composeRef(() => {}, forwardedRef);
+      };
       if (request === './staticActions') return require(path.join(__dirname, 'Modal/staticActions.ts'));
       if (request.endsWith('.less')) return {};
       return require(request);
@@ -258,7 +272,11 @@ const button = wrappers.Button.render(
   },
   ref,
 );
-assert.equal(button.props['ref'], ref);
+assert.equal(typeof button.props['ref'], 'function');
+const renderedButton = { tagName: 'BUTTON' };
+(button.props['ref'] as (element: unknown) => void)(renderedButton);
+assert.equal(ref.current, renderedButton);
+assert.equal(Object.keys(colorMixCalls[0] as object).length, 5, 'Custom colors get all five fallback variables');
 assert.equal(button.props['color'], 'primary');
 assert.equal(button.props['variant'], 'text');
 assert.equal(button.props['title'], 'Text');

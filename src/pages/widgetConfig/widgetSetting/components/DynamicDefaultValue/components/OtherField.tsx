@@ -27,6 +27,8 @@ import { OtherFieldWrap } from '../styled';
 import { getControls, getControlType } from '../util';
 
 export interface OtherFieldProps extends Omit<SelectOtherFieldProps, 'dynamicValue' | 'onDynamicValueChange'> {
+  /** 754：默认值编辑器入口上下文（父组件显式传 true；其他路径缺省 false）。 */
+  isDefaultValue?: boolean | undefined;
   dynamicValue?: DynamicValueSource[] | undefined;
   onDynamicValueChange?: SelectOtherFieldProps['onDynamicValueChange'] | undefined;
   item?: DynamicValueSource | undefined;
@@ -44,6 +46,7 @@ export default function OtherField(props: OtherFieldProps) {
     globalSheetInfo = {},
     globalSheetControls = [],
     from,
+    isDefaultValue,
   } = props;
   const { worksheetId } = globalSheetInfo;
   const originControls: FormControl[] = (props.controls || []).concat(globalSheetControls);
@@ -128,7 +131,7 @@ export default function OtherField(props: OtherFieldProps) {
 
   const getFieldNameById = (item: DynamicValueSource, controls: FormControl[]) => {
     const { cid, rcid } = item;
-    const filterControls = getControls({ data, controls, isCurrent: true, from });
+    const filterControls = getControls({ data, controls, isCurrent: true, from, isDefaultValue });
 
     if (rcid) {
       // 子表控件中 如果是主记录
@@ -137,7 +140,12 @@ export default function OtherField(props: OtherFieldProps) {
       }
 
       const record = _.find(controls, item => item.controlId === rcid);
-      const reFilterControls = getControls({ data, controls: _.get(record, 'relationControls') || [], from });
+      const reFilterControls = getControls({
+        data,
+        controls: _.get(record, 'relationControls') || [],
+        from,
+        isDefaultValue,
+      });
       return {
         recordName: _.get(record, 'controlName'),
         fieldName: getFieldName(reFilterControls, cid),

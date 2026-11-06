@@ -3,7 +3,7 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import { checkIsAppAdmin } from 'ming-ui/functions';
 import flowMonitor from 'src/pages/workflow/api/processVersion.js';
-import { navigateTo } from 'src/router/navigateTo';
+import { pathCompletion } from 'src/utils/common';
 import ExecutionDetails from './ExecutionDetails';
 import HistoryChart from './HistoryChart';
 import RealTimeData from './RealTimeData';
@@ -202,7 +202,7 @@ export default class WorkflowMonitor extends Component<any, any> {
               title: _l('管理工作流“%0”', name),
               description: _l('如果你不是工作流所在应用的管理员，需要将自己加为管理员以获得权限'),
               callback: () => {
-                navigateTo(`/workflowedit/${id}`);
+                window.open(pathCompletion(`/workflowedit/${id}`), '_blank');
               },
             })
           }

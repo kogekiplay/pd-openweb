@@ -227,7 +227,8 @@ const MobileForm = props => {
       isDraft: isDraft || from === FROM.DRAFT,
       mobileApprovalRecordInfo,
       setActiveTabControlId: value => setActiveTabControlId(value),
-      renderForm: value => renderForm(value),
+      // Tab 在渲染期间调用，必须使用本轮闭包中的完整表单数据。
+      renderForm,
       triggerCustomEvent: value => triggerCustomEvent({ ...props, ...value }),
     };
 

@@ -37,6 +37,8 @@ interface SheetEntry {
   name: string;
 }
 interface SelectFieldsProps extends Omit<SelectOtherFieldProps, 'onDynamicValueChange'> {
+  /** 754：默认值编辑器入口上下文（父组件显式传 true；其他路径缺省 false）。 */
+  isDefaultValue?: boolean | undefined;
   onClick?: ((field: DynamicFieldSelection) => void) | undefined;
   onMultiUserChange?: ((values: DynamicValueSource[]) => void) | undefined;
 }
@@ -106,7 +108,7 @@ const UnwrappedSelectFields = class SelectFields extends Component<SelectFieldsP
     );
   };
   filterFieldList = () => {
-    const { from, globalSheetInfo, controls, data = {}, fromCustomEventApi } = this.props;
+    const { from, isDefaultValue, globalSheetInfo, controls, data = {}, fromCustomEventApi } = this.props;
     const subListControls = this.omitSelfAndNest(controls) || [];
     const globalSheetControls = this.omitSelfAndNest(this.props.globalSheetControls);
     const { worksheetId } = globalSheetInfo || {};
@@ -138,12 +140,14 @@ const UnwrappedSelectFields = class SelectFields extends Component<SelectFieldsP
         controls: filterSys(subListControls, fromCustomEventApi),
         isCurrent: true,
         from,
+        isDefaultValue,
       }),
       [String(worksheetId)]: getControls({
         data,
         controls: filterSys(globalSheetControls),
         isCurrent: true,
         from,
+        isDefaultValue,
       }),
     }; // 获取关联表控件下的所有符合条件的字段
 
@@ -163,6 +167,7 @@ const UnwrappedSelectFields = class SelectFields extends Component<SelectFieldsP
         controls: relationControls,
         isCurrent: undefined,
         from,
+        isDefaultValue,
       });
       fieldList[String(id)] = filteredRelationControls;
     });

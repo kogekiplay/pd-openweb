@@ -190,12 +190,22 @@ const fields = [
   { controlId: 'department', type: 27 },
   { controlId: 'derived-number', type: 30, sourceControlType: 6 },
 ];
-const selected = (type: number, from?: number) =>
-  (call(utilities, 'getControls', { data: { type }, controls: fields, from }) as Control[]).map(
-    value => value.controlId,
-  );
-assert.deepEqual(selected(6), ['number', 'derived-number']);
-assert.deepEqual(selected(6, 6), ['number']);
+const selected = (type: number, from?: number, isDefaultValue?: boolean) =>
+  (
+    call(utilities, 'getControls', {
+      data: { type },
+      controls: fields,
+      from,
+      ...(isDefaultValue === undefined ? {} : { isDefaultValue }),
+    }) as Control[]
+  ).map(value => value.controlId);
+// 754（official fd9d6ad dynamicValue.js）：只有显式 isDefaultValue 或既有 from 模式才启用
+// “type 30 → sourceControlType”补全；隐式默认调用不再把派生数值列为主表输入字段。
+assert.deepEqual(selected(6), ['number']);
+assert.deepEqual(selected(6, 2), ['number', 'derived-number']); // SEARCH_PARAMS：非 default，保留派生
+assert.deepEqual(selected(6, 14), ['number', 'derived-number']); // RULES：非 default，保留派生
+assert.deepEqual(selected(6, undefined, true), ['number', 'derived-number']); // 显式默认值编辑器走补全分支
+assert.deepEqual(selected(6, 6), ['number']); // 查询工作表模式不补全派生
 assert.deepEqual(selected(15), ['date']);
 assert.deepEqual(selected(27), ['member', 'department']);
 assert.deepEqual(call(utilities, 'getControls', {}), []);

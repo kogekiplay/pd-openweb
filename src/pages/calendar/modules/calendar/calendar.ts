@@ -108,7 +108,7 @@ Calendar.Method = {
   loadFullCalendar: function (parameter: Record<string, any>) {
     createCalendarInstance(document.getElementById('calendar'), {
       headerToolbar: {
-        left: 'today prev,next title',
+        left: 'today prev,next title refresh',
         center: '',
         // v2 的 agendaDay/agendaWeek/month 改成 v7 的名字；"列表"不再靠往工具栏
         // 注入一个假按钮再 destroy 掉日历，直接用 v7 内置的 listMonth 视图。
@@ -119,6 +119,7 @@ Calendar.Method = {
       // v7：buttonText 被移除，改成 buttons 映射的 .text，且 key 必须是精确视图名
       buttons: {
         today: { text: _l('今天') },
+        refresh: { text: _l('刷新'), click: () => fcRefetchEvents() },
         timeGridDay: { text: _l('日') },
         timeGridWeek: { text: _l('周') },
         dayGridMonth: { text: _l('月') },

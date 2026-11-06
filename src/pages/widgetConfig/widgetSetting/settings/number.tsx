@@ -243,7 +243,7 @@ export default function Number(props) {
 
       {fromExcel ? null : (
         <Fragment>
-          <DynamicDefaultValue {...props} />
+          <DynamicDefaultValue {...props} isDefaultValue />
           <WidgetVerify {...props} />
 
           {isSlider && (

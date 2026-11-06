@@ -729,6 +729,51 @@ export function DeptSelect(props: QuickDepartmentOptions) {
   );
 }
 
+/**
+ * Roots that keep focusable controls inside the active dialog.
+ * The drawer panel and antd's Modal content both carry role="dialog"; the class
+ * selectors are belt-and-braces for versions that rename or wrap the panel.
+ * Note: the drawer root (.ant-drawer) is pointer-events:none, so it is never a host.
+ */
+const DIALOG_HOST_SELECTORS = [
+  '[role="dialog"]',
+  '.ant-modal-content',
+  '.ant-drawer-section',
+  '.ant-drawer-content',
+  '.ant-drawer-body',
+];
+
+/**
+ * True Element check, including the cross-realm case (an iframe anchor carries its
+ * own window). Never trusts a bare nodeType: an SVG element or any look-alike object
+ * would pass that, and the panel mount needs a real Element.
+ */
+function isElement(value: unknown): value is Element {
+  if (value === null || (typeof value !== 'object' && typeof value !== 'function')) return false;
+  if (typeof Element !== 'undefined' && value instanceof Element) return true;
+  const owner: unknown = Reflect.get(value, 'ownerDocument');
+  if (owner === null || typeof owner !== 'object') return false;
+  const view: unknown = Reflect.get(owner, 'defaultView');
+  if (view === null || typeof view !== 'object') return false;
+  const ctor: unknown = Reflect.get(view, 'Element');
+  if (typeof ctor !== 'function') return false;
+  return value instanceof ctor;
+}
+
+/**
+ * Resolve the dialog that owns the anchor, if any.
+ * Returns a real Element (closest() already guarantees that once the receiver is one)
+ * or null for the plain document-body path so callers keep the old behaviour.
+ */
+export function resolveDialogHost(target: unknown): Element | null {
+  if (!isElement(target)) return null;
+  for (const selector of DIALOG_HOST_SELECTORS) {
+    const host = target.closest(selector);
+    if (host) return host;
+  }
+  return null;
+}
+
 export default function quickSelectDept(target: unknown, props: QuickDepartmentOptions = {}): QuickDepartmentHandle {
   const panelWidth = 360;
   const minHeight = props.minHeight || 358;
@@ -778,21 +823,58 @@ export default function quickSelectDept(target: unknown, props: QuickDepartmentO
         }
       }
 
-      $con.style.position = 'absolute';
-      $con.style.left = x + 'px';
-      $con.style.top = y + 'px';
-      $con.style.zIndex = String(zIndex);
+      place();
     }
   }
 
+  /** The dialog that owns the anchor; null keeps the legacy document-body mount. */
+  const host = resolveDialogHost(target);
+
+  /**
+   * Write the panel position for the active mount.
+   * Inside a dialog the panel is absolute in the dialog's own coordinate space, so
+   * the viewport rects are rebased on the panel's offset parent (the drawer uses a
+   * transform, which would make a fixed panel both mispositioned and clipped).
+   * The document-body path is unchanged.
+   */
+  function place() {
+    $con.style.position = 'absolute';
+    $con.style.zIndex = String(zIndex);
+    if (!host) {
+      $con.style.left = x + 'px';
+      $con.style.top = y + 'px';
+      return;
+    }
+    // Rebase the viewport rect onto the containing block: absolute left/top measure
+    // from the offset parent's padding box, so drop its border (clientLeft/Top) and
+    // add its scroll (the panel scrolls with the content). Using the offset parent
+    // rather than the host keeps the drawer transform from shifting the panel.
+    const offsetParent: Element | null = $con.offsetParent;
+    const base = (offsetParent || host).getBoundingClientRect();
+    const borderLeft = offsetParent ? offsetParent.clientLeft : 0;
+    const borderTop = offsetParent ? offsetParent.clientTop : 0;
+    const scrollLeft = offsetParent ? offsetParent.scrollLeft : 0;
+    const scrollTop = offsetParent ? offsetParent.scrollTop : 0;
+    $con.style.left = x - base.x - borderLeft + scrollLeft + 'px';
+    $con.style.top = y - base.y - borderTop + scrollTop + 'px';
+  }
+
+  if (host) {
+    host.appendChild($con);
+  } else {
+    document.body.appendChild($con);
+  }
+
+  // Position only after mounting: offsetParent is null while the panel is detached.
   setPosition();
-  document.body.appendChild($con);
+
   const root = createRoot($con);
 
   function destory() {
     root.unmount();
-    if ($con && $con.parentNode === document.body && document.body.contains($con)) {
-      document.body.removeChild($con);
+    const parent = $con.parentNode;
+    if (parent && parent.contains($con)) {
+      parent.removeChild($con);
     }
   }
 

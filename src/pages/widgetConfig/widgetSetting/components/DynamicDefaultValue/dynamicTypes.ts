@@ -64,6 +64,8 @@ export interface SelectOtherFieldProps {
   withDY?: boolean | undefined;
   linkParams?: string[] | undefined;
   fromCustomEventApi?: boolean | undefined;
+  /** 754：默认值编辑器入口标记（官方 number/WidgetBase 传入），用于 getControls 的字段补全分支。 */
+  isDefaultValue?: boolean | undefined;
   actionData?: { actionType?: string | undefined } | undefined;
   parentControl?: FormControl | undefined;
   onTriggerClick?: (() => void) | undefined;

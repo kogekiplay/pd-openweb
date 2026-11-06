@@ -284,6 +284,18 @@
     gap: 10px;
     min-height: initial;
 
+    &:not(.readonlyShowAll) {
+      .Radio,
+      .Checkbox {
+        &--disabled {
+          .Radio-box,
+          .Checkbox-box {
+            display: none;
+          }
+        }
+      }
+    }
+
     .Radio,
     .Checkbox {
       display: flex;
@@ -293,10 +305,10 @@
 
       &--disabled {
         color: var(--color-text-primary) !important;
+        opacity: 1 !important;
 
-        .Radio-box,
-        .Checkbox-box {
-          display: none;
+        > span:last-child {
+          color: var(--color-text-primary) !important;
         }
       }
 

@@ -111,11 +111,13 @@ export const functions = {
   },
   // 返回分钟数
   MINUTE: function (dateStr: dayjs.ConfigType) {
+    if (_.isNil(dateStr) || dateStr === '') return '';
     const minute = newDate(completeTime(dateStr)).getMinutes();
     return _.isNumber(minute) && !_.isNaN(minute) ? minute : undefined;
   },
   // 返回小时数
   HOUR: function (dateStr: dayjs.ConfigType) {
+    if (_.isNil(dateStr) || dateStr === '') return '';
     const hour = newDate(completeTime(dateStr)).getHours();
     return _.isNumber(hour) && !_.isNaN(hour) ? hour : undefined;
   },

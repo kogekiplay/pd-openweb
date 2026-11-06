@@ -20,7 +20,7 @@ interface Call { controller: string; action: string; args: Data; options: Data; 
 const cache = new Map<string, Data>();
 const calls: Call[] = [], dispatched: Data[] = [], trace: string[] = [];
 const storage = { getItem: () => null };
-const md = { global: { Account: { accountId: 'self', isPortal: false, messageListShowType: 0 } } };
+const md = { global: { SysSettings: { hideAIBasicFun: false }, Account: { accountId: 'self', isPortal: false, messageListShowType: 0 } } };
 Reflect.set(globalThis, 'md', md); Reflect.set(globalThis, 'localStorage', storage);
 Reflect.set(globalThis, '_l', (text: string) => text);
 Reflect.set(globalThis, 'alert', (text: string, level?: number) => trace.push(`alert:${text}:${level}`));
@@ -234,6 +234,19 @@ async function main() {
     assert.equal(Object.hasOwn(returned, 'isContact'), true); assert.equal(returned.isContact, undefined);
     assert.equal(calls[0]!.args['accountId'], undefined); assert.equal(Object.hasOwn(calls[0]!.args, 'accountId'), true);
     assert.equal(view.state['isError'], false); assert.equal(view.state['loading'], false);
+  });
+  await check('754 system AI setting overrides toolbar visibility while ordinary patches keep identity', () => {
+    const config = { mingoVisible: true, hideOpenCommonApp: true };
+    md.global.SysSettings.hideAIBasicFun = false;
+    const visible = actions['setToolbarConfig']!(config) as Data;
+    assert.equal(visible['result'], config);
+    md.global.SysSettings.hideAIBasicFun = true;
+    try {
+      const hidden = actions['setToolbarConfig']!(config) as Data;
+      assert.deepEqual(hidden['result'], { ...config, mingoVisible: false });
+      assert.notEqual(hidden['result'], config);
+      assert.equal(config.mingoVisible, true, 'The supplied patch is not mutated');
+    } finally { md.global.SysSettings.hideAIBasicFun = false; }
   });
   console.log('Inbox identity and actual session lookup pipeline passed: ' + passed + ' checks');
 }

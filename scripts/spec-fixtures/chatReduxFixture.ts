@@ -83,12 +83,14 @@ function installHost(
     localStorage?: ReturnType<typeof makeLocalStorage>;
     messageListShowType?: number;
     accountId?: string;
+    hideAIBasicFun?: boolean;
   } = {},
 ) {
   const ls = overrides.localStorage || makeLocalStorage();
   (globalThis as any)['localStorage'] = ls;
   (globalThis as any)['md'] = {
     global: {
+      SysSettings: { hideAIBasicFun: overrides.hideAIBasicFun ?? false },
       Account: {
         messageListShowType: overrides.messageListShowType === undefined ? undefined : overrides.messageListShowType,
         accountId: overrides.accountId,

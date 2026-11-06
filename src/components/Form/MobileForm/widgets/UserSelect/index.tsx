@@ -1,4 +1,4 @@
-import { Fragment, memo, useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -252,9 +252,4 @@ UserSelect.propTypes = {
   onChange: PropTypes.func,
 };
 
-export default memo(UserSelect, (prevProps, nextProps) => {
-  return _.isEqual(
-    _.pick(prevProps, ['value', 'disabled', 'formDisabled']),
-    _.pick(nextProps, ['value', 'disabled', 'formDisabled']),
-  );
-});
+export default UserSelect;

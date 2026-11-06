@@ -132,14 +132,20 @@ const isMobile = browserIsMobile();
 
 const getIconColor = ({ iconColor, navColor }: { iconColor?: string | undefined; navColor?: string | undefined }) => {
   // The existing SDK accepts absent color at runtime; preserve its own fallback.
-  const palette: unknown = Reflect.apply(generate, undefined, [iconColor]);
-  if (!Array.isArray(palette) || !Array.from(palette).every(value => typeof value === 'string'))
-    throw new TypeError('Invalid generated API icon palette');
-  const lightColor: string | undefined = palette[0];
-  const light = [lightColor, '#ffffff', '#f5f6f7'].includes(navColor);
+  const color = iconColor || 'var(--color-primary)';
+  let lightColor = 'var(--color-primary-transparent)';
+  if (iconColor) {
+    const palette: unknown = Reflect.apply(generate, undefined, [iconColor]);
+    const paletteList: unknown[] = Array.isArray(palette) ? palette : [];
+    const allStrings = paletteList.every(value => typeof value === 'string');
+    const first: unknown = paletteList[0];
+    if (!allStrings || typeof first !== 'string') throw new TypeError('Invalid generated API icon palette');
+    lightColor = first;
+  }
+  const light = typeof navColor === 'string' && [lightColor, '#ffffff', '#f5f6f7'].includes(navColor);
   const black = '#1b2025' === navColor;
-  const backgroundColor = light ? lightColor : navColor || iconColor;
-  const fillColor = black || light ? iconColor : '#fff';
+  const backgroundColor = light ? lightColor : navColor || color;
+  const fillColor = black || light ? color : '#fff';
   return { backgroundColor, fillColor };
 };
 

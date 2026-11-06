@@ -8,9 +8,12 @@ import type { OverlayScrollbarsComponentRef } from 'overlayscrollbars-react';
 import PropTypes from 'prop-types';
 import { browserIsMobile } from 'src/utils/common';
 import instancePlugin from './plugins';
+// 冲突解法：保留本地 typed 的 ./types 导入（上游 .jsx 无此导入），
+// 官方 7.5.4 把样式切到仓库内 2.11.4 版本（移除 @property）—— 该 import 在下方已由 merge 给出。
 import type { EmptyScrollInfo, ScrollInfo, ScrollViewProps } from './types';
-import 'overlayscrollbars/styles/overlayscrollbars.css';
 import './index.less';
+// 本地 2.11.4 样式移除了 @property，规避旧版浏览器的属性注册兼容问题。
+import './overlayscrollbars.css';
 
 OverlayScrollbars.plugin(instancePlugin);
 

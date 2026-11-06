@@ -3,7 +3,7 @@ import type { TableProps } from 'antd';
 import moment from 'moment';
 import { UserHead } from 'ming-ui';
 import { START_APP_TYPE } from 'src/pages/workflow/WorkflowList/utils';
-import { navigateTo } from 'src/router/navigateTo';
+import { pathCompletion } from 'src/utils/common';
 import IsAppAdmin from '../../../components/IsAppAdmin';
 import type { HistoryWorkflowItem } from '../historyWorkflow';
 
@@ -38,7 +38,7 @@ export const getHistoryWorkflowColumns = ({
             defaultIcon={workflowType.iconName}
             iconColor={workflowType.iconColor}
             createType={2}
-            ckeckSuccessCb={() => navigateTo(`/workflowedit/${value}`)}
+            ckeckSuccessCb={() => window.open(pathCompletion(`/workflowedit/${value}`), '_blank')}
           />
         </div>
       );

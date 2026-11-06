@@ -4,8 +4,15 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Dialog, Icon, SvgIcon, Textarea } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import useColorMix from 'ming-ui/hooks/useColorMix';
 import LoadingDots from 'src/pages/widgetConfig/widgetSetting/components/DevelopWithAI/ChatBot/LoadingDots';
 import loadAiImg from 'src/pages/worksheet/assets/aiLoad.png';
+
+type ColorMixDefinitions = NonNullable<Parameters<typeof useColorMix>[0]>;
+
+const AI_COLOR_MIXES: ColorMixDefinitions = {
+  '--ai-item-selected-background': { color: 'var(--app-primary-color)', percent: 6 },
+};
 
 const AIActionDialogWrap = styled(Dialog)`
   .aiContentWrap {
@@ -47,7 +54,7 @@ const AIActionDialogWrap = styled(Dialog)`
       background: var(--color-background-secondary);
     }
     &.active {
-      background: color-mix(in srgb, var(--app-primary-color) 6%, transparent);
+      background: var(--ai-item-selected-background, color-mix(in srgb, var(--app-primary-color) 6%, transparent));
       border: 1px solid var(--app-primary-color);
       .summary {
         color: var(--app-primary-color);
@@ -137,6 +144,7 @@ export default function CreateAIDialog(props) {
   const [name, setName] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [customRemark, setCustomRemark] = useState<string | undefined>();
+  const colorMixRef = useColorMix<HTMLDivElement>(AI_COLOR_MIXES);
 
   const renderItem = (item, index: number) => {
     const isActive = item.summary === name;
@@ -233,7 +241,7 @@ export default function CreateAIDialog(props) {
           <Icon icon="refresh1" className="textTertiary Font16 pointer mLeft10" onClick={refresh} />
         </Tooltip>
       </div>
-      <div className="aiContentWrap overflowHidden Relative">
+      <div className="aiContentWrap overflowHidden Relative" ref={colorMixRef}>
         {loadingAIsuggestions ? (
           <div className="aiContent flexRow">
             {[...defaultAIsuggestions, ...Array(4 - defaultAIsuggestions.length)].map((item, index) =>

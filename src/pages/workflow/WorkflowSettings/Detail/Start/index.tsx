@@ -117,7 +117,7 @@ export default class Start extends Component<any, any> {
    * 保存
    */
   onSave = ({ close = true, isUpdate = undefined } = {}) => {
-    const { flowInfo, isPlugin } = this.props;
+    const { flowInfo, isPlugin, isIntegration } = this.props;
     const { data, saveRequest } = this.state;
     // 处理按时间触发时间日期
     const isDateField =
@@ -259,7 +259,7 @@ export default class Start extends Component<any, any> {
       }
     }
 
-    if (saveRequest || _.isEqual(data, this.cacheResult)) {
+    if (saveRequest || (!isIntegration && _.isEqual(data, this.cacheResult))) {
       return;
     }
 
@@ -398,7 +398,7 @@ export default class Start extends Component<any, any> {
   };
 
   override render() {
-    const { processId, selectNodeId, flowInfo } = this.props;
+    const { processId, selectNodeId, flowInfo, isIntegration } = this.props;
     const { data } = this.state;
 
     if (_.isEmpty(data)) {
@@ -509,7 +509,7 @@ export default class Start extends Component<any, any> {
                 ],
                 data.appType,
               )) &&
-            !_.isEqual(data, this.cacheResult)
+            (isIntegration || !_.isEqual(data, this.cacheResult))
           }
           onSave={() => {
             if (data.appType === APP_TYPE.WEBHOOK) {
