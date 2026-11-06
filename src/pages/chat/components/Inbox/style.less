@@ -177,6 +177,43 @@
         max-width: 100%;
       }
     }
+    .workflowNoticeRichText {
+      overflow-wrap: anywhere;
+      p, figure, blockquote, pre, table { margin: 0 0 0.6em; }
+      > :last-child { margin-bottom: 0; }
+      h1, h2, h3, h4, h5, h6 { margin: 0.6em 0; font-weight: bold; line-height: 1.4; }
+      h1 { font-size: 1.8em; }
+      h2 { font-size: 1.5em; }
+      h3 { font-size: 1.25em; }
+      ul { list-style: disc; padding-left: 1.5em; }
+      ol { list-style: decimal; padding-left: 1.5em; }
+      ul > li { list-style-type: disc; }
+      ol > li { list-style-type: decimal; }
+      li[data-list="bullet"] { list-style-type: disc; }
+      li[data-list="ordered"] { list-style-type: decimal; }
+      blockquote { border-left: 3px solid var(--color-border-primary); padding-left: 12px; }
+      pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+      figure { max-width: 100%; overflow-x: auto; }
+      table { max-width: 100%; border-collapse: collapse; }
+      td, th { border: 1px solid var(--color-border-primary); padding: 4px 8px; vertical-align: top; }
+      img { max-width: 100%; height: auto; }
+      .workflow-ql-align-center { text-align: center; }
+      .workflow-ql-align-right { text-align: right; }
+      .workflow-ql-align-justify { text-align: justify; }
+      .workflow-ql-size-small { font-size: 0.75em; }
+      .workflow-ql-size-large { font-size: 1.5em; }
+      .workflow-ql-size-huge { font-size: 2.5em; }
+      .workflow-ql-font-serif { font-family: Georgia, serif; }
+      .workflow-ql-font-monospace { font-family: monospace; }
+      .workflow-image-style-align-left { text-align: left; }
+      .workflow-image-style-align-right { text-align: right; }
+      .workflow-image-style-align-center { text-align: center; }
+      .notice-indent(@level) when (@level > 0) {
+        .workflow-ql-indent-@{level} { padding-left: (3em * @level); }
+        .notice-indent(@level - 1);
+      }
+      .notice-indent(8);
+    }
     .textMsg a {
       word-wrap: break-word;
       word-break: break-all;

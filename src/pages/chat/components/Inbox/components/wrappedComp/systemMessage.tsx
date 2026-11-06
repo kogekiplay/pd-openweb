@@ -14,6 +14,7 @@ import logDialog from 'src/pages/workflow/WorkflowSettings/History/components/lo
 import ErrorDialog from 'src/pages/worksheet/common/WorksheetBody/ImportDataFromExcel/ErrorDialog';
 import { navigateTo } from 'src/router/navigateTo';
 import { getRequest, pathCompletion } from 'src/utils/common';
+import { isWorkflowNoticeRichText, sanitizeWorkflowNoticeHtml } from 'src/utils/core/sanitizeHtml';
 import { addBehaviorLog, dateConvertToUserZone } from 'src/utils/project';
 import { MSG_DONE_TEXT, MSGTYPES } from '../../constants';
 import type { InboxItem } from '../../util';
@@ -326,7 +327,17 @@ export default class SystemMessage extends PureComponent<SystemMessageProps, Sys
       [MSGTYPES.WorkFlowTaskMessage, MSGTYPES.WorkFlowUserTaskMessage, MSGTYPES.WorkFlowSendTaskMessage].includes(
         inboxType,
       ) && !!status;
-    const value = xss(content.replace(/[\r\n]/g, '<br />'), xssOptions);
+    const richWorkflowNotice = [
+      MSGTYPES.WorkFlowMessage,
+      MSGTYPES.WorkFlowTaskMessage,
+      MSGTYPES.WorkFlowUserTaskMessage,
+      MSGTYPES.WorkFlowSendTaskMessage,
+      MSGTYPES.WorkFlowSendMessage,
+    ].includes(inboxType) && isWorkflowNoticeRichText(content);
+    const ContentTag = richWorkflowNotice ? 'div' : 'span';
+    const value = richWorkflowNotice
+      ? sanitizeWorkflowNoticeHtml(content)
+      : xss(content.replace(/[\r\n]/g, '<br />'), xssOptions);
     const linkifyValue = parse(linkifySanitizedHtml(value, xssOptions));
 
     const renderIcon = () => {
@@ -391,7 +402,8 @@ export default class SystemMessage extends PureComponent<SystemMessageProps, Sys
                 }}
               />
               {typeName && <span className="mRight5 textTertiary">:</span>}
-              <span
+              <ContentTag
+                className={richWorkflowNotice ? 'workflowNoticeRichText' : undefined}
                 dangerouslySetInnerHTML={{
                   __html: linkifyValue,
                 }}

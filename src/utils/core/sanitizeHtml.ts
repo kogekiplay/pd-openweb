@@ -199,6 +199,44 @@ export const sanitizePostMessageHtml = (html: unknown) =>
     }),
   );
 
+
+/** Workflow notifications accept rich-field HTML without enabling arbitrary editor CSS or controls. */
+const workflowNoticeWhiteList: IWhiteList = {
+  ...postMessageWhiteList,
+  p: withStyle('p', ['class']),
+  a: withStyle('a', ['target', 'href', 'title', 'rel', 'optype', 'opvalue', 'taskid', 'opuser', 't']),
+  figure: withStyle('figure', ['class']),
+  table: withStyle('table', ['class']),
+  li: withStyle('li', ['class', 'data-list']),
+};
+delete workflowNoticeWhiteList.video;
+delete workflowNoticeWhiteList.audio;
+
+const noticeEditorClass = /^(?:ql-(?:align-(?:center|right|justify)|size-(?:small|large|huge)|font-(?:serif|monospace)|indent-[1-8])|image|image_resized|image-style-align-(?:left|right|center)|table|task-list-checkbox)$/;
+const noticeListTypes = new Set(['ordered', 'bullet', 'checked', 'unchecked']);
+const safeWorkflowNoticeAttrValue: SafeAttrValueHandler = (tag, name, value, cssFilter) => {
+  if (name === 'class') {
+    const tokens = friendlyAttrValue(value).split(/[^a-zA-Z0-9_-]+/).filter(token => noticeEditorClass.test(token));
+    return escapeAttrValue(tokens.map(token => 'workflow-' + token).join(' '));
+  }
+  if (tag === 'li' && name === 'data-list') return noticeListTypes.has(value) ? escapeAttrValue(value) : '';
+  return safePostMessageAttrValue(tag, name, value, cssFilter);
+};
+
+/** Encoded tags stay text; only actual rich HTML takes the rich-text path. */
+export const isWorkflowNoticeRichText = (html: string): boolean =>
+  /<(?:p|div|span|h[1-6]|ul|ol|li|table|thead|tbody|tfoot|tr|td|th|pre|code|blockquote|strong|em|b|i|u|s|del|mark|small|sub|sup|hr|img|figure|font)(?:[^a-z0-9_-]|$)/i.test(html);
+
+export const sanitizeWorkflowNoticeHtml = (html: string): string =>
+  ensureSafeBlankTarget(filterXSS(html, {
+    whiteList: workflowNoticeWhiteList,
+    css: { whiteList: postMessageCssWhiteList },
+    onTag: filterPostMessageTag,
+    safeAttrValue: safeWorkflowNoticeAttrValue,
+    stripIgnoreTag: true,
+    stripIgnoreTagBody: ['script', 'style'],
+  }));
+
 export const sanitizeMarkdownPreviewHtml = (html: unknown) =>
   ensureSafeBlankTarget(
     filterXSS(String(html ?? ''), {
