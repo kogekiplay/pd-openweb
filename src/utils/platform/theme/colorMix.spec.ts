@@ -40,8 +40,8 @@ function fakeStyle(): FakeStyle {
   };
 }
 
-function elementClass(): { new (): object } {
-  const Klass = function FakeElement() { /* realm marker only */ };
+function elementClass() {
+  const Klass = class FakeElement { /* realm marker only */ };
   Object.defineProperty(Klass, 'name', { value: 'FakeElement' });
   return Klass;
 }
@@ -110,13 +110,15 @@ interface ColorMixModule {
 
 /** Evaluate already transformed code with only @ctrl/tinycolor resolved for real. */
 function evaluate(code: string): ColorMixModule {
-  const module = { exports: {} as Record<string, unknown> };
+  const module: { exports: Partial<ColorMixModule> } = { exports: {} };
   const requireStub = (name: string): unknown => {
     if (name === '@ctrl/tinycolor') return require('@ctrl/tinycolor');
     throw new Error('Unstubbed module requested by real source: ' + name);
   };
   new Function('require', 'module', 'exports', code)(requireStub, module, module.exports);
-  return module.exports as ColorMixModule;
+  const { mixColors, observeColorMix } = module.exports;
+  if (typeof mixColors !== 'function' || typeof observeColorMix !== 'function') throw new TypeError('Missing actual color mix exports');
+  return { mixColors, observeColorMix };
 }
 
 /** Load the working tree module through the repo babel pipeline. */

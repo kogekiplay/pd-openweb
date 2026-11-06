@@ -18,8 +18,8 @@ const { transformFileSync } = require('../../../../scripts/spec-harness.ts');
 type Rect = { x: number; y: number; width: number; height: number };
 
 /** Two fake realms so the cross-realm Element fallback can be exercised. */
-function elementClass(label: string): { new (): object } {
-  const Klass = function FakeElementClass() { /* realm marker only */ };
+function elementClass(label: string) {
+  const Klass = class FakeElementClass { /* realm marker only */ };
   Object.defineProperty(Klass, 'name', { value: label });
   return Klass;
 }
@@ -46,7 +46,7 @@ interface FakeElement {
   closest(selector: string): FakeElement | null;
 }
 
-function fakeElement(selectors: string[] = [], rect?: Rect, realm?: unknown): FakeElement {
+function fakeElement(selectors: string[] = [], rect?: Rect, realm?: ReturnType<typeof elementClass>): FakeElement {
   const proto = (realm || ElementCtor).prototype;
   const element = Object.create(proto) as FakeElement;
   element.style = {};
