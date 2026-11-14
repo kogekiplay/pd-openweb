@@ -28,6 +28,7 @@ import { dateConvertToServerZone, dateConvertToUserZone } from 'src/utils/projec
 import { handleRecordError } from 'src/utils/record';
 import type { AppDispatch, GetState } from 'src/redux/types';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import type { WorksheetFilterCondition, WorksheetFilters } from 'src/pages/worksheet/types';
 
 const updatePeriodList = ({ result, parent }) => {
   return (dispatch: AppDispatch, getState: GetState) => {
@@ -61,6 +62,20 @@ const getExportPeriodList = (type: number, { startTime, endTime }, viewConfig) =
 
 let viewRequest = new WeakMap();
 let fetchRowsRequestSeq = new WeakMap();
+
+// 导出页在工作表及默认筛选初始化完成后恢复快照，由甘特图挂载统一发起查询。
+export const restoreGunterExportFilters = ({
+  filters,
+  quickFilter,
+}: {
+  filters: Partial<WorksheetFilters>;
+  quickFilter: WorksheetFilterCondition[];
+}) => {
+  return (dispatch: AppDispatch) => {
+    dispatch({ type: 'WORKSHEET_UPDATE_FILTERS', filters });
+    dispatch({ type: 'WORKSHEET_UPDATE_QUICK_FILTER', filter: quickFilter });
+  };
+};
 
 export const fetchRows = callBackFun => {
   return (dispatch: AppDispatch, getState: GetState) => {

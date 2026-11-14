@@ -127,7 +127,7 @@ export function WorkflowConflictDialog(props: WorkflowConflictDialogProps) {
               <div className="columnName flex">
                 <IsAppAdmin
                   className="alignItemsCenter workflowInfoWrap"
-                  appId={item.app.id}
+                  appId={item.app?.id}
                   appName={item.process.name}
                   defaultIcon={workflowTypeOf(item).iconName}
                   iconColor={workflowTypeOf(item).iconColor}

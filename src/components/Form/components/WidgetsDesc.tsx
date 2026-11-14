@@ -59,6 +59,7 @@ class WidgetsDesc extends React.Component<any, WidgetsDescState> {
             <span
               ref={formcon => { this.formcon = formcon; }}
               className="descText"
+              data-toggle-text={isShow ? _l('收起') : _l('更多')}
               style={{ wordBreak: 'normal', overflowWrap: 'break-word' }}
             >
               <Linkify properties={{ target: '_blank' }}>{item.desc}</Linkify>
