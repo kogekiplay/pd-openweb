@@ -1,12 +1,24 @@
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { formatQuickFilter } from 'src/utils/domain/worksheet/filter';
+import type { WorksheetBase, WorksheetFilterCondition, WorksheetFilters } from 'src/pages/worksheet/types';
+
+type GunterExportBase = Pick<WorksheetBase, 'appId' | 'worksheetId' | 'viewId'>;
+type GunterExportSnapshot = GunterExportBase & {
+  version: 1;
+  accountId: string;
+  expiresAt: number;
+  filters: WorksheetFilters;
+  quickFilter: WorksheetFilterCondition[];
+};
+
+type GunterExportSnapshotInput = Partial<GunterExportSnapshot>;
 
 const STORAGE_PREFIX = 'gunterExportFilters-';
 const SNAPSHOT_LIFETIME = 10 * 60 * 1000;
-const CONTEXT_KEYS = ['appId', 'worksheetId', 'viewId'];
+const CONTEXT_KEYS: (keyof GunterExportBase)[] = ['appId', 'worksheetId', 'viewId'];
 
-const hasValidFilters = snapshot =>
+const hasValidFilters = (snapshot: GunterExportSnapshotInput) =>
   _.isPlainObject(snapshot) &&
   _.isPlainObject(snapshot.filters) &&
   Array.isArray(snapshot.quickFilter) &&
@@ -27,7 +39,15 @@ const clearExpiredSnapshots = () => {
 };
 
 // 每次导出单独保存，避免同一视图的多个标签页互相覆盖筛选条件。
-export const saveGunterExportFilters = ({ base, filters, quickFilter }) => {
+export const saveGunterExportFilters = ({
+  base,
+  filters,
+  quickFilter,
+}: {
+  base: GunterExportBase;
+  filters: WorksheetFilters;
+  quickFilter: WorksheetFilterCondition[];
+}) => {
   if (!hasValidFilters({ filters, quickFilter })) {
     throw new Error('Invalid Gunter export filters');
   }
@@ -53,7 +73,10 @@ export const saveGunterExportFilters = ({ base, filters, quickFilter }) => {
   return exportId;
 };
 
-export const takeGunterExportFilters = (exportId, base) => {
+export const takeGunterExportFilters = (
+  exportId: string | undefined,
+  base: GunterExportBase,
+): GunterExportSnapshot | null => {
   // 兼容直接访问旧导出地址；显式携带但无效的标识不能退回无筛选导出。
   if (exportId === undefined) return null;
 
