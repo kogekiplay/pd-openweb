@@ -10,12 +10,13 @@
 
 ## 回归测试
 
-维护位置：本目录的 `GunterExport.test.js`。在仓库根目录执行：
+维护位置：`scripts/hap755-semantic.spec.ts`。在仓库根目录执行：
 
 ```bash
-node src/pages/worksheet/views/GunterView/components/GunterExport/GunterExport.test.js
+node scripts/hap755-semantic.spec.ts
 ```
 
-测试调用真实快照方法、组件生命周期、Redux Action 和 reducer，验证条件传递、空筛选、
-默认值覆盖、多次导出隔离、存储异常、旧地址兼容及截图触发和卸载清理。
-当前为手动执行，尚未接入 package.json 或 CI；浏览器跨页存储与实际图片下载需另行验证。
+测试执行真实快照方法和导出组件生命周期，验证条件传递、多次导出隔离、一次性读取、
+有效期、损坏标识、账号/视图匹配，以及先恢复筛选再挂载查询、单次打印和卸载清理。
+Redux 调用边界在该隔离规格中使用桩；不能把它当成完整 reducer 或实际图片下载认证。
+该规格也由 `npm test` 扫描执行；浏览器跨页存储、真实查询结果与图片下载需另行验证。
