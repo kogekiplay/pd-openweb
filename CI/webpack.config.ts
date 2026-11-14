@@ -485,6 +485,9 @@ module.exports = function (alonePath = '') {
     },
     resolve: {
       alias: {
+        // Babel 7 vendor output still requests helpers/esm/*, removed from runtime 8 exports.
+        // Keep package resolution (and its import/default conditions) on the public helpers/* export.
+        '@babel/runtime/helpers/esm/*': '@babel/runtime/helpers/*',
         worksheet: 'src/pages/worksheet',
         mobile: 'src/pages/Mobile',
         statistics: 'src/pages/Statistics',
