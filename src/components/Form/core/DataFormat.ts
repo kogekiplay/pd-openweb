@@ -107,6 +107,7 @@ interface DataFormatOptions {
   ignoreRequired?: boolean | undefined;
   verifyAllControls?: boolean | undefined;
   noAutoSubmit?: boolean | undefined;
+  waitForPendingSearchRequests?: boolean;
   recordCreateTime?: string | undefined;
   masterRecordRowId?: string | undefined;
   masterData?: ControlValue | undefined;
@@ -165,6 +166,7 @@ export default class DataFormat {
   declare errorItems: FormError[];
   /** controlId -> 是否正在加载 */
   declare loadingInfo: Record<string, boolean>;
+  declare pendingSearchRequests: Map<string | undefined, number> | undefined;
   /** 正在异步求值的控件 */
   declare asyncControls: Record<string, ControlValue>;
   /** 子表 store 的集中存放处 */
@@ -206,6 +208,7 @@ export default class DataFormat {
     ignoreRequired = false,
     verifyAllControls = false,
     noAutoSubmit = false,
+    waitForPendingSearchRequests = false,
     recordCreateTime = '',
     masterRecordRowId = '',
     masterData,
@@ -252,6 +255,7 @@ export default class DataFormat {
     this.from = from;
     this.isDraft = isDraft;
     this.searchConfig = searchConfig;
+    this.pendingSearchRequests = waitForPendingSearchRequests ? new Map() : undefined;
     this.onAsyncChange = (...args) => {
       onAsyncChange(...args, this);
     };
@@ -1994,8 +1998,23 @@ export default class DataFormat {
       ...para,
     };
 
-    // 同上：abortController 由 requestPool 自己持有
-    return this.requestPool.getFilterRowsByQueryDefault(params);
+    // 请求失败沿用下游无结果分支，清理字段加载状态。
+    const request = this.requestPool.getFilterRowsByQueryDefault(params).catch(() => null);
+    const { pendingSearchRequests } = this;
+
+    if (!pendingSearchRequests) return request;
+
+    // 批量添加行的遮罩需要等待实际请求完成，去重返回的空结果不计入。
+    pendingSearchRequests.set(controlId, (pendingSearchRequests.get(controlId) || 0) + 1);
+    return request.finally(() => {
+      const pendingCount = (pendingSearchRequests.get(controlId) || 0) - 1;
+
+      if (pendingCount) {
+        pendingSearchRequests.set(controlId, pendingCount);
+      } else {
+        pendingSearchRequests.delete(controlId);
+      }
+    });
   };
 
   /**
@@ -2053,6 +2072,11 @@ export default class DataFormat {
 
     filterSearchConfig.forEach(async (currentConfig: ControlValue) => {
       this.setLoadingInfo(currentConfig.controlId, true);
+      const completeSearch = () => {
+        if (!this.pendingSearchRequests?.get(currentConfig.controlId)) {
+          this.setLoadingInfo(currentConfig.controlId, false, true);
+        }
+      };
 
       const updateData = (value: ControlValue) => {
         this.updateDataSource({
@@ -2070,7 +2094,7 @@ export default class DataFormat {
           this.ruleControlIds.push(currentConfig.controlId);
         }
 
-        this.setLoadingInfo(currentConfig.controlId, false, true);
+        completeSearch();
       };
 
       const {
@@ -2091,7 +2115,7 @@ export default class DataFormat {
 
       // 他表不执行查询
       if (!currentControl || currentControl.type === 30) {
-        this.setLoadingInfo(controlId, false, true);
+        completeSearch();
         return;
       }
 
@@ -2141,7 +2165,7 @@ export default class DataFormat {
             (canSearchMore && res.count > 1 && moreType === 1) ||
             (recordsNotFound === 1 && !res.count)
           ) {
-            this.setLoadingInfo(controlId, false, true);
+            completeSearch();
             return;
           }
 
@@ -2176,7 +2200,7 @@ export default class DataFormat {
           });
 
           if (!canMapConfigs.length) {
-            this.setLoadingInfo(controlId, false, true);
+            completeSearch();
             return;
           }
 
@@ -2202,7 +2226,7 @@ export default class DataFormat {
             (canSearchMore && res.count > 1 && moreType === 1) ||
             (recordsNotFound === 1 && !res.count)
           ) {
-            this.setLoadingInfo(controlId, false, true);
+            completeSearch();
             return;
           }
 
@@ -2289,7 +2313,7 @@ export default class DataFormat {
 
             // 防止新建的时候无效变更引起的报错提示
             if (searchType === 'init' && _.isEqual(value, currentControl.value)) {
-              this.setLoadingInfo(controlId, false, true);
+              completeSearch();
               return;
             }
 
@@ -2297,7 +2321,7 @@ export default class DataFormat {
           }
         }
       } else {
-        this.setLoadingInfo(controlId, false, true);
+        completeSearch();
       }
     });
   };

@@ -272,7 +272,11 @@ const environment: Record<string, unknown> = {
   localStorage: { currentProjectId: 'project' },
 };
 const widget = selections('src/pages/widgetConfig/config/widget.ts', ['WIDGETS_TO_API_TYPE_ENUM'], environment);
-const control = selections('src/utils/control.ts', ['formatNumberThousand', 'toFixed'], { ...environment, _: lodash });
+const precision = selections('src/utils/numberPrecision.ts', ['toFixed'], { ...environment, _: lodash });
+const control = {
+  ...selections('src/utils/control.ts', ['formatNumberThousand'], { ...environment, _: lodash, ...precision }),
+  ...precision,
+};
 const common = compile(
   fs.readFileSync(path.join(root, 'src/pages/Statistics/Charts/common.ts'), 'utf8'),
   path.join(root, 'src/pages/Statistics/Charts/common.ts'),

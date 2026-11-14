@@ -81,7 +81,7 @@ export default class Orgothers extends Component<any, any> {
                       <div>
                         <button
                           type="button"
-                          className="ming Button Button--link colorPrimary adminHoverColor"
+                          className="ming Button Button--link colorPrimary adminHoverColor pLeft5"
                           onClick={() => this[item.click](item.key, true)}
                         >
                           {item.clickValue}

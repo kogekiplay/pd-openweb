@@ -117,7 +117,7 @@ const _bindPopstateOnce = () => {
 
 /** 判断本次 popstate 是否由移动端弹层返回栈消费 */
 export const isHistoryLayerPopstate = (event: PopStateEvent) =>
-  Boolean(event && _historyLayerPopstateEvents.has(event));
+  Boolean(event && (_historyLayerPopstateEvents.has(event) || _pendingHistoryLayerPopstates > 0 || _layerStack.length > 0));
 
 /**
  * 把弹层入栈，并 push 一帧 history，state 中带唯一 __layerSeq 用于 popstate 判定。

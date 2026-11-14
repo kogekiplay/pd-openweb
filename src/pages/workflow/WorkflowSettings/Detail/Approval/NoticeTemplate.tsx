@@ -42,7 +42,7 @@ export default ({ companyId, processId, relationId, selectNodeId, data, selectMs
       visible
       width={640}
       className="workflowDialogBox workflowSettings"
-      style={{ overflow: 'initial' }}
+      style={{ overflow: 'visible' }}
       overlayClosable={false}
       type="scroll"
       title={_l('通知设置')}

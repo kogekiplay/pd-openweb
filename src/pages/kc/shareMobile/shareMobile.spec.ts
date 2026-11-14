@@ -130,6 +130,7 @@ interface Scenario {
   pathname?: string;
   ios?: boolean;
   weixin?: boolean;
+  isHap?: boolean;
   login?: boolean;
   previewReply?: unknown;
   rejectPreview?: boolean;
@@ -221,6 +222,7 @@ function engine(before = false, s: Scenario = {}) {
   };
   const win = {
     isWeiXin: !!s.weixin,
+    platformENV: { isHap: s.isHap !== false },
     nativeAlert: (text: string) => nav.push(['nativeAlert', text]),
     open: (url: unknown) => nav.push(['open', url]),
   };
@@ -442,6 +444,17 @@ const qiniu =
   time;
 
 async function run() {
+  for (const weixin of [false, true]) {
+    for (const isHap of [false, true]) {
+      const current = engine(false, { node: commonNode, weixin, isHap });
+      await current.flush();
+      assert.equal(
+        current.requests.filter(request => request[0] === 'weixin-config').length,
+        weixin && isHap ? 1 : 0,
+        `WeChat SDK config must require both WeChat and HAP (weixin=${weixin}, isHap=${isHap})`,
+      );
+    }
+  }
   for (const base of [commonNode, kcNode])
     for (const ext of ['pdf', 'docx', 'txt', 'jpg', 'zip', 'PDF'])
       for (const ios of [false, true])

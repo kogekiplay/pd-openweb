@@ -17,6 +17,7 @@ export interface FunctionControl {
 }
 export interface FunctionEvaluationControl extends FunctionControl {
   controlId?: string | undefined;
+  dot?: number | string | null | undefined;
   expression?: unknown;
 }
 export interface FunctionOption {

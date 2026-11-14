@@ -44,6 +44,7 @@ function load(): Execute {
   const { code } = transformFileSync(source, { plugins: ['@babel/plugin-transform-modules-commonjs'] });
   const moduleLike: { exports: { default?: Execute } } = { exports: {} };
   new Function('module', 'exports', 'require', code)(moduleLike, moduleLike.exports, (name: string) => {
+    if (name === 'src/utils/numberPrecision') return require('../../../../../../../src/utils/numberPrecision.ts');
     if (name === 'lodash' || name === 'dayjs' || name === 'query-string') return require(name);
     if (name === 'src/pages/widgetConfig/config/widget')
       return {

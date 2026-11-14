@@ -70,7 +70,7 @@ export default function confirm(props: ConfirmOptions): ConfirmClose {
       footer={props.footer || footer}
       onOk={handleClose}
       confirmOnOk={props.onOk}
-      onCancel={handleClose}
+      onCancel={props.onlyClose ? () => handleClose(false) : handleClose}
       confirm={props.type || 'confirm'}
     />,
   );

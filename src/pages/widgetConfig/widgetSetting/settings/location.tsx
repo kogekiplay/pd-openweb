@@ -4,13 +4,13 @@ import { Tooltip } from 'ming-ui/antd-components';
 import { SettingItem } from '../../styled';
 import { getAdvanceSetting, handleAdvancedSettingChange, updateConfig } from '../../util/setting';
 
-const LOCATION_RANGE = [
+const getLocationRange = () => [
   { value: 0, text: _l('不限制') },
   { value: 1, text: _l('当前位置周围') },
   // { value: 2, text: '指定定位地点' },
 ];
 
-const LOCATION_RANGE_TYPE = [
+const getLocationRangeType = () => [
   { value: '0', text: _l('定位地图上的位置') },
   {
     value: '1',
@@ -26,7 +26,7 @@ const LOCATION_RANGE_TYPE = [
   },
 ];
 
-const DISTANCE_CONFIG = [
+const getDistanceConfig = () => [
   {
     value: 100,
     text: _l('100米'),
@@ -69,7 +69,7 @@ export default function Location({ data, onChange }) {
           size="middle"
           vertical={true}
           checkedValue={strDefault[0]}
-          data={LOCATION_RANGE_TYPE}
+          data={getLocationRangeType()}
           onChange={value =>
             onChange({
               ...handleAdvancedSettingChange(data, {
@@ -90,7 +90,7 @@ export default function Location({ data, onChange }) {
               style={{ width: '100%', backgroundColor: 'var(--color-background-primary)' }}
               menuStyle={{ width: '100%' }}
               value={enumDefault2}
-              data={LOCATION_RANGE}
+              data={getLocationRange()}
               onChange={value => {
                 if (value === 1) {
                   onChange({ ...handleAdvancedSettingChange(data, { distance: 100 }), enumDefault2: 1 });
@@ -107,7 +107,7 @@ export default function Location({ data, onChange }) {
               style={{ width: '100%', backgroundColor: 'var(--color-background-primary)', marginTop: '10px' }}
               menuStyle={{ width: '100%' }}
               value={Number(distance) || undefined}
-              data={DISTANCE_CONFIG}
+              data={getDistanceConfig()}
               onChange={value => {
                 onChange(handleAdvancedSettingChange(data, { distance: value }));
               }}

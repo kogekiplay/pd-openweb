@@ -12,7 +12,6 @@ import CreateByMingDaoYun from 'src/components/CreateByMingDaoYun';
 import CustomFields from 'src/components/Form';
 import { updateRulesData } from 'src/components/Form/core/formUtils/updateRulesData';
 import { checkMobileVerify, getControlsByTab } from 'src/components/Form/core/utils';
-import PublicAppLangDropdown from 'src/components/PublicAppLangDropdown';
 import FormSection from 'src/pages/worksheet/common/recordInfo/RecordForm/FormSection';
 import { browserIsMobile, getRequest } from 'src/utils/common';
 import { controlState } from 'src/utils/control';
@@ -68,6 +67,7 @@ export default class FillWorksheet extends React.Component<any, any> {
     formData: PropTypes.arrayOf(PropTypes.shape({})),
     onSubmit: PropTypes.func,
     status: PropTypes.string,
+    langDropdown: PropTypes.node,
   };
 
   constructor(props) {
@@ -314,7 +314,7 @@ export default class FillWorksheet extends React.Component<any, any> {
   };
 
   override render() {
-    const { loading, publicWorksheetInfo = {}, rules, status, isPreview, themeBgColor } = this.props;
+    const { loading, publicWorksheetInfo = {}, rules, status, isPreview, themeBgColor, langDropdown } = this.props;
     const { submitLoading, formData, showError, submitBtnLoading } = this.state;
     const {
       name,
@@ -345,24 +345,26 @@ export default class FillWorksheet extends React.Component<any, any> {
     const visibleHeaders = _.isUndefined(extendDatas.visibleHeaders)
       ? ['logo', 'title', 'description']
       : safeParse(extendDatas.visibleHeaders);
+    const showLogo = visibleHeaders.includes('logo') && logoUrl && logo !== 'no';
+    const showTitle = visibleHeaders.includes('title') && name && title !== 'no';
+    const showDescription = visibleHeaders.includes('description') && !!desc && description !== 'no';
 
     return (
       <React.Fragment>
         {submitLoading && <LoadMask />}
-        <div className="infoCon">
+        <div className={cx('infoCon', { hasHeader: header !== 'no' && (showLogo || showTitle || showDescription) })}>
+          {langDropdown}
           {header !== 'no' && (
             <React.Fragment>
-              {visibleHeaders.includes('logo') && logoUrl && logo !== 'no' && (
-                <ImgCon>
+              {showLogo && (
+                <ImgCon className="publicWorksheetLogo">
                   <img className="logo" src={logoUrl} />
                 </ImgCon>
               )}
 
-              {visibleHeaders.includes('title') && name && title !== 'no' && (
-                <div className="worksheetName">{name}</div>
-              )}
+              {showTitle && <div className="worksheetName">{name}</div>}
 
-              {visibleHeaders.includes('description') && !!desc && description !== 'no' && (
+              {showDescription && (
                 <div className="mdEditor">
                   <RichText
                     data={desc || ''}
@@ -539,7 +541,6 @@ export default class FillWorksheet extends React.Component<any, any> {
           footer !== 'no' &&
           window.top === window.self && (
             <div className="mingdaoCon">
-              <PublicAppLangDropdown className="mRight16" appId={appId} projectId={projectId} placement="topLeft" />
               {_l('由 %0 创建的表单', projectName || '')}
               {/* a7f10198e9d84702b68ba35f73c94cac 是写死的举报表单的shareId  */}
               {shareId && shareId !== 'a7f10198e9d84702b68ba35f73c94cac' && (

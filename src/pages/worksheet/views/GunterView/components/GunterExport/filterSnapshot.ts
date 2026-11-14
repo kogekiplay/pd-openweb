@@ -74,7 +74,7 @@ export const saveGunterExportFilters = ({
 };
 
 export const takeGunterExportFilters = (
-  exportId: string | undefined,
+  exportId: ReturnType<typeof import('query-string').default.parse>[string] | undefined,
   base: GunterExportBase,
 ): GunterExportSnapshot | null => {
   // 兼容直接访问旧导出地址；显式携带但无效的标识不能退回无筛选导出。

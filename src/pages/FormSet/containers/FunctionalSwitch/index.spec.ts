@@ -492,7 +492,11 @@ async function main() {
   await check('native storage shims erase identically and workflow usage decoder keeps opaque metadata', async () => {
     for (const rel of ['src/common/cookies.ts', 'src/pages/embed/mingoEntry/widgetEntry.ts']) {
       const old = cp.execFileSync('git', ['show', `${h.BASE}:${rel}`], { cwd: h.ROOT, encoding: 'utf8' });
-      assert.equal(h.compile(fs.readFileSync(path.join(h.ROOT, rel), 'utf8'), rel), h.compile(old, rel), rel);
+      const current = fs.readFileSync(path.join(h.ROOT, rel), 'utf8');
+      // The storage shim remains type-only. Cookie language behavior intentionally
+      // changes in 7.5.5 and is exercised against the old HEAD by hap755-semantic.
+      const shim = source => source.slice(source.indexOf('window.safeLocalStorageSetItem ='), source.indexOf('/**', source.indexOf('window.safeLocalStorageSetItem =')));
+      assert.equal(h.compile(rel === 'src/common/cookies.ts' ? shim(current) : current, rel), h.compile(rel === 'src/common/cookies.ts' ? shim(old) : old, rel), rel);
     }
     const s = h.renderer(h.currentDelete, {}, { kind: 'delete' });
     const rows = [{ name: 'Flow', flowNodes: [{ name: 'Node' }], extra: { keep: true } }];

@@ -1,6 +1,15 @@
 ﻿import { get } from 'lodash';
 import moment from 'moment';
 
+function isSameOriginWithTop() {
+  try {
+    return window.top?.location.origin === window.location.origin;
+  } catch {
+    // 跨源嵌入无法读取顶层地址，继续使用本地语言缓存。
+    return false;
+  }
+}
+
 /**
  * 安全地将数据存储到本地存储中
  * @param {...any} args - 传递给 localStorage.setItem() 方法的参数
@@ -28,7 +37,9 @@ window.setCookie = function setCookie(name: string, value, expire) {
 
   if (window.top !== window.self && name === 'i18n_langtag') {
     safeLocalStorageSetItem(name, value);
-    return;
+
+    // 同源嵌入优先读取 Cookie，切换语言时也需同步写入。
+    if (!isSameOriginWithTop()) return;
   }
 
   // 过期时间处理
@@ -61,14 +72,17 @@ window.getCookie = function getCookie(name: string) {
     return localStorage.getItem(name) || null;
   }
 
-  if (window.top !== window.self && name === 'i18n_langtag') {
+  const isEmbeddedLanguage = window.top !== window.self && name === 'i18n_langtag';
+
+  if (isEmbeddedLanguage && !isSameOriginWithTop()) {
     return localStorage.getItem(name) || null;
   }
 
   const cookieRegex = new RegExp(`(^| )${name}=([^;]*)(;|$)`);
   const cookieMatch = document.cookie.match(cookieRegex);
 
-  return cookieMatch ? decodeURIComponent(cookieMatch[2]!) : null;
+  const cookieValue = cookieMatch ? decodeURIComponent(cookieMatch[2]!) : null;
+  return isEmbeddedLanguage ? cookieValue || localStorage.getItem(name) || null : cookieValue;
 };
 
 /**

@@ -66,6 +66,7 @@ const errors = {
 };
 const checkedPhones: string[] = [];
 const stubs: Record<string, unknown> = {
+    'src/pages/widgetConfig/config/widget': { WIDGETS_TO_API_TYPE_ENUM: { TEXT: 2, FORMULA_FUNC: 53 } },
   'ming-ui/components/PhoneNumberInput/util': {
     telIsValidNumber: (value: string) => {
       checkedPhones.push(value);

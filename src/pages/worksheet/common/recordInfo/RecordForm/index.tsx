@@ -277,14 +277,16 @@ function RecordForm(props) {
   const getRulesData = updateRulesData({
     from: dealFrom,
     rules: recordinfo.rules,
-    data: formdata,
-    recordId,
-  })
-    .map(control => {
+    data: formdata.map((control: FormControl) => {
       const runtimeControl = control.controlId === undefined ? undefined : runtimeControlMap[control.controlId];
 
-      return runtimeControl && runtimeControl.store ? { ...control, store: runtimeControl.store } : control;
-    })
+      return runtimeControl && runtimeControl.store
+        ? { ...control, store: runtimeControl.store,
+            value: control.type === 34 && control.value === undefined ? runtimeControl.value : control.value }
+        : control;
+    }),
+    recordId,
+  })
     .filter(control => controlState(control, dealFrom).visible)
     .map(c =>
       Object.assign((!ignoreLock && isLock) || isRecordLock ? { ...c, disabled: true } : c, {

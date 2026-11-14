@@ -385,6 +385,7 @@ const widgetTypes = {
   LOCATION: 40,
 };
 const execImports = {
+  'src/utils/numberPrecision': require('../../../../../../../src/utils/numberPrecision.ts'),
   lodash: require('lodash'),
   dayjs,
   'query-string': require('query-string'),

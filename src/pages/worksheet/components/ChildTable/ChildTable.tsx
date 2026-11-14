@@ -24,7 +24,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
-import { Menu, MenuItem, Skeleton } from 'ming-ui';
+import { Button, Menu, MenuItem, Skeleton } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import worksheetAjax from 'src/api/worksheet';
 import { createRequestPool } from 'worksheet/api/standard';
@@ -223,6 +223,8 @@ class ChildTable extends React.Component<any, any> {
   declare rowsLoading: Record<string, boolean>;
   /** 任意一行在加载时盖的遮罩 */
   declare showLoadingMask: boolean;
+  declare pendingRowWrites: number;
+  declare loadingMaskDismissed: boolean;
   /** 上一次重建过树形结构的 rows，用来判断要不要再建 */
   declare _treeRebuiltForRows: RecordRow[];
   /** 子表容器 DOM，由 ref 回调写入 */
@@ -300,6 +302,7 @@ class ChildTable extends React.Component<any, any> {
       disableMaskDataControls: {},
       rowsLoadingStatus: {},
       showLoadingMask: false,
+      loadingMaskText: '',
       menuVisible: false,
       layoutDirection: this.defaultDirection,
     };
@@ -318,6 +321,8 @@ class ChildTable extends React.Component<any, any> {
     this.dataFormatCacheMap = new Map();
     props.registerCell(this);
     this.rowsLoading = {};
+    this.pendingRowWrites = 0;
+    this.loadingMaskDismissed = false;
   }
 
   override componentDidMount() {
@@ -424,7 +429,15 @@ class ChildTable extends React.Component<any, any> {
         }
 
         if (get(this.props, 'lastAction.type') === 'CLEAR_AND_SET_ROWS') {
-          this.dataFormatCacheMap.clear();
+          const previousRowIds = new Set(prevProps.rows.map((row: RecordRow) => row.rowid));
+          const currentRowIds = new Set(this.props.rows.map((row: RecordRow) => row.rowid));
+          // 导入替换的新行已创建计算实例，保留其导入值保护标记和异步回填链路。
+          // 旧行及已移除行的缓存仍需失效，避免外部赋值后复用过期数据。
+          this.dataFormatCacheMap.forEach((_dataFormat, rowId) => {
+            if (previousRowIds.has(rowId) || !currentRowIds.has(rowId)) {
+              this.dataFormatCacheMap.delete(rowId);
+            }
+          });
         }
       }
 
@@ -488,6 +501,7 @@ class ChildTable extends React.Component<any, any> {
 
   override componentWillUnmount() {
     const { mode, control } = this.props;
+    this.pendingRowWrites = 0;
 
     if (mode !== 'dialog' && _.isFunction(control.addRefreshEvents)) {
       control.addRefreshEvents(control.controlId, undefined);
@@ -924,6 +938,21 @@ class ChildTable extends React.Component<any, any> {
     this.triggerCustomEvent();
   }
 
+  syncLoadingMask() {
+    const showLoadingMask =
+      !this.loadingMaskDismissed && (this.pendingRowWrites > 0 || Object.values(this.rowsLoading).some(Boolean));
+
+    if (showLoadingMask !== this.showLoadingMask) {
+      this.showLoadingMask = showLoadingMask;
+      this.setState({ showLoadingMask });
+    }
+  }
+
+  dismissLoadingMask = () => {
+    this.loadingMaskDismissed = true;
+    this.syncLoadingMask();
+  };
+
   rowUpdate(
     { row, controlId, value, rowId } = {},
     {
@@ -957,6 +986,7 @@ class ChildTable extends React.Component<any, any> {
         {
           isQueryWorksheetFill,
           asyncUpdate: true,
+          trackLoading: !!row?.needShowLoading,
           userTriggerChange: false,
           updateSuccessCb: (needUpdateRow: RecordRow) => {
             if (isMobile) {
@@ -1001,40 +1031,29 @@ class ChildTable extends React.Component<any, any> {
         abortController: this.abortController,
         masterRecordRowId: recordId,
         noAutoSubmit: true,
+        waitForPendingSearchRequests: !!row?.needShowLoading,
         updateLoadingItems: loadingInfo => {
           if (!row || !row.needShowLoading) return;
           this.rowsLoading[rowId] = !_.every(Object.values(loadingInfo), b => !b);
-          const newShowLoadingMask = !Object.values(this.rowsLoading).every(v => v === false);
-
-          if (newShowLoadingMask !== this.showLoadingMask) {
-            this.setState({
-              showLoadingMask: newShowLoadingMask,
-            });
-          }
-
-          this.showLoadingMask = newShowLoadingMask;
+          this.syncLoadingMask();
         },
         onAsyncChange: (changes, dataFormat) => {
           flushSync(() => {
-            if (rowId && row && row.needShowLoading) {
-              this.rowsLoading[rowId] = !_.every(Object.values(dataFormat.loadingInfo), b => !b);
-              const newShowLoadingMask = !Object.values(this.rowsLoading).every(v => v === false);
-
-              if (newShowLoadingMask !== this.showLoadingMask) {
-                this.setState({
-                  showLoadingMask: newShowLoadingMask,
-                });
-              }
-
-              this.showLoadingMask = newShowLoadingMask;
-            }
-
             if (!_.isEmpty(changes.controlIds)) {
               changes.controlIds.forEach((cid: string) => {
                 asyncUpdateCell(cid, changes.value);
               });
             } else if (changes.controlId) {
               asyncUpdateCell(changes.controlId, changes.value);
+            }
+
+            if (rowId && row && row.needShowLoading) {
+              this.rowsLoading[rowId] = !_.every(Object.values(dataFormat.loadingInfo), b => !b);
+              this.syncLoadingMask();
+            }
+            if (rowId && row && row.needShowLoading) {
+              this.rowsLoading[rowId] = !_.every(Object.values(dataFormat.loadingInfo), b => !b);
+              this.syncLoadingMask();
             }
           });
         },
@@ -1161,6 +1180,8 @@ class ChildTable extends React.Component<any, any> {
           return;
         }
 
+        this.loadingMaskDismissed = false;
+        this.setState({ loadingMaskText: _l('正在导入数据...') });
         setTimeout(() => {
           const newRows: RecordRow[] = data
             .slice(0, this.settings.maxCount - filterEmptyChildTableRows(rows).length)
@@ -1217,6 +1238,8 @@ class ChildTable extends React.Component<any, any> {
         .concat(this.props.masterData.formData),
       onOk: (selectedRecords: RecordRow[]) => {
         const rowsLength = filterEmptyChildTableRows(rows).length;
+        this.loadingMaskDismissed = false;
+        this.setState({ loadingMaskText: _l('正在添加记录...') });
 
         if (rowsLength + selectedRecords.length > this.settings.maxCount) {
           alert(_l('最多输入%0条记录，超出的记录不写入', this.settings.maxCount), 3);
@@ -1225,7 +1248,7 @@ class ChildTable extends React.Component<any, any> {
         addRows(
           selectedRecords.slice(0, this.settings.maxCount - rowsLength).map((selectedRecord: RecordRow) => {
             const row = this.rowUpdate({
-              row: this.newRow(),
+              row: this.newRow({ needShowLoading: true }, { isCreate: true }),
               controlId: relateRecordControl.controlId,
               value: JSON.stringify(formatRecordToRelateRecord(relateRecordControl.relationControls, [selectedRecord])),
             });
@@ -1296,14 +1319,15 @@ class ChildTable extends React.Component<any, any> {
 
     const update = debounce(
       () => {
-        if (_.isFunction(options.updateSuccessCb)) {
-          options.updateSuccessCb(newRow);
-        }
-
-        updateRow({ rowid: row.rowid, value: newRow }, { asyncUpdate: options.asyncUpdate });
-
-        if (!options.asyncUpdate) {
-          this.triggerCustomEvent();
+        try {
+          if (_.isFunction(options['updateSuccessCb'])) options['updateSuccessCb'](newRow);
+          updateRow({ rowid: row.rowid, value: newRow }, { asyncUpdate: options.asyncUpdate });
+          if (!options.asyncUpdate) this.triggerCustomEvent();
+        } finally {
+          if (options?.['trackLoading'] && this.pendingRowWrites > 0) {
+            this.pendingRowWrites -= 1;
+            if (!this.pendingRowWrites) this.syncLoadingMask();
+          }
         }
       },
       isUndefined(options.debounceTime) ? 300 : options.debounceTime,
@@ -1325,11 +1349,10 @@ class ChildTable extends React.Component<any, any> {
           c.options = _.uniqBy([...control.options, newOption], 'key');
         }
       });
-      update();
-      return;
     }
 
-    update.apply(this);
+    if (options?.['trackLoading']) this.pendingRowWrites += 1;
+    update();
   }
 
   handleRowDetailSave = (row: RecordRow, updatedControlIds?: string[]) => {
@@ -1692,6 +1715,7 @@ class ChildTable extends React.Component<any, any> {
       isAddRowByLine,
       disableMaskDataControls,
       showLoadingMask,
+      loadingMaskText,
       menuVisible,
       layoutDirection,
     } = this.state;
@@ -2242,7 +2266,14 @@ class ChildTable extends React.Component<any, any> {
                 showControlStyle
                 showLoadingMask={showLoadingMask}
                 showSummary={showSummary}
-                loadingMaskChildren={<span className="childTableIsImportingData">{_l('正在导入数据...')}</span>}
+                loadingMaskChildren={
+                  <div className="childTableLoadingMaskContent flexColumn alignItemsCenter justifyContentCenter w100 h100">
+                    <span className="childTableIsImportingData">{loadingMaskText}</span>
+                    <Button className="childTableLoadingMaskClose" type="link" size="small" onClick={this.dismissLoadingMask}>
+                      {_l('关闭遮罩')}
+                    </Button>
+                  </div>
+                }
                 isTreeTableView={isTreeTableView}
                 treeLayerControlId={treeLayerControlId}
                 treeTableViewData={treeTableViewData}

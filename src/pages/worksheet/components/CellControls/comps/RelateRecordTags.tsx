@@ -80,13 +80,14 @@ const Tag = styled.div`
   position: relative;
   display: inline-block;
   line-height: 21px;
-  background-color: rgba(0, 100, 240, 0.08);
+  background-color: var(--color-background-overlay-light);
   border-radius: var(--radius-xs);
   padding: 0 10px;
   margin: 6px 0 0 6px;
   &.isediting.allowRemove {
     padding-right: var(--space-6);
   }
+  &.allowOpenRecord { background-color: var(--color-primary-transparent); }
   &.allowOpenRecord:hover {
     color: var(--color-primary-text);
     background-color: color-mix(in srgb, var(--color-primary) 16%, transparent);

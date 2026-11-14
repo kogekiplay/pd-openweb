@@ -94,7 +94,11 @@ const constants = realModule('src/components/ShareCardConfig/config.ts');
 const boundary = realModule('src/components/Form/core/formUtils/valueBoundary.ts');
 const dynamicRel = 'src/components/Form/core/formUtils/index.ts';
 const dynamicSource = fs.readFileSync(path.join(ROOT, dynamicRel), 'utf8');
-assert.equal(dynamicSource, historical(dynamicRel));
+// 7.5.5 intentionally changes formula-null semantics. This fixture exercises only
+// these three dynamic-value producers; keep their full implementations frozen.
+for (const name of ['getCurrentValue', 'parseStaticValue', 'getDynamicValue']) {
+  assert.equal(declaration(dynamicSource, name), declaration(historical(dynamicRel), name), name);
+}
 const common = fs.readFileSync(path.join(ROOT, 'src/utils/common.ts'), 'utf8');
 const helperErrors = [];
 const dynamicCode = [

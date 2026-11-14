@@ -1,4 +1,5 @@
 import { Parser } from 'hot-formula-parser';
+import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
 import _ from 'lodash';
 import moment from 'moment';
 import { getDefaultCode } from 'ming-ui/components/PhoneNumberInput/DialCodeSelect/utils';
@@ -796,7 +797,11 @@ export function calcDefaultValueFunction({
   if (result.error) {
     console.log(result);
   } else {
-    return String(_.isUndefined(result.value) ? '' : result.value);
+    const { type, enumDefault2 } = fnControl;
+    const resultType = type === WIDGETS_TO_API_TYPE_ENUM.FORMULA_FUNC ? enumDefault2 : type;
+    const { value } = result;
+    const isEmptyText = resultType === WIDGETS_TO_API_TYPE_ENUM.TEXT && _.isNull(value);
+    return String(_.isUndefined(value) || isEmptyText ? '' : value);
   }
   return undefined;
 }

@@ -28,7 +28,7 @@ const RecordCardCellRelateRecord = styled.div`
   display: inline-block;
   line-height: 21px;
   font-size: var(--font-sm);
-  background-color: rgba(0, 100, 240, 0.08);
+  background-color: var(--hap-relate-record-tag-background, var(--color-background-overlay-light));
   padding: 0 10px;
   border-radius: var(--radius-sm);
   margin-right: 6px;
@@ -474,7 +474,11 @@ export default class RelateRecord extends React.Component<any, any> {
               cellControlEdittingStatus: isediting,
               singleLine,
             })}
-            selectedStyle={{ width: style.width, minHeight: style.height, borderRadius: 0 }}
+            selectedStyle={{
+              '--selected-item-bg': allowlink === '1' ? 'var(--color-primary-transparent)' : 'var(--color-background-overlay-light)',
+              '--hap-relate-record-tag-background': allowlink === '1' ? 'var(--color-primary-transparent)' : 'var(--color-background-overlay-light)',
+              width: style.width, minHeight: style.height, borderRadius: 0,
+            }}
             onChange={newRecords => {
               this.records = newRecords;
               this.changed = true;

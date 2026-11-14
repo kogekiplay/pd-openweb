@@ -101,6 +101,7 @@ function load(file: string): Modules {
     plugins: ['@babel/plugin-transform-dynamic-import', '@babel/plugin-transform-modules-commonjs'],
   });
   const stubs: Record<string, unknown> = {
+    'src/pages/widgetConfig/config/widget': { WIDGETS_TO_API_TYPE_ENUM: { TEXT: 2, FORMULA_FUNC: 53 } },
     'src/utils/common': { accMul: (a: number, b: number) => a * b, accDiv: (a: number, b: number) => a / b },
     'src/utils/project': {
       dateAppZoneToServerZone: (value: unknown) => value,

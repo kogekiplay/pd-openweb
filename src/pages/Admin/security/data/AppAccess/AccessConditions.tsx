@@ -207,7 +207,9 @@ export default function AccessConditions(props) {
         className="accessTypeRadioGroup"
         size="middle"
         checkedValue={accessType}
-        data={ACCESS_CONDITION_ENUM}
+        data={ACCESS_CONDITION_ENUM.filter(
+          ({ value }) => (window.platformENV.isLocal && !window.platformENV.isPlatform) || value === 0 || value === 3,
+        )}
         onChange={value => {
           if (value === undefined) return;
           setAccessType(value);

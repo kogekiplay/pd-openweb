@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { toFixed } from 'src/utils/numberPrecision';
 import _, { isNaN } from 'lodash';
 import qs from 'query-string';
 import { WIDGETS_TO_API_TYPE_ENUM } from 'src/pages/widgetConfig/config/widget';
@@ -226,8 +227,11 @@ function formatFunctionResult(control: FunctionEvaluationControl, value: unknown
 
           const numericValue = typeof result === 'string' ? Number(result || 0) : result || 0;
           if (typeof numericValue !== 'number') return result;
-          result = numericValue
-            .toFixed(12)
+          const dot = Number(control.dot);
+          const precision = dot + (_.get(control, 'advancedSetting.numshow') === '1' ? 2 : 0);
+          const hasPrecision =
+            control.dot !== null && control.dot !== '' && Number.isInteger(dot) && dot >= 0 && precision <= 20;
+          result = (hasPrecision ? toFixed(numericValue, precision) : numericValue.toFixed(12))
             .toString()
             .match(/^-?[\d.]+/)?.[0];
           result = (typeof result === 'string' ? result : '').replace(/\.([0-9]*[1-9])0+$|\.0+$/, (_match, group) => {

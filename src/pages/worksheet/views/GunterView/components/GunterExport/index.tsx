@@ -1,9 +1,11 @@
 import { Component, Fragment } from 'react';
-import { shallowEqual } from 'react-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 import moment from 'moment';
+import qs from 'query-string';
+import { restoreGunterExportFilters } from 'worksheet/redux/actions/gunterview';
+import { takeGunterExportFilters } from './filterSnapshot';
 import { LoadDiv } from 'ming-ui';
 import DocumentTitle from 'ming-ui/components/DocumentTitle';
 import { loadWorksheet, updateBase } from 'worksheet/redux/actions';
@@ -12,51 +14,112 @@ import type { RootState } from 'src/redux/types';
 import printGunter from './print';
 import './index.less';
 
-let GunterExport = class GunterExport extends Component<any, any> {
-  constructor(props) {
+type ExportProps = Pick<RootState['sheet'], 'base' | 'views' | 'worksheetInfo'> & {
+  worksheetError: RootState['sheet']['error'];
+  loading: boolean;
+  match: { params: Parameters<typeof takeGunterExportFilters>[1] };
+  updateBase: (base: Parameters<typeof takeGunterExportFilters>[1]) => void;
+  loadWorksheet: typeof loadWorksheet;
+  restoreGunterExportFilters: (snapshot: NonNullable<ReturnType<typeof takeGunterExportFilters>>) => void;
+};
+class GunterExport extends Component<ExportProps, { error: false | string; ready: boolean }> {
+  mounted = false;
+  restoringFilters = false;
+  printStarted = false;
+  filterSnapshot: ReturnType<typeof takeGunterExportFilters> = null;
+  printTimer: ReturnType<typeof setTimeout> | undefined;
+  constructor(props: ExportProps) {
     super(props);
     this.state = {
       error: false,
+      ready: false,
     };
   }
 
   override componentDidMount() {
     const { match } = this.props;
-    this.props.updateBase(match.params);
-    this.props.loadWorksheet(match.params.worksheetId);
-  }
 
-  override componentDidUpdate(prevProps) {
-    if (!shallowEqual(prevProps, this.props)) {
-      const { loading, views, base } = this.props;
-
-      if (loading !== prevProps.loading) {
-        setTimeout(() => {
-          const view = _.find(views, {
-            viewId: base.viewId,
-          });
-
-          const name = `${view.name}${moment().format('_YYYYMMDDHHmmSS')}`;
-          printGunter(name).then(error => {
-            if (error) {
-              this.setState({
-                error: true,
-              });
-            }
-          });
-        }, 1000);
-      }
+    this.mounted = true;
+    try {
+      this.filterSnapshot = takeGunterExportFilters(qs.parse(location.search)['exportId'], match.params);
+    } catch {
+      this.setState({ error: _l('导出条件已失效，请返回视图重新导出') });
+      return;
     }
+
+    this.props.updateBase(match.params);
+    this.props.loadWorksheet(match.params.worksheetId || '', undefined);
   }
+
+  override componentDidUpdate(prevProps: ExportProps) {
+    const { loading, views, base, worksheetInfo, worksheetError, restoreGunterExportFilters } = this.props;
+
+    if (this.state.error) return;
+
+    if (worksheetError) {
+      this.setState({ error: _l('导出失败，请返回视图重新导出') });
+      return;
+    }
+
+    const view = _.find(views, { viewId: base.viewId });
+
+    if (!this.state.ready) {
+      if (
+        worksheetInfo.worksheetId !== this.props.match.params.worksheetId ||
+        worksheetInfo.isRequestingRelationControls !== false ||
+        this.restoringFilters
+      ) {
+        return;
+      }
+
+      if (!view) {
+        this.setState({ error: _l('导出失败，请返回视图重新导出') });
+        return;
+      }
+
+      this.restoringFilters = true;
+      if (this.filterSnapshot) restoreGunterExportFilters(this.filterSnapshot);
+      this.setState({ ready: true });
+      return;
+    }
+
+    if (!view || !prevProps.loading || loading || this.printStarted) return;
+
+    this.printStarted = true;
+    this.printTimer = setTimeout(() => {
+      const name = `${view.name}${moment().format('_YYYYMMDDHHmmSS')}`;
+
+      Promise.resolve()
+        .then(() => printGunter(name))
+        .then(error => {
+          if (error) this.handlePrintError();
+        })
+        .catch(this.handlePrintError);
+    }, 1000);
+  }
+
+  override componentWillUnmount() {
+    this.mounted = false;
+    clearTimeout(this.printTimer);
+  }
+
+  handlePrintError = () => {
+    if (this.mounted) {
+      this.setState({ error: _l('导出失败，请缩小视图类型再尝试~') });
+    }
+  };
 
   renderContent() {
     const { base, views } = this.props;
+
+    if (!this.state.ready) return null;
 
     if (views.length) {
       const view = _.find(views, {
         viewId: base.viewId,
       });
 
+      if (!view) return null;
       return (
         <Fragment>
           <Gunter view={view} />
@@ -81,7 +144,7 @@ let GunterExport = class GunterExport extends Component<any, any> {
         <div className="flexColumn">
           {error ? (
             <Fragment>
-              <div className="mTop10 textSecondary">{_l('导出失败，请缩小视图类型再尝试~')}</div>
+              <div className="mTop10 textSecondary">{error}</div>
               <DocumentTitle title={_l('导出失败')} />
             </Fragment>
           ) : (
@@ -104,15 +167,16 @@ let GunterExport = class GunterExport extends Component<any, any> {
     );
   }
 };
-GunterExport = connect(
-  (state: RootState) => ({ ..._.pick(state.sheet, ['base', 'views']), ..._.pick(state.sheet.gunterView, ['loading']) }),
+const ConnectedGunterExport: import('react').ComponentType<{ match: ExportProps['match'] }> = connect(
+  (state: RootState) => ({ ..._.pick(state.sheet, ['base', 'views', 'worksheetInfo']), worksheetError: state.sheet.error, ..._.pick(state.sheet.gunterView, ['loading']) }),
   dispatch =>
     bindActionCreators(
       {
         updateBase,
         loadWorksheet,
+        restoreGunterExportFilters,
       },
       dispatch,
     ),
 )(GunterExport);
-export default GunterExport;
+export default ConnectedGunterExport;
