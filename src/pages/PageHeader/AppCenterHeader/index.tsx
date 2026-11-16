@@ -20,6 +20,7 @@ const Mask = styled.div`
   width: 100%;
   height: 100%;
   pointer-events: none;
+  background: var(--app-center-header-mask-bg, transparent);
 `;
 
 const Con = styled.div`

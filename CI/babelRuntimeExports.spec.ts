@@ -28,7 +28,9 @@ async function main() {
         target: 'web',
         context: root,
         entry,
-        resolve: { ...config.resolve, alias },
+        // A nested runtime 7 can hide the runtime 8 exports regression.
+        // Exercise the declared top-level runtime regardless of install layout.
+        resolve: { ...config.resolve, alias, modules: [path.join(root, 'node_modules')] },
         output: { path: temporary, filename: legacy ? 'before.js' : 'after.js' },
         optimization: { minimize: false },
         cache: false,
@@ -54,8 +56,8 @@ async function main() {
     assert.equal(after.hasErrors(), false, after.toString({ all: false, errors: true }));
     const modules = [...after.compilation.modules].map(module => module.identifier());
     assert.ok(
-      modules.some(name => /input-number.*mini-decimal/.test(name)),
-      'Nested consumer must be compiled',
+      modules.some(name => /[/\\]@rc-component[/\\]mini-decimal[/\\]/.test(name)),
+      'Real mini-decimal consumer must be compiled',
     );
     for (const helper of helpers) {
       assert.ok(

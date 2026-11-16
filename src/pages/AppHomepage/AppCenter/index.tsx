@@ -10,6 +10,7 @@ import AppLib from 'src/pages/AppHomepage/AppLib';
 import { getTodoCount } from 'src/pages/workflow/MyProcess/Entry';
 import { navigateTo } from 'src/router/navigateTo';
 import { emitter } from 'src/utils/common';
+import { getRgbaByColor } from 'src/utils/controlCommon';
 import { getCurrentProject } from 'src/utils/project';
 import withRouter from '../../../router/withRouter';
 import Dashboard from '../Dashboard';
@@ -105,6 +106,24 @@ function AppCenter(props) {
         }
     : {};
   const dashboardColor = getDashboardColor((platformSetting || {}).color);
+  // 顶栏与内容分别加载，用继承的变量覆盖整个 AppCenter 生命周期。
+  // Dashboard 卸载或顶栏延后挂载，都不应丢失组织主题色。
+  useEffect(() => {
+    const updateHeaderTheme = (mode: string | undefined) => {
+      document.documentElement.style.setProperty(
+        '--app-center-header-mask-bg',
+        getRgbaByColor(dashboardColor.themeColor, mode === 'dark' ? '0.1' : '0.08'),
+      );
+    };
+    updateHeaderTheme(window.themeMode);
+    emitter.addListener('CHANGE_THEME_MODE', updateHeaderTheme);
+
+    return () => {
+      emitter.removeListener('CHANGE_THEME_MODE', updateHeaderTheme);
+      document.documentElement.style.removeProperty('--app-center-header-mask-bg');
+    };
+  }, [dashboardColor.themeColor]);
+
   useEffect(() => {
     emitter.addListener('CHANGE_CURRENT_PROJECT', changeProject);
     loadPlatformSetting(currentProject.projectId);
