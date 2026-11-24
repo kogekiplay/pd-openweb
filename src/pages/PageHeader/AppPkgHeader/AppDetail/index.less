@@ -15,24 +15,37 @@
   .ant-modal-close {
     top: -2px !important;
     right: -30px !important;
+    width: auto;
+    height: auto;
+    background: transparent !important;
     opacity: 0.8;
     color: var(--color-text-disabled);
     text-overflow: initial;
     &:hover {
       opacity: 1;
     }
+    &:focus-visible {
+      outline-offset: 2px !important;
+    }
     .icon {
       font-size: var(--font-xl);
     }
     .ant-modal-close-x {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: var(--color-white);
       width: auto;
-      width: auto;
+      height: auto;
       line-height: normal;
     }
   }
   .ant-modal-container {
+    /* antd v6 默认给 .ant-modal-container 注入 contentPadding（20px 24px），
+       本弹窗及各消费方均自行管理内边距，此处归零；切勿加 overflow: hidden，
+       否则会裁掉定位在容器外右上角的 .ant-modal-close。 */
     height: 100%;
+    padding: 0;
     border-radius: 6px;
   }
   .ant-modal-body {
@@ -87,11 +100,20 @@
   overflow: hidden;
   &.preview {
     overflow-y: auto;
-    .appIntroDialog > div {
-      &:nth-child(1),
-      &:nth-child(3) {
-        width: 100% !important;
-        height: 40px !important;
+    .appIntroDialog {
+      /* antd v6（@rc-component/dialog）移除了首尾 focus-trap sentinel div，
+         .ant-modal 下只剩唯一的 .ant-modal-container 直接子元素。
+         改用伪元素提供预览滚动时的上下 40px 留白，且 .ant-modal-container 保持
+         height: auto，避免超长内容超出视口时白色容器背景被截断。 */
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 40px;
+      }
+      .ant-modal-container {
+        height: auto;
       }
     }
   }
