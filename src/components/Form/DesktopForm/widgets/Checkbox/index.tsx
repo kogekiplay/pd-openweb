@@ -259,7 +259,7 @@ const CheckboxWidgets = props => {
                       flexWidth: noMaxWidth,
                     })}
                     disabled={disabled}
-                    style={isSheet ? undefined : { opacity: 1 }}
+                    style={{ alignItems: 'center', ...(isSheet ? {} : { opacity: 1 }) }}
                     title={item.value}
                     text={renderList(item, noMaxWidth)}
                     value={item.key}

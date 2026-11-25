@@ -62,6 +62,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
     isediting: PropTypes.bool,
     disabled: PropTypes.bool,
     multiple: PropTypes.bool,
+    doNotClearKeywordsWhenChange: PropTypes.bool,
     allowOpenRecord: PropTypes.bool, // 是否允许查看记录
     className: PropTypes.string,
     controls: PropTypes.arrayOf(PropTypes.shape({})),
@@ -127,6 +128,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
       // 表格内退出编辑态，提交面板内累积的变更
       if (prevProps.isediting && !this.props.isediting) {
         this.commitChange();
+        this.setState({ keywords: '' });
       }
 
       if (!_.isEqual(prevProps.selected, this.props.selected)) {
@@ -304,6 +306,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
     this.setState(
       {
         listvisible: false,
+        keywords: '',
       },
       () => {
         onVisibleChange(false);
@@ -463,7 +466,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
   };
 
   handleChange({ defer } = {}) {
-    const { multiple, doNotClearKeywordsWhenChange } = this.props;
+    const { multiple, doNotClearKeywordsWhenChange = multiple } = this.props;
 
     if (multiple) {
       this.focusInput();
@@ -515,9 +518,17 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
           <ViewHoverRelateRecordCard record={selected[0]} {...this.props}>
             <span
               title={title}
-              className="normalSelectedItem placeholder ellipsis"
+              className={cx('normalSelectedItem placeholder ellipsis', {
+                clickable:
+                  insheet &&
+                  !active &&
+                  allowOpenRecord &&
+                  !isMobileTable &&
+                  selected[0]?.rowid &&
+                  !/^temp/.test(selected[0].rowid),
+              })}
               onClick={e => {
-                if (!allowOpenRecord || isMobileTable) {
+                if (!allowOpenRecord || isMobileTable || !selected[0]?.rowid || /^temp/.test(selected[0].rowid)) {
                   return;
                 }
 
@@ -580,6 +591,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
       allowOpenRecord,
       recordId,
     } = this.props;
+    const { isMobileTable } = this.props;
     const canDrag = get(control, 'advancedSetting.allowdrag') === '1';
     const { selected, keywords } = this.state;
     const { active } = this;
@@ -618,17 +630,20 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
               const { index } = options;
               const record = options.item;
               const title = getTitleTextFromRelateControl(this.control, record);
+              const canOpen = !!record.rowid && !!allowOpenRecord && !isMobileTable && !/^temp/.test(record.rowid);
               return active || insheet ? (
                 <ViewHoverRelateRecordCard record={record} {...this.props}>
                   <div
                     key={record.rowid}
-                    className={cx('activeSelectedItem', { active, allowRemove: this.allowRemove || record.isNewAdd })}
+                    className={cx('activeSelectedItem', {
+                      active,
+                      clickable: canOpen && !active,
+                      allowRemove: this.allowRemove || record.isNewAdd,
+                    })}
                     onClick={e => {
+                      if (!canOpen || active) return;
                       e.stopPropagation();
-                      if (!allowOpenRecord || active || /^temp/.test(record.rowid) || active) {
-                        return;
-                      }
-
+                      if (window.getSelection()?.toString()) return;
                       this.setState({ previewRecord: { recordId: record.rowid } });
                     }}
                   >
@@ -653,7 +668,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
                     className={cx('normalSelectedItem ellipsis multiple', { isEnd: index === length - 1 })}
                     title={title}
                     onClick={e => {
-                      if (!allowOpenRecord) {
+                      if (!canOpen) {
                         return;
                       }
 
@@ -1004,7 +1019,7 @@ export default class RelateRecordDropdown extends React.Component<any, any> {
                 }
               } else {
                 this.commitChange();
-                this.setState({ listvisible: false });
+                this.setState({ listvisible: false, keywords: '' });
               }
 
               onVisibleChange(visilbe);

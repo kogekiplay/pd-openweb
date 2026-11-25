@@ -153,7 +153,7 @@ function loadCreateUploader(qiniuCalls: QiniuCall[]): CreateUploaderModule {
   function makeRequire(dir: string) {
     return function localRequire(request: string): unknown {
       // 被测代码自己的模块：真的编译加载
-      if (request.startsWith('./uploader/') || request.startsWith('./')) {
+      if (request.startsWith('./') || request.startsWith('../')) {
         if (request === './uploader/qiniuV1') {
           // 【替身】不发网络请求，把入参与回调句柄记下来给断言用；
           // abort 也记下来，用例 12 靠它验「removeFile 真的中断了在途任务」。

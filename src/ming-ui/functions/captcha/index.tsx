@@ -1,4 +1,4 @@
-﻿import { Fragment } from 'react';
+﻿import { createRef, Fragment } from 'react';
 import { Dialog } from 'ming-ui';
 import { generateRandomPassword } from 'src/utils/common';
 import './index.less';
@@ -56,7 +56,27 @@ export default function captcha(
   };
 
   if (md.global.getCaptchaType() === 1) {
-    Dialog.confirm({
+    const inputRef = createRef<HTMLInputElement>();
+    let submitted = false;
+    const handleSubmit = () =>
+      new Promise<void>((resolve, reject) => {
+        if (submitted) {
+          resolve();
+          return;
+        }
+
+        const value = inputRef.current?.value.trim();
+
+        if (!value) {
+          alert(_l('请输入验证码'), 3);
+          reject(true);
+        } else {
+          submitted = true;
+          callback({ ret: 0, ticket: value, randstr });
+          resolve();
+        }
+      });
+    const close = Dialog.confirm({
       title: _l('请输入验证码'),
       closable: false,
       anim: false,
@@ -64,12 +84,23 @@ export default function captcha(
       description: (
         <Fragment>
           <input
+            ref={inputRef}
             name="functionsCaptcha"
             autoComplete="off"
             type="text"
             className="captchaInput"
             autoFocus
             placeholder={_l('不区分大小写')}
+            onKeyDown={event => {
+              if (event.key !== 'Enter' || event.repeat || event.defaultPrevented || event.nativeEvent.isComposing)
+                return;
+              event.preventDefault();
+              event.stopPropagation();
+              handleSubmit().then(
+                () => close(true, true),
+                () => {},
+              );
+            }}
           />
           <div className="captchaImg">
             <img src={getImgLink()} />
@@ -86,19 +117,7 @@ export default function captcha(
           </div>
         </Fragment>
       ),
-      onOk: () => {
-        return new Promise<void>(function (reslove, reject) {
-          const value = String($('.captchaInput').val() ?? '').trim();
-
-          if (!value) {
-            alert(_l('请输入验证码'), 3);
-            reject(true);
-          } else {
-            callback({ ret: 0, ticket: value, randstr: randstr });
-            reslove();
-          }
-        });
-      },
+      onOk: handleSubmit,
       onCancel,
     });
     return;

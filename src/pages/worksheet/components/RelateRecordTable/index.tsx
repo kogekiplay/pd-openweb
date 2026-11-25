@@ -41,7 +41,16 @@ export interface RelateRecordTableProps {
   openFrom?: string | undefined;
   formData?: FormControl[] | undefined;
   sheetSwitchPermit?: HapApi.MD.Entity.Worksheet.SwitchPermitModel[] | undefined;
-  onCountChange?: ((count: number | undefined, changed: boolean | undefined) => void) | undefined;
+  onCountChange?:
+    | ((
+        count: number | undefined,
+        changed: boolean | undefined,
+        metadata: {
+          recordUpdated?: boolean;
+          recordsDeleted?: boolean;
+        },
+      ) => void)
+    | undefined;
   isDraft?: boolean | undefined;
   useHeight?: boolean | undefined;
   isSplit?: boolean | undefined;
@@ -144,7 +153,7 @@ export default function RelateRecordTableIndex(props: RelateRecordTableProps) {
   }, [control.controlId, isRelateRecordTableStore(control.store) ? control.store.version : undefined]);
   useEffect(() => {
     cache.current.storeVersion = store.version;
-    return store.subscribe(() => {
+    const unsubscribe = store.subscribe(() => {
       if (cache.current.storeVersion !== store.version) return;
       const state = store.getState();
       if (!state.initialized || state.loading || state.tableState.error) return;
@@ -155,8 +164,12 @@ export default function RelateRecordTableIndex(props: RelateRecordTableProps) {
       }
 
       const keywords = state?.tableState?.keywords;
+      const recordUpdated = lastAction?.type === 'UPDATE_RECORD';
+      const recordsDeleted = lastAction?.type === 'DELETE_RECORDS' && lastAction['recordsDeleted'] === true;
+      const deletedCount =
+        recordsDeleted && Array.isArray(lastAction['recordIds']) ? lastAction['recordIds'].length : 0;
 
-      if (keywords) {
+      if (keywords && !recordUpdated && !recordsDeleted) {
         return;
       }
 
@@ -166,19 +179,31 @@ export default function RelateRecordTableIndex(props: RelateRecordTableProps) {
         changed = true;
       }
 
-      const newCount =
-        !state.base.saveSync && typeof state.tableState.countForShow !== 'undefined'
+      const newCount = keywords
+        ? (cache.current.count ?? state.base.initialCount ?? 0) - deletedCount
+        : !state.base.saveSync && typeof state.tableState.countForShow !== 'undefined'
           ? state.tableState.countForShow
           : state.tableState.count;
 
-      if ((cache.current.count !== newCount || !recordId) && isFunction(onCountChange)) {
-        onCountChange(newCount, state.base.isTab ? state.changes.changed : changed);
+      if (
+        (cache.current.count !== newCount || !recordId || recordUpdated || recordsDeleted) &&
+        isFunction(onCountChange)
+      ) {
+        onCountChange(
+          newCount,
+          recordUpdated || recordsDeleted || (state.base.isTab ? state.changes.changed : changed),
+          {
+            recordUpdated,
+            recordsDeleted,
+          },
+        );
       }
 
       cache.current.count = newCount;
       cache.current.changes = state.changes;
     });
-  }, [store.version]);
+    return unsubscribe;
+  }, [store, onCountChange, recordId]);
   useEffect(() => {
     if (control.type !== 51) return;
     const filterControl = { ...control, relationControls: store.getState().controls, recordId };

@@ -801,7 +801,8 @@ export default class OtherTool extends Component<any, any> {
                     <div>
                       <button
                         type="button"
-                        className="ming Button Button--link colorPrimary pLeft0 adminHoverColor Block"
+                        className="ming Button Button--link colorPrimary adminHoverColor Block"
+                        style={{ padding: 0, border: 0 }}
                         onClick={this.checkHasKey}
                       >
                         {_l('查看密钥')}

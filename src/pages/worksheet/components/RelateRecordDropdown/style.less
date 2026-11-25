@@ -163,9 +163,9 @@
           }
         }
       }
-      &.allowOpenRecord {
-        &:not(.active) .normalSelectedItem,
-        .activeSelectedItem:not(.addBtn) {
+      &.allowOpenRecord:not(.active) {
+        .normalSelectedItem.clickable,
+        .activeSelectedItem.clickable {
           cursor: pointer;
           &:hover {
             color: var(--color-primary-text);

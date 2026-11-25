@@ -3,6 +3,7 @@ import { get, includes, isUndefined } from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { formatNumberThousand, toFixed } from 'src/utils/control';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { getSummaryResult } from 'src/utils/record';
 
 const Con = styled.div`
@@ -23,7 +24,11 @@ const Con = styled.div`
   }
 `;
 
-export default function SelectedInfo({ selectedRowIds = [], summaryControls = [], records = [] }) {
+export default function SelectedInfo({ selectedRowIds = [], summaryControls = [], records = [] }: {
+  selectedRowIds?: Array<string | undefined>;
+  summaryControls?: Array<FormControl & { summaryType: number }>;
+  records?: RecordRow[];
+}) {
   const selectedRecords = useMemo(() => {
     return records.filter(record => record && selectedRowIds.includes(record.rowid));
   }, [records, selectedRowIds]);

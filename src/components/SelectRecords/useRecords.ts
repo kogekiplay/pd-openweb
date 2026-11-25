@@ -5,7 +5,7 @@ import sheetAjax from 'src/api/worksheet';
 import { getFilter } from 'src/pages/worksheet/common/WorkSheetFilter/util';
 import type { WorksheetView } from 'src/pages/worksheet/types';
 import { getTranslateInfo } from 'src/utils/app';
-import type { ControlAdvancedSetting } from 'src/utils/controlTypes';
+import type { ControlAdvancedSetting, RecordRow } from 'src/utils/controlTypes';
 import { replaceAdvancedSettingTranslateInfo, replaceControlsTranslateInfo } from 'src/utils/translate';
 
 export const ERROR_STATUS = {
@@ -82,7 +82,7 @@ export default function useRecords(props) {
   const cache = useRef({});
   const nextPageRef = useRef(1); // 列表模式下“下一页”页码，用于 loadMore 追加
   const loadMoreInProgressRef = useRef(false); // 同步锁，防止同一页 loadMore 触发两次
-  const [records, setRecords] = useState([]);
+  const [records, setRecords] = useState<RecordRow[]>([]);
   const [loading, setLoading] = useState(true);
   // 【别写成 useState({})】那样推出来是 {}，读 worksheetInfo.allowAdd 一律 TS2339。
   // 此前没报是因为它被 getSheetStylesOfRelateRecordTable 的 Record<string, any> 顺带污染成
@@ -368,6 +368,11 @@ export default function useRecords(props) {
 
   const hasMore = listMode && records.length < total;
 
+  const handleUpdateKeyWords = useCallback(newKeyWords => {
+    setKeyWords(newKeyWords);
+    setPageIndex(1);
+  }, []);
+
   return {
     loading,
     worksheetInfo,
@@ -391,11 +396,7 @@ export default function useRecords(props) {
     loadMore,
     loadMoreLoading,
     hasMore,
-    handleUpdateKeyWords: newKeyWords => {
-      setRecordsLoading(true);
-      setKeyWords(newKeyWords);
-      setPageIndex(1);
-    },
+    handleUpdateKeyWords,
     handleUpdateSortControl: newSortControl => {
       setSortControl(newSortControl);
       setPageIndex(1);

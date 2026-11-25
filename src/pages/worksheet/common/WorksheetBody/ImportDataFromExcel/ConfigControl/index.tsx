@@ -3,11 +3,23 @@ import cx from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import filterXSS from 'xss';
-import { Button, Checkbox, Dialog, Dropdown, Icon, LoadDiv, Menu, MultipleDropdown, ScrollView } from 'ming-ui';
+import {
+  antNotification,
+  Button,
+  Checkbox,
+  Dialog,
+  Dropdown,
+  Icon,
+  LoadDiv,
+  Menu,
+  MultipleDropdown,
+  ScrollView,
+} from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import sheetAjax from 'src/api/worksheet';
 import { ALL_SYS } from 'src/pages/widgetConfig/config/widget';
 import { getIconByType } from 'src/pages/widgetConfig/util';
+import { alertIfNotUnauthorized } from 'src/utils/services/request/error';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import DropDownItem from './DropDownItem';
 import './index.less';
@@ -30,11 +42,12 @@ export default class ConfigControl extends Component<any, any> {
     isFromRelateRecord: PropTypes.bool,
     onSave: PropTypes.func,
     onCancel: PropTypes.func,
+    onReset: PropTypes.func,
     selectRow: PropTypes.object,
     onPrevious: PropTypes.func,
     importSheetInfo: PropTypes.object,
+    token: PropTypes.string,
     filePath: PropTypes.string,
-    fileId: PropTypes.string,
     fileKey: PropTypes.string,
     isCharge: PropTypes.bool,
     hideControlIds: PropTypes.array,
@@ -103,7 +116,7 @@ export default class ConfigControl extends Component<any, any> {
     };
   }
 
-  request = null;
+  request = false;
   cacheSource = null;
   hasRecordId = {};
 
@@ -463,6 +476,7 @@ export default class ConfigControl extends Component<any, any> {
    * 开始导入
    */
   beginImport = controlMappingFilter => {
+    if (this.request) return;
     (async () => {
       const { isCharge } = this.props;
       const { tigger, repeatConfig, repeatRecord, worksheetControls, edited, controlMapping, relateSource } =
@@ -606,10 +620,11 @@ export default class ConfigControl extends Component<any, any> {
     );
   }
 
-  onImport = controlMapping => {
+  onImport = async controlMapping => {
+    if (this.request) return;
     const {
+      token,
       filePath,
-      fileId,
       fileKey,
       worksheetId,
       appId,
@@ -617,6 +632,7 @@ export default class ConfigControl extends Component<any, any> {
       importSheetInfo,
       onSave,
       onCancel,
+      onReset,
       extendOptions,
     } = this.props;
     const { workSheetProjectId, repeatRecord, tigger, repeatConfig, userControls, departmentControls, errorSkip } =
@@ -640,17 +656,10 @@ export default class ConfigControl extends Component<any, any> {
       });
     }
 
-    // 避免重复提交
-    if (this.request) return;
-
-    this.request = true;
-
-    onSave(fileKey);
-
     const requestData = {
       ...extendOptions,
+      token,
       filePath,
-      fileId,
       workSheetId: worksheetId,
       appId,
       accountId: md.global.Account.accountId,
@@ -664,11 +673,34 @@ export default class ConfigControl extends Component<any, any> {
       errorSkip,
     };
 
-    window.mdyAPI('', '', requestData, {
-      ajaxOptions: { url: `${md.global.Config.WorksheetDownUrl}/ExportExcel/Import` },
-    });
+    this.request = true;
+    this.setState({ importing: true });
 
-    onCancel();
+    try {
+      onSave(fileKey);
+      const result = await window.mdyAPI('', '', requestData, {
+        ajaxOptions: { url: `${md.global.Config.WorksheetDownUrl}/ExportExcel/Import` },
+        customParseResponse: true,
+      });
+
+      if (result?.status !== 1) {
+        antNotification.close(fileKey);
+        alert(_l('导入失败，请稍后重试'), 2);
+        if (result?.status === 2 && result.message === 'NoPermission') {
+          onReset?.();
+        }
+
+        return;
+      }
+
+      onCancel();
+    } catch (error) {
+      antNotification.close(fileKey);
+      alertIfNotUnauthorized(error, _l('导入失败，请稍后重试'), 2);
+    } finally {
+      this.request = false;
+      this.setState({ importing: false });
+    }
   };
 
   /**
@@ -950,11 +982,18 @@ export default class ConfigControl extends Component<any, any> {
         <div className="flexColumn">
           <div className="flex" />
           <div className="flexRow">
-            <Button className="mRight16" size="medium" type="secondary" onClick={onPrevious}>
+            <Button
+              className="mRight16"
+              size="medium"
+              type="secondary"
+              disabled={this.state['importing']}
+              onClick={onPrevious}
+            >
               {_l('上一步')}
             </Button>
             <Button
               size="medium"
+              loading={this.state['importing']}
               disabled={!controlMappingFilter.length}
               onClick={() => this.beginImport(controlMappingFilter)}
             >

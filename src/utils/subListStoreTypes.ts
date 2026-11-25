@@ -186,7 +186,7 @@ export interface RelateRecordState {
   records: FieldStoreRecord[];
   tableState: RelateTableState;
   changes: RelateChanges;
-  rowsSummary: { types: Record<string, number>; values: Record<string, unknown> };
+  rowsSummary: { types: Record<string, number>; values: Record<string, unknown>; requestId?: number | undefined };
   lastAction: UnknownAction;
 }
 export type ChildTableDispatch = ThunkDispatch<ChildTableState, undefined, ChildTableAction>;

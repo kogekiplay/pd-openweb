@@ -196,6 +196,7 @@ const Chatbot = props => {
         {isCharge && (
           <MoreMenu
             {...props}
+            isCharge={isCharge}
             desc={chatbotAppItem.desc}
             onChangeDesc={value => setChatbotAppItem(values => ({ ...values, desc: value }))}
           >

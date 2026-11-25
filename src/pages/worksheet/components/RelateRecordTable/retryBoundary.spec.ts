@@ -64,6 +64,9 @@ function load(relative: string): ModuleExports {
   const target: { exports: ModuleExports } = { exports: {} };
   modules.set(file, target.exports);
   const dependency = (name: string): unknown => {
+    if (name === 'src/pages/worksheet/common/WorkSheetFilter/enum')
+      return load('src/pages/worksheet/common/WorkSheetFilter/enum.ts');
+    if (name === 'src/utils/services/request/error') return { alertIfNotUnauthorized() {} };
     if (['lodash', 'redux', '@reduxjs/toolkit', 'uuid', 'classnames', 'prop-types', 'react/jsx-runtime'].includes(name))
       return require(name);
     if (name === 'react')

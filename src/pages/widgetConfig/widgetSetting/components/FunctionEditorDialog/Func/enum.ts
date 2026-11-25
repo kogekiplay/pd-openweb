@@ -1071,6 +1071,7 @@ export const functionTypes: Record<string, string> = {
   advanced: _l('高级函数'),
 };
 
+// 公式模块也会在 .NET Jint 中初始化，函数示例保持静态，不依赖 window 或 console。
 const functionDetailsMap = {
   // date 日期函数
   NETWORKDAY: {

@@ -11,7 +11,7 @@ import * as baseAction from 'src/pages/worksheet/redux/actions';
 import * as detailActions from 'src/pages/worksheet/redux/actions/detailView';
 import type { RootState } from 'src/redux/types';
 import { getAdvanceSetting } from 'src/utils/control';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { getCardWidth } from 'src/utils/worksheet';
 import ViewEmpty from '../components/ViewEmpty';
 import DetailItem from './DetaiIItem';
@@ -98,21 +98,29 @@ function DetailView(props) {
     controls,
     updateWorksheetSomeControls,
   }: { controls: FormControl[]; [key: string]: any } = props;
-  const { detailViewRows = [], detailViewLoading, detailPageIndex, detailKeyWords, noMoreRows } = detailView;
+  const {
+    detailViewRows = [],
+    detailViewLoading,
+    keepDetailRecordWhileLoading,
+    detailPageIndex,
+    detailKeyWords,
+    noMoreRows,
+  } = detailView;
   const currentView = views.find(o => o.viewId === viewId) || {};
   const coverCid = currentView.coverCid || _.get(worksheetInfo, ['advancedSetting', 'coverid']);
   const { showtoolbar, showtitle } = getAdvanceSetting(currentView);
   const inputRef = useRef<HTMLInputElement>(null);
   const cardWidth = getCardWidth(currentView);
 
-  const [currentRecord, setCurrentRecord] = useState({});
+  const [currentRecord, setCurrentRecord] = useState<RecordRow>({});
   const [isOpenGroup, setIsOpenGroup] = useState(true);
   const [dragMaskVisible, setDragMaskVisible] = useState(false);
   const [groupFilterWidth, setGroupFilterWidth] = useState(
     isOpenGroup ? cardWidth || window.localStorage.getItem(`detailGroupWidth_${viewId}`) || (coverCid ? 335 : 240) : 32,
   );
   const [flag, setFlag] = useState(+new Date());
-  const isLoading = (detailViewLoading && detailPageIndex === 1) || worksheetInfo.isRequestingRelationControls;
+  const isLoadingFirstPage = detailViewLoading && detailPageIndex === 1;
+  const isLoading = (isLoadingFirstPage && !keepDetailRecordWhileLoading) || worksheetInfo.isRequestingRelationControls;
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -184,7 +192,7 @@ function DetailView(props) {
   );
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    const editingElements = document.getElementsByClassName('editingBar');
+    const editingElements = document.querySelectorAll<HTMLElement>('.editingBar');
     const isEditing = !![...editingElements].filter(el => el.style.overflow === '').length;
 
     if (!!detailViewRows.length && _.get(e, 'target.parentNode.id') === 'detailNavList') {
@@ -378,9 +386,10 @@ function DetailView(props) {
               }}
               isCharge={isCharge}
               updateWorksheetControls={updateWorksheetSomeControls}
-              customBtnTriggerCb={() => {
+              customBtnTriggerCb={({ continueAdd }: { continueAdd?: boolean | undefined } = {}) => {
                 setTimeout(() => {
-                  fetchRows(1, detailKeyWords);
+                  // 自定义按钮的创建弹窗挂在记录详情下，继续创建时刷新列表不能卸载详情。
+                  fetchRows(1, detailKeyWords, { keepDetails: continueAdd });
                 }, 100);
               }}
             />

@@ -109,6 +109,7 @@ function Con(props) {
     tab: 1,
     isCreate: false,
     showMenu: false,
+    hasChange: 0,
   };
   const [
     {
@@ -147,13 +148,13 @@ function Con(props) {
     }
 
     setState({ loading: true });
-    let sorter = {
+    let sorter: { lastModifiedDate?: string | undefined; apiCount?: string | undefined; createdDate?: string } = {
       lastModifiedDate: timeSort === 1 ? 'ascend' : timeSort === 2 ? 'descend' : undefined,
       apiCount: countSort === 1 ? 'ascend' : countSort === 2 ? 'descend' : undefined,
     };
 
     if (!sorter.lastModifiedDate && !sorter.apiCount) {
-      sorter = undefined;
+      sorter = { createdDate: 'descend' };
     }
 
     ajaxPromise =
@@ -286,7 +287,7 @@ function Con(props) {
                   }
 
                   setState({
-                    searchType: value,
+                    searchType: value ?? 0,
                     pageIndex: 1,
                     hasChange: hasChange + 1,
                   });

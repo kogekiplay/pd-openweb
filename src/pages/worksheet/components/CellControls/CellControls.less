@@ -834,3 +834,18 @@
     line-height: 1.4;
   }
 }
+
+.cellRelateRecordDropdown .RelateRecordDropdown-selected {
+  .normalSelectedItem,
+  .activeSelectedItem {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &:not(.active) .clickable:hover {
+    color: var(--color-primary-text);
+    background-color: color-mix(in srgb, var(--color-primary) 16%, transparent);
+    cursor: pointer;
+  }
+}

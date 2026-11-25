@@ -1,5 +1,4 @@
 import cx from 'classnames';
-import _ from 'lodash';
 import { Icon } from 'ming-ui';
 import { emitter } from 'src/utils/common';
 import { PopoverWrap } from '../ChatList/Avatar/styled';
@@ -20,14 +19,14 @@ const collections = () => {
               icon: 'forum',
               href: 'https://nocoly.zendesk.com/hc/en-001',
             },
-            { id: 'helpDoc', text: _l('寻找伙伴支持'), icon: 'partner', href: 'https://www.nocoly.com/partner' },
+            { id: 'partner', text: _l('寻找伙伴支持'), icon: 'partner', href: 'https://www.nocoly.com/partner' },
             { id: 'partnerSupport', text: _l('智能客服'), icon: 'support_agent' },
           ]
         : [
             { id: 'helpDoc', text: _l('帮助文档'), icon: 'class', href: 'https://help.mingdao.com/' },
             { id: 'video', text: _l('学习视频'), icon: 'play_circle_outline', href: 'https://learn.mingdao.com/' },
             { id: 'communityQuestions', text: _l('社区提问'), icon: 'forum', href: 'https://bbs.mingdao.net/' },
-            { id: 'helpDoc', text: _l('寻找伙伴支持'), icon: 'partner', href: 'https://www.mingdao.com/partnerlist' },
+            { id: 'partner', text: _l('寻找伙伴支持'), icon: 'partner', href: 'https://www.mingdao.com/partnerlist' },
             { id: 'partnerSupport', text: _l('人工客服'), icon: 'support_agent' },
           ],
     },
@@ -81,41 +80,26 @@ const renderProjectsPopover = ({ onClose = () => {}, onCloseHelpPopover = () => 
           <div key={type}>
             <div className="horizontalPadding textTertiary bold">{text}</div>
             {items.map(v => {
-              if (
-                (window.platformENV.isOverseas || window.platformENV.isLocal) &&
-                _.includes(['video', 'communityQuestions', 'helpDoc', ''], v.id)
-              ) {
-                return null;
-              }
-
-              if (_.includes(['partnerSupport'], v.id)) {
+              if (v.id === 'partnerSupport') {
                 return (
                   <div
                     className="itemWrap flexRow alignItemsCenter pointer"
                     key={v.id}
                     onClick={() => {
-                      if (v.id === 'partnerSupport') {
-                        onCloseHelpPopover(); // 先关闭帮助浮层
-                        onClose(); // 再关闭侧边抽屉
+                      onCloseHelpPopover(); // 先关闭帮助浮层
+                      onClose(); // 再关闭侧边抽屉
 
-                        if (window.platformENV.isOverseas) {
-                          emitter.emit('SET_MINGO_VISIBLE', { mingoVisible: true });
-                        } else {
-                          setTimeout(() => {
-                            window.mingoPendingStartTask = { callFromHelp: true };
-                            emitter.emit('SET_MINGO_VISIBLE');
-                          }, 20);
-                        }
+                      if (window.platformENV.isOverseas) {
+                        emitter.emit('SET_MINGO_VISIBLE', { mingoVisible: true });
+                      } else {
+                        setTimeout(() => {
+                          window.mingoPendingStartTask = { callFromHelp: true };
+                          emitter.emit('SET_MINGO_VISIBLE');
+                        }, 20);
                       }
                     }}
                   >
-                    <Icon
-                      icon={v.icon}
-                      className={cx('textTertiary TxtMiddle', {
-                        Font16: v.id === 'lastUpdated',
-                        Font20: v.id !== 'lastUpdated',
-                      })}
-                    />
+                    <Icon icon={v.icon} className="textTertiary TxtMiddle Font20" />
                     <div className="mLeft10 flex ellipsis textPrimary">{v.text}</div>
                   </div>
                 );

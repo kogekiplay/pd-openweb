@@ -52,15 +52,17 @@ class DialogImportExcelCreate extends Component<any, any> {
     this.props.changeDialogCreateAppVisible(false);
   }
   getToken = params => {
-    const { projectId, createType } = this.props;
-    appManagementController
+    const { projectId, createType, appId, groupId, appGroupId, appGroupType } = this.props;
+    return appManagementController
       .getToken({
         tokenType: createType === 'app' ? 6 : 4,
         projectId,
+        filePath: params.filePath,
+        ...(createType === 'app' ? { groupId: appGroupId, groupType: appGroupType } : { appId, sectionId: groupId }),
       })
       .then(res => {
         this.setState({ token: res });
-        this.getPreviewData({
+        return this.getPreviewData({
           token: res,
           ...params,
         });
@@ -86,7 +88,7 @@ class DialogImportExcelCreate extends Component<any, any> {
       token,
     };
 
-    window
+    return window
       .mdyAPI('', '', questParams, {
         ajaxOptions: {
           type: 'GET',
@@ -210,7 +212,7 @@ class DialogImportExcelCreate extends Component<any, any> {
   };
 
   getParams = (isMore?: boolean | undefined) => {
-    const { id, filePath, freeRowCount } = this.state;
+    const { id, filePath, freeRowCount, token } = this.state;
     const {
       createType,
       projectId,
@@ -290,7 +292,7 @@ class DialogImportExcelCreate extends Component<any, any> {
           configs,
           ...extra,
         };
-    return params;
+    return { ...params, token };
   };
 
   handleNext = () => {

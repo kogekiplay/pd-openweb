@@ -2,6 +2,7 @@ import { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Dropdown, Menu, Popover } from 'antd';
+import copy from 'copy-to-clipboard';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { Icon, RichText } from 'ming-ui';
@@ -24,7 +25,7 @@ const MenuWrap = styled(Menu)`
 `;
 
 const MoreMenu = props => {
-  const { base, data, appPkg, isLand } = props;
+  const { base, data, appPkg, isCharge, isLand } = props;
   const { desc, onChangeDesc } = props;
   const [editIntroVisible, setEditIntroVisible] = useState(false);
   const [descIsEditing, setDescIsEditing] = useState(false);
@@ -150,6 +151,21 @@ const MoreMenu = props => {
                   <div>{_l('说明')}</div>
                 </div>
               </Menu.Item>
+              {isCharge && data.chatbotId && (
+                <Menu.Item
+                  key="copyId"
+                  onClick={async () => {
+                    setPopupVisible(false);
+                    const copied = await copy(data.chatbotId).catch(() => false);
+                    alert(copied ? _l('复制成功') : _l('复制失败'), copied ? 1 : 2);
+                  }}
+                >
+                  <div className="flexRow valignWrapper">
+                    <Icon icon="ID" className="Font18 mLeft5 mRight10 textTertiary" />
+                    <div>{_l('复制 ID')}</div>
+                  </div>
+                </Menu.Item>
+              )}
               {!isLock && (
                 <Fragment>
                   <Menu.Divider />

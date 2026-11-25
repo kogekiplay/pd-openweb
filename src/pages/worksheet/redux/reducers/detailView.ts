@@ -43,6 +43,17 @@ export function detailViewLoading(state = false, action: ReduxAction<{ loading: 
   }
 }
 
+export function keepDetailRecordWhileLoading(
+  state = false,
+  action: ReduxAction<{ loading: boolean; keepDetails?: boolean }>,
+) {
+  if (action.type === 'CHANGE_DETAIL_VIEW_LOADING') {
+    return action.loading && !!action.keepDetails;
+  }
+
+  return state;
+}
+
 export function detailPageIndex(state = 1, action: ReduxAction<{ pageIndex: number }>) {
   const { type } = action;
 

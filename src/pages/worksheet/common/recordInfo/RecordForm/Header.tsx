@@ -76,7 +76,7 @@ export default function InfoHeader(props) {
     // exAccountDiscussEnum = 0, //外部用户的讨论类型 0：所有讨论 1：不可见内部讨论
     // approved: false, //允许外部用户允许查看审批流转详情
   } = props;
-  const { projectId = localStorage.getItem('currentProjectId') } = recordinfo;
+  const { projectId } = recordinfo;
   let { renderHeader } = props;
   const { isSmall, worksheetId, recordId, notDialog } = recordbase;
   const rowId = useRef(recordId);

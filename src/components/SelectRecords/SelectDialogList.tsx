@@ -1,7 +1,9 @@
+import type { ReactNode } from 'react';
 import cx from 'classnames';
 import { find, get } from 'lodash';
 import styled from 'styled-components';
 import { ScrollView, Skeleton } from 'ming-ui';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { getTitleTextFromRelateControl } from 'src/utils/control';
 import RegExpValidator from 'src/utils/expression';
 
@@ -31,7 +33,8 @@ const ListItemCon = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-  &:hover {
+  &:hover,
+  &.keyboardActive {
     background: var(--color-background-hover);
   }
   &.selected {
@@ -40,6 +43,9 @@ const ListItemCon = styled.div`
       font-size: var(--font-xl);
       color: var(--color-primary-text);
     }
+  }
+  &.keyboardActive {
+    box-shadow: inset 0 0 0 1px var(--color-primary);
   }
   .listItemCover {
     width: 32px;
@@ -106,8 +112,27 @@ function getCoverUrl(record, coverControl) {
   if (typeof v === 'object' && v !== null && v.url) return v.url;
   return '';
 }
-
-function ListItem({ record, control, coverControl, multiple, selected, onSelect, onOpenRecord, noMaskTitle }) {
+function ListItem({
+  record,
+  control,
+  coverControl,
+  multiple,
+  selected,
+  keyboardActive,
+  onSelect,
+  onOpenRecord,
+  noMaskTitle,
+}: {
+  record: RecordRow;
+  control: FormControl;
+  coverControl?: FormControl | undefined;
+  multiple?: boolean | undefined;
+  selected: boolean;
+  keyboardActive: boolean;
+  onSelect: (rowId?: string) => void;
+  onOpenRecord?: ((record: RecordRow) => void) | undefined;
+  noMaskTitle?: boolean | undefined;
+}) {
   // 有些接口会直接返回已渲染的 name（可能是掩码后的展示值）
   // 解码后希望走 renderText + noMask 展示明文，因此在 noMask 时临时屏蔽 name。
   const titleData =
@@ -120,18 +145,10 @@ function ListItem({ record, control, coverControl, multiple, selected, onSelect,
   const title = getTitleTextFromRelateControl(control, titleData, { noMask: noMaskTitle }) || _l('未命名');
   const coverUrl = getCoverUrl(record, coverControl);
 
-  const handleClick = () => {
-    if (multiple) {
-      onSelect(record.rowid);
-    } else {
-      onSelect(record.rowid);
-    }
-  };
-
   return (
     <ListItemCon
-      className={cx({ selected })}
-      onClick={handleClick}
+      className={cx({ selected, keyboardActive })}
+      onClick={() => onSelect(record.rowid)}
       onDoubleClick={() => onOpenRecord && onOpenRecord(record)}
     >
       {coverUrl && <img className="listItemCover" src={coverUrl} alt="" />}
@@ -150,6 +167,7 @@ export default function SelectDialogList({
   control,
   multiple,
   selectedRowIds = [],
+  activeRowId,
   needHideRowIds = [],
   noMaskTitle,
   onToggleSelect,
@@ -160,6 +178,24 @@ export default function SelectDialogList({
   emptyIcon,
   emptyText,
   recordsLoading,
+}: {
+  loading?: boolean | undefined;
+  records?: RecordRow[] | undefined;
+  controls?: FormControl[] | undefined;
+  control: FormControl;
+  multiple?: boolean | undefined;
+  selectedRowIds?: Array<string | undefined> | undefined;
+  activeRowId?: string | undefined;
+  needHideRowIds?: Array<string | undefined> | undefined;
+  noMaskTitle?: boolean | undefined;
+  onToggleSelect: (rowId?: string) => void;
+  onOpenRecord?: ((record: RecordRow) => void) | undefined;
+  loadMore?: (() => void) | undefined;
+  hasMore?: boolean | undefined;
+  loadMoreLoading?: boolean | undefined;
+  emptyIcon?: ReactNode;
+  emptyText?: ReactNode;
+  recordsLoading?: boolean | undefined;
 }) {
   const coverControl = get(control, 'coverCid') && find(controls, { controlId: get(control, 'coverCid') });
   const displayRecords = records.filter(r => !needHideRowIds.includes(r.rowid));
@@ -195,6 +231,7 @@ export default function SelectDialogList({
               coverControl={coverControl}
               multiple={multiple}
               selected={selectedRowIds.includes(record.rowid)}
+              keyboardActive={Boolean(activeRowId) && record.rowid === activeRowId}
               onSelect={onToggleSelect}
               onOpenRecord={onOpenRecord}
               noMaskTitle={noMaskTitle}

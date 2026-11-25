@@ -195,6 +195,8 @@ export default class CustomButtons extends React.Component<any, any> {
     onButtonTriggerFail: () => {},
   };
 
+  declare activeBtn: Partial<HapApi.MD.Entity.Worksheet.WorksheetBtnEntity>;
+
   override state = {};
 
   override componentDidMount() {
@@ -209,7 +211,7 @@ export default class CustomButtons extends React.Component<any, any> {
   }
   get tipConfig() {
     const { appId, worksheetId } = this.props;
-    const translateInfo = getTranslateInfo(appId, worksheetId, this.activeBtn.btnId);
+    const translateInfo = getTranslateInfo(appId, worksheetId, this.activeBtn.btnId ?? '');
     const tiptext = get(this.activeBtn, 'advancedSetting.tiptext');
     return {
       enableTip: get(this.activeBtn, 'advancedSetting.opentip') !== '0',
@@ -422,7 +424,10 @@ export default class CustomButtons extends React.Component<any, any> {
       });
   };
 
-  handleAddRecordCallback = () => {
+  handleAddRecordCallback = (
+    _row: RecordRow | undefined,
+    { continueAdd }: { continueAdd?: boolean | undefined } = {},
+  ) => {
     const { reloadRecord, loadBtns, triggerCallback } = this.props;
     const { activeBtn = {} } = this;
     const btnTypeStr = activeBtn.writeObject + '' + activeBtn.writeType;
@@ -437,7 +442,7 @@ export default class CustomButtons extends React.Component<any, any> {
       reloadRecord();
     }
 
-    triggerCallback();
+    triggerCallback({ continueAdd });
   };
 
   fillRecordControls = (newControls, targetOptions, customwidget, cb = () => {}) => {
@@ -460,7 +465,7 @@ export default class CustomButtons extends React.Component<any, any> {
       projectID: targetOptions.projectId,
       newOldControl: newControls,
       btnId: this.activeBtn.btnId,
-      hasFilters: !!this.activeBtn.filters.length,
+      hasFilters: !!this.activeBtn.filters?.length,
       btnWorksheetId: worksheetId,
       btnRowId: recordId,
       pushUniqueId: md.global.Config.pushUniqueId,

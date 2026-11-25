@@ -556,8 +556,10 @@ export default class Options extends React.Component<any, any> {
           {!!value && !isEmpty(selectedOptions) && (
             <div className={cx('cellOptions cellControl', { singleLine })}>
               {selectedOptions.map((option, index) => {
+                const label = this.getShowValue(option);
+
                 if (showAsText || showAsTextWithBg) {
-                  return <div key={index}>{this.getShowValue(option)}</div>;
+                  return <div key={index}>{label}</div>;
                 }
 
                 return (
@@ -565,8 +567,9 @@ export default class Options extends React.Component<any, any> {
                     className="cellOption ellipsis"
                     key={index}
                     style={Object.assign({}, { ...getOptionStyle(option, cell) })}
+                    title={cell.inView ? label : undefined}
                   >
-                    {this.getShowValue(option)}
+                    {label}
                   </span>
                 );
               })}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { bool, func, number, string } from 'prop-types';
 import { Dialog, VerifyPasswordInput } from 'ming-ui';
 import functionWrap from 'ming-ui/components/FunctionWrap';
@@ -36,42 +36,48 @@ export default function VerifyPasswordConfirm(props) {
     });
   }, [isRequired, password, isNoneVerification, closeImageValidation]);
 
-  useEffect(() => {
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        handleConfirm();
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isRequired, password, isNoneVerification, closeImageValidation]);
-
   return (
     <Dialog
       visible
       className="verifyPasswordConfirm"
       width={width}
       overlayClosable={false}
+      bindEnterTriggerOk={false}
       title={title || _l('安全验证')}
       description={description}
       onOk={handleConfirm}
       onCancel={onCancel}
       confirm={confirmType}
     >
-      <VerifyPasswordInput
-        showSubTitle={false}
-        autoFocus={true}
-        isRequired={isRequired}
-        allowNoVerify={allowNoVerify}
-        onChange={({ password, isNoneVerification }) => {
-          setPassword(password);
-          setIsNoneVerification(isNoneVerification);
+      <div
+        onKeyDown={event => {
+          if (
+            event.key !== 'Enter' ||
+            event.repeat ||
+            event.defaultPrevented ||
+            event.nativeEvent.isComposing ||
+            !(event.target instanceof HTMLInputElement) ||
+            event.target.getAttribute('role') === 'combobox' ||
+            !event.currentTarget.contains(event.target)
+          )
+            return;
+
+          event.preventDefault();
+          event.stopPropagation();
+          handleConfirm();
         }}
-      />
+      >
+        <VerifyPasswordInput
+          showSubTitle={false}
+          autoFocus={true}
+          isRequired={isRequired}
+          allowNoVerify={allowNoVerify}
+          onChange={({ password, isNoneVerification }) => {
+            setPassword(password);
+            setIsNoneVerification(isNoneVerification);
+          }}
+        />
+      </div>
     </Dialog>
   );
 }

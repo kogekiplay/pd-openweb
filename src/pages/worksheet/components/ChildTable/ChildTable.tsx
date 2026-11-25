@@ -157,13 +157,7 @@ const DropIcon = styled.span`
 const isMobile = browserIsMobile();
 const systemControls = SYSTEM_CONTROLS.map((c: FormControl) => ({ ...c, fieldPermission: '111' }));
 const MAX_COUNT = 1000;
-
-// 从 html 代码创建元素
-const createElementFromHtml = (html: string) => {
-  const con = document.createElement('div');
-  con.innerHTML = html;
-  return con.firstElementChild;
-};
+const LOADING_MASK_DISMISS_DELAY = 60 * 1000;
 
 /**
  * 批量编辑弹层（BatchEditRecord）交过来的待更新项 —— 【不是】 FormControl。
@@ -223,6 +217,9 @@ class ChildTable extends React.Component<any, any> {
   declare rowsLoading: Record<string, boolean>;
   /** 任意一行在加载时盖的遮罩 */
   declare showLoadingMask: boolean;
+  declare isUnmounted: boolean;
+  declare loadingMaskDismissTimer: ReturnType<typeof setTimeout> | undefined;
+  declare cellErrorTip: HTMLDivElement | null;
   declare pendingRowWrites: number;
   declare loadingMaskDismissed: boolean;
   /** 上一次重建过树形结构的 rows，用来判断要不要再建 */
@@ -302,6 +299,7 @@ class ChildTable extends React.Component<any, any> {
       disableMaskDataControls: {},
       rowsLoadingStatus: {},
       showLoadingMask: false,
+      canDismissLoadingMask: false,
       loadingMaskText: '',
       menuVisible: false,
       layoutDirection: this.defaultDirection,
@@ -323,9 +321,11 @@ class ChildTable extends React.Component<any, any> {
     this.rowsLoading = {};
     this.pendingRowWrites = 0;
     this.loadingMaskDismissed = false;
+    this.showLoadingMask = false;
   }
 
   override componentDidMount() {
+    this.isUnmounted = false;
     const { control, recordId, needResetControls } = this.props;
     this.updateDefsourceOfControl();
 
@@ -345,7 +345,7 @@ class ChildTable extends React.Component<any, any> {
 
     if (browserIsMobile()) return;
     $(this.childTableCon).on('mouseenter', '.cell:not(.row-head)', this.handleMouseEnter);
-    $(this.childTableCon).on('mouseleave', '.cell:not(.row-head)', this.handleMouseLeave);
+    $(this.childTableCon).on('mouseleave', '.cell:not(.row-head)', this.handleCellMouseLeave);
     window.addEventListener('keydown', this.handleKeyDown);
   }
 
@@ -501,6 +501,8 @@ class ChildTable extends React.Component<any, any> {
 
   override componentWillUnmount() {
     const { mode, control } = this.props;
+    this.isUnmounted = true;
+    clearTimeout(this.loadingMaskDismissTimer);
     this.pendingRowWrites = 0;
 
     if (mode !== 'dialog' && _.isFunction(control.addRefreshEvents)) {
@@ -508,7 +510,8 @@ class ChildTable extends React.Component<any, any> {
     }
 
     $(this.childTableCon).off('mouseenter', '.cell:not(.row-head)', this.handleMouseEnter);
-    $(this.childTableCon).off('mouseleave', '.cell:not(.row-head)', this.handleMouseLeave);
+    $(this.childTableCon).off('mouseleave', '.cell:not(.row-head)', this.handleCellMouseLeave);
+    this.handleMouseLeave();
     window.removeEventListener('keydown', this.handleKeyDown);
     this.abortController && this.abortController.abort && this.abortController.abort();
     this.dataFormatCacheMap.clear();
@@ -578,7 +581,14 @@ class ChildTable extends React.Component<any, any> {
       (newControls || get(base, 'controls') || props.controls).map((c: FormControl) => ({
         ...c,
         ...(isWorkflow
-          ? {}
+          ? {
+              // 刷新行接口返回的是工作表权限，审批节点权限以初始化时的工作项字段为准。
+              controlPermissions: get(
+                _.find(base.originControls, { controlId: c.controlId }),
+                'controlPermissions',
+                c.controlPermissions,
+              ),
+            }
           : {
               controlPermissions:
                 isRelateRecordTableControl(c) || c.type === 34
@@ -939,16 +949,27 @@ class ChildTable extends React.Component<any, any> {
   }
 
   syncLoadingMask() {
+    if (this.isUnmounted) return;
+
     const showLoadingMask =
       !this.loadingMaskDismissed && (this.pendingRowWrites > 0 || Object.values(this.rowsLoading).some(Boolean));
 
-    if (showLoadingMask !== this.showLoadingMask) {
-      this.showLoadingMask = showLoadingMask;
-      this.setState({ showLoadingMask });
+    if (showLoadingMask === this.showLoadingMask) return;
+
+    this.showLoadingMask = showLoadingMask;
+    clearTimeout(this.loadingMaskDismissTimer);
+    this.setState({ showLoadingMask, canDismissLoadingMask: false });
+
+    if (showLoadingMask) {
+      this.loadingMaskDismissTimer = setTimeout(() => {
+        this.setState({ canDismissLoadingMask: true });
+      }, LOADING_MASK_DISMISS_DELAY);
     }
   }
 
   dismissLoadingMask = () => {
+    if (!this.showLoadingMask || !this.state['canDismissLoadingMask']) return;
+
     this.loadingMaskDismissed = true;
     this.syncLoadingMask();
   };
@@ -1002,9 +1023,19 @@ class ChildTable extends React.Component<any, any> {
     const cacheKey = isNewRecord ? rowId : row?.rowid;
 
     if (isNewRecord || !cacheKey || !this.dataFormatCacheMap.has(cacheKey)) {
+      // 新行计算默认值时使用当前主表快照，不依赖尚未提交的 setState 更新。
+      const controls = isNewRecord
+        ? handleUpdateDefsourceOfControl({
+            recordId,
+            relateRecordControl: this.props['control'],
+            masterData,
+            controls: this.state['controls'].map((c: FormControl) => ({ ...c })),
+          })
+        : this.state.controls;
+
       formdata = new DataFormat({
         requestPool: this.requestPool,
-        data: this.state.controls.map((c: FormControl) => {
+        data: controls.map((c: FormControl) => {
           const importedValue = (row || {})[c.controlId];
           let controlValue = importedValue;
 
@@ -1492,61 +1523,48 @@ class ChildTable extends React.Component<any, any> {
     return undefined;
   };
 
-  handleMouseEnter = e => {
-    const { layoutDirection } = this.state;
-    const cell = $(e.target).closest('.cell:not(.focus)')[0];
+  handleMouseEnter = (event: { currentTarget: HTMLElement }) => {
+    const cell = event.currentTarget;
+    this.handleMouseLeave();
+    if (!cell.matches('.cellControlErrorStatus:not(.focus):not(.isediting):not(.iseditting)')) return;
 
-    if (!cell) {
-      return;
-    }
+    const rowId = cell.className.match(/\brow-id-([^\s]+)/)?.[1];
+    const controlId = cell.className.match(/\bcontrol-val-([^\s]+)/)?.[1];
+    const error = rowId && controlId && this.props['cellErrors']?.[`${rowId}-${controlId}`];
 
-    $(cell).addClass('errorActive');
-    const { rows, cellErrors } = this.props;
-    const columns = this.getShowColumns();
-    const hasError = /cellControlErrorStatus/.test(cell.className);
-    const cellIsEditing = /iseditting/.test(cell.className);
-    const rowIndex = cell.className.match(/ row-([0-9]+) /) && Number(cell.className.match(/ row-([0-9]+) /)[1]);
-    const columnIndex = cell.className.match(/ col-([0-9]+) /) && Number(cell.className.match(/ col-([0-9]+) /)[1]);
-    const dataIndex = layoutDirection === 'horizontal' ? rowIndex : columnIndex - 1;
-    const controlIndex = layoutDirection === 'horizontal' ? columnIndex : rowIndex + 1;
-    const rowId = (rows[dataIndex] || {}).rowid;
-    const controlId = !isUndefined(controlIndex) && (columns[controlIndex - 1] || {}).controlId;
+    if (!error) return;
 
-    if (hasError && !cellIsEditing && rowId && controlId) {
-      const error = cellErrors[rowId + '-' + controlId];
+    const tip = document.createElement('div');
+    tip.className = 'mdTableErrorTip';
+    tip.textContent = error;
+    tip.addEventListener('mouseleave', this.handleMouseLeave);
+    document.body.appendChild(tip);
+    this.cellErrorTip = tip;
 
-      if (error) {
-        const errorEle = createElementFromHtml(`<div
-            class="mdTableErrorTip"
-            style="
-              position: absolute;
-              font-size: var(--font-xs);
-              padding: 0px var(--space-2);
-              height: 26px;
-              max-width: 300px;
-              line-height: 26px;
-              white-space: nowrap;
-              background: var(--color-error);
-              z-index: 2;
-              color: var(--color-white)";
-          >
-            <div class="ellipsis" title="${error}">${error}</div>
-          </div>`);
-        document.body.appendChild(errorEle);
-        const top =
-          cell.getBoundingClientRect().y +
-          (/row-0/.test(cell.getAttribute('class')) ? cell.offsetHeight - 1 : -1 * errorEle.offsetHeight);
-        const left = cell.getBoundingClientRect().x;
-        errorEle.style.top = top + 'px';
-        errorEle.style.left = left + 'px';
-        errorEle.style.zIndex = 9999999;
-      }
-    }
+    const cellRect = cell.getBoundingClientRect();
+    const { clientWidth, clientHeight } = document.documentElement;
+    const { width, height } = tip.getBoundingClientRect();
+    const margin = 8;
+    const spaceAbove = cellRect.top - margin;
+    const spaceBelow = clientHeight - cellRect.bottom - margin;
+    const firstRow = cell.classList.contains('row-0');
+    const placeBelow = firstRow
+      ? spaceBelow >= height || spaceBelow >= spaceAbove
+      : spaceAbove < height && spaceBelow > spaceAbove;
+    const top = placeBelow ? cellRect.bottom : cellRect.top - height;
+
+    tip.style.top = `${Math.max(margin, Math.min(top, clientHeight - height - margin))}px`;
+    tip.style.left = `${Math.max(margin, Math.min(cellRect.left, clientWidth - width - margin))}px`;
+  };
+  handleCellMouseLeave = (event: JQuery.MouseLeaveEvent<HTMLElement>) => {
+    this.handleMouseLeave(event);
   };
 
-  handleMouseLeave = () => {
-    $('.mdTableErrorTip').remove();
-    $('.cell').removeClass('errorActive');
+  handleMouseLeave = (event?: { relatedTarget?: EventTarget | null | undefined }) => {
+    if (event?.relatedTarget instanceof Node && this.cellErrorTip?.contains(event.relatedTarget)) return;
+
+    this.cellErrorTip?.remove();
+    this.cellErrorTip = null;
   };
   handleBatchUpdateRecords = ({ tableRows, activeControl } = {}) => {
     const { appId, control, updateRows, rows, clearAndSetRows, updateTreeTableViewData, sortRows, sortConfig } =
@@ -1715,6 +1733,7 @@ class ChildTable extends React.Component<any, any> {
       isAddRowByLine,
       disableMaskDataControls,
       showLoadingMask,
+      canDismissLoadingMask,
       loadingMaskText,
       menuVisible,
       layoutDirection,
@@ -2267,11 +2286,13 @@ class ChildTable extends React.Component<any, any> {
                 showLoadingMask={showLoadingMask}
                 showSummary={showSummary}
                 loadingMaskChildren={
-                  <div className="childTableLoadingMaskContent flexColumn alignItemsCenter justifyContentCenter w100 h100">
+                  <div className="flexColumn alignItemsCenter justifyContentCenter w100 h100">
                     <span className="childTableIsImportingData">{loadingMaskText}</span>
-                    <Button className="childTableLoadingMaskClose" type="link" size="small" onClick={this.dismissLoadingMask}>
-                      {_l('关闭遮罩')}
-                    </Button>
+                    {canDismissLoadingMask && (
+                      <Button type="link" size="small" onClick={this.dismissLoadingMask}>
+                        {_l('关闭遮罩')}
+                      </Button>
+                    )}
                   </div>
                 }
                 isTreeTableView={isTreeTableView}
@@ -2293,6 +2314,7 @@ class ChildTable extends React.Component<any, any> {
                 height={tableHeight}
                 fromModule={WORKSHEETTABLE_FROM_MODULE.SUBLIST}
                 viewId={viewId}
+                onScroll={() => this.handleMouseLeave()}
                 scrollBarHoverShow
                 ref={this.worksheettable}
                 setHeightAsRowCount={fullShowTable}

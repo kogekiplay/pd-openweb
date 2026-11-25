@@ -43,6 +43,8 @@ import type {
   UploadErrorInfo,
 } from './uploader/types';
 
+import bindUploadErrors from './uploader/uploadErrors';
+
 export { FileStatus, UPLOAD_ERROR, UploadError, UploaderState } from './uploader/constants';
 export type { Uploader, UploaderFile, UploaderOption } from './uploader/types';
 
@@ -183,10 +185,16 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
       if (initFunc.PostInit) initFunc.PostInit(uploader);
     },
     destroy() {
+      if (destroyed) return;
       destroyed = true;
-      uploader.stop();
-      select.destroy();
-      handlers.clear();
+      try {
+        uploader.stop();
+        uploadErrors.flush();
+        trigger('Destroy', uploader);
+      } finally {
+        select.destroy();
+        handlers.clear();
+      }
     },
     start() {
       startQueue();
@@ -195,6 +203,7 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
       uploader.state = UploaderState.STOPPED;
       for (const task of tasks.values()) task.abort();
       tasks.clear();
+      uploadErrors.handleStateChanged();
       trigger('StateChanged', uploader);
     },
     addFile(input) {
@@ -264,9 +273,21 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
       // 对外那层把实参标成了可选（有调用方只传事件名，见 types.ts 的说明），
       // 内部这层是严格的；这里如实转发，缺的实参就让处理器自己拿到 undefined ——
       // 和改造前 plupload 的行为一致。
+      if (event === 'Error') {
+        const [up, error, tip] = args as unknown as Partial<UploaderEventArgs['Error']>;
+        if (up && error) {
+          uploadErrors.handleError(error);
+          trigger('Error', up, error, error.uploadErrorMessage ?? tip ?? '');
+          return;
+        }
+      }
+      if (event === 'StateChanged') uploadErrors.handleStateChanged();
+      if (event === 'UploadComplete' || event === 'Destroy') uploadErrors.flush();
       trigger(event, ...(args as UploaderEventArgs[typeof event]));
     },
   };
+
+  const uploadErrors = bindUploadErrors(uploader);
 
   function triggerUploadError(file: UploaderFile | undefined, message: string, code?: number) {
     if (file) file.status = FileStatus.FAILED;
@@ -279,6 +300,13 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
    * 这样调用方拿到的 errTip 不变。
    */
   function emitError(err: UploadErrorInfo) {
+    uploadErrors.handleError(err);
+    const errTip = err.uploadErrorMessage ?? getLegacyErrorTip(err);
+    trigger('Error', uploader, err, errTip);
+    if (initFunc.Error) initFunc.Error(uploader, err, errTip);
+  }
+
+  function getLegacyErrorTip(err: UploadErrorInfo): string {
     let errTip = '';
     let errorText = '';
 
@@ -290,7 +318,10 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
         errTip = _l('无法上传，不支持该格式的文件');
         break;
       case UploadError.HTTP_ERROR:
-        errorText = (err.response && err.response.error) || '';
+        errorText = typeof err.response?.error === 'string' ? err.response.error : '';
+        if (/limited mimeType/i.test(errorText)) {
+          return _l('不支持此文件格式，请转换后重试。') + (err.status ? `(${err.status})` : '');
+        }
         switch (err.status) {
           case 400:
             errTip = _l('上传文件发生错误，请稍后再试。');
@@ -309,6 +340,21 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
             break;
           case 614:
             errTip = _l('文件服务器已存在同名文件，请重新上传。');
+            {
+              try {
+                const response: unknown = JSON.parse(errorText);
+                if (
+                  response &&
+                  typeof response === 'object' &&
+                  'error' in response &&
+                  typeof response.error === 'string'
+                ) {
+                  errorText = response.error;
+                }
+              } catch {
+                // 七牛有时直接返回纯文本。
+              }
+            }
             break;
           case 631:
             errTip = _l('指定空间不存在。');
@@ -317,7 +363,7 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
             errTip = _l('上传数据块校验出错。请重试或提交反馈。');
             break;
           default:
-            if (err.file && !err.file.type && (err.file.size || 0) % 4096 === 0) {
+            if (err.status && err.file && !err.file.type && (err.file.size || 0) % 4096 === 0) {
               errTip = _l('此浏览器不支持上传文件夹');
             } else if (err.file && err.file.notExists) {
               errTip = _l('文件不存在，请确认本地文件位置。');
@@ -350,8 +396,7 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
         break;
     }
 
-    trigger('Error', uploader, err, errTip);
-    if (initFunc.Error) initFunc.Error(uploader, err, errTip);
+    return errTip;
   }
 
   // ── 加入队列 ────────────────────────────────────────────────────────────
@@ -663,6 +708,7 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
     const pending = files.some(f => f.status === FileStatus.QUEUED || f.status === FileStatus.UPLOADING);
     if (pending) return;
     uploader.state = UploaderState.STOPPED;
+    uploadErrors.flush();
     trigger('UploadComplete', uploader, files.slice());
     if (initFunc.UploadComplete) initFunc.UploadComplete(uploader, files.slice());
   }

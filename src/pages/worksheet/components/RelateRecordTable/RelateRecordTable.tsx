@@ -50,6 +50,7 @@ function RelateRecordTable(props) {
     isDraft,
     formItemId,
     onUpdateCell = () => {},
+    onCountChange,
   }: { records: RecordRow[]; [key: string]: any } = props;
   const { updateWorksheetControls } = props;
   const { updateRecord, deleteRecords, refresh, updateBase, updateTableConfigByControl } = props;
@@ -92,7 +93,7 @@ function RelateRecordTable(props) {
         },
         onDeleteSuccess: () => {
           if (!control.disabled && allowEdit && controlPermission.editable) {
-            deleteRecords([recordId]);
+            deleteRecords([recordId], { recordsDeleted: true });
           }
         },
       });
@@ -183,6 +184,7 @@ function RelateRecordTable(props) {
           }}
           cache={tableCache}
           handleOpenRecordInfo={handleOpenRecordInfo}
+          onCountChange={onCountChange}
           updateWorksheetControls={updateWorksheetControls}
           formItemId={formItemId}
         />
@@ -229,6 +231,7 @@ RelateRecordTable.propTypes = {
   refresh: func,
   updateTableConfigByControl: func,
   onUpdateCell: func,
+  onCountChange: func,
 };
 
 const mapStateToProps = (state: RootState) => ({

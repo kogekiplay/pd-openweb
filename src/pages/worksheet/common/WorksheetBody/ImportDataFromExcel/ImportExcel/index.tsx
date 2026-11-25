@@ -3,16 +3,21 @@ import cx from 'classnames';
 import * as Immutable from 'immutable';
 import _ from 'lodash';
 import { Button, Dialog, Support } from 'ming-ui';
+import appManagementController from 'src/api/appManagement';
 import { UPLOAD_ERROR, UPLOAD_STATUS } from 'src/pages/kc/constant/enum';
 import * as utils from 'src/pages/kc/utils';
 import createUploader from 'src/utils/createUploader';
+import { alertIfNotUnauthorized } from 'src/utils/services/request/error';
 import { UploadError } from 'src/utils/uploader/constants';
-import type { UploaderFile } from 'src/utils/uploader/types';
+import type { Uploader, UploaderFile } from 'src/utils/uploader/types';
 import UploadAction from './UploadAction';
 import UploadProgress from './UploadProgress';
 import './index.less';
 
 export default class ImportExcel extends React.Component<any, any> {
+  declare uploader: Uploader;
+  private previewPending = false;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -111,69 +116,90 @@ export default class ImportExcel extends React.Component<any, any> {
     });
   }
 
-  cancelUpload = id => {
-    if (this.uploader.removeFile(id)) {
-      const fileList = this.state.fileList.remove(id);
-      this.setState({ fileList });
-    } else {
+  cancelUpload = (id: string) => {
+    if (!this.uploader.files.some(file => file.id === id)) {
       alert(_l('取消失败'), 3);
+      return;
     }
+    this.uploader.removeFile(id);
   };
 
-  retryUpload = id => {
+  retryUpload = (id: string) => {
     const selectFile = this.state.fileList.get(id);
+    const file = this.uploader.files.find(file => file.id === id);
+    if (!selectFile || selectFile.isRef || !file) return;
+    this.uploader.removeFile(id);
+    this.uploader.addFile(file.getNative());
+  };
 
+  deleteFile = (id: string) => {
+    const selectFile = this.state.fileList.get(id);
+    if (!selectFile) return;
     if (!selectFile.isRef) {
-      const up = this.uploader;
-      const file = up.getFile(id);
-      up.trigger('Retry', file);
-    }
-  };
-
-  deleteFile = id => {
-    const selectFile = this.state.fileList.get(id);
-    const fileList = this.state.fileList.remove(id);
-    let newFilePaths = this.state.filePaths.concat();
-
-    if (selectFile.isRef) {
-      newFilePaths = this.state.filePaths.filter(item => item.id !== id);
-      this.setState({ fileList, filePaths: newFilePaths });
-    } else {
-      if (this.uploader.removeFile(id)) {
-        newFilePaths = this.state.filePaths.filter(item => item.id !== selectFile.path);
-        this.setState({ fileList, filePaths: newFilePaths });
-      } else {
+      if (!this.uploader.files.some(file => file.id === id)) {
         alert(_l('删除失败'), 3);
+        return;
       }
+      this.uploader.removeFile(id);
     }
+    this.setState((prev: { fileList: Immutable.OrderedMap<string, unknown>; filePaths: Array<{ id: string }> }) => ({
+      fileList: prev.fileList.remove(id),
+      filePaths: prev.filePaths.filter(item => item.id !== (selectFile.isRef ? id : selectFile.path)),
+    }));
   };
 
-  onNext = () => {
-    const { hideUploadExcel, worksheetId } = this.props;
-    const requestData = {
-      filePath: this.state.filePaths[0].type === 1 ? this.state.filePaths[0].id : '',
-      fileId: this.state.filePaths[0].type === 2 ? this.state.filePaths[0].id : '',
-      worksheetId,
-    };
+  onNext = async () => {
+    if (this.previewPending) return;
+    const { hideUploadExcel, worksheetId, extendOptions } = this.props;
+    const file = this.state.filePaths[0];
+    if (!file || file.type !== 1) return;
+    const { masterSheetId, masterWorksheetId, rowId, controlId } = extendOptions || {};
+    const filePath = file.id;
+    const isCurrentFile = () => this.state.filePaths[0] === file && this.props['worksheetId'] === worksheetId;
 
+    this.previewPending = true;
     this.setState({ loading: true });
 
-    window
-      .mdyAPI('', '', requestData, {
-        ajaxOptions: {
-          type: 'GET',
-          url: `${md.global.Config.WorksheetDownUrl}/ExportExcel/GetPreviewExcel`,
+    try {
+      const token = await appManagementController.getToken(
+        {
+          tokenType: 10,
+          worksheetId,
+          filePath,
+          masterWorksheetId: masterWorksheetId || masterSheetId,
+          rowId,
+          controlId,
         },
-        customParseResponse: true,
-      })
-      .then(data => {
-        const fileInfo = {
-          filePath: this.state.filePaths[0].type === 1 ? this.state.filePaths[0].id : '',
-          fileId: this.state.filePaths[0].type === 2 ? this.state.filePaths[0].id : '',
-          fileName: this.state.filePaths[0].name,
-        };
-        hideUploadExcel(data.data, fileInfo, data.message);
-      });
+        { silent: true },
+      );
+      if (!isCurrentFile()) return;
+      const data = await window.mdyAPI(
+        '',
+        '',
+        { token, filePath, worksheetId, accountId: md.global.Account.accountId },
+        {
+          ajaxOptions: {
+            type: 'GET',
+            url: `${md.global.Config.WorksheetDownUrl}/ExportExcel/GetPreviewExcel`,
+          },
+          customParseResponse: true,
+        },
+      );
+      if (!isCurrentFile()) return;
+      if (data?.status !== 1) {
+        alert(_l('导入失败，请稍后重试'), 2);
+        return;
+      }
+
+      hideUploadExcel(data.data, { filePath, fileName: file.name, token }, data.message);
+    } catch (error) {
+      if (isCurrentFile()) {
+        alertIfNotUnauthorized(error, _l('导入失败，请稍后重试'), 2);
+      }
+    } finally {
+      this.previewPending = false;
+      this.setState({ loading: false });
+    }
   };
 
   override render() {

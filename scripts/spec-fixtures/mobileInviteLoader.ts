@@ -32,7 +32,13 @@ function makeMobile(){
  function page(props:Data={}){return instance(f.load('src/components/addFriends/MobileOrEmailInvite.tsx')['default'] as Constructor,{fromType:0,projectId:'p',onCancel(){},setDetailMode(){},...props});}
  async function finish(index:number,value:unknown){const p=requests[index];assert.ok(p);p.resolve(value);const result=await Promise.allSettled(p.children);await Promise.resolve();return result;}
  async function fail(index:number,reason:unknown){const p=requests[index];assert.ok(p);p.reject(reason);const result=await Promise.allSettled(p.children);await Promise.resolve();return result;}
- async function passCaptcha(index=dialogs.length-1){assert.ok(dialogs[index]);return invoke(dialogs[index]!,'onOk');}
+ async function passCaptcha(index=dialogs.length-1){
+  const dialog=dialogs[index];assert.ok(dialog);
+  const input=f.nodes(dialog['description']).find(node=>node.type==='input');assert.ok(input);
+  const ref=input.props['ref'];assert.ok(ref&&typeof ref==='object');
+  Reflect.set(ref,'current',{value:captchaValue});
+  return invoke(dialog,'onOk');
+ }
  function parentView(){const open=f.load('src/components/addFriends/index.tsx')['default'];assert.equal(typeof open,'function');Reflect.apply(open as (...args:unknown[])=>unknown,undefined,[{fromType:0,projectId:'p'}]);const entry=wraps.at(-1)!;assert.equal(typeof entry.Type,'function');const parent=instance(entry.Type as Constructor,entry.props);parent.state['selectTab']=2;return {...invoke(parent,'renderContent') as {type:unknown;props:Data},parent};}
  function input(kind:'Email'|'Tel',onChange:(value:Data)=>void){const Type=f.load('src/pages/Role/PortalCon/components/'+kind+'.tsx')['default'];assert.equal(typeof Type,'function');return Reflect.construct(Type as new(props:Data)=>object,[{data:{},onChange}]);}
  return{...f,md,core,common,requests,alerts,patches,dialogs,wraps,domTrace,page,parentView,input,invoke,finish,fail,passCaptcha,commit:()=>{for(const callback of callbacks.splice(0))callback();},setReturn:(value:unknown)=>{custom={value};},setFailure:(reason:unknown)=>{failure=reason;},setCaptchaValue:(value:string)=>{captchaValue=value;},setCaptchaMode:(value:number)=>{md.global['getCaptchaType']=()=>value;},setCaptchaTarget:(value:unknown)=>{captchaTarget=value;},tencentReply:async(value:Data)=>{await Promise.resolve();assert.ok(tencentCallbacks.length);tencentCallbacks.at(-1)!(value);},setEncrypt:(fn:((value:unknown)=>unknown)|undefined)=>{encryptOverride=fn;}};

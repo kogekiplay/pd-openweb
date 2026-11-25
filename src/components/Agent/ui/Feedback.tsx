@@ -1,7 +1,8 @@
 import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import { Popup } from 'antd-mobile';
-import { LoadDiv } from 'ming-ui';
-import { Modal } from 'ming-ui/antd-components';
+import copy from 'copy-to-clipboard';
+import { Icon, LoadDiv } from 'ming-ui';
+import { Button, Modal, Tooltip } from 'ming-ui/antd-components';
 import useFunctionWrapComponent from 'ming-ui/hooks/useFunctionWrapComponent';
 import agentAjax from 'src/api/agent';
 import { browserIsMobile } from 'src/utils/common';
@@ -35,6 +36,27 @@ function errorText(error?: unknown): string {
   const code = record(record(error)?.['data'])?.['errorCode'];
   return getAgentFeedbackErrorMessage(code);
 }
+export function CopyTraceIdButton({ traceId }: { traceId: string }) {
+  if (!traceId) return null;
+
+  const label = _l('复制 ID');
+
+  return (
+    <Tooltip title={label} placement="top">
+      <Button
+        type="text"
+        size={browserIsMobile() ? 'middle' : 'small'}
+        aria-label={label}
+        icon={<Icon icon="ID" className="Font18 textSecondary" />}
+        onClick={async () => {
+          const copied = await copy(traceId).catch(() => false);
+          alert(copied ? _l('复制成功') : _l('复制失败'), copied ? 1 : 2);
+        }}
+      />
+    </Tooltip>
+  );
+}
+
 export function AgentFeedback({ traceId, projectId, onClose }: Props) {
   const frameRef = useRef<HTMLIFrameElement>(null);
   const [formUrl, setFormUrl] = useState('');
@@ -97,10 +119,16 @@ export function AgentFeedback({ traceId, projectId, onClose }: Props) {
       <LoadDiv />
     </div>
   );
+  const title = (
+    <span className="inlineFlex alignItemsCenter" style={{ gap: 4 }}>
+      {_l('反馈')}
+      <CopyTraceIdButton traceId={traceId} />
+    </span>
+  );
   return mobile ? (
     <Popup visible className="mobileModal topRadius" onMaskClick={onClose}>
       <div className="flexRow pAll16">
-        <strong className="flex">{_l('反馈')}</strong>
+        <strong className="flex">{title}</strong>
         <button type="button" className="ming Button Button--link" onClick={onClose}>
           {_l('关闭')}
         </button>
@@ -108,7 +136,7 @@ export function AgentFeedback({ traceId, projectId, onClose }: Props) {
       {content}
     </Popup>
   ) : (
-    <Modal open width={640} title={_l('反馈')} keyboard mask={{ closable: true }} footer={null} onCancel={onClose}>
+    <Modal open width={640} title={title} keyboard mask={{ closable: true }} footer={null} onCancel={onClose}>
       {content}
     </Modal>
   );

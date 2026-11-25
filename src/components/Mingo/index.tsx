@@ -94,6 +94,7 @@ function Mingo(props) {
   const [, setCurrentChatId] = useState(null);
   // 新版 Agent 当前会话 id（由 ChatPanel 广播 SESSION_ACTIVE 得到）：供「新窗口打开」续接同一会话
   const [agentSessionId, setAgentSessionId] = useState(null);
+  const [taskInstanceKey, setTaskInstanceKey] = useState(0);
   const contentRef = useRef(null);
   const [taskType, setTaskType] = useState(
     (pendingStartTask && pendingStartTask.type) ||
@@ -124,6 +125,12 @@ function Mingo(props) {
       if (window.mingoPendingStartTask) {
         if (window.mingoPendingStartTask.base) {
           setBase(window.mingoPendingStartTask.base);
+        }
+
+        if (window.mingoPendingStartTask.type === MINGO_TASK_TYPE.CREATE_APP_ASSIGNMENT) {
+          // 已打开 Agent 时任务类型不会变化，重建任务实例才能消费新的首条需求。
+          setTaskInstanceKey(key => key + 1);
+          setAgentSessionId(null);
         }
 
         setIsChatting(true);
@@ -269,6 +276,7 @@ function Mingo(props) {
         </div>
       )}
       <MingoEntry
+        key={taskInstanceKey}
         allowEdit
         base={{ ...base, worksheetInfo: base.worksheetInfo || worksheetInfo }}
         sheetList={sheetList}

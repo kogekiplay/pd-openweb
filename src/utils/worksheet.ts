@@ -621,7 +621,7 @@ export function getGroupControlId(view: WorksheetView | undefined): string | und
 }
 
 export function getFiltersForGroupedView(
-  control: Pick<FormControl, 'controlId' | 'type'>,
+  control: Pick<FormControl, 'controlId' | 'type' | 'sourceControlType'>,
   groupKey: string,
 ): WorksheetFilterCondition {
   if (String(groupKey) === '-1') {
@@ -632,6 +632,8 @@ export function getFiltersForGroupedView(
       filterType: 7,
     };
   }
+
+  const groupType = control.type === WIDGETS_TO_API_TYPE_ENUM.SHEET_FIELD ? control.sourceControlType : control.type;
 
   if (
     includes(
@@ -644,7 +646,7 @@ export function getFiltersForGroupedView(
         WIDGETS_TO_API_TYPE_ENUM.ORG_ROLE,
         WIDGETS_TO_API_TYPE_ENUM.DEPARTMENT,
       ],
-      control.type,
+      groupType,
     )
   ) {
     return {
@@ -657,7 +659,7 @@ export function getFiltersForGroupedView(
     };
   }
 
-  if (control.type === WIDGETS_TO_API_TYPE_ENUM.SCORE) {
+  if (groupType === WIDGETS_TO_API_TYPE_ENUM.SCORE) {
     return {
       controlId: control.controlId,
       dataType: control.type,

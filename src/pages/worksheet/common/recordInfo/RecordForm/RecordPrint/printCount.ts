@@ -97,6 +97,16 @@ export function parseRowPrintCount(value: unknown): RowPrintCount {
   }
   return { totalPrintCount: count(response?.['totalPrintCount']), templates };
 }
+export async function loadPrintCount(
+  args: PrintContext & { rowIds: string[] },
+  required: boolean,
+): Promise<RowPrintCount | undefined> {
+  if (!args.projectId || !args.worksheetId || !required || !printCountFeatureAvailable(args.projectId))
+    return undefined;
+
+  return getRowPrintCount(args);
+}
+
 export async function getRowPrintCount(args: PrintContext & { rowIds: string[] }): Promise<RowPrintCount> {
   const response: unknown = await worksheetAjax.getRowPrintCount(args);
   return parseRowPrintCount(response);

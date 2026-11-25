@@ -20,14 +20,14 @@ import { getDownLoadUrl } from 'src/pages/Print/core/util';
 import { browserIsMobile, emitter, pathCompletion } from 'src/utils/common';
 import type { FormControl } from 'src/utils/controlTypes';
 import { VersionProductType } from 'src/utils/enum';
+import { hasPrintLimitTemplate } from 'src/utils/domain/worksheet/print';
 import { addBehaviorLog, getFeatureStatus } from 'src/utils/project';
 import { sendCloudPrint } from 'src/utils/record';
 import IconBtn from './IconBtn';
 import ManagePrintCountModal, { type ManagedPrintTemplate } from './RecordPrint/ManagePrintCountModal';
 import {
-  getRowPrintCount,
+  loadPrintCount,
   precheckTemplatePrint,
-  printCountFeatureAvailable,
   type RowPrintCount,
   type TemplatePrintCount,
 } from './RecordPrint/printCount';
@@ -288,7 +288,12 @@ export default class PrintList extends Component<any, any> {
   }
 
   override componentDidUpdate(prevProps) {
-    if (this.props.worksheetId !== prevProps.worksheetId || this.props.recordId !== prevProps.recordId) {
+    if (
+      this.props.worksheetId !== prevProps.worksheetId ||
+      this.props.recordId !== prevProps.recordId ||
+      this.props['projectId'] !== prevProps.projectId ||
+      this.props['printCountEnabled'] !== prevProps.printCountEnabled
+    ) {
       this.getData();
     }
   }
@@ -308,14 +313,19 @@ export default class PrintList extends Component<any, any> {
           rowIds: [recordId].filter(Boolean),
         })
         .then(tempList => {
-          if (recordId && printCountFeatureAvailable(projectId)) {
-            getRowPrintCount({ projectId, worksheetId, rowIds: [recordId] })
-              .then(printCount => {
-                if (this.props['recordId'] === recordId && this.props['worksheetId'] === worksheetId)
-                  this.setState({ printCount });
-              })
-              .catch(() => this.setState({ printCount: undefined }));
-          }
+          const printCountRequired =
+            Number(this.props['type']) !== 2 && (Boolean(this.props['printCountEnabled']) || hasPrintLimitTemplate(tempList));
+          void loadPrintCount({ projectId, worksheetId, rowIds: [recordId].filter(Boolean) }, printCountRequired)
+            .catch(() => undefined)
+            .then(printCount => {
+              if (
+                this.props['recordId'] === recordId &&
+                this.props['worksheetId'] === worksheetId &&
+                this.props['projectId'] === projectId
+              ) {
+                this.setState({ printCount });
+              }
+            });
           let list = !viewId ? tempList.filter(o => o.range === 1) : tempList;
 
           this.setState({

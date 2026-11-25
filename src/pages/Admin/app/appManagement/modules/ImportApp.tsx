@@ -3,6 +3,7 @@ import { Progress } from 'antd';
 import cx from 'classnames';
 import { Checkbox, Icon, Support, SvgIcon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
+import appManagementController from 'src/api/appManagement';
 import { formatFileSize } from 'src/utils/common';
 import createUploader from 'src/utils/createUploader';
 import RegExpValidator from 'src/utils/expression';
@@ -81,6 +82,7 @@ export default class ImportApp extends React.Component<any, any> {
               file: file,
               url: md.global.FileStoreConfig.documentHost + '/' + key,
               errTip: '',
+              token: '',
             },
             () => {
               this.checkPassword();
@@ -101,7 +103,7 @@ export default class ImportApp extends React.Component<any, any> {
   }
 
   //验证密码是否正确
-  checkPassword() {
+  async checkPassword() {
     const { step } = this.state;
     const params = {
       password: this.state.password,
@@ -110,12 +112,40 @@ export default class ImportApp extends React.Component<any, any> {
       projectId: this.props.projectId ? this.props.projectId : Config.projectId,
     };
 
-    window
-      .mdyAPI('', '', params, {
-        ajaxOptions: { url: `${md.global.Config.AppFileServer}AppFile/Check` },
-        customParseResponse: true,
-      })
-      .then(({ data: { errorCode, apps = [], isHighVersions } }) => {
+    let token = this.state['token'];
+
+    if (!token) {
+      try {
+        token = await appManagementController.getToken({
+          tokenType: 9,
+          projectId: params.projectId,
+          url: params.url,
+        });
+        this.setState({ token });
+      } catch {
+        this.setState({ file: {}, url: '', token: '' });
+        return;
+      }
+    }
+
+    return window
+      .mdyAPI(
+        '',
+        '',
+        { ...params, token },
+        {
+          ajaxOptions: { url: `${md.global.Config.AppFileServer}AppFile/Check` },
+          customParseResponse: true,
+        },
+      )
+      .then((res: { state: number; exception?: string; data?: { errorCode: number; apps?: unknown[]; isHighVersions?: boolean } } | undefined) => {
+        if (res?.state !== 1 || !res.data) {
+          this.setState({ errTip: res?.exception, token: '' });
+          return;
+        }
+
+        const { errorCode, apps = [], isHighVersions } = res.data;
+
         if (step >= 2 && (errorCode === 5 || ERRORMSG[errorCode])) {
           alert(errorCode === 5 ? _l('解析失败，不是有效的应用文件') : ERRORMSG[errorCode], 2);
         }
@@ -146,6 +176,7 @@ export default class ImportApp extends React.Component<any, any> {
     }
 
     const params = {
+      token: this.state['token'],
       password: this.state.password,
       url: this.state.url,
       accountId: md.global.Account.accountId,

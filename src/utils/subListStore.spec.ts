@@ -101,6 +101,9 @@ function load(relative: string): ModuleExports {
       : file;
   const { code } = transformFileSync(sourceFile, { plugins: ['@babel/plugin-transform-modules-commonjs'] });
   const dependency = (name: string): unknown => {
+    if (name === 'src/pages/worksheet/common/WorkSheetFilter/enum')
+      return load('src/pages/worksheet/common/WorkSheetFilter/enum.ts');
+    if (name === 'src/utils/services/request/error') return { alertIfNotUnauthorized() {} };
     if (name === 'lodash' || name === 'redux' || name === '@reduxjs/toolkit' || name === 'uuid') return require(name);
     if (name === 'src/api/worksheet' || name === 'src/api/publicWorksheet') return api;
     if (name === 'file-saver') return { saveAs() {} };

@@ -301,9 +301,11 @@ export default function SendToChat(props) {
         value={description}
         onChange={e => setDescription(e.target.value)}
       />
-      <Button className="mTop6" disabled={!selectedUser} onClick={handleSend}>
-        {_l('发送')}
-      </Button>
+      <div className="TxtRight">
+        <Button className="mTop6" disabled={!selectedUser} onClick={handleSend}>
+          {_l('发送')}
+        </Button>
+      </div>
     </Con>
   );
 }

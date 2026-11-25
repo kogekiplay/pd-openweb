@@ -427,7 +427,10 @@ export default class RelateRecord extends React.Component<any, any> {
     } else if (parseInt(showtype, 10) === RELATE_RECORD_SHOW_TYPE.DROPDOWN) {
       return (
         <EditableCellCon
-          className={cx(className, 'cellRelateRecord', { canedit: editable, focusInput: editable })}
+          className={cx(className, 'cellRelateRecord cellRelateRecordDropdown', {
+            canedit: editable,
+            focusInput: editable,
+          })}
           style={style}
           conRef={this.cell}
           hideOutline

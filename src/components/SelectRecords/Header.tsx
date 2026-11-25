@@ -16,6 +16,7 @@ interface SelectRecordsHeaderProps {
   controls: FormControl[];
   searchConfig?: { searchControl?: FormControl | undefined } | undefined;
   onSearch: (value: string) => void;
+  onSearchFocus?: React.FocusEventHandler<HTMLInputElement> | undefined;
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement> | undefined;
   onNewRecord?: (() => void) | undefined;
   onExpandFastFilters?: (() => void) | undefined;
@@ -101,6 +102,7 @@ export default function Header(props: SelectRecordsHeaderProps) {
     controls,
     searchConfig,
     onSearch,
+    onSearchFocus,
     onKeyDown,
     onNewRecord,
     onExpandFastFilters,
@@ -127,6 +129,7 @@ export default function Header(props: SelectRecordsHeaderProps) {
             manualRef={inputRef}
             autoFocus
             value={keyword}
+            onFocus={onSearchFocus}
             onChange={value => {
               setKeyword(value);
               onSearch(value);

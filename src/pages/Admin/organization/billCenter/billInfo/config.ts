@@ -41,6 +41,7 @@ export const orderRecordType = enumObj({
   Merchant: 100,
   KnowledgeBaseVectorization: 33,
   Chunks: 34, // 向量知识库分块
+  MingdaoOpt: 35, // 系统扣除
   CloudApiAI: 36, // 云服务
   Mingo: 37,
 });
@@ -81,6 +82,7 @@ export const orderTypeText: Record<string, string> = {
   DocumentParsing: _l('AI Agent-文档解析'),
   KnowledgeBaseVectorization: _l('知识库向量化'),
   Chunks: _l('向量分块扩充包'),
+  MingdaoOpt: _l('系统扣除'),
   CloudApiAI: _l('云服务'),
   Mingo: 'Mingo',
 };
@@ -124,7 +126,7 @@ export const orderRecordStatusDropdownData = [{ value: 0, text: _l('全部') }].
 export const enumOrderRecordStatus = enumObj(orderRecordStatus);
 
 export const PAID_RECORD_TYPE = [
-  2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23, 25, 26, 28, 34, 100,
+  2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23, 25, 26, 28, 34, 35, 100,
 ];
 export const RECHARGE_RECORD_TYPE = [1, 15, 20, 24, 27, 29, 31, 30, 32, 33, 36, 37];
 
@@ -147,7 +149,7 @@ export const invoiceConfig = [
   {
     key: 'email',
     text: _l('Email地址'),
-    verify: /^(\w+)(\.\w+)*@(\w+)(\.\w+)*.(\w+)$/i,
+    verify: /^([\w&]+)(\.[\w&]+)*@(\w+)(\.\w+)*.(\w+)$/i,
     half: true,
     require: true,
   },

@@ -1,3 +1,20 @@
+import type { FuncDateFormatterFunc } from '@full-ui/headless-calendar';
+import moment from 'moment';
+import { getWeekNumber } from 'src/utils/domain/worksheet/calendar';
+
+function weekTitle(weekBegin: number): FuncDateFormatterFunc {
+  return ({ start, end }) => {
+    const firstDay = moment([start.year, start.month, start.day]);
+    const lastDay = end ? moment([end.year, end.month, end.day]) : firstDay;
+    const endFormat = firstDay.isSame(lastDay, 'month')
+      ? 'DD'
+      : firstDay.isSame(lastDay, 'year')
+        ? 'MM/DD'
+        : 'YYYY/MM/DD';
+    return `${firstDay.format('YYYY/MM/DD')} - ${lastDay.format(endFormat)} ${_l('第%0周', getWeekNumber(firstDay, weekBegin))}`;
+  };
+}
+
 export const TAB_LIST = [
   { key: 'eventAll', txt: _l('全部') },
   { key: 'eventScheduled', txt: _l('已排期') },
@@ -23,7 +40,7 @@ export const CALENDAR_BUTTONS = {
   listMonth: { text: _l('列表') },
 };
 
-export const CALENDAR_VIEW_FORMATS = {
+const CALENDAR_VIEW_FORMATS = {
   dayGridMonth: {
     titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' },
   },
@@ -50,6 +67,17 @@ export const CALENDAR_VIEW_FORMATS = {
   // as const 不能少：不加的话 'numeric' 被拓宽成 string，对不上 v7 收紧后的
   // NativeDateFormatterOptions（v6 的类型宽松，没这个问题）。
 } as const;
+
+const formatsByWeekBegin = Array.from({ length: 7 }, (_, weekBegin) => {
+  const titleFormat = weekTitle(weekBegin);
+  return {
+    ...CALENDAR_VIEW_FORMATS,
+    timeGridWeek: { ...CALENDAR_VIEW_FORMATS.timeGridWeek, titleFormat },
+    dayGridWeek: { ...CALENDAR_VIEW_FORMATS.dayGridWeek, titleFormat },
+  };
+});
+
+export const getCalendarViewFormats = (weekBegin = 1) => formatsByWeekBegin[weekBegin] ?? formatsByWeekBegin[1];
 
 export const DEFAULT_COLOR = 'var(--color-primary-transparent)';
 export const DEFAULT_BORDER_COLOR_DARK = 'rgba(255, 255, 255, 0.12)';

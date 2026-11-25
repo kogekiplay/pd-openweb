@@ -1,5 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
+import copy from 'copy-to-clipboard';
 import { Dialog, Icon } from 'ming-ui';
 import { Tooltip } from 'ming-ui/antd-components';
 import { ICON_ROLE_TYPE, sysRoleType } from 'src/pages/Role/config.js';
@@ -20,45 +21,28 @@ export default class ItemCon extends React.Component<any, any> {
       selectDebugRole = [],
     } = this.props;
     const { data, roleId } = this.props;
+    const isSystemRole = sysRoleType.includes(data.roleType);
 
-    let optList = [];
+    const optList = [];
 
     //离开自己所在的角色
     if (data.isMyRole && !(isOwner && data.roleType === APP_ROLE_TYPE.ADMIN_ROLE) && !selectDebugRole.length) {
       //拥有者不能离开管理员角色
-      optList = [
-        ...optList,
-        {
-          value: 0,
-          text: _l('离开'),
-        },
-      ];
+      optList.push({ value: 0, text: _l('离开') });
     }
 
     //编辑自己有权限的自定义角色
     if (canEditApp) {
-      if (!sysRoleType.includes(data.roleType)) {
-        optList = [
-          ...optList,
-          {
-            value: 1,
-            text: _l('编辑角色'),
-            showLine: data.isMyRole,
-          },
-          {
-            value: 2,
-            type: 'err',
-            text: _l('删除'),
-          },
-        ];
-      } else {
-        optList = [
-          ...optList,
-          {
-            value: 1,
-            text: _l('查看角色'),
-          },
-        ];
+      optList.push({
+        value: 1,
+        text: isSystemRole ? _l('查看角色') : _l('编辑角色'),
+        showLine: !isSystemRole && data.isMyRole,
+      });
+      if (data.roleId) {
+        optList.push({ value: 'copyId', text: _l('复制 ID') });
+      }
+      if (!isSystemRole) {
+        optList.push({ value: 2, type: 'err', text: _l('删除') });
       }
     }
 
@@ -93,7 +77,7 @@ export default class ItemCon extends React.Component<any, any> {
             <DropOption
               dataList={optList}
               showHeader={() => {
-                if (!data.isMyRole || sysRoleType.includes(data.roleType)) {
+                if (!data.isMyRole || isSystemRole) {
                   return null;
                 }
 
@@ -103,7 +87,7 @@ export default class ItemCon extends React.Component<any, any> {
                   </div>
                 );
               }}
-              onAction={it => {
+              onAction={async it => {
                 if (it.value === 0) {
                   Dialog.confirm({
                     title: <span className="Red">{_l('你确认离开此角色吗？')}</span>,
@@ -115,6 +99,9 @@ export default class ItemCon extends React.Component<any, any> {
                   });
                 } else if (it.value === 1) {
                   this.props.setQuickTag({ roleId: data.roleId, tab: 'roleSet' });
+                } else if (it.value === 'copyId') {
+                  const copied = await copy(data.roleId).catch(() => false);
+                  alert(copied ? _l('复制成功') : _l('复制失败'), copied ? 1 : 2);
                 } else if (it.value === 2) {
                   this.props.delDialog(this.props.roleList.find(it => it.roleId === data.roleId));
                 }

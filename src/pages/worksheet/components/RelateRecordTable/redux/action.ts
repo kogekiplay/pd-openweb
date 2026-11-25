@@ -16,6 +16,8 @@ import { getTranslateInfo } from 'src/utils/app';
 import { getFilledRequestParams } from 'src/utils/common';
 import { controlState, replaceByIndex } from 'src/utils/control';
 import type { FormControl, RecordRow } from 'src/utils/controlTypes';
+import { FILTER_CONDITION_TYPE } from 'src/pages/worksheet/common/WorkSheetFilter/enum';
+import { alertIfNotUnauthorized } from 'src/utils/services/request/error';
 import { storeFailureMessage, storeObject, storeRows } from 'src/utils/fieldStoreBoundary';
 import { handleRowData } from 'src/utils/record';
 import type {
@@ -593,10 +595,13 @@ export function search(keywords: string) {
   };
 }
 
-export function updateRecord(newRecord: FieldStoreRecord): RelationRecordsAction {
-  return {
-    type: 'UPDATE_RECORD',
-    newRecord,
+export function updateRecord(newRecord: FieldStoreRecord) {
+  return (dispatch: RelateRecordTableDispatch) => {
+    dispatch({
+      type: 'UPDATE_RECORD',
+      newRecord,
+    });
+    dispatch(getRelateRecordSummary());
   };
 }
 
@@ -608,10 +613,7 @@ export function updateRecordByRecordId(recordId: string, changes: FieldStoreReco
   };
 }
 
-export function appendRecords(
-  records: FieldStoreRecord[] = [],
-  { afterRecordId }: { afterRecordId?: string | undefined } = {},
-) {
+function appendRecordsToTable(records: FieldStoreRecord[], afterRecordId?: string) {
   return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
     const { base } = state;
@@ -623,10 +625,23 @@ export function appendRecords(
       afterRecordId,
     });
     dispatch(updateTreeTableViewData());
-    // saveSync 模式下新记录已写入服务端（handleAddRelation 走 updateRelateRecords、onNew 走 addRecord 携带 masterRecord 直接落库），需重拉统计；非 saveSync 模式记录仅暂存本地，刷新只会拿到不含新记录的旧值，反而误导。
-    if (base.saveSync) {
-      dispatch(getRelateRecordSummary());
+    dispatch(getRelateRecordSummary());
+  };
+}
+
+export function appendRecords(
+  records: FieldStoreRecord[] = [],
+  { afterRecordId }: { afterRecordId?: string | undefined } = {},
+) {
+  return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
+    const { base } = getState();
+    const { control, from, saveSync } = base;
+
+    if (afterRecordId && records[0]?.rowid && control?.type === 29 && from === RECORD_INFO_FROM.DRAFT && saveSync) {
+      return dispatch(handleAddRelation(records, { afterRecordId }));
     }
+
+    return dispatch(appendRecordsToTable(records, afterRecordId));
   };
 }
 
@@ -637,15 +652,20 @@ export function appendFakeRecords(records: FieldStoreRecord[]): RelationRecordsA
   };
 }
 
-export function deleteRecords(recordIds: string | string[] = []) {
+export function deleteRecords(recordIds: string | string[] = [], { recordsDeleted = false } = {}) {
   return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
-    const { base } = state;
+    const { base, changes } = state;
+    const ids = typeof recordIds === 'string' ? [recordIds] : recordIds;
     dispatch({
       type: 'DELETE_RECORDS',
-      recordIds: typeof recordIds === 'string' ? [recordIds] : recordIds,
+      recordIds: ids,
       saveSync: base.saveSync,
+      recordsDeleted,
+      // 暂存新增的关联尚未计入服务端数量，真实删除时只从展示数量中扣除。
+      savedRecordCount: ids.filter(id => !includes(changes.addedRecordIds, id)).length,
     });
+    dispatch(getRelateRecordSummary());
   };
 }
 
@@ -700,7 +720,6 @@ export function updateCell(
         }
 
         dispatch(updateRecord({ ...updatedRow, allowedit: true, allowdelete: true }));
-        dispatch(getRelateRecordSummary());
       });
     }
 
@@ -797,52 +816,109 @@ function getStatisticsSettingTypes(control: FormControl | undefined) {
 }
 
 export function getRelateRecordSummary({ reset = false } = {}) {
-  return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
-    const state = getState();
-    const { base, tableState, rowsSummary } = state;
-    const { control = {}, worksheetId, recordId, appId, viewId } = base;
+  return async (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
+    const { base, tableState, changes, rowsSummary } = getState();
+    const { control, worksheetId, recordId, appId, viewId } = base;
+    const controlId = control?.controlId;
 
-    if (get(control, 'advancedSetting.openstatistics') !== '1') return;
-    if (!worksheetId || !recordId) return;
+    if (!control || !controlId || !worksheetId || !recordId || get(control, 'advancedSetting.openstatistics') !== '1')
+      return;
 
     const savedTypes = getStatisticsSettingTypes(control);
     const types = reset ? savedTypes : { ...savedTypes, ...rowsSummary.types };
-    const columnRpts = Object.keys(types)
-      .filter(controlId => types[controlId])
-      .map(controlId => ({
-        controlId,
-        rptType: Number(types[controlId]),
-      }));
+    const columnRpts = Object.entries(types)
+      .filter(([, type]) => type)
+      .map(([id, type]) => ({ controlId: id, rptType: Number(type) }));
+    const requestId = (rowsSummary.requestId || 0) + 1;
+    dispatch({ type: 'START_ROWS_SUMMARY', requestId, types });
 
     if (!columnRpts.length) {
-      dispatch({ type: 'UPDATE_ROWS_SUMMARY', types, values: {} });
+      dispatch({ type: 'UPDATE_ROWS_SUMMARY', requestId, types, values: {} });
       return;
     }
 
-    worksheetAjax
-      .getFilterRowsReport(
-        getFilledRequestParams({
-          worksheetId,
-          appId,
-          viewId,
-          rowId: recordId,
-          ...(control?.controlId !== undefined ? { controlId: control.controlId } : {}),
-          columnRpts,
-          filterControls: tableState.filterControls || [],
-          keyWords: tableState.keywords || '',
-          searchType: 1,
-          getType: 7,
-          requestParams: { controlId: control?.controlId, rowId: recordId },
-        }),
-      )
-      .then(data => {
-        dispatch({
-          type: 'UPDATE_ROWS_SUMMARY',
-          types,
-          values:
-            data && data.length ? [{}, ...data].reduce((a, b) => Object.assign({}, a, { [b.controlId]: b.value })) : {},
-        });
-      });
+    const reportFilters = {
+      columnRpts,
+      filterControls: tableState.filterControls || [],
+      keyWords: tableState.keywords || '',
+      searchType: 1,
+    };
+    let args: Parameters<typeof worksheetAjax.getFilterRowsReport>[0] = {
+      ...reportFilters,
+      worksheetId,
+      appId,
+      viewId,
+      rowId: recordId,
+      controlId,
+      getType: 7,
+      requestParams: { controlId, rowId: recordId },
+    };
+
+    try {
+      const { addedRecordIds, deletedRecordIds, isDeleteAll } = changes;
+      let report: unknown;
+      if (!base.saveSync && (addedRecordIds.length || deletedRecordIds.length || isDeleteAll)) {
+        let savedIds: string[] = [];
+        if (!isDeleteAll) {
+          const detail = await worksheetAjax.getRowDetail({
+            appId,
+            worksheetId,
+            rowId: recordId,
+            viewId,
+            instanceId: base.instanceId,
+            workId: base.workId,
+            getType: base.isDraft || base.from === RECORD_INFO_FROM.DRAFT ? 21 : 1,
+          });
+          const row = detail?.rowData && storeObject(safeParse(detail.rowData, 'object'));
+          const relationIds = row && row[`rc${controlId}`];
+          const ids: unknown = safeParse(relationIds || '[]', 'array');
+          if (
+            !row ||
+            !Array.isArray(ids) ||
+            !ids.every(id => typeof id === 'string') ||
+            (Number(row[controlId]) > 0 && !relationIds)
+          ) {
+            throw new Error('Related record IDs are unavailable');
+          }
+          savedIds = ids;
+        }
+
+        // 统计完整关联集合，包含尚未保存的增删。空集合不发送筛选请求。
+        const ids = _.uniq([...savedIds, ...addedRecordIds]).filter(
+          id => typeof id === 'string' && !deletedRecordIds.includes(id),
+        );
+        if (!ids.length) report = [];
+        args = {
+          ...reportFilters,
+          worksheetId: control.dataSource,
+          appId: base.relateWorksheetInfo?.appId || appId,
+          viewId: control.viewId,
+          filterControls: reportFilters.filterControls.concat({
+            controlId: 'rowid',
+            dataType: 2,
+            filterType: FILTER_CONDITION_TYPE.EQ,
+            spliceType: 1,
+            values: ids,
+          }),
+        };
+      }
+
+      if (getState().rowsSummary.requestId !== requestId) return;
+      report ??= await worksheetAjax.getFilterRowsReport(getFilledRequestParams(args));
+      if (getState().rowsSummary.requestId !== requestId) return;
+      const values: Record<string, unknown> = {};
+      if (Array.isArray(report)) {
+        for (const item of report) {
+          const row = storeObject(item);
+          if (typeof row?.['controlId'] === 'string') values[row['controlId']] = row['value'];
+        }
+      }
+      dispatch({ type: 'UPDATE_ROWS_SUMMARY', requestId, types, values });
+    } catch (error) {
+      if (getState().rowsSummary.requestId === requestId) {
+        alertIfNotUnauthorized(error, _l('获取统计失败'), 2);
+      }
+    }
   };
 }
 
@@ -926,7 +1002,7 @@ export function handleRecreateRecord(
   return (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const state = getState();
     const { base, controls } = state;
-    const { worksheetId, control, recordId, relateWorksheetInfo, formData } = base;
+    const { worksheetId, control, recordId, relateWorksheetInfo, formData, from, saveSync } = base;
     if (!control || !record.rowid || !recordId) return;
     const worksheetInfo = relateWorksheetInfo;
     const pid = record.pid;
@@ -960,6 +1036,10 @@ export function handleRecreateRecord(
             dispatch(appendRecords([_.assign(record, { pid })]));
           }
         },
+        handleAddRelation:
+          control.type === 29 && from === RECORD_INFO_FROM.DRAFT && saveSync
+            ? (records: FieldStoreRecord[]) => dispatch(handleAddRelation(records.map(item => ({ ...item, pid }))))
+            : undefined,
         openRecord,
       });
     });
@@ -1070,7 +1150,10 @@ export function handleRemoveRelation(recordIds: string | string[]) {
   };
 }
 
-export function handleAddRelation(records: FieldStoreRecord | FieldStoreRecord[]) {
+export function handleAddRelation(
+  records: FieldStoreRecord | FieldStoreRecord[],
+  { afterRecordId }: { afterRecordId?: string | undefined } = {},
+) {
   return async (dispatch: RelateRecordTableDispatch, getState: RelateRecordTableGetState) => {
     const { base } = getState();
     const { from, saveSync, recordId, appId, viewId, worksheetId, control, instanceId, workId } = base;
@@ -1091,14 +1174,14 @@ export function handleAddRelation(records: FieldStoreRecord | FieldStoreRecord[]
           ...(workId !== undefined ? { workId } : {}),
           ...(from === RECORD_INFO_FROM.DRAFT ? { updateType: from } : {}),
         });
-        dispatch(appendRecords(rows));
+        dispatch(appendRecordsToTable(rows, afterRecordId));
         alert(_l('添加记录成功！'));
       } catch (err) {
         console.log(err);
         alert(_l('添加记录失败！'), 2);
       }
     } else {
-      dispatch(appendRecords(rows));
+      dispatch(appendRecordsToTable(rows, afterRecordId));
     }
   };
 }
@@ -1125,7 +1208,7 @@ export function deleteOriginalRecords({ recordIds = [] }: { recordIds?: string[]
       recordIds: allowDeleteRowIds,
     })
       .then(() => {
-        dispatch(deleteRecords(allowDeleteRowIds));
+        dispatch(deleteRecords(allowDeleteRowIds, { recordsDeleted: true }));
         if (allowDeleteRowIds.length < recordIds.length) {
           alert(_l('存在无权限删除的记录，有权限的已删除'), 3);
         }

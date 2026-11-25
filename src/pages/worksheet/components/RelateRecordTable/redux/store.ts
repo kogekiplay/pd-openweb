@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { find, get, includes, isEmpty } from 'lodash';
+import { find, get, includes, isEmpty, uniqBy } from 'lodash';
 import { v4 } from 'uuid';
 import { RELATE_RECORD_SHOW_TYPE } from 'worksheet/constants/enum';
 import { isRelateRecordTableControl } from 'src/utils/control';
 import type { FormControl } from 'src/utils/controlTypes';
 import { storeFailureMessage } from 'src/utils/fieldStoreBoundary';
 import type { FieldStoreControl, RelateRecordState, RelateRecordTableStore } from 'src/utils/subListStoreTypes';
-import { init, updateTreeTableViewData } from './action';
+import { getRelateRecordSummary, init, updateTreeTableViewData } from './action';
 import reducer from './reducer';
 import type { RelateRecordAction } from './stateTypes';
 
@@ -145,6 +145,7 @@ export default function generateStore(
     // 会导致树形结构错乱（已无子记录的节点仍显示展开 icon、节点层级错位等）。
     // 这里必须基于还原后的 records 干净重建：传 resetExpansion 丢弃旧 treeMap，不复用撤销前的展开状态。
     store.dispatch(updateTreeTableViewData({ resetExpansion: true }));
+    store.dispatch(getRelateRecordSummary());
   };
 
   let initializing: Promise<void> | undefined;
@@ -169,10 +170,17 @@ export default function generateStore(
     return initializing;
   };
   const reset = () => {
+    const { records, tableState, base, changes } = store.getState();
+    const savedRecords =
+      !base.saveSync && base.recordId ? uniqBy(changes.addedRecords.concat(records), 'rowid') : records;
+    const count = (tableState.countForShow ?? tableState.count) || savedRecords.length;
+    store.dispatch({ type: 'CLEAR_CHANGES' });
+    store.dispatch({ type: 'INIT_FIRST_PAGE_RESULT', value: { count, records: savedRecords } });
     store.dispatch({
       type: 'UPDATE_TABLE_STATE',
       value: { highlightRows: {} },
     });
+    store.dispatch(getRelateRecordSummary());
   };
 
   const setEmpty: RelateRecordTableStore['setEmpty'] = ({ ignoreControlId = [] } = {}) => {

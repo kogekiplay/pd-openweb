@@ -142,8 +142,9 @@ export default function RelateRecordTableDialog(props) {
     updateWorksheetControls = () => {},
   } = props;
 
-  // 关闭时先回调 onClosed（内联表格据此读回全屏改过的统计方式），再真正关闭弹层
+  // 所有关闭入口统一刷新原表格，再同步统计方式并关闭弹层。
   const handleClose = () => {
+    reloadTable();
     onClosed();
     onClose();
   };
@@ -220,13 +221,7 @@ export default function RelateRecordTableDialog(props) {
           </Tooltip>
           {!callFromDialog && (
             <Tooltip title={_l('关闭')} shortcut={'Esc'} placement="bottom">
-              <IconBtn
-                className="hoverColorPrimary"
-                onClick={() => {
-                  reloadTable();
-                  handleClose();
-                }}
-              >
+              <IconBtn className="hoverColorPrimary" onClick={handleClose}>
                 <i className="icon icon-close"></i>
               </IconBtn>
             </Tooltip>

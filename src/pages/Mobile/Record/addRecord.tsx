@@ -151,6 +151,12 @@ class AddRecord extends Component<any, any> {
                 addType={2}
                 notDialog={true}
                 changeWorksheetStatusCode={() => this.setState({ status: STATUS.ERROR })}
+                openRecord={(recordId: string, openViewId?: string) => {
+                  window.mobileNavigateTo(
+                    `/mobile/record/${params.appId || appId}/${params.worksheetId || worksheetId}${openViewId ? `/${openViewId}` : ''}/${recordId}`,
+                    true,
+                  );
+                }}
                 onAdd={(_data, { continueAdd }) => {
                   if (!continueAdd) {
                     this.setState({ status: STATUS.SUCCESS });

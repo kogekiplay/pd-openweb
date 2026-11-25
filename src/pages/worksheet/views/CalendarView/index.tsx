@@ -43,7 +43,7 @@ import SelectField from '../components/SelectField';
 import SelectFieldForStartOrEnd from '../components/SelectFieldForStartOrEnd';
 import { eventDidMount } from './CalendarEvent';
 import CalendarIds from './CalendarIds';
-import { CALENDAR_BUTTONS, CALENDAR_VIEW_FORMATS, TAB_LIST } from './constants';
+import { CALENDAR_BUTTONS, getCalendarViewFormats, TAB_LIST } from './constants';
 import { buildEventOrder } from './eventOrder';
 import External from './External';
 import { FC_CLASS_COMPAT } from './fcClassCompat';
@@ -148,7 +148,7 @@ const MemoFullCalendar = React.memo(
           resetFcEventDraggingPoint();
         }}
         eventDragStop={() => owner.setState({ isMove: false })}
-        views={CALENDAR_VIEW_FORMATS}
+        views={getCalendarViewFormats(weekbegin ? Number(weekbegin) % 7 : 1)}
         // v7 把 dayCellContent 拆细了，日号所在的顶部区叫 dayCellTopContent
         dayCellTopContent={item => {
           return (

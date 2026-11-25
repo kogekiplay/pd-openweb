@@ -50,6 +50,7 @@ export default function MoreMenu(props) {
       isAdmin={roleType === 2}
       allowDelete={allowDelete}
       allowCopy={allowAdd && recordinfo.allowEdit}
+      allowCopyId={!isDraft && !window.isPublicApp && !window.shareState?.shareId && !md.global.Account.isPortal}
       allowRecreate={allowAdd}
       projectId={projectId}
       appId={appId}

@@ -114,7 +114,7 @@ export function getFormDataForNewRecord({
   defaultFormDataEditable,
   writeControls = [],
 }) {
-  return new Promise((resolve, reject) => {
+  return new Promise<FormControl[]>((resolve, reject) => {
     if (!worksheetInfo?.roleType || !worksheetInfo.allowAdd) {
       reject(_l('该表已删除或没有权限'));
       return;

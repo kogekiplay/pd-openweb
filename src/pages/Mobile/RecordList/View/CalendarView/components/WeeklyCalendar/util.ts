@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { getWeekNumber } from 'src/utils/domain/worksheet/calendar';
 import { WEEKS } from '../../util';
 
 export const FORMAT = 'YYYY-MM-DD';
@@ -24,18 +25,17 @@ export const formatDateWithWeekday = dateStr => {
   return `${date.year()}/${date.month() + 1}/${date.date()}  ${WEEKS[date.day()]}`;
 };
 
-export const getWeekTitle = dates => {
-  if (!dates.length) return undefined;
-  // 周的第一天
+export const getWeekTitle = (dates: moment.Moment[]) => {
   const start = dates[0];
-  // 周的最后一天
-  const end = dates[dates.length - 1];
+  const end = dates.at(-1);
+  if (!start || !end) return undefined;
   const sameYear = start.year() === end.year();
-  const title = sameYear
-    ? `${start.year()}/${start.format('MM/DD')} - ${end.format('MM/DD')}`
-    : `${start.format('YYYY/MM/DD')} - ${end.format('YYYY/MM/DD')}`;
+  const sameMonth = start.isSame(end, 'month');
+  const endFormat = sameMonth ? 'DD' : sameYear ? 'MM/DD' : 'YYYY/MM/DD';
+  const title = `${start.format('YYYY/MM/DD')} - ${end.format(endFormat)}`;
 
-  return title;
+  // dates 由 getCurrentWeekDates 按视图的 weekBegin 配置生成。
+  return `${title} ${_l('第%0周', getWeekNumber(start.format(FORMAT), start.day()))}`;
 };
 
 // 计算给定日期是所在周第几天（基于weekBegin起算）

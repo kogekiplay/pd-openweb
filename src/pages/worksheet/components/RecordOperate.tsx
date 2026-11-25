@@ -246,6 +246,7 @@ export default function RecordOperate(props) {
     isCharge,
     isAdmin,
     isDevAndOps,
+    allowCopyId = false,
     projectId,
     appId,
     viewId,
@@ -298,7 +299,7 @@ export default function RecordOperate(props) {
     allowRecreate &&
     (isOpenPermit(permitList.recordRecreateSwitch, sheetSwitchPermit, viewId) || isSubList);
   const isManageView = viewId === worksheetId;
-  const showCopyId = _.includes(shows, 'copyId') && (isCharge || isDevAndOps);
+  const showCopyId = !!recordId && _.includes(shows, 'copyId') && (isCharge || isDevAndOps || allowCopyId);
   const showPrint = _.includes(shows, 'print');
   const showRemoveRelation = _.includes(shows, 'removeRelation');
   const showEditForm = _.includes(shows, 'editform') && isCharge;
@@ -692,9 +693,9 @@ export default function RecordOperate(props) {
                 data-event="copyID"
                 className="printItem"
                 icon={<Icon className="Font17 mLeft5" icon="ID" />}
-                onClick={() => {
-                  copy(recordId);
-                  alert(_l('复制成功'), 1);
+                onClick={async () => {
+                  const copied = await copy(recordId).catch(() => false);
+                  alert(copied ? _l('复制成功') : _l('复制失败'), copied ? 1 : 2);
                   changePopupVisible(false);
                 }}
               >
@@ -906,6 +907,7 @@ export default function RecordOperate(props) {
 }
 
 RecordOperate.propTypes = {
+  allowCopyId: PropTypes.bool,
   popupAlign: PropTypes.shape({}),
   isRelateRecordTable: PropTypes.bool,
   allowAdd: PropTypes.bool,

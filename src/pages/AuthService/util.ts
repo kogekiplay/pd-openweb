@@ -261,7 +261,7 @@ export const validation = ({ isForSendCode, keys = [], type, info }) => {
       //邮箱验证
       const isEmailRule = emailOrTel => {
         const emailReg =
-          /^[\u4e00-\u9fa5\w-]+(\.[\u4e00-\u9fa5\w-]+)*@[\u4e00-\u9fa5\w-]+(\.[\u4e00-\u9fa5\w-]+)*\.[\u4e00-\u9fa5\w-]+$/i;
+          /^[\u4e00-\u9fa5\w&-]+(\.[\u4e00-\u9fa5\w&-]+)*@[\u4e00-\u9fa5\w-]+(\.[\u4e00-\u9fa5\w-]+)*\.[\u4e00-\u9fa5\w-]+$/i;
 
         if (!emailReg.test(emailOrTel.trim())) {
           warnList.push({ tipDom: 'inputAccount', warnTxt: _l('邮箱格式错误') });

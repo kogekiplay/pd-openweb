@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { useKeyPressEvent } from 'react-use';
 import cx from 'classnames';
 import {
@@ -10,7 +10,6 @@ import {
   identity,
   isEmpty,
   isEqual,
-  isNumber,
   isUndefined,
   some,
   union,
@@ -37,7 +36,7 @@ import RestrictAccessStatus from 'src/components/restrictAccessStatus';
 import emptyPng from 'src/pages/worksheet/assets/record.png';
 import 'src/pages/worksheet/components/WorksheetTable/components/ColumnHead/ColumnHead.less';
 import { checkIsTextControl, isRelateRecordTableControl } from 'src/utils/control';
-import type { FormControl } from 'src/utils/controlTypes';
+import type { FormControl, RecordRow } from 'src/utils/controlTypes';
 import { addBehaviorLog } from 'src/utils/project';
 import { replaceControlsTranslateInfo } from 'src/utils/translate';
 import { getSheetStylesOfRelateRecordTable } from 'src/utils/worksheet';
@@ -246,19 +245,29 @@ export default function SelectDialog({ ...args }) {
     listMode,
     useColumnStyle: inheritColumnStyle,
   });
-  const recordsCache = useRef({});
+  const recordsCache = useRef<Record<string, RecordRow | undefined>>({});
   const tableRef = useRef<any>(undefined);
   const cache = useRef({});
-  const [activeRowIndex, setActiveRowIndex] = useState(-1);
-  const [selectedRowIds, setSelectedRowIds] = useState([]);
+  const [keyboardRow, setKeyboardRow] = useState<{ records: RecordRow[]; id: string } | null>(null);
+  const visibleRecords = records.filter(record => !needHideRowIds.includes(record.rowid));
+  const activeRowIndex =
+    keyboardRow?.records === records ? visibleRecords.findIndex(record => record.rowid === keyboardRow.id) : -1;
+  const activeRowId = visibleRecords[activeRowIndex]?.rowid;
+  const searchRecords = useMemo(() => debounce(handleUpdateKeyWords, 500), [handleUpdateKeyWords]);
+  useEffect(() => () => searchRecords.cancel(), [searchRecords]);
+  const [selectedRowIds, setSelectedRowIds] = useState<Array<string | undefined>>([]);
   const [tempSheetColumnWidths, setTempSheetColumnWidths] = useState({});
   const [isFiltered, setIsFiltered] = useState(false);
   const [filtersVisible, setFiltersVisible] = useState<string | boolean | null>(
     window.localStorage.getItem(`selectDialogFiltersVisible`),
   );
-  const [disableMaskDataControls, setDisableMaskDataControls] = useState({});
+  const [disableMaskDataControls, setDisableMaskDataControls] = useState<Record<string, boolean>>({});
   // 弹层里新建记录时新增的选项，工作表模板里还没有，需要在本次弹层内合并使用
   const [newOptionControls, setNewOptionControls] = useState([]);
+  const highlightedRows = {
+    ...(control.type === 29 && Object.fromEntries(selectedRowIds.map(id => [id, true]))),
+    ...(activeRowId && { [activeRowId]: true }),
+  };
   const allowShowIgnoreAllFilters =
     error === ERROR_STATUS.INVALID_CONDITION && isCharge && recordId === 'FAKE_RECORD_ID_FROM_BATCH_EDIT';
   const showNewRecord =
@@ -319,7 +328,11 @@ export default function SelectDialog({ ...args }) {
 
   const coverControl = get(control, 'coverCid') && find(controls, { controlId: get(control, 'coverCid') });
   const tableConfig = getTableConfig(controlsForShow, {
-    titleControl,
+    // 关联记录选择弹窗的表格仅将已显示的标题列置顶，不额外补入。
+    titleControl:
+      control.type === 29 && !listMode && !some(controlsForShow, c => c.controlId === titleControlId)
+        ? undefined
+        : titleControl,
     coverControl: !isRelateRecordTableControl(control) && coverControl,
   });
   const sheetStyles =
@@ -351,51 +364,53 @@ export default function SelectDialog({ ...args }) {
     })
     .filter(identity);
 
-  const handleToggleSelect = useCallback(
-    (toggleRowId, rowIndex = 0) => {
-      setActiveRowIndex(rowIndex);
-      if (multiple) {
-        setSelectedRowIds(prev => {
-          const selectIndex = findIndex(
-            unionBy(records.concat(values(recordsCache.current)), 'rowid'),
-            r => r.rowid === toggleRowId,
+  const handleToggleSelect = toggleRowId => {
+    if (multiple) {
+      setSelectedRowIds(prev => {
+        const selectIndex = findIndex(
+          unionBy(records.concat(values(recordsCache.current)), 'rowid'),
+          r => r.rowid === toggleRowId,
+        );
+
+        if (cache.current.shiftActive && !!prev.length) {
+          let startIndex = Math.min(...[selectIndex, cache.current.shiftActiveRowIndex]);
+          let endIndex = Math.max(...[selectIndex, cache.current.shiftActiveRowIndex]);
+
+          if (endIndex > records.length - 1) {
+            endIndex = records.length - 1;
+          }
+
+          return union(
+            unionBy(records.concat(values(recordsCache.current)), 'rowid')
+              .slice(startIndex, endIndex + 1)
+              .map(r => r.rowid)
+              .concat(prev),
           );
+        }
 
-          if (cache.current.shiftActive && !!prev.length) {
-            let startIndex = Math.min(...[selectIndex, cache.current.shiftActiveRowIndex]);
-            let endIndex = Math.max(...[selectIndex, cache.current.shiftActiveRowIndex]);
+        cache.current.shiftActiveRowIndex = selectIndex;
+        if (prev.includes(toggleRowId)) {
+          return prev.filter(id => id !== toggleRowId);
+        }
 
-            if (endIndex > records.length - 1) {
-              endIndex = records.length - 1;
-            }
+        return [...prev, toggleRowId];
+      });
+    } else {
+      const toggleRow = find(records.concat(values(recordsCache.current)), record => record.rowid === toggleRowId);
+      setSelectedRowIds([toggleRowId]);
+      onOk([toggleRow ? toggleRow : { rowid: toggleRowId }], worksheetInfo);
+      onClose();
+    }
+  };
 
-            return union(
-              unionBy(records.concat(values(recordsCache.current)), 'rowid')
-                .slice(startIndex, endIndex + 1)
-                .map(r => r.rowid)
-                .concat(prev),
-            );
-          }
-
-          cache.current.shiftActiveRowIndex = selectIndex;
-          if (prev.includes(toggleRowId)) {
-            return prev.filter(id => id !== toggleRowId);
-          }
-
-          return [...prev, toggleRowId];
-        });
-      } else {
-        const toggleRow = find(records.concat(values(recordsCache.current)), record => record.rowid === toggleRowId);
-        setSelectedRowIds([toggleRowId]);
-        onOk([toggleRow ? toggleRow : { rowid: toggleRowId }], worksheetInfo);
-        onClose();
-      }
-    },
-    [multiple, selectedCount, maxCount, records, worksheetInfo],
-  );
+  const handlePointerSelect = (rowId?: string) => {
+    if (!rowId) return;
+    setKeyboardRow(null);
+    handleToggleSelect(rowId);
+  };
 
   const width = window.innerWidth - 32 * 2 > 1600 ? 1600 : window.innerWidth - 32 * 2;
-  const handleConfirm = useCallback(() => {
+  const handleConfirm = () => {
     if (!selectedRowIds.length) return;
     const selectedRecords = selectedRowIds.map(id =>
       find(records.concat(values(recordsCache.current)), record => record.rowid === id),
@@ -408,38 +423,36 @@ export default function SelectDialog({ ...args }) {
 
     onOk(selectedRecords);
     onClose();
-  }, [selectedRowIds, records, selectedCount, maxCount]);
-  const handleInputKeyDown = useCallback(
-    e => {
-      if (e.key === 'Enter') {
-        if (e.ctrlKey || e.metaKey) {
-          handleConfirm();
-          return;
-        }
+  };
+  const handleInputKeyDown = e => {
+    if (e.nativeEvent?.isComposing || e.keyCode === 229) return;
 
-        if (activeRowIndex !== -1 && records[activeRowIndex]) {
-          handleToggleSelect(records[activeRowIndex].rowid, activeRowIndex);
-        }
-      } else if (e.key === 'ArrowDown') {
-        const newActiveRowIndex = activeRowIndex + 1;
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (e.repeat) return;
 
-        if (newActiveRowIndex < records.length && isNumber(newActiveRowIndex) && !isNaN(newActiveRowIndex)) {
-          setActiveRowIndex(newActiveRowIndex);
-        }
-
-        tableRef.current?.table?.focusRow(newActiveRowIndex);
-      } else if (e.key === 'ArrowUp') {
-        const newActiveRowIndex = activeRowIndex - 1;
-
-        if (newActiveRowIndex >= 0 && isNumber(newActiveRowIndex) && !isNaN(newActiveRowIndex)) {
-          setActiveRowIndex(newActiveRowIndex);
-        }
-
-        tableRef.current?.table?.focusRow(newActiveRowIndex);
+      if (e.ctrlKey || e.metaKey) {
+        handleConfirm();
+        return;
       }
-    },
-    [activeRowIndex, records, handleConfirm],
-  );
+
+      const activeRecord = visibleRecords[activeRowIndex];
+      if (!recordsLoading && e.currentTarget.value === keyWords && activeRecord) {
+        handleToggleSelect(activeRecord.rowid);
+      }
+      return;
+    }
+
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    if (recordsLoading || e.currentTarget.value !== keyWords) return;
+    const nextIndex = activeRowIndex + (e.key === 'ArrowDown' ? 1 : -1);
+    const nextRecord = visibleRecords[nextIndex];
+    if (!nextRecord?.rowid) return;
+
+    e.preventDefault();
+    setKeyboardRow({ records, id: nextRecord.rowid });
+    tableRef.current?.table?.focusRow(nextIndex);
+  };
   useKeyPressEvent(
     'Shift',
     () => {
@@ -454,7 +467,7 @@ export default function SelectDialog({ ...args }) {
     },
   );
   useKeyPressEvent('Enter', e => {
-    if (e.ctrlKey || e.metaKey) {
+    if (!e.isComposing && e.keyCode !== 229 && !e.repeat && (e.ctrlKey || e.metaKey)) {
       handleConfirm();
     }
   });
@@ -463,7 +476,7 @@ export default function SelectDialog({ ...args }) {
   }, [tableConfig.fixedColumnCount]);
   useEffect(() => {
     selectedRowIds.forEach(selectedRowId => {
-      if (!recordsCache.current[selectedRowId]) {
+      if (selectedRowId && !recordsCache.current[selectedRowId]) {
         recordsCache.current[selectedRowId] = find(records, record => record.rowid === selectedRowId);
       }
     });
@@ -586,7 +599,11 @@ export default function SelectDialog({ ...args }) {
             setFiltersVisible(prev => !prev);
             safeLocalStorageSetItem('selectDialogFiltersVisible', String(!filtersVisible));
           }}
-          onSearch={debounce(handleUpdateKeyWords, 500)}
+          onSearch={keyword => {
+            setKeyboardRow(null);
+            searchRecords(keyword);
+          }}
+          onSearchFocus={() => setKeyboardRow(null)}
           onNewRecord={() => {
             if (!isUndefined(selectedCount) && selectedCount + selectedRowIds.length > maxCount) {
               alert(_l('最多关联%0条', maxCount), 3);
@@ -625,7 +642,7 @@ export default function SelectDialog({ ...args }) {
               onAdd: row => {
                 if (multiple || singleConfirm) {
                   setRecords(prev => [row, ...prev]);
-                  handleToggleSelect(row.rowid, 0);
+                  handlePointerSelect(row.rowid);
                 } else {
                   onOk([row]);
                   onClose();
@@ -685,14 +702,13 @@ export default function SelectDialog({ ...args }) {
                       sheetColumnWidths={Object.assign(
                         sheetStyles ? sheetStyles.sheetColumnWidths : {},
                         tempSheetColumnWidths,
-                        tempSheetColumnWidths,
                       )}
                       onColumnWidthChange={(controlId: string, value) => {
                         setTempSheetColumnWidths(prev => ({ ...prev, [controlId]: value }));
                       }}
                       columnStyles={sheetStyles ? sheetStyles.columnStyles : {}}
                       columns={tableConfig.visibleControls.map(c =>
-                        disableMaskDataControls[c.controlId]
+                        c.controlId && disableMaskDataControls[c.controlId]
                           ? {
                               ...c,
                               advancedSetting: Object.assign({}, c.advancedSetting, {
@@ -702,13 +718,9 @@ export default function SelectDialog({ ...args }) {
                           : c,
                       )}
                       rowHeight={!isRelateRecordTableControl(control) && coverControl ? 88 : 34}
-                      data={records.filter(r => !needHideRowIds.includes(r.rowid))}
-                      sheetViewHighlightRows={
-                        activeRowIndex > -1 && records[activeRowIndex] ? { [records[activeRowIndex].rowid]: true } : {}
-                      }
-                      onCellClick={(_clickedControl, clickedRow, rowIndex) => {
-                        handleToggleSelect(clickedRow.rowid, rowIndex);
-                      }}
+                      data={visibleRecords}
+                      sheetViewHighlightRows={highlightedRows}
+                      onCellClick={(_clickedControl, clickedRow) => handlePointerSelect(clickedRow.rowid)}
                       renderColumnHead={({ control, ...rest }) => {
                         const { columnIndex } = rest;
                         const showFrozen = columnIndex < 11 && !control.hideFrozen && fixedColumnCount !== columnIndex;
@@ -782,39 +794,22 @@ export default function SelectDialog({ ...args }) {
                                     controlId: control.controlId,
                                     isAsc: newIsAsc,
                                   };
-                              setActiveRowIndex(undefined);
+                              setKeyboardRow(null);
                               handleUpdateSortControl(newSortControl);
                             }}
                           />
                         );
                       }}
-                      renderRowHead={({
-                        className,
-                        style,
-                        rowIndex,
-                        row,
-                      }: {
-                        className?: string;
-                        [key: string]: any;
-                      }) => (
+                      renderRowHead={({ className, style, rowIndex }: { className?: string; [key: string]: any }) => (
                         <RowHead
                           className={className}
                           style={style}
                           rowIndex={rowIndex}
-                          data={records.filter(r => !needHideRowIds.includes(r.rowid))}
+                          data={visibleRecords}
                           type={multiple ? 0 : 1}
                           selectedRowIds={selectedRowIds}
-                          onToggleSelect={handleToggleSelect}
+                          onToggleSelect={handlePointerSelect}
                           onUpdateSelectedRowIds={setSelectedRowIds}
-                          onOpenRecord={() => {
-                            openRecordInfo({
-                              appId,
-                              worksheetId,
-                              viewId,
-                              projectId,
-                              recordId: row.rowid,
-                            });
-                          }}
                         />
                       )}
                       emptyIcon={
@@ -848,9 +843,10 @@ export default function SelectDialog({ ...args }) {
                 control={control}
                 multiple={multiple}
                 selectedRowIds={selectedRowIds}
+                activeRowId={activeRowId}
                 needHideRowIds={needHideRowIds}
                 noMaskTitle={noMaskTitle}
-                onToggleSelect={handleToggleSelect}
+                onToggleSelect={handlePointerSelect}
                 onOpenRecord={record =>
                   openRecordInfo({
                     appId,

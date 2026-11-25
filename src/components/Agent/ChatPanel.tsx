@@ -114,7 +114,7 @@ import {
 } from './ui/embed';
 import AskEmbed from './ui/embed/Ask';
 import { ChartSaveProvider } from './ui/embed/chartSaveContext';
-import useAgentFeedback from './ui/Feedback';
+import useAgentFeedback, { CopyTraceIdButton } from './ui/Feedback';
 import ModifyPlanComposer from './ui/ModifyPlanComposer';
 import {
   fetchHelpSessionShareUrl,
@@ -2263,10 +2263,10 @@ export default function ChatPanel({
                             : undefined
                         }
                         onFeedback={
-                          !anonymous && !helpMode && getFeedbackTraceId(message)
-                            ? () =>
+                          !anonymous && !helpMode && window.platformENV?.isPlatform
+                            ? (traceId: string) =>
                                 feedback.open({
-                                  traceId: getFeedbackTraceId(message),
+                                  traceId,
                                   projectId: getContextProjectId(),
                                 })
                             : undefined
@@ -2601,6 +2601,7 @@ function MessageRow({
   // 确认类卡片（plan 漂移 / rebuild 二选一）是交互 halt 而非计费产物，
   // 「请确认下一步操作」这类消息不展示信用点，避免让用户误以为确认动作要扣费。
   const isConfirmCard = parts.some(p => p.kind === 'rebuild-confirm' || p.kind === 'plan-drift');
+  const traceId = getFeedbackTraceId(message);
 
   return (
     <Message role={message.role}>
@@ -2659,16 +2660,20 @@ function MessageRow({
           always={isLast}
           onRefresh={() => onRefreshUsage(message)}
         >
-          {onShare && (
+          {!isConfirmCard && onShare && (
             <Button type="text" size="small" onClick={onShare}>
               {_l('分享')}
             </Button>
           )}
-          {onFeedback && (
-            <Button type="text" size="small" onClick={onFeedback}>
-              {_l('反馈')}
-            </Button>
-          )}
+          {!isConfirmCard &&
+            traceId &&
+            (onFeedback ? (
+              <Button type="text" size="small" onClick={() => onFeedback(traceId)}>
+                {_l('反馈')}
+              </Button>
+            ) : (
+              <CopyTraceIdButton traceId={traceId} />
+            ))}
         </MessageMeta>
       )}
       {/* 用户消息只展示发送时间（无扣费）：整行最新一条常驻、旧消息 hover 才显现 */}

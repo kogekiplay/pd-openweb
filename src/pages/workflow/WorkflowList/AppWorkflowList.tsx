@@ -1,6 +1,7 @@
 import { Component, Fragment } from 'react';
 import { shallowEqual } from 'react-redux';
 import cx from 'classnames';
+import copy from 'copy-to-clipboard';
 import _ from 'lodash';
 import moment from 'moment';
 import qs from 'query-string';
@@ -884,6 +885,18 @@ class AppWorkflowList extends Component<any, any> {
                 this.getCount();
               }}
             />
+          </MenuItem>
+        )}
+
+        {data.id && (
+          <MenuItem
+            onClick={async () => {
+              const copied = await copy(data.id).catch(() => false);
+              alert(copied ? _l('复制成功') : _l('复制失败'), copied ? 1 : 2);
+            }}
+          >
+            <Icon icon="ID" className="textSecondary Font16 pLeft12 mRight10" />
+            {_l('复制 ID')}
           </MenuItem>
         )}
 

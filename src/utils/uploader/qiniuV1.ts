@@ -99,18 +99,18 @@ function parseJson<T = QiniuResponse>(text: string): T | null {
   }
 }
 
-/** 把 XHR 的失败翻成本仓既有的错误形状（调用方按 code/status 分支） */
-function httpError(xhr: XMLHttpRequest): UploadErrorInfo {
+/** 保留响应中的业务错误码和文案，HTTP 401 也可能是安全扫描失败。 */
+function httpError(xhr: XMLHttpRequest, response: UploadErrorInfo['response']): UploadErrorInfo {
   return {
     code: UploadError.HTTP_ERROR,
     status: xhr.status,
     message: xhr.statusText || 'request failed',
-    // 解析失败给 undefined 而不是 null：UploadErrorInfo.response 是可选字段
-    response: parseJson(xhr.responseText || '') || undefined,
+    response,
   };
 }
 
 type XhrOptions = {
+  requiredField: 'key' | 'ctx';
   headers?: Record<string, string>;
   /** 这一片在整体里的起始偏移，用于把分片内进度换算成整体进度 */
   baseLoaded?: number;
@@ -124,7 +124,7 @@ function post(
   body: XMLHttpRequestBodyInit,
   opts: XhrOptions,
   register: (x: XMLHttpRequest) => void,
-): Promise<QiniuResponse | null> {
+): Promise<QiniuResponse> {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     register(xhr);
@@ -140,10 +140,11 @@ function post(
     }
 
     xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        resolve(parseJson(xhr.responseText || '') ?? {});
+      const data = parseJson<QiniuResponse & NonNullable<UploadErrorInfo['response']>>(xhr.responseText || '');
+      if (xhr.status >= 200 && xhr.status < 300 && data?.[opts.requiredField] && !Number.isFinite(data.code)) {
+        resolve(data);
       } else {
-        reject(httpError(xhr));
+        reject(httpError(xhr, data || undefined));
       }
     };
     // 【status 为 0 的两种情况要分开】abort 是我们自己叫停的，不该报错给用户；
@@ -188,15 +189,23 @@ export function uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHa
     // 字段名 file 与换掉之前的配置一致（plupload 的 file_data_name）
     form.append('file', file, fname || file.name);
 
-    const res = await post(base, form, { total: file.size, onProgress: handlers.onProgress }, register);
-    // 直传成功时七牛必定回一段 JSON；解析不出来就当作没返回内容，交空对象给回调，
-    // 由上层的「没有 key」分支去报错（原先 res 是 any，这里本来就可能是 null）。
-    handlers.onComplete(res || {});
+    const res = await post(
+      base,
+      form,
+      { requiredField: 'key', total: file.size, onProgress: handlers.onProgress },
+      register,
+    );
+    handlers.onComplete(res);
   }
 
   // ── 分片：mkblk 逐片 + mkfile 收尾 ──────────────────────────────────────
   function readCache(): ResumeCache | null {
-    const raw = localStorage.getItem(file.name);
+    let raw: string | null;
+    try {
+      raw = localStorage.getItem(file.name);
+    } catch {
+      return null;
+    }
     if (!raw) return null;
     const cached = parseJson<ResumeCache>(raw);
     if (!cached) return null;
@@ -208,9 +217,17 @@ export function uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHa
     return cached;
   }
 
+  function clearCache() {
+    try {
+      localStorage.removeItem(file.name);
+    } catch {
+      // 存储不可用时上传仍需成功或触发失败回调。
+    }
+  }
+
   async function chunked() {
     const cached = readCache();
-    if (!cached) localStorage.removeItem(file.name);
+    if (!cached) clearCache();
 
     let offset = cached ? cached.offset : 0;
     const ctxList: string[] = cached && cached.ctx ? cached.ctx.split(',') : [];
@@ -223,16 +240,12 @@ export function uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHa
       const res = await post(
         `${base}/mkblk/${blockSize}`,
         blob,
-        { headers: auth, baseLoaded: offset, total: file.size, onProgress: handlers.onProgress },
+        { requiredField: 'ctx', headers: auth, baseLoaded: offset, total: file.size, onProgress: handlers.onProgress },
         register,
       );
 
-      if (!res || !res.ctx) {
-        handlers.onError({ code: UploadError.HTTP_ERROR, status: 200, message: 'mkblk 未返回 ctx' });
-        return;
-      }
-
-      ctxList.push(res.ctx);
+      // post 已校验 ctx，保留完整服务端响应给错误回调。
+      ctxList.push(res.ctx!);
       offset += blockSize;
 
       const percent = Math.round((offset / file.size) * 100);
@@ -254,14 +267,12 @@ export function uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHa
     const res = await post(
       `${base}/mkfile/${file.size || 0}/key/${btoa(key || '')}`,
       ctxList.join(','),
-      { headers: { ...auth, 'Content-Type': 'text/plain;charset=UTF-8' } },
+      { requiredField: 'key', headers: { ...auth, 'Content-Type': 'text/plain;charset=UTF-8' } },
       register,
-    );
-
-    // 传完就把续传点清掉，避免下次命中一个已完成的缓存
-    localStorage.removeItem(file.name);
-    // 同 direct()：mkfile 解析不出 JSON 时交空对象，由上层按「没有 key」报错
-    handlers.onComplete(res || {});
+    ).finally(() => {
+      if (!aborted) clearCache();
+    });
+    handlers.onComplete(res);
   }
 
   const useChunk = chunkSize > 0 && file.size > chunkSize;

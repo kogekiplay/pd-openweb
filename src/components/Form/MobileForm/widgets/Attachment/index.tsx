@@ -43,6 +43,13 @@ export interface MobileAttachmentProps extends Omit<FormControl, 'value' | 'adva
   otherSheetControlType?: number | undefined;
   onChange(value: string): void;
 }
+type MobileUploadAttachment = AttachmentValue & {
+  allowDown?: boolean;
+  fileName?: string;
+  fileSize?: number;
+  originalFileName?: string;
+};
+
 export default class Widgets extends Component<MobileAttachmentProps, any> {
   declare _isUnmounted: boolean;
 
@@ -209,46 +216,54 @@ export default class Widgets extends Component<MobileAttachmentProps, any> {
 
   filesChanged = (files, key: string) => {
     const enumDefault = this.props.enumDefault || 3;
-    const value = JSON.parse(this.state.value || '[]');
-    const isArray = _.isArray(value);
+    this.setState(
+      (prev: { value: string | null | undefined }) => {
+        const value = JSON.parse(prev.value || '[]');
+        const isArray = _.isArray(value);
 
-    const newValue = {
-      attachments: isArray ? [] : value.attachments,
-      knowledgeAtts: isArray ? [] : value.knowledgeAtts,
-      attachmentData: isArray ? value : value.attachmentData,
-    };
+        const newValue = {
+          attachments: isArray ? [] : value.attachments,
+          knowledgeAtts: isArray ? [] : value.knowledgeAtts,
+          attachmentData: isArray ? value : value.attachmentData,
+        };
 
-    newValue[key] = files;
+        newValue[key] = files.map(file => ({ ...file }));
 
-    // 补充 index
-    if ([2, 3].includes(enumDefault)) {
-      // 旧的在前
-      newValue.attachmentData.forEach((data, index: number) => {
-        data.index = index;
-      });
-      newValue.attachments.forEach((data, index: number) => {
-        data.index = newValue.attachmentData.length + index;
-      });
-      newValue.knowledgeAtts.forEach((data, index: number) => {
-        data.index = newValue.attachmentData.length + newValue.attachments.length + index;
-      });
-    } else {
-      // 新的在前
-      newValue.attachments.forEach((data, index: number) => {
-        data.index = index;
-      });
-      newValue.knowledgeAtts.forEach((data, index: number) => {
-        data.index = newValue.attachments.length + index;
-      });
-      newValue.attachmentData.forEach((data, index: number) => {
-        data.index = newValue.attachments.length + newValue.knowledgeAtts.length + index;
-      });
-    }
+        // 补充 index
+        if ([2, 3].includes(enumDefault)) {
+          // 旧的在前
+          newValue.attachmentData.forEach((data, index: number) => {
+            data.index = index;
+          });
+          newValue.attachments.forEach((data, index: number) => {
+            data.index = newValue.attachmentData.length + index;
+          });
+          newValue.knowledgeAtts.forEach((data, index: number) => {
+            data.index = newValue.attachmentData.length + newValue.attachments.length + index;
+          });
+        } else {
+          // 新的在前
+          newValue.attachments.forEach((data, index: number) => {
+            data.index = index;
+          });
+          newValue.knowledgeAtts.forEach((data, index: number) => {
+            data.index = newValue.attachments.length + index;
+          });
+          newValue.attachmentData.forEach((data, index: number) => {
+            data.index = newValue.attachments.length + newValue.knowledgeAtts.length + index;
+          });
+        }
 
-    this.props.onChange(
-      newValue.attachments.length + newValue.knowledgeAtts.length + newValue.attachmentData.length === 0
-        ? ''
-        : JSON.stringify(newValue),
+        const nextValue =
+          newValue.attachments.length + newValue.knowledgeAtts.length + newValue.attachmentData.length === 0
+            ? ''
+            : JSON.stringify(newValue);
+
+        return { value: nextValue };
+      },
+      () => {
+        this.props.onChange(this.state.value);
+      },
     );
   };
 
@@ -396,27 +411,29 @@ export default class Widgets extends Component<MobileAttachmentProps, any> {
                 const nomalAttrs = completed.filter(v => !v.refId);
 
                 if (attrs.length) {
-                  const newKnowledgeAtts = _.uniqBy(knowledgeAtts, 'fileID')
-                    .concat(attrs)
-                    .map(item => ({
-                      allowDown: item.allowDown,
-                      fileExt: item.fileExt,
-                      fileID: item.fileID,
-                      fileSize: item.fileSize,
-                      originalFileName: item.originalFileName,
-                      refId: item.refId,
-                      viewUrl: item.viewUrl,
-                    }));
-                  this.setState({ knowledgeAtts: newKnowledgeAtts }, () => {
-                    this.filesChanged(this.state.knowledgeAtts, 'knowledgeAtts');
-                  });
+                  this.setState(
+                    (prev: { knowledgeAtts: MobileUploadAttachment[] }) => ({
+                      knowledgeAtts: _.uniqBy(prev.knowledgeAtts.concat(attrs), 'fileID').map(item => ({
+                        allowDown: item.allowDown,
+                        fileExt: item.fileExt,
+                        fileID: item.fileID,
+                        fileSize: item.fileSize,
+                        originalFileName: item.originalFileName,
+                        refId: item.refId,
+                        viewUrl: item.viewUrl,
+                      })),
+                    }),
+                    () => {
+                      this.filesChanged(this.state.knowledgeAtts, 'knowledgeAtts');
+                    },
+                  );
                 }
 
                 if (nomalAttrs.length) {
                   this.setState(
-                    {
-                      mobileFiles: _.uniqBy(this.state.mobileFiles.concat(completed), 'fileName'),
-                    },
+                    (prev: { mobileFiles: MobileUploadAttachment[] }) => ({
+                      mobileFiles: _.uniqBy(prev.mobileFiles.concat(nomalAttrs), 'fileName'),
+                    }),
                     () => {
                       this.handleMobileChangeFiles();
                     },
@@ -705,7 +722,7 @@ export default class Widgets extends Component<MobileAttachmentProps, any> {
         this.setState({ knowledgeAtts: res });
       },
       onChangeAttachmentData: res => this.filesChanged(res, 'attachmentData'),
-      onRemoveFile: file => {
+      onRemoveFile: (file: AttachmentValue) => {
         this.handleCheckMobileFiles(file);
       },
     };

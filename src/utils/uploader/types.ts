@@ -86,6 +86,7 @@ export interface UploaderEventArgs {
   FileUploaded: [up: Uploader, file: UploaderFile, info: { response: UploadedFileResponse }];
   UploadComplete: [up: Uploader, files: UploaderFile[]];
   StateChanged: [up: Uploader];
+  Destroy: [up: Uploader];
   /** errTip 是已经本地化好的提示串，直接可以弹给用户 */
   Error: [up: Uploader, err: UploadErrorInfo, errTip: string];
 }
@@ -149,6 +150,9 @@ export interface UploadErrorInfo {
   /** 与具体文件无关的错误（如整批取凭证失败）显式给 undefined */
   file?: UploaderFile | undefined;
   details?: string;
+  /** 上传器已负责提示，调用方仍需完成失败收尾。 */
+  uploadErrorHandled?: boolean;
+  uploadErrorMessage?: string;
 }
 
 /** filters.mime_types 的一项 */

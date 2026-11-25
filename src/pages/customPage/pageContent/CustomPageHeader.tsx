@@ -2,6 +2,7 @@ import { Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import { Popover } from 'antd';
 import Trigger from '@rc-component/trigger';
 import cx from 'classnames';
+import copy from 'copy-to-clipboard';
 import update from 'immutability-helper';
 import { pick } from 'lodash';
 import _ from 'lodash';
@@ -156,7 +157,7 @@ export default function CustomPageHeader(props) {
       });
   };
 
-  const handleClick = (type, data?) => {
+  const handleClick = async (type, data?) => {
     switch (type) {
       case 'editCanvas':
         updateVisible(update(visible, { popupVisible: { $set: false } }));
@@ -186,6 +187,12 @@ export default function CustomPageHeader(props) {
       case 'adjustScreen':
         handleUpdatePage(data);
         break;
+      case 'copyId': {
+        const copied = await copy(pageId).catch(() => false);
+        alert(copied ? _l('复制成功') : _l('复制失败'), copied ? 1 : 2);
+        updateVisible(prevVisible => ({ ...prevVisible, popupVisible: false }));
+        break;
+      }
       case 'copy':
         copyCustomPage({
           appId,

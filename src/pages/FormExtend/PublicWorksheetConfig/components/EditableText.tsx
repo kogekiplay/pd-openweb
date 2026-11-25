@@ -60,6 +60,7 @@ export default class EditableText extends React.Component<any, any> {
         active={editting}
         style={style}
         onClick={() => {
+          if (editting) return;
           this.setState({ editting: true, inputvalue: value }, () => {
             setTimeout(() => {
               if (this.input) this.input.focus();

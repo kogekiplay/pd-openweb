@@ -421,6 +421,20 @@ export default function MoreOperation(props) {
 
     const showDivider = !isGroup || (isEditApp && appItem.type === 1 && (appItem.urlTemplate ? true : isActive));
 
+    const copyIdItem = appItem.workSheetId && (
+      <MenuItem
+        data-event="copyID"
+        icon={<Icon icon="ID" className="Font18" />}
+        onClick={async () => {
+          setPopupVisible(false);
+          const copied = await copy(appItem.workSheetId).catch(() => false);
+          alert(copied ? _l('复制成功') : _l('复制失败'), copied ? 1 : 2);
+        }}
+      >
+        <span className="text">{_l('复制 ID')}</span>
+      </MenuItem>
+    );
+
     return (
       <Operation className={`worksheetItemOperate worksheetItemOperate-${appItem.workSheetId}`}>
         {!isGroup && (
@@ -521,17 +535,7 @@ export default function MoreOperation(props) {
               </MenuItem>
             )}
 
-            <MenuItem
-              data-event="copyID"
-              icon={<Icon icon="ID" className="Font18" />}
-              onClick={() => {
-                setPopupVisible(false);
-                copy(appItem.workSheetId);
-                alert(_l('复制成功'));
-              }}
-            >
-              <span className="text">{_l('复制 ID')}</span>
-            </MenuItem>
+            {copyIdItem}
 
             {isEditApp && <hr className="splitter" />}
           </Fragment>
@@ -551,6 +555,7 @@ export default function MoreOperation(props) {
                 <span className="text">{_l('复制%02022')}</span>
               </MenuItem>
             )}
+            {!isGroup && [1, 3].includes(appItem.type) && copyIdItem}
             <MenuItem
               data-event="move"
               icon={<Icon icon="swap_horiz" className="Font18" />}
