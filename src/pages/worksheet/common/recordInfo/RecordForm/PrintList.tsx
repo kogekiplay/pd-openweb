@@ -19,18 +19,13 @@ import { PRINT_TEMP, PRINT_TYPE, PRINT_TYPE_STYLE } from 'src/pages/Print/core/c
 import { getDownLoadUrl } from 'src/pages/Print/core/util';
 import { browserIsMobile, emitter, pathCompletion } from 'src/utils/common';
 import type { FormControl } from 'src/utils/controlTypes';
-import { VersionProductType } from 'src/utils/enum';
 import { hasPrintLimitTemplate } from 'src/utils/domain/worksheet/print';
+import { VersionProductType } from 'src/utils/enum';
 import { addBehaviorLog, getFeatureStatus } from 'src/utils/project';
 import { sendCloudPrint } from 'src/utils/record';
 import IconBtn from './IconBtn';
 import ManagePrintCountModal, { type ManagedPrintTemplate } from './RecordPrint/ManagePrintCountModal';
-import {
-  loadPrintCount,
-  precheckTemplatePrint,
-  type RowPrintCount,
-  type TemplatePrintCount,
-} from './RecordPrint/printCount';
+import { loadPrintCount, precheckTemplatePrint, type RowPrintCount } from './RecordPrint/printCount';
 
 const MenuItemWrap = styled(MenuItem)`
   &.printItem.Item {
@@ -259,7 +254,26 @@ export async function handleTemplateRecordPrint({
   }
 }
 
+type PrintListContext = Partial<Record<'appId' | 'projectId' | 'worksheetId' | 'viewId' | 'recordId', string>>;
+
+function getPrintContextKey({ appId, projectId, worksheetId, viewId, recordId }: PrintListContext) {
+  return JSON.stringify([appId, projectId, worksheetId, viewId, recordId]);
+}
+
+interface PrintListData {
+  contextKey: string;
+  tempList: Awaited<ReturnType<typeof worksheetAjax.getPrintList>>;
+  printCount?: RowPrintCount | undefined;
+}
+
 export default class PrintList extends Component<any, any> {
+  private printRequestId = 0;
+
+  private get currentPrintData(): PrintListData | undefined {
+    const data: PrintListData | undefined = this.state['printData'];
+    return data?.contextKey === getPrintContextKey(this.props) ? data : undefined;
+  }
+
   static override propTypes = {
     isCharge: PropTypes.bool,
     type: PropTypes.string, // 显示样式 0 显示在menuItem中 1 显示为按钮 2 只显示系统打印
@@ -278,7 +292,6 @@ export default class PrintList extends Component<any, any> {
     super(props);
     this.state = {
       showPrintGroup: false,
-      tempList: [],
     };
   }
 
@@ -288,65 +301,53 @@ export default class PrintList extends Component<any, any> {
   }
 
   override componentDidUpdate(prevProps) {
+    const contextChanged = getPrintContextKey(this.props) !== getPrintContextKey(prevProps);
+    if (contextChanged) this.setState({ managePrintCountVisible: false });
     if (
-      this.props.worksheetId !== prevProps.worksheetId ||
-      this.props.recordId !== prevProps.recordId ||
-      this.props['projectId'] !== prevProps.projectId ||
-      this.props['printCountEnabled'] !== prevProps.printCountEnabled
+      contextChanged ||
+      this.props['printCountEnabled'] !== prevProps.printCountEnabled ||
+      this.props['type'] !== prevProps.type
     ) {
-      this.getData();
+      void this.getData();
     }
   }
 
   override componentWillUnmount() {
+    this.printRequestId += 1;
     emitter.off('RELOAD_RECORD_INFO_PRINT_LIST', this.getData);
   }
 
-  getData = () => {
-    const { viewId, worksheetId, recordId, projectId } = this.props;
+  getData = async () => {
+    const { viewId, worksheetId, recordId, projectId, type, printCountEnabled } = this.props;
+    const contextKey = getPrintContextKey(this.props);
+    const requestId = ++this.printRequestId;
+    const isCurrentRequest = () => requestId === this.printRequestId && contextKey === getPrintContextKey(this.props);
+    if (!worksheetId) return;
 
-    if (worksheetId) {
-      worksheetAjax
-        .getPrintList({
-          worksheetId,
-          viewId,
-          rowIds: [recordId].filter(Boolean),
-        })
-        .then(tempList => {
-          const printCountRequired =
-            Number(this.props['type']) !== 2 && (Boolean(this.props['printCountEnabled']) || hasPrintLimitTemplate(tempList));
-          void loadPrintCount({ projectId, worksheetId, rowIds: [recordId].filter(Boolean) }, printCountRequired)
-            .catch(() => undefined)
-            .then(printCount => {
-              if (
-                this.props['recordId'] === recordId &&
-                this.props['worksheetId'] === worksheetId &&
-                this.props['projectId'] === projectId
-              ) {
-                this.setState({ printCount });
-              }
-            });
-          let list = !viewId ? tempList.filter(o => o.range === 1) : tempList;
+    const rowIds = [recordId].filter(Boolean);
+    const templates = await worksheetAjax.getPrintList({ worksheetId, viewId, rowIds }).catch(() => undefined);
+    if (!templates || !isCurrentRequest()) return;
 
-          this.setState({
-            tempList: list
-              .filter(l => !l.disabled)
-              .sort(
-                (a, b) =>
-                  PRINT_TEMP[_.findKey(PRINT_TYPE, l => l === a.type)] -
-                  PRINT_TEMP[_.findKey(PRINT_TYPE, l => l === b.type)],
-              ),
-            tempListLoaded: true,
-          });
-        });
-    }
+    const tempList = templates
+      .filter(item => !item.disabled && (viewId || item.range === 1))
+      .sort(
+        (a, b) =>
+          PRINT_TEMP[_.findKey(PRINT_TYPE, l => l === a.type)] - PRINT_TEMP[_.findKey(PRINT_TYPE, l => l === b.type)],
+      );
+    const printData: PrintListData = { contextKey, tempList };
+    this.setState(() => (isCurrentRequest() ? { printData } : null));
+
+    const required = Number(type) !== 2 && (Boolean(printCountEnabled) || hasPrintLimitTemplate(templates));
+    const printCount = await loadPrintCount({ projectId, worksheetId, rowIds }, required).catch(() => undefined);
+    if (!isCurrentRequest()) return;
+    this.setState(() => (isCurrentRequest() ? { printData: { ...printData, printCount } } : null));
   };
 
-  getDownload = async (item: { id: string; type: number }, e: React.MouseEvent) => {
+  getDownload = async (item: { id?: string | undefined; type: number }, e: React.MouseEvent) => {
     const { worksheetId, projectId, viewId, appId, recordId } = this.props;
     const { type, id } = item;
     // 系统打印
-    if (type === 0) return;
+    if (type === 0 || !id) return;
 
     e.stopPropagation();
     if (!(await precheckTemplatePrint({ projectId, worksheetId, printId: id, rowIds: [recordId] }))) return;
@@ -390,7 +391,7 @@ export default class PrintList extends Component<any, any> {
     });
   }
 
-  renderPrintTemplate = (templateType: string) => {
+  renderPrintTemplate = (templateType: string, { tempList, printCount: rowPrintCount }: PrintListData) => {
     const {
       isCharge,
       viewId,
@@ -405,7 +406,7 @@ export default class PrintList extends Component<any, any> {
       workId,
       instanceId,
     } = this.props;
-    const { tempList, templateId, printLoading } = this.state;
+    const { templateId, printLoading } = this.state;
     let attriData = controls.filter((it: FormControl) => it.attribute === 1);
     const defaultTempList = tempList.filter(it =>
       [PRINT_TYPE.SYS_PRINT, PRINT_TYPE.WORD_PRINT, PRINT_TYPE.EXCEL_PRINT].includes(it.type),
@@ -436,9 +437,7 @@ export default class PrintList extends Component<any, any> {
         </div>
         {list.map((it, index: number) => {
           let isCustom = [2, 5].includes(it.type);
-          const printCount: TemplatePrintCount | undefined = this.state['printCount']?.templates.find(
-            (item: TemplatePrintCount) => item.printId === it.id,
-          );
+          const printCount = rowPrintCount?.templates.find(item => item.printId === it.id);
           const limitReached = printCount?.printLimitEnabled && printCount.leftPrintCount === 0;
 
           return (
@@ -515,16 +514,10 @@ export default class PrintList extends Component<any, any> {
       worksheetId,
       recordId,
     } = this.props;
-    const { tempList, showPrintGroup } = this.state;
-    const printCount: RowPrintCount | undefined = this.state['printCount'];
-    const managedTemplates: ManagedPrintTemplate[] = (printCount?.templates || [])
-      .filter(template => template.printLimitEnabled)
-      .map(template => ({
-        ...template,
-        name: tempList.find((item: { id: string; name: string }) => item.id === template.printId)?.name || _l('未命名'),
-      }));
+    const { showPrintGroup } = this.state;
+    const printData = this.currentPrintData;
 
-    if (tempList.length <= 0 || type === 2) {
+    if (!printData?.tempList.length || type === 2) {
       return isOpenPermit(permitList.recordPrintSwitch, sheetSwitchPermit, viewId) && type !== 1 ? (
         <MenuItemWrap
           data-event="print"
@@ -541,6 +534,14 @@ export default class PrintList extends Component<any, any> {
         ''
       );
     } else {
+      const { tempList, printCount } = printData;
+      const managedTemplates: ManagedPrintTemplate[] = (printCount?.templates || [])
+        .filter(template => template.printLimitEnabled)
+        .map(template => ({
+          ...template,
+          name: tempList.find(item => item.id === template.printId)?.name || _l('未命名'),
+        }));
+
       return (
         <Fragment>
           <Trigger
@@ -571,7 +572,7 @@ export default class PrintList extends Component<any, any> {
                         type === 1 || !isOpenPermit(permitList.recordPrintSwitch, sheetSwitchPermit, viewId),
                     })}
                   >
-                    {['defaultPrint', 'codePrint', 'cloudPrint'].map(item => this.renderPrintTemplate(item))}
+                    {['defaultPrint', 'codePrint', 'cloudPrint'].map(item => this.renderPrintTemplate(item, printData))}
                   </div>
                 )}
                 {this.props['isCharge'] && managedTemplates.length > 0 && (

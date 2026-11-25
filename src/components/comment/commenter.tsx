@@ -222,15 +222,20 @@ class Commenter extends React.Component<any, any> {
    * @param  {boolean} res
    */
   onUploadComplete(res) {
-    this.setState({ isUploadComplete: res });
-
-    if (res && !$(this.textarea).val() && (this.state.attachmentData.length || this.state.kcAttachmentData.length)) {
-      $(this.textarea).val(
-        this.state.attachmentData.length
-          ? this.state.attachmentData[0].originalFileName
-          : this.state.kcAttachmentData[0].originalFileName,
-      );
-    }
+    this.setState({ isUploadComplete: res }, () => {
+      if (
+        res &&
+        this.textarea &&
+        !$(this.textarea).val() &&
+        (this.state.attachmentData.length || this.state.kcAttachmentData.length)
+      ) {
+        $(this.textarea).val(
+          this.state.attachmentData.length
+            ? this.state.attachmentData[0].originalFileName
+            : this.state.kcAttachmentData[0].originalFileName,
+        );
+      }
+    });
   }
 
   onClickAway() {

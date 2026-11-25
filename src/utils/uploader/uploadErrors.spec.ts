@@ -17,13 +17,14 @@ interface TestError {
 type Events = {
   Error: [TestUploader, TestError, string];
   UploadComplete: [TestUploader];
+  FilesRemoved: [TestUploader, TestUploader['files']];
   FileUploaded: [TestUploader];
   StateChanged: [TestUploader];
   Destroy: [TestUploader];
 };
 type Handlers = { [E in keyof Events]?: (...args: Events[E]) => void };
 interface TestUploader {
-  files: Array<NonNullable<TestError['file']> & { status: number }>;
+  files: Array<NonNullable<TestError['file']> & { status: number; getNative(): File }>;
   state: number;
   addFile(input: File | File[]): void;
   bind<E extends keyof Events>(event: E, handler: (...args: Events[E]) => void): void;
@@ -51,7 +52,9 @@ function setup({ blockedStorage = false } = {}) {
     statusText = '';
     responseText = '';
     url = '';
-    upload = {};
+    body: unknown;
+    upload = { addEventListener() {} };
+    private loadListeners: Array<() => void> = [];
     onload?: () => void;
     onerror?: () => void;
     onabort?: () => void;
@@ -59,7 +62,11 @@ function setup({ blockedStorage = false } = {}) {
       this.url = url;
     }
     setRequestHeader() {}
-    send() {
+    addEventListener(event: string, listener: () => void) {
+      if (event === 'load') this.loadListeners.push(listener);
+    }
+    send(body: unknown) {
+      this.body = body;
       requests.push(this);
     }
     abort() {
@@ -69,12 +76,23 @@ function setup({ blockedStorage = false } = {}) {
       this.status = status;
       this.responseText = responseText;
       this.onload?.();
+      this.loadListeners.forEach(listener => listener());
     }
   }
 
+  const getToken = async (files: Array<{ ext: string }>) =>
+    files.map((_, index) => ({
+      uptoken: `test-token-${index}`,
+      key: `test/key-${index}`,
+      serverName: '/file',
+      fileName: `key-${index}`,
+    }));
   const globals = {
     md: {
-      global: { FileStoreConfig: { uploadHost: '/file/mingdao/upload' }, SysSettings: { fileUploadLimitSize: 100 } },
+      global: {
+        FileStoreConfig: { uploadHost: '/file/mingdao/upload', documentHost: '/document' },
+        SysSettings: { fileUploadLimitSize: 100 },
+      },
     },
     alert(message: string, severity: number) {
       alerts.push([message, severity]);
@@ -88,6 +106,7 @@ function setup({ blockedStorage = false } = {}) {
       }
     },
     XMLHttpRequest: FakeXhr,
+    document: { getElementById: () => null },
     localStorage: {
       getItem(name: string) {
         if (blockedStorage) throw new Error('Storage unavailable');
@@ -104,7 +123,7 @@ function setup({ blockedStorage = false } = {}) {
     },
   };
   const cache = new Map<string, Record<string, unknown>>();
-  function load(filename: string): Record<string, unknown> {
+  function load(filename: string, expose = ''): Record<string, unknown> {
     const cached = cache.get(filename);
     if (cached) return cached;
     const mod: { exports: Record<string, unknown> } = { exports: {} };
@@ -112,10 +131,23 @@ function setup({ blockedStorage = false } = {}) {
     if (!result?.code) throw new Error(`Could not compile ${filename}`);
     const { code } = result;
     function localRequire(request: string): unknown {
-      if (request.startsWith('.')) return load(path.resolve(path.dirname(filename), `${request}.ts`));
+      if (request.endsWith('.less') || request === './UploadAction' || request === './UploadProgress') return {};
+      if (request === 'ming-ui/components/AutoSize') return (component: unknown) => component;
+      if (request === 'styled-components') return { div: () => 'div' };
+      if (request === 'react') return { ...require('react'), Component: BatchedComponent };
+      if (request === 'ming-ui' || request === 'src/api/appManagement' || request === 'src/pages/kc/utils') return {};
+      if (request.startsWith('./') || request.startsWith('../')) {
+        return load(path.resolve(path.dirname(filename), `${request}.ts`));
+      }
+      if (request === 'src/utils/createUploader' || request === 'src/pages/kc/constant/enum') {
+        return load(path.resolve(__dirname, `../../${request.slice(4)}.ts`));
+      }
+      if (request === 'src/utils/services/request/error') return {};
+      if (request === 'src/utils/services/file/uploadError')
+        return load(path.resolve(__dirname, '../services/file/uploadError.ts'));
       if (request === 'src/utils/commonRequestBoundary')
         return load(path.resolve(__dirname, '../commonRequestBoundary.ts'));
-      if (request === 'src/utils/common') return {};
+      if (request === 'src/utils/common') return { getToken };
       if (request === 'src/utils/expression') {
         return {
           getExtOfFileName: (name: string) => path.extname(name).slice(1),
@@ -125,7 +157,7 @@ function setup({ blockedStorage = false } = {}) {
       }
       return require(request);
     }
-    new Function('module', 'exports', 'require', ...Object.keys(globals), code)(
+    new Function('module', 'exports', 'require', ...Object.keys(globals), `${code}\n${expose}`)(
       mod,
       mod.exports,
       localRequire,
@@ -135,8 +167,9 @@ function setup({ blockedStorage = false } = {}) {
     return mod.exports;
   }
 
-  const getUploadError = load(path.resolve(__dirname, '../services/file/uploadError.ts'))
-    ['getUploadError'] as GetUploadError;
+  const getUploadError = load(path.resolve(__dirname, '../services/file/uploadError.ts'))[
+    'getUploadError'
+  ] as GetUploadError;
   const bindUploadErrors = load(path.resolve(__dirname, 'uploadErrors.ts'))['default'] as (up: { state: number }) => {
     handleError(error: TestError): void;
     handleStateChanged(): void;
@@ -152,18 +185,9 @@ function setup({ blockedStorage = false } = {}) {
     UploadError: { HTTP_ERROR: number };
   };
   function createUploader(init: Handlers = {}) {
-    return mod.default({
-      init,
-      getToken: async files =>
-        files.map((_, index) => ({
-          uptoken: `test-token-${index}`,
-          key: `test/key-${index}`,
-          serverName: '/file',
-          fileName: `key-${index}`,
-        })),
-    });
+    return mod.default({ init, getToken });
   }
-  return { alerts, requests, storage, getUploadError, bindUploadErrors, createUploader, ...mod };
+  return { alerts, requests, storage, getUploadError, bindUploadErrors, createUploader, load, ...mod };
 }
 
 const settle = () => new Promise<void>(resolve => setImmediate(resolve));
@@ -290,7 +314,7 @@ test('HTTP 401 的安全错误先于逐文件回调，批次提示先于完成�
       [ctx.UploadError.HTTP_ERROR, 401, b],
     ],
   );
-  assert.ok(up.files.every(item => item.status === ctx.FileStatus.FAILED));
+  assert.deepEqual(up.files, []);
   assert.equal(ctx.alerts.length, 1);
 });
 
@@ -375,5 +399,173 @@ test('直传和分片将 2xx 错误体、空响应、合并拒绝及网络错误
     assert.equal(received?.uploadErrorHandled, scenario.expected ? true : undefined);
     assert.deepEqual(ctx.alerts, scenario.expected ? [[scenario.expected, 2]] : []);
     assert.equal(ctx.storage.size, 0);
+    if (!isDirect || scenario.expected) assert.deepEqual(up.files, []);
   }
+});
+
+const blockSize = 4 * 1024 * 1024;
+
+test('第二片终止失败清除续传点及队列，重复添加从首片重新上传', async () => {
+  for (const response of [{ code: 40007 }, { code: 40007, ctx: 'invalid-ctx' }, {}]) {
+    const ctx = setup();
+    const events: string[] = [];
+    const up = ctx.createUploader({
+      Error(uploader, error) {
+        events.push('error');
+        assert.equal(ctx.storage.has('retry.zip'), false);
+        assert.equal(uploader.files[0]?.id, error.file?.id);
+        assert.equal(uploader.files[0]?.status, ctx.FileStatus.FAILED);
+      },
+      FilesRemoved(_up, removed) {
+        events.push('remove');
+        assert.equal(removed[0]?.status, ctx.FileStatus.FAILED);
+      },
+      FileUploaded() {
+        events.push('uploaded');
+      },
+      UploadComplete() {
+        events.push('complete');
+      },
+    });
+    const source = new File(
+      [Buffer.alloc(blockSize, 1), Buffer.alloc(blockSize, 2), Buffer.alloc(1024 * 1024, 3)],
+      'retry.zip',
+    );
+    up.addFile(source);
+    await settle();
+    const failedId = up.files[0]?.id;
+    ctx.requests[0]!.reply(200, '{"ctx":"old-first"}');
+    await settle();
+    assert.equal(JSON.parse(ctx.storage.get(source.name) ?? '').offset, blockSize);
+    ctx.requests[1]!.reply(200, JSON.stringify(response));
+    await settle();
+    assert.deepEqual(events, ['error', 'remove', 'complete']);
+    assert.deepEqual(up.files, []);
+
+    up.addFile(source);
+    await settle();
+    assert.notEqual(up.files[0]?.id, failedId);
+    const firstBlock = ctx.requests[2]!.body as Blob;
+    assert.equal(new Uint8Array(await firstBlock.slice(0, 1).arrayBuffer())[0], 1);
+    for (const [index, ctxName] of ['new-first', 'new-second', 'new-third'].entries()) {
+      ctx.requests[index + 2]!.reply(200, JSON.stringify({ ctx: ctxName }));
+      await settle();
+    }
+    assert.match(ctx.requests[5]!.url, /\/mkfile\//);
+    assert.equal(ctx.requests[5]!.body, 'new-first,new-second,new-third');
+    ctx.requests[5]!.reply(200, '{"key":"test/key"}');
+    await settle();
+    assert.deepEqual(events, ['error', 'remove', 'complete', 'uploaded', 'complete']);
+    assert.equal(ctx.storage.size, 0);
+  }
+});
+
+test('第二片的网络中断保留续传点，重新添加时复用第一片 ctx', async () => {
+  const ctx = setup();
+  const up = ctx.createUploader();
+  const source = file('resume.zip', 2 * blockSize + 1);
+  up.addFile(source);
+  await settle();
+  ctx.requests[0]!.reply(200, '{"ctx":"old-first"}');
+  await settle();
+  ctx.requests[1]!.onerror?.();
+  await settle();
+  assert.equal(up.files[0]?.status, ctx.FileStatus.FAILED);
+  const saved = JSON.parse(ctx.storage.get(source.name) ?? '');
+  assert.equal(saved.offset, blockSize);
+  assert.equal(saved.ctx, 'old-first');
+
+  up.addFile(source);
+  await settle();
+  ctx.requests[2]!.reply(200, '{"ctx":"new-second"}');
+  await settle();
+  ctx.requests[3]!.reply(200, '{"ctx":"new-third"}');
+  await settle();
+  assert.equal(ctx.requests[4]!.body, 'old-first,new-second,new-third');
+  ctx.requests[4]!.reply(200, '{"key":"test/key"}');
+  await settle();
+  assert.equal(ctx.storage.size, 0);
+});
+
+test('RichText MyUploadAdapter 拒绝时使用 XHR 业务码对应的文案', async () => {
+  const ctx = setup();
+  const { MyUploadAdapter } = ctx.load(
+    path.resolve(__dirname, '../../ming-ui/components/RichText.tsx'),
+    'module.exports.MyUploadAdapter = MyUploadAdapter;',
+  ) as { MyUploadAdapter: new (loader: { file: Promise<File> }, tokenArgs: object) => { upload(): Promise<unknown> } };
+  for (const [index, scenario] of [
+    { status: 401, code: 40006, expected: scanAlert('image.zip', virus)[0] },
+    { status: 200, code: 50006, expected: '安全扫描繁忙或超时，请稍后重试' },
+  ].entries()) {
+    const adapter = new MyUploadAdapter({ file: Promise.resolve(file('image.zip')) }, {});
+    const rejection = assert.rejects(adapter.upload(), (reason: unknown) => reason === scenario.expected);
+    await settle();
+    ctx.requests[index]!.reply(scenario.status, JSON.stringify({ code: scenario.code, message: 'provider message' }));
+    await rejection;
+  }
+});
+
+type State = Record<string, unknown>;
+class BatchedComponent {
+  state: State = {};
+  private pending: Array<State | ((state: State) => State)> = [];
+  setState(update: State | ((state: State) => State)) {
+    this.pending.push(update);
+  }
+  flushState() {
+    for (const update of this.pending.splice(0)) {
+      this.state = { ...this.state, ...(typeof update === 'function' ? update(this.state) : update) };
+    }
+  }
+}
+
+test('Excel 直传业务失败后保留错误行并用同一个原生文件重试', async () => {
+  const ctx = setup();
+  const { default: ImportExcel } = ctx.load(
+    path.resolve(__dirname, '../../pages/worksheet/common/WorksheetBody/ImportDataFromExcel/ImportExcel/index.tsx'),
+  ) as {
+    default: new (props: object) => BatchedComponent & {
+      uploader: TestUploader;
+      state: { fileList: { size: number; get(id: string): { errorText: string; path?: string } | undefined } };
+      componentDidMount(): void;
+      retryUpload(id: string): void;
+      cancelUpload(id: string): void;
+    };
+  };
+  const component = new ImportExcel({});
+  component.componentDidMount();
+  const source = file('retry.xlsx');
+  component.uploader.addFile(source);
+  await settle();
+  const failedId = component.uploader.files[0]!.id;
+  ctx.requests[0]!.reply(401, '{"code":40007}');
+  await settle();
+  component.flushState();
+  assert.deepEqual(component.uploader.files, []);
+  assert.equal(component.state.fileList.get(failedId)?.errorText, scanAlert(source.name, policy)[0]);
+
+  component.retryUpload(failedId);
+  await settle();
+  const retryId = component.uploader.files[0]!.id;
+  assert.notEqual(retryId, failedId);
+  assert.equal(component.uploader.files[0]!.getNative(), source);
+  ctx.requests[1]!.reply(200, '{"key":"test/excel.xlsx"}');
+  await settle();
+  component.flushState();
+  assert.equal(component.state.fileList.size, 1);
+  assert.equal(component.state.fileList.get(failedId), undefined);
+  assert.equal(component.state.fileList.get(retryId)?.path, '/document/test/excel.xlsx');
+
+  component.uploader.addFile(file('cancel.xlsx'));
+  await settle();
+  component.flushState();
+  const cancelId = component.uploader.files[1]!.id;
+  component.cancelUpload(cancelId);
+  component.flushState();
+  assert.deepEqual(
+    component.uploader.files.map(entry => entry.id),
+    [retryId],
+  );
+  assert.equal(component.state.fileList.get(cancelId), undefined);
+  assert.deepEqual(ctx.alerts, [scanAlert(source.name, policy)]);
 });

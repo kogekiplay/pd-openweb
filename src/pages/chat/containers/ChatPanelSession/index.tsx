@@ -214,6 +214,11 @@ class ChatPanelSession extends Component<ChatPanelSessionProps, ChatPanelSession
 
     this.props.dispatch(actions.addMessage(sendMsg, currentMessages[currentMessages.length - 1]));
   }
+  handleRemovePrepareMessage(fileId: string) {
+    if (!fileId) return;
+    const { session } = this.props;
+    this.props.dispatch(actions.removeMessage(session.id as string, fileId));
+  }
   handleSendEmotionTextMsg(emotionText: string) {
     const { value } = this.state;
     const { currentSession } = this.props;
@@ -567,6 +572,7 @@ class ChatPanelSession extends Component<ChatPanelSessionProps, ChatPanelSession
                   onSendEmotionPicMsg={this.handleSendEmotionPicMsg.bind(this)}
                   onSendFileMsg={this.handleSendFileMsg.bind(this)}
                   onPrepareUpload={this.handlePrepareUpload.bind(this)}
+                  onRemovePrepareMessage={this.handleRemovePrepareMessage.bind(this)}
                   onSelectedUser={this.handleSelectedUser.bind(this)}
                   onShake={this.handleShake.bind(this)}
                   onChangeValue={this.handleChange.bind(this)}

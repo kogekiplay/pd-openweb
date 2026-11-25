@@ -50,27 +50,31 @@ export default class ImportExcel extends React.Component<any, any> {
       },
       init: {
         FilesAdded(_up, files) {
-          let { fileList } = comp.state;
-          _.forEach(files, file => {
-            fileList = fileList.set(file.id, {
-              name: file.name,
-              relativePath: file.getSource().relativePath,
-              loaded: file?.loaded,
-              size: file.size,
-              status: file.mdUploadErrorType ? UPLOAD_STATUS.ERROR : UPLOAD_STATUS.QUEUE,
-              errorText: '',
-            });
-          });
-
-          comp.setState({ fileList });
+          comp.setState(({ fileList }) => ({
+            fileList: fileList.withMutations(rows => {
+              _.forEach(files, file => {
+                rows.set(file.id, {
+                  name: file.name,
+                  nativeFile: file.getNative(),
+                  relativePath: file.getSource().relativePath,
+                  loaded: file.loaded,
+                  size: file.size,
+                  status: file.mdUploadErrorType ? UPLOAD_STATUS.ERROR : UPLOAD_STATUS.QUEUE,
+                  errorText: '',
+                });
+              });
+            }),
+          }));
         },
         FilesRemoved(_up, files) {
-          let { fileList } = comp.state;
-          _.forEach(files, file => {
-            fileList = fileList.delete(file.id);
-          });
-
-          comp.setState({ fileList });
+          comp.setState(({ fileList }) => ({
+            fileList: fileList.withMutations(rows => {
+              _.forEach(files, file => {
+                // 上传器会移除终止失败的队列项，保留错误行供用户重试。
+                if (rows.get(file.id)?.status !== UPLOAD_STATUS.ERROR) rows.delete(file.id);
+              });
+            }),
+          }));
         },
         Error(_up, err, errTip) {
           if (err.code === UploadError.FILE_SIZE_ERROR) {
@@ -83,38 +87,39 @@ export default class ImportExcel extends React.Component<any, any> {
             }
           }
 
-          const fileList = comp.state.fileList.update(err.file.id, fileItem => {
-            if (!fileItem) return fileItem;
-            fileItem.errorText = errTip;
-            fileItem.status = UPLOAD_STATUS.ERROR;
-            return fileItem;
-          });
-          comp.setState({ fileList });
+          const file = err.file;
+          if (!file) return;
+          comp.setState(({ fileList }) => ({
+            fileList: fileList.update(
+              file.id,
+              fileItem => fileItem && { ...fileItem, errorText: errTip, status: UPLOAD_STATUS.ERROR },
+            ),
+          }));
         },
         UploadProgress(_up, file: UploaderFile) {
-          const fileList = comp.state.fileList.update(file.id, fileItem => {
-            if (!fileItem) return fileItem;
-            fileItem.loaded = file?.loaded;
-            fileItem.status = UPLOAD_STATUS.UPLOADING;
-            return fileItem;
-          });
-
-          comp.setState({ fileList });
+          comp.setState(({ fileList }) => ({
+            fileList: fileList.update(
+              file.id,
+              fileItem => fileItem && { ...fileItem, loaded: file.loaded, status: UPLOAD_STATUS.UPLOADING },
+            ),
+          }));
         },
         FileUploaded(_up, file, info) {
-          const { key } = info.response;
-          const filePaths = comp.state.filePaths.concat();
-          filePaths.push({ id: md.global.FileStoreConfig.documentHost + '/' + key, type: 1, name: file.name });
-          const fileList = comp.state.fileList.update(file.id, fileItem => {
-            if (!fileItem) return fileItem;
-            fileItem.status = UPLOAD_STATUS.COMPLETE;
-            fileItem.name = file.name;
-            fileItem.ext = file.name.split('.')[file.name.split('.').length - 1];
-            fileItem.path = md.global.FileStoreConfig.documentHost + '/' + key;
-            return fileItem;
-          });
-
-          comp.setState({ fileList, filePaths });
+          const path = md.global.FileStoreConfig.documentHost + '/' + info.response.key;
+          comp.setState(({ fileList, filePaths }) => ({
+            filePaths: filePaths.concat({ id: path, type: 1, name: file.name }),
+            fileList: fileList.update(
+              file.id,
+              fileItem =>
+                fileItem && {
+                  ...fileItem,
+                  status: UPLOAD_STATUS.COMPLETE,
+                  name: file.name,
+                  ext: file.name.split('.').pop(),
+                  path,
+                },
+            ),
+          }));
         },
       },
     });
@@ -130,22 +135,16 @@ export default class ImportExcel extends React.Component<any, any> {
 
   retryUpload = (id: string) => {
     const selectFile = this.state.fileList.get(id);
-    const file = this.uploader.files.find(file => file.id === id);
-    if (!selectFile || selectFile.isRef || !file) return;
+    if (!selectFile || selectFile.isRef || !selectFile.nativeFile) return;
     this.uploader.removeFile(id);
-    this.uploader.addFile(file.getNative());
+    this.setState(({ fileList }) => ({ fileList: fileList.delete(id) }));
+    this.uploader.addFile(selectFile.nativeFile);
   };
 
   deleteFile = (id: string) => {
     const selectFile = this.state.fileList.get(id);
     if (!selectFile) return;
-    if (!selectFile.isRef) {
-      if (!this.uploader.files.some(file => file.id === id)) {
-        alert(_l('删除失败'), 3);
-        return;
-      }
-      this.uploader.removeFile(id);
-    }
+    if (!selectFile.isRef) this.uploader.removeFile(id);
     this.setState((prev: { fileList: Immutable.OrderedMap<string, unknown>; filePaths: Array<{ id: string }> }) => ({
       fileList: prev.fileList.remove(id),
       filePaths: prev.filePaths.filter(item => item.id !== (selectFile.isRef ? id : selectFile.path)),

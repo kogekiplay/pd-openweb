@@ -48,7 +48,7 @@ export interface QiniuUploadParams {
 export interface QiniuUploadHandlers {
   onProgress: (loaded: number, total: number, percent: number) => void;
   onComplete: (res: QiniuResponse) => void;
-  onError: (err: UploadErrorInfo) => void;
+  onError: (err: UploadErrorInfo, restartRequired: boolean) => void;
 }
 
 export interface QiniuUploadTask {
@@ -99,13 +99,22 @@ function parseJson<T = QiniuResponse>(text: string): T | null {
   }
 }
 
+interface QiniuRequestError extends UploadErrorInfo {
+  restartRequired?: boolean;
+}
+
 /** 保留响应中的业务错误码和文案，HTTP 401 也可能是安全扫描失败。 */
-function httpError(xhr: XMLHttpRequest, response: UploadErrorInfo['response']): UploadErrorInfo {
+function httpError(
+  xhr: XMLHttpRequest,
+  response: UploadErrorInfo['response'],
+  restartRequired: boolean,
+): QiniuRequestError {
   return {
     code: UploadError.HTTP_ERROR,
     status: xhr.status,
     message: xhr.statusText || 'request failed',
     response,
+    restartRequired,
   };
 }
 
@@ -141,10 +150,14 @@ function post(
 
     xhr.onload = () => {
       const data = parseJson<QiniuResponse & NonNullable<UploadErrorInfo['response']>>(xhr.responseText || '');
-      if (xhr.status >= 200 && xhr.status < 300 && data?.[opts.requiredField] && !Number.isFinite(data.code)) {
+      const hasBusinessError = Number.isFinite(data?.code);
+      const value = data?.[opts.requiredField];
+      if (data && xhr.status >= 200 && xhr.status < 300 && typeof value === 'string' && value && !hasBusinessError) {
         resolve(data);
       } else {
-        reject(httpError(xhr, data || undefined));
+        // 分片的 HTTP 拒绝会作废续传点。网络中断仍可从已完成的分片继续。
+        const restartRequired = hasBusinessError || (opts.requiredField === 'ctx' && xhr.status > 0);
+        reject(httpError(xhr, data || undefined, restartRequired));
       }
     };
     // 【status 为 0 的两种情况要分开】abort 是我们自己叫停的，不该报错给用户；
@@ -165,6 +178,7 @@ export function uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHa
   const auth = { Authorization: `UpToken ${token}` };
 
   let aborted = false;
+  let finalizing = false;
   let current: XMLHttpRequest | null = null;
   const register = (x: XMLHttpRequest) => {
     current = x;
@@ -173,11 +187,12 @@ export function uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHa
 
   // 这个函数挂在各处 .catch 上，收到的既可能是我们自己 reject 的 UploadErrorInfo，
   // 也可能是 abort 标记，还可能是运行时抛的任意异常，所以两边都标成可选。
-  const fail = (err?: Partial<UploadErrorInfo> & Partial<AbortSignalError>) => {
+  const fail = (err?: QiniuRequestError & Partial<AbortSignalError>) => {
     if (aborted || err?.__aborted) return; // 自己叫停的，不报错
-    handlers.onError(
-      err && err.code ? (err as UploadErrorInfo) : { code: UploadError.GENERIC_ERROR, message: String(err) },
-    );
+    const restartRequired = finalizing || err?.restartRequired === true;
+    if (restartRequired) clearCache();
+    const { restartRequired: _restartRequired, ...error } = err || {};
+    handlers.onError(error.code ? error : { code: UploadError.GENERIC_ERROR, message: String(err) }, restartRequired);
   };
 
   // ── 直传：一次 multipart POST ────────────────────────────────────────────
@@ -264,14 +279,16 @@ export function uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHa
 
     // 收尾。【btoa 而不是 url-safe base64】与换掉之前的实现保持一致 ——
     // 那份在生产上跑了很久，改成 url-safe 反而是引入未经验证的差异。
+    finalizing = true;
     const res = await post(
       `${base}/mkfile/${file.size || 0}/key/${btoa(key || '')}`,
       ctxList.join(','),
       { requiredField: 'key', headers: { ...auth, 'Content-Type': 'text/plain;charset=UTF-8' } },
       register,
-    ).finally(() => {
-      if (!aborted) clearCache();
-    });
+    );
+    finalizing = false;
+    if (aborted) return;
+    clearCache();
     handlers.onComplete(res);
   }
 

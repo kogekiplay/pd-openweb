@@ -656,11 +656,15 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
           finishFile(file, res);
           maybeComplete();
         },
-        onError(err) {
+        onError(err, restartRequired) {
           tasks.delete(file.id);
           file.status = FileStatus.FAILED;
-          emitError({ ...err, file });
-          maybeComplete();
+          try {
+            emitError({ ...err, file });
+          } finally {
+            if (restartRequired) uploader.removeFile(file);
+            maybeComplete();
+          }
         },
       },
     );

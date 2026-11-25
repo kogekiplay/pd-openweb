@@ -77,6 +77,7 @@ export interface SendToolbarProps {
   onSendEmotionPicMsg: (message: EmotionPicMessage) => void;
   onSendFileMsg: (file: FileMessage, msg: string) => void;
   onPrepareUpload: (message: FileMessage) => void;
+  onRemovePrepareMessage?: ((fileId: string) => void) | undefined;
   onSelectedUser: (user: string) => void;
   onShake: () => void;
   onChangeValue: (value: string) => void;
@@ -319,7 +320,15 @@ export default class SendToolbar extends Component<SendToolbarProps, SendToolbar
           // 上面三行刚把 id/name/ft 写进同一对象，运行期就是该合同，断言被 babel 完全剥离。
           _this.props.onSendFileMsg({ file: uploadFile as FileMessageFile, type }, msg);
         },
-        Error(_uploader, error) {
+        Error(uploader, error) {
+          const errorFileId = error?.file?.id;
+          if (errorFileId) {
+            delete window[`chatBeforeUpload${errorFileId}`];
+            delete window[`chatUploadProgress${errorFileId}`];
+            uploader.removeFile({ id: errorFileId });
+            _this.props.onRemovePrepareMessage?.(errorFileId);
+          }
+
           if (error.uploadErrorHandled) return;
           if (error.code === UploadError.FILE_SIZE_ERROR) {
             alert(_l('单个文件大小超过%0MB，无法支持上传', fileUploadLimitSize), 2);

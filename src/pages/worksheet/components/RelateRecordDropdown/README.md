@@ -1,12 +1,11 @@
-# 关联记录下拉回归测试
+# 关联记录下拉回归验证
 
-在仓库根目录执行：
+本仓暂无 `RelateRecordDropdown` 独立单元 spec；关联记录 ID 解析与表格重试等相邻逻辑可在仓库根目录运行以下可执行的 spec：
 
 ```bash
-node src/pages/worksheet/components/RelateRecordDropdown/RelateRecordDropdown.test.js
+node scripts/run-specs.ts --filter relateRecordIds
+node scripts/run-specs.ts --filter retryBoundary
 ```
-
-测试与实现同目录维护，使用项目已有 Node、Babel 和 assert。当前为手工回归入口，未自动接入 CI。
 
 ## 搜索词保留规则
 
@@ -14,7 +13,7 @@ node src/pages/worksheet/components/RelateRecordDropdown/RelateRecordDropdown.te
 
 列表展示与判断共用同一候选集合，“为空”占位项不计入搜索结果。远程完整性按实际请求的 pageSize 判断；返回满页时保守保留搜索词，不额外发请求确认。原有分页逻辑和面板关闭时统一提交的时机不变。
 
-## 自动用例覆盖
+## 回归核对清单
 
 - 搜索 3 条，部分选中时保留，全部选中后清空；关闭面板再统一提交。
 - 指定项搜索、空值前缀、范围外已选记录及取消选择。
@@ -25,4 +24,4 @@ node src/pages/worksheet/components/RelateRecordDropdown/RelateRecordDropdown.te
 - 显式开启或关闭搜索词保留参数，以及关闭面板后清词和统一提交。
 - 失焦关闭、Tab 关闭和退出单元格编辑时清空搜索词，已有变更只提交一次；仅搜索未选择时不提交，打开选择弹窗时保留搜索。
 
-测试执行真实下拉和列表逻辑，API、UI 组件在依赖边界替换，不等同浏览器和服务端联调。发布前仍应手工核对搜索词清空后的列表刷新、焦点以及鼠标/键盘连续选择。
+发布前应在真实浏览器与服务端联调环境下手工核对搜索词清空后的列表刷新、焦点以及鼠标/键盘连续选择。

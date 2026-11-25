@@ -150,18 +150,33 @@
       }
     }
 
-    > .customAntSelect.hap-select-single {
-      /* Select 封装通过内联样式固定单选高度，表单选中值需随文字换行撑高。 */
+    > .customAntSelect.ant-select-single {
+      /* antd 单选 Select 默认单行截断，表单选中值需随文字换行撑高。 */
       height: auto !important;
-      min-height: var(--hap-select-height);
-      padding-block: calc((var(--hap-select-height) - 24px) / 2 - var(--hap-select-border-size));
+      min-height: 36px;
 
-      .singleSelectLabel {
+      .ant-select-content-has-value {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+      }
+
+      .ant-select-content-value {
+        white-space: normal;
+        line-height: 20px !important;
+      }
+
+      .customAntDropdownTitle,
+      .customAntDropdownTitleWithBG {
+        height: auto;
+        max-width: 100%;
         padding-top: 2px;
         padding-bottom: 2px;
         line-height: 20px;
         white-space: normal;
         word-break: break-all;
+        overflow: visible;
+        text-overflow: clip;
       }
     }
 
@@ -1060,7 +1075,7 @@
     }
 
     .customFormRelationBtn,
-    .RelateRecordDropdown .hap-select:not(.hap-select-disabled),
+    .RelateRecordDropdown .RelateRecordDropdown-selected:not(.readonly),
     .customFormControlBox.relateRecordBtn:not(.formBoxNoBorder):not(.controlDisabled),
     .location {
       outline: 3px solid var(--color-primary-focus-outer);
