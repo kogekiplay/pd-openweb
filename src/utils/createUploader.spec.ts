@@ -67,10 +67,11 @@ type Uploader = {
   /** 【调用方会直接改它】，用例 6 钉的就是「在 BeforeUpload 里写它能生效」这条契约 */
   settings: { multipart_params: Record<string, string>; [key: string]: unknown };
   files: UploaderFile[];
+  state: number;
   start(fileIds?: readonly string[]): void;
   stop(): void;
   addFile(files: FakeFile[]): void;
-  removeFile(file: UploaderFile | string): void;
+  removeFile(file: Pick<UploaderFile, 'id'> | string): void;
   bind<E extends UploaderEvent>(event: E, handler: (...args: UploaderEventArgs[E]) => void): void;
 };
 
@@ -82,6 +83,7 @@ type UploaderEventArgs = {
   UploadProgress: [up: Uploader, file: UploaderFile];
   FileUploaded: [up: Uploader, file: UploaderFile, info: { response: UploadedFileResponse }];
   UploadComplete: [up: Uploader, files: UploaderFile[]];
+  StateChanged: [up: Uploader];
   /** errTip 是已经本地化好的提示串 */
   Error: [up: Uploader, err: UploadErrorInfo, errTip: string];
 };
@@ -118,6 +120,7 @@ type QiniuUploadTask = { abort(): void };
 type CreateUploaderModule = {
   default: (option: UploaderOption) => Uploader;
   FileStatus: Record<string, number>;
+  UploaderState: Record<string, number>;
   UploadError: Record<string, number>;
   UPLOAD_ERROR: Record<string, number>;
 };
@@ -509,6 +512,52 @@ test('removeFile 中断在途上传并发 FilesRemoved', async () => {
   // 注释写着「替身返回的 abort 是空的，这里换成能观测的」但没真换，
   // 于是用例名里的「中断在途上传」其实一直没被验证。替身现在会记 abort。
   assert.strictEqual(calls[0].aborted, true, 'removeFile 应当中断在途的上传任务');
+});
+
+test('取消单个文件保留其他任务，取消最后一个上传后未确认文件仍等待', async () => {
+  const calls: QiniuCall[] = [];
+  const { uploader, events, mod } = makeUploader({ auto_start: false }, calls);
+  const states: number[] = [];
+  uploader.bind('StateChanged', up => states.push(up.state));
+  uploader.addFile([fakeFile('first.png'), fakeFile('second.png'), fakeFile('unconfirmed.png')]);
+  const [first, second, unconfirmed] = uploader.files;
+  uploader.start([first.id, second.id]);
+  await tick();
+  assert.strictEqual(calls.length, 2);
+
+  uploader.removeFile({ id: first.id });
+  assert.strictEqual(calls[0].aborted, true);
+  assert.strictEqual(calls[1].aborted, false);
+  assert.strictEqual(uploader.state, mod.UploaderState.STARTED);
+
+  uploader.removeFile({ id: second.id });
+  assert.strictEqual(calls[1].aborted, true);
+  assert.deepEqual(uploader.files, [unconfirmed]);
+  assert.strictEqual(unconfirmed.status, mod.FileStatus.QUEUED);
+  assert.strictEqual(calls.length, 2);
+  assert.strictEqual(uploader.state, mod.UploaderState.STOPPED);
+  assert.deepEqual(states, [mod.UploaderState.STARTED, mod.UploaderState.STOPPED]);
+  assert.ok(!findEvent(events, 'UploadComplete'));
+});
+
+test('取消在传文件时保留已确认且尚待凭证的文件', async () => {
+  const calls: QiniuCall[] = [];
+  const { uploader, mod } = makeUploader({ auto_start: false }, calls);
+  uploader.addFile([fakeFile('first.png')]);
+  const first = uploader.files[0];
+  uploader.start([first.id]);
+  await tick();
+  assert.strictEqual(calls.length, 1);
+
+  uploader.addFile([fakeFile('confirmed.png')]);
+  const confirmed = uploader.files[1];
+  uploader.start([confirmed.id]);
+  uploader.removeFile({ id: first.id });
+  assert.strictEqual(uploader.state, mod.UploaderState.STARTED);
+  assert.strictEqual(calls.length, 1);
+  await tick();
+  assert.strictEqual(calls.length, 2);
+  assert.strictEqual(confirmed.status, mod.FileStatus.UPLOADING);
 });
 
 // ── 13. 【时序】auto_start:false 时，start() 早于凭证返回也必须能传 ────────

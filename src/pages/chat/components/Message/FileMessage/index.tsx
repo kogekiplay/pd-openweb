@@ -20,7 +20,7 @@ export interface FileMessageProps {
 }
 export default class FileMessage extends Component<FileMessageProps, FileMessageState> {
   declare iconClassName: string;
-  declare uploader: { stop(): void; start(): void; removeFile(file: { id: string | number }): void } | null;
+  declare uploader: { removeFile(file: { id: string | number }): void } | null;
   declare uploadFileId: string | number | undefined;
 
   constructor(props: FileMessageProps) {
@@ -75,11 +75,7 @@ export default class FileMessage extends Component<FileMessageProps, FileMessage
 
     if (!message.isPrepare || !files || !hasAttachmentData(files) || !files.id) return;
 
-    if (this.uploader) {
-      this.uploader.stop();
-      this.uploader.removeFile({ id: files.id });
-      this.uploader.start();
-    }
+    this.uploader?.removeFile({ id: files.id });
 
     this.setState(
       {

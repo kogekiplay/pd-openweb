@@ -232,7 +232,7 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
       const removed = files[idx];
       if (!removed) return;
       files.splice(idx, 1);
-      pendingStartIds.delete(id);
+      const wasPending = pendingStartIds.delete(id);
       const task = tasks.get(id);
       if (task) {
         task.abort();
@@ -240,6 +240,16 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
       }
       trigger('FilesRemoved', uploader, [removed]);
       if (initFunc.FilesRemoved) initFunc.FilesRemoved(uploader, [removed]);
+
+      if ((task || wasPending) && uploader.state === UploaderState.STARTED && !tasks.size) {
+        // 手动队列里未确认的文件仍在等待，不占用当前上传批次。
+        const pending = files.some(
+          file =>
+            file.status === FileStatus.UPLOADING ||
+            (file.status === FileStatus.QUEUED && (option.auto_start || pendingStartIds.has(file.id))),
+        );
+        if (!pending) uploader.stop();
+      }
     },
     refresh() {
       // 有意为空：plupload 里这是重新测量透明 input 相对按钮的位置；
