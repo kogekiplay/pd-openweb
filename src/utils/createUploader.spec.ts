@@ -561,6 +561,55 @@ test('auto_start:false 时完成或停止上一批后，新批次需要再次调
   }
 });
 
+test('auto_start:false 时，新批次凭证到位后仍等待确认，即使上一批正在上传', async () => {
+  const calls: QiniuCall[] = [];
+  const { uploader, mod } = makeUploader({ auto_start: false }, calls);
+  uploader.addFile([fakeFile('first.png')]);
+  uploader.start();
+  await tick();
+  assert.strictEqual(calls.length, 1);
+  assert.strictEqual(uploader.files[0].status, mod.FileStatus.UPLOADING);
+
+  uploader.addFile([fakeFile('second.png')]);
+  await tick();
+  const second = uploader.files[1];
+  assert.strictEqual(second.token, 'token-0');
+  assert.strictEqual(calls.length, 1, '第二批尚未确认');
+  assert.strictEqual(second.status, mod.FileStatus.QUEUED);
+
+  uploader.start();
+  assert.strictEqual(calls.length, 2);
+  assert.strictEqual(second.status, mod.FileStatus.UPLOADING);
+});
+
+test('auto_start:false 时，上一批的凭证失败不会启动下一批', async () => {
+  const calls: QiniuCall[] = [];
+  let rejectTokens = true;
+  const { uploader, events, mod } = makeUploader(
+    {
+      auto_start: false,
+      getToken: files => (rejectTokens ? Promise.reject(new Error('Token unavailable')) : tokenStub(files)),
+    },
+    calls,
+  );
+  uploader.addFile([fakeFile('first.png')]);
+  uploader.start();
+  await tick();
+  assert.strictEqual(findEvent(events, 'Error')?.[1].code, mod.UploadError.SECURITY_ERROR);
+  assert.strictEqual(uploader.files.length, 0);
+  assert.strictEqual(calls.length, 0);
+
+  rejectTokens = false;
+  uploader.addFile([fakeFile('second.png')]);
+  await tick();
+  assert.strictEqual(uploader.files[0].token, 'token-0');
+  assert.strictEqual(calls.length, 0, '新批次需要单独确认');
+
+  uploader.start();
+  assert.strictEqual(calls.length, 1);
+  assert.strictEqual(uploader.files[0].status, mod.FileStatus.UPLOADING);
+});
+
 test('取凭证拒绝后整批失败并移出等待队列，可重新添加上传', async () => {
   const calls: QiniuCall[] = [];
   let rejectTokens = true;
