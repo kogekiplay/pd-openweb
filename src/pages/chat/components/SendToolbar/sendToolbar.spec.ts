@@ -2,7 +2,7 @@
  * `src/pages/chat/components/SendToolbar/index.tsx` 的行为规格（持续目标·发送工具栏切片）。
  *
  * 【为什么这样测】`SendToolbar` 是 React class 组件，本仓没有 render 测试设施；但模块顶层的
- * `recurShowFileConfirm` 是"逐个文件确认后再放行上传"的**真实递归逻辑**：终止时 `up.start()` 一次、
+ * `recurShowFileConfirm` 是"逐个文件确认后再放行上传"的**真实递归逻辑**：终止时用已确认的文件 ID 调用 `up.start(ids)`、
  * 确认时同步回调 `cb({type, file})` 并在 300ms 后递归下一个、拒绝时移除文件并在 100ms 后递归。
  * 本 spec 从**真实源码**抽出该函数后执行（不复制、不改产品源码），依赖由参数注入。
  *
@@ -55,7 +55,8 @@ interface HarnessResult {
 }
 
 interface FakeUp {
-  start(): void;
+  files?: FakeFile[];
+  start(fileIds?: readonly string[]): void;
   removeFile(file: FakeFile): void;
 }
 
@@ -159,10 +160,10 @@ function filesOf(count: number): FakeFile[] {
   return Array.from({ length: count }, (_v, index) => ({ id: `f${index}`, name: `file-${index}.png` }));
 }
 
-check('终止分支：i >= length 时只调用一次 up.start() 并返回 false', () => {
+check('终止分支：没有已确认文件时直接返回 false', () => {
   const result = extractRunner()({ fileConfirm: () => undefined, setTimeout: () => 0, clearTimeout: () => undefined, Constant: { MSGTYPE_FILE: 5 } });
   const files = filesOf(2);
-  const ret = result.run({ start: () => undefined, removeFile: () => undefined }, files, 2, 2, () => undefined);
+  const ret = result.run({ start: () => assert.fail('没有已确认文件'), removeFile: () => undefined }, files, 2, 2);
   assert.equal(ret, false, '终止返回 false');
   assert.equal(result.confirmations.length, 0, '不发起确认');
 });
@@ -188,9 +189,9 @@ check('确认流：定时器触发后递归到下一个文件，直到 i >= leng
   const result = extractRunner()({ fileConfirm: () => undefined, setTimeout: () => 0, clearTimeout: () => undefined, Constant: { MSGTYPE_FILE: 5 } });
   const files = filesOf(2);
   const received: { type: number; file: FakeFile }[] = [];
-  const started: number[] = [];
+  const started: Array<readonly string[] | undefined> = [];
   const fakeUp = {
-    start: () => started.push(1),
+    start: (fileIds?: readonly string[]) => started.push(fileIds),
     removeFile: () => undefined,
   };
   const recur = (i: number, cb: (message: { type: number; file: FakeFile }) => void): void => {
@@ -209,7 +210,7 @@ check('确认流：定时器触发后递归到下一个文件，直到 i >= leng
     files,
     '回调顺序与文件顺序一致',
   );
-  assert.equal(started.length, 1, '全部确认完才 start() 且只调用一次');
+  assert.deepEqual(started, [files.map(file => file.id)], '全部确认完才启动这些文件');
 });
 
 check('拒绝流：noFn 移除同一文件对象，并排入 100ms 后递归（不回调 cb）', () => {
@@ -225,6 +226,28 @@ check('拒绝流：noFn 移除同一文件对象，并排入 100ms 后递归（�
   assert.equal(received.length, 0, '拒绝不触发 cb');
   assert.equal(result.timers.length, 1, '拒绝也排入递归定时器');
   assert.equal(result.timers[0]!.delay, 100, '拒绝递归延迟 100ms');
+});
+
+check('确认延迟内入队的新文件不启动，最后一个取消时仍启动已确认文件', () => {
+  const result = extractRunner()({ fileConfirm: () => undefined, setTimeout: () => 0, clearTimeout: () => undefined, Constant: { MSGTYPE_FILE: 5 } });
+  const [first, last, added] = filesOf(3) as [FakeFile, FakeFile, FakeFile];
+  const started: Array<readonly string[] | undefined> = [];
+  const up: FakeUp = {
+    files: [first, last],
+    start: fileIds => started.push(fileIds),
+    removeFile(file) {
+      this.files = this.files?.filter(queued => queued.id !== file.id) ?? [];
+    },
+  };
+  result.run(up, [first, last], 0, 2);
+  result.confirmations[0]!.options.yesFn();
+  assert.deepEqual(started, []);
+  up.files!.push(added);
+  result.timers[0]!.fn();
+  result.confirmations[1]!.options.noFn();
+  result.timers[1]!.fn();
+  assert.deepEqual(started, [[first.id]]);
+  assert.deepEqual(up.files, [first, added]);
 });
 
 check('单文件边界：length=1 时确认一次后递归即终止并 start()', () => {

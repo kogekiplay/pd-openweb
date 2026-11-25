@@ -254,7 +254,8 @@ export interface Uploader {
 
   init(): void;
   destroy(): void;
-  start(): void;
+  /** 传入文件 ID 时，仅启动队列中匹配的文件。 */
+  start(fileIds?: readonly string[]): void;
   stop(): void;
   addFile(files: File | File[] | FileList): void;
   /** 按 id 找；调用方常只给 { id }（实现里只读 id） */

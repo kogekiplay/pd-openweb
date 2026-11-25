@@ -67,7 +67,7 @@ type Uploader = {
   /** 【调用方会直接改它】，用例 6 钉的就是「在 BeforeUpload 里写它能生效」这条契约 */
   settings: { multipart_params: Record<string, string>; [key: string]: unknown };
   files: UploaderFile[];
-  start(): void;
+  start(fileIds?: readonly string[]): void;
   stop(): void;
   addFile(files: FakeFile[]): void;
   removeFile(file: UploaderFile | string): void;
@@ -580,6 +580,28 @@ test('auto_start:false 时，新批次凭证到位后仍等待确认，即使上
   uploader.start();
   assert.strictEqual(calls.length, 2);
   assert.strictEqual(second.status, mod.FileStatus.UPLOADING);
+});
+
+test('start(fileIds) 只启动已确认的文件，等待凭证期间也保留范围', async () => {
+  for (const credentialsReady of [true, false]) {
+    const calls: QiniuCall[] = [];
+    const { uploader, mod } = makeUploader({ auto_start: false }, calls);
+    uploader.addFile([fakeFile('confirmed.png')]);
+    const first = uploader.files[0];
+    uploader.addFile([fakeFile('added-during-delay.png')]);
+    const second = uploader.files[1];
+    if (credentialsReady) await tick();
+
+    uploader.start([first.id]);
+    await tick();
+    assert.strictEqual(calls.length, 1);
+    assert.strictEqual(first.status, mod.FileStatus.UPLOADING);
+    assert.strictEqual(second.status, mod.FileStatus.QUEUED);
+
+    uploader.start();
+    assert.strictEqual(calls.length, 2);
+    assert.strictEqual(second.status, mod.FileStatus.UPLOADING);
+  }
 });
 
 test('auto_start:false 时，上一批的凭证失败不会启动下一批', async () => {

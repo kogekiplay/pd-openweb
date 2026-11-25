@@ -94,10 +94,10 @@ const recurShowFileConfirm = (
   i: number,
   length: number,
   cb: ((message: FileMessage) => void) | undefined,
+  confirmedIds: string[] = [],
 ) => {
   if (i >= length) {
-    // 最后一次调用时启动重新开始上传
-    up.start();
+    if (confirmedIds.length > 0) up.start(confirmedIds);
     return false;
   }
 
@@ -109,12 +109,13 @@ const recurShowFileConfirm = (
       if (i < length) {
         // 防止快速点击上传
         const timer = setTimeout(() => {
-          recurShowFileConfirm(up, files, ++i, length, cb);
+          recurShowFileConfirm(up, files, ++i, length, cb, confirmedIds);
           clearTimeout(timer);
         }, 300);
       }
 
       if (!up.files || up.files.some(item => item.id === file.id)) {
+        confirmedIds.push(file.id);
         const message = {
           type: Constant.MSGTYPE_FILE,
           file,
@@ -127,7 +128,7 @@ const recurShowFileConfirm = (
       if (i < length) {
         // 防止快速点击上传
         var timer = setTimeout(() => {
-          recurShowFileConfirm(up, files, ++i, length, cb);
+          recurShowFileConfirm(up, files, ++i, length, cb, confirmedIds);
           clearTimeout(timer);
         }, 100);
       }
@@ -211,10 +212,7 @@ export default class SendToolbar extends Component<SendToolbarProps, SendToolbar
 
     // 【原来这里是直接 new plupload.Uploader】改走 createUploader（内部是 qiniu-js）。
     //
-    // 【为什么能原样保留"逐个确认完再上传"的交互】createUploader 的 start() 现在
-    // 支持在凭证返回【之前】被调用：它记下"已请求开始"，凭证到位时把等着的文件接上。
-    // 本组件只有一个文件时，recurShowFileConfirm 会同步走到 up.start()，
-    // 正是撞这个时序的场景，所以既不用改交互、也不用给门面加专用钩子。
+    // 逐个确认后按 ID 启动上传。凭证还未返回时，createUploader 会保留已确认文件的启动请求。
     //
     // 取凭证也交给 createUploader 了（bucket: 1 与原来手写的一致，type 用默认 0，
     // 与原来的 getToken(tokenFiles) 相同），所以下面的 FilesAdded 里不再自己取。
@@ -277,7 +275,7 @@ export default class SendToolbar extends Component<SendToolbarProps, SendToolbar
 
           // 【不再自己取凭证】createUploader 会在本回调返回后去取，
           // 并把 token/key/serverName/fileName 挂到同一批文件对象上。
-          // 确认流程本身不需要凭证，最后那次 up.start() 也不怕早于凭证（见上面的说明）。
+          // 确认流程可以在凭证返回前完成。
           recurShowFileConfirm(uploader, files, 0, files.length, _this.props.onPrepareUpload.bind(this));
           return undefined;
         },

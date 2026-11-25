@@ -197,8 +197,8 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
         handlers.clear();
       }
     },
-    start() {
-      startQueue();
+    start(fileIds) {
+      startQueue(fileIds);
     },
     stop() {
       pendingStartIds.clear();
@@ -546,11 +546,14 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
   }
 
   // ── 上传 ────────────────────────────────────────────────────────────────
-  function startQueue() {
+  function startQueue(fileIds?: readonly string[]) {
     if (destroyed) return;
-    // 只确认当前排队的文件。凭证晚到时继续上传这些文件，后来入队的文件需要再次确认。
+    const selectedIds = fileIds && new Set(fileIds);
+    // 只记录本次启动的文件，凭证到位时继续上传这些文件。
     for (const file of files) {
-      if (file.status === FileStatus.QUEUED) pendingStartIds.add(file.id);
+      if (file.status === FileStatus.QUEUED && (!selectedIds || selectedIds.has(file.id))) {
+        pendingStartIds.add(file.id);
+      }
     }
     uploader.state = UploaderState.STARTED;
     trigger('StateChanged', uploader);
