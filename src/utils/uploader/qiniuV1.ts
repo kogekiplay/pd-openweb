@@ -175,10 +175,12 @@ export function uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHa
   // 【原样使用，只去掉结尾的斜杠】相对路径（/file/mingdao/upload）与完整域名都成立
   const base = String(params.url || '').replace(/\/+$/, '');
   const chunkSize = params.chunkSize || 0;
+  const useChunk = chunkSize > 0 && file.size > chunkSize;
   const auth = { Authorization: `UpToken ${token}` };
 
   let aborted = false;
   let finalizing = false;
+  let resumeCheckpoint: string | null = null;
   let current: XMLHttpRequest | null = null;
   const register = (x: XMLHttpRequest) => {
     current = x;
@@ -190,7 +192,7 @@ export function uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHa
   const fail = (err?: QiniuRequestError & Partial<AbortSignalError>) => {
     if (aborted || err?.__aborted) return; // 自己叫停的，不报错
     const restartRequired = finalizing || err?.restartRequired === true;
-    if (restartRequired) clearCache();
+    if (useChunk && restartRequired) clearCache();
     const { restartRequired: _restartRequired, ...error } = err || {};
     handlers.onError(error.code ? error : { code: UploadError.GENERIC_ERROR, message: String(err) }, restartRequired);
   };
@@ -229,12 +231,15 @@ export function uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHa
     if (Date.now() - (cached.time || 0) >= ONE_DAY) return null;
     if (cached.percent === 100) return null; // 进度 100% 的残留会引发 499，直接丢弃
     if (cached.total !== file.size) return null; // 靠「文件名 + 大小」认定是同一个文件
+    resumeCheckpoint = raw;
     return cached;
   }
 
   function clearCache() {
+    if (!resumeCheckpoint) return;
     try {
-      localStorage.removeItem(file.name);
+      // 同名上传可能已写入新的续传点，只清理本次读取或写入的版本。
+      if (localStorage.getItem(file.name) === resumeCheckpoint) localStorage.removeItem(file.name);
     } catch {
       // 存储不可用时上传仍需成功或触发失败回调。
     }
@@ -242,7 +247,6 @@ export function uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHa
 
   async function chunked() {
     const cached = readCache();
-    if (!cached) clearCache();
 
     let offset = cached ? cached.offset : 0;
     const ctxList: string[] = cached && cached.ctx ? cached.ctx.split(',') : [];
@@ -269,7 +273,9 @@ export function uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHa
       // 每片成功后落一次续传点，与换掉之前的字段完全一致
       try {
         const cache: ResumeCache = { ctx: ctxList.join(','), percent, total: file.size, offset, time: Date.now() };
-        safeLocalStorageSetItem(file.name, JSON.stringify(cache));
+        const checkpoint = JSON.stringify(cache);
+        localStorage.setItem(file.name, checkpoint);
+        resumeCheckpoint = checkpoint;
       } catch {
         /* 存不下就算了，只是丢掉续传能力，不影响本次上传 */
       }
@@ -292,7 +298,6 @@ export function uploadToQiniu(params: QiniuUploadParams, handlers: QiniuUploadHa
     handlers.onComplete(res);
   }
 
-  const useChunk = chunkSize > 0 && file.size > chunkSize;
   (useChunk ? chunked() : direct()).catch(fail);
 
   return {

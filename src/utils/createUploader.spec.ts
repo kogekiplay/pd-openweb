@@ -68,6 +68,7 @@ type Uploader = {
   settings: { multipart_params: Record<string, string>; [key: string]: unknown };
   files: UploaderFile[];
   start(): void;
+  stop(): void;
   addFile(files: FakeFile[]): void;
   removeFile(file: UploaderFile | string): void;
   bind<E extends UploaderEvent>(event: E, handler: (...args: UploaderEventArgs[E]) => void): void;
@@ -531,6 +532,33 @@ test('auto_start:false 且未调用 start() 时不会自动上传', async () => 
   uploader.addFile([fakeFile('pic.png')]);
   await tick();
   assert.strictEqual(calls.length, 0, '没请求过开始，就不该上传');
+});
+
+test('auto_start:false 时完成或停止上一批后，新批次需要再次调用 start()', async () => {
+  for (const end of ['complete', 'stop'] as const) {
+    const calls: QiniuCall[] = [];
+    const { uploader, events } = makeUploader({ auto_start: false }, calls);
+    uploader.addFile([fakeFile('first.png')]);
+    uploader.start();
+    await tick();
+    assert.strictEqual(calls.length, 1);
+    if (end === 'complete') {
+      calls[0].handlers.onComplete({ key: 'first.png' });
+      assert.ok(findEvent(events, 'UploadComplete'));
+    } else {
+      uploader.stop();
+      assert.strictEqual(calls[0].aborted, true);
+    }
+
+    uploader.addFile([fakeFile('second.png')]);
+    await tick();
+    assert.strictEqual(calls.length, 1, `上一批 ${end} 后，凭证到位不应启动新批次`);
+
+    uploader.start();
+    assert.strictEqual(calls.length, 2);
+    const uploads = events.filter(event => event[0] === 'BeforeUpload');
+    assert.strictEqual(uploads[1][1][1].name, 'second.png');
+  }
 });
 
 test('取凭证拒绝后整批失败并移出等待队列，可重新添加上传', async () => {

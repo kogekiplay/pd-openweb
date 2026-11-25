@@ -145,9 +145,10 @@ export default class ImportExcel extends React.Component<any, any> {
     const selectFile = this.state.fileList.get(id);
     if (!selectFile) return;
     if (!selectFile.isRef) this.uploader.removeFile(id);
+    const targetPath = selectFile.isRef ? id : selectFile.path;
     this.setState((prev: { fileList: Immutable.OrderedMap<string, unknown>; filePaths: Array<{ id: string }> }) => ({
       fileList: prev.fileList.remove(id),
-      filePaths: prev.filePaths.filter(item => item.id !== (selectFile.isRef ? id : selectFile.path)),
+      filePaths: targetPath ? prev.filePaths.filter(item => item.id !== targetPath) : prev.filePaths,
     }));
   };
 

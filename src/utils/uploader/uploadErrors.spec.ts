@@ -112,14 +112,14 @@ function setup({ blockedStorage = false } = {}) {
         if (blockedStorage) throw new Error('Storage unavailable');
         return storage.get(name) ?? null;
       },
+      setItem(name: string, value: string) {
+        if (blockedStorage) throw new Error('Storage unavailable');
+        storage.set(name, value);
+      },
       removeItem(name: string) {
         if (blockedStorage) throw new Error('Storage unavailable');
         storage.delete(name);
       },
-    },
-    safeLocalStorageSetItem(name: string, value: string) {
-      if (blockedStorage) throw new Error('Storage unavailable');
-      storage.set(name, value);
     },
   };
   const cache = new Map<string, Record<string, unknown>>();
@@ -485,6 +485,40 @@ test('第二片的网络中断保留续传点，重新添加时复用第一片 c
   ctx.requests[4]!.reply(200, '{"key":"test/key"}');
   await settle();
   assert.equal(ctx.storage.size, 0);
+});
+
+test('同名小文件直传失败后，大文件仍从原续传点继续', async () => {
+  const ctx = setup();
+  const up = ctx.createUploader();
+  const source = file('shared.zip', blockSize + 1024 * 1024);
+  up.addFile(source);
+  await settle();
+  ctx.requests[0]!.reply(200, '{"ctx":"saved-first"}');
+  await settle();
+  ctx.requests[1]!.onerror?.();
+  await settle();
+  const checkpoint = ctx.storage.get(source.name);
+  assert.ok(checkpoint);
+
+  up.addFile(file(source.name));
+  await settle();
+  assert.doesNotMatch(ctx.requests[2]!.url, /\/mkblk\//);
+  const directId = up.files[1]!.id;
+  ctx.requests[2]!.reply(401, '{"code":40007}');
+  await settle();
+  assert.equal(up.files.some(entry => entry.id === directId), false);
+  assert.deepEqual(ctx.alerts, [scanAlert(source.name, policy)]);
+  assert.equal(ctx.storage.get(source.name), checkpoint);
+
+  up.addFile(source);
+  await settle();
+  assert.match(ctx.requests[3]!.url, /\/mkblk\/1048576$/);
+  ctx.requests[3]!.reply(200, '{"ctx":"resumed-second"}');
+  await settle();
+  assert.equal(ctx.requests[4]!.body, 'saved-first,resumed-second');
+  ctx.requests[4]!.reply(200, '{"key":"test/resumed"}');
+  await settle();
+  assert.equal(ctx.storage.has(source.name), false);
 });
 
 test('RichText MyUploadAdapter 拒绝时使用 XHR 业务码对应的文案', async () => {

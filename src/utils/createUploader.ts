@@ -200,6 +200,7 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
       startQueue();
     },
     stop() {
+      startRequested = false;
       uploader.state = UploaderState.STOPPED;
       for (const task of tasks.values()) task.abort();
       tasks.clear();
@@ -711,6 +712,7 @@ export default function createUploader(inputOption: UploaderOption): Uploader {
   function maybeComplete() {
     const pending = files.some(f => f.status === FileStatus.QUEUED || f.status === FileStatus.UPLOADING);
     if (pending) return;
+    startRequested = false;
     uploader.state = UploaderState.STOPPED;
     uploadErrors.flush();
     trigger('UploadComplete', uploader, files.slice());

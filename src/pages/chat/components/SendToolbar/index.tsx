@@ -114,11 +114,13 @@ const recurShowFileConfirm = (
         }, 300);
       }
 
-      const message = {
-        type: Constant.MSGTYPE_FILE,
-        file,
-      };
-      cb && cb(message);
+      if (!up.files || up.files.some(item => item.id === file.id)) {
+        const message = {
+          type: Constant.MSGTYPE_FILE,
+          file,
+        };
+        cb && cb(message);
+      }
     },
     noFn() {
       up.removeFile(file);

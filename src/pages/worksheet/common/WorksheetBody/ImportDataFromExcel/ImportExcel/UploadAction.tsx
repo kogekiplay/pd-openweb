@@ -18,10 +18,16 @@ export default class UploadAction extends React.Component<any, any> {
 
     switch (status) {
       case UPLOAD_STATUS.ERROR:
-        icon = <Icon icon="turnLeft" className="Font14" />;
-        title = _l('重试');
-        action = retryUpload;
-        break;
+        return (
+          <div className="flexRow alignItemsCenter">
+            <div className="fileListActionBtn Hand hoverColorPrimary" title={_l('重试')} onClick={retryUpload}>
+              <Icon icon="turnLeft" className="Font14" />
+            </div>
+            <div className="fileListActionBtn Hand hoverColorPrimary mLeft8" title={_l('删除')} onClick={deleteFile}>
+              <span className="textIcon">×</span>
+            </div>
+          </div>
+        );
       case UPLOAD_STATUS.QUEUE:
       case UPLOAD_STATUS.UPLOADING:
         icon = <span className="textIcon">×</span>;
