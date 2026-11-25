@@ -243,7 +243,10 @@ export default class CommonInfo extends Component<any, any> {
           this.setState({ uploadLoading: true });
           up.disableBrowse();
         }}
-        onError={() => {}}
+        onError={up => {
+          this.setState({ uploadLoading: false });
+          up.disableBrowse(false);
+        }}
       >
         <div className="logoBoxBorder">
           <img src={logo || undefined} alt="avatar" />

@@ -158,8 +158,10 @@ export default class CustomIcon extends Component<any, any> {
                   });
                 }
               }}
-              onError={(_up, _err, errTip) => {
-                alert(errTip, 2);
+              onError={(_up, err, errTip) => {
+                if (!err.uploadErrorHandled) {
+                  alert(errTip, 2);
+                }
               }}
             >
               <div

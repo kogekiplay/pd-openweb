@@ -829,8 +829,13 @@ export default function CreateTaxNumber(props) {
                     setUploading(true);
                     up.disableBrowse();
                   }}
-                  onError={(_up, _err, errTip) => {
-                    alert(errTip, 2);
+                  onError={(up, err, errTip) => {
+                    if (!err.uploadErrorHandled) {
+                      alert(errTip, 2);
+                    }
+
+                    setUploading(false);
+                    up.disableBrowse(false);
                   }}
                 >
                   <Button disabled={uploading}>{uploading ? _l('更新中...') : _l('更新')}</Button>

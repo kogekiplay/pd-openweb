@@ -329,7 +329,9 @@ class AppearanceConfig extends React.Component<AppearanceConfigProps, Appearance
             this.setState({ isUploading: true });
             up.disableBrowse();
           }}
-          onError={(_up: CoverUploader, err: { code?: number | string | undefined }) => {
+          onError={(up: CoverUploader, err: { code?: number | string | undefined }) => {
+            this.setState({ isUploading: false });
+            up.disableBrowse(false);
             if (err.code === -600) alert(_l('上传失败，只允许上传5M以内的文件'), 2);
           }}
         >

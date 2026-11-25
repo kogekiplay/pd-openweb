@@ -35,16 +35,6 @@ import { UploadError } from 'src/utils/uploader/constants';
 /** 真实上传器类型（`UploaderEventArgs[*][0]` / `UploaderOption.remove_files_callback` 都是它）。 */
 import type { Uploader } from 'src/utils/uploader/types';
 
-const errorCode = {
-  40001: _l('鉴权失败'),
-  40002: _l('非法的文件类型'),
-  40003: _l('bucket 不存在'),
-  40004: _l('文件大小错误'),
-  50002: _l('系统错误 metadata error'),
-  50003: _l('系统错误 hash error'),
-  50004: _l('系统错误'),
-};
-
 export interface UploadFilesRegistration {
   manualRef?: ((instance: UploadFiles) => void) | null | undefined;
 }
@@ -299,9 +289,16 @@ export default class UploadFiles extends Component<any, any> {
   /** 调用点唯一：`onError={(uploader, error) => _this.removeErrorFile(uploader, error?.file?.id)}`，
    *  故 `uploader` 同样是 `UploaderEventArgs['Error'][0]`；body 只用 `uploader.removeFile`。 */
   removeErrorFile = (uploader: Uploader, fileId: string | undefined) => {
-    if (fileId && uploader.removeFile) {
+    if (!fileId) return;
+
+    if (uploader.removeFile) {
       uploader.removeFile({ id: fileId });
     }
+
+    this.setState(
+      ({ temporaryData }) => ({ temporaryData: temporaryData.filter(item => item.id !== fileId) }),
+      () => this.props.onTemporaryDataUpdate(this.state.temporaryData),
+    );
   };
 
   onOpenFolderSelectDialog() {
@@ -918,9 +915,9 @@ export default class UploadFiles extends Component<any, any> {
               addFiles.push({ id: item.id, fileSize: item.size || 0, progress: 0.1, base });
             });
 
-            _this.setState({
-              temporaryData: _this.state.temporaryData.concat(addFiles),
-            });
+            _this.setState(({ temporaryData }) => ({
+              temporaryData: temporaryData.concat(addFiles),
+            }));
             return undefined;
           }}
           onBeforeUpload={uploader => {
@@ -932,62 +929,39 @@ export default class UploadFiles extends Component<any, any> {
             const uploadPercent = ((loaded / size) * 100).toFixed(1);
 
             // 给当前正在上传的文件设置进度
-            const newTemporaryData = _this.state.temporaryData.map(item => {
-              if (file.id === item.id && 'progress' in item) {
-                item.progress = uploadPercent;
-              }
-
-              return item;
-            });
-
-            _this.setState({
-              temporaryData: newTemporaryData,
-            });
+            _this.setState(({ temporaryData }) => ({
+              temporaryData: temporaryData.map(item =>
+                file.id === item.id && 'progress' in item ? { ...item, progress: uploadPercent } : item,
+              ),
+            }));
           }}
           onUploaded={(_uploader, file, response) => {
             // 上传完成，取消进度条
-            const newTemporaryData = _this.state.temporaryData.map(item => {
-              if (file.id == item.id && 'progress' in item) {
-                item = formatResponseData(file, response);
-                item.originalFileName = decodeURIComponent(item.originalFileName);
-                delete item.progress;
-                delete item.base;
-              }
+            _this.setState(
+              ({ temporaryData }) => ({
+                temporaryData: temporaryData.map(item => {
+                  if (file.id == item.id && 'progress' in item) {
+                    item = formatResponseData(file, response);
+                    item.originalFileName = decodeURIComponent(item.originalFileName);
+                  }
 
-              return item;
-            });
-
-            _this.setState({
-              temporaryData: newTemporaryData,
-            });
-
-            _this.props.onTemporaryDataUpdate(newTemporaryData);
+                  return item;
+                }),
+              }),
+              () => _this.props.onTemporaryDataUpdate(_this.state.temporaryData),
+            );
           }}
           onUploadComplete={() => {
-            _this._uploading = false;
-            _this.props.onUploadComplete(true);
+            // 等待成功及失败回调的列表更新提交，避免父级使用旧附件列表结束上传。
+            _this.setState({}, () => {
+              _this._uploading = false;
+              _this.props.onUploadComplete(true);
+            });
           }}
           onError={(uploader, error) => {
             _this.removeErrorFile(uploader, error?.file?.id);
 
-            if ((window.platformENV.isOverseas || window.platformENV.isLocal) && error.response) {
-              try {
-                // 上传层（uploader/qiniuV1 的 httpError）已经把返回体解析成对象了。原来这里再 JSON.parse 一次，
-                // 对象转成 "[object Object]" 必然抛错落进 catch —— 换掉 plupload 以后，私有部署下服务端给的
-                // 具体原因（50001 带的 message、errorCode 里那些）一次都没弹出来过，一律成了「上传失败」
-                const res = error.response;
-
-                if (res.code === 50001) {
-                  alert(res.message, 2);
-                  return;
-                } else if (errorCode[res.code]) {
-                  alert(errorCode[res.code], 2);
-                  return;
-                }
-              } catch (error) {
-                console.error(error);
-              }
-            }
+            if (error.uploadErrorHandled) return;
 
             if (error.code === UploadError.FILE_SIZE_ERROR) {
               alert(_l('单个文件大小超过%0MB，无法支持上传', maxTotalSize), 2);

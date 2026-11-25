@@ -75,7 +75,7 @@ function loadMarkdownLifecycle() {
     if (name === 'react/jsx-runtime' || name === 'styled-components' || name === 'prop-types' || name === 'lodash') return require(name);
     if (name === '@mdfe/vditor') return { __esModule: true, default: NativeEditor };
     if (name.endsWith('.css')) return {};
-    if (name === 'src/utils/common' || name === 'src/utils/commonRequestBoundary' || name === 'src/utils/expression') return {};
+    if (name === 'src/utils/common' || name === 'src/utils/commonRequestBoundary' || name === 'src/utils/expression' || name === 'src/utils/services/file/uploadError') return {};
     throw new Error('Unexpected lifecycle fixture dependency ' + name);
   }, { __customSubPath__: '' }, (value: string) => value, (callback: Cleanup) => { timers.push(callback); });
   const Subject = moduleLike.exports['default'];

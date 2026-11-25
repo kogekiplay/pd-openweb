@@ -1,6 +1,10 @@
 
 # UploadFiles 
 
+#### 上传失败回归验证
+
+上传失败状态同步覆盖单批部分失败、连续失败、失败与进度/成功/新增文件回调交错、父级列表与完成状态同步，以及历史附件保留；上传器队列与错误回归测试见 `src/utils/createUploader.spec.ts` 与 `src/utils/uploader/uploadErrors.spec.ts`。
+
 | Option | Type | Description | Default |
 | ----- | ----- | ----- | ----- |
 | arrowLeft | number | arrow 的 left 值 | 0 |

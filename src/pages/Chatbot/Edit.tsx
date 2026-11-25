@@ -166,8 +166,11 @@ const Edit = props => {
             onAdd={up => {
               up.disableBrowse();
             }}
-            onError={(_up, _err, errTip) => {
-              alert(errTip, 2);
+            onError={(up, err, errTip) => {
+              up.disableBrowse(false);
+              if (!err.uploadErrorHandled) {
+                alert(errTip, 2);
+              }
             }}
           >
             <div className="avatar pointer">

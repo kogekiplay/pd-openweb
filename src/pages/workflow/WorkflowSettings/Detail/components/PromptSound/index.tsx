@@ -236,8 +236,12 @@ export default ({ companyId, processId, relationId, selectNodeId, promptSound, f
                 setUploading(true);
                 up.disableBrowse();
               }}
-              onError={(_up, _err, errTip) => {
-                alert(errTip, 2);
+              onError={(up, err, errTip) => {
+                setUploading(false);
+                up.disableBrowse(false);
+                if (!err.uploadErrorHandled) {
+                  alert(errTip, 2);
+                }
               }}
             >
               {promptSound.file ? (

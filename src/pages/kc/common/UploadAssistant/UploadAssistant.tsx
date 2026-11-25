@@ -234,7 +234,9 @@ class UploadAssistant extends React.Component<any, any> {
         },
         Error(_up, err, errTip) {
           if (errTip) {
-            alert(errTip);
+            if (!err.uploadErrorHandled) {
+              alert(errTip);
+            }
           }
 
           const fileList = comp.state.fileList.update(err.file.id, fileItem => {

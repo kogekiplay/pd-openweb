@@ -409,8 +409,12 @@ export default function BulletinSetting(props) {
                 setUploadLoading(true);
                 up.disableBrowse();
               }}
-              onError={(_up, _err, errTip) => {
-                alert(errTip, 2);
+              onError={(up, err, errTip) => {
+                setUploadLoading(false);
+                up.disableBrowse(false);
+                if (!err.uploadErrorHandled) {
+                  alert(errTip, 2);
+                }
               }}
             >
               <div className="uploadBtn">{_l('自定义')}</div>

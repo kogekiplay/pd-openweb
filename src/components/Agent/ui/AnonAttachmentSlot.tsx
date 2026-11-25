@@ -136,7 +136,7 @@ export default function AnonAttachmentSlot<T extends { id: string } = AnonymousA
         onChange(prev => prev.map(f => (ids.has(f.id) ? ({ ...f, status: 'error' } as T) : f)));
       }
 
-      antAlert(_l('上传失败'), 2);
+      antAlert((err as { uploadErrorMessage?: string } | null)?.uploadErrorMessage || _l('上传失败'), 2);
     }
   }
 

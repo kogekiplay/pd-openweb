@@ -248,7 +248,7 @@ class EditPrint extends React.Component<EditPrintProps, EditPrintState> {
           );
           up.disableBrowse(false);
         },
-        Error: (_up, _err, errTip) => {
+        Error: (_up, err, errTip) => {
           this.setState({
             loading: false,
             suc: false,
@@ -259,7 +259,9 @@ class EditPrint extends React.Component<EditPrintProps, EditPrintState> {
             error: true,
           });
           if (errTip) {
-            alert(errTip, 2);
+            if (!err.uploadErrorHandled) {
+              alert(errTip, 2);
+            }
           }
         },
       },

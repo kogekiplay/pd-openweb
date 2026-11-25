@@ -318,18 +318,16 @@ export default class UpgradeProcess extends Component<any, any> {
           this.setState({ isEncrypt: false, errTip: '' });
         }}
         onBeforeUpload={(_up, file) => {
-          setTimeout(() => {
-            !this.state.analyzeLoading && this.setState({ file: batchUpdate ? {} : file, analyzeLoading: true });
-          }, 200);
+          !this.state.analyzeLoading && this.setState({ file: batchUpdate ? {} : file, analyzeLoading: true });
         }}
         onUploaded={this.onUploadComplete}
-        onError={() => {
+        onError={(_up, err) => {
           this.setState({
             file: {},
             files: [],
             url: '',
             password: '',
-            errTip: _l('文件上传失败'),
+            errTip: err.uploadErrorMessage || _l('文件上传失败'),
             analyzeLoading: false,
           });
         }}

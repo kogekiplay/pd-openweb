@@ -320,6 +320,7 @@ export default class SendToolbar extends Component<SendToolbarProps, SendToolbar
           _this.props.onSendFileMsg({ file: uploadFile as FileMessageFile, type }, msg);
         },
         Error(_uploader, error) {
+          if (error.uploadErrorHandled) return;
           if (error.code === UploadError.FILE_SIZE_ERROR) {
             alert(_l('单个文件大小超过%0MB，无法支持上传', fileUploadLimitSize), 2);
           } else {

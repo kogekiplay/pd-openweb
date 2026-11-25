@@ -123,7 +123,13 @@ export default class UploadFile extends Component<any, any> {
       },
       type: 0,
       init: {
-        Error: (_up, err) => {
+        Error: (up, err) => {
+          if (err.file) {
+            const errorFileId = err.file.id;
+            up.removeFile(err.file);
+            this.setState(({ files }) => ({ files: files.filter(file => file.id !== errorFileId) }));
+          }
+
           const {
             file: { name },
             code,

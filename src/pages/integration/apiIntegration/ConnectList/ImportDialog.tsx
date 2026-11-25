@@ -240,12 +240,12 @@ export default function ImportDialog(props) {
             !analyzeLoading && setState({ file: file, analyzeLoading: true, upgradeId: '' });
           }}
           onUploaded={onUploadComplete}
-          onError={() => {
+          onError={(_up, err) => {
             setState({
               file: {},
               upgradeId: '',
               url: '',
-              errTip: _l('文件上传失败'),
+              errTip: err.uploadErrorMessage || _l('文件上传失败'),
               analyzeLoading: false,
             });
           }}

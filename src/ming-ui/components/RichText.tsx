@@ -9,6 +9,7 @@ import { getToken } from 'src/utils/common';
 import { requireFileToken } from 'src/utils/commonRequestBoundary';
 import type { TokenRequestArgs } from 'src/utils/commonRequestTypes';
 import RegExpValidator from 'src/utils/expression';
+import { getUploadError } from 'src/utils/services/file/uploadError';
 import { preventWidgetResizeRedrawRecursion } from './richTextUtils';
 import './less/RichText.less';
 
@@ -412,10 +413,11 @@ class MyUploadAdapter {
         })
         .catch(reject);
       this.xhr.addEventListener('load', () => {
-        const response = this.xhr.response;
+        const response = safeParse(this.xhr.responseText, 'object');
+        const uploadError = getUploadError(response, result.name);
 
-        if (!response || response.error) {
-          return reject(response && response.error ? response.error.message : "Couldn't upload file");
+        if (!this.xhr.responseText || !response || uploadError || this.xhr.status >= 400 || response.error) {
+          return reject(uploadError?.message || response?.error?.message || _l('上传失败，请稍后再试。'));
         }
 
         // If the upload is successful, resolve the upload promise with an object containing

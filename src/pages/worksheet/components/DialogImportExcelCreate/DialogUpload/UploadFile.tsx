@@ -60,6 +60,7 @@ export default class UploadFile extends Component<any, any> {
       getTokenParam,
       init: {
         Error: (_up, err) => {
+          this.setState({ file: undefined });
           const {
             file: { name },
             code,

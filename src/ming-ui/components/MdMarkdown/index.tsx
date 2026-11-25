@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { getToken } from 'src/utils/common';
 import { requireFileToken } from 'src/utils/commonRequestBoundary';
 import RegExpValidator from 'src/utils/expression';
+import { getUploadError } from 'src/utils/services/file/uploadError';
 
 let vditorPromise;
 const CODE_HIGHLIGHT_MARK = 'data-md-code-highlight';
@@ -255,6 +256,8 @@ function MdMarkdown(props) {
     return new Promise((resolve, reject) => {
       const urlList = [];
       const showList: string[] = [];
+      const securityErrors: string[] = [];
+      let pending = files.length;
 
       files.forEach(file => {
         const formData = new FormData();
@@ -290,6 +293,8 @@ function MdMarkdown(props) {
             });
           })
           .then(res => {
+            const uploadError = getUploadError(res, file.name);
+            if (uploadError) throw Object.assign(new Error(uploadError.message), { data: res });
             if (res) {
               const urlImg = res.url || (res.serverName && res.key) ? res.serverName + res.key : '';
               urlList.push(urlImg);
@@ -304,8 +309,27 @@ function MdMarkdown(props) {
             }
           })
           .catch(error => {
+            const uploadError = getUploadError(error?.data, file.name);
+
+            if (uploadError?.isSecurityError) {
+              securityErrors.push(uploadError.message);
+            } else if (uploadError) {
+              alert(uploadError.message, 2);
+            }
+
             console.error('上传失败:', error);
             reject(error);
+          })
+          .finally(() => {
+            pending--;
+            if (!pending && securityErrors.length) {
+              alert(
+                securityErrors.length === 1
+                  ? securityErrors[0]
+                  : _l('%0 个文件检测到安全风险，无法上传', securityErrors.length),
+                2,
+              );
+            }
           });
       });
     });
